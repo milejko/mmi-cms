@@ -1,8 +1,7 @@
 {
 	"name": "mmi/mmi-cms",
-	"type": "library",
 	"description": "CMS for MMi Framework",
-	"keywords": ["cms, mmi, framework"],
+	"keywords": ["cms", "mmi", "framework"],
 	"license": "MIT",
 	"authors": [
 		{
