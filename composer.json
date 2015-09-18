@@ -28,5 +28,12 @@
 		"php": ">=5.4.0",
 		"mmi/mmi": "dev-master",
 		"phpmailer/phpmailer": "*"
+	},
+	"autoload": {
+		"psr-4": {
+			"Cms\\": "src/Cms",
+			"CmsAdmin\\": "src/CmsAdmin"
+		}
 	}
+
 }
