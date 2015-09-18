@@ -1,1 +1,0 @@
-{#Nie jesteś autoryzowany do wykonania tej akcji#}
