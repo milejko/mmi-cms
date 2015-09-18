@@ -1,0 +1,29 @@
+{
+	"name": "mmi/cms",
+	"type": "library",
+	"description": "CMS for MMi Framework",
+	"keywords": ["cms, mmi, framework"],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Mariusz Miłejko",
+			"email": "mariusz@milejko.pl"
+		},
+		{
+			"name": "Bartłomiej Wołos",
+			"email": "funfel@onet.pl"
+		},
+		{
+			"name": "Maciej Pawłowski",
+			"email": "mac@macu.eu"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0",
+		"mmi/mmi": "*",
+		"phpmailer/phpmailer": "*"
+	},
+	"require-dev": {
+		"monolog/monolog": "~1.11"
+	}
+}
