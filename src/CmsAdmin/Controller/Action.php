@@ -15,9 +15,9 @@ abstract class Action Extends \Mmi\Controller\Action {
 	public function init() {
 		//ustawienie języka edycji
 		$session = new \Mmi\Session\Space('cms-language');
-		$lang = in_array($session->lang, \App\Registry::$config->application->languages) ? $session->lang : null;
-		if ($lang === null && isset(\App\Registry::$config->application->languages[0])) {
-			$lang = \App\Registry::$config->application->languages[0];
+		$lang = in_array($session->lang, \App\Registry::$config->languages) ? $session->lang : null;
+		if ($lang === null && isset(\App\Registry::$config->languages[0])) {
+			$lang = \App\Registry::$config->languages[0];
 		}
 		unset($this->getRequest()->lang);
 		unset(\Mmi\Controller\Front::getInstance()->getRequest()->lang);

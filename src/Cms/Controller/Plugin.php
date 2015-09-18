@@ -50,7 +50,7 @@ class Plugin extends \Mmi\Controller\Plugin\PluginAbstract {
 
 		//konfiguracja autoryzacji
 		$auth = new \Mmi\Auth();
-		$auth->setSalt(\App\Registry::$config->application->salt);
+		$auth->setSalt(\App\Registry::$config->salt);
 		$auth->setModelName(\App\Registry::$config->session->authModel ? \App\Registry::$config->session->authModel : '\Cms\Model\Auth');
 		\App\Registry::$auth = $auth;
 		\Mmi\Controller\Action\Helper\Action::getInstance()->setAuth($auth);
@@ -61,7 +61,7 @@ class Plugin extends \Mmi\Controller\Plugin\PluginAbstract {
 		if ($remember > 0 && !$auth->hasIdentity() && $cookie->match('remember')) {
 			$params = [];
 			parse_str($cookie->getValue(), $params);
-			if (isset($params['id']) && isset($params['key']) && $params['key'] == md5(\App\Registry::$config->application->salt . $params['id'])) {
+			if (isset($params['id']) && isset($params['key']) && $params['key'] == md5(\App\Registry::$config->salt . $params['id'])) {
 				$auth->setIdentity($params['id']);
 				$auth->idAuthenticate();
 			}
@@ -116,13 +116,13 @@ class Plugin extends \Mmi\Controller\Plugin\PluginAbstract {
 	 */
 	protected function _handleNotFoundForward(\Mmi\Controller\Request $request) {
 		//niepoprawny język
-		if ($request->__get('lang') && !in_array($request->__get('lang'), \App\Registry::$config->application->languages)) {
+		if ($request->__get('lang') && !in_array($request->__get('lang'), \App\Registry::$config->languages)) {
 			\Mmi\Controller\Front::getInstance()->getResponse()->setCodeNotFound();
 			//wyłączanie języka
 			unset($request->lang);
 			//ustawianie języka do domyślny
-			if (isset(\App\Registry::$config->application->languages[0])) {
-				$request->lang = \App\Registry::$config->application->languages[0];
+			if (isset(\App\Registry::$config->languages[0])) {
+				$request->lang = \App\Registry::$config->languages[0];
 			}
 			//ustawianie błędu
 			$this->_setNotFoundRequest($request);
@@ -144,8 +144,8 @@ class Plugin extends \Mmi\Controller\Plugin\PluginAbstract {
 		//ustawienie widoku
 		$view = \Mmi\Controller\Front::getInstance()->getView();
 		$base = $view->baseUrl;
-		$view->domain = \App\Registry::$config->application->host;
-		$view->languages = \App\Registry::$config->application->languages;
+		$view->domain = \App\Registry::$config->host;
+		$view->languages = \App\Registry::$config->languages;
 		$jsRequest = $request->toArray();
 		$jsRequest['baseUrl'] = $base;
 		unset($jsRequest['controller']);

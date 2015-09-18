@@ -96,7 +96,7 @@ class Record extends \Mmi\Orm\Record {
 		if ($this->id === null) {
 			return;
 		}
-		return substr(md5($this->name . \App\Registry::$config->application->salt), 0, 8);
+		return substr(md5($this->name . \App\Registry::$config->salt), 0, 8);
 	}
 
 	/**

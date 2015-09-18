@@ -19,7 +19,7 @@ class Copy extends \Mmi\Form {
 
 		$langMultiOptions = [];
 		//wybór z dostępnych języków
-		foreach (\App\Registry::$config->application->languages as $lang) {
+		foreach (\App\Registry::$config->languages as $lang) {
 			if ($lang == \Mmi\Controller\Front::getInstance()->getRequest()->lang) {
 				continue;
 			}

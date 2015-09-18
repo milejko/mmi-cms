@@ -14,7 +14,7 @@ define('BASE_PATH', realpath(dirname(__FILE__) . '/../../../../'));
 require BASE_PATH . '/app/autoload.php';
 
 //powołanie i uruchomienie aplikacji
-$application = new \Mmi\Application('\Mmi\Application\BootstrapCli');
+$application = new \Mmi\App('\Mmi\App\BootstrapCli');
 $application->run();
 
 Cms\Model\Cron::run();

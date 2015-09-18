@@ -43,7 +43,7 @@ class Auth extends \Mmi\Form {
 			->setValue(\Cms\Orm\Auth\Role\Query::byAuthId($this->_record->id)->findPairs('cms_role_id', 'cms_role_id'));
 
 		$languages = [];
-		foreach (\App\Registry::$config->application->languages as $language) {
+		foreach (\App\Registry::$config->languages as $language) {
 			$languages[$language] = $language;
 		}
 

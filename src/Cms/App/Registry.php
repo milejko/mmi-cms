@@ -8,9 +8,9 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace Cms;
+namespace Cms\App;
 
-abstract class Registry extends \Mmi\Registry {
+abstract class Registry extends \Mmi\App\Registry {
 
 	/**
 	 * Obiekt ACL

@@ -73,7 +73,7 @@ class Auth implements \Mmi\Auth\AuthInterface {
 	 * @return string
 	 */
 	public static function getSaltedPasswordHash($password) {
-		return hash('sha512', \App\Registry::$config->application->salt . md5($password) . $password . 'sltd');
+		return hash('sha512', \App\Registry::$config->salt . md5($password) . $password . 'sltd');
 	}
 
 	/**

@@ -59,7 +59,7 @@ class Index extends Action {
 	 */
 	public function languageAction() {
 		$session = new \Mmi\Session\Space('cms-language');
-		$session->lang = in_array($this->locale, \App\Registry::$config->application->languages) ? $this->locale : null;
+		$session->lang = in_array($this->locale, \App\Registry::$config->languages) ? $this->locale : null;
 		$referer = \Mmi\Controller\Front::getInstance()->getRequest()->getReferer();
 		//przekierowanie na referer
 		if ($referer) {
@@ -72,7 +72,7 @@ class Index extends Action {
 	 * Widget języków
 	 */
 	public function languageWidgetAction() {
-		$this->view->languages = \App\Registry::$config->application->languages;
+		$this->view->languages = \App\Registry::$config->languages;
 	}
 
 	/**

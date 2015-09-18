@@ -8,20 +8,23 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace Cms;
+namespace Cms\App\Config;
 
-abstract class Config extends \Mmi\Config {
+/**
+ * Klasa konfiguracji aplikacji CMS
+ */
+abstract class App extends \Mmi\App\Config\App {
 
 	/**
 	 * Konfiguracja autoryzacji CMS (LDAP)
-	 * @var \Cms\Config\Ldap
+	 * @var \Cms\App\Config\Ldap
 	 */
 	public $ldap;
 
 	public function __construct() {
-
+		//ładowanie konfiguracji rodzica
 		parent::__construct();
-		$this->ldap = new \Cms\Config\Ldap();
+		$this->ldap = new \Cms\App\Config\Ldap();
 	}
 
 }

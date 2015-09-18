@@ -8,7 +8,7 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace Cms\Config;
+namespace Cms\App\Config;
 
 /**
  * Klasa konfiguracji routera
