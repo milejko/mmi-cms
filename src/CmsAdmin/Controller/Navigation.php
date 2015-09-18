@@ -1,0 +1,64 @@
+<?php
+
+/**
+ * Mmi Framework (https://bitbucket.org/mariuszmilejko/mmicms/)
+ * 
+ * @link       https://bitbucket.org/mariuszmilejko/mmicms/
+ * @copyright  Copyright (c) 2010-2015 Mariusz Miłejko (http://milejko.com)
+ * @license    http://milejko.com/new-bsd.txt New BSD License
+ */
+
+namespace CmsAdmin\Controller;
+
+class Navigation extends Action {
+
+	public function indexAction() {
+		$config = new \Mmi\Navigation\Config();
+		\Cms\Model\Navigation::decorateConfiguration($config);
+		$this->view->navigation = $config->findById($this->id, true);
+	}
+
+	public function editAction() {
+		$navRecord = new \Cms\Orm\Navigation\Record($this->id);
+		switch ($this->type) {
+			case 'link':
+				$form = new \CmsAdmin\Form\Page\Link($navRecord);
+				break;
+			case 'folder':
+				$form = new \CmsAdmin\Form\Page\Folder($navRecord);
+				break;
+			case 'simple':
+				$form = new \CmsAdmin\Form\Page\Article($navRecord);
+				break;
+			default:
+				$form = new \CmsAdmin\Form\Page\Cms($navRecord);
+				break;
+		}
+		if ($form->isSaved()) {
+			$this->getResponse()->redirect('cmsAdmin', 'navigation', 'index', ['id' => $navRecord->parentId]);
+		}
+		$this->view->pageForm = $form;
+	}
+
+	/**
+	 * Usuwanie elementu
+	 */
+	public function deleteAction() {
+		/* @var $record \Cms\Orm\Navigation\Record */
+		$record = \Cms\Orm\Navigation\Query::factory()->findPk($this->id);
+		if ($record !== null && $record->delete()) {
+			$this->getHelperMessenger()->addMessage('Poprawnie usunięto element nawigacyjny', true);
+		}
+		$this->getResponse()->redirect('cmsAdmin', 'navigation', 'index', ['id' => $record->parentId]);
+	}
+
+	public function sortAction() {
+		$this->getResponse()->setTypePlain();
+		if (!$this->getPost()->__get('navigation-item')) {
+			return $this->view->getTranslate()->_('Przenoszenie nie powiodło się');
+		}
+		\Cms\Model\Navigation::sortBySerial($this->getPost()->__get('navigation-item'));
+		return '';
+	}
+
+}
