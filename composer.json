@@ -1,8 +1,7 @@
 {
 	"name": "mmi/mmi-cms",
-	"type": "library",
 	"description": "CMS for MMi Framework",
-	"keywords": ["cms, mmi, framework"],
+	"keywords": ["cms", "mmi", "framework"],
 	"license": "MIT",
 	"authors": [
 		{
@@ -22,5 +21,12 @@
 		"php": ">=5.4.0",
 		"mmi/mmi": "dev-master",
 		"phpmailer/phpmailer": "*"
+	},
+	"autoload": {
+		"psr-4": {
+			"Cms\\": "src/Cms",
+			"CmsAdmin\\": "src/CmsAdmin"
+		}
 	}
+
 }
