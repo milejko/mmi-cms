@@ -57,31 +57,31 @@
 			<li id="item-file-{$file->id}" class="item">
 				<div class="img-center">
 				{if $file->mimeType == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'} {*xlsx*}
-					<img src="{$baseUrl}/default/file/images/types/xlsx-{if $imgIns}32{else}48{/if}.png" alt="Microsoft Office - OOXML - Spreadsheet" />
+					<img src="{$baseUrl}/resource/cmsAdmin/images/types/xlsx-{if $imgIns}32{else}48{/if}.png" alt="Microsoft Office - OOXML - Spreadsheet" />
 				{elseif $file->mimeType == 'application/vnd.ms-excel'} {*xls*}
-					<img src="{$baseUrl}/default/file/images/types/xls-{if $imgIns}32{else}48{/if}.png" alt="Microsoft Excel Sheet File" />
+					<img src="{$baseUrl}/resource/cmsAdmin/images/types/xls-{if $imgIns}32{else}48{/if}.png" alt="Microsoft Excel Sheet File" />
 				{elseif $file->mimeType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'} {*docx*}
-					<img src="{$baseUrl}/default/file/images/types/docx-{if $imgIns}32{else}48{/if}.png" alt="Microsoft Office - OOXML - Document" />
+					<img src="{$baseUrl}/resource/cmsAdmin/images/types/docx-{if $imgIns}32{else}48{/if}.png" alt="Microsoft Office - OOXML - Document" />
 				{elseif $file->mimeType == 'application/msword'} {*doc*}
-					<img src="{$baseUrl}/default/file/images/types/doc-{if $imgIns}32{else}48{/if}.png" alt="Microsoft Word Document" />
+					<img src="{$baseUrl}/resource/cmsAdmin/images/types/doc-{if $imgIns}32{else}48{/if}.png" alt="Microsoft Word Document" />
 				{elseif $file->mimeType == 'application/vnd.openxmlformats-officedocument.presentationml.presentation'} {*pptx*}
-					<img src="{$baseUrl}/default/file/images/types/pptx-{if $imgIns}32{else}48{/if}.png" alt="Microsoft Office - OOXML - Presentation" />
+					<img src="{$baseUrl}/resource/cmsAdmin/images/types/pptx-{if $imgIns}32{else}48{/if}.png" alt="Microsoft Office - OOXML - Presentation" />
 				{elseif $file->mimeType == 'application/vnd.ms-powerpoint'} {*ppt*}
-					<img src="{$baseUrl}/default/file/images/types/ppt-{if $imgIns}32{else}48{/if}.png" alt="Microsoft PowerPoint Presentation" />
+					<img src="{$baseUrl}/resource/cmsAdmin/images/types/ppt-{if $imgIns}32{else}48{/if}.png" alt="Microsoft PowerPoint Presentation" />
 				{elseif $file->mimeType == 'text/csv'} {*csv*}
-					<img src="{$baseUrl}/default/file/images/types/csv-{if $imgIns}32{else}48{/if}.png" alt="Comma-Seperated Values" />
+					<img src="{$baseUrl}/resource/cmsAdmin/images/types/csv-{if $imgIns}32{else}48{/if}.png" alt="Comma-Seperated Values" />
 				{elseif $file->mimeType == 'application/pdf'} {*pdf*}
-					<img src="{$baseUrl}/default/file/images/types/pdf-{if $imgIns}32{else}48{/if}.png" alt="Adobe Portable Document Format" />
+					<img src="{$baseUrl}/resource/cmsAdmin/images/types/pdf-{if $imgIns}32{else}48{/if}.png" alt="Adobe Portable Document Format" />
 				{elseif $file->mimeType == 'application/rtf'} {*rtf*}
-					<img src="{$baseUrl}/default/file/images/types/rtf-{if $imgIns}32{else}48{/if}.png" alt="Rich Text Format" />
+					<img src="{$baseUrl}/resource/cmsAdmin/images/types/rtf-{if $imgIns}32{else}48{/if}.png" alt="Rich Text Format" />
 				{elseif $file->mimeType == 'application/zip'} {*zip*}
-					<img src="{$baseUrl}/default/file/images/types/zip-{if $imgIns}32{else}48{/if}.png" alt="Zip Archive" />
+					<img src="{$baseUrl}/resource/cmsAdmin/images/types/zip-{if $imgIns}32{else}48{/if}.png" alt="Zip Archive" />
 				{elseif $file->mimeType == 'application/xml'} {*xml*}
-					<img src="{$baseUrl}/default/file/images/types/xml-{if $imgIns}32{else}48{/if}.png" alt="XML - Extensible Markup Language" />
+					<img src="{$baseUrl}/resource/cmsAdmin/images/types/xml-{if $imgIns}32{else}48{/if}.png" alt="XML - Extensible Markup Language" />
 				{elseif $file->mimeType == 'text/plain'} {*txt*}
-					<img src="{$baseUrl}/default/file/images/types/txt-{if $imgIns}32{else}48{/if}.png" alt="Text File" /> 
+					<img src="{$baseUrl}/resource/cmsAdmin/images/types/txt-{if $imgIns}32{else}48{/if}.png" alt="Text File" /> 
 				{elseif $file->mimeType == 'audio/mpeg'} {*mp3*}
-					<img src="{$baseUrl}/default/file/images/types/mp3-{if $imgIns}32{else}48{/if}.png" alt="Music File" />
+					<img src="{$baseUrl}/resource/cmsAdmin/images/types/mp3-{if $imgIns}32{else}48{/if}.png" alt="Music File" />
 				{/if}
 				</div>
 				{$file->original|truncate:32}<br />

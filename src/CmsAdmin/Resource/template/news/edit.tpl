@@ -1,4 +1,4 @@
-{headScript()->appendFile($baseUrl . '/resource/cms/js/news.js')}
+{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/news.js')}
 <div class="content-box">
 	<div class="content-box-header">
 		<h3>{if !$request->id}{#Dodawanie#}{else}{#Edycja#}{/if} {#aktualności#}</h3>

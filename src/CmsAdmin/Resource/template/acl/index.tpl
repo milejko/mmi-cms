@@ -1,4 +1,4 @@
-{headScript()->appendFile($baseUrl . '/resource/cms/js/acl.js')}
+{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/acl.js')}
 <div class="content-box column-left">
 	<div class="content-box-header">
 		<h3>{#Role użytkowników#}</h3>

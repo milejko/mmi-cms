@@ -23,8 +23,8 @@ class DateTimePicker extends \Cms\Form\Element\DatePicker {
 		$dateEnd = isset($this->_options['dateEnd']) ? $this->_options['dateEnd'] : 'false';
 		$datepicker = isset($this->_options['datepicker']) ? $this->_options['datepicker'] : 'true';
 		$view->headLink()->appendStylesheet($view->baseUrl . '/resource/cms/css/datetimepicker.css');
-		$view->headScript()->prependFile($view->baseUrl . '/resource/cms/js/jquery/jquery.js');
-		$view->headScript()->appendFile($view->baseUrl . '/resource/cms/js/jquery/datetimepicker.js');
+		$view->headScript()->prependFile($view->baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js');
+		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/jquery/datetimepicker.js');
 		$id = $this->getOption('id');
 		$view->headScript()->appendScript("$(document).ready(function () {
 				$('#$id').datetimepicker({'lang':'pl', step: 15, dateStart: '$dateStart', dateEnd: '$dateEnd', datepicker: '$datepicker', format:'$format', validateOnBlur: true, closeOnDateSelect: false});

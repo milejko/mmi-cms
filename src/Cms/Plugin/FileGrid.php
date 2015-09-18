@@ -28,31 +28,31 @@ class FileGrid extends \Mmi\Grid {
 			'value' => '{if ($rowData->class ==\'image\')}<img src="{thumb($rowData, \'scaley\', \'30\')}" />{else}' .
 			'{$mime = \'%mimeType%\'}' .
 			'{if $mime == \'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\'}' .
-			'	<img src="{$baseUrl}/default/file/images/types/xlsx-32.png" alt="Microsoft Office - OOXML - Spreadsheet" />' .
+			'	<img src="{$baseUrl}/resource/cmsAdmin/images/types/xlsx-32.png" alt="Microsoft Office - OOXML - Spreadsheet" />' .
 			'{elseif $mime == \'application/vnd.ms-excel\'}' .
-			'	<img src="{$baseUrl}/default/file/images/types/xls-32.png" alt="Microsoft Excel Sheet File" />' .
+			'	<img src="{$baseUrl}/resource/cmsAdmin/images/types/xls-32.png" alt="Microsoft Excel Sheet File" />' .
 			'{elseif $mime == \'application/vnd.openxmlformats-officedocument.wordprocessingml.document\'}' .
-			'	<img src="{$baseUrl}/default/file/images/types/docx-32.png" alt="Microsoft Office - OOXML - Document" />' .
+			'	<img src="{$baseUrl}/resource/cmsAdmin/images/types/docx-32.png" alt="Microsoft Office - OOXML - Document" />' .
 			'{elseif $mime == \'application/msword\'}' .
-			'	<img src="{$baseUrl}/default/file/images/types/doc-32.png" alt="Microsoft Word Document" />' .
+			'	<img src="{$baseUrl}/resource/cmsAdmin/images/types/doc-32.png" alt="Microsoft Word Document" />' .
 			'{elseif $mime == \'application/vnd.openxmlformats-officedocument.presentationml.presentation\'}' .
-			'	<img src="{$baseUrl}/default/file/images/types/pptx-32.png" alt="Microsoft Office - OOXML - Presentation" />' .
+			'	<img src="{$baseUrl}/resource/cmsAdmin/images/types/pptx-32.png" alt="Microsoft Office - OOXML - Presentation" />' .
 			'{elseif $mime == \'application/vnd.ms-powerpoint\'}' .
-			'	<img src="{$baseUrl}/default/file/images/types/ppt-32.png" alt="Microsoft PowerPoint Presentation" />' .
+			'	<img src="{$baseUrl}/resource/cmsAdmin/images/types/ppt-32.png" alt="Microsoft PowerPoint Presentation" />' .
 			'{elseif $mime == \'text/csv\'}' .
-			'	<img src="{$baseUrl}/default/file/images/types/csv-32.png" alt="Comma-Seperated Values" />' .
+			'	<img src="{$baseUrl}/resource/cmsAdmin/images/types/csv-32.png" alt="Comma-Seperated Values" />' .
 			'{elseif $mime == \'application/pdf\'}' .
-			'	<img src="{$baseUrl}/default/file/images/types/pdf-32.png" alt="Adobe Portable Document Format" />' .
+			'	<img src="{$baseUrl}/resource/cmsAdmin/images/types/pdf-32.png" alt="Adobe Portable Document Format" />' .
 			'{elseif $mime == \'application/rtf\'}' .
-			'	<img src="{$baseUrl}/default/file/images/types/rtf-32.png" alt="Rich Text Format" />' .
+			'	<img src="{$baseUrl}/resource/cmsAdmin/images/types/rtf-32.png" alt="Rich Text Format" />' .
 			'{elseif $mime == \'application/zip\'}' .
-			'	<img src="{$baseUrl}/default/file/images/types/zip-32.png" alt="Zip Archive" />' .
+			'	<img src="{$baseUrl}/resource/cmsAdmin/images/types/zip-32.png" alt="Zip Archive" />' .
 			'{elseif $mime == \'application/xml\'}' .
-			'	<img src="{$baseUrl}/default/file/images/types/xml-32.png" alt="XML - Extensible Markup Language" />' .
+			'	<img src="{$baseUrl}/resource/cmsAdmin/images/types/xml-32.png" alt="XML - Extensible Markup Language" />' .
 			'{elseif $mime == \'text/plain\'}' .
-			'	<img src="{$baseUrl}/default/file/images/types/txt-32.png" alt="Text File" />' .
+			'	<img src="{$baseUrl}/resource/cmsAdmin/images/types/txt-32.png" alt="Text File" />' .
 			'{elseif $mime == \'audio/mpeg\'}' .
-			'	<img src="{$baseUrl}/default/file/images/types/mp3-32.png" alt="Music File" />' .
+			'	<img src="{$baseUrl}/resource/cmsAdmin/images/types/mp3-32.png" alt="Music File" />' .
 			'{/if}' .
 			'{/if}'
 		]);

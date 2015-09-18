@@ -1,6 +1,6 @@
-{headScript()->appendFile($baseUrl . '/resource/cms/js/jquery/jquery.js')}
-{headScript()->appendFile($baseUrl . '/resource/cms/js/flot.js')}
-{headScript()->appendFile($baseUrl . '/resource/cms/js/tooltip.js')}
+{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js')}
+{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/flot.js')}
+{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/tooltip.js')}
 {headLink()->appendStylesheet($baseUrl . '/default/cms/css/stat.css')}
 <script type="text/javascript">
 	{$dailyChart}

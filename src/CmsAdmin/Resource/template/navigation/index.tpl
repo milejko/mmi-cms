@@ -1,6 +1,6 @@
-{headScript()->appendFile($baseUrl . '/resource/cms/js/jquery/jquery.js')}
-{headScript()->appendFile($baseUrl . '/resource/cms/js/jquery/ui.js')}
-{headScript()->appendFile($baseUrl . '/resource/cms/js/navigation.js')}
+{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js')}
+{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/jquery/ui.js')}
+{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/navigation.js')}
 <div class="content-box">
 	<div class="content-box-header">
 		<h3>{#Menu serwisu#}</h3>

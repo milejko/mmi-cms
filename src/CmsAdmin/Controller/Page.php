@@ -37,9 +37,9 @@ class Page extends Action {
 		$this->view->widgets = \Cms\Orm\Page\Widget\Query::active()->find();
 
 		//skrypty js
-		$this->view->headScript()->prependFile($this->view->baseUrl . '/resource/cms/js/jquery/jquery.js');
-		$this->view->headScript()->appendFile($this->view->baseUrl . '/resource/cms/js/jquery/ui.js');
-		$this->view->headScript()->appendFile($this->view->baseUrl . '/resource/cms/js/page.js');
+		$this->view->headScript()->prependFile($this->view->baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js');
+		$this->view->headScript()->appendFile($this->view->baseUrl . '/resource/cmsAdmin/js/jquery/ui.js');
+		$this->view->headScript()->appendFile($this->view->baseUrl . '/resource/cmsAdmin/js/page.js');
 
 		//css'y
 		$this->view->headLink()->appendStyleSheet($this->view->baseUrl . '/default/cms/css/page.css');
