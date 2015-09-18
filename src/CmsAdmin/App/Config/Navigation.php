@@ -8,7 +8,7 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace CmsAdmin\Config;
+namespace CmsAdmin\App\Config;
 
 class Navigation extends \Mmi\Navigation\Config {
 
