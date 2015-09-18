@@ -1,5 +1,5 @@
 {
-	"name": "mmi/cms",
+	"name": "mmi/mmi-cms",
 	"type": "library",
 	"description": "CMS for MMi Framework",
 	"keywords": ["cms, mmi, framework"],
@@ -28,8 +28,5 @@
 		"php": ">=5.4.0",
 		"mmi/mmi": "dev-master",
 		"phpmailer/phpmailer": "*"
-	},
-	"require-dev": {
-		"monolog/monolog": "~1.11"
 	}
 }
