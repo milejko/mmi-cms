@@ -1,6 +1,6 @@
 {
 	"name": "mmi/mmi-cms",
-	"description": "CMS for MMi Framework",
+	"description": "The CMS written with MMi Framework",
 	"keywords": ["cms", "mmi", "framework"],
 	"license": "MIT",
 	"authors": [
