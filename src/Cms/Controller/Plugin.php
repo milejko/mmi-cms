@@ -37,14 +37,6 @@ class Plugin extends \Mmi\Controller\Plugin\PluginAbstract {
 	public function preDispatch(\Mmi\Controller\Request $request) {
 		//obsługa nieodnalezionych komponentów i nieprawidłowych języków
 		$this->_handleNotFoundForward($request);
-
-		//ustawianie sesji
-		if (\App\Registry::$config->session->name) {
-			//ustawia ID sesji jeśli jawnie podana w requescie
-			$request->sessionId !== null ? \Mmi\Session::setId($request->sessionId) : null;
-			\Mmi\Session::start(\App\Registry::$config->session);
-		}
-
 		//ustawianie widoku
 		$this->_viewSetup($request);
 

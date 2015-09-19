@@ -10,6 +10,9 @@
 
 namespace Cms\App;
 
+/**
+ * Klasa rejestru aplikacji CMS
+ */
 abstract class Registry extends \Mmi\App\Registry {
 
 	/**
@@ -23,18 +26,6 @@ abstract class Registry extends \Mmi\App\Registry {
 	 * @var \Mmi\Auth
 	 */
 	public static $auth;
-
-	/**
-	 * Konfiguracja
-	 * @var \App\Config\Local
-	 */
-	public static $config;
-
-	/**
-	 * Obiekt adaptera bazodanowego
-	 * @var \Mmi\Db\Adapter\Pdo\PdoAbstract
-	 */
-	public static $db;
 
 	/**
 	 * Obiekt navigacji

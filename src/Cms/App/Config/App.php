@@ -21,24 +21,35 @@ abstract class App extends \Mmi\App\Config\App {
 	 */
 	public $ldap;
 
+	/**
+	 * Konfiguracja nawigatora
+	 * @var \Mmi\Navigation\Config
+	 */
+	public $navigation;
+
 	public function __construct() {
-
-		//ładowanie konfiguracji rodzica
+		//ładowanie konfiguracji MMi
 		parent::__construct();
-
+		
+		//konfiguracja LDAP
 		$this->ldap = new \Cms\App\Config\Ldap();
-
+		
+		//konfiguracja pluginów
 		$this->plugins = ['\Cms\Controller\Plugin'];
 
-		//moduł + kontroler index + akcja index np. /news
-		$cmsRoutes = new \Cms\App\Config\Router();
-
 		//dodawanie rout CMS
-		$this->router->setRoutes($cmsRoutes->toArray());
+		$this->router->setRoutes((new \Cms\App\Config\Router())->toArray());
 		
+		//nazwa sesji
+		$this->session->name = 'mmi-cms';
+
 		//konfiguracja nawigatora
+		$this->navigation = new \Mmi\Navigation\Config();
+		//dodawanie nawigatora CMS
 		$this->navigation->addElement(\CmsAdmin\App\Config\Navigation::getMenu());
 
+		//konfiguracja bazy danych
+		$this->db = new \Mmi\Db\Config();
 		$this->db->driver = 'sqlite';
 		$this->db->host = BASE_PATH . '/var/cms-db.sqlite';
 	}
