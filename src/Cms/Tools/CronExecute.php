@@ -7,14 +7,25 @@
  * @copyright  Copyright (c) 2010-2015 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
-//określanie ścieżki
-define('BASE_PATH', realpath(dirname(__FILE__) . '/../../../../'));
 
-//ładowanie autoloadera aplikacji
-require BASE_PATH . '/app/autoload.php';
+namespace Cms\Tools;
 
-//powołanie i uruchomienie aplikacji
-$application = new \Mmi\App('\Mmi\App\BootstrapCli');
-$application->run();
+//kalkulacja ścieżki
+foreach ([__DIR__ . '/..', __DIR__ . '/../../..', __DIR__ . '/../../../../../..'] as $path) {
+	if (file_exists($path . '/vendor/mmi')) {
+		include $path . '/vendor/mmi/mmi/src/Mmi/Tools/CliAbstract.php';
+	}
+}
 
-Cms\Model\Cron::run();
+/**
+ * Usuwa pliki bez powiązań w strukturze
+ */
+class CronExecute extends \Mmi\Tools\CliAbstract {
+
+	public function run() {
+		\Cms\Model\Cron::run();
+	}
+
+}
+
+new CronExecute();

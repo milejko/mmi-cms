@@ -8,10 +8,14 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace Mmi\Tools;
+namespace Cms\Tools;
 
-//nie ma tu jeszcze autoloadera ładowanie CliAbstract
-require_once '../../Core/Tools/CliAbstract.php';
+//kalkulacja ścieżki
+foreach ([__DIR__ . '/..', __DIR__ . '/../../..', __DIR__ . '/../../../../../..'] as $path) {
+	if (file_exists($path . '/vendor/mmi')) {
+		include $path . '/vendor/mmi/mmi/src/Mmi/Tools/CliAbstract.php';
+	}
+}
 
 /**
  * Usuwa pliki bez powiązań w strukturze
@@ -29,7 +33,7 @@ class FileGarbageCollector extends \Mmi\Tools\CliAbstract {
 	 * @var integer
 	 */
 	protected $_count = 0;
-	
+
 	/**
 	 * Ilość plików odnalezionych
 	 * @var integer
@@ -101,7 +105,7 @@ class FileGarbageCollector extends \Mmi\Tools\CliAbstract {
 		ob_flush();
 		flush();
 	}
-	
+
 }
 
 //nowy obiekt kolektora śmieci
