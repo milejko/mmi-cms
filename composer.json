@@ -19,8 +19,8 @@
 	],
 	"require": {
 		"php": ">=5.4.0",
-		"mmi/mmi": "dev-master",
-		"phpmailer/phpmailer": "*"
+		"mmi/mmi": "~3.0",
+		"phpmailer/phpmailer": "~5.2"
 	},
 	"autoload": {
 		"psr-4": {
