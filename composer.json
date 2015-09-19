@@ -25,7 +25,8 @@
 	"autoload": {
 		"psr-4": {
 			"Cms\\": "src/Cms",
-			"CmsAdmin\\": "src/CmsAdmin"
+			"CmsAdmin\\": "src/CmsAdmin",
+			"App\\": "src/App"
 		}
 	}
 

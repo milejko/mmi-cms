@@ -116,24 +116,21 @@ class Plugin extends \Mmi\Controller\Plugin\PluginAbstract {
 	 */
 	protected function _handleNotFoundForward(\Mmi\Controller\Request $request) {
 		//niepoprawny język
-		if ($request->__get('lang') && !in_array($request->__get('lang'), \App\Registry::$config->languages)) {
-			\Mmi\Controller\Front::getInstance()->getResponse()->setCodeNotFound();
-			//wyłączanie języka
-			unset($request->lang);
-			//ustawianie języka do domyślny
-			if (isset(\App\Registry::$config->languages[0])) {
-				$request->lang = \App\Registry::$config->languages[0];
-			}
-			//ustawianie błędu
-			$this->_setNotFoundRequest($request);
+		if (!$request->__get('lang') || in_array($request->__get('lang'), \App\Registry::$config->languages)) {
+			return;
 		}
-		//brak komponentu (moduł + kontroler + akcja)
-		$components = \Mmi\Controller\Front::getInstance()->getStructure('module');
-		if (!isset($components[$request->getModuleName()][$request->getControllerName()][$request->getActionName()])) {
-			\Mmi\Controller\Front::getInstance()->getResponse()->setCodeNotFound();
-			//ustawianie błędu
-			$this->_setNotFoundRequest($request);
+		//wyłączanie języka
+		unset($request->lang);
+		//ustawianie języka na domyślny
+		if (isset(\App\Registry::$config->languages[0])) {
+			$request->lang = \App\Registry::$config->languages[0];
 		}
+		//ustawianie błędu w request
+		$request->setModuleName('mmi')
+			->setControllerName('index')
+			->setActionName('error');
+		//ustawianie kodu odpowiedzi na 404
+		\Mmi\Controller\Front::getInstance()->getResponse()->setCodeNotFound();
 	}
 
 	/**
@@ -185,18 +182,6 @@ class Plugin extends \Mmi\Controller\Plugin\PluginAbstract {
 			->setParams(['unauthorized' => 1]);
 		//ustawianie kodu odpowiedzi na 403
 		\Mmi\Controller\Front::getInstance()->getResponse()->setCodeForbidden();
-	}
-
-	/**
-	 * Ustawia request na brak strony
-	 * @param \Mmi\Controller\Request $request
-	 */
-	protected function _setNotFoundRequest(\Mmi\Controller\Request $request) {
-		$request->setModuleName('mmi')
-			->setControllerName('index')
-			->setActionName('error');
-		//ustawianie kodu odpowiedzi na 404
-		\Mmi\Controller\Front::getInstance()->getResponse()->setCodeNotFound();
 	}
 
 }
