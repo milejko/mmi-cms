@@ -72,7 +72,7 @@ class Mail {
 		//serializacja załączników
 		$mail->attachements = serialize($files);
 		//przepychanie zmiennych do widoku
-		$view = \Mmi\Controller\Front::getInstance()->getView();
+		$view = \Mmi\App\FrontController::getInstance()->getView();
 		foreach ($params as $key => $value) {
 			$view->$key = $value;
 		}

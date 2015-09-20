@@ -13,7 +13,7 @@ namespace Cms\Form;
 /**
  * Formularz logowania do CMS
  */
-class Login extends \Mmi\Form {
+class Login extends \Mmi\Form\Component {
 
 	public function init() {
 		$this->addElementText('username')

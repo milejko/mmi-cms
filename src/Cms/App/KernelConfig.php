@@ -8,16 +8,16 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace Cms\App\Config;
+namespace Cms\App;
 
 /**
  * Klasa konfiguracji aplikacji CMS
  */
-abstract class App extends \Mmi\App\Config\App {
+abstract class KernelConfig extends \Mmi\App\KernelConfig {
 
 	/**
 	 * Konfiguracja autoryzacji CMS (LDAP)
-	 * @var \Cms\App\Config\Ldap
+	 * @var \Cms\App\LdapConfig
 	 */
 	public $ldap;
 
@@ -32,13 +32,13 @@ abstract class App extends \Mmi\App\Config\App {
 		parent::__construct();
 		
 		//konfiguracja LDAP
-		$this->ldap = new \Cms\App\Config\Ldap();
+		$this->ldap = new \Cms\App\LdapConfig();
 		
 		//konfiguracja pluginów
-		$this->plugins = ['\Cms\Controller\Plugin'];
+		$this->plugins = ['\Cms\App\FrontControllerPlugin'];
 
 		//dodawanie rout CMS
-		$this->router->setRoutes((new \Cms\App\Config\Router())->toArray());
+		$this->router->setRoutes((new \Cms\App\RouterConfig())->toArray());
 		
 		//nazwa sesji
 		$this->session->name = 'mmi-cms';

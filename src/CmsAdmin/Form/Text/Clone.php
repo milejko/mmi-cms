@@ -13,14 +13,14 @@ namespace CmsAdmin\Form\Text;
 /**
  * Formularz kopiowania tekstów statycznych
  */
-class Copy extends \Mmi\Form {
+class Copy extends \Mmi\Form\Component {
 
 	public function init() {
 
 		$langMultiOptions = [];
 		//wybór z dostępnych języków
 		foreach (\App\Registry::$config->languages as $lang) {
-			if ($lang == \Mmi\Controller\Front::getInstance()->getRequest()->lang) {
+			if ($lang == \Mmi\App\FrontController::getInstance()->getRequest()->lang) {
 				continue;
 			}
 			$langMultiOptions[$lang] = $lang;
@@ -41,7 +41,7 @@ class Copy extends \Mmi\Form {
 	 * @return boolean
 	 */
 	public function beforeSave() {
-		$lang = \Mmi\Controller\Front::getInstance()->getRequest()->lang;
+		$lang = \Mmi\App\FrontController::getInstance()->getRequest()->lang;
 		foreach (\Cms\Orm\Text\Query::byLang($this->source)->find() as $record) {
 			/* @var $record \Cms\Orm\Text\Record */
 			if (\Cms\Orm\Text\Query::byKeyLang($record->key, $lang)->findFirst() !== null) {

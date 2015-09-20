@@ -29,6 +29,7 @@
 			"App\\": "src/App"
 		}
 	},
+	"minimum-stability": "dev",
 	"extra": {
 		"branch-alias": {
 			"dev-master": "1.0-dev"

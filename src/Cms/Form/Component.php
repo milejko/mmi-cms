@@ -8,9 +8,9 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace Cms;
+namespace Cms\Form;
 
-abstract class Form extends \Mmi\Form {
+abstract class Component extends \Mmi\Form\Component {
 
 	/**
 	 * Nazwa obiektu do przypięcia plików

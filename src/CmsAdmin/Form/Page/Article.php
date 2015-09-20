@@ -13,7 +13,7 @@ namespace CmsAdmin\Form\Page;
 /**
  * Formularz artykułów cms w nawigatorze
  */
-class Article extends \Cms\Form {
+class Article extends \Cms\Form\Component {
 
 	public function init() {
 		//menu label
@@ -72,7 +72,7 @@ class Article extends \Cms\Form {
 		//pozycja w drzewie
 		$this->addElementSelect('parentId')
 			->setLabel('Element nadrzędny')
-			->setValue(\Mmi\Controller\Front::getInstance()->getRequest()->parent)
+			->setValue(\Mmi\App\FrontController::getInstance()->getRequest()->parent)
 			->setMultiOptions(\Cms\Model\Navigation::getMultiOptions());
 
 		$this->addElementDateTimePicker('dateStart')

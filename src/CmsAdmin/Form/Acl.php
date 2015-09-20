@@ -10,11 +10,11 @@
 
 namespace CmsAdmin\Form;
 
-class Acl extends \Mmi\Form {
+class Acl extends \Mmi\Form\Component {
 
 	public function init() {
 
-		$this->_record->cmsRoleId = \Mmi\Controller\Front::getInstance()->getRequest()->roleId;
+		$this->_record->cmsRoleId = \Mmi\App\FrontController::getInstance()->getRequest()->roleId;
 
 		$this->addElementSelect('object')
 			->setMultiOptions(array_merge(['' => '---'], \CmsAdmin\Model\Reflection::getOptionsWildcard()));

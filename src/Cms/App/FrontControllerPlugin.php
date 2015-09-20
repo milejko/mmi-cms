@@ -8,12 +8,12 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace Cms\Controller;
+namespace Cms\App;
 
 /**
  * Plugin front kontrolera (hooki)
  */
-class Plugin extends \Mmi\Controller\Plugin\PluginAbstract {
+class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 
 	/**
 	 * Hook przed routingiem
@@ -27,7 +27,7 @@ class Plugin extends \Mmi\Controller\Plugin\PluginAbstract {
 			\App\Registry::$cache->save($routes = \Cms\Orm\Route\Query::active()->find(), 'Mmi-Route', 0);
 		}
 		//aktualizacja konfiguracji routera  routy CMS
-		\Cms\Model\Route::updateRouterConfig(\Mmi\Controller\Front::getInstance()->getRouter()->getConfig(), $routes);
+		\Cms\Model\Route::updateRouterConfig(\Mmi\App\FrontController::getInstance()->getRouter()->getConfig(), $routes);
 	}
 
 	/**
@@ -41,11 +41,11 @@ class Plugin extends \Mmi\Controller\Plugin\PluginAbstract {
 		$this->_viewSetup($request);
 
 		//konfiguracja autoryzacji
-		$auth = new \Mmi\Auth();
+		$auth = new \Mmi\Security\Auth();
 		$auth->setSalt(\App\Registry::$config->salt);
 		$auth->setModelName(\App\Registry::$config->session->authModel ? \App\Registry::$config->session->authModel : '\Cms\Model\Auth');
 		\App\Registry::$auth = $auth;
-		\Mmi\Controller\Action\Helper\Action::getInstance()->setAuth($auth);
+		\Mmi\Controller\ActionPerformer::getInstance()->setAuth($auth);
 
 		//funkcja pamiętaj mnie realizowana poprzez cookie
 		$cookie = new \Mmi\Http\Cookie();
@@ -60,7 +60,7 @@ class Plugin extends \Mmi\Controller\Plugin\PluginAbstract {
 		}
 		//autoryzacja do widoku
 		if ($auth->hasIdentity()) {
-			\Mmi\Controller\Front::getInstance()->getView()->auth = $auth;
+			\Mmi\App\FrontController::getInstance()->getView()->auth = $auth;
 		}
 
 		//ustawienie acl
@@ -69,8 +69,8 @@ class Plugin extends \Mmi\Controller\Plugin\PluginAbstract {
 			\App\Registry::$cache->save($acl, 'Mmi-Acl', 0);
 		}
 		\App\Registry::$acl = $acl;
-		\Mmi\Controller\Action\Helper\Action::getInstance()->setAcl($acl);
-		\Mmi\Controller\Front::getInstance()->getView()->acl = $acl;
+		\Mmi\Controller\ActionPerformer::getInstance()->setAcl($acl);
+		\Mmi\App\FrontController::getInstance()->getView()->acl = $acl;
 
 		//zablokowane na ACL
 		if (!$acl->isAllowed($auth->getRoles(), strtolower($request->getModuleName() . ':' . $request->getControllerName() . ':' . $request->getActionName()))) {
@@ -91,7 +91,7 @@ class Plugin extends \Mmi\Controller\Plugin\PluginAbstract {
 			/* @var $config \App\Config\Navigation */
 			$config = \App\Registry::$config->navigation;
 			\Cms\Model\Navigation::decorateConfiguration($config);
-			$navigation = new \Mmi\Navigation($config);
+			$navigation = new \Mmi\Navigation\Component($config);
 			\App\Registry::$cache->save($navigation, 'Mmi-Navigation-' . $request->__get('lang'), 0);
 		}
 		$navigation->setup($request);
@@ -122,7 +122,7 @@ class Plugin extends \Mmi\Controller\Plugin\PluginAbstract {
 			->setControllerName('index')
 			->setActionName('error');
 		//ustawianie kodu odpowiedzi na 404
-		\Mmi\Controller\Front::getInstance()->getResponse()->setCodeNotFound();
+		\Mmi\App\FrontController::getInstance()->getResponse()->setCodeNotFound();
 	}
 
 	/**
@@ -131,7 +131,7 @@ class Plugin extends \Mmi\Controller\Plugin\PluginAbstract {
 	 */
 	protected function _viewSetup(\Mmi\Controller\Request $request) {
 		//ustawienie widoku
-		$view = \Mmi\Controller\Front::getInstance()->getView();
+		$view = \Mmi\App\FrontController::getInstance()->getView();
 		$base = $view->baseUrl;
 		$view->domain = \App\Registry::$config->host;
 		$view->languages = \App\Registry::$config->languages;
@@ -173,7 +173,7 @@ class Plugin extends \Mmi\Controller\Plugin\PluginAbstract {
 			->setActionName('error')
 			->setParams(['unauthorized' => 1]);
 		//ustawianie kodu odpowiedzi na 403
-		\Mmi\Controller\Front::getInstance()->getResponse()->setCodeForbidden();
+		\Mmi\App\FrontController::getInstance()->getResponse()->setCodeForbidden();
 	}
 
 }

@@ -88,7 +88,7 @@ class Record extends \Mmi\Orm\Record {
 	 */
 	public function save() {
 		//ustawianie domyślnego języka
-		$this->lang = \Mmi\Controller\Front::getInstance()->getRequest()->lang;
+		$this->lang = \Mmi\App\FrontController::getInstance()->getRequest()->lang;
 		//ustawienie rodzica
 		$this->parentId = $this->parentId !== null ? $this->parentId : 0;
 		return $this->_clearCache() && parent::save();
@@ -130,7 +130,7 @@ class Record extends \Mmi\Orm\Record {
 	 */
 	protected function _clearCache() {
 		\App\Registry::$cache->remove('Mmi-Navigation-');
-		\App\Registry::$cache->remove('Mmi-Navigation-' . \Mmi\Controller\Front::getInstance()->getRequest()->lang);
+		\App\Registry::$cache->remove('Mmi-Navigation-' . \Mmi\App\FrontController::getInstance()->getRequest()->lang);
 		\App\Registry::$cache->remove('Mmi-Acl');
 		return true;
 	}

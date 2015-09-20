@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Form;
 
-class Text extends \Mmi\Form {
+class Text extends \Mmi\Form\Component {
 
 	public function init() {
 

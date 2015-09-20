@@ -31,7 +31,7 @@ class Record extends \Mmi\Orm\Record {
 
 	public function _insert() {
 		$this->dateAdd = date('Y-m-d H:i:s');
-		$this->ip = \Mmi\Controller\Front::getInstance()->getEnvironment()->remoteAddress;
+		$this->ip = \Mmi\App\FrontController::getInstance()->getEnvironment()->remoteAddress;
 		$this->active = 1;
 		$auth = \App\Registry::$auth;
 		if ($auth->hasIdentity()) {

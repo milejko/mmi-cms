@@ -35,7 +35,7 @@ class Record extends \Mmi\Orm\Record {
 			}
 			$this->uri = $uri;
 		}
-		$this->lang = \Mmi\Controller\Front::getInstance()->getRequest()->lang;
+		$this->lang = \Mmi\App\FrontController::getInstance()->getRequest()->lang;
 		$this->dateModify = date('Y-m-d H:i:s');
 		return parent::save();
 	}

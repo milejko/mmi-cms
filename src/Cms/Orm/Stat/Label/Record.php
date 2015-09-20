@@ -19,7 +19,7 @@ class Record extends \Mmi\Orm\Record {
 	public $description;
 
 	protected function _insert() {
-		$this->lang = \Mmi\Controller\Front::getInstance()->getRequest()->lang;
+		$this->lang = \Mmi\App\FrontController::getInstance()->getRequest()->lang;
 		return parent::_insert();
 	}
 

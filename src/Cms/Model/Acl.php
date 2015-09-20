@@ -37,10 +37,10 @@ class Acl {
 
 	/**
 	 * Ustawianie ACL'a
-	 * @return \Mmi\Acl
+	 * @return \Mmi\Security\Acl
 	 */
 	public static function setupAcl() {
-		$acl = new \Mmi\Acl();
+		$acl = new \Mmi\Security\Acl();
 		$aclData = Orm\Acl\Query::factory()
 			->join('cms_role')->on('cms_role_id')
 			->find();

@@ -14,7 +14,7 @@ namespace CmsAdmin\Form;
  * Formularz odpowiedzi na kontakt
  * @method \Cms\Orm\Contact\Record getRecord()
  */
-class Contact extends \Mmi\Form {
+class Contact extends \Mmi\Form\Component {
 
 	public function init() {
 

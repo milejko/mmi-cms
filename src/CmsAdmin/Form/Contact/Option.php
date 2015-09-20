@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Form\Contact;
 
-class Option extends \Mmi\Form {
+class Option extends \Mmi\Form\Component {
 
 	public function init() {
 

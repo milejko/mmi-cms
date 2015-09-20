@@ -31,8 +31,8 @@ class Contact extends \Mmi\Controller\Action {
 			}
 			$namespace->unsetAll();
 			$this->getResponse()->redirectToUrl($link);
-		} elseif (\Mmi\Controller\Front::getInstance()->getEnvironment()->httpReferer) {
-			$namespace->referer = \Mmi\Controller\Front::getInstance()->getEnvironment()->httpReferer;
+		} elseif (\Mmi\App\FrontController::getInstance()->getEnvironment()->httpReferer) {
+			$namespace->referer = \Mmi\App\FrontController::getInstance()->getEnvironment()->httpReferer;
 		}
 	}
 

@@ -10,14 +10,14 @@
 
 namespace Cms\Form\Element;
 
-class DateTimePicker extends \Cms\Form\Element\DatePicker {
+class DateTimePicker extends \Cms\Form\Component\Element\DatePicker {
 
 	/**
 	 * Buduje pole
 	 * @return string
 	 */
 	public function fetchField() {
-		$view = \Mmi\Controller\Front::getInstance()->getView();
+		$view = \Mmi\App\FrontController::getInstance()->getView();
 		$format = isset($this->_options['format']) ? $this->_options['format'] : 'Y-m-d H:i';
 		$dateStart = isset($this->_options['dateStart']) ? $this->_options['dateStart'] : 'false';
 		$dateEnd = isset($this->_options['dateEnd']) ? $this->_options['dateEnd'] : 'false';

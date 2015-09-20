@@ -14,7 +14,7 @@ namespace CmsAdmin\Form\Page;
  * Formularz folderó w nawigatorze
  * @method \Cms\Orm\Navigation\Record getRecord()
  */
-class Folder extends \Cms\Form {
+class Folder extends \Cms\Form\Component {
 
 	public function init() {
 		//menu label
@@ -43,7 +43,7 @@ class Folder extends \Cms\Form {
 		//pozycja w drzewie
 		$this->addElementSelect('parentId')
 			->setLabel('Element nadrzędny')
-			->setValue(\Mmi\Controller\Front::getInstance()->getRequest()->parent)
+			->setValue(\Mmi\App\FrontController::getInstance()->getRequest()->parent)
 			->setMultiOptions(\Cms\Model\Navigation::getMultiOptions());
 
 		//optional url

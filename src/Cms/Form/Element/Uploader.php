@@ -51,7 +51,7 @@ class Uploader extends \Mmi\Form\Element\File {
 			$object = 'tmp-' . $object;
 			$objectId = \Mmi\Session::getNumericId();
 		}
-		return '<iframe frameborder="0" src="' . \Mmi\Controller\Front::getInstance()->getView()->url([
+		return '<iframe frameborder="0" src="' . \Mmi\App\FrontController::getInstance()->getView()->url([
 				'module' => 'cms',
 				'controller' => 'file',
 				'action' => 'uploader',

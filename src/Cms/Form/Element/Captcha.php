@@ -29,7 +29,7 @@ class Captcha extends \Mmi\Form\Element\ElementAbstract {
 		if (!$this->getValue()) {
 			$this->setValue(str_replace('"', '&quot;', $this->getOption('value')));
 		}
-		$view = \Mmi\Controller\Front::getInstance()->getView();
+		$view = \Mmi\App\FrontController::getInstance()->getView();
 		$html = '<div class="image"><img src="' . $view->url(['module' => 'cms', 'controller' => 'captcha', 'action' => 'index', 'name' => $this->_options['name']]) . '" alt="" /></div>';
 		$html .= '<div class="input"><input ';
 		$html .= 'type="text" ' . $this->_getHtmlOptions() . '/></div>';

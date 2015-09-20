@@ -24,7 +24,7 @@ class Record extends \Mmi\Orm\Record {
 	public function save() {
 		//data modyfikacji
 		$this->dateModify = date('Y-m-d H:i:s');
-		$this->lang = \Mmi\Controller\Front::getInstance()->getRequest()->lang;
+		$this->lang = \Mmi\App\FrontController::getInstance()->getRequest()->lang;
 		//usunięcie kompilantów
 		foreach (glob(BASE_PATH . '/var/compile/' . $this->lang . '_*.php') as $compilant) {
 			unlink($compilant);

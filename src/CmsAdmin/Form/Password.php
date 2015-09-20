@@ -14,7 +14,7 @@ namespace CmsAdmin\Form;
  * Formularz zmiany hasła w CMS
  * @method \Cms\Orm\Auth\Record getRecord()
  */
-class Password extends \Mmi\Form {
+class Password extends \Mmi\Form\Component {
 
 	public function init() {
 

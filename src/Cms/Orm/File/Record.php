@@ -141,7 +141,7 @@ class Record extends \Mmi\Orm\Record {
 		//plik źródłowy
 		$inputFile = $this->getRealPath();
 		//generowanie linku bazowego
-		$url = \Mmi\Controller\Front::getInstance()->getView()->url([], true, $absolute);
+		$url = \Mmi\App\FrontController::getInstance()->getView()->url([], true, $absolute);
 		//brzydki if, jak aplikacja odpalana jest z podkatalogu
 		if ($url === '/') {
 			$baseUrl = '/data';

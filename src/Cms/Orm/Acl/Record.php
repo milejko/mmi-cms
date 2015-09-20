@@ -37,7 +37,7 @@ class Record extends \Mmi\Orm\Record {
 
 	protected function _clearCache() {
 		\App\Registry::$cache->remove('Mmi-Navigation-');
-		\App\Registry::$cache->remove('Mmi-Navigation-' . \Mmi\Controller\Front::getInstance()->getRequest()->lang);
+		\App\Registry::$cache->remove('Mmi-Navigation-' . \Mmi\App\FrontController::getInstance()->getRequest()->lang);
 		\App\Registry::$cache->remove('Mmi-Acl');
 	}
 

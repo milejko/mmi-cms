@@ -17,7 +17,7 @@ class ColorPicker extends \Mmi\Form\Element\Text {
 	 * @return string
 	 */
 	public function fetchField() {
-		$view = \Mmi\Controller\Front::getInstance()->getView();
+		$view = \Mmi\App\FrontController::getInstance()->getView();
 		$view->headScript()->prependFile($view->baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/jquery/farbtastic.js');
 		$view->headScript()->appendScript('

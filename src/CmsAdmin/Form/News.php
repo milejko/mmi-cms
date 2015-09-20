@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Form;
 
-class News extends \Cms\Form {
+class News extends \Cms\Form\Component {
 
 	public function init() {
 

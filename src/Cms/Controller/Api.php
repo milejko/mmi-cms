@@ -29,9 +29,9 @@ class Api extends \Mmi\Controller\Action {
 				->setTypeJson();
 			$apiModel = $this->_getModelName($this->obj);
 			//serwer z autoryzacją HTTP
-			if (\Mmi\Controller\Front::getInstance()->getEnvironment()->authUser) {
+			if (\Mmi\App\FrontController::getInstance()->getEnvironment()->authUser) {
 				$apiModel .= '_Private';
-				$auth = new \Mmi\Auth();
+				$auth = new \Mmi\Security\Auth();
 				$auth->setModelName($apiModel);
 				//autoryzacja basic
 				$auth->httpAuth('Private API', 'Access denied!');
@@ -58,9 +58,9 @@ class Api extends \Mmi\Controller\Action {
 				'obj' => $this->obj,
 			];
 			//prywatny serwer
-			if (\Mmi\Controller\Front::getInstance()->getEnvironment()->authUser) {
+			if (\Mmi\App\FrontController::getInstance()->getEnvironment()->authUser) {
 				$apiModel .= '_Private';
-				$auth = new \Mmi\Auth();
+				$auth = new \Mmi\Security\Auth();
 				$auth->setModelName($apiModel);
 				$auth->httpAuth('Private API', 'Access denied!');
 				$wsdlParams['type'] = 'private';
@@ -94,7 +94,7 @@ class Api extends \Mmi\Controller\Action {
 				'obj' => $this->obj,
 			];
 			//serwer z autoryzacją (WSDL jest publiczny)
-			if ($this->type == 'private' || \Mmi\Controller\Front::getInstance()->getEnvironment()->authUser) {
+			if ($this->type == 'private' || \Mmi\App\FrontController::getInstance()->getEnvironment()->authUser) {
 				$apiModel .= '_Private';
 			}
 			//link do serwera SOAP
@@ -147,7 +147,7 @@ class Api extends \Mmi\Controller\Action {
 	 * @return boolean
 	 */
 	protected function _isSsl() {
-		return \Mmi\Controller\Front::getInstance()->getEnvironment()->httpSecure;
+		return \Mmi\App\FrontController::getInstance()->getEnvironment()->httpSecure;
 	}
 
 }

@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Form\Stat;
 
-class Object extends \Mmi\Form {
+class Object extends \Mmi\Form\Component {
 
 	public function init() {
 
@@ -24,7 +24,7 @@ class Object extends \Mmi\Form {
 			->setValue($this->getOption('year'))
 			->setMultiOptions([date('Y') - 1 => date('Y') - 1, date('Y') => date('Y')]);
 
-		$view = \Mmi\Controller\Front::getInstance()->getView();
+		$view = \Mmi\App\FrontController::getInstance()->getView();
 
 		$this->addElementSelect('month')
 			->setLabel('miesiąc')

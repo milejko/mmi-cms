@@ -10,7 +10,7 @@
 
 namespace Cms\Form;
 
-class Comment extends \Mmi\Form {
+class Comment extends \Mmi\Form\Component {
 
 	public function init() {
 		$this->_record->object = $this->getOption('object');

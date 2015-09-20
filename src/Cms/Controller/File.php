@@ -19,7 +19,7 @@ class File extends \Mmi\Controller\Action {
 	 * Funkcja dla użytkownika ładowana na końcu konstruktora
 	 */
 	public function init() {
-		\Mmi\Controller\Front::getInstance()->getResponse()->setHeader('X-UA-Compatible', 'IE=EmulateIE10', true);
+		\Mmi\App\FrontController::getInstance()->getResponse()->setHeader('X-UA-Compatible', 'IE=EmulateIE10', true);
 	}
 
 	/**
@@ -27,7 +27,7 @@ class File extends \Mmi\Controller\Action {
 	 * @return string
 	 */
 	public function listAction() {
-		\Mmi\Controller\Front::getInstance()->getResponse()->setHeader('Content-type', 'application/json');
+		\Mmi\App\FrontController::getInstance()->getResponse()->setHeader('Content-type', 'application/json');
 		if (!$this->object || !$this->objectId || !$this->hash || !$this->t) {
 			return '';
 		}

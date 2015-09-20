@@ -51,7 +51,7 @@ class DatePicker extends \Mmi\Form\Element\ElementAbstract {
 	 * @return string
 	 */
 	public function fetchField() {
-		$view = \Mmi\Controller\Front::getInstance()->getView();
+		$view = \Mmi\App\FrontController::getInstance()->getView();
 		$format = isset($this->_options['format']) ? $this->_options['format'] : 'Y-m-d';
 		$dateStart = isset($this->_options['dateStart']) ? $this->_options['dateStart'] : 'false';
 		$dateEnd = isset($this->_options['dateEnd']) ? $this->_options['dateEnd'] : 'false';

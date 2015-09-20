@@ -15,13 +15,13 @@ use \Cms\Orm;
 /**
  * Klasa autoryzacji
  */
-class Auth implements \Mmi\Auth\AuthInterface {
+class Auth implements \Mmi\Security\AuthInterface {
 
 	/**
 	 * Autoryzacja do CMS
 	 * @param string $identity
 	 * @param string $credential
-	 * @return \Mmi\Auth\Record
+	 * @return \Mmi\Security\AuthRecord
 	 */
 	public static function authenticate($identity, $credential) {
 		//błędna autoryzacja (brak aktywnego użytkownika)
@@ -91,11 +91,11 @@ class Auth implements \Mmi\Auth\AuthInterface {
 	 * Po poprawnej autoryzacji zapis danych i loga
 	 * zwraca rekord autoryzacji
 	 * @param \Cms\Orm\Auth\Record $record
-	 * @return \Mmi\Auth\Record
+	 * @return \Mmi\Security\AuthRecord
 	 */
 	protected static function _authSuccess(\Cms\Orm\Auth\Record $record) {
 		//zapis poprawnego logowania do rekordu
-		$record->lastIp = \Mmi\Controller\Front::getInstance()->getEnvironment()->remoteAddress;
+		$record->lastIp = \Mmi\App\FrontController::getInstance()->getEnvironment()->remoteAddress;
 		$record->lastLog = date('Y-m-d H:i:s');
 		$record->save();
 		//logowanie pozytywnej autoryzacji
@@ -107,7 +107,7 @@ class Auth implements \Mmi\Auth\AuthInterface {
 			'message' => 'LOGGED: ' . $record->username
 		]);
 		//nowy obiekt autoryzacji
-		$authRecord = new \Mmi\Auth\Record();
+		$authRecord = new \Mmi\Security\AuthRecord();
 		//ustawianie pól rekordu
 		$authRecord->id = $record->id;
 		$authRecord->name = $record->name;
@@ -184,7 +184,7 @@ class Auth implements \Mmi\Auth\AuthInterface {
 	 */
 	protected static function _updateUserFailedLogin($record) {
 		//zapis danych błędnego logowania znanego użytkownika
-		$record->lastFailIp = \Mmi\Controller\Front::getInstance()->getEnvironment()->remoteAddress;
+		$record->lastFailIp = \Mmi\App\FrontController::getInstance()->getEnvironment()->remoteAddress;
 		$record->lastFailLog = date('Y-m-d H:i:s');
 		$record->failLogCount = $record->failLogCount + 1;
 		$record->save();

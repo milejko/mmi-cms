@@ -35,7 +35,7 @@ class Record extends \Mmi\Orm\Record {
 		//data dodania
 		$this->dateAdd = date('Y-m-d H:i:s');
 		$this->signature = '~' . $this->signature;
-		$this->ip = \Mmi\Controller\Front::getInstance()->getEnvironment()->remoteAddress;
+		$this->ip = \Mmi\App\FrontController::getInstance()->getEnvironment()->remoteAddress;
 		//dane z autoryzacji
 		$auth = \App\Registry::$auth;
 		if ($auth->hasIdentity()) {

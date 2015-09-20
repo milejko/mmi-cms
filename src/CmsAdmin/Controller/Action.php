@@ -20,12 +20,12 @@ abstract class Action Extends \Mmi\Controller\Action {
 			$lang = \App\Registry::$config->languages[0];
 		}
 		unset($this->getRequest()->lang);
-		unset(\Mmi\Controller\Front::getInstance()->getRequest()->lang);
+		unset(\Mmi\App\FrontController::getInstance()->getRequest()->lang);
 		if ($lang !== null) {
-			\Mmi\Controller\Front::getInstance()->getRequest()->lang = $lang;
+			\Mmi\App\FrontController::getInstance()->getRequest()->lang = $lang;
 			$this->getRequest()->lang = $lang;
 		}
-		\Mmi\Controller\Front::getInstance()->getResponse()->setHeader('X-UA-Compatible', 'IE=EmulateIE10', true);
+		\Mmi\App\FrontController::getInstance()->getResponse()->setHeader('X-UA-Compatible', 'IE=EmulateIE10', true);
 	}
 
 }

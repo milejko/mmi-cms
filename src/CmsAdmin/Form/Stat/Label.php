@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Form\Stat;
 
-class Label extends \Mmi\Form {
+class Label extends \Mmi\Form\Component {
 
 	public function init() {
 

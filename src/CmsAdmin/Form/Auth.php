@@ -14,7 +14,7 @@ namespace CmsAdmin\Form;
  * Formularz dodawania i edycji użytkowników CMS
  * @method \Cms\Orm\Auth\Record getRecord()
  */
-class Auth extends \Mmi\Form {
+class Auth extends \Mmi\Form\Component {
 
 	public function init() {
 

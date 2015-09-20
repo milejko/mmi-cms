@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Form;
 
-class Route extends \Mmi\Form {
+class Route extends \Mmi\Form\Component {
 
 	public function init() {
 

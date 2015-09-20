@@ -17,19 +17,19 @@ abstract class Registry extends \Mmi\App\Registry {
 
 	/**
 	 * Obiekt ACL
-	 * @var \Mmi\Acl
+	 * @var \Mmi\Security\Acl
 	 */
 	public static $acl;
 
 	/**
 	 * Obiekt autoryzacji
-	 * @var \Mmi\Auth
+	 * @var \Mmi\Security\Auth
 	 */
 	public static $auth;
 
 	/**
 	 * Obiekt navigacji
-	 * @var \Mmi\Navigation
+	 * @var \Mmi\Navigation\Component
 	 */
 	public static $navigation;
 

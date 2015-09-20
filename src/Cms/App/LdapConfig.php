@@ -8,12 +8,12 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace Cms\App\Config;
+namespace Cms\App;
 
 /**
  * Klasa konfiguracji routera
  */
-class Ldap {
+class LdapConfig {
 
 	/**
 	 * Aktywny

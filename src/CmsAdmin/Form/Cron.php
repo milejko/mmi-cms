@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Form;
 
-class Cron extends \Mmi\Form {
+class Cron extends \Mmi\Form\Component {
 
 	public function init() {
 		$this->addElementText('name')

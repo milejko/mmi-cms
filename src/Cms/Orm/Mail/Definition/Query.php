@@ -111,11 +111,11 @@ class Query extends \Mmi\Orm\Query {
 	 * @return \Cms\Orm\Mail\Definition\Query
 	 */
 	public static function lang() {
-		if (!\Mmi\Controller\Front::getInstance()->getRequest()->lang) {
+		if (!\Mmi\App\FrontController::getInstance()->getRequest()->lang) {
 			return self::factory();
 		}
 		return self::factory()
-				->whereLang()->equals(\Mmi\Controller\Front::getInstance()->getRequest()->lang)
+				->whereLang()->equals(\Mmi\App\FrontController::getInstance()->getRequest()->lang)
 				->orFieldLang()->equals(null)
 				->orderDescLang();
 	}

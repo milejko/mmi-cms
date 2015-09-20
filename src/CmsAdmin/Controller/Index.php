@@ -60,7 +60,7 @@ class Index extends Action {
 	public function languageAction() {
 		$session = new \Mmi\Session\Space('cms-language');
 		$session->lang = in_array($this->locale, \App\Registry::$config->languages) ? $this->locale : null;
-		$referer = \Mmi\Controller\Front::getInstance()->getRequest()->getReferer();
+		$referer = \Mmi\App\FrontController::getInstance()->getRequest()->getReferer();
 		//przekierowanie na referer
 		if ($referer) {
 			$this->getResponse()->redirectToUrl($referer);
