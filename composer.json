@@ -24,9 +24,9 @@
 	},
 	"autoload": {
 		"psr-4": {
+			"App\\": "src/App",
 			"Cms\\": "src/Cms",
-			"CmsAdmin\\": "src/CmsAdmin",
-			"App\\": "src/App"
+			"CmsAdmin\\": "src/CmsAdmin"
 		}
 	},
 	"minimum-stability": "dev",
