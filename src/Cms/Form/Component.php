@@ -135,7 +135,7 @@ abstract class Component extends \Mmi\Form\Component {
 			//przenoszenie z uploadera
 			\Cms\Model\File::move('tmp-' . $this->_fileObjectName, \Mmi\Session::getNumericId(), $this->_fileObjectName, $id);
 		} catch (\Exception $e) {
-			\Mmi\Exception\Logger::log($e);
+			\Mmi\App\ExceptionLogger::log($e);
 		}
 	}
 

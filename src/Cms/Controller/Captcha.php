@@ -67,7 +67,7 @@ class Captcha extends \Mmi\Controller\Action {
 		}
 
 		//zapis do sesji
-		$formSession = new \Mmi\Session\Space('\Mmi\Form');
+		$formSession = new \Mmi\Session\Space('MmiForm');
 		$name = 'captcha-' . $this->name;
 		$formSession->$name = $word;
 

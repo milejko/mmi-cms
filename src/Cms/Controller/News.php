@@ -17,7 +17,7 @@ class News extends \Mmi\Controller\Action {
 		if ($this->getPost()->pages) {
 			$this->getResponse()->redirect('cms', 'news', 'index', ['pages' => intval($this->getPost()->pages)]);
 		}
-		$paginator = new \Mmi\Paginator();
+		$paginator = new \Mmi\Paginator\Component();
 		$pages = 10;
 		//ustawianie ilości stron na liście
 		if ($this->pages) {

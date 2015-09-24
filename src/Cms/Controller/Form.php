@@ -34,7 +34,7 @@ class Form extends \Mmi\Controller\Action {
 		$recordClass = $options['recordClass'];
 		//powoływanie forma
 		$form = new $class($recordClass ? new $recordClass(isset($options['id']) ? $options['id'] : null) : null, $options['options']);
-		/* @var $form \Mmi\Form */
+		/* @var $form \Mmi\Form\Component */
 		//pobieranie elementu do walidacji
 		$element = $form->getElement($this->getPost()->field);
 		//jeśli brak elementu - wyjście
