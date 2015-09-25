@@ -27,7 +27,7 @@ var handleTooltip = function handleTooltip(event, pos, item, ticks, index) {
 //zmiana pola w formularzu statystyk w adminie
 $(document).ready(function () {
 	$('select').change(function () {
-		$('.cms-form-admin-stat-object').submit();
+		$('.cmsadmin-form-stat-object').submit();
 		return false;
 	});
 });
