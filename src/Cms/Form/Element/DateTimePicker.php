@@ -10,7 +10,7 @@
 
 namespace Cms\Form\Element;
 
-class DateTimePicker extends \Cms\Form\Form\Element\DatePicker {
+class DateTimePicker extends \Cms\Form\Element\DatePicker {
 
 	/**
 	 * Buduje pole
@@ -22,7 +22,7 @@ class DateTimePicker extends \Cms\Form\Form\Element\DatePicker {
 		$dateStart = isset($this->_options['dateStart']) ? $this->_options['dateStart'] : 'false';
 		$dateEnd = isset($this->_options['dateEnd']) ? $this->_options['dateEnd'] : 'false';
 		$datepicker = isset($this->_options['datepicker']) ? $this->_options['datepicker'] : 'true';
-		$view->headLink()->appendStylesheet($view->baseUrl . '/resource/cms/css/datetimepicker.css');
+		$view->headLink()->appendStylesheet($view->baseUrl . '/resource/cmsAdmin/css/datetimepicker.css');
 		$view->headScript()->prependFile($view->baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/jquery/datetimepicker.js');
 		$id = $this->getOption('id');

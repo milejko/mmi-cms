@@ -49,11 +49,11 @@ class PageController extends Mvc\Controller {
 		$withWidgets = preg_replace('/(\{widget\(([a-zA-Z1-9\'\,\s\(\=\>]+\))\)\})/', '<div class="composer-widget" data-widget="$2">$2</div>$1', $page->text);
 
 		//ustawianie contentu
-		$this->view->setPlaceholder('content', $this->view->render('cms-admin', 'page', 'toolkit') .
+		$this->view->setPlaceholder('content', $this->view->renderTemplate('cmsAdmin', 'page', 'toolkit') .
 			'<div class="cms-page-composer">' . $this->view->renderDirectly($withWidgets) . '</div>');
 
 		//render layoutu
-		return $this->view->renderLayout('cms', 'page');
+		return $this->view->renderLayout('cmsAdmin', 'page');
 	}
 
 	public function updateAction() {

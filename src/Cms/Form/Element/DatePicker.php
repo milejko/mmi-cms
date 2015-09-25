@@ -55,7 +55,7 @@ class DatePicker extends \Mmi\Form\Element\ElementAbstract {
 		$format = isset($this->_options['format']) ? $this->_options['format'] : 'Y-m-d';
 		$dateStart = isset($this->_options['dateStart']) ? $this->_options['dateStart'] : 'false';
 		$dateEnd = isset($this->_options['dateEnd']) ? $this->_options['dateEnd'] : 'false';
-		$view->headLink()->appendStylesheet($view->baseUrl . '/resource/cms/css/datetimepicker.css');
+		$view->headLink()->appendStylesheet($view->baseUrl . '/resource/cmsAdmin/css/datetimepicker.css');
 		$view->headScript()->prependFile($view->baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/jquery/datetimepicker.js');
 		$id = $this->getOption('id');
