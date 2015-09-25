@@ -16,7 +16,7 @@ class Navigation extends \Mmi\Navigation\Config {
 		return self::newElement()
 				->setLabel('Panel administracyjny')
 				->setModule('cmsAdmin')
-				->setController('Index')
+				->setController('index')
 				->setVisible(true)
 				->addChild(self::newElement()
 					->setLabel('Zmiana hasła')
