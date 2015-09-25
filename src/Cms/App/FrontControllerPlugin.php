@@ -18,9 +18,9 @@ class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 	/**
 	 * Hook przed routingiem
 	 * dodaje do routera routy przechowywane w bazie CMS
-	 * @param \Mmi\Controller\Request $request
+	 * @param \Mmi\Http\Request $request
 	 */
-	public function routeStartup(\Mmi\Controller\Request $request) {
+	public function routeStartup(\Mmi\Http\Request $request) {
 		//routy z cms
 		if (null === ($routes = \App\Registry::$cache->load('Mmi-Route'))) {
 			//zapis rout do cache
@@ -32,9 +32,9 @@ class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 
 	/**
 	 * Przed uruchomieniem dispatchera
-	 * @param \Mmi\Controller\Request $request
+	 * @param \Mmi\Http\Request $request
 	 */
-	public function preDispatch(\Mmi\Controller\Request $request) {
+	public function preDispatch(\Mmi\Http\Request $request) {
 		//obsługa nieodnalezionych komponentów i nieprawidłowych języków
 		$this->_handleNotFoundForward($request);
 		//ustawianie widoku
@@ -45,7 +45,7 @@ class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 		$auth->setSalt(\App\Registry::$config->salt);
 		$auth->setModelName(\App\Registry::$config->session->authModel ? \App\Registry::$config->session->authModel : '\Cms\Model\Auth');
 		\App\Registry::$auth = $auth;
-		\Mmi\Controller\ActionPerformer::getInstance()->setAuth($auth);
+		\Mmi\Mvc\ActionPerformer::getInstance()->setAuth($auth);
 
 		//funkcja pamiętaj mnie realizowana poprzez cookie
 		$cookie = new \Mmi\Http\Cookie();
@@ -69,7 +69,7 @@ class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 			\App\Registry::$cache->save($acl, 'Mmi-Acl', 0);
 		}
 		\App\Registry::$acl = $acl;
-		\Mmi\Controller\ActionPerformer::getInstance()->setAcl($acl);
+		\Mmi\Mvc\ActionPerformer::getInstance()->setAcl($acl);
 		\Mmi\App\FrontController::getInstance()->getView()->acl = $acl;
 
 		//zablokowane na ACL
@@ -91,22 +91,22 @@ class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 			/* @var $config \App\Config\Navigation */
 			$config = \App\Registry::$config->navigation;
 			\Cms\Model\Navigation::decorateConfiguration($config);
-			$navigation = new \Mmi\Navigation\Component($config);
+			$navigation = new \Mmi\Navigation\Navigation($config);
 			\App\Registry::$cache->save($navigation, 'Mmi-Navigation-' . $request->__get('lang'), 0);
 		}
 		$navigation->setup($request);
 		//przypinanie nawigatora do helpera widoku nawigacji
-		\Mmi\View\Helper\Navigation::setAcl($acl);
-		\Mmi\View\Helper\Navigation::setAuth($auth);
-		\Mmi\View\Helper\Navigation::setNavigation($navigation);
+		\Mmi\Mvc\ViewHelper\Navigation::setAcl($acl);
+		\Mmi\Mvc\ViewHelper\Navigation::setAuth($auth);
+		\Mmi\Mvc\ViewHelper\Navigation::setNavigation($navigation);
 	}
 
 	/**
 	 * Obsługa przekierowania na błąd w przypadku nieprawidłowego języka lub
 	 * braku modułu
-	 * @param \Mmi\Controller\Request $request
+	 * @param \Mmi\Http\Request $request
 	 */
-	protected function _handleNotFoundForward(\Mmi\Controller\Request $request) {
+	protected function _handleNotFoundForward(\Mmi\Http\Request $request) {
 		//niepoprawny język
 		if (!$request->__get('lang') || in_array($request->__get('lang'), \App\Registry::$config->languages)) {
 			return;
@@ -127,9 +127,9 @@ class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 
 	/**
 	 * Ustawienie zmiennych w widoku
-	 * @param \Mmi\Controller\Request $request
+	 * @param \Mmi\Http\Request $request
 	 */
-	protected function _viewSetup(\Mmi\Controller\Request $request) {
+	protected function _viewSetup(\Mmi\Http\Request $request) {
 		//ustawienie widoku
 		$view = \Mmi\App\FrontController::getInstance()->getView();
 		$base = $view->baseUrl;
@@ -145,9 +145,9 @@ class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 
 	/**
 	 * Ustawia request na logowanie admina
-	 * @param \Mmi\Controller\Request $request
+	 * @param \Mmi\Http\Request $request
 	 */
-	protected function _setAdminLoginRequest(\Mmi\Controller\Request $request) {
+	protected function _setAdminLoginRequest(\Mmi\Http\Request $request) {
 		$request->setModuleName('cmsAdmin')
 			->setControllerName('index')
 			->setActionName('login');
@@ -155,9 +155,9 @@ class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 
 	/**
 	 * Ustawia request na logowanie admina
-	 * @param \Mmi\Controller\Request $request
+	 * @param \Mmi\Http\Request $request
 	 */
-	protected function _setUserLoginRequest(\Mmi\Controller\Request $request) {
+	protected function _setUserLoginRequest(\Mmi\Http\Request $request) {
 		$request->setModuleName('cms')
 			->setControllerName('user')
 			->setActionName('login');
@@ -165,9 +165,9 @@ class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 
 	/**
 	 * Ustawia request na nieautoryzowany
-	 * @param \Mmi\Controller\Request $request
+	 * @param \Mmi\Http\Request $request
 	 */
-	protected function _setUnauthorizedRequest(\Mmi\Controller\Request $request) {
+	protected function _setUnauthorizedRequest(\Mmi\Http\Request $request) {
 		$request->setModuleName('mmi')
 			->setControllerName('index')
 			->setActionName('error')

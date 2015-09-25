@@ -26,7 +26,7 @@ class Antirobot extends \Mmi\Form\Element\Hidden {
 	 * @return string
 	 */
 	public function fetchField() {
-		$this->setValue(\Mmi\Validate\Antirobot::generateCrc());
+		$this->setValue(\Mmi\Validator\Antirobot::generateCrc());
 		return parent::fetchField();
 	}
 

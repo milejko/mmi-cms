@@ -33,7 +33,7 @@ class Record extends \Mmi\Orm\Record {
 
 	public function isExistWidgetEdit($action) {
 		$structure = \Mmi\Structure::getStructure('module');
-		return array_key_exists($action . 'Edit', $structure['cms']['admin-widget']);
+		return array_key_exists($action . 'Edit', $structure['cmsAdmin']['widget']);
 	}
 
 }

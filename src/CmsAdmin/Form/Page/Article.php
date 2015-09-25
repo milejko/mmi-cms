@@ -13,7 +13,7 @@ namespace CmsAdmin\Form\Page;
 /**
  * Formularz artykułów cms w nawigatorze
  */
-class Article extends \Cms\Form\Component {
+class Article extends \Cms\Form\Form {
 
 	public function init() {
 		//menu label

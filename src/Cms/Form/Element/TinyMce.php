@@ -139,7 +139,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 			$objectId = $this->getForm()->getRecord()->getPk();
 		}
 		$t = round(microtime(true));
-		$hash = md5(\Mmi\Session::getId() . '+' . $t . '+' . $objectId);
+		$hash = md5(\Mmi\Session\Session::getId() . '+' . $t . '+' . $objectId);
 		//dołączanie skryptu
 		$view->headScript()->appendScript("
 			tinyMCE.init({

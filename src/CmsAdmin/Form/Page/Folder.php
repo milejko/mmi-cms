@@ -14,7 +14,7 @@ namespace CmsAdmin\Form\Page;
  * Formularz folderó w nawigatorze
  * @method \Cms\Orm\Navigation\Record getRecord()
  */
-class Folder extends \Cms\Form\Component {
+class Folder extends \Cms\Form\Form {
 
 	public function init() {
 		//menu label

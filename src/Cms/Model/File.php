@@ -26,7 +26,7 @@ class File {
 		foreach ($files as $fileSet) {
 			//pliki w polu formularza
 			foreach ($fileSet as $file) {
-				/* @var $file \Mmi\Controller\Request\File */
+				/* @var $file \Mmi\Http\RequestFile */
 				if (!self::appendFile($file, $object, $id, $allowedTypes)) {
 					return false;
 				}
@@ -37,13 +37,13 @@ class File {
 
 	/**
 	 * Dołącza pliki dla danego object i id bezpośrednio z serwera
-	 * @param \Mmi\Controller\Request\File $file obiekt pliku
+	 * @param \Mmi\Http\RequestFile $file obiekt pliku
 	 * @param string $object obiekt
 	 * @param integer $id id obiektu
 	 * @param array $allowedTypes dozwolone typy plików
 	 * @return boolean
 	 */
-	public static function appendFile(\Mmi\Controller\Request\File $file, $object, $id = null, $allowedTypes = []) {
+	public static function appendFile(\Mmi\Http\RequestFile $file, $object, $id = null, $allowedTypes = []) {
 		//pomijanie plików typu bmp (bitmapy windows - nieobsługiwane w PHP)
 		if ($file->type == 'image/x-ms-bmp') {
 			return false;
@@ -115,10 +115,10 @@ class File {
 
 	/**
 	 * Tworzy nowy rekord na podstawie pliku z requestu
-	 * @param \Mmi\Controller\Request\File $file plik z requesta
+	 * @param \Mmi\Http\RequestFile $file plik z requesta
 	 * @return \Cms\Orm\File\Record rekord pliku
 	 */
-	protected static function _newRecordFromRequestFile(\Mmi\Controller\Request\File $file) {
+	protected static function _newRecordFromRequestFile(\Mmi\Http\RequestFile $file) {
 		//nowy rekord
 		$record = new Orm\File\Record();
 		//typ zasobu

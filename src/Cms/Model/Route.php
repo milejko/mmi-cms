@@ -14,11 +14,11 @@ class Route {
 
 	/**
 	 * Aktualizuje konfigurację routera
-	 * @param \Mmi\Controller\Router\Config $config
+	 * @param \Mmi\Mvc\Router\Config $config
 	 * @param \Mmi\Orm\Record\Collection $routes
-	 * @return \Mmi\Controller\Router\Config
+	 * @return \Mmi\Mvc\Router\Config
 	 */
-	public static function updateRouterConfig(\Mmi\Controller\Router\Config $config, \Mmi\Orm\Record\Collection $routes) {
+	public static function updateRouterConfig(\Mmi\Mvc\Router\Config $config, \Mmi\Orm\Record\Collection $routes) {
 		$i = 0;
 		foreach ($routes as $route) { /* @var $route \Cms\Orm\Route\Record */
 			$i++;

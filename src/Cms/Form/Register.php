@@ -14,7 +14,7 @@ namespace Cms\Form;
  * Formularz rejestracji
  * @method type getRecord()
  */
-class Register extends \Cms\Form\Component {
+class Register extends \Cms\Form\Form {
 
 	public function init() {
 

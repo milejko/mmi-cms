@@ -13,7 +13,7 @@ namespace CmsAdmin\Form\Page;
 /**
  * Formularz linków w nawigatorze
  */
-class Link extends \Cms\Form\Component {
+class Link extends \Cms\Form\Form {
 
 	public function init() {
 		//menu label

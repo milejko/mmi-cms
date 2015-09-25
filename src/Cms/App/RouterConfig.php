@@ -13,7 +13,7 @@ namespace Cms\App;
 /**
  * Klasa konfiguracji routera
  */
-class RouterConfig extends \Mmi\Controller\Router\Config {
+class RouterConfig extends \Mmi\Mvc\Router\Config {
 
 	public function __construct() {
 

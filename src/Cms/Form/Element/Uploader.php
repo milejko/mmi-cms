@@ -49,7 +49,7 @@ class Uploader extends \Mmi\Form\Element\File {
 		}
 		if (!$objectId) {
 			$object = 'tmp-' . $object;
-			$objectId = \Mmi\Session::getNumericId();
+			$objectId = \Mmi\Session\Session::getNumericId();
 		}
 		return '<iframe frameborder="0" src="' . \Mmi\App\FrontController::getInstance()->getView()->url([
 				'module' => 'cms',

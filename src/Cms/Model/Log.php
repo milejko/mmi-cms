@@ -22,7 +22,7 @@ class Log {
 	public static function add($operation = null, array $data = []) {
 		$record = new Orm\Log\Record();
 		$env = \Mmi\App\FrontController::getInstance()->getEnvironment();
-		if (\Mmi\Session::namespaceIsset('Auth')) {
+		if (\Mmi\Session\Session::namespaceIsset('Auth')) {
 			$authNamespace = new \Mmi\Session\Space('Auth');
 			$record->cmsAuthId = $authNamespace->id;
 		}

@@ -32,8 +32,8 @@ class PictureWidgetGrid extends \Mmi\Grid {
 		$this->addColumn('buttons', 'buttons', [
 			'label' => 'Operacje',
 			'links' => [
-				'edit' => $this->_view->url(['id' => '%id%', 'action' => 'pictureWidgetEdit', 'controller' => 'admin-widget', 'module' => 'cms']),
-				'delete' => $this->_view->url(['id' => '%id%', 'action' => 'pictureWidgetDelete', 'controller' => 'admin-widget', 'module' => 'cms'])
+				'edit' => $this->_view->url(['id' => '%id%', 'action' => 'pictureWidgetEdit', 'controller' => 'widget', 'module' => 'cmsAdmin']),
+				'delete' => $this->_view->url(['id' => '%id%', 'action' => 'pictureWidgetDelete', 'controller' => 'widget', 'module' => 'cmsAdmin'])
 			]
 		]);
 	}

@@ -44,7 +44,7 @@ class MailGrid extends \Mmi\Grid {
 		$this->addColumn('buttons', 'buttons', [
 			'label' => 'operacje',
 			'links' => [
-				'edit' => $this->_view->url(['module' => 'cms', 'controller' => 'admin-mail', 'action' => 'preview', 'id' => '%id%'])
+				'edit' => $this->_view->url(['module' => 'cmsAdmin', 'controller' => 'mail', 'action' => 'preview', 'id' => '%id%'])
 			]
 		]);
 	}

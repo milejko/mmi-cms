@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Form\Mail;
 
-class Definition extends \Mmi\Form\Component {
+class Definition extends \Mmi\Form\Form {
 
 	public function init() {
 

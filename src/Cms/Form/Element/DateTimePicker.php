@@ -10,7 +10,7 @@
 
 namespace Cms\Form\Element;
 
-class DateTimePicker extends \Cms\Form\Component\Element\DatePicker {
+class DateTimePicker extends \Cms\Form\Form\Element\DatePicker {
 
 	/**
 	 * Buduje pole

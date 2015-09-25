@@ -14,7 +14,7 @@ namespace CmsAdmin\Form;
  * Formularz dodawania strony CMS
  * @method \Cms\Orm\Page\Record getRecord()
  */
-class Page extends \Cms\Form\Component {
+class Page extends \Cms\Form\Form {
 
 	public function init() {
 

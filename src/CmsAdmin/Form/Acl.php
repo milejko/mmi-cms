@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Form;
 
-class Acl extends \Mmi\Form\Component {
+class Acl extends \Mmi\Form\Form {
 
 	public function init() {
 

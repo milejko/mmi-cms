@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Form\Page;
 
-class Widget extends \Mmi\Form\Component {
+class Widget extends \Mmi\Form\Form {
 
 	public function init() {
 

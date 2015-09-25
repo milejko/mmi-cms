@@ -13,7 +13,7 @@ namespace CmsAdmin\Form\Text;
 /**
  * Formularz kopiowania tekstów statycznych
  */
-class Copy extends \Mmi\Form\Component {
+class Copy extends \Mmi\Form\Form {
 
 	public function init() {
 

@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Form\Widget;
 
-class Picture extends \Cms\Form\Component {
+class Picture extends \Cms\Form\Form {
 
 	public function init() {
 

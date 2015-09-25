@@ -182,30 +182,30 @@ class Record extends \Mmi\Orm\Record {
 		switch ($scaleType) {
 			//skalowanie domyślne
 			case 'default':
-				$imgRes = \Mmi\Image::inputToResource($inputFile);
+				$imgRes = \Mmi\Image\Image::inputToResource($inputFile);
 				break;
 			//skalowanie proporcjonalne do maksymalnego rozmiaru
 			case 'scale':
 				$v = explode('x', $scale);
 				if (count($v) == 1 && is_numeric($v[0]) && intval($v[0]) > 0) {
-					$imgRes = \Mmi\Image::scale($inputFile, $v[0]);
+					$imgRes = \Mmi\Image\Image::scale($inputFile, $v[0]);
 				} elseif (count($v) == 2 && is_numeric($v[0]) && intval($v[0]) > 0 && is_numeric($v[1]) && intval($v[1]) > 0) {
-					$imgRes = \Mmi\Image::scale($inputFile, $v[0], $v[1]);
+					$imgRes = \Mmi\Image\Image::scale($inputFile, $v[0], $v[1]);
 				}
 				break;
 			//skalowanie do maksymalnego X
 			case 'scalex':
-				$imgRes = \Mmi\Image::scalex($inputFile, intval($scale));
+				$imgRes = \Mmi\Image\Image::scalex($inputFile, intval($scale));
 				break;
 			//skalowanie do maksymalnego Y
 			case 'scaley':
-				$imgRes = \Mmi\Image::scaley($inputFile, intval($scale));
+				$imgRes = \Mmi\Image\Image::scaley($inputFile, intval($scale));
 				break;
 			//skalowanie z obcięciem
 			case 'scalecrop':
 				$v = explode('x', $scale);
 				if (is_numeric($v[0]) && intval($v[0]) > 0 && is_numeric($v[1]) && intval($v[1]) > 0) {
-					$imgRes = \Mmi\Image::scaleCrop($inputFile, $v[0], $v[1]);
+					$imgRes = \Mmi\Image\Image::scaleCrop($inputFile, $v[0], $v[1]);
 				}
 				break;
 		}

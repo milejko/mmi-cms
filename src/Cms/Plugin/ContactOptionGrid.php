@@ -32,14 +32,14 @@ class ContactOptionGrid extends \Mmi\Grid {
 			'label' => 'operacje',
 			'links' => [
 				'edit' => $this->_view->url([
-					'module' => 'cms',
-					'controller' => 'admin-contact',
+					'module' => 'cmsAdmin',
+					'controller' => 'contact',
 					'action' => 'editSubject',
 					'id' => '%id%'
 				]),
 				'delete' => $this->_view->url([
-					'module' => 'cms',
-					'controller' => 'admin-contact',
+					'module' => 'cmsAdmin',
+					'controller' => 'contact',
 					'action' => 'deleteSubject',
 					'id' => '%id%'
 				]),

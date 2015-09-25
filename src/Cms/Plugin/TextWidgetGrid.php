@@ -28,8 +28,8 @@ class TextWidgetGrid extends \Mmi\Grid {
 		$this->addColumn('buttons', 'buttons', [
 			'label' => 'Operacje',
 			'links' => [
-				'edit' => $this->_view->url(['id' => '%id%', 'action' => 'textWidgetEdit', 'controller' => 'admin-widget', 'module' => 'cms']),
-				'delete' => $this->_view->url(['id' => '%id%', 'action' => 'textWidgetDelete', 'controller' => 'admin-widget', 'module' => 'cms'])
+				'edit' => $this->_view->url(['id' => '%id%', 'action' => 'textWidgetEdit', 'controller' => 'widget', 'module' => 'cmsAdmin']),
+				'delete' => $this->_view->url(['id' => '%id%', 'action' => 'textWidgetDelete', 'controller' => 'widget', 'module' => 'cmsAdmin'])
 			]
 		]);
 	}

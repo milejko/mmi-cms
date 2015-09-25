@@ -35,7 +35,7 @@ abstract class Dto {
 			if ($type === 'object') {
 				$type = get_class($data);
 			}
-			throw new \Mmi\Json\Rpc\Data\Exception('Invalid input data: ' . $type . ' is not supported');
+			throw new \Mmi\JsonRpc\Data\Exception('Invalid input data: ' . $type . ' is not supported');
 		}
 	}
 

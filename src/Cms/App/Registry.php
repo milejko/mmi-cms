@@ -29,7 +29,7 @@ abstract class Registry extends \Mmi\App\Registry {
 
 	/**
 	 * Obiekt navigacji
-	 * @var \Mmi\Navigation\Component
+	 * @var \Mmi\Navigation\Navigation
 	 */
 	public static $navigation;
 

@@ -46,7 +46,7 @@ class Mail {
 			return false;
 		}
 		//walidacja listy adresów "do"
-		$email = new \Mmi\Validate\EmailAddressList();
+		$email = new \Mmi\Validator\EmailAddressList();
 		if (!$email->isValid($to)) {
 			return false;
 		}

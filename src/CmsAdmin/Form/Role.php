@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Form;
 
-class Role extends \Mmi\Form\Component {
+class Role extends \Mmi\Form\Form {
 
 	public function init() {
 

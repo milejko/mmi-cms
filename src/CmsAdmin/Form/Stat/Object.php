@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Form\Stat;
 
-class Object extends \Mmi\Form\Component {
+class Object extends \Mmi\Form\Form {
 
 	public function init() {
 

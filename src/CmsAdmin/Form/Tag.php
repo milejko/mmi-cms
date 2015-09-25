@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Form;
 
-class Tag extends \Mmi\Form\Component {
+class Tag extends \Mmi\Form\Form {
 
 	public function init() {
 
