@@ -15,10 +15,10 @@ class Route {
 	/**
 	 * Aktualizuje konfigurację routera
 	 * @param \Mmi\Mvc\Router\Config $config
-	 * @param \Mmi\Orm\Record\Collection $routes
+	 * @param \Mmi\Orm\RecordCollection $routes
 	 * @return \Mmi\Mvc\Router\Config
 	 */
-	public static function updateRouterConfig(\Mmi\Mvc\Router\Config $config, \Mmi\Orm\Record\Collection $routes) {
+	public static function updateRouterConfig(\Mmi\Mvc\Router\Config $config, \Mmi\Orm\RecordCollection $routes) {
 		$i = 0;
 		foreach ($routes as $route) { /* @var $route \Cms\Orm\Route\Record */
 			$i++;

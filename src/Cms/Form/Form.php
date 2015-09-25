@@ -20,11 +20,11 @@ abstract class Form extends \Mmi\Form\Form {
 
 	/**
 	 * Konstruktor
-	 * @param \Mmi\Orm\Record\Ro $record obiekt recordu
+	 * @param \Mmi\Orm\Record $record obiekt recordu
 	 * @param array $options opcje
 	 * @param string $className nazwa klasy
 	 */
-	public function __construct(\Mmi\Orm\Record\Ro $record = null, array $options = []) {
+	public function __construct(\Mmi\Orm\Record $record = null, array $options = []) {
 		//kalkulacja nazwy plików dla active record
 		if ($record) {
 			$this->_fileObjectName = $this->_classToFileObject(get_class($record));

@@ -13,7 +13,7 @@ namespace Cms\Model;
 /**
  * Generator kodu dla biblioteki wykresów FLOT
  */
-class StatFlot extends \Mmi\Orm {
+class StatFlot {
 
 	/**
 	 * Generuje kod HTML dla biblioteki flot

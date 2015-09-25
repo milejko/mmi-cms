@@ -273,7 +273,7 @@ class Stat {
 	 * @param integer $month
 	 * @param integer $day
 	 * @param integer $hour
-	 * @return \Mmi\Orm\Record\Collection
+	 * @return \Mmi\Orm\RecordCollection
 	 */
 	public static function getRows($object, $objectId, $year = null, $month = null, $day = null, $hour = null) {
 		//nowa quera filtrująca po obiekcie i ID

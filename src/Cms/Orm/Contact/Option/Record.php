@@ -15,6 +15,5 @@ class Record extends \Mmi\Orm\Record {
 	public $id;
 	public $name;
 	public $sendTo;
-	public $order;
 
 }

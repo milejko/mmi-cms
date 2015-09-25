@@ -42,9 +42,9 @@ class PageController extends Mvc\Controller {
 		$this->view->headScript()->appendFile($this->view->baseUrl . '/resource/cmsAdmin/js/page.js');
 
 		//css'y
-		$this->view->headLink()->appendStyleSheet($this->view->baseUrl . '/default/cms/css/page.css');
-		$this->view->headLink()->appendStyleSheet($this->view->baseUrl . '/default/cms/css/fonts/fontawesome/css/font-awesome.css');
-		$this->view->headStyle()->appendStyleFile('default/cms/css/page.css');
+		$this->view->headLink()->appendStyleSheet($this->view->baseUrl . '/resource/cmsAdmin/css/page.css');
+		$this->view->headLink()->appendStyleSheet($this->view->baseUrl . '/resource/cmsAdmin/css/fonts/fontawesome/css/font-awesome.css');
+		$this->view->headStyle()->appendStyleFile('resource/cmsAdmin/css/page.css');
 
 		$withWidgets = preg_replace('/(\{widget\(([a-zA-Z1-9\'\,\s\(\=\>]+\))\)\})/', '<div class="composer-widget" data-widget="$2">$2</div>$1', $page->text);
 

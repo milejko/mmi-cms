@@ -20,7 +20,7 @@ class DtoCollection extends \ArrayObject {
 		if ($data === null) {
 			return;
 		}
-		if ($data instanceof \Mmi\Orm\Record\Collection) {
+		if ($data instanceof \Mmi\Orm\RecordCollection) {
 			$this->setFromDaoRecordCollection($data);
 			return;
 		}
@@ -52,10 +52,10 @@ class DtoCollection extends \ArrayObject {
 
 	/**
 	 * Ustawia kolekcję na podstawie obiektu obiektów
-	 * @param \Mmi\Orm\Record\Collection $data kolekcja obiektów DAO
+	 * @param \Mmi\Orm\RecordCollection $data kolekcja obiektów DAO
 	 * @return \Cms\Model\Api\Orm\DtoCollection
 	 */
-	public final function setFromDaoRecordCollection(\Mmi\Orm\Record\Collection $data) {
+	public final function setFromDaoRecordCollection(\Mmi\Orm\RecordCollection $data) {
 		$dtoClass = $this->_getDtoClass();
 		$this->exchangeArray([]);
 		foreach ($data as $record) {

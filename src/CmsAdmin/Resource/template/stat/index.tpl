@@ -1,7 +1,7 @@
 {headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js')}
 {headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/flot.js')}
 {headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/tooltip.js')}
-{headLink()->appendStylesheet($baseUrl . '/default/cms/css/stat.css')}
+{headLink()->appendStylesheet($baseUrl . '/resource/cmsAdmin/css/stat.css')}
 <script type="text/javascript">
 	{$dailyChart}
 	{$monthlyChart}
