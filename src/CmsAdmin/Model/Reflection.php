@@ -21,7 +21,7 @@ class Reflection {
 			$moduleName = substr($module, strrpos($module, '/') + 1);
 			foreach (glob($module . '/*Controller.php') as $controller) {
 				$var = file_get_contents($controller);
-				$controllerName = substr($controller, strrpos($controller, '/') + 1, -4);
+				$controllerName = substr($controller, strrpos($controller, '/') + 1, -14);
 				if (preg_match_all('/function ([a-zA-Z0-9]+Action)\(/', $var, $actions) && isset($actions[1])) {
 					foreach ($actions[1] as $action) {
 						$action = substr($action, 0, -6);
@@ -44,10 +44,9 @@ class Reflection {
 		$structure = [];
 		foreach (glob(BASE_PATH . '/src/*') as $module) {
 			$moduleName = substr($module, strrpos($module, '/') + 1);
-			foreach (array_merge(glob($module . '/Controller/*.php'), glob($module . '/Controller/Admin/*.php')) as $controller) {
+			foreach (glob($module . '/*Controller.php') as $controller) {
 				$var = file_get_contents($controller);
-				$controller = str_replace('/Admin/', '/Admin-', $controller);
-				$controllerName = substr($controller, strrpos($controller, '/') + 1, -4);
+				$controllerName = substr($controller, strrpos($controller, '/') + 1, -14);
 				if (preg_match_all('/function ([a-zA-Z0-9]+Action)\(/', $var, $actions) && isset($actions[1])) {
 					$first = true;
 					foreach ($actions[1] as $action) {
