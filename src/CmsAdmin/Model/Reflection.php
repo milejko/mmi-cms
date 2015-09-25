@@ -19,7 +19,7 @@ class Reflection {
 		$structure = [];
 		foreach (glob(BASE_PATH . '/src/*') as $module) {
 			$moduleName = substr($module, strrpos($module, '/') + 1);
-			foreach (glob($module . '/Controller/*.php') as $controller) {
+			foreach (glob($module . '/*Controller.php') as $controller) {
 				$var = file_get_contents($controller);
 				$controllerName = substr($controller, strrpos($controller, '/') + 1, -4);
 				if (preg_match_all('/function ([a-zA-Z0-9]+Action)\(/', $var, $actions) && isset($actions[1])) {
