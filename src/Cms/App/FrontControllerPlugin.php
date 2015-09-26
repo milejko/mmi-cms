@@ -35,8 +35,10 @@ class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 	 * @param \Mmi\Http\Request $request
 	 */
 	public function preDispatch(\Mmi\Http\Request $request) {
-		//obsługa nieodnalezionych komponentów i nieprawidłowych języków
-		$this->_handleNotFoundForward($request);
+		//niepoprawny język
+		if ($request->__get('lang') && !in_array($request->__get('lang'), \App\Registry::$config->languages)) {
+			throw new \Mmi\Mvc\NotFoundException('Language not found');
+		}
 		//ustawianie widoku
 		$this->_viewSetup($request);
 
@@ -45,7 +47,7 @@ class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 		$auth->setSalt(\App\Registry::$config->salt);
 		$auth->setModelName(\App\Registry::$config->session->authModel ? \App\Registry::$config->session->authModel : '\Cms\Model\Auth');
 		\App\Registry::$auth = $auth;
-		\Mmi\Mvc\ActionPerformer::getInstance()->setAuth($auth);
+		\Mmi\Mvc\ActionHelper::getInstance()->setAuth($auth);
 
 		//funkcja pamiętaj mnie realizowana poprzez cookie
 		$cookie = new \Mmi\Http\Cookie();
@@ -69,7 +71,7 @@ class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 			\App\Registry::$cache->save($acl, 'Mmi-Acl', 0);
 		}
 		\App\Registry::$acl = $acl;
-		\Mmi\Mvc\ActionPerformer::getInstance()->setAcl($acl);
+		\Mmi\Mvc\ActionHelper::getInstance()->setAcl($acl);
 		\Mmi\App\FrontController::getInstance()->getView()->acl = $acl;
 
 		//zablokowane na ACL
@@ -83,7 +85,7 @@ class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 				$this->_setUserLoginRequest($request);
 			} else {
 				//zalogowany na nieuprawnioną rolę
-				$this->_setUnauthorizedRequest($request);
+				throw new \Mmi\Mvc\NotFoundException('Unauthorized access');
 			}
 		}
 		//ustawienie nawigatora
@@ -99,30 +101,6 @@ class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 		\Mmi\Mvc\ViewHelper\Navigation::setAcl($acl);
 		\Mmi\Mvc\ViewHelper\Navigation::setAuth($auth);
 		\Mmi\Mvc\ViewHelper\Navigation::setNavigation($navigation);
-	}
-
-	/**
-	 * Obsługa przekierowania na błąd w przypadku nieprawidłowego języka lub
-	 * braku modułu
-	 * @param \Mmi\Http\Request $request
-	 */
-	protected function _handleNotFoundForward(\Mmi\Http\Request $request) {
-		//niepoprawny język
-		if (!$request->__get('lang') || in_array($request->__get('lang'), \App\Registry::$config->languages)) {
-			return;
-		}
-		//wyłączanie języka
-		unset($request->lang);
-		//ustawianie języka na domyślny
-		if (isset(\App\Registry::$config->languages[0])) {
-			$request->lang = \App\Registry::$config->languages[0];
-		}
-		//ustawianie błędu w request
-		$request->setModuleName('mmi')
-			->setControllerName('index')
-			->setActionName('error');
-		//ustawianie kodu odpowiedzi na 404
-		\Mmi\App\FrontController::getInstance()->getResponse()->setCodeNotFound();
 	}
 
 	/**
@@ -161,19 +139,6 @@ class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 		$request->setModuleName('cms')
 			->setControllerName('user')
 			->setActionName('login');
-	}
-
-	/**
-	 * Ustawia request na nieautoryzowany
-	 * @param \Mmi\Http\Request $request
-	 */
-	protected function _setUnauthorizedRequest(\Mmi\Http\Request $request) {
-		$request->setModuleName('mmi')
-			->setControllerName('index')
-			->setActionName('error')
-			->setParams(['unauthorized' => 1]);
-		//ustawianie kodu odpowiedzi na 403
-		\Mmi\App\FrontController::getInstance()->getResponse()->setCodeForbidden();
 	}
 
 }

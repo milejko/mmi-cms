@@ -135,7 +135,7 @@ abstract class Form extends \Mmi\Form\Form {
 			//przenoszenie z uploadera
 			\Cms\Model\File::move('tmp-' . $this->_fileObjectName, \Mmi\Session\Session::getNumericId(), $this->_fileObjectName, $id);
 		} catch (\Exception $e) {
-			\Mmi\App\ExceptionLogger::log($e);
+			\Mmi\Logger\LoggerHelper::getLogger()->addWarning($e->getMessage());
 		}
 	}
 
