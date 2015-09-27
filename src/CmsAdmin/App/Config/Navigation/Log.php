@@ -16,12 +16,7 @@ class Log extends \Mmi\Navigation\Config {
 		return self::newElement()
 				->setLabel('Log systemowy')
 				->setModule('cmsAdmin')
-				->setController('log')
-				->addChild(self::newElement()
-					->setLabel('Błedy')
-					->setModule('cmsAdmin')
-					->setController('log')
-					->setAction('error'));
+				->setController('log');
 	}
 
 }

@@ -23,12 +23,4 @@ class LogController extends Mvc\Controller {
 		$this->view->grid = $grid;
 	}
 
-	/**
-	 * Lista logów błędu
-	 */
-	public function errorAction() {
-		$logFile = BASE_PATH . '/var/log/error.execution.log';
-		$this->view->data = nl2br(file_get_contents($logFile, 0, NULL, filesize($logFile) - 32000));
-	}
-
 }
