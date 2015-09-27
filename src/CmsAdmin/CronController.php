@@ -20,7 +20,7 @@ class CronController extends Mvc\Controller {
 	public function editAction() {
 		$form = new \CmsAdmin\Form\Cron(new \Cms\Orm\Cron\Record($this->id));
 		if ($form->isSaved()) {
-			$this->getHelperMessenger()->addMessage('Zadanie zapisane poprawnie', true);
+			$this->getMessenger()->addMessage('Zadanie zapisane poprawnie', true);
 			$this->getResponse()->redirect('cmsAdmin', 'cron');
 		}
 		$this->view->cronForm = $form;
@@ -29,7 +29,7 @@ class CronController extends Mvc\Controller {
 	public function deleteAction() {
 		$record = \Cms\Orm\Cron\Query::factory()->findPk($this->id);
 		if ($record && $record->delete()) {
-			$this->getHelperMessenger()->addMessage('Zadanie CRON poprawnie usunięte', true);
+			$this->getMessenger()->addMessage('Zadanie CRON poprawnie usunięte', true);
 		}
 		$this->getResponse()->redirect('cmsAdmin', 'cron');
 	}

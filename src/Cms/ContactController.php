@@ -23,7 +23,7 @@ class ContactController extends \Mmi\Mvc\Controller {
 		$this->view->contactForm = $form;
 		//zapis
 		if ($form->isSaved()) {
-			$this->getHelperMessenger()->addMessage('Wiadomość wysłano poprawnie.', true);
+			$this->getMessenger()->addMessage('Wiadomość wysłano poprawnie.', true);
 			if ($namespace->referer) {
 				$link = $namespace->referer;
 			} else {

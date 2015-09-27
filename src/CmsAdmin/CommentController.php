@@ -19,7 +19,7 @@ class CommentController extends Mvc\Controller {
 	public function deleteAction() {
 		$comment = \Cms\Orm\Comment\Query::factory()->findPk($this->id);
 		if ($comment && $comment->delete()) {
-			$this->getHelperMessenger()->addMessage('Poprawnie usunięto artykuł', true);
+			$this->getMessenger()->addMessage('Poprawnie usunięto artykuł', true);
 		}
 		$this->getResponse()->redirect('cmsAdmin', 'comment');
 	}

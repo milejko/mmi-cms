@@ -47,7 +47,7 @@ class NavigationController extends Mvc\Controller {
 		/* @var $record \Cms\Orm\Navigation\Record */
 		$record = \Cms\Orm\Navigation\Query::factory()->findPk($this->id);
 		if ($record !== null && $record->delete()) {
-			$this->getHelperMessenger()->addMessage('Poprawnie usunięto element nawigacyjny', true);
+			$this->getMessenger()->addMessage('Poprawnie usunięto element nawigacyjny', true);
 		}
 		$this->getResponse()->redirect('cmsAdmin', 'navigation', 'index', ['id' => $record->parentId]);
 	}

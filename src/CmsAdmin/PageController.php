@@ -89,7 +89,7 @@ class PageController extends Mvc\Controller {
 
 	public function deleteAction() {
 		if (null !== ($record = \Cms\Orm\Page\Query::factory()->findPk($this->id)) && $record->delete()) {
-			$this->getHelperMessenger()->addMessage('Strona usunięta poprawnie');
+			$this->getMessenger()->addMessage('Strona usunięta poprawnie');
 		}
 		$this->getResponse()->redirect('cmsAdmin', 'page');
 	}

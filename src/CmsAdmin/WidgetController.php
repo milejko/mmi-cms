@@ -26,7 +26,7 @@ class WidgetController extends Mvc\Controller {
 
 		$form = new \CmsAdmin\Form\Widget\Text($widget);
 		if ($form->isSaved()) {
-			$this->getHelperMessenger()->addMessage('Tekst został dodany');
+			$this->getMessenger()->addMessage('Tekst został dodany');
 			$this->getResponse()->redirect('cmsAdmin', 'widget', 'textWidgetEdit');
 		}
 		$this->view->textForm = $form;
@@ -34,7 +34,7 @@ class WidgetController extends Mvc\Controller {
 
 	public function textWidgetDeleteAction() {
 		if (null !== ($record = \Cms\Orm\Widget\Text\Query::factory()->findPk($this->id)) && $record->delete()) {
-			$this->getHelperMessenger()->addMessage('Tekst usunięty poprawnie');
+			$this->getMessenger()->addMessage('Tekst usunięty poprawnie');
 		}
 		$this->getResponse()->redirect('cmsAdmin', 'widget', 'textWidgetEdit');
 	}
@@ -48,7 +48,7 @@ class WidgetController extends Mvc\Controller {
 
 		$form = new \CmsAdmin\Form\Widget\Picture($pictureRec);
 		if ($form->isSaved()) {
-			$this->getHelperMessenger()->addMessage('Zdjęcie zostało zapisane');
+			$this->getMessenger()->addMessage('Zdjęcie zostało zapisane');
 			$this->getResponse()->redirect('cmsAdmin', 'widget', 'pictureWidgetEdit');
 		}
 		$this->view->pictureForm = $form;
@@ -56,7 +56,7 @@ class WidgetController extends Mvc\Controller {
 
 	public function pictureWidgetDeleteAction() {
 		if (null !== ($record = \Cms\Orm\Widget\Picture\Query::factory()->findPk($this->id)) && $record->delete()) {
-			$this->getHelperMessenger()->addMessage('Zdjęcie usunięte poprawnie');
+			$this->getMessenger()->addMessage('Zdjęcie usunięte poprawnie');
 		}
 		$this->getResponse()->redirect('cmsAdmin', 'widget', 'pictureWidgetEdit');
 	}

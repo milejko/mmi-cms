@@ -28,7 +28,7 @@ class MailController extends Mvc\Controller {
 	public function deleteAction() {
 		$mail = \Cms\Orm\Mail\Query::factory()->findPk($this->id);
 		if ($mail && $mail->delete()) {
-			$this->getHelperMessenger()->addMessage('Email został usunięty z kolejki', true);
+			$this->getMessenger()->addMessage('Email został usunięty z kolejki', true);
 		}
 		$this->getResponse()->redirect('cmsAdmin', 'mail', 'index');
 	}
@@ -47,13 +47,13 @@ class MailController extends Mvc\Controller {
 	public function sendAction() {
 		$result = \Cms\Model\Mail::send();
 		if ($result['success'] > 0) {
-			$this->getHelperMessenger()->addMessage('Maile z kolejki zostały wysłane', true);
+			$this->getMessenger()->addMessage('Maile z kolejki zostały wysłane', true);
 		}
 		if ($result['error'] > 0) {
-			$this->getHelperMessenger()->addMessage('Przy wysyłaniu wystąpiły błędy', false);
+			$this->getMessenger()->addMessage('Przy wysyłaniu wystąpiły błędy', false);
 		}
 		if ($result['success'] + $result['error'] == 0) {
-			$this->getHelperMessenger()->addMessage('Brak maili do wysyłki');
+			$this->getMessenger()->addMessage('Brak maili do wysyłki');
 		}
 		$this->getResponse()->redirect('cmsAdmin', 'mail', 'index');
 	}

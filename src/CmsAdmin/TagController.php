@@ -19,7 +19,7 @@ class TagController extends Mvc\Controller {
 	public function editAction() {
 		$form = new \CmsAdmin\Form\Tag(new \Cms\Orm\Tag\Record($this->id));
 		if ($form->isSaved()) {
-			$this->getHelperMessenger()->addMessage('Tag zapisany poprawnie', true);
+			$this->getMessenger()->addMessage('Tag zapisany poprawnie', true);
 			$this->getResponse()->redirect('cmsAdmin', 'tag', 'index');
 		}
 		$this->view->tagForm = $form;
@@ -28,7 +28,7 @@ class TagController extends Mvc\Controller {
 	public function deleteAction() {
 		$tag = \Cms\Orm\Tag\Query::factory()->findPk($this->id);
 		if ($tag && $tag->delete()) {
-			$this->getHelperMessenger()->addMessage('Tag usunięty', true);
+			$this->getMessenger()->addMessage('Tag usunięty', true);
 		}
 		$this->getResponse()->redirect('cmsAdmin', 'tag', 'index');
 	}

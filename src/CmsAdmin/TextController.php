@@ -34,10 +34,10 @@ class TextController extends Mvc\Controller {
 		}
 		//zapisany
 		if ($form->isSaved()) {
-			$this->getHelperMessenger()->addMessage('Poprawnie zapisano tekst', true);
+			$this->getMessenger()->addMessage('Poprawnie zapisano tekst', true);
 			$this->getResponse()->redirect('cmsAdmin', 'text');
 		}
-		$this->getHelperMessenger()->addMessage('Błąd zapisu tekstu, tekst o tym kluczu już istnieje', false);
+		$this->getMessenger()->addMessage('Błąd zapisu tekstu, tekst o tym kluczu już istnieje', false);
 	}
 
 	/**
@@ -52,10 +52,10 @@ class TextController extends Mvc\Controller {
 		}
 		//zapis
 		if ($form->isSaved()) {
-			$this->getHelperMessenger()->addMessage('Poprawnie sklonowano teksty', true);
+			$this->getMessenger()->addMessage('Poprawnie sklonowano teksty', true);
 			$this->getResponse()->redirect('cmsAdmin', 'text');
 		}
-		$this->getHelperMessenger()->addMessage('Błąd klonowania tekstów', false);
+		$this->getMessenger()->addMessage('Błąd klonowania tekstów', false);
 	}
 
 	/**
@@ -65,7 +65,7 @@ class TextController extends Mvc\Controller {
 		$text = \Cms\Orm\Text\Query::factory()->findPk($this->id);
 		//jeśli znaleziono tekst i udało się usunąć
 		if ($text && $text->delete()) {
-			$this->getHelperMessenger()->addMessage('Poprawnie skasowano tekst', true);
+			$this->getMessenger()->addMessage('Poprawnie skasowano tekst', true);
 		}
 		$this->getResponse()->redirect('cmsAdmin', 'text');
 	}

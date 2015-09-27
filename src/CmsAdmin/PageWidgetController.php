@@ -28,7 +28,7 @@ class PageWidgetController extends Mvc\Controller {
 		]);
 
 		if ($form->isSaved()) {
-			$this->getHelperMessenger()->addMessage('Widget zapisany poprawnie');
+			$this->getMessenger()->addMessage('Widget zapisany poprawnie');
 			$this->getResponse()->redirect('cmsAdmin', 'pageWidget');
 		}
 		$this->view->widgetForm = $form;		
@@ -37,7 +37,7 @@ class PageWidgetController extends Mvc\Controller {
 	public function deleteAction() {
 		$record = \Cms\Orm\Page\Widget\Query::factory()->findPk($this->id);
 		if ($record !== null && $record->delete()) {
-			$this->getHelperMessenger()->addMessage('Widget zostal usuniety');
+			$this->getMessenger()->addMessage('Widget zostal usuniety');
 		}
 		$this->getResponse()->redirect('cmsAdmin', 'pageWidget');
 	}

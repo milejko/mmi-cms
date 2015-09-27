@@ -26,12 +26,12 @@ class AclController extends Mvc\Controller {
 		}
 		$roleForm = new \CmsAdmin\Form\Role($roleRecord = new \Cms\Orm\Role\Record());
 		if ($roleForm->isMine() && $roleForm->isSaved()) {
-			$this->getHelperMessenger()->addMessage('Poprawnie zapisano rolę', true);
+			$this->getMessenger()->addMessage('Poprawnie zapisano rolę', true);
 			$this->getResponse()->redirect('cmsAdmin', 'acl', 'index', ['roleId' => $roleRecord->id]);
 		}
 		$aclForm = new \CmsAdmin\Form\Acl(new \Cms\Orm\Acl\Record());
 		if ($aclForm->isMine() && $aclForm->isSaved()) {
-			$this->getHelperMessenger()->addMessage('Poprawnie zapisano regułę', true);
+			$this->getMessenger()->addMessage('Poprawnie zapisano regułę', true);
 			$this->getResponse()->redirect('cmsAdmin', 'acl', 'index', ['roleId' => $this->roleId]);
 		}
 		$this->view->roleForm = $roleForm;

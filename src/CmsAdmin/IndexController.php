@@ -34,11 +34,11 @@ class IndexController extends Mvc\Controller {
 		}
 		//logowanie niepoprawne
 		if (!$form->isSaved()) {
-			$this->getHelperMessenger()->addMessage('Logowanie niepoprawne', false);
+			$this->getMessenger()->addMessage('Logowanie niepoprawne', false);
 			return;
 		}
 		//zalogowano
-		$this->getHelperMessenger()->addMessage('Zalogowano poprawnie', true);
+		$this->getMessenger()->addMessage('Zalogowano poprawnie', true);
 		\Cms\Model\Stat::hit('admin-login');
 		$this->getResponse()->redirect('cmsAdmin');
 	}
@@ -48,7 +48,7 @@ class IndexController extends Mvc\Controller {
 	 */
 	public function logoutAction() {
 		\App\Registry::$auth->clearIdentity();
-		$this->getHelperMessenger()->addMessage('Dziękujemy za skorzystanie z serwisu, wylogowanio poprawnie', true);
+		$this->getMessenger()->addMessage('Dziękujemy za skorzystanie z serwisu, wylogowanio poprawnie', true);
 		//hit do statystyk
 		\Cms\Model\Stat::hit('admin-logout');
 		$this->getResponse()->redirect('cmsAdmin');
@@ -91,7 +91,7 @@ class IndexController extends Mvc\Controller {
 		}
 		//hit do statystyk
 		\Cms\Model\Stat::hit('admin_password');
-		$this->getHelperMessenger()->addMessage('Hasło zmienione poprawnie, zaloguj się ponownie');
+		$this->getMessenger()->addMessage('Hasło zmienione poprawnie, zaloguj się ponownie');
 		//wylogowanie
 		\App\Registry::$auth->clearIdentity();
 		\Cms\Model\Stat::hit('admin_logout');

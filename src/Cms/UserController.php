@@ -26,11 +26,11 @@ class UserController extends \Mmi\Mvc\Controller {
 		}
 		//błędne logowanie
 		if (!$form->isSaved()) {
-			$this->getHelperMessenger()->addMessage('Logowanie błędne', false);
+			$this->getMessenger()->addMessage('Logowanie błędne', false);
 			return;
 		}
 		//lowowanie poprawne
-		$this->getHelperMessenger()->addMessage('Zalogowano poprawnie', true);
+		$this->getMessenger()->addMessage('Zalogowano poprawnie', true);
 		\Cms\Model\Stat::hit('user-login');
 		$this->getResponse()->redirectToUrl('/');
 	}
@@ -40,7 +40,7 @@ class UserController extends \Mmi\Mvc\Controller {
 	 */
 	public function logoutAction() {
 		\App\Registry::$auth->clearIdentity();
-		$this->getHelperMessenger()->addMessage('Wylogowano poprawnie', true);
+		$this->getMessenger()->addMessage('Wylogowano poprawnie', true);
 		\Cms\Model\Stat::hit('user-logout');
 		$this->getResponse()->redirectToUrl('/');
 	}
@@ -56,11 +56,11 @@ class UserController extends \Mmi\Mvc\Controller {
 		}
 		//błędy formularza
 		if (!$form->isSaved()) {
-			$this->getHelperMessenger()->addMessage('Formularz zawiera błędy', false);
+			$this->getMessenger()->addMessage('Formularz zawiera błędy', false);
 			return;
 		}
 		//rejestracja poprawna
-		$this->getHelperMessenger()->addMessage('Zarejestrowano poprawnie. Sprawdź e-mail i kliknij potwierdzenie konta.', true);
+		$this->getMessenger()->addMessage('Zarejestrowano poprawnie. Sprawdź e-mail i kliknij potwierdzenie konta.', true);
 		\Cms\Model\Stat::hit('user-register');
 		$this->getResponse()->redirectToUrl('/');
 	}

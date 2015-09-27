@@ -28,7 +28,7 @@ class FileController extends Mvc\Controller {
 	public function deleteAction() {
 		$file = \Cms\Orm\File\Query::factory()->findPk($this->id);
 		if ($file && $file->delete()) {
-			$this->getHelperMessenger()->addMessage('Poprawnie usunięto plik', true);
+			$this->getMessenger()->addMessage('Poprawnie usunięto plik', true);
 		}
 		$this->getResponse()->redirect('cmsAdmin', 'file', 'index');
 	}

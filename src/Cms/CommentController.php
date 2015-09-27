@@ -34,7 +34,7 @@ class CommentController extends \Mmi\Mvc\Controller {
 			'objectId' => $this->objectId
 		]);
 		if ($form->isSaved()) {
-			$this->getHelperMessenger()->addMessage('Dodano komentarz', true);
+			$this->getMessenger()->addMessage('Dodano komentarz', true);
 			$this->getResponse()->redirectToUrl($this->getRequest()->getReferer());
 		}
 		$this->view->commentForm = $form;

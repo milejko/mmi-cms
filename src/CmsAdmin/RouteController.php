@@ -19,7 +19,7 @@ class RouteController extends Mvc\Controller {
 	public function editAction() {
 		$form = new \CmsAdmin\Form\Route(new \Cms\Orm\Route\Record($this->id));
 		if ($form->isSaved()) {
-			$this->getHelperMessenger()->addMessage('Poprawnie zapisano trasę', true);
+			$this->getMessenger()->addMessage('Poprawnie zapisano trasę', true);
 			$this->getResponse()->redirect('cmsAdmin', 'route');
 		}
 		$this->view->routeForm = $form;
@@ -28,7 +28,7 @@ class RouteController extends Mvc\Controller {
 	public function deleteAction() {
 		$text = \Cms\Orm\Route\Query::factory()->findPk($this->id);
 		if ($text && $text->delete()) {
-			$this->getHelperMessenger()->addMessage('Poprawnie skasowano trasę');
+			$this->getMessenger()->addMessage('Poprawnie skasowano trasę');
 		}
 		$this->getResponse()->redirect('cmsAdmin', 'route', 'index');
 	}

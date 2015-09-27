@@ -19,7 +19,7 @@ class AuthController extends Mvc\Controller {
 	public function editAction() {
 		$form = new \CmsAdmin\Form\Auth(new \Cms\Orm\Auth\Record($this->id));
 		if ($form->isSaved()) {
-			$this->getHelperMessenger()->addMessage('Poprawnie zapisano użytkownika', true);
+			$this->getMessenger()->addMessage('Poprawnie zapisano użytkownika', true);
 			$this->getResponse()->redirect('cmsAdmin', 'auth');
 		}
 		$this->view->authForm = $form;
@@ -28,7 +28,7 @@ class AuthController extends Mvc\Controller {
 	public function deleteAction() {
 		$auth = \Cms\Orm\Auth\Query::factory()->findPk($this->id);
 		if ($auth && $auth->delete()) {
-			$this->getHelperMessenger()->addMessage('Poprawnie skasowano użytkownika', true);
+			$this->getMessenger()->addMessage('Poprawnie skasowano użytkownika', true);
 		}
 		$this->getResponse()->redirect('cmsAdmin', 'auth');
 	}
