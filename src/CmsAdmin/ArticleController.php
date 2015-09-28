@@ -13,7 +13,7 @@ namespace CmsAdmin;
 class ArticleController extends Mvc\Controller {
 
 	public function indexAction() {
-		$this->view->grid = new \Cms\Plugin\ArticleGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\ArticleGrid();
 	}
 
 	public function editAction() {

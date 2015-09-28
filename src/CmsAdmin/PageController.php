@@ -16,7 +16,7 @@ namespace CmsAdmin;
 class PageController extends Mvc\Controller {
 
 	public function indexAction() {
-		$this->view->grid = new \Cms\Plugin\PageGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\PageGrid();
 	}
 
 	public function editAction() {

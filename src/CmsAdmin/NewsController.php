@@ -19,7 +19,7 @@ class NewsController extends Mvc\Controller {
 	 * Lista aktualności
 	 */
 	public function indexAction() {
-		$this->view->grid = new \Cms\Plugin\NewsGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\NewsGrid();
 	}
 
 	/**

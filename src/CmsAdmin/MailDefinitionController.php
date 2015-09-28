@@ -13,7 +13,7 @@ namespace CmsAdmin;
 class MailDefinitionController extends Mvc\Controller {
 
 	public function indexAction() {
-		$grid = new \Cms\Plugin\MailDefinitionGrid();
+		$grid = new \CmsAdmin\Plugin\MailDefinitionGrid();
 		$this->view->grid = $grid;
 	}
 

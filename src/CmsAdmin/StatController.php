@@ -101,7 +101,7 @@ class StatController extends Mvc\Controller {
 	 * Zarządzanie labelkami
 	 */
 	public function labelAction() {
-		$this->view->grid = new \Cms\Plugin\StatLabelGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\StatLabelGrid();
 	}
 
 	/**

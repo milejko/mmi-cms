@@ -13,7 +13,7 @@ namespace CmsAdmin;
 class RouteController extends Mvc\Controller {
 
 	public function indexAction() {
-		$this->view->grid = new \Cms\Plugin\RouteGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\RouteGrid();
 	}
 
 	public function editAction() {

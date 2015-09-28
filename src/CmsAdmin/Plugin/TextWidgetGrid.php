@@ -8,9 +8,9 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace Cms\Plugin;
+namespace CmsAdmin\Plugin;
 
-class TextWidgetGrid extends \Mmi\Grid {
+class TextWidgetGrid extends \CmsAdmin\Plugin\Grid {
 
 	public function init() {
 

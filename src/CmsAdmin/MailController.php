@@ -19,7 +19,7 @@ class MailController extends Mvc\Controller {
 	 * Kolejka maili
 	 */
 	public function indexAction() {
-		$this->view->grid = new \Cms\Plugin\MailGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\MailGrid();
 	}
 
 	/**

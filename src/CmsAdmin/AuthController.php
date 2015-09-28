@@ -13,7 +13,7 @@ namespace CmsAdmin;
 class AuthController extends Mvc\Controller {
 
 	public function indexAction() {
-		$this->view->grid = new \Cms\Plugin\AuthGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\AuthGrid();
 	}
 
 	public function editAction() {

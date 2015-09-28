@@ -13,7 +13,7 @@ namespace CmsAdmin;
 class CronController extends Mvc\Controller {
 
 	public function indexAction() {
-		$grid = new \Cms\Plugin\CronGrid();
+		$grid = new \CmsAdmin\Plugin\CronGrid();
 		$this->view->grid = $grid;
 	}
 

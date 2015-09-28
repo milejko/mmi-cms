@@ -22,6 +22,9 @@
 		"mmi/mmi": "~3.0.0",
 		"phpmailer/phpmailer": "~5.2"
 	},
+	"require-dev": {
+		"php-console/php-console": "~3.1"
+	},
 	"autoload": {
 		"psr-4": {
 			"Cms\\": "src/Cms",

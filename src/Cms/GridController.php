@@ -68,7 +68,7 @@ class GridController extends \Mmi\Mvc\Controller {
 			return;
 		}
 		$class = $options['className'];
-		$grid = new $class(); /* @var $grid \Mmi\Grid */
+		$grid = new $class(); /* @var $grid \CmsAdmin\Plugin\Grid */
 		if ($value) {
 			if ($value == 'DESC') {
 				$options['order'][$field] = 'DESC';

@@ -8,9 +8,9 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace Cms\Plugin;
+namespace CmsAdmin\Plugin;
 
-class MailDefinitionGrid extends \Mmi\Grid {
+class MailDefinitionGrid extends \CmsAdmin\Plugin\Grid {
 
 	public function init() {
 

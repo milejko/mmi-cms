@@ -13,11 +13,11 @@ namespace CmsAdmin;
 class ContactController extends Mvc\Controller {
 
 	public function indexAction() {
-		$this->view->grid = new \Cms\Plugin\ContactGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\ContactGrid();
 	}
 
 	public function subjectAction() {
-		$this->view->grid = new \Cms\Plugin\ContactOptionGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\ContactOptionGrid();
 	}
 
 	public function editSubjectAction() {

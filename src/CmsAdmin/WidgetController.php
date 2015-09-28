@@ -13,7 +13,7 @@ namespace CmsAdmin;
 class WidgetController extends Mvc\Controller {
 
 	public function indexAction() {
-		$this->view->grid = new \Cms\Plugin\WidgetGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\WidgetGrid();
 	}
 
 	public function textWidgetEditAction() {
@@ -22,7 +22,7 @@ class WidgetController extends Mvc\Controller {
 			$this->view->textId = $widget->id;
 		}
 
-		$this->view->grid = new \Cms\Plugin\TextWidgetGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\TextWidgetGrid();
 
 		$form = new \CmsAdmin\Form\Widget\Text($widget);
 		if ($form->isSaved()) {
@@ -44,7 +44,7 @@ class WidgetController extends Mvc\Controller {
 		if ($pictureRec != null) {
 			$this->view->pictureId = $pictureRec->id;
 		}
-		$this->view->grid = new \Cms\Plugin\PictureWidgetGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\PictureWidgetGrid();
 
 		$form = new \CmsAdmin\Form\Widget\Picture($pictureRec);
 		if ($form->isSaved()) {

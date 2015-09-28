@@ -8,9 +8,9 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace Cms\Plugin;
+namespace CmsAdmin\Plugin;
 
-class StatLabelGrid extends \Mmi\Grid {
+class StatLabelGrid extends \CmsAdmin\Plugin\Grid {
 
 	public function init() {
 

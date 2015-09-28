@@ -13,7 +13,7 @@ namespace CmsAdmin;
 class CommentController extends Mvc\Controller {
 
 	public function indexAction() {
-		$this->view->grid = new \Cms\Plugin\CommentGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\CommentGrid();
 	}
 
 	public function deleteAction() {

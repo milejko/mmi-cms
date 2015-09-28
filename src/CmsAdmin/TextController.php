@@ -19,7 +19,7 @@ class TextController extends Mvc\Controller {
 	 * Grid tekstów
 	 */
 	public function indexAction() {
-		$this->view->grid = new \Cms\Plugin\TextGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\TextGrid();
 	}
 
 	/**

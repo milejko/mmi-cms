@@ -19,7 +19,7 @@ class FileController extends Mvc\Controller {
 	 * Lista plików
 	 */
 	public function indexAction() {
-		$this->view->grid = new \Cms\Plugin\FileGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\FileGrid();
 	}
 	
 	/**

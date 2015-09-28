@@ -8,12 +8,12 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace Cms\Plugin;
+namespace CmsAdmin\Plugin;
 
 /**
  * Grid plików
  */
-class FileGrid extends \Mmi\Grid {
+class FileGrid extends \CmsAdmin\Plugin\Grid {
 
 	public function init() {
 
