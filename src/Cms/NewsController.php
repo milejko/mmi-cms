@@ -10,8 +10,14 @@
 
 namespace Cms;
 
+/**
+ * Kontroler newsów
+ */
 class NewsController extends \Mmi\Mvc\Controller {
 
+	/**
+	 * Lista aktualności
+	 */
 	public function indexAction() {
 		//przekierowanie z posta z ilością podstron
 		if ($this->getPost()->pages) {
@@ -35,6 +41,9 @@ class NewsController extends \Mmi\Mvc\Controller {
 		$this->view->paginator = $paginator;
 	}
 
+	/**
+	 * Lista top aktualności
+	 */
 	public function topAction() {
 		$limit = $this->limit ? intval($this->limit) : 5;
 		$this->view->news = \Cms\Orm\News\Query::active()
@@ -42,6 +51,9 @@ class NewsController extends \Mmi\Mvc\Controller {
 			->find();
 	}
 
+	/**
+	 * Wyświetlenie aktualności
+	 */
 	public function displayAction() {
 		$this->view->item = \Cms\Orm\News\Query::activeByUri($this->uri)
 			->findFirst();

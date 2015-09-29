@@ -15,11 +15,18 @@ namespace Cms;
  */
 class CronController extends \Mmi\Mvc\Controller {
 
+	/**
+	 * Uruchomienie crona
+	 * @return string
+	 */
 	public function indexAction() {
 		\Cms\Model\Cron::run();
 		return 'OK';
 	}
 
+	/**
+	 * Wysyłka maili
+	 */
 	public function sendMailAction() {
 		if (rand(0, 120) == 12) {
 			$this->view->cleared = \Cms\Model\Mail::clean();
@@ -27,10 +34,16 @@ class CronController extends \Mmi\Mvc\Controller {
 		$this->view->result = \Cms\Model\Mail::send();
 	}
 
+	/**
+	 * Agregator statystyk
+	 */
 	public function agregateAction() {
 		$this->view->result = \Cms\Model\Stat::agregate();
 	}
 
+	/**
+	 * Czyściciel logów
+	 */
 	public function cleanAction() {
 		$months = 24;
 		if ($this->months > 0) {

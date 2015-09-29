@@ -10,12 +10,21 @@
 
 namespace CmsAdmin;
 
+/**
+ * Kontroler użytkowników
+ */
 class AuthController extends Mvc\Controller {
 
+	/**
+	 * Lista użytkowników
+	 */
 	public function indexAction() {
 		$this->view->grid = new \CmsAdmin\Plugin\AuthGrid();
 	}
 
+	/**
+	 * Edycja użytkownika
+	 */
 	public function editAction() {
 		$form = new \CmsAdmin\Form\Auth(new \Cms\Orm\Auth\Record($this->id));
 		if ($form->isSaved()) {
@@ -25,6 +34,9 @@ class AuthController extends Mvc\Controller {
 		$this->view->authForm = $form;
 	}
 
+	/**
+	 * Kasowanie użytkownika
+	 */
 	public function deleteAction() {
 		$auth = \Cms\Orm\Auth\Query::factory()->findPk($this->id);
 		if ($auth && $auth->delete()) {

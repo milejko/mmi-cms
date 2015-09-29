@@ -10,12 +10,21 @@
 
 namespace CmsAdmin;
 
+/**
+ * Kontroler tagów
+ */
 class TagController extends Mvc\Controller {
 
+	/**
+	 * Lista tagów
+	 */
 	public function indexAction() {
 		$this->view->grid = new \CmsAdmin\Plugin\TagGrid();
 	}
 
+	/**
+	 * Edycja tagów
+	 */
 	public function editAction() {
 		$form = new \CmsAdmin\Form\Tag(new \Cms\Orm\Tag\Record($this->id));
 		if ($form->isSaved()) {
@@ -25,6 +34,9 @@ class TagController extends Mvc\Controller {
 		$this->view->tagForm = $form;
 	}
 
+	/**
+	 * Usuwanie tagu
+	 */
 	public function deleteAction() {
 		$tag = \Cms\Orm\Tag\Query::factory()->findPk($this->id);
 		if ($tag && $tag->delete()) {

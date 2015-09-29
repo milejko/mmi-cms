@@ -10,16 +10,28 @@
 
 namespace CmsAdmin;
 
+/**
+ * Kontroler kontaktów
+ */
 class ContactController extends Mvc\Controller {
 
+	/**
+	 * Lista zgłoszeń
+	 */
 	public function indexAction() {
 		$this->view->grid = new \CmsAdmin\Plugin\ContactGrid();
 	}
 
+	/**
+	 * Lista tematów zgłoszeń
+	 */
 	public function subjectAction() {
 		$this->view->grid = new \CmsAdmin\Plugin\ContactOptionGrid();
 	}
 
+	/**
+	 * Edycja tematu
+	 */
 	public function editSubjectAction() {
 		$form = new \CmsAdmin\Form\Contact\Option(new \Cms\Orm\Contact\Option\Record($this->id));
 		if ($form->isSaved()) {
@@ -29,6 +41,9 @@ class ContactController extends Mvc\Controller {
 		$this->view->optionForm = $form;
 	}
 
+	/**
+	 * Usuwanie tematu
+	 */
 	public function deleteSubjectAction() {
 		$option = \Cms\Orm\Contact\Option\Query::factory()->findPk($this->id);
 		if ($option && $option->delete()) {
@@ -37,6 +52,9 @@ class ContactController extends Mvc\Controller {
 		$this->getResponse()->redirect('cmsAdmin', 'contact', 'subject');
 	}
 
+	/**
+	 * Usuwanie zgłoszenia
+	 */
 	public function deleteAction() {
 		$contact = \Cms\Orm\Contact\Query::factory()->findPk($this->id);
 		if ($contact && $contact->delete()) {
@@ -45,6 +63,9 @@ class ContactController extends Mvc\Controller {
 		$this->getResponse()->redirect('cmsAdmin', 'contact');
 	}
 
+	/**
+	 * Edycja/odpowiedź na zgłoszenie
+	 */
 	public function editAction() {
 		$form = new \CmsAdmin\Form\Contact(new \Cms\Orm\Contact\Record($this->id));
 		if ($form->isSaved()) {

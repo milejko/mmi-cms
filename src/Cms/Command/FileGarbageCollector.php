@@ -109,4 +109,4 @@ class FileGarbageCollector extends \Mmi\Tools\CliAbstract {
 }
 
 //nowy obiekt kolektora śmieci
-new FileGarbageCollector();
+new FileGarbageCollector(isset($argv[1]) ? $argv[1] : null);

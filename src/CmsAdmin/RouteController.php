@@ -10,12 +10,21 @@
 
 namespace CmsAdmin;
 
+/**
+ * Kontroler tras
+ */
 class RouteController extends Mvc\Controller {
 
+	/**
+	 * Lista tras
+	 */
 	public function indexAction() {
 		$this->view->grid = new \CmsAdmin\Plugin\RouteGrid();
 	}
 
+	/**
+	 * Edycja trasy
+	 */
 	public function editAction() {
 		$form = new \CmsAdmin\Form\Route(new \Cms\Orm\Route\Record($this->id));
 		if ($form->isSaved()) {
@@ -25,6 +34,9 @@ class RouteController extends Mvc\Controller {
 		$this->view->routeForm = $form;
 	}
 
+	/**
+	 * Usuwanie trasy
+	 */
 	public function deleteAction() {
 		$text = \Cms\Orm\Route\Query::factory()->findPk($this->id);
 		if ($text && $text->delete()) {

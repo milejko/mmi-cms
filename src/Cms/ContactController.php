@@ -10,8 +10,14 @@
 
 namespace Cms;
 
+/**
+ * Strona kontaktowa
+ */
 class ContactController extends \Mmi\Mvc\Controller {
 
+	/**
+	 * Akcja kontaktu
+	 */
 	public function indexAction() {
 		//ciasteczko sesyjne - zapamietanie sciezki
 		$namespace = new \Mmi\Session\Space('contact');

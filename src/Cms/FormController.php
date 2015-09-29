@@ -10,8 +10,15 @@
 
 namespace Cms;
 
+/**
+ * Kontroler ajax formularzy
+ */
 class FormController extends \Mmi\Mvc\Controller {
 
+	/**
+	 * Walidacja formularza
+	 * @return string
+	 */
 	public function validateAction() {
 		//typ odpowiedzi: plain
 		$this->getResponse()->setTypePlain();

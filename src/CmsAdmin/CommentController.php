@@ -10,12 +10,21 @@
 
 namespace CmsAdmin;
 
+/**
+ * Kontroler komentarzy
+ */
 class CommentController extends Mvc\Controller {
 
+	/**
+	 * Lista komentarzy
+	 */
 	public function indexAction() {
 		$this->view->grid = new \CmsAdmin\Plugin\CommentGrid();
 	}
 
+	/**
+	 * Usuwanie komentarza
+	 */
 	public function deleteAction() {
 		$comment = \Cms\Orm\Comment\Query::factory()->findPk($this->id);
 		if ($comment && $comment->delete()) {

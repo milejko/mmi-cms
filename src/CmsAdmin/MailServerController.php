@@ -10,13 +10,22 @@
 
 namespace CmsAdmin;
 
+/**
+ * Kontroler serwerów mailowych
+ */
 class MailServerController extends Mvc\Controller {
 
+	/**
+	 * Lista serwerów
+	 */
 	public function indexAction() {
 		$grid = new \CmsAdmin\Plugin\MailServerGrid();
 		$this->view->grid = $grid;
 	}
 
+	/**
+	 * Edycja serwera
+	 */
 	public function editAction() {
 		$form = new \CmsAdmin\Form\Mail\Server(new \Cms\Orm\Mail\Server\Record($this->id));
 		if ($form->isSaved()) {
@@ -26,6 +35,9 @@ class MailServerController extends Mvc\Controller {
 		$this->view->serverForm = $form;
 	}
 
+	/**
+	 * Usuwanie serwera
+	 */
 	public function deleteAction() {
 		$server = \Cms\Orm\Mail\Server\Query::factory()->findPk($this->id);
 		try {

@@ -10,13 +10,22 @@
 
 namespace CmsAdmin;
 
+/**
+ * Kontroler harmonogramu zadań
+ */
 class CronController extends Mvc\Controller {
 
+	/**
+	 * Lista zadań
+	 */
 	public function indexAction() {
 		$grid = new \CmsAdmin\Plugin\CronGrid();
 		$this->view->grid = $grid;
 	}
 
+	/**
+	 * Edycja zadania
+	 */
 	public function editAction() {
 		$form = new \CmsAdmin\Form\Cron(new \Cms\Orm\Cron\Record($this->id));
 		if ($form->isSaved()) {
@@ -26,6 +35,9 @@ class CronController extends Mvc\Controller {
 		$this->view->cronForm = $form;
 	}
 
+	/**
+	 * Usuwanie zadania
+	 */
 	public function deleteAction() {
 		$record = \Cms\Orm\Cron\Query::factory()->findPk($this->id);
 		if ($record && $record->delete()) {

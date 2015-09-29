@@ -28,4 +28,4 @@ class CronExecute extends \Mmi\Tools\CliAbstract {
 
 }
 
-new CronExecute();
+new CronExecute(isset($argv[1]) ? $argv[1] : null);

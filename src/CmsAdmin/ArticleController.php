@@ -10,12 +10,21 @@
 
 namespace CmsAdmin;
 
+/**
+ * Artykuły
+ */
 class ArticleController extends Mvc\Controller {
 
+	/**
+	 * Lista artykułów
+	 */
 	public function indexAction() {
 		$this->view->grid = new \CmsAdmin\Plugin\ArticleGrid();
 	}
 
+	/**
+	 * Edycja artykułu
+	 */
 	public function editAction() {
 		$form = new \CmsAdmin\Form\Article(new \Cms\Orm\Article\Record($this->id));
 		if ($form->isSaved()) {
@@ -25,6 +34,9 @@ class ArticleController extends Mvc\Controller {
 		$this->view->articleForm = $form;
 	}
 
+	/**
+	 * Usuwanie artykułu
+	 */
 	public function deleteAction() {
 		$record = \Cms\Orm\Article\Query::factory()->findPk($this->id);
 		if ($record && $record->delete()) {

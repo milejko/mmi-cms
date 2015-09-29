@@ -10,13 +10,22 @@
 
 namespace CmsAdmin;
 
+/**
+ * Definicje szablonów maili
+ */
 class MailDefinitionController extends Mvc\Controller {
 
+	/**
+	 * Lista szablonów
+	 */
 	public function indexAction() {
 		$grid = new \CmsAdmin\Plugin\MailDefinitionGrid();
 		$this->view->grid = $grid;
 	}
 
+	/**
+	 * Edycja szablonu
+	 */
 	public function editAction() {
 		$form = new \CmsAdmin\Form\Mail\Definition(new \Cms\Orm\Mail\Definition\Record($this->id));
 		if ($form->isSaved()) {
@@ -26,6 +35,9 @@ class MailDefinitionController extends Mvc\Controller {
 		$this->view->definitionForm = $form;
 	}
 
+	/**
+	 * Usuwanie szablonu
+	 */
 	public function deleteAction() {
 		$definition = \Cms\Orm\Mail\Definition\Query::factory()->findPk($this->id);
 		try {
