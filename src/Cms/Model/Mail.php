@@ -173,7 +173,7 @@ class Mail {
 				$result['success'] ++;
 			} catch (\Exception $e) {
 				//bład wysyłki
-				\Mmi\Logger\LoggerHelper::getLogger()->addWarning($e->getMessage());
+				\Mmi\App\FrontController::getInstance()->getLogger()->addWarning($e->getMessage());
 				//jak nie da sie wysłac to usuwamy
 				$email->delete();
 				//podwyzszenie licznika nieudanych

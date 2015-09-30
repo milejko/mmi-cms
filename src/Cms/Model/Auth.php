@@ -145,7 +145,7 @@ class Auth implements \Mmi\Security\AuthInterface {
 		}
 		try {
 			//tworzenie klienta
-			$ldapClient = new \Mmi\Ldap\Client(\Mmi\Ldap\ServerConfig::factory()
+			$ldapClient = new \Mmi\Ldap\LdapClient(\Mmi\Ldap\LdapConfig::factory()
 					->setAddress(\App\Registry::$config->ldap->address)
 					->setUser(\App\Registry::$config->ldap->user)
 					->setPassword(\App\Registry::$config->ldap->password)
