@@ -18,7 +18,7 @@ class Contact {
 	 * @return array
 	 */
 	public static function getMultioptions() {
-		return Orm\CmsContactOption\Query::factory()
+		return Orm\CmsContactOptionQuery::factory()
 				->orderAscOrder()
 				->orderAscName()
 				->findPairs('id', 'name');

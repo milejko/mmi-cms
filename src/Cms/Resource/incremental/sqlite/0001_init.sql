@@ -421,7 +421,6 @@ INSERT INTO "cms_article" ("id", "lang", "title", "uri", "dateAdd", "dateModify"
 <li>Logi (systemowe i błędów) - pozwalają monitorować aplikację</li>
 <li>Menu serwisu - umożliwia zarządzanie menu (zarówno frontu jak i panelu administracyjnego)</li>
 <li>Pliki - agreguje pliki dodane we wszystkich modułach (np. zdjęcia w aktualnościach, awatary użytkowników itp.)</li>
-<li>Strony CMS - umożliwia utworzenie szablonów (layoutów), a następnie stron opartych o te szablony, złożonych z dowolnych komponentów CMS</li>
 <li>Teksty stałe - zarządzanie tekstami stałymi frontu aplikacji (np. tekst w stopce)</li>
 </ol></li>
 <li>Statystyki - pozwala monitorować wybrane zachowania użytkowników</li>

@@ -27,7 +27,7 @@ class MailDefinitionController extends Mvc\Controller {
 	 * Edycja szablonu
 	 */
 	public function editAction() {
-		$form = new \CmsAdmin\FOrm\CmsMailDefinition(new \Cms\Orm\CmsMailDefinition\Record($this->id));
+		$form = new \CmsAdmin\Form\Mail\Definition(new \Cms\Orm\CmsMailDefinition\Record($this->id));
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Poprawnie zapisano definicję maila', true);
 			$this->getResponse()->redirect('cmsAdmin', 'mailDefinition');

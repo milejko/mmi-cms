@@ -38,7 +38,6 @@ class Navigation extends \Mmi\Navigation\Config {
 				->addChild(Navigation\Comment::getMenu())
 				->addChild(Navigation\Contact::getMenu())
 				->addChild(Navigation\Stat::getMenu())
-				->addChild(Navigation\Page::getMenu())
 				->addChild(Navigation\Text::getMenu());
 	}
 

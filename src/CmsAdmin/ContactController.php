@@ -33,7 +33,7 @@ class ContactController extends Mvc\Controller {
 	 * Edycja tematu
 	 */
 	public function editSubjectAction() {
-		$form = new \CmsAdmin\FOrm\CmsContactOption(new \Cms\Orm\CmsContactOption\Record($this->id));
+		$form = new \CmsAdmin\Form\Contact\Option(new \Cms\Orm\CmsContactOption\Record($this->id));
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Poprawnie zapisano temat kontaktu', true);
 			$this->getResponse()->redirect('cmsAdmin', 'contact', 'subject');
@@ -45,7 +45,7 @@ class ContactController extends Mvc\Controller {
 	 * Usuwanie tematu
 	 */
 	public function deleteSubjectAction() {
-		$option = \Cms\Orm\CmsContactOption\Query::factory()->findPk($this->id);
+		$option = \Cms\Orm\CmsContactOptionQuery::factory()->findPk($this->id);
 		if ($option && $option->delete()) {
 			$this->getMessenger()->addMessage('Poprawnie usunięto temat', true);
 		}

@@ -44,7 +44,7 @@ class TextController extends Mvc\Controller {
 	 * Klonowanie tekstu
 	 */
 	public function cloneAction() {
-		$form = new \CmsAdmin\FOrm\CmsTextCopy(new \Cms\Orm\CmsTextRecord());
+		$form = new \CmsAdmin\Form\Text\Copy(new \Cms\Orm\CmsTextRecord());
 		$this->view->copyForm = $form;
 		//brak wysłanych danych
 		if (!$form->isMine()) {

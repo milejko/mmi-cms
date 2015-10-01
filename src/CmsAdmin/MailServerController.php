@@ -27,7 +27,7 @@ class MailServerController extends Mvc\Controller {
 	 * Edycja serwera
 	 */
 	public function editAction() {
-		$form = new \CmsAdmin\FOrm\CmsMailServer(new \Cms\Orm\CmsMailServer\Record($this->id));
+		$form = new \CmsAdmin\Form\Mail\Server(new \Cms\Orm\CmsMailServer\Record($this->id));
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Zapisano ustawienia serwera', true);
 			$this->getResponse()->redirect('cmsAdmin', 'mailServer');

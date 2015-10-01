@@ -22,7 +22,7 @@ class StatController extends Mvc\Controller {
 		$year = $this->year ? $this->year : date('Y');
 		$month = $this->month ? $this->month : date('m');
 		//form filtrujący
-		$form = new \CmsAdmin\FOrm\CmsStatObject(null, ['object' => $this->object,
+		$form = new \CmsAdmin\Form\Stat\Object(null, ['object' => $this->object,
 			'year' => $year,
 			'month' => $month,
 		]);
@@ -108,7 +108,7 @@ class StatController extends Mvc\Controller {
 	 * Edycja labelki
 	 */
 	public function editAction() {
-		$form = new \CmsAdmin\FOrm\CmsStatLabel(new \Cms\Orm\CmsStatLabelRecord($this->id));
+		$form = new \CmsAdmin\Form\Stat\Label(new \Cms\Orm\CmsStatLabelRecord($this->id));
 		//jeśli form zapisany
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Nazwa statystyki została zapisana', true);
