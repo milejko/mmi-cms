@@ -26,7 +26,7 @@ class ArticleController extends Mvc\Controller {
 	 * Edycja artykułu
 	 */
 	public function editAction() {
-		$form = new \CmsAdmin\Form\Article(new \Cms\Orm\Article\Record($this->id));
+		$form = new \CmsAdmin\Form\Article(new \Cms\Orm\CmsArticleRecord($this->id));
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Artykuł zapisany poprawnie', true);
 			$this->getResponse()->redirect('cmsAdmin', 'article');
@@ -38,7 +38,7 @@ class ArticleController extends Mvc\Controller {
 	 * Usuwanie artykułu
 	 */
 	public function deleteAction() {
-		$record = \Cms\Orm\Article\Query::factory()->findPk($this->id);
+		$record = \Cms\Orm\CmsArticleQuery::factory()->findPk($this->id);
 		if ($record && $record->delete()) {
 			$this->getMessenger()->addMessage('Poprawnie usunięto artykuł', true);
 		}

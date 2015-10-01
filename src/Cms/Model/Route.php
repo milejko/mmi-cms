@@ -20,7 +20,7 @@ class Route {
 	 */
 	public static function updateRouterConfig(\Mmi\Mvc\Router\Config $config, \Mmi\Orm\RecordCollection $routes) {
 		$i = 0;
-		foreach ($routes as $route) { /* @var $route \Cms\Orm\Route\Record */
+		foreach ($routes as $route) { /* @var $route \Cms\Orm\RouteRecord */
 			$i++;
 			$route = $route->toRouteArray();
 			$config->setRoute('cms-' . $i, $route['pattern'], $route['replace'], $route['default']);

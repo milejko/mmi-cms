@@ -10,11 +10,14 @@
 
 namespace CmsAdmin\Plugin;
 
+/**
+ * Grid artykułów
+ */
 class ArticleGrid extends \CmsAdmin\Plugin\Grid {
 
 	public function init() {
 
-		$this->setQuery(\Cms\Orm\Article\Query::factory());
+		$this->setQuery(\Cms\Orm\CmsArticleQuery::factory());
 
 		$this->addColumn('text', 'title', [
 			'label' => 'tytuł',

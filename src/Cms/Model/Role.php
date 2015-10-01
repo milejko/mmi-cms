@@ -10,8 +10,11 @@
 
 namespace Cms\Model;
 
-use \Cms\Orm;
+use Cms\Orm\CmsAuthRoleQuery;
 
+/**
+ * Model ról
+ */
 class Role {
 
 	/**
@@ -23,21 +26,21 @@ class Role {
 	public static function grant($cmsAuthId, array $roles, $revoke = true) {
 		//usuwa wszystkie role
 		if ($revoke) {
-			Orm\Auth\Role\Query::byAuthId($cmsAuthId)
+			CmsAuthRoleQuery::byAuthId($cmsAuthId)
 				->find()
 				->delete();
 		}
 		//iteracja po rolach
 		foreach ($roles as $roleId) {
 			//rola istnieje
-			if (null !== Orm\Auth\Role\Query::factory()
+			if (null !== CmsAuthRoleQuery::factory()
 					->whereCmsRoleId()->equals($roleId)
 					->andFieldCmsAuthId()->equals($cmsAuthId)
 					->findFirst()) {
 				continue;
 			}
 			//zapis rekordu
-			$record = new Orm\Auth\Role\Record();
+			$record = new Orm\CmsAuthRoleRecord();
 			$record->cmsAuthId = $cmsAuthId;
 			$record->cmsRoleId = $roleId;
 			$record->save();

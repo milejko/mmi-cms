@@ -9,8 +9,13 @@
  */
 
 namespace Cms\Model;
-use \Cms\Orm;
 
+use Cms\Orm\CmsNavigationQuery;
+use Cms\Orm\CmsNavigationRecord;
+
+/**
+ * Model nawigacji
+ */
 class Navigation {
 
 	/**
@@ -18,7 +23,7 @@ class Navigation {
 	 * @return array
 	 */
 	public static function getMultiOptions() {
-		return [null => '---'] + Orm\Navigation\Query::lang()
+		return [null => '---'] + CmsNavigationQuery::lang()
 				->orderAscParentId()
 				->orderAscOrder()->findPairs('id', 'label');
 	}
@@ -28,12 +33,12 @@ class Navigation {
 	 * @param \Mmi\Navigation\Config $config
 	 */
 	public static function decorateConfiguration(\Mmi\Navigation\Config $config) {
-		$objectArray = Orm\Navigation\Query::lang()
+		$objectArray = CmsNavigationQuery::lang()
 			->orderAscParentId()
 			->orderAscOrder()
 			->find()
 			->toObjectArray();
-		foreach ($objectArray as $key => $record) {/* @var $record \Cms\Orm\Navigation\Record */
+		foreach ($objectArray as $key => $record) {/* @var $record \Cms\Orm\CmsNavigationRecord */
 			if ($record->parentId != 0) {
 				continue;
 			}
@@ -52,7 +57,7 @@ class Navigation {
 	 */
 	public static function sortBySerial(array $serial = []) {
 		foreach ($serial as $order => $id) {
-			$record = Orm\Navigation\Query::factory()
+			$record = CmsNavigationQuery::factory()
 				->findPk($id);
 			if (!$record) {
 				continue;
@@ -65,12 +70,12 @@ class Navigation {
 
 	/**
 	 * 
-	 * @param \Cms\Orm\Navigation\Record $record
+	 * @param \Cms\Orm\CmsNavigationRecord $record
 	 * @param \Mmi\Navigation\Config\Element $element
 	 * @param array $objectArray
 	 */
-	protected static function _buildChildren(\Cms\Orm\Navigation\Record $record, \Mmi\Navigation\Config\Element $element, array $objectArray) {
-		foreach ($objectArray as $key => $child) {/* @var $child \Cms\Orm\Navigation\Record */
+	protected static function _buildChildren(\Cms\Orm\CmsNavigationRecord $record, \Mmi\Navigation\Config\Element $element, array $objectArray) {
+		foreach ($objectArray as $key => $child) {/* @var $child CmsNavigationRecord */
 			if ($child->parentId != $record->id) {
 				continue;
 			}
@@ -84,11 +89,11 @@ class Navigation {
 
 	/**
 	 * 
-	 * @param \Cms\Orm\Navigation\Record $record
+	 * @param \Cms\Orm\CmsNavigationRecord $record
 	 * @param \Mmi\Navigation\Config\Element $element
 	 * @return \Mmi\Navigation\Config\Element
 	 */
-	protected static function _setNavigationElementFromRecord(\Cms\Orm\Navigation\Record $record, \Mmi\Navigation\Config\Element $element) {
+	protected static function _setNavigationElementFromRecord(CmsNavigationRecord $record, \Mmi\Navigation\Config\Element $element) {
 		$https = null;
 		if ($record->https === 0) {
 			$https = false;

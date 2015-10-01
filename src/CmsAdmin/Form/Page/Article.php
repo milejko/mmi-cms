@@ -35,7 +35,7 @@ class Article extends \Cms\Form\Form {
 		//uri artykułu
 		$articleId = null;
 		//wyszukiwanie artykułu
-		if (preg_match('/^uri=([a-z0-9\-\_]+)$/i', $this->getRecord()->params, $matches) && null !== ($article = \Cms\Orm\Article\Query::byUri($matches[1])
+		if (preg_match('/^uri=([a-z0-9\-\_]+)$/i', $this->getRecord()->params, $matches) && null !== ($article = \Cms\Orm\CmsArticleQuery::byUri($matches[1])
 				->findFirst())) {
 			$articleId = $article->id;
 		}
@@ -98,7 +98,7 @@ class Article extends \Cms\Form\Form {
 	 * @return boolean
 	 */
 	public function beforeSave() {
-		if (null === ($article = \Cms\Orm\Article\Query::factory()->findPk($this->getElement('articleId')->getValue()))) {
+		if (null === ($article = \Cms\Orm\CmsArticleQuery::factory()->findPk($this->getElement('articleId')->getValue()))) {
 			return true;
 		}
 		$this->getRecord()->module = 'cms';

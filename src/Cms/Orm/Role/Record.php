@@ -20,7 +20,7 @@ class Record extends \Mmi\Orm\Record {
 			return false;
 		}
 		//zapis reguły dostępu do defaulta dla zapisanej roli
-		$rule = new \Cms\Orm\Acl\Record();
+		$rule = new \Cms\Orm\CmsAclRecord();
 		$rule->cmsRoleId = $this->id;
 		$rule->module = 'mmi';
 		$rule->access = 'allow';

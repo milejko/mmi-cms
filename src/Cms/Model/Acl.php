@@ -9,7 +9,7 @@
  */
 
 namespace Cms\Model;
-use \Cms\Orm;
+use Cms\Orm\CmsAclQuery;
 
 class Acl {
 
@@ -20,7 +20,7 @@ class Acl {
 	 */
 	public static function getMultioptionsByRoleId($role) {
 		$rules = [];
-		$data = Orm\Acl\Query::factory()
+		$data = CmsAclQuery::factory()
 			->whereCmsRoleId()->equals($role)
 			->find();
 		foreach ($data as $item) {
@@ -41,10 +41,10 @@ class Acl {
 	 */
 	public static function setupAcl() {
 		$acl = new \Mmi\Security\Acl();
-		$aclData = Orm\Acl\Query::factory()
+		$aclData = CmsAclQuery::factory()
 			->join('cms_role')->on('cms_role_id')
 			->find();
-		foreach ($aclData as $aclRule) { /* @var $aclData \Cms\Orm\Acl\Record */
+		foreach ($aclData as $aclRule) { /* @var $aclData \Cms\Orm\CmsAclRecord */
 			$resource = '';
 			if ($aclRule->module) {
 				$resource .= $aclRule->module . ':';

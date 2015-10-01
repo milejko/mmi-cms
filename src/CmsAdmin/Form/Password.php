@@ -12,7 +12,7 @@ namespace CmsAdmin\Form;
 
 /**
  * Formularz zmiany hasła w CMS
- * @method \Cms\Orm\Auth\Record getRecord()
+ * @method \Cms\Orm\CmsAuthRecord getRecord()
  */
 class Password extends \Mmi\Form\Form {
 
@@ -56,7 +56,7 @@ class Password extends \Mmi\Form\Form {
 			return false;
 		}
 		//znajdowanie rekordu użytkownika
-		$authRecord = \Cms\Orm\Auth\Query::factory()->findPk(\App\Registry::$auth->getId());
+		$authRecord = \Cms\Orm\CmsAuthQuery::factory()->findPk(\App\Registry::$auth->getId());
 		if (null === $authRecord) {
 			return false;
 		}

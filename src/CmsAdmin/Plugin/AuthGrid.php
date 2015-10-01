@@ -14,7 +14,7 @@ class AuthGrid extends \CmsAdmin\Plugin\Grid {
 
 	public function init() {
 
-		$this->setQuery(\Cms\Orm\Auth\Query::factory());
+		$this->setQuery(\Cms\Orm\CmsAuthQuery::factory());
 
 		$this->setOption('locked', true);
 

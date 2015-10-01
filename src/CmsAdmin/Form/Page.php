@@ -50,7 +50,7 @@ class Page extends \Cms\Form\Form {
 			->setLabel('Treść szablonu (do testów)');
 
 		//ustawianie pól nawigatora i routera
-		if ($this->_record->cmsNavigationId && (null !== ($nr = \Cms\Orm\Navigation\Query::factory()->findPk($this->_record->cmsNavigationId)))) {
+		if ($this->_record->cmsNavigationId && (null !== ($nr = \Cms\Orm\CmsNavigationQuery::factory()->findPk($this->_record->cmsNavigationId)))) {
 			$this->getElement('title')->setValue($nr->title);
 			$this->getElement('description')->setValue($nr->description);
 		}
@@ -70,10 +70,10 @@ class Page extends \Cms\Form\Form {
 	 */
 	public function beforeSave() {
 		//pobieranie elementu nawigacji
-		$navigationRecord = $this->getRecord()->cmsNavigationId ? \Cms\Orm\Navigation\Query::factory()->findPk($this->getRecord()->cmsNavigationId) : null;
+		$navigationRecord = $this->getRecord()->cmsNavigationId ? \Cms\Orm\CmsNavigationQuery::factory()->findPk($this->getRecord()->cmsNavigationId) : null;
 		//jeśli nie pobrano - nowy
 		if ($navigationRecord === null) {
-			$navigationRecord = new \Cms\Orm\Navigation\Record();
+			$navigationRecord = new \Cms\Orm\CmsNavigationRecord();
 		}
 		//ustawianie opcji elementu
 		$navigationRecord->absolute = 0;
@@ -116,7 +116,7 @@ class Page extends \Cms\Form\Form {
 	 */
 	public function afterSave() {
 		//pobranie nawigacji
-		$navigationRecord = \Cms\Orm\Navigation\Query::factory()->findPk($this->getRecord()->cmsNavigationId);
+		$navigationRecord = \Cms\Orm\CmsNavigationQuery::factory()->findPk($this->getRecord()->cmsNavigationId);
 		//pobranie routy
 		$routeRecord = \Cms\Orm\Route\Query::factory()->findPk($this->getRecord()->cmsRouteId);
 		//zapis do rekordu nawigacji parametru ID strony

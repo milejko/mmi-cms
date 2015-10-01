@@ -28,7 +28,7 @@ class NavigationController extends Mvc\Controller {
 	 * Edycja elementu menu
 	 */
 	public function editAction() {
-		$navRecord = new \Cms\Orm\Navigation\Record($this->id);
+		$navRecord = new \Cms\Orm\CmsNavigationRecord($this->id);
 		switch ($this->type) {
 			case 'link':
 				$form = new \CmsAdmin\Form\Page\Link($navRecord);
@@ -53,8 +53,8 @@ class NavigationController extends Mvc\Controller {
 	 * Usuwanie elementu
 	 */
 	public function deleteAction() {
-		/* @var $record \Cms\Orm\Navigation\Record */
-		$record = \Cms\Orm\Navigation\Query::factory()->findPk($this->id);
+		/* @var $record \Cms\Orm\CmsNavigationRecord */
+		$record = \Cms\Orm\CmsNavigationQuery::factory()->findPk($this->id);
 		if ($record !== null && $record->delete()) {
 			$this->getMessenger()->addMessage('Poprawnie usunięto element nawigacyjny', true);
 		}

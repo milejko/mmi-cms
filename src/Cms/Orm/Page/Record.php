@@ -35,7 +35,7 @@ class Record extends \Mmi\Orm\Record {
 			return false;
 		}
 		//usuwa powiązany element nawigacyjny
-		$navigationRecord = \Cms\Orm\Navigation\Query::factory()->findPk($this->cmsNavigationId);
+		$navigationRecord = \Cms\Orm\CmsNavigationQuery::factory()->findPk($this->cmsNavigationId);
 		$navigationRecord !== null && $navigationRecord->delete();
 		//usuwa powiązaną routę
 		$routeRecord = \Cms\Orm\Route\Query::factory()->findPk($this->cmsRouteId);

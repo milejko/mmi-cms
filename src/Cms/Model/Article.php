@@ -9,7 +9,6 @@
  */
 
 namespace Cms\Article;
-use \Cms\Orm;
 
 class Article {
 
@@ -18,7 +17,7 @@ class Article {
 	 * @return array
 	 */
 	public static function getMultioptions() {
-		return [null => '---'] + Orm\Article\Query::factory()
+		return [null => '---'] + \Cms\Orm\CmsArticleQuery::factory()
 				->orderAscTitle()
 				->findPairs('id', 'title');
 	}

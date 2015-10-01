@@ -10,10 +10,12 @@
 
 namespace Cms\Model;
 
-use \Cms\Orm;
+use Cms\Orm\CmsAuthQuery;
+use Cms\Orm\CmsAuthRoleQuery;
+use Cms\Orm\CmsAuthRecord;
 
 /**
- * Klasa autoryzacji
+ * Model autoryzacji
  */
 class Auth implements \Mmi\Security\AuthInterface {
 
@@ -36,7 +38,7 @@ class Auth implements \Mmi\Security\AuthInterface {
 		}
 
 		//poprawna autoryzacja
-		$record->setOption('roles', Orm\Auth\Role\Query::joinedRolebyAuthId($record->id)->findPairs('cms_role_id', 'name'));
+		$record->setOption('roles', CmsAuthRoleQuery::joinedRolebyAuthId($record->id)->findPairs('cms_role_id', 'name'));
 		return self::_authSuccess($record);
 	}
 
@@ -50,7 +52,7 @@ class Auth implements \Mmi\Security\AuthInterface {
 		if (null === $record = self::_findUserByIdentity($id)) {
 			return;
 		}
-		$record->setOption('roles', Orm\Auth\Role\Query::joinedRolebyAuthId($record->id)->findPairs('cms_role_id', 'name'));
+		$record->setOption('roles', CmsAuthRoleQuery::joinedRolebyAuthId($record->id)->findPairs('cms_role_id', 'name'));
 		return self::_authSuccess($record);
 	}
 
@@ -90,10 +92,10 @@ class Auth implements \Mmi\Security\AuthInterface {
 	/**
 	 * Po poprawnej autoryzacji zapis danych i loga
 	 * zwraca rekord autoryzacji
-	 * @param \Cms\Orm\Auth\Record $record
+	 * @param CmsAuthRecord $record
 	 * @return \Mmi\Security\AuthRecord
 	 */
-	protected static function _authSuccess(\Cms\Orm\Auth\Record $record) {
+	protected static function _authSuccess(CmsAuthRecord $record) {
 		//zapis poprawnego logowania do rekordu
 		$record->lastIp = \Mmi\App\FrontController::getInstance()->getEnvironment()->remoteAddress;
 		$record->lastLog = date('Y-m-d H:i:s');
@@ -120,11 +122,11 @@ class Auth implements \Mmi\Security\AuthInterface {
 
 	/**
 	 * Autoryzacja lokalna
-	 * @param \Cms\Orm\Auth\Record $identity
+	 * @param CmsAuthRecord $identity
 	 * @param string $credential
 	 * @return boolean
 	 */
-	protected static function _localAuthenticate(\Cms\Orm\Auth\Record $identity, $credential) {
+	protected static function _localAuthenticate(CmsAuthRecord $identity, $credential) {
 		//rekord aktywny i hasło zgodne
 		if ($identity->password == self::getSaltedPasswordHash($credential) || $identity->password == sha1($credential)) {
 			return true;
@@ -134,11 +136,11 @@ class Auth implements \Mmi\Security\AuthInterface {
 
 	/**
 	 * Autoryzacja LDAP
-	 * @param \Cms\Orm\Auth\Record $identity
+	 * @param CmsAuthRecord $identity
 	 * @param string $credential
 	 * @return boolean
 	 */
-	protected static function _ldapAuthenticate(\Cms\Orm\Auth\Record $identity, $credential) {
+	protected static function _ldapAuthenticate(CmsAuthRecord $identity, $credential) {
 		//ldap wyłączony
 		if (!isset(\App\Registry::$config->ldap) || !\App\Registry::$config->ldap->active) {
 			return;
@@ -166,12 +168,12 @@ class Auth implements \Mmi\Security\AuthInterface {
 	/**
 	 * Znajduje użytkownika po nazwie lub mailu
 	 * @param string $identity
-	 * @return \Cms\Orm\Auth\Record
+	 * @return CmsAuthRecord
 	 */
 	protected static function _findUserByIdentity($identity) {
-		return Orm\Auth\Query::factory()
+		return CmsAuthQuery::factory()
 				->whereActive()->equals(true)
-				->andQuery(Orm\Auth\Query::factory()
+				->andQuery(CmsAuthQuery::factory()
 					->whereUsername()->equals($identity)
 					->orFieldEmail()->equals($identity)
 					->orFieldId()->equals((integer) $identity))
@@ -180,7 +182,7 @@ class Auth implements \Mmi\Security\AuthInterface {
 
 	/**
 	 * Aktualizuje rekord użytkownika o błędne logowanie
-	 * @param \Cms\Orm\Auth\Record $record
+	 * @param CmsAuthRecord $record
 	 */
 	protected static function _updateUserFailedLogin($record) {
 		//zapis danych błędnego logowania znanego użytkownika

@@ -26,7 +26,7 @@ class AuthController extends Mvc\Controller {
 	 * Edycja użytkownika
 	 */
 	public function editAction() {
-		$form = new \CmsAdmin\Form\Auth(new \Cms\Orm\Auth\Record($this->id));
+		$form = new \CmsAdmin\Form\Auth(new \Cms\Orm\CmsAuthRecord($this->id));
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Poprawnie zapisano użytkownika', true);
 			$this->getResponse()->redirect('cmsAdmin', 'auth');
@@ -38,7 +38,7 @@ class AuthController extends Mvc\Controller {
 	 * Kasowanie użytkownika
 	 */
 	public function deleteAction() {
-		$auth = \Cms\Orm\Auth\Query::factory()->findPk($this->id);
+		$auth = \Cms\Orm\CmsAuthQuery::factory()->findPk($this->id);
 		if ($auth && $auth->delete()) {
 			$this->getMessenger()->addMessage('Poprawnie skasowano użytkownika', true);
 		}

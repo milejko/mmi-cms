@@ -10,39 +10,45 @@
 
 namespace Cms\Form;
 
+use Cms\Orm\CmsAuthQuery;
+
 /**
  * Formularz rejestracji
- * @method type getRecord()
+ * @method \Cms\Orm\CmsAuthRecord getRecord()
  */
 class Register extends \Cms\Form\Form {
 
 	public function init() {
 
+		//nazwa użytkownika
 		$this->addElementText('username')
 			->setLabel('nazwa użytkownika (nick)')
 			->setRequired()
 			->addValidatorAlnum()
-			->addValidatorRecordUnique(\Cms\Orm\Auth\Query::factory(), 'username')
+			->addValidatorRecordUnique(CmsAuthQuery::factory(), 'username')
 			->addValidatorStringLength(4, 25)
 			->addFilter('lowercase');
 
+		//email
 		$this->addElementText('email')
 			->setLabel('e-mail')
 			->setRequired()
 			->addValidatorEmailAddress()
-			->addValidatorRecordUnique(\Cms\Orm\Auth\Query::factory(), 'email')
+			->addValidatorRecordUnique(CmsAuthQuery::factory(), 'email')
 			->addValidatorStringLength(4, 150)
 			->addFilter('lowercase');
 
-		// Create and configure password element:
+		//password
 		$this->addElementPassword('password')
 			->setLabel('hasło')
 			->setRequired()
 			->addValidatorStringLength(4, 64);
 
+		//potwierdzenie
 		$this->addElementPassword('confirmPassword')
 			->setLabel('potwierdź hasło');
 
+		//regulamin
 		$this->addElementCheckbox('regulations')
 			->setLabel('Akceptuję regulamin')
 			->setRequired();

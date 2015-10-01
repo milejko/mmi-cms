@@ -12,7 +12,7 @@ namespace CmsAdmin\Form\Page;
 
 /**
  * Formularz folderó w nawigatorze
- * @method \Cms\Orm\Navigation\Record getRecord()
+ * @method \Cms\Orm\CmsNavigationRecord getRecord()
  */
 class Folder extends \Cms\Form\Form {
 

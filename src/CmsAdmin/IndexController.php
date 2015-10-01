@@ -19,7 +19,7 @@ class IndexController extends Mvc\Controller {
 	 * Strona główna admina
 	 */
 	public function indexAction() {
-		$this->view->user = \Cms\Orm\Auth\Query::factory()->findPk(\App\Registry::$auth->getId());
+		$this->view->user = \Cms\Orm\CmsAuthQuery::factory()->findPk(\App\Registry::$auth->getId());
 	}
 
 	/**

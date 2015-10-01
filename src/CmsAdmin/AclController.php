@@ -29,7 +29,7 @@ class AclController extends Mvc\Controller {
 			$this->getMessenger()->addMessage('Poprawnie zapisano rolę', true);
 			$this->getResponse()->redirect('cmsAdmin', 'acl', 'index', ['roleId' => $roleRecord->id]);
 		}
-		$aclForm = new \CmsAdmin\Form\Acl(new \Cms\Orm\Acl\Record());
+		$aclForm = new \CmsAdmin\Form\Acl(new \Cms\Orm\CmsAclRecord());
 		if ($aclForm->isMine() && $aclForm->isSaved()) {
 			$this->getMessenger()->addMessage('Poprawnie zapisano regułę', true);
 			$this->getResponse()->redirect('cmsAdmin', 'acl', 'index', ['roleId' => $this->roleId]);
@@ -48,7 +48,7 @@ class AclController extends Mvc\Controller {
 		if (!($this->id > 0)) {
 			return 0;
 		}
-		$rule = \Cms\Orm\Acl\Query::factory()->findPk($this->id);
+		$rule = \Cms\Orm\CmsAclQuery::factory()->findPk($this->id);
 		//skasowane
 		if ($rule && $rule->delete()) {
 			return 1;
@@ -67,7 +67,7 @@ class AclController extends Mvc\Controller {
 		if (!($this->value) || count($params) != 3) {
 			return $msg;
 		}
-		$record = \Cms\Orm\Acl\Query::factory()->findPk($params[2]);
+		$record = \Cms\Orm\CmsAclQuery::factory()->findPk($params[2]);
 		if (!$record) {
 			return;
 		}

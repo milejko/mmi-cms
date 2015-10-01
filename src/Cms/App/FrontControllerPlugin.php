@@ -9,6 +9,7 @@
  */
 
 namespace Cms\App;
+use Cms\Orm\CmsRouteQuery;
 
 /**
  * Plugin front kontrolera (hooki)
@@ -24,7 +25,7 @@ class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 		//routy z cms
 		if (null === ($routes = \App\Registry::$cache->load('Mmi-Route'))) {
 			//zapis rout do cache
-			\App\Registry::$cache->save($routes = \Cms\Orm\Route\Query::active()->find(), 'Mmi-Route', 0);
+			\App\Registry::$cache->save($routes = CmsRouteQuery::active()->find(), 'Mmi-Route', 0);
 		}
 		//aktualizacja konfiguracji routera  routy CMS
 		\Cms\Model\Route::updateRouterConfig(\Mmi\App\FrontController::getInstance()->getRouter()->getConfig(), $routes);

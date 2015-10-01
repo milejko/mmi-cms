@@ -12,7 +12,7 @@ namespace CmsAdmin\Form;
 
 /**
  * Formularz dodawania i edycji użytkowników CMS
- * @method \Cms\Orm\Auth\Record getRecord()
+ * @method \Cms\Orm\CmsAuthRecord getRecord()
  */
 class Auth extends \Mmi\Form\Form {
 
@@ -23,7 +23,7 @@ class Auth extends \Mmi\Form\Form {
 			->setRequired()
 			->addFilter('stringTrim')
 			->addValidatorNotEmpty()
-			->addValidatorRecordUnique(\Cms\Orm\Auth\Query::factory(), 'username', $this->getRecord()->id);
+			->addValidatorRecordUnique(\Cms\Orm\CmsAuthQuery::factory(), 'username', $this->getRecord()->id);
 
 		$this->addElementText('name')
 			->setLabel('pełna nazwa użytkownika (opcjonalna)')
@@ -34,13 +34,13 @@ class Auth extends \Mmi\Form\Form {
 			->setRequired()
 			->addFilter('stringTrim')
 			->addValidatorEmailAddress()
-			->addValidatorRecordUnique(\Cms\Orm\Auth\Query::factory(), 'email', $this->getRecord()->id);
+			->addValidatorRecordUnique(\Cms\Orm\CmsAuthQuery::factory(), 'email', $this->getRecord()->id);
 
 		$this->addElementMultiCheckbox('cmsRoles')
 			->setLabel('role')
 			->setDescription('Grupa uprawnień')
 			->setMultiOptions(\Cms\Orm\Role\Query::factory()->findPairs('id', 'name'))
-			->setValue(\Cms\Orm\Auth\Role\Query::byAuthId($this->_record->id)->findPairs('cms_role_id', 'cms_role_id'));
+			->setValue(\Cms\Orm\CmsAuthRoleQuery::byAuthId($this->_record->id)->findPairs('cms_role_id', 'cms_role_id'));
 
 		$languages = [];
 		foreach (\App\Registry::$config->languages as $language) {

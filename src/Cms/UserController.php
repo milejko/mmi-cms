@@ -49,7 +49,7 @@ class UserController extends \Mmi\Mvc\Controller {
 	 * Nowe konto
 	 */
 	public function registerAction() {
-		$form = new \Cms\Form\Register(new \Cms\Orm\Auth\Record());
+		$form = new \Cms\Form\Register(new \Cms\Orm\CmsAuthRecord());
 		$this->view->registerForm = $form;
 		if (!$form->isMine()) {
 			return;
