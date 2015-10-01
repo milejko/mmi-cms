@@ -17,7 +17,7 @@ class Cron {
 	 * Pobiera zadania crona
 	 */
 	public static function run() {
-		foreach (Orm\Cron\Query::active()->find() as $cron) {
+		foreach (Orm\CmsCronQuery::active()->find() as $cron) {
 			$logData = [];
 			$logData['name'] = $cron->name;
 			$logData['dateLastExecute'] = $cron->dateLastExecute;
@@ -53,7 +53,7 @@ class Cron {
 
 	/**
 	 * Sprawdza czy dane zadanie jest do wykonania
-	 * @param \Cms\Orm\Cron\Record $record
+	 * @param \Cms\Orm\CmsCronRecord $record
 	 */
 	protected static function _getToExecute($record) {
 		return self::_valueMatch(date('i'), $record->minute) &&

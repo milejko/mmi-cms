@@ -14,7 +14,7 @@ class CronGrid extends \CmsAdmin\Plugin\Grid {
 
 	public function init() {
 
-		$this->setQuery(\Cms\Orm\Cron\Query::factory());
+		$this->setQuery(\Cms\Orm\CmsCronQuery::factory());
 
 		$this->addColumn('text', 'name', [
 			'label' => 'Nazwa',

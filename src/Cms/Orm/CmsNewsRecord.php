@@ -27,7 +27,7 @@ class CmsNewsRecord extends \Mmi\Orm\Record {
 		$uri = $filter->filter($this->title);
 		//identyfikatory dla linków wewnętrznych
 		if ($this->internal == 1) {
-			$exists = CmsFileQuery::byUri($uri)
+			$exists = CmsNewsQuery::byUri($uri)
 				->findFirst();
 			if ($exists !== null && $exists->getPk() != $this->getPk()) {
 				$uri = $uri . '_' . date('Y-m-d');
