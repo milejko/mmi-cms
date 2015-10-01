@@ -10,54 +10,46 @@
 
 namespace CmsAdmin\Model;
 
+use Mmi\App\FrontController;
+
 /**
- * @TODO do refaktoryzacji - brzydki kod
+ * Model list komponentów MVC
  */
 class Reflection {
 
+	/**
+	 * Pobranie akcji
+	 * @return array
+	 */
 	public static function getActions() {
 		$structure = [];
-		foreach (glob(BASE_PATH . '/src/*') as $module) {
-			$moduleName = substr($module, strrpos($module, '/') + 1);
-			foreach (glob($module . '/*Controller.php') as $controller) {
-				$var = file_get_contents($controller);
-				$controllerName = substr($controller, strrpos($controller, '/') + 1, -14);
-				if (preg_match_all('/function ([a-zA-Z0-9]+Action)\(/', $var, $actions) && isset($actions[1])) {
-					foreach ($actions[1] as $action) {
-						$action = substr($action, 0, -6);
-						$moduleName = lcfirst($moduleName);
-						$controllerName = lcfirst($controllerName);
-						$structure[] = [
-							'path' => trim($moduleName . '_' . $controllerName . '_' . $action, '_ '),
-							'module' => $moduleName,
-							'controller' => $controllerName,
-							'action' => $action
-						];
-					}
+		foreach (FrontController::getInstance()->getStructure('module') as $moduleName => $module) {
+			foreach ($module as $controllerName => $controller) {
+				foreach ($controller as $actionName => $action) {
+					$structure[] = [
+						'path' => trim($moduleName . '_' . $controllerName . '_' . $actionName, '_ '),
+						'module' => $moduleName,
+						'controller' => $controllerName,
+						'action' => $actionName
+					];
 				}
 			}
 		}
 		return $structure;
 	}
 
+	/**
+	 * Pobranie modułów, kontrolerów, akcji
+	 * @return array
+	 */
 	public static function getOptionsWildcard() {
 		$structure = [];
-		foreach (glob(BASE_PATH . '/src/*') as $module) {
-			$moduleName = substr($module, strrpos($module, '/') + 1);
-			foreach (glob($module . '/*Controller.php') as $controller) {
-				$var = file_get_contents($controller);
-				$controllerName = substr($controller, strrpos($controller, '/') + 1, -14);
-				if (preg_match_all('/function ([a-zA-Z0-9]+Action)\(/', $var, $actions) && isset($actions[1])) {
-					$first = true;
-					foreach ($actions[1] as $action) {
-						$action = substr($action, 0, -6);
-						if ($first) {
-							$structure[$moduleName] = $moduleName;
-							$structure[$moduleName . ':' . $controllerName] = $moduleName . ' - ' . $controllerName;
-							$first = false;
-						}
-						$structure[$moduleName . ':' . $controllerName . ':' . $action] = $moduleName . ' - ' . $controllerName . ' - ' . $action;
-					}
+		foreach (FrontController::getInstance()->getStructure('module') as $moduleName => $module) {
+			$structure[$moduleName] = $moduleName;
+			foreach ($module as $controllerName => $controller) {
+				$structure[$moduleName . ':' . $controllerName] = $moduleName . ' - ' . $controllerName;
+				foreach ($controller as $actionName => $action) {
+					$structure[$moduleName . ':' . $controllerName . ':' . $actionName] = $moduleName . ' - ' . $controllerName . ' - ' . $actionName;
 				}
 			}
 		}
