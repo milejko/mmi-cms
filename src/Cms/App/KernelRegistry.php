@@ -13,7 +13,7 @@ namespace Cms\App;
 /**
  * Klasa rejestru aplikacji CMS
  */
-abstract class Registry extends \Mmi\App\Registry {
+abstract class KernelRegistry extends \Mmi\App\KernelRegistry {
 
 	/**
 	 * Obiekt ACL
