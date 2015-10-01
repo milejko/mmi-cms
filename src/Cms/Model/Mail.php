@@ -188,7 +188,7 @@ class Mail {
 	 * @return array lista
 	 */
 	public static function getMultioptions() {
-		$rows = Orm\CmsMailServer\Query::factory()
+		$rows = Orm\CmsMailServerQuery::factory()
 			->whereActive()->equals(1)
 			->find();
 		$pairs = [];

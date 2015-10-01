@@ -14,7 +14,7 @@ class RouteGrid extends \CmsAdmin\Plugin\Grid {
 
 	public function init() {
 
-		$this->setQuery(\Cms\Orm\Route\Query::factory()
+		$this->setQuery(\Cms\Orm\CmsRouteQuery::factory()
 				->orderAscOrder());
 
 		$this->setOption('rows', 100);

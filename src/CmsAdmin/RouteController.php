@@ -26,7 +26,7 @@ class RouteController extends Mvc\Controller {
 	 * Edycja trasy
 	 */
 	public function editAction() {
-		$form = new \CmsAdmin\Form\Route(new \Cms\Orm\Route\Record($this->id));
+		$form = new \CmsAdmin\Form\Route(new \Cms\Orm\CmsRouteRecord($this->id));
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Poprawnie zapisano trasę', true);
 			$this->getResponse()->redirect('cmsAdmin', 'route');
@@ -38,7 +38,7 @@ class RouteController extends Mvc\Controller {
 	 * Usuwanie trasy
 	 */
 	public function deleteAction() {
-		$text = \Cms\Orm\Route\Query::factory()->findPk($this->id);
+		$text = \Cms\Orm\CmsRouteQuery::factory()->findPk($this->id);
 		if ($text && $text->delete()) {
 			$this->getMessenger()->addMessage('Poprawnie skasowano trasę');
 		}

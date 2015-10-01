@@ -14,7 +14,7 @@ class MailServerGrid extends \CmsAdmin\Plugin\Grid {
 
 	public function init() {
 
-		$this->setQuery(\Cms\Orm\CmsMailServer\Query::factory()
+		$this->setQuery(\Cms\Orm\CmsMailServerQuery::factory()
 				->orderDescId());
 
 		$this->addColumn('text', 'address', [
