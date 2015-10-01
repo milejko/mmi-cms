@@ -33,7 +33,7 @@ class ContactController extends Mvc\Controller {
 	 * Edycja tematu
 	 */
 	public function editSubjectAction() {
-		$form = new \CmsAdmin\Form\Contact\Option(new \Cms\Orm\CmsContactOption\Record($this->id));
+		$form = new \CmsAdmin\Form\Contact\Option(new \Cms\Orm\CmsContactOptionRecord($this->id));
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Poprawnie zapisano temat kontaktu', true);
 			$this->getResponse()->redirect('cmsAdmin', 'contact', 'subject');
