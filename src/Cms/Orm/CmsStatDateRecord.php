@@ -2,6 +2,9 @@
 
 namespace Cms\Orm;
 
+/**
+ * Rekord statystyk zagregowanych
+ */
 class CmsStatDateRecord extends \Mmi\Orm\Record {
 
 	public $id;

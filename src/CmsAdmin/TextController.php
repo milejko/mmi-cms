@@ -26,7 +26,7 @@ class TextController extends Mvc\Controller {
 	 * Akcja edycji tekstu
 	 */
 	public function editAction() {
-		$form = new \CmsAdmin\Form\Text(new \Cms\Orm\Text\Record($this->id));
+		$form = new \CmsAdmin\Form\Text(new \Cms\Orm\CmsTextRecord($this->id));
 		$this->view->textForm = $form;
 		//brak wysłanych danych
 		if (!$form->isMine()) {
@@ -44,7 +44,7 @@ class TextController extends Mvc\Controller {
 	 * Klonowanie tekstu
 	 */
 	public function cloneAction() {
-		$form = new \CmsAdmin\Form\Text\Copy(new \Cms\Orm\Text\Record());
+		$form = new \CmsAdmin\FOrm\CmsTextCopy(new \Cms\Orm\CmsTextRecord());
 		$this->view->copyForm = $form;
 		//brak wysłanych danych
 		if (!$form->isMine()) {
@@ -62,7 +62,7 @@ class TextController extends Mvc\Controller {
 	 * Usuwanie tekstu
 	 */
 	public function deleteAction() {
-		$text = \Cms\Orm\Text\Query::factory()->findPk($this->id);
+		$text = \Cms\Orm\CmsTextQuery::factory()->findPk($this->id);
 		//jeśli znaleziono tekst i udało się usunąć
 		if ($text && $text->delete()) {
 			$this->getMessenger()->addMessage('Poprawnie skasowano tekst', true);

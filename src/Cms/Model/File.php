@@ -9,8 +9,12 @@
  */
 
 namespace Cms\Model;
-use \Cms\Orm;
+use Cms\Orm\CmsFileQuery;
+use Cms\Orm\CmsFileRecord;
 
+/**
+ * Model pliku
+ */
 class File {
 
 	/**
@@ -86,7 +90,7 @@ class File {
 	public static function move($srcObject, $srcId, $destObject, $destId) {
 		$i = 0;
 		//przenoszenie plików
-		foreach (Orm\File\Query::byObject($srcObject, $srcId)->find() as $file) {
+		foreach (CmsFileQuery::byObject($srcObject, $srcId)->find() as $file) {
 			//nowy obiekt i id
 			$file->object = $destObject;
 			$file->objectId = $destId;
@@ -104,7 +108,7 @@ class File {
 	public static function sortBySerial(array $serial = []) {
 		foreach ($serial as $order => $id) {
 			//brak rekordu o danym ID
-			if (null === ($record = Orm\File\Query::factory()->findPk($id))) {
+			if (null === ($record = CmsFileQuery::factory()->findPk($id))) {
 				continue;
 			}
 			//ustawianie kolejności i zapis
@@ -116,11 +120,11 @@ class File {
 	/**
 	 * Tworzy nowy rekord na podstawie pliku z requestu
 	 * @param \Mmi\Http\RequestFile $file plik z requesta
-	 * @return \Cms\Orm\File\Record rekord pliku
+	 * @return CmsFileRecord rekord pliku
 	 */
 	protected static function _newRecordFromRequestFile(\Mmi\Http\RequestFile $file) {
 		//nowy rekord
-		$record = new Orm\File\Record();
+		$record = new CmsFileRecord();
 		//typ zasobu
 		$record->mimeType = $file->type;
 		//klasa zasobu
@@ -148,7 +152,7 @@ class File {
 	 */
 	public static function deleteByObject($object = null, $objectId = null) {
 		//wybieramy kolekcję i usuwamy całą
-		return Orm\File\Query::byObject($object, $objectId)
+		return CmsFileQuery::byObject($object, $objectId)
 				->find()
 				->delete();
 	}

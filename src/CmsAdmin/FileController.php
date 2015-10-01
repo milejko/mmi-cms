@@ -26,7 +26,7 @@ class FileController extends Mvc\Controller {
 	 * Usuwanie pliku (z listy)
 	 */
 	public function deleteAction() {
-		$file = \Cms\Orm\File\Query::factory()->findPk($this->id);
+		$file = \Cms\Orm\CmsFileQuery::factory()->findPk($this->id);
 		if ($file && $file->delete()) {
 			$this->getMessenger()->addMessage('Poprawnie usunięto plik', true);
 		}
@@ -44,7 +44,7 @@ class FileController extends Mvc\Controller {
 			return '';
 		}
 		//brak pliku
-		if (null === ($file = \Cms\Orm\File\Query::factory()->findPk($this->id)) || $this->hash != $file->name) {
+		if (null === ($file = \Cms\Orm\CmsFileQuery::factory()->findPk($this->id)) || $this->hash != $file->name) {
 			return $this->view->getTranslate()->_('Przypinanie nie powiodło się');
 		}
 		//przypina plik
@@ -64,7 +64,7 @@ class FileController extends Mvc\Controller {
 			return $error;
 		}
 		//brak pliku
-		if (null === ($file = \Cms\Orm\File\Query::factory()->findPk($this->id))) {
+		if (null === ($file = \Cms\Orm\CmsFileQuery::factory()->findPk($this->id))) {
 			return $error;
 		}
 		//błędny plik
@@ -90,7 +90,7 @@ class FileController extends Mvc\Controller {
 		if (!$this->id) {
 			return $this->view->getTranslate()->_('Usuwanie nie powiodło się, brak pliku');
 		}
-		$file = \Cms\Orm\File\Query::factory()->findPk($this->id);
+		$file = \Cms\Orm\CmsFileQuery::factory()->findPk($this->id);
 		if (!$file || $this->hash != $file->getHashName()) {
 			return $this->view->getTranslate()->_('Usuwanie nie powiodło się');
 		}

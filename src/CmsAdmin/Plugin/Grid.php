@@ -470,7 +470,7 @@ abstract class Grid {
 						break;
 					case 'image':
 						$image = $fieldData;
-						if ($image instanceof \Cms\Orm\File\Record) {
+						if ($image instanceof \Cms\Orm\CmsFileRecord) {
 							$column['scale'] = (isset($column['scale']) && intval(isset($column['scale'])) > 0) ? $column['scale'] : 200;
 							$column['scaleType'] = (isset($column['scaleType'])) ? $column['scaleType'] : 'scalex';
 							$html .= '<div><img class="image" src="' . $this->_view->thumb($image, $column['scaleType'], $column['scale']) . '" alt="' . $column['name'] . '" /></div>';

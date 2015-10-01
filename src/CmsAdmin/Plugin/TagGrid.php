@@ -14,7 +14,7 @@ class TagGrid extends \CmsAdmin\Plugin\Grid {
 
 	public function init() {
 
-		$this->setQuery(\Cms\Orm\Tag\Query::factory());
+		$this->setQuery(\Cms\Orm\CmsTagQuery::factory());
 		$this->setOption('locked', true);
 
 		$this->addColumn('text', 'tag', [

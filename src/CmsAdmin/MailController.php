@@ -26,7 +26,7 @@ class MailController extends Mvc\Controller {
 	 * Usuniecie maila
 	 */
 	public function deleteAction() {
-		$mail = \Cms\Orm\Mail\Query::factory()->findPk($this->id);
+		$mail = \Cms\Orm\CmsMailQuery::factory()->findPk($this->id);
 		if ($mail && $mail->delete()) {
 			$this->getMessenger()->addMessage('Email został usunięty z kolejki', true);
 		}
@@ -37,7 +37,7 @@ class MailController extends Mvc\Controller {
 	 * Podglad treści maila
 	 */
 	public function previewAction() {
-		$mail = \Cms\Orm\Mail\Query::factory()->findPk($this->id);
+		$mail = \Cms\Orm\CmsMailQuery::factory()->findPk($this->id);
 		$this->view->message = $mail->message;
 	}
 	

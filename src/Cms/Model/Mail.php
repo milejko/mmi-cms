@@ -19,7 +19,7 @@ class Mail {
 	 * @return integer ilość usuniętych
 	 */
 	public static function clean() {
-		return Orm\Mail\Query::factory()
+		return Orm\CmsMailQuery::factory()
 				->whereActive()->equals(1)
 				->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-1 week')))
 				->find()
@@ -41,7 +41,7 @@ class Mail {
 	 */
 	public static function pushEmail($name, $to, array $params = [], $fromName = null, $replyTo = null, $subject = null, $sendAfter = null, array $attachments = []) {
 		//brak definicji
-		if (null === ($def = Orm\Mail\Definition\Query::langByName($name)
+		if (null === ($def = Orm\CmsMailDefinitionQuery::langByName($name)
 			->findFirst())) {
 			return false;
 		}
@@ -51,7 +51,7 @@ class Mail {
 			return false;
 		}
 		//nowy rekord maila
-		$mail = new Orm\Mail\Record();
+		$mail = new Orm\CmsMailRecord();
 		$mail->cmsMailDefinitionId = $def->id;
 		$mail->to = $to;
 		$mail->fromName = $fromName ? $fromName : $def->fromName;
@@ -93,7 +93,7 @@ class Mail {
 		//rezultat wysyłania
 		$result = ['error' => 0, 'success' => 0];
 		//pobieranie maili
-		$emails = Orm\Mail\Query::factory()
+		$emails = Orm\CmsMailQuery::factory()
 			->join('cms_mail_definition')->on('cms_mail_definition_id')
 			->join('cms_mail_server', 'cms_mail_definition')->on('cms_mail_server_id')
 			->whereActive()->equals(0)
@@ -188,7 +188,7 @@ class Mail {
 	 * @return array lista
 	 */
 	public static function getMultioptions() {
-		$rows = Orm\Mail\Server\Query::factory()
+		$rows = Orm\CmsMailServer\Query::factory()
 			->whereActive()->equals(1)
 			->find();
 		$pairs = [];

@@ -10,11 +10,14 @@
 
 namespace CmsAdmin\Plugin;
 
+/**
+ * Grid komentarzy
+ */
 class CommentGrid extends \CmsAdmin\Plugin\Grid {
 
 	public function init() {
 
-		$this->setQuery(\Cms\Orm\Comment\Query::factory());
+		$this->setQuery(\Cms\Orm\CmsCommentQuery::factory());
 
 		$this->addColumn('text', 'dateAdd', [
 			'label' => 'data dodania'

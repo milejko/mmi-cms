@@ -19,12 +19,12 @@ class AclController extends Mvc\Controller {
 	 * Lista uprawnień
 	 */
 	public function indexAction() {
-		$this->view->roles = \Cms\Orm\Role\Query::factory()->find();
+		$this->view->roles = \Cms\Orm\CmsRoleQuery::factory()->find();
 		if ($this->roleId) {
 			$this->view->rules = \Cms\Model\Acl::getMultioptionsByRoleId($this->roleId);
 			$this->view->options = [null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard();
 		}
-		$roleForm = new \CmsAdmin\Form\Role($roleRecord = new \Cms\Orm\Role\Record());
+		$roleForm = new \CmsAdmin\Form\Role($roleRecord = new \Cms\Orm\CmsRoleRecord());
 		if ($roleForm->isMine() && $roleForm->isSaved()) {
 			$this->getMessenger()->addMessage('Poprawnie zapisano rolę', true);
 			$this->getResponse()->redirect('cmsAdmin', 'acl', 'index', ['roleId' => $roleRecord->id]);

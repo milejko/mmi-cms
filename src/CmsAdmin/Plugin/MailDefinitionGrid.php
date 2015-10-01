@@ -14,7 +14,7 @@ class MailDefinitionGrid extends \CmsAdmin\Plugin\Grid {
 
 	public function init() {
 
-		$this->setQuery(\Cms\Orm\Mail\Definition\Query::lang());
+		$this->setQuery(\Cms\Orm\CmsMailDefinitionQuery::lang());
 
 		$this->addColumn('text', 'lang', [
 			'label' => 'język'

@@ -94,4 +94,48 @@ class CmsNewsQuery extends \Mmi\Orm\Query {
 		return new self($tableName);
 	}
 
+	/**
+	 * Zapytanie językowe
+	 * @return CmsNewsQuery
+	 */
+	public static function lang() {
+		if (!\Mmi\App\FrontController::getInstance()->getRequest()->lang) {
+			return self::factory();
+		}
+		return self::factory()
+				->whereLang()->equals(\Mmi\App\FrontController::getInstance()->getRequest()->lang)
+				->orFieldLang()->equals(null)
+				->orderDescLang();
+	}
+
+	/**
+	 * Zapytanie o aktywne
+	 * @return CmsNewsQuery
+	 */
+	public static function active() {
+		return self::lang()
+				->whereVisible()->equals(1)
+				->orderAscDateAdd();
+	}
+
+	/**
+	 * Zapytanie o aktywne po uri
+	 * @param string $uri
+	 * @return CmsNewsQuery
+	 */
+	public static function activeByUri($uri) {
+		return self::active()
+				->whereUri()->equals($uri);
+	}
+
+	/**
+	 * Zapytanie po uri
+	 * @param string $uri
+	 * @return CmsNewsQuery
+	 */
+	public static function byUri($uri) {
+		return self::lang()
+				->whereUri()->equals($uri);
+	}
+
 }

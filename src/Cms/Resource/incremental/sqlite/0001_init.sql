@@ -231,37 +231,6 @@ CREATE TABLE cms_route
 CREATE INDEX cms_route_active_idx ON cms_route (active);
 CREATE INDEX cms_route_order_idx ON cms_route ("order");
 
-CREATE TABLE cms_page
-(
-  id INTEGER PRIMARY KEY,
-  name character varying,
-  cms_navigation_id integer NOT NULL,
-  cms_route_id integer NOT NULL,
-  text text,
-  active boolean,
-  "dateAdd" DATETIME,
-  "dateModify" DATETIME,
-  cms_auth_id integer DEFAULT NULL,
-  FOREIGN KEY (cms_auth_id) REFERENCES cms_auth (id) ON UPDATE SET NULL ON DELETE SET NULL,
-  FOREIGN KEY (cms_navigation_id) REFERENCES cms_navigation(id) ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (cms_route_id) REFERENCES cms_route(id) ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-CREATE INDEX fki_cms_page_cms_navigation_id ON cms_page (cms_navigation_id);
-CREATE INDEX fki_cms_page_cms_route_id ON cms_page (cms_route_id);
-CREATE INDEX fki_cms_page_cms_auth_id ON cms_page (cms_auth_id);
-
-CREATE TABLE cms_page_widget
-(
-  id INTEGER PRIMARY KEY,
-  name character varying,
-  module character varying(64),
-  controller character varying(64),
-  action character varying(64),
-  params character varying,
-  active boolean
-);
-
 CREATE TABLE cms_tag
 (
   id INTEGER PRIMARY KEY,
@@ -415,18 +384,6 @@ CREATE TABLE cms_stat_label
 );
 
 CREATE UNIQUE INDEX cms_stat_label_lang_object_idx ON cms_stat_label (lang, "object");
-
-CREATE TABLE cms_widget_text
-(
-  id INTEGER PRIMARY KEY,
-  data text
-);
-
-CREATE TABLE cms_widget_picture
-(
-  id INTEGER PRIMARY KEY,
-  "dateAdd" DATETIME
-);
 
 INSERT INTO cms_role (id, name) VALUES (1, 'guest');
 INSERT INTO cms_role (id, name) VALUES (2, 'member');

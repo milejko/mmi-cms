@@ -11,6 +11,9 @@
 namespace Cms\Model;
 use \Cms\Orm;
 
+/**
+ * Model logu
+ */
 class Log {
 
 	/**
@@ -20,12 +23,9 @@ class Log {
 	 * @return bool czy dodano
 	 */
 	public static function add($operation = null, array $data = []) {
-		$record = new Orm\Log\Record();
+		$record = new Orm\CmsLogRecord();
 		$env = \Mmi\App\FrontController::getInstance()->getEnvironment();
-		if (\Mmi\Session\Session::namespaceIsset('Auth')) {
-			$authNamespace = new \Mmi\Session\Space('Auth');
-			$record->cmsAuthId = $authNamespace->id;
-		}
+		$record->cmsAuthId = \App\Registry::$auth->getId() ? \App\Registry::$auth->getId() : null;
 		$record->url = $env->requestUri;
 		$record->ip = $env->remoteAddress;
 		$record->browser = $env->httpUserAgent;
@@ -50,7 +50,7 @@ class Log {
 				unset($data['cms_auth_id']);
 			}
 			if (!empty($data)) {
-				$record->data = serialize($data);
+				$record->data = json_encode($data);
 			}
 		}
 		return $record->save();
@@ -62,7 +62,7 @@ class Log {
 	 * @return integer
 	 */
 	public static function clean($months = 24) {
-		return Orm\Log\Query::factory()
+		return Orm\CmsLogQuery::factory()
 				->whereDateTime()->less(date('Y-m-d H:i:s', strtotime('-' . $months . ' month')))
 				->find()
 				->delete();

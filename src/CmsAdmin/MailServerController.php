@@ -27,7 +27,7 @@ class MailServerController extends Mvc\Controller {
 	 * Edycja serwera
 	 */
 	public function editAction() {
-		$form = new \CmsAdmin\Form\Mail\Server(new \Cms\Orm\Mail\Server\Record($this->id));
+		$form = new \CmsAdmin\FOrm\CmsMailServer(new \Cms\Orm\CmsMailServer\Record($this->id));
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Zapisano ustawienia serwera', true);
 			$this->getResponse()->redirect('cmsAdmin', 'mailServer');
@@ -39,7 +39,7 @@ class MailServerController extends Mvc\Controller {
 	 * Usuwanie serwera
 	 */
 	public function deleteAction() {
-		$server = \Cms\Orm\Mail\Server\Query::factory()->findPk($this->id);
+		$server = \Cms\Orm\CmsMailServer\Query::factory()->findPk($this->id);
 		try {
 			if ($server && $server->delete()) {
 				$this->getMessenger()->addMessage('Usunięto serwer');

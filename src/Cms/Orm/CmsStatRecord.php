@@ -2,6 +2,9 @@
 
 namespace Cms\Orm;
 
+/**
+ * Rekord statystyk
+ */
 class CmsStatRecord extends \Mmi\Orm\Record {
 
 	public $id;

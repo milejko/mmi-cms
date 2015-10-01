@@ -124,4 +124,14 @@ class CmsCronQuery extends \Mmi\Orm\Query {
 		return new self($tableName);
 	}
 
+	/**
+	 * Zapytanie o aktywne cron'y
+	 * @return CmsCronQuery
+	 */
+	public static function active() {
+		return self::factory()
+				->whereActive()->equals(1)
+				->orderAscId();
+	}
+
 }

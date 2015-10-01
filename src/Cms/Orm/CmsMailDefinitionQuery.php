@@ -106,4 +106,28 @@ class CmsMailDefinitionQuery extends \Mmi\Orm\Query {
 		return new self($tableName);
 	}
 
+	/**
+	 * Definicje zgodne z językiem
+	 * @return CmsMailDefinitionQuery
+	 */
+	public static function lang() {
+		if (!\Mmi\App\FrontController::getInstance()->getRequest()->lang) {
+			return self::factory();
+		}
+		return self::factory()
+				->whereLang()->equals(\Mmi\App\FrontController::getInstance()->getRequest()->lang)
+				->orFieldLang()->equals(null)
+				->orderDescLang();
+	}
+
+	/**
+	 * Definicję językowe po nazwie
+	 * @param string $name
+	 * @return CmsMailDefinitionQuery
+	 */
+	public static function langByName($name) {
+		return self::lang()
+				->whereName()->equals($name);
+	}
+
 }

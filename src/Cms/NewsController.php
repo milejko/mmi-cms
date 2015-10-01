@@ -33,8 +33,8 @@ class NewsController extends \Mmi\Mvc\Controller {
 			$pages = (int) $this->pages;
 		}
 		$paginator->setRowsPerPage($pages);
-		$paginator->setRowsCount(\Cms\Orm\News\Query::active()->count());
-		$this->view->news = \Cms\Orm\News\Query::active()
+		$paginator->setRowsCount(\Cms\Orm\CmsNewsQuery::active()->count());
+		$this->view->news = \Cms\Orm\CmsNewsQuery::active()
 			->limit($paginator->getLimit())
 			->offset($paginator->getOffset())
 			->find();
@@ -46,7 +46,7 @@ class NewsController extends \Mmi\Mvc\Controller {
 	 */
 	public function topAction() {
 		$limit = $this->limit ? intval($this->limit) : 5;
-		$this->view->news = \Cms\Orm\News\Query::active()
+		$this->view->news = \Cms\Orm\CmsNewsQuery::active()
 			->limit($limit)
 			->find();
 	}
@@ -55,7 +55,7 @@ class NewsController extends \Mmi\Mvc\Controller {
 	 * Wyświetlenie aktualności
 	 */
 	public function displayAction() {
-		$this->view->item = \Cms\Orm\News\Query::activeByUri($this->uri)
+		$this->view->item = \Cms\Orm\CmsNewsQuery::activeByUri($this->uri)
 			->findFirst();
 		if ($this->view->item === null) {
 			$this->getResponse()->redirect('cms', 'news', 'index');

@@ -26,7 +26,7 @@ class NewsController extends Mvc\Controller {
 	 * Edycja artykułu
 	 */
 	public function editAction() {
-		$form = new \CmsAdmin\Form\News(new \Cms\Orm\News\Record($this->id));
+		$form = new \CmsAdmin\Form\News(new \Cms\Orm\CmsNewsRecord($this->id));
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('News zapisany poprawnie', true);
 			$this->getResponse()->redirect('cmsAdmin', 'news');
@@ -38,7 +38,7 @@ class NewsController extends Mvc\Controller {
 	 * Usuwanie artykułu
 	 */
 	public function deleteAction() {
-		$article = \Cms\Orm\News\Query::factory()->findPk($this->id);
+		$article = \Cms\Orm\CmsNewsQuery::factory()->findPk($this->id);
 		if ($article && $article->delete()) {
 			$this->getMessenger()->addMessage('News usunięty poprawnie', true);
 		}

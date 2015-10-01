@@ -2,6 +2,9 @@
 
 namespace Cms\Orm;
 
+/**
+ * Rekord listu mailowego
+ */
 class CmsMailRecord extends \Mmi\Orm\Record {
 
 	public $id;
@@ -17,5 +20,14 @@ class CmsMailRecord extends \Mmi\Orm\Record {
 	public $dateSent;
 	public $dateSendAfter;
 	public $active;
+
+	/**
+	 * Wstawienie rekordu
+	 * @return boolean
+	 */
+	protected function _insert() {
+		$this->dateAdd = date('Y-m-d H:i:s');
+		return parent::_insert();
+	}
 
 }

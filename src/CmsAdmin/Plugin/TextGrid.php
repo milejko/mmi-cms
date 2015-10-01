@@ -14,7 +14,7 @@ class TextGrid extends \CmsAdmin\Plugin\Grid {
 
 	public function init() {
 
-		$this->setQuery(\Cms\Orm\Text\Query::lang()
+		$this->setQuery(\Cms\Orm\CmsTextQuery::lang()
 				->orderAscKey());
 
 		$this->setOption('rows', 100);

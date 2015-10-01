@@ -14,7 +14,7 @@ class LogGrid extends \CmsAdmin\Plugin\Grid {
 
 	public function init() {
 
-		$this->setQuery(\Cms\Orm\Log\Query::factory()
+		$this->setQuery(\Cms\Orm\CmsLogQuery::factory()
 				->orderDescDateTime());
 
 		$this->addColumn('text', 'dateTime', [

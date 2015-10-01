@@ -2,6 +2,9 @@
 
 namespace Cms\Orm;
 
+/**
+ * Rekord logu
+ */
 class CmsLogRecord extends \Mmi\Orm\Record {
 
 	public $id;

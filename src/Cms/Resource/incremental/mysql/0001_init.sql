@@ -365,49 +365,6 @@ CREATE TABLE `cms_stat_label` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 
-CREATE TABLE cms_page_widget
-(
-  `id` integer NOT NULL AUTO_INCREMENT,
-  name varchar(128),
-  module varchar(64),
-  controller varchar(64),
-  action varchar(64),
-  params varchar(512),
-  active boolean,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
-
-CREATE TABLE cms_page
-(
-  `id` integer NOT NULL AUTO_INCREMENT,
-  name varchar(128),
-  cms_navigation_id integer NOT NULL,
-  cms_route_id integer NOT NULL,
-  text text,
-  active boolean,
-  cms_auth_id integer DEFAULT NULL,
-  `dateAdd`  datetime DEFAULT NULL,
-  `dateModify` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `cms_page_ibfk_1` FOREIGN KEY (`cms_navigation_id`) REFERENCES cms_navigation(`id`) ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT `cms_page_ibfk_2` FOREIGN KEY (`cms_route_id`) REFERENCES cms_route (`id`) ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT `cms_page_ibfk_3` FOREIGN KEY (`cms_auth_id`) REFERENCES cms_auth (`id`) ON UPDATE SET NULL ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
-
-CREATE TABLE cms_widget_text
-(
-  `id` integer NOT NULL AUTO_INCREMENT,
-  `data` text,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
-
-CREATE TABLE cms_widget_picture
-(
-  `id` integer NOT NULL AUTO_INCREMENT,
-  `dateAdd` datetime,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
-
 INSERT INTO `cms_role` (`id`, `name`) VALUES
 (1,	'guest'),
 (2,	'member'),

@@ -42,13 +42,13 @@ class Copy extends \Mmi\Form\Form {
 	 */
 	public function beforeSave() {
 		$lang = \Mmi\App\FrontController::getInstance()->getRequest()->lang;
-		foreach (\Cms\Orm\Text\Query::byLang($this->source)->find() as $record) {
-			/* @var $record \Cms\Orm\Text\Record */
-			if (\Cms\Orm\Text\Query::byKeyLang($record->key, $lang)->findFirst() !== null) {
+		foreach (\Cms\Orm\CmsTextQuery::byLang($this->source)->find() as $record) {
+			/* @var $record \Cms\Orm\CmsTextRecord */
+			if (\Cms\Orm\CmsTextQuery::byKeyLang($record->key, $lang)->findFirst() !== null) {
 				continue;
 			}
 			//nowy rekord
-			$r = \Cms\Orm\Text\Record();
+			$r = \Cms\Orm\CmsTextRecord();
 			$r->lang = $lang;
 			$r->key = $record->key;
 			$r->content = $record->content;

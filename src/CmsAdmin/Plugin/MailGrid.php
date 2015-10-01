@@ -14,7 +14,7 @@ class MailGrid extends \CmsAdmin\Plugin\Grid {
 
 	public function init() {
 
-		$this->setQuery(\Cms\Orm\Mail\Query::factory()
+		$this->setQuery(\Cms\Orm\CmsMailQuery::factory()
 				->orderDescId());
 
 		$this->addColumn('checkbox', 'active', [

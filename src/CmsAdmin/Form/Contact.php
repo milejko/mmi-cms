@@ -12,7 +12,7 @@ namespace CmsAdmin\Form;
 
 /**
  * Formularz odpowiedzi na kontakt
- * @method \Cms\Orm\Contact\Record getRecord()
+ * @method \Cms\Orm\CmsContactRecord getRecord()
  */
 class Contact extends \Mmi\Form\Form {
 

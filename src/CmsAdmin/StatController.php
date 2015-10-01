@@ -22,7 +22,7 @@ class StatController extends Mvc\Controller {
 		$year = $this->year ? $this->year : date('Y');
 		$month = $this->month ? $this->month : date('m');
 		//form filtrujący
-		$form = new \CmsAdmin\Form\Stat\Object(null, ['object' => $this->object,
+		$form = new \CmsAdmin\FOrm\CmsStatObject(null, ['object' => $this->object,
 			'year' => $year,
 			'month' => $month,
 		]);
@@ -47,7 +47,7 @@ class StatController extends Mvc\Controller {
 		$object = $this->object;
 		$year = intval($year);
 		$month = intval($month);
-		$label = \Cms\Orm\Stat\Label\Query::byObject($object)
+		$label = \Cms\Orm\CmsStatLabelQuery::byObject($object)
 			->findFirst();
 		if ($label === null) {
 			return;
@@ -108,7 +108,7 @@ class StatController extends Mvc\Controller {
 	 * Edycja labelki
 	 */
 	public function editAction() {
-		$form = new \CmsAdmin\Form\Stat\Label(new \Cms\Orm\Stat\Label\Record($this->id));
+		$form = new \CmsAdmin\FOrm\CmsStatLabel(new \Cms\Orm\CmsStatLabelRecord($this->id));
 		//jeśli form zapisany
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Nazwa statystyki została zapisana', true);
@@ -121,7 +121,7 @@ class StatController extends Mvc\Controller {
 	 * Usuwanie statystyki
 	 */
 	public function deleteAction() {
-		$label = \Cms\Orm\Stat\Label\Query::factory()->findPk($this->id);
+		$label = \Cms\Orm\CmsStatLabelQuery::factory()->findPk($this->id);
 		if ($label && $label->delete()) {
 			$this->getMessenger()->addMessage('Nazwa statystyki została usunięta', true);
 		}

@@ -64,4 +64,14 @@ class CmsStatLabelQuery extends \Mmi\Orm\Query {
 		return new self($tableName);
 	}
 
+	/**
+	 * Po obiekcie
+	 * @param string $object
+	 * @return CmsStatLabelQuery
+	 */
+	public static function byObject($object) {
+		return self::factory()
+				->whereObject()->equals($object);
+	}
+
 }

@@ -22,14 +22,14 @@ class CommentController extends \Mmi\Mvc\Controller {
 		if (!$this->objectId) {
 			return;
 		}
-		$this->view->comments = \Cms\Orm\Comment\Query::byObject($this->object, $this->objectId, $this->descending)
+		$this->view->comments = \Cms\Orm\CmsCommentQuery::byObject($this->object, $this->objectId, $this->descending)
 			->limit(100)
 			->find();
 
 		if (!($this->allowGuests || \App\Registry::$auth->hasIdentity())) {
 			return;
 		}
-		$form = new \Cms\Form\Comment(new \Cms\Orm\Comment\Record(), [
+		$form = new \Cms\Form\Comment(new \Cms\Orm\CmsCommentRecord(), [
 			'object' => $this->object,
 			'objectId' => $this->objectId
 		]);

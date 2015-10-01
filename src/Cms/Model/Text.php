@@ -45,16 +45,16 @@ class Text {
 	 * Inicjalizacja slownika
 	 */
 	protected static function _initDictionary() {
-		if (null === (self::$_texts = \App\Registry::$cache->load('\Cms\Text'))) {
+		if (null === (self::$_texts = \App\Registry::$cache->load('Cms-text'))) {
 			self::$_texts = [];
-			foreach (Orm\Text\Query::factory()->find() as $text) {
+			foreach (Orm\CmsTextQuery::factory()->find() as $text) {
 				if ($text->lang === null) {
 					self::$_texts['none'][$text->key] = $text->content;
 					continue;
 				}
 				self::$_texts[$text->lang][$text->key] = $text->content;
 			}
-			\App\Registry::$cache->save(self::$_texts, '\Cms\Text', 0);
+			\App\Registry::$cache->save(self::$_texts, 'Cms-text', 0);
 		}
 	}
 

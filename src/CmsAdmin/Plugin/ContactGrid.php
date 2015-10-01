@@ -14,7 +14,7 @@ class ContactGrid extends \CmsAdmin\Plugin\Grid {
 
 	public function init() {
 
-		$this->setQuery(\Cms\Orm\Contact\Query::factory());
+		$this->setQuery(\Cms\Orm\CmsContactQuery::factory());
 
 		$this->addColumn('custom', 'id', [
 			'label' => 'ticket',

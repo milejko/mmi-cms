@@ -33,7 +33,7 @@ class ContactController extends Mvc\Controller {
 	 * Edycja tematu
 	 */
 	public function editSubjectAction() {
-		$form = new \CmsAdmin\Form\Contact\Option(new \Cms\Orm\Contact\Option\Record($this->id));
+		$form = new \CmsAdmin\FOrm\CmsContactOption(new \Cms\Orm\CmsContactOption\Record($this->id));
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Poprawnie zapisano temat kontaktu', true);
 			$this->getResponse()->redirect('cmsAdmin', 'contact', 'subject');
@@ -45,7 +45,7 @@ class ContactController extends Mvc\Controller {
 	 * Usuwanie tematu
 	 */
 	public function deleteSubjectAction() {
-		$option = \Cms\Orm\Contact\Option\Query::factory()->findPk($this->id);
+		$option = \Cms\Orm\CmsContactOption\Query::factory()->findPk($this->id);
 		if ($option && $option->delete()) {
 			$this->getMessenger()->addMessage('Poprawnie usunięto temat', true);
 		}
@@ -56,7 +56,7 @@ class ContactController extends Mvc\Controller {
 	 * Usuwanie zgłoszenia
 	 */
 	public function deleteAction() {
-		$contact = \Cms\Orm\Contact\Query::factory()->findPk($this->id);
+		$contact = \Cms\Orm\CmsContactQuery::factory()->findPk($this->id);
 		if ($contact && $contact->delete()) {
 			$this->getMessenger()->addMessage('Poprawnie usunięto wiadomość', true);
 		}
@@ -67,7 +67,7 @@ class ContactController extends Mvc\Controller {
 	 * Edycja/odpowiedź na zgłoszenie
 	 */
 	public function editAction() {
-		$form = new \CmsAdmin\Form\Contact(new \Cms\Orm\Contact\Record($this->id));
+		$form = new \CmsAdmin\Form\Contact(new \Cms\Orm\CmsContactRecord($this->id));
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Wysłano odpowiedź na wiadomość', true);
 			$this->getResponse()->redirect('cmsAdmin', 'contact');

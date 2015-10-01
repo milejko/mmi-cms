@@ -14,7 +14,7 @@ class ContactOptionGrid extends \CmsAdmin\Plugin\Grid {
 
 	public function init() {
 
-		$this->setQuery(\Cms\Orm\Contact\Option\Query::factory());
+		$this->setQuery(\Cms\Orm\CmsContactOption\Query::factory());
 
 		$this->addColumn('text', 'name', [
 			'label' => 'temat pytania'

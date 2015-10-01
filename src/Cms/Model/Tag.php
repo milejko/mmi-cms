@@ -22,7 +22,7 @@ class Tag {
 	 */
 	public static function tag($tagId, $object, $objectId = null) {
 		try {
-			$record = new Orm\Tag\Link\Record();
+			$record = new Orm\CmsTagLinkRecord();
 			$record->cmsTagId = $tagId;
 			$record->object = $object;
 			$record->objectId = $objectId;
@@ -40,7 +40,7 @@ class Tag {
 	 * @return boolean
 	 */
 	public static function namedTag($tagName, $object, $objectId = null) {
-		$tag = Orm\Tag\Query::byName(trim($tagName))
+		$tag = Orm\CmsTagQuery::byName(trim($tagName))
 			->findFirst();
 		if ($tag === null) {
 			return false;
@@ -56,7 +56,7 @@ class Tag {
 	 * @return boolean
 	 */
 	public static function unTag($tagId, $object, $objectId = null) {
-		return Orm\Tag\Link\Query::factory()
+		return Orm\CmsTagLinkQuery::factory()
 				->whereCmsTagId()->equals($tagId)
 				->andFieldObject()->equals($object)
 				->andFieldObjectId()->equals($objectId)
@@ -72,7 +72,7 @@ class Tag {
 	 * @return boolean
 	 */
 	public static function unNamedTag($tagName, $object, $objectId = null) {
-		$tag = Orm\Tag\Query::byName(trim($tagName))
+		$tag = Orm\CmsTagQuery::byName(trim($tagName))
 			->findFirst();
 		if ($tag === null) {
 			return false;
@@ -87,7 +87,7 @@ class Tag {
 	 * @return int ilość usuniętych
 	 */
 	public static function clearTags($object, $objectId = null) {
-		return Orm\Tag\Link\Query::factory()
+		return Orm\CmsTagLinkQuery::factory()
 				->whereObject()->equals($object)
 				->andFieldObjectId()->equals($objectId)
 				->find()
@@ -120,7 +120,7 @@ class Tag {
 	public static function replaceNamedTags(array $tagNames, $object, $objectId = null) {
 		$tagIds = [];
 		foreach ($tagNames as $tagName) {
-			$tag = Orm\Tag\Query::byName(trim($tagName))
+			$tag = Orm\CmsTagQuery::byName(trim($tagName))
 				->findFirst();
 			//tworzy tag jeśli jeszcze nie utworzony
 			if ($tag == null) {
@@ -141,7 +141,7 @@ class Tag {
 	 */
 	public static function getTagString($object, $objectId) {
 		$tagString = '';
-		foreach (Orm\Tag\Link\Query::tagsByObject($object, $objectId)->find() as $tag) {
+		foreach (Orm\CmsTagLinkQuery::tagsByObject($object, $objectId)->find() as $tag) {
 			$tagString .= $tag->getJoined('cms_tag')->tag . ',';
 		}
 		return trim($tagString, ', ');

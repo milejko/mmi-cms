@@ -35,7 +35,7 @@ class FileController extends \Mmi\Mvc\Controller {
 			return '';
 		}
 		$files = [];
-		foreach (\Cms\Orm\File\Query::imagesByObject($this->object, $this->objectId)->find() as $file) {
+		foreach (\Cms\Orm\CmsFileQuery::imagesByObject($this->object, $this->objectId)->find() as $file) {
 			$files[] = ['title' => $file->original, 'value' => $file->getUrl('scalex', '990')];
 		}
 		return json_encode($files);
@@ -94,11 +94,11 @@ class FileController extends \Mmi\Mvc\Controller {
 		//blad
 		$this->view->error = $this->error;
 		//lista obrazów
-		$this->view->images = \Cms\Orm\File\Query::imagesByObject($this->object, $this->objectId)
+		$this->view->images = \Cms\Orm\CmsFileQuery::imagesByObject($this->object, $this->objectId)
 			->orderAscDateAdd()
 			->find();
 		//lista pozostałych plików
-		$this->view->files = \Cms\Orm\File\Query::notImagesByObject($this->object, $this->objectId)
+		$this->view->files = \Cms\Orm\CmsFileQuery::notImagesByObject($this->object, $this->objectId)
 			->orderAscDateAdd()
 			->find();
 	}

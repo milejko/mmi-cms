@@ -64,4 +64,39 @@ class CmsTextQuery extends \Mmi\Orm\Query {
 		return new self($tableName);
 	}
 
+	/**
+	 * Zapytanie po langu z requesta
+	 * @return CmsTextQuery
+	 */
+	public static function lang() {
+		if (!\Mmi\App\FrontController::getInstance()->getRequest()->lang) {
+			return self::factory();
+		}
+		return self::factory()
+				->whereLang()->equals(\Mmi\App\FrontController::getInstance()->getRequest()->lang)
+				->orFieldLang()->equals(null)
+				->orderDescLang();
+	}
+
+	/**
+	 * 
+	 * @param string $lang
+	 * @return CmsTextQuery
+	 */
+	public static function byLang($lang) {
+		return self::factory()
+				->whereLang()->equals($lang);
+	}
+
+	/**
+	 * 
+	 * @param string $key
+	 * @param string $lang
+	 * @return CmsTextQuery
+	 */
+	public static function byKeyLang($key, $lang) {
+		return self::byLang($lang)
+				->andFieldKey()->equals($key);
+	}
+
 }

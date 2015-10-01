@@ -18,7 +18,7 @@ class Definition extends \Mmi\Form\Form {
 			->setLabel('Unikalna nazwa')
 			->setRequired()
 			->addValidatorStringLength(6, 25)
-			->addValidatorRecordUnique(\Cms\Orm\Mail\Definition\Query::factory(), 'name', $this->_record->id);
+			->addValidatorRecordUnique(\Cms\Orm\CmsMailDefinitionQuery::factory(), 'name', $this->_record->id);
 
 		$this->addElementSelect('cmsMailServerId')
 			->setLabel('Połącznie')

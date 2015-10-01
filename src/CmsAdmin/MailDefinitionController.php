@@ -27,7 +27,7 @@ class MailDefinitionController extends Mvc\Controller {
 	 * Edycja szablonu
 	 */
 	public function editAction() {
-		$form = new \CmsAdmin\Form\Mail\Definition(new \Cms\Orm\Mail\Definition\Record($this->id));
+		$form = new \CmsAdmin\FOrm\CmsMailDefinition(new \Cms\Orm\CmsMailDefinition\Record($this->id));
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Poprawnie zapisano definicję maila', true);
 			$this->getResponse()->redirect('cmsAdmin', 'mailDefinition');
@@ -39,7 +39,7 @@ class MailDefinitionController extends Mvc\Controller {
 	 * Usuwanie szablonu
 	 */
 	public function deleteAction() {
-		$definition = \Cms\Orm\Mail\Definition\Query::factory()->findPk($this->id);
+		$definition = \Cms\Orm\CmsMailDefinitionQuery::factory()->findPk($this->id);
 		try {
 			if ($definition && $definition->delete()) {
 				$this->getMessenger()->addMessage('Poprawnie skasowano definicję maila');

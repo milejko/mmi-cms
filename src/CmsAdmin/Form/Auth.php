@@ -18,6 +18,7 @@ class Auth extends \Mmi\Form\Form {
 
 	public function init() {
 
+		//nazwa użytkownika
 		$this->addElementText('username')
 			->setLabel('nazwa użytkownika')
 			->setRequired()
@@ -25,10 +26,12 @@ class Auth extends \Mmi\Form\Form {
 			->addValidatorNotEmpty()
 			->addValidatorRecordUnique(\Cms\Orm\CmsAuthQuery::factory(), 'username', $this->getRecord()->id);
 
+		//imię i nazwisko użytkownika
 		$this->addElementText('name')
 			->setLabel('pełna nazwa użytkownika (opcjonalna)')
 			->addFilter('stringTrim');
 
+		//email
 		$this->addElementText('email')
 			->setLabel('adres e-mail')
 			->setRequired()
@@ -36,10 +39,11 @@ class Auth extends \Mmi\Form\Form {
 			->addValidatorEmailAddress()
 			->addValidatorRecordUnique(\Cms\Orm\CmsAuthQuery::factory(), 'email', $this->getRecord()->id);
 
+		//role
 		$this->addElementMultiCheckbox('cmsRoles')
 			->setLabel('role')
 			->setDescription('Grupa uprawnień')
-			->setMultiOptions(\Cms\Orm\Role\Query::factory()->findPairs('id', 'name'))
+			->setMultiOptions(\Cms\Orm\CmsRoleQuery::factory()->findPairs('id', 'name'))
 			->setValue(\Cms\Orm\CmsAuthRoleQuery::byAuthId($this->_record->id)->findPairs('cms_role_id', 'cms_role_id'));
 
 		$languages = [];
@@ -54,9 +58,11 @@ class Auth extends \Mmi\Form\Form {
 				->setDescription('Preferowany przez użytkownika język interfejsu');
 		}
 
+		//aktywny
 		$this->addElementCheckbox('active')
 			->setLabel('Aktywny');
 
+		//zmiana hasła
 		$this->addElementText('changePassword')
 			->setLabel('zmiana hasła')
 			->setDescription('Jeśli nie chcesz zmienić hasła nie wypełniaj tego pola')
