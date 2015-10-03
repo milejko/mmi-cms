@@ -35,12 +35,8 @@ class News extends \Cms\Form\Form {
 			->setOption('img', 'news:' . $this->_record->id)
 			->setModeAdvanced();
 
-		$this->addElementRadio('visible')
-			->setLabel('Publikacja')
-			->setMultiOptions([
-				1 => 'włączony',
-				0 => 'wyłączony',
-			]);
+		$this->addElementCheckbox('visible')
+			->setLabel('Publikacja');
 
 		$this->addElementUploader('uploader')
 			->setLabel('Dołącz pliki');
