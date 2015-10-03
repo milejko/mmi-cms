@@ -14,9 +14,6 @@ class News extends \Cms\Form\Form {
 
 	public function init() {
 
-		//ustawia zabezpieczenie CSRF
-		$this->setSecured();
-
 		$this->addElementText('title')
 			->setLabel('Tytuł artykułu')
 			->setRequired()
@@ -38,7 +35,7 @@ class News extends \Cms\Form\Form {
 			->setOption('img', 'news:' . $this->_record->id)
 			->setModeAdvanced();
 
-		$this->addElementSelect('visible')
+		$this->addElementRadio('visible')
 			->setLabel('Publikacja')
 			->setMultiOptions([
 				1 => 'włączony',

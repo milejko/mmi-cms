@@ -14,8 +14,6 @@ class Contact extends \Cms\Form\Form {
 
 	public function init() {
 
-		$this->setSecured();
-
 		if (!$this->getOption('subjectId')) {
 			$this->addElementSelect('cmsContactOptionId')
 				->setLabel('Wybierz temat')

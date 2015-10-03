@@ -10,6 +10,9 @@
 
 namespace Cms\Form\Element;
 
+/**
+ * Element utrudniający wysłanie formularza robotom
+ */
 class Antirobot extends \Mmi\Form\Element\Hidden {
 
 	/**

@@ -10,6 +10,9 @@
 
 namespace Cms\Form\Element;
 
+/**
+ * Pole tinyMce
+ */
 class TinyMce extends \Mmi\Form\Element\Textarea {
 
 	/**
@@ -134,9 +137,9 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 			$onInit = "oninit : '" . $this->_options['oninit'] . "',";
 		}
 		//odczyt zmiennych z rekordu
-		if ($this->getForm()->hasRecord()) {
-			$object = $this->getForm()->getFileObjectName();
-			$objectId = $this->getForm()->getRecord()->getPk();
+		if ($this->_form->hasRecord()) {
+			$object = $this->_form->getFileObjectName();
+			$objectId = $this->_form->getRecord()->getPk();
 		}
 		$t = round(microtime(true));
 		$hash = md5(\Mmi\Session\Session::getId() . '+' . $t . '+' . $objectId);

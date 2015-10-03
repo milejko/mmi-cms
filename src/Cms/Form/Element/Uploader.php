@@ -10,6 +10,9 @@
 
 namespace Cms\Form\Element;
 
+/**
+ * Element uploader
+ */
 class Uploader extends \Mmi\Form\Element\File {
 
 	/**
@@ -43,9 +46,9 @@ class Uploader extends \Mmi\Form\Element\File {
 	public function fetchField() {
 		$object = 'library';
 		$objectId = null;
-		if ($this->getForm()->hasRecord()) {
-			$object = $this->getForm()->getFileObjectName();
-			$objectId = $this->getForm()->getRecord()->getPk();
+		if ($this->_form->hasRecord()) {
+			$object = $this->_form->getFileObjectName();
+			$objectId = $this->_form->getRecord()->getPk();
 		}
 		if (!$objectId) {
 			$object = 'tmp-' . $object;
@@ -55,7 +58,7 @@ class Uploader extends \Mmi\Form\Element\File {
 				'module' => 'cms',
 				'controller' => 'file',
 				'action' => 'uploader',
-				'class' => str_replace('\\', '', get_class($this->getForm())),
+				'class' => str_replace('\\', '', get_class($this->_form)),
 				'object' => $object,
 				'objectId' => $objectId,
 				'types' => $this->getOption('types'),

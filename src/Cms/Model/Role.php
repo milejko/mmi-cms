@@ -11,6 +11,7 @@
 namespace Cms\Model;
 
 use Cms\Orm\CmsAuthRoleQuery;
+use Cms\Orm\CmsAuthRoleRecord;
 
 /**
  * Model ról
@@ -40,7 +41,7 @@ class Role {
 				continue;
 			}
 			//zapis rekordu
-			$record = new Orm\CmsAuthRoleRecord();
+			$record = new CmsAuthRoleRecord();
 			$record->cmsAuthId = $cmsAuthId;
 			$record->cmsRoleId = $roleId;
 			$record->save();

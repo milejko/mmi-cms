@@ -10,6 +10,9 @@
 
 namespace Cms\Form\Element;
 
+/**
+ * Wybór koloru
+ */
 class ColorPicker extends \Mmi\Form\Element\Text {
 
 	/**

@@ -10,6 +10,9 @@
 
 namespace Cms\Form\Element;
 
+/**
+ * Element captcha
+ */
 class Captcha extends \Mmi\Form\Element\ElementAbstract {
 
 	/**
@@ -26,9 +29,6 @@ class Captcha extends \Mmi\Form\Element\ElementAbstract {
 	 * @return string
 	 */
 	public function fetchField() {
-		if (!$this->getValue()) {
-			$this->setValue(str_replace('"', '&quot;', $this->getOption('value')));
-		}
 		$view = \Mmi\App\FrontController::getInstance()->getView();
 		$html = '<div class="image"><img src="' . $view->url(['module' => 'cms', 'controller' => 'captcha', 'action' => 'index', 'name' => $this->_options['name']]) . '" alt="" /></div>';
 		$html .= '<div class="input"><input ';

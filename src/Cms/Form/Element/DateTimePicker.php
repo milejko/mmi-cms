@@ -10,6 +10,9 @@
 
 namespace Cms\Form\Element;
 
+/**
+ * Wybór daty i czasu
+ */
 class DateTimePicker extends \Cms\Form\Element\DatePicker {
 
 	/**

@@ -38,7 +38,7 @@ class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 	public function preDispatch(\Mmi\Http\Request $request) {
 		//niepoprawny język
 		if ($request->__get('lang') && !in_array($request->__get('lang'), \App\Registry::$config->languages)) {
-			throw new \Mmi\Mvc\NotFoundException('Language not found');
+			throw new \Mmi\Mvc\MvcNotFoundException('Language not found');
 		}
 		//ustawianie widoku
 		$this->_viewSetup($request);
@@ -85,8 +85,9 @@ class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 				//logowanie użytkownika
 				$this->_setUserLoginRequest($request);
 			} else {
+				\App\Registry::$auth->clearIdentity();
 				//zalogowany na nieuprawnioną rolę
-				throw new \Mmi\Mvc\NotFoundException('Unauthorized access');
+				throw new \Mmi\Mvc\MvcNotFoundException('Unauthorized access');
 			}
 		}
 		//ustawienie nawigatora

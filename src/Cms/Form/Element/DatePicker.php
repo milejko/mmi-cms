@@ -10,6 +10,9 @@
 
 namespace Cms\Form\Element;
 
+/**
+ * Element wyboru daty
+ */
 class DatePicker extends \Mmi\Form\Element\ElementAbstract {
 
 	/**
