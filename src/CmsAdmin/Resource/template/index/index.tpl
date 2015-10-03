@@ -5,7 +5,7 @@
 		</h3>
 	</div>
 	<div class="content-box-content clearfix">
-		<h5>{#Dane administratora CMS#}:</h5>
+		<h5>{#Twoje dane#}:</h5>
 		{if $user}
 		<table class="striped grid">
 				<tr>

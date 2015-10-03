@@ -215,7 +215,7 @@ form div.field.checkbox {
 	margin: 20px 0;
 }
 
-form div.field.checkbox label, form div.field.multicheckbox label {
+form div.field.checkbox label, form div.field.multicheckbox label, form div.field.radio label {
 	display: inline-block;
 }
 
@@ -223,12 +223,12 @@ form div.field.checkbox input, form div.field.multicheckbox input {
 	margin-right: 5px;
 }
 
-div.field.multicheckbox ul {
+div.field.multicheckbox ul, div.field.radio ul {
 	list-style-type: none;
 	margin: 0;
 }
 
-div.field.multicheckbox ul li {
+div.field.multicheckbox ul li, div.field.radio ul li {
 	margin: 0;
 }
 
