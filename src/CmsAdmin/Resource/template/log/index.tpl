@@ -5,5 +5,6 @@
 	</div>
 	<div class="content-box-content clearfix">
 		{$grid}
+		{$grid2}
 	</div>
 </div>
