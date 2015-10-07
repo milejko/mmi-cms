@@ -10,33 +10,38 @@
 
 namespace CmsAdmin\Plugin;
 
-class LogGrid extends \CmsAdmin\Plugin\Grid {
+use CmsAdmin\Grid\Grid;
+use CmsAdmin\Grid\Element;
+
+/**
+ * Klasa grid loga CMS
+ */
+class LogGrid extends Grid {
 
 	public function init() {
 
 		$this->setQuery(\Cms\Orm\CmsLogQuery::factory()
 				->orderDescDateTime());
 
-		$this->addColumn('text', 'dateTime', [
-			'label' => 'data i czas'
-		]);
-		$this->addColumn('text', 'operation', [
-			'label' => 'operacja'
-		]);
-		$this->addColumn('text', 'url', [
-			'label' => 'URL'
-		]);
+		$this->addElement((new Element\IndexElement()));
 
-		$this->addColumn('text', 'data', [
-			'label' => 'dane',
-		]);
+		$this->addElement((new Element\TextElement('dateTime'))
+				->setLabel('data i czas'));
 
-		$this->addColumn('text', 'ip', [
-			'label' => 'adres IP'
-		]);
-		$this->addColumn('checkbox', 'success', [
-			'label' => 'sukces',
-		]);
+		$this->addElement((new Element\TextElement('operation'))
+				->setLabel('operacja'));
+
+		$this->addElement((new Element\TextElement('url'))
+				->setLabel('URL'));
+
+		$this->addElement((new Element\TextElement('data'))
+				->setLabel('dane'));
+
+		$this->addElement((new Element\TextElement('ip'))
+				->setLabel('adres IP'));
+
+		$this->addElement((new Element\CheckboxElement('success'))
+				->setLabel('sukces'));
 	}
 
 }

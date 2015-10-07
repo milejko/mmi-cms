@@ -13,7 +13,7 @@ namespace CmsAdmin\Grid;
 /**
  * Abstrakcyjna klasa grida
  */
-class Grid extends \Mmi\OptionObject {
+abstract class Grid extends \Mmi\OptionObject {
 
 	/**
 	 * Elementy grida
@@ -40,14 +40,14 @@ class Grid extends \Mmi\OptionObject {
 		//tworzy obiekt stanu
 		$this->_state = (new GridState())->setGrid($this);
 		$this->init();
+		//obsługa zapytań JSON do grida
+		(new GridRequestHandler($this))->handleRequest();
 	}
 
 	/**
 	 * Inicjalizacja
 	 */
-	public function init() {
-		
-	}
+	abstract public function init();
 
 	/**
 	 * Dodaje element grida
@@ -93,7 +93,7 @@ class Grid extends \Mmi\OptionObject {
 	 * @param \Mmi\Orm\Query $query
 	 * @return \CmsAdmin\Grid\Grid
 	 */
-	public function setQuery(\Mmi\Orm\Query $query) {
+	public final function setQuery(\Mmi\Orm\Query $query) {
 		$this->_query = $query;
 		return $this;
 	}
@@ -102,7 +102,7 @@ class Grid extends \Mmi\OptionObject {
 	 * Pobiera kolekcję rekordów
 	 * @return \Mmi\Orm\RecordCollection
 	 */
-	public function getDataCollection() {
+	public final function getDataCollection() {
 		//aktualizuje zapytanie i pobiera dane
 		return $this->getState()
 			->setupQuery($this->getQuery())
@@ -112,8 +112,9 @@ class Grid extends \Mmi\OptionObject {
 	/**
 	 * Render grida
 	 */
-	public function __toString() {
+	public final function __toString() {
 		try {
+			//rendering grida HTML
 			return (new GridRenderer($this))->render();
 		} catch (\Exception $e) {
 			return $e->getMessage();

@@ -22,17 +22,7 @@ class LogController extends Mvc\Controller {
 		$grid = new \CmsAdmin\Plugin\LogGrid();
 		$this->view->grid = $grid;
 		
-		$grid2 = new \CmsAdmin\Grid\Grid();
-		$grid2->setQuery(\Cms\Orm\CmsLogQuery::factory())
-			->addElement((new \CmsAdmin\Grid\Element\IndexElement()))
-			->addElement((new \CmsAdmin\Grid\Element\TextElement())->setName('dateTime')->setLabel('data i czas'))
-			->addElement((new \CmsAdmin\Grid\Element\TextElement())->setName('operation')->setLabel('operacja'))
-			->addElement((new \CmsAdmin\Grid\Element\TextElement())->setName('url')->setLabel('URL'))
-			->addElement((new \CmsAdmin\Grid\Element\TextElement())->setName('data')->setLabel('dane'))
-			->addElement((new \CmsAdmin\Grid\Element\TextElement())->setName('ip')->setLabel('adres IP'))
-			->addElement((new \CmsAdmin\Grid\Element\CheckboxElement())->setName('success')->setLabel('sukces'))
-		;
-		$grid2->getState()
+		$grid->getState()
 			->setFilters([])
 			->setOrder([])
 			->addFilter((new \CmsAdmin\Grid\GridStateFilter())
@@ -48,8 +38,6 @@ class LogController extends Mvc\Controller {
 				->setMethod('orderDesc'))
 			->setRowsPerPage(10)
 			->setPage(1);
-		$this->view->grid2 = $grid2;
-
 	}
 
 }

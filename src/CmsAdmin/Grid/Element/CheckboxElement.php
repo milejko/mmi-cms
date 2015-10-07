@@ -18,12 +18,13 @@ class CheckboxElement extends SelectElement {
 	/**
 	 * Domyślne opcje dla checkboxa
 	 */
-	public function __construct() {
+	public function __construct($name) {
 		$this->setMultiOptions([
 			null => '---',
 			0 => 'odznaczone',
 			1 => 'zaznaczone'
 		]);
+		parent::__construct($name);
 	}
 
 	/**

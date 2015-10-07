@@ -42,7 +42,7 @@ class GridRenderer {
 		//iteracja po elementach
 		foreach ($this->_grid->getElements() as $element) {
 			//renderuje kolumnę z labelką i filtrem
-			$html .= '<th>' . $element->renderLabel() . $element->renderFilter() . '</th>';
+			$html .= '<th>' . $element->renderLabel() . '<br />' . $element->renderFilter() . '</th>';
 		}
 		//zwrot html
 		return $html . '</tr>';
@@ -87,6 +87,7 @@ class GridRenderer {
 	 * @return string
 	 */
 	public function render() {
+		//render nagłówka ciała i stopki
 		return '<table class="grid striped"><tbody>' .
 			$this->renderHeader() .
 			$this->renderBody() .

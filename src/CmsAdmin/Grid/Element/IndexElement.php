@@ -18,10 +18,12 @@ namespace CmsAdmin\Grid\Element;
 class IndexElement extends ElementAbstract {
 	
 	/**
-	 * Ustawienia domyślne
+	 * Konstruktor ustawia domyślny label
+	 * @param string $name
 	 */
-	public function __construct() {
-		 $this->setLabel('lp.');
+	public function __construct($name = null) {
+		 $this->setLabel('#');
+		 parent::__construct($name == null ? 'index' : $name);
 	}
 	
 	/**

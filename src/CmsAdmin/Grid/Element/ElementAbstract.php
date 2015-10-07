@@ -26,6 +26,14 @@ abstract class ElementAbstract extends \Mmi\OptionObject {
 	protected $_grid;
 
 	/**
+	 * Konstruktor ustawia nazwę
+	 * @param string $name
+	 */
+	public function __construct($name) {
+		$this->setName($name);
+	}
+
+	/**
 	 * Ustawia grida macieżystego
 	 * @param \CmsAdmin\Grid\Grid $grid
 	 * @return ElementAbstract
@@ -34,7 +42,7 @@ abstract class ElementAbstract extends \Mmi\OptionObject {
 		$this->_grid = $grid;
 		return $this;
 	}
-	
+
 	/**
 	 * Renderuje labelkę kolumny
 	 * @return string
@@ -48,7 +56,8 @@ abstract class ElementAbstract extends \Mmi\OptionObject {
 	 * @return string
 	 */
 	public function renderFilter() {
-		return '<input type="text" value="' . $this->_getFilterValue() . '"/>';
+		return (new \Mmi\Form\Element\Text($this->getName()))
+				->setValue($this->_getFilterValue());
 	}
 
 	/**
