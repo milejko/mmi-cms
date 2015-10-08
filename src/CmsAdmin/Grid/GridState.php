@@ -61,7 +61,7 @@ class GridState extends \Mmi\OptionObject {
 	public function setGrid(Grid $grid) {
 		$this->_grid = $grid;
 		//przypinanie przestrzeni w sesji
-		$this->_space = new \Mmi\Session\Space($class = get_class($grid));
+		$this->_space = new \Mmi\Session\Space($grid->getClass());
 		//ustawia opcje z sesji jeśli nie puste
 		if (!empty($this->_space->toArray())) {
 			$this->setOptions($this->_space->toArray());
@@ -76,7 +76,7 @@ class GridState extends \Mmi\OptionObject {
 	public function addFilter(GridStateFilter $filter) {
 		$filters = $this->getFilters();
 		//dodaje filtr
-		$filters[] = $filter;
+		$filters[$filter->getField()] = $filter;
 		$this->setFilters($filters);
 		return $this;
 	}
@@ -88,7 +88,7 @@ class GridState extends \Mmi\OptionObject {
 	public function addOrder(GridStateOrder $order) {
 		$orders = $this->getOrder();
 		//dodaje order
-		$orders[] = $order;
+		$orders[$order->getField()] = $order;
 		$this->setOrder($orders);
 		return $this;
 	}

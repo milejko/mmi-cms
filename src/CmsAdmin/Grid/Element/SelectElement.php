@@ -42,7 +42,7 @@ class SelectElement extends ElementAbstract {
 	 */
 	public function renderFilter() {
 		//tworzy element form selecta, ustawia opcje i wartość filtra
-		return (new \Mmi\Form\Element\Select($this->getName()))
+		return (new \Mmi\Form\Element\Select($this->getFormElementName()))
 				->setMultiOptions($this->getMultiOptions())
 				->setValue($this->_getFilterValue());
 	}

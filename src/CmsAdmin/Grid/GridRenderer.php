@@ -9,6 +9,7 @@
  */
 
 namespace CmsAdmin\Grid;
+use Mmi\App\FrontController;
 
 /**
  * Renderer HTML grida
@@ -87,12 +88,16 @@ class GridRenderer {
 	 * @return string
 	 */
 	public function render() {
+		$view = FrontController::getInstance()->getView();
+		//dołączenie js
+		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/jquery/ui.js');
+		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/grid2.js');
 		//render nagłówka ciała i stopki
-		return '<table class="grid striped"><tbody>' .
+		return '<table id="' . $this->_grid->getClass() . '" class="grid striped">' .
 			$this->renderHeader() .
 			$this->renderBody() .
 			$this->renderFooter() .
-			'</tbody></table>';
+			'</table>';
 	}
-
+	
 }

@@ -21,23 +21,6 @@ class LogController extends Mvc\Controller {
 	public function indexAction() {
 		$grid = new \CmsAdmin\Plugin\LogGrid();
 		$this->view->grid = $grid;
-		
-		$grid->getState()
-			->setFilters([])
-			->setOrder([])
-			->addFilter((new \CmsAdmin\Grid\GridStateFilter())
-				->setField('operation')
-				->setMethod('like')
-				->setValue('log'))
-			->addFilter((new \CmsAdmin\Grid\GridStateFilter())
-				->setField('success')
-				->setMethod('equals')
-				->setValue(0))
-			->addOrder((new \CmsAdmin\Grid\GridStateOrder())
-				->setField('id')
-				->setMethod('orderDesc'))
-			->setRowsPerPage(10)
-			->setPage(1);
 	}
 
 }

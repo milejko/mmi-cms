@@ -34,6 +34,14 @@ abstract class ElementAbstract extends \Mmi\OptionObject {
 	}
 
 	/**
+	 * Zwraca nazwę dla elementu formularza
+	 * @return string
+	 */
+	public function getFormElementName() {
+		return $this->_grid->getClass() . '[' . $this->getName() . ']';
+	}
+
+	/**
 	 * Ustawia grida macieżystego
 	 * @param \CmsAdmin\Grid\Grid $grid
 	 * @return ElementAbstract
@@ -48,7 +56,17 @@ abstract class ElementAbstract extends \Mmi\OptionObject {
 	 * @return string
 	 */
 	public function renderLabel() {
-		return '<a href="#' . $this->getName() . '" class="' . $this->_getOrderMethod() . '">' . ($this->getLabel() ? $this->getLabel() : $this->getName()) . '</a>';
+		$html = '<a class="order" href="#' . $this->getFormElementName() . '[' . $this->_getOrderMethod() . ']' . '" data-method="' . $this->_getOrderMethod() . '">' . ($this->getLabel() ? $this->getLabel() : $this->getName()) . '</a>';
+		//brak sortowania
+		if (!$this->_getOrderMethod()) {
+			return $html;
+		}
+		//ikona w dół
+		if ($this->_getOrderMethod() == 'orderDesc') {
+			return $html . ' <i class="icon-download"></i>';
+		}
+		//ikona w górę
+		return $html . ' <i class="icon-upload"></i>';
 	}
 
 	/**
@@ -56,7 +74,7 @@ abstract class ElementAbstract extends \Mmi\OptionObject {
 	 * @return string
 	 */
 	public function renderFilter() {
-		return (new \Mmi\Form\Element\Text($this->getName()))
+		return (new \Mmi\Form\Element\Text($this->getFormElementName()))
 				->setValue($this->_getFilterValue());
 	}
 

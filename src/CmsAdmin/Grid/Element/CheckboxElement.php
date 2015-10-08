@@ -38,7 +38,7 @@ class CheckboxElement extends SelectElement {
 			return '?';
 		}
 		//nowy element select
-		return (new \Mmi\Form\Element\Checkbox($this->getName()))
+		return (new \Mmi\Form\Element\Checkbox($this->getFormElementName()))
 			//ustawia wartość na odpowiadającą zaznaczeniu
 			->setValue($this->_getCheckedValue())
 			//ustawia zaznaczenie

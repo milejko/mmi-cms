@@ -32,7 +32,7 @@ abstract class Grid extends \Mmi\OptionObject {
 	 * @var GridState
 	 */
 	protected $_state;
-
+	
 	/**
 	 * Konstruktor
 	 */
@@ -96,6 +96,14 @@ abstract class Grid extends \Mmi\OptionObject {
 	public final function setQuery(\Mmi\Orm\Query $query) {
 		$this->_query = $query;
 		return $this;
+	}
+	
+	/**
+	 * Pobiera uproszczoną nazwę klasy grida
+	 * @return string
+	 */
+	public final function getClass() {
+		return str_replace('\\', '', get_class($this));
 	}
 
 	/**
