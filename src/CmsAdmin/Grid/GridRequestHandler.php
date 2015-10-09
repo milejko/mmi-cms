@@ -59,6 +59,7 @@ class GridRequestHandler {
 
 	protected function _retrievePostOrder(\Mmi\Http\RequestPost $post) {
 		if (false !== strpos($post->order, $this->_grid->getClass())) {
+			die($post->order);
 			return (new GridStateOrder());
 		}
 	}
