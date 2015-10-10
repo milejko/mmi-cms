@@ -30,7 +30,7 @@ class Login extends \Mmi\Form\Form {
 		$this->addElementSubmit('submit')
 			->setLabel('Zaloguj się');
 	}
-	
+
 	/**
 	 * Logowanie
 	 * @return boolean
