@@ -21,21 +21,26 @@ function fieldValidationOnBlur(element) {
 	var fieldValue = $(element).val(),
 			fid = $(element).attr('id'),
 			formId = fid.substr(0, fid.lastIndexOf('-')),
+			form = $('form.' + fid.substr(0, fid.lastIndexOf('-'))),
+			formClass = form.attr('data-class'),
+			recordClass = form.attr('data-record-class'),
+			recordId = form.attr('data-record-id'),
 			name = fid.substr(fid.lastIndexOf('-') + 1),
 			errorsId = formId + '-' + name + '-errors';
 	if ('checkbox' === $(element).attr('type') && !$(element).is(':checked')) {
 		fieldValue = '0';
 	}
 	$.post(request.baseUrl + '/?module=cms&controller=form&action=validate', {
-		ctrl: $('#' + formId + '-' + formId + '__ctrl').val(), 
 		field: name, 
+		class: formClass,
+		recordClass: recordClass,
+		recordId: recordId,
 		value: urlencode(fieldValue)
 	},
 	function (result) {
+		$('#' + errorsId).parent().removeClass('error');
 		if (result) {
 			$('#' + errorsId).parent().addClass('error');
-		} else {
-			$('#' + errorsId).parent().removeClass('error');
 		}
 		$('#' + errorsId).html(result);
 	});

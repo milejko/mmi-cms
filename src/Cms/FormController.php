@@ -26,21 +26,15 @@ class FormController extends \Mmi\Mvc\Controller {
 		$this->view->setLayoutDisabled();
 
 		//sprawdzenie obecności obowiązkowych pól w poscie
-		if (!$this->getPost()->ctrl || !$this->getPost()->field) {
-			return '';
-		}
-		//ekstrakcja opcji z CTRL
-		$options = \Mmi\Convert\Table::fromString($this->getPost()->ctrl);
-		//brak obowiązkowych opcji w CTRL
-		if (!isset($options['class']) || !isset($options['options']) || !isset($options['recordClass'])) {
+		if (!$this->getPost()->class || !$this->getPost()->field) {
 			return '';
 		}
 		//nazwa klasy forma
-		$class = $options['class'];
-		//nazwa klasy rekordu
-		$recordClass = $options['recordClass'];
+		$className = $this->getPost()->class;
+		//klasa rekordu
+		$recordClassName = $this->getPost()->recordClass;
 		//powoływanie forma
-		$form = new $class($recordClass ? new $recordClass(isset($options['id']) ? $options['id'] : null) : null, $options['options']);
+		$form = new $className($recordClassName ? new $recordClassName($this->getPost()->recordId ? $this->getPost()->recordId : null) : null);
 		/* @var $form \Mmi\Form\Form */
 		//pobieranie elementu do walidacji
 		$element = $form->getElement($this->getPost()->field);
