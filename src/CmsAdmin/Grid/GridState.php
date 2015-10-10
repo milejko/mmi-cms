@@ -55,8 +55,8 @@ class GridState extends \Mmi\OptionObject {
 	
 	/**
 	 * Przypina grida
-	 * @param \CmsAdmin\Grid\Grid $grid
-	 * @return \CmsAdmin\Grid\GridState
+	 * @param Grid $grid
+	 * @return GridState
 	 */
 	public function setGrid(Grid $grid) {
 		$this->_grid = $grid;
@@ -71,26 +71,50 @@ class GridState extends \Mmi\OptionObject {
 	
 	/**
 	 * Dodaje filtr
-	 * @param \CmsAdmin\Grid\GridStateFilter $filter
+	 * @param GridStateFilter $filter
+	 * @return GridState
 	 */
 	public function addFilter(GridStateFilter $filter) {
 		$filters = $this->getFilters();
 		//dodaje filtr
 		$filters[$filter->getField()] = $filter;
-		$this->setFilters($filters);
-		return $this;
+		return $this->setFilters($filters);
+	}
+	
+	/**
+	 * Usuwa filtrację
+	 * @param GridStateFilter $filter
+	 * @return GridState
+	 */
+	public function removeFilter(GridStateFilter $filter) {
+		$filters = $this->getFilters();
+		//usuwa filtr
+		unset($filters[$filter->getField()]);
+		return $this->setFilters($filters);
 	}
 
 	/**
 	 * Dodaje sortowanie
-	 * @param \CmsAdmin\Grid\GridStateOrder $order
+	 * @param GridStateOrder $order
+	 * @return GridState
 	 */
 	public function addOrder(GridStateOrder $order) {
 		$orders = $this->getOrder();
 		//dodaje order
 		$orders[$order->getField()] = $order;
-		$this->setOrder($orders);
-		return $this;
+		return $this->setOrder($orders);
+	}
+	
+	/**
+	 * Usuwa sortowanie
+	 * @param GridStateOrder $order
+	 * @return GridState
+	 */
+	public function removeOrder(GridStateOrder $order) {
+		$orders = $this->getOrder();
+		//usuwa sortowanie
+		unset($orders[$order->getField()]);
+		return $this->setOrder($orders);
 	}
 	
 	/**
@@ -139,7 +163,7 @@ class GridState extends \Mmi\OptionObject {
 	/**
 	 * Stosuje filtry na zapytaniu
 	 * @param \Mmi\Orm\Query $query
-	 * @return \CmsAdmin\Grid\GridState
+	 * @return GridState
 	 */
 	private function _applyFilters(\Mmi\Orm\Query $query) {
 		//resetowanie where
@@ -158,7 +182,7 @@ class GridState extends \Mmi\OptionObject {
 	/**
 	 * Stosuje sortowania na zapytaniu
 	 * @param \Mmi\Orm\Query $query
-	 * @return \CmsAdmin\Grid\GridState
+	 * @return GridState
 	 */
 	private function _applyOrder(\Mmi\Orm\Query $query) {
 		//resetowanie orderu

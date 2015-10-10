@@ -17,6 +17,7 @@ namespace CmsAdmin\Grid;
  * @method GridStateOrder setField($field) ustawia pole sortowania
  * @method string getField() pobiera pole sortowania
  * @method string getMethod() pobiera typ sortowania
+ * @method GridStateOrder unsetMethod() usuwa metodę sortowania
  */
 class GridStateOrder extends \Mmi\OptionObject {
 	

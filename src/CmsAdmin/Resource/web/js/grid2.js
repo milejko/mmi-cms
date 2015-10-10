@@ -36,8 +36,9 @@ CMS.grid = function () {
 		//sortowanie grida
 		$('table.grid').on('click', 'th > a.order', function () {
 			var field = $(this).attr('href'),
-				gridId = $(this).parent('th').parent('tr').parent('tbody').parent('table').attr('id');
-			$.post(window.location, {order: field}, function(data) {
+				gridId = $(this).parent('th').parent('tr').parent('tbody').parent('table').attr('id'),
+				method = $(this).attr('data-method');
+			$.post(window.location, {order: field, method: method}, function(data) {
 				$('#' + gridId).html(data);
 			});
 			return false;

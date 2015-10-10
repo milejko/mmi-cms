@@ -56,7 +56,7 @@ abstract class ElementAbstract extends \Mmi\OptionObject {
 	 * @return string
 	 */
 	public function renderLabel() {
-		$html = '<a class="order" href="#' . $this->getFormElementName() . '[' . $this->_getOrderMethod() . ']' . '" data-method="' . $this->_getOrderMethod() . '">' . ($this->getLabel() ? $this->getLabel() : $this->getName()) . '</a>';
+		$html = '<a class="order" href="#' . $this->getFormElementName() . '" data-method="' . $this->_getOrderMethod() . '">' . ($this->getLabel() ? $this->getLabel() : $this->getName()) . '</a>';
 		//brak sortowania
 		if (!$this->_getOrderMethod()) {
 			return $html;
