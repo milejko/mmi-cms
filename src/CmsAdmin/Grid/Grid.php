@@ -12,6 +12,13 @@ namespace CmsAdmin\Grid;
 
 /**
  * Abstrakcyjna klasa grida
+ * 
+ * @method Element\CheckboxElement addElementCheckbox($field) dodaje element checkbox
+ * @method Element\CustomElement addElementCustom($field) dodaje element dowolny
+ * @method Element\IndexElement addElementIndex() dodaje element indeksujący
+ * @method Element\SelectElement addElementSelect($field) dodaje element select
+ * @method Element\TextElement addElementText($field) dodaje element tekstowy
+ * @method Element\OperationElement addElementOperation() dodaje element operacji na rekordzie
  */
 abstract class Grid extends \Mmi\OptionObject {
 
@@ -32,7 +39,7 @@ abstract class Grid extends \Mmi\OptionObject {
 	 * @var GridState
 	 */
 	protected $_state;
-	
+
 	/**
 	 * Konstruktor
 	 */
@@ -52,14 +59,13 @@ abstract class Grid extends \Mmi\OptionObject {
 	/**
 	 * Dodaje element grida
 	 * @param \CmsAdmin\Grid\Element\ElementAbstract $element
-	 * @return Grid
+	 * @return Element\ElementAbstract
 	 */
 	public final function addElement(Element\ElementAbstract $element) {
 		//dodawanie elementu (nazwa unikalna)
-		$this->_elements[$element->getName()] = $element->setGrid($this);
-		return $this;
+		return $this->_elements[$element->getName()] = $element->setGrid($this);
 	}
-	
+
 	/**
 	 * Pobranie elementów formularza
 	 * @return \CmsAdmin\Grid\Element\ElementAbstract[]
@@ -97,7 +103,7 @@ abstract class Grid extends \Mmi\OptionObject {
 		$this->_query = $query;
 		return $this;
 	}
-	
+
 	/**
 	 * Pobiera uproszczoną nazwę klasy grida
 	 * @return string
@@ -113,8 +119,8 @@ abstract class Grid extends \Mmi\OptionObject {
 	public final function getDataCollection() {
 		//aktualizuje zapytanie i pobiera dane
 		return $this->getState()
-			->setupQuery($this->getQuery())
-			->find();
+				->setupQuery($this->getQuery())
+				->find();
 	}
 
 	/**
@@ -127,6 +133,24 @@ abstract class Grid extends \Mmi\OptionObject {
 		} catch (\Exception $e) {
 			return $e->getMessage();
 		}
+	}
+
+	/**
+	 * Magicznie wywoływanie metod
+	 * @param string $name
+	 * @param array $params
+	 * @return mixed
+	 */
+	public function __call($name, $params) {
+		$matches = [];
+		//obsługa addElement
+		if (preg_match('/addElement([a-zA-Z0-9]+)/', $name, $matches)) {
+			$elementClass = '\\CmsAdmin\\Grid\\Element\\' . $matches[1] . 'Element';
+			//dodaje element
+			return $this->addElement(new $elementClass(isset($params[0]) ? $params[0] : null));
+		}
+		//obsługa nadrzędnych
+		return parent::__call($name, $params);
 	}
 
 }

@@ -9,6 +9,7 @@
  */
 
 namespace CmsAdmin\Grid\Element;
+use Mmi\App\FrontController;
 
 /**
  * Klasa elementu indeksującego
@@ -20,47 +21,26 @@ namespace CmsAdmin\Grid\Element;
  * @method self setLabel($label) ustawia labelkę
  * @method string getLabel() pobiera labelkę
  */
-class IndexElement extends ElementAbstract {
-	
+class OperationElement extends ElementAbstract {
+
 	/**
 	 * Konstruktor ustawia domyślny label
-	 * pole nie ma nazwy
+	 * pole bez nazwy
 	 */
 	public function __construct() {
-		 $this->setLabel('#');
-		 parent::__construct('_index_');
-	}
-	
-	/**
-	 * Renderuje filtrację pola
-	 * @return string
-	 */
-	public function renderFilter() {
-		return '';
-	}
-	
-	/**
-	 * Renderuje labelkę
-	 * @return string
-	 */
-	public function renderLabel() {
-		return $this->getLabel();
+		$this->setLabel('operacje');
+		parent::__construct('_operation_');
 	}
 
 	/**
-	 * Renderuje pole tekstowe
+	 * Renderuje komórkę
 	 * @param \Mmi\Orm\RecordRo $record
 	 * @return string
 	 */
 	public function renderCell(\Mmi\Orm\RecordRo $record) {
-		//inicjalizacja
-		if ($this->getIndex() === null) {
-			//ustawia wartość domyślną uwzględniając paginator
-			$this->setIndex(($this->_grid->getState()->getPage() -1) * $this->_grid->getState()->getRowsPerPage());
-		}
-		//podwyższa indeks
-		$this->setIndex($this->getIndex() + 1);
-		return $this->getIndex();
+		$view = FrontController::getInstance()->getView();
+		return '<a href="' . $view->url(['action' => 'edit', 'id' => $record->getPk()]) . '"><i class="icon-pencil"></i></a> ' .
+			'<a href="' . $view->url(['action' => 'delete', 'id' => $record->getPk()]) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>';
 	}
 
 }

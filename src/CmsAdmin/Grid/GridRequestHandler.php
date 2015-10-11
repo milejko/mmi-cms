@@ -36,7 +36,7 @@ class GridRequestHandler {
 	 */
 	public function handleRequest() {
 		//obsługa eksportera
-		$this->_handleExporter(FrontController::getInstance()->getRequest());
+		$this->_handleCsvExporter(FrontController::getInstance()->getRequest());
 		//obsługa danych z POST
 		$post = FrontController::getInstance()->getRequest()->getPost();
 		//brak posta
@@ -49,13 +49,14 @@ class GridRequestHandler {
 		}
 	}
 	
-	protected function _handleExporter(\Mmi\Http\Request $request) {
-		//brak
-		if (null === $operation = $request->{$this->_grid->getClass()}) {
-			return;
-		}
+	/**
+	 * Obsługa eksportera CSV
+	 * @param \Mmi\Http\Request $request
+	 * @return type
+	 */
+	protected function _handleCsvExporter(\Mmi\Http\Request $request) {
 		//nieznana operacja
-		if ($operation !== 'export') {
+		if ('export' != $request->{$this->_grid->getClass()}) {
 			return;
 		}
 		//ustawia typ danych
@@ -64,7 +65,7 @@ class GridRequestHandler {
 			->setType('text/csv');
 		//przesyła CSV do klienta
 		(new GridExporter($this->_grid))->passCsv();
-		die();
+		exit;
 	}
 
 	/**
@@ -148,11 +149,12 @@ class GridRequestHandler {
 	 */
 	protected function _render() {
 		$renderer = new GridRenderer($this->_grid);
+		//ustawianie odpowiedzi
 		FrontController::getInstance()->getResponse()
 			->setTypePlain()
 			->setContent($renderer->renderHeader() . $renderer->renderBody() . $renderer->renderFooter())
 			->send();
-		die();
+		exit;
 	}
 
 }

@@ -12,9 +12,10 @@ namespace CmsAdmin\Grid\Element;
 
 /**
  * Abstrakcyjna klasa elementu
- * @method ElementAbstract setName($name) ustawia nazwę pola
+ * 
+ * @method self setName($name) ustawia nazwę pola
  * @method string getName() pobiera nazwę pola
- * @method ElementAbstract setLabel($label) ustawia labelkę
+ * @method self setLabel($label) ustawia labelkę
  * @method string getLabel() pobiera labelkę
  */
 abstract class ElementAbstract extends \Mmi\OptionObject {
@@ -56,6 +57,10 @@ abstract class ElementAbstract extends \Mmi\OptionObject {
 	 * @return string
 	 */
 	public function renderLabel() {
+		//brak property
+		if (!$this->_fieldInRecord()) {
+			return $this->getLabel() ? $this->getLabel() : $this->getName();
+		}
 		$html = '<a class="order" href="#' . $this->getFormElementName() . '" data-method="' . $this->_getOrderMethod() . '">' . ($this->getLabel() ? $this->getLabel() : $this->getName()) . '</a>';
 		//brak sortowania
 		if (!$this->_getOrderMethod()) {
@@ -74,6 +79,11 @@ abstract class ElementAbstract extends \Mmi\OptionObject {
 	 * @return string
 	 */
 	public function renderFilter() {
+		//brak property
+		if (!$this->_fieldInRecord()) {
+			return;
+		}
+		//zwrot filtra
 		return (new \Mmi\Form\Element\Text($this->getFormElementName()))
 				->setValue($this->_getFilterValue());
 	}
@@ -98,6 +108,14 @@ abstract class ElementAbstract extends \Mmi\OptionObject {
 				return $filter->getValue();
 			}
 		}
+	}
+
+	/**
+	 * Sprawdza istnienie pola w rekordzie
+	 * @return boolean
+	 */
+	protected function _fieldInRecord() {
+		return property_exists($this->_grid->getQuery()->getRecordName(), $this->getName());
 	}
 
 	/**

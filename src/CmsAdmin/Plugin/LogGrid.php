@@ -23,25 +23,31 @@ class LogGrid extends Grid {
 		$this->setQuery(\Cms\Orm\CmsLogQuery::factory()
 				->orderDescDateTime());
 
-		$this->addElement((new Element\IndexElement()));
+		$this->addElementIndex();
 
-		$this->addElement((new Element\TextElement('dateTime'))
-				->setLabel('data i czas'));
+		$this->addElementText('dateTime')
+			->setLabel('data i czas');
 
-		$this->addElement((new Element\TextElement('operation'))
-				->setLabel('operacja'));
+		$this->addElementText('operation')
+			->setLabel('operacja');
 
-		$this->addElement((new Element\TextElement('url'))
-				->setLabel('URL'));
+		$this->addElementText('url')
+			->setLabel('URL');
 
-		$this->addElement((new Element\TextElement('data'))
-				->setLabel('dane'));
+		$this->addElementText('data')
+			->setLabel('dane');
 
-		$this->addElement((new Element\TextElement('ip'))
-				->setLabel('adres IP'));
+		$this->addElementText('ip')
+			->setLabel('adres IP');
 
-		$this->addElement((new Element\CheckboxElement('success'))
-				->setLabel('sukces'));
+		$this->addElementCustom('ids')
+			->setLabel('xyz')
+			->setTemplateCode('{$record->id}');
+		
+		$this->addElementOperation();
+		
+		$this->addElementCheckbox('success')
+			->setLabel('sukces');
 	}
 
 }

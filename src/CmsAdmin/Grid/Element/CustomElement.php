@@ -9,24 +9,29 @@
  */
 
 namespace CmsAdmin\Grid\Element;
+use Mmi\App\FrontController;
 
 /**
- * Klasa elementu tekstowego
+ * Klasa elementu dowolnego
  * 
+ * @method CustomElement setTemplateCode($code) dodaje kod
+ * @method string getTemplateCode() pobiera kod szablonu
  * @method self setName($name) ustawia nazwę pola
  * @method string getName() pobiera nazwę pola
  * @method self setLabel($label) ustawia labelkę
  * @method string getLabel() pobiera labelkę
  */
-class TextElement extends ElementAbstract {
-
+class CustomElement extends ElementAbstract {
+	
 	/**
-	 * Renderuje pole tekstowe
+	 * Renderuje customowe elementy
 	 * @param \Mmi\Orm\RecordRo $record
 	 * @return string
 	 */
 	public function renderCell(\Mmi\Orm\RecordRo $record) {
-		return property_exists($record, $this->getName()) ? $record->{$this->getName()} : '?';
+		$view = FrontController::getInstance()->getView();
+		$view->record = $record;
+		return $view->renderDirectly($this->getTemplateCode());
 	}
 
 }

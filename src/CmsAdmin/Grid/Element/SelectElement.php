@@ -12,7 +12,12 @@ namespace CmsAdmin\Grid\Element;
 
 /**
  * Klasa elementu select
+ * 
  * @method array getMultiOptions()
+ * @method self setName($name) ustawia nazwę pola
+ * @method string getName() pobiera nazwę pola
+ * @method self setLabel($label) ustawia labelkę
+ * @method string getLabel() pobiera labelkę
  */
 class SelectElement extends ElementAbstract {
 

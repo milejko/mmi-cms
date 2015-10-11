@@ -30,9 +30,14 @@ class GridExporter {
 		$this->_grid = $grid;
 	}
 
+	/**
+	 * Parsuje dane do postaci CSV
+	 */
 	public function passCsv() {
 		$csv = fopen('php://output', 'w');
+		//iteracja po danych
 		foreach ($this->_getData() as $data) {
+			//zapis linii CSV
 			fputcsv($csv, $data);
 		}
 		fclose($csv);
@@ -45,6 +50,7 @@ class GridExporter {
 	protected function _getData() {
 		return $this->_grid->getState()
 				->setupQuery($this->_grid->getQuery())
+				//eksport maksimum 100k rekordów
 				->limit(100000)
 				->offset(null)
 				->find()->toArray();

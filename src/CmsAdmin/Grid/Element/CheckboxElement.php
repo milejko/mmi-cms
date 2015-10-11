@@ -12,6 +12,11 @@ namespace CmsAdmin\Grid\Element;
 
 /**
  * Klasa elementu checkbox
+ * 
+ * @method self setName($name) ustawia nazwę pola
+ * @method string getName() pobiera nazwę pola
+ * @method self setLabel($label) ustawia labelkę
+ * @method string getLabel() pobiera labelkę
  */
 class CheckboxElement extends SelectElement {
 	
