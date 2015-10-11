@@ -39,7 +39,7 @@ class GridPaginator {
 			'Znaleziono: <strong>' . $this->_grid->getState()->getDataCount() . '</strong> pozycji, strona: ' . 
 			$this->_renderSelect() . 
 			' z ' . $this->getPagesCount() .
-			', <a target="_blank" href="?' . $this->_grid->getClass() . '[_export_]">export csv</a>' .
+			', <a target="_blank" href="?' . $this->_grid->getClass() . '=export">export csv</a>' .
 			'</th></tr>';
 	}
 	

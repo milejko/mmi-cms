@@ -35,6 +35,9 @@ class GridRequestHandler {
 	 * Obsługa requestu jeśli się pojawił
 	 */
 	public function handleRequest() {
+		//obsługa eksportera
+		$this->_handleExporter(FrontController::getInstance()->getRequest());
+		//obsługa danych z POST
 		$post = FrontController::getInstance()->getRequest()->getPost();
 		//brak posta
 		if ($post->isEmpty()) {
@@ -44,6 +47,24 @@ class GridRequestHandler {
 		if ($this->_rebuildFilter($post) || $this->_rebuildOrder($post)) {
 			$this->_render();
 		}
+	}
+	
+	protected function _handleExporter(\Mmi\Http\Request $request) {
+		//brak
+		if (null === $operation = $request->{$this->_grid->getClass()}) {
+			return;
+		}
+		//nieznana operacja
+		if ($operation !== 'export') {
+			return;
+		}
+		//ustawia typ danych
+		FrontController::getInstance()->getResponse()
+			->setHeader('Content-disposition', 'attachment; filename=' . $this->_grid->getClass() . '.csv')
+			->setType('text/csv');
+		//przesyła CSV do klienta
+		(new GridExporter($this->_grid))->passCsv();
+		die();
 	}
 
 	/**
