@@ -77,7 +77,7 @@ class Auth extends \Mmi\Form\Form {
 	 * @return boolean
 	 */
 	public function beforeSave() {
-		if (null !== $password = $this->getElement('changePassword')->getValue()) {
+		if ('' !== $password = $this->getElement('changePassword')->getValue()) {
 			$this->getRecord()->password = \Cms\Model\Auth::getSaltedPasswordHash($password);
 		}
 		return true;
