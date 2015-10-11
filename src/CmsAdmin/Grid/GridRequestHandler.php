@@ -98,8 +98,13 @@ class GridRequestHandler {
 		if (null === $filter = $this->_retrievePostFilter($post)) {
 			return;
 		}
+		//obsługa paginatora
+		if ($filter->getField() == '_paginator_') {
+			$this->_grid->getState()->setPage($filter->getValue());
+			return true;
+		}
 		//usuwa lub dodaje filtr
-		$filter->getValue() == '' ? $this->_grid->getState()->removeFilter($filter) : $this->_grid->getState()->addFilter($filter);
+		$filter->getValue() == '' ? $this->_grid->getState()->removeFilter($filter)->setPage(1) : $this->_grid->getState()->addFilter($filter)->setPage(1);
 		return true;
 	}
 
@@ -123,6 +128,7 @@ class GridRequestHandler {
 	protected function _render() {
 		$renderer = new GridRenderer($this->_grid);
 		FrontController::getInstance()->getResponse()
+			->setTypePlain()
 			->setContent($renderer->renderHeader() . $renderer->renderBody() . $renderer->renderFooter())
 			->send();
 		die();

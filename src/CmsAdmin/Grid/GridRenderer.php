@@ -24,9 +24,7 @@ class GridRenderer {
 
 	/**
 	 * Konstruktror
-	 * @param array $elements
-	 * @param integer $count
-	 * @param \Mmi\Orm\RecordCollection $collection
+	 * @param Grid $grid
 	 */
 	public function __construct(Grid $grid) {
 		//podpięcie grida
@@ -76,11 +74,8 @@ class GridRenderer {
 	 * @return string html
 	 */
 	public function renderFooter() {
-		$paginator = (new \Mmi\Paginator\Paginator())
-			->setPage($this->_grid->getState()->getPage())
-			->setRowsPerPage($this->_grid->getState()->getRowsPerPage())
-			->setRowsCount($this->_grid->getState()->getDataCount());
-		return '<tr><th colspan="' . count($this->_grid->getElements()) . '">' . (string) $paginator . '</th></tr>';
+		//powołanie paginatora i render
+		return (new GridPaginator($this->_grid))->render();
 	}
 
 	/**
