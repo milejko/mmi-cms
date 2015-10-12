@@ -8,17 +8,17 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace CmsAdmin\Grid\Element;
+namespace CmsAdmin\Grid\Column;
 
 /**
- * Klasa elementu tekstowego
+ * Klasa Columnu tekstowego
  * 
  * @method self setName($name) ustawia nazwę pola
  * @method string getName() pobiera nazwę pola
  * @method self setLabel($label) ustawia labelkę
  * @method string getLabel() pobiera labelkę
  */
-class TextElement extends ElementAbstract {
+class TextColumn extends ColumnAbstract {
 
 	/**
 	 * Renderuje pole tekstowe

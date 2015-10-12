@@ -21,26 +21,26 @@ class ArticleGrid extends \CmsAdmin\Grid\Grid {
 		$this->setQuery(\Cms\Orm\CmsArticleQuery::factory());
 		
 		//indeks
-		$this->addElementIndex();
+		$this->addColumnIndex();
 
 		//tytuł
-		$this->addElementText('title')
+		$this->addColumnText('title')
 			->setLabel('tytuł');
 
 		//treść
-		$this->addElementText('text')
+		$this->addColumnText('text')
 			->setLabel('treść');
 
 		//data dodania
-		$this->addElementText('dateAdd')
+		$this->addColumnText('dateAdd')
 			->setLabel('data dodania');
 
 		//data modyfikacji
-		$this->addElementText('dateModify')
+		$this->addColumnText('dateModify')
 			->setLabel('data modyfikacji');
 
 		//operacje
-		$this->addElementOperation();
+		$this->addColumnOperation();
 	}
 
 }

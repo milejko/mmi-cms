@@ -22,30 +22,30 @@ class LogGrid extends \CmsAdmin\Grid\Grid {
 				->orderDescDateTime());
 
 		//indeks
-		$this->addElementIndex();
+		$this->addColumnIndex();
 
 		//data i czas
-		$this->addElementText('dateTime')
+		$this->addColumnText('dateTime')
 			->setLabel('data i czas');
 
 		//operacja
-		$this->addElementText('operation')
+		$this->addColumnText('operation')
 			->setLabel('operacja');
 
 		//url
-		$this->addElementText('url')
+		$this->addColumnText('url')
 			->setLabel('URL');
 
 		//dane
-		$this->addElementText('data')
+		$this->addColumnText('data')
 			->setLabel('dane');
 
 		//ip
-		$this->addElementText('ip')
+		$this->addColumnText('ip')
 			->setLabel('adres IP');
 
 		//sukces
-		$this->addElementCheckbox('success')
+		$this->addColumnCheckbox('success')
 			->setLabel('sukces');
 	}
 

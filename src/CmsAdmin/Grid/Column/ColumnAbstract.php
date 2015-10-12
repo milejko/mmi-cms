@@ -8,17 +8,17 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace CmsAdmin\Grid\Element;
+namespace CmsAdmin\Grid\Column;
 
 /**
- * Abstrakcyjna klasa elementu
+ * Abstrakcyjna klasa Columnu
  * 
  * @method self setName($name) ustawia nazwę pola
  * @method string getName() pobiera nazwę pola
  * @method self setLabel($label) ustawia labelkę
  * @method string getLabel() pobiera labelkę
  */
-abstract class ElementAbstract extends \Mmi\OptionObject {
+abstract class ColumnAbstract extends \Mmi\OptionObject {
 
 	/**
 	 * Obiekt grida
@@ -35,17 +35,17 @@ abstract class ElementAbstract extends \Mmi\OptionObject {
 	}
 
 	/**
-	 * Zwraca nazwę dla elementu formularza
+	 * Zwraca nazwę dla Columnu formularza
 	 * @return string
 	 */
-	public function getFormElementName() {
+	public function getFormColumnName() {
 		return $this->_grid->getClass() . '[' . $this->getName() . ']';
 	}
 
 	/**
 	 * Ustawia grida macieżystego
 	 * @param \CmsAdmin\Grid\Grid $grid
-	 * @return ElementAbstract
+	 * @return ColumnAbstract
 	 */
 	public function setGrid(\CmsAdmin\Grid\Grid $grid) {
 		$this->_grid = $grid;
@@ -61,7 +61,7 @@ abstract class ElementAbstract extends \Mmi\OptionObject {
 		if (!$this->_fieldInRecord()) {
 			return $this->getLabel() ? $this->getLabel() : $this->getName();
 		}
-		$html = '<a class="order" href="#' . $this->getFormElementName() . '" data-method="' . $this->_getOrderMethod() . '">' . ($this->getLabel() ? $this->getLabel() : $this->getName()) . '</a>';
+		$html = '<a class="order" href="#' . $this->getFormColumnName() . '" data-method="' . $this->_getOrderMethod() . '">' . ($this->getLabel() ? $this->getLabel() : $this->getName()) . '</a>';
 		//brak sortowania
 		if (!$this->_getOrderMethod()) {
 			return $html;
@@ -84,7 +84,7 @@ abstract class ElementAbstract extends \Mmi\OptionObject {
 			return;
 		}
 		//zwrot filtra
-		return (new \Mmi\Form\Element\Text($this->getFormElementName()))
+		return (new \Mmi\Form\Element\Text($this->getFormColumnName()))
 				->setValue($this->_getFilterValue());
 	}
 

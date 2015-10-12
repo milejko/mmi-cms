@@ -38,10 +38,10 @@ class GridRenderer {
 	public function renderHeader() {
 		//wiersz nagłówka
 		$html = '<tr>';
-		//iteracja po elementach
-		foreach ($this->_grid->getElements() as $element) {
+		//iteracja po Columnach
+		foreach ($this->_grid->getColumns() as $Column) {
 			//renderuje kolumnę z labelką i filtrem
-			$html .= '<th>' . $element->renderLabel() . '<br />' . $element->renderFilter() . '</th>';
+			$html .= '<th>' . $Column->renderLabel() . '<br />' . $Column->renderFilter() . '</th>';
 		}
 		//zwrot html
 		return $html . '</tr>';
@@ -57,10 +57,10 @@ class GridRenderer {
 		foreach ($this->_grid->getDataCollection() as $record) {
 			//tworzenie wiersza
 			$html .= '<tr>';
-			//iteracja po elementach
-			foreach ($this->_grid->getElements() as $element) {
+			//iteracja po Columnach
+			foreach ($this->_grid->getColumns() as $Column) {
 				//renderuje krotkę
-				$html .= '<td>' . $element->renderCell($record) . '</td>';
+				$html .= '<td>' . $Column->renderCell($record) . '</td>';
 			}
 			//zamknięcie wiersza
 			$html .= '</tr>';

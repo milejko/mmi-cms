@@ -8,17 +8,17 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace CmsAdmin\Grid\Element;
+namespace CmsAdmin\Grid\Column;
 
 /**
- * Klasa elementu checkbox
+ * Klasa Columnu checkbox
  * 
  * @method self setName($name) ustawia nazwę pola
  * @method string getName() pobiera nazwę pola
  * @method self setLabel($label) ustawia labelkę
  * @method string getLabel() pobiera labelkę
  */
-class CheckboxElement extends SelectElement {
+class CheckboxColumn extends SelectColumn {
 	
 	/**
 	 * Domyślne opcje dla checkboxa
@@ -42,8 +42,8 @@ class CheckboxElement extends SelectElement {
 		if (!property_exists($record, $this->getName())) {
 			return '?';
 		}
-		//nowy element select
-		return (new \Mmi\Form\Element\Checkbox($this->getFormElementName()))
+		//nowy Column select
+		return (new \Mmi\Form\Element\Checkbox($this->getFormColumnName()))
 			//ustawia wartość na odpowiadającą zaznaczeniu
 			->setValue($this->_getCheckedValue())
 			//ustawia zaznaczenie

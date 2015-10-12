@@ -10,49 +10,53 @@
 
 namespace CmsAdmin\Plugin;
 
-class AuthGrid extends \CmsAdmin\Plugin\Grid {
+/**
+ * Grid użytkowników
+ */
+class AuthGrid extends \CmsAdmin\Grid\Grid {
 
 	public function init() {
 
+		//domyślne zapytanie
 		$this->setQuery(\Cms\Orm\CmsAuthQuery::factory());
+		
+		//indeks
+		$this->addColumnIndex();
 
-		$this->setOption('locked', true);
+		//nazwa
+		$this->addColumnText('username')
+			->setLabel('nazwa użytkownika');
 
-		$this->addColumn('text', 'username', [
-			'label' => 'nazwa użytkownika'
-		]);
+		//email
+		$this->addColumnText('email')
+			->setLabel('e-mail');
 
-		$this->addColumn('text', 'email', [
-			'label' => 'e-mail'
-		]);
+		//imię
+		$this->addColumnText('name')
+			->setLabel('pełna nazwa użytkownika');
 
-		$this->addColumn('text', 'name', [
-			'label' => 'pełna nazwa użytkownika'
-		]);
+		//ostatnie logowanie
+		$this->addColumnText('lastLog')
+			->setLabel('ostatnio zalogowany');
 
-		$this->addColumn('text', 'lastLog', [
-			'label' => 'ostatnio zalogowany'
-		]);
+		//ostatnie IP
+		$this->addColumnText('lastIp')
+			->setLabel('ostatni IP');
 
-		$this->addColumn('text', 'lastIp', [
-			'label' => 'ostatni IP'
-		]);
+		//błędne logowanie
+		$this->addColumnText('lastFailLog')
+			->setLabel('błędne logowanie');
 
-		$this->addColumn('text', 'lastFailLog', [
-			'label' => 'błędne logowanie'
-		]);
+		//ostatnie ip błędnego logowania
+		$this->addColumnText('lastFailIp')
+			->setLabel('IP błędnego logowania');
 
-		$this->addColumn('text', 'lastFailIp', [
-			'label' => 'IP błędnego logowania'
-		]);
-
-		$this->addColumn('checkbox', 'active', [
-			'label' => 'aktywny'
-		]);
-
-		$this->addColumn('buttons', 'buttons', [
-			'label' => 'operacje'
-		]);
+		//aktywny
+		$this->addColumnCheckbox('active')
+			->setLabel('aktywny');
+		
+		//operacje
+		$this->addColumnOperation();
 	}
 
 }

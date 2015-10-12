@@ -8,20 +8,20 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace CmsAdmin\Grid\Element;
+namespace CmsAdmin\Grid\Column;
 use Mmi\App\FrontController;
 
 /**
- * Klasa elementu indeksującego
+ * Klasa Columnu indeksującego
  * 
- * @method IndexElement setIndex($index) ustawia index
+ * @method IndexColumn setIndex($index) ustawia index
  * @method integer getIndex() pobiera wartość indeksu
  * @method self setName($name) ustawia nazwę pola
  * @method string getName() pobiera nazwę pola
  * @method self setLabel($label) ustawia labelkę
  * @method string getLabel() pobiera labelkę
  */
-class OperationElement extends ElementAbstract {
+class OperationColumn extends ColumnAbstract {
 
 	/**
 	 * Konstruktor ustawia domyślny label
@@ -42,7 +42,7 @@ class OperationElement extends ElementAbstract {
 	 * %pole% zastępowany jest przez $record->pole
 	 * 
 	 * @param array $params
-	 * @return OperationElement
+	 * @return OperationColumn
 	 */
 	public function setEditParams(array $params = ['action' => 'edit', 'id' => '%id%']) {
 		return $this->setOption('editParams', $params);
@@ -54,7 +54,7 @@ class OperationElement extends ElementAbstract {
 	 * %pole% zastępowany jest przez $record->pole
 	 * 
 	 * @param array $params
-	 * @return OperationElement
+	 * @return OperationColumn
 	 */
 	public function setDeleteParams(array $params = ['action' => 'delete', 'id' => '%id%']) {
 		return $this->setOption('deleteParams', $params);

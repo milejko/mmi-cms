@@ -8,23 +8,23 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace CmsAdmin\Grid\Element;
+namespace CmsAdmin\Grid\Column;
 use Mmi\App\FrontController;
 
 /**
- * Klasa elementu dowolnego
+ * Klasa Columnu dowolnego
  * 
- * @method CustomElement setTemplateCode($code) dodaje kod
+ * @method CustomColumn setTemplateCode($code) dodaje kod
  * @method string getTemplateCode() pobiera kod szablonu
  * @method self setName($name) ustawia nazwę pola
  * @method string getName() pobiera nazwę pola
  * @method self setLabel($label) ustawia labelkę
  * @method string getLabel() pobiera labelkę
  */
-class CustomElement extends ElementAbstract {
+class CustomColumn extends ColumnAbstract {
 	
 	/**
-	 * Renderuje customowe elementy
+	 * Renderuje customowe Columny
 	 * @param \Mmi\Orm\RecordRo $record
 	 * @return string
 	 */

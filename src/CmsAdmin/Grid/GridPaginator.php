@@ -35,7 +35,7 @@ class GridPaginator {
 	 * @return type
 	 */
 	public function render() {
-		return '<tr><th class="paginator" colspan="' . count($this->_grid->getElements()) . '">' . 
+		return '<tr><th class="paginator" colspan="' . count($this->_grid->getColumns()) . '">' . 
 			'Znaleziono: <strong>' . $this->_grid->getState()->getDataCount() . '</strong> pozycji, strona: ' . 
 			$this->_renderSelect() . 
 			' z ' . $this->getPagesCount() .
@@ -52,7 +52,7 @@ class GridPaginator {
 	}
 
 	/**
-	 * Renderuje element select
+	 * Renderuje Column select
 	 * @return \Mmi\Form\Element\Select
 	 */
 	protected function _renderSelect() {

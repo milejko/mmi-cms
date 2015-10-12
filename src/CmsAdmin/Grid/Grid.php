@@ -13,20 +13,20 @@ namespace CmsAdmin\Grid;
 /**
  * Abstrakcyjna klasa grida
  * 
- * @method Element\CheckboxElement addElementCheckbox($field) dodaje element checkbox
- * @method Element\CustomElement addElementCustom($field) dodaje element dowolny
- * @method Element\IndexElement addElementIndex() dodaje element indeksujący
- * @method Element\SelectElement addElementSelect($field) dodaje element select
- * @method Element\TextElement addElementText($field) dodaje element tekstowy
- * @method Element\OperationElement addElementOperation() dodaje element operacji na rekordzie
+ * @method Column\CheckboxColumn addColumnCheckbox($field) dodaje Column checkbox
+ * @method Column\CustomColumn addColumnCustom($field) dodaje Column dowolny
+ * @method Column\IndexColumn addColumnIndex() dodaje Column indeksujący
+ * @method Column\SelectColumn addColumnSelect($field) dodaje Column select
+ * @method Column\TextColumn addColumnText($field) dodaje Column tekstowy
+ * @method Column\OperationColumn addColumnOperation() dodaje Column operacji na rekordzie
  */
 abstract class Grid extends \Mmi\OptionObject {
 
 	/**
-	 * Elementy grida
+	 * Columny grida
 	 * @var array
 	 */
-	protected $_elements = [];
+	protected $_Columns = [];
 
 	/**
 	 * Obiekt zapytania
@@ -57,21 +57,21 @@ abstract class Grid extends \Mmi\OptionObject {
 	abstract public function init();
 
 	/**
-	 * Dodaje element grida
-	 * @param \CmsAdmin\Grid\Element\ElementAbstract $element
-	 * @return Element\ElementAbstract
+	 * Dodaje Column grida
+	 * @param \CmsAdmin\Grid\Column\ColumnAbstract $Column
+	 * @return Column\ColumnAbstract
 	 */
-	public final function addElement(Element\ElementAbstract $element) {
-		//dodawanie elementu (nazwa unikalna)
-		return $this->_elements[$element->getName()] = $element->setGrid($this);
+	public final function addColumn(Column\ColumnAbstract $Column) {
+		//dodawanie Columnu (nazwa unikalna)
+		return $this->_Columns[$Column->getName()] = $Column->setGrid($this);
 	}
 
 	/**
-	 * Pobranie elementów formularza
-	 * @return \CmsAdmin\Grid\Element\ElementAbstract[]
+	 * Pobranie Columnów formularza
+	 * @return \CmsAdmin\Grid\Column\ColumnAbstract[]
 	 */
-	public final function getElements() {
-		return $this->_elements;
+	public final function getColumns() {
+		return $this->_Columns;
 	}
 
 	/**
@@ -143,11 +143,11 @@ abstract class Grid extends \Mmi\OptionObject {
 	 */
 	public function __call($name, $params) {
 		$matches = [];
-		//obsługa addElement
-		if (preg_match('/addElement([a-zA-Z0-9]+)/', $name, $matches)) {
-			$elementClass = '\\CmsAdmin\\Grid\\Element\\' . $matches[1] . 'Element';
-			//dodaje element
-			return $this->addElement(new $elementClass(isset($params[0]) ? $params[0] : null));
+		//obsługa addColumn
+		if (preg_match('/addColumn([a-zA-Z0-9]+)/', $name, $matches)) {
+			$ColumnClass = '\\CmsAdmin\\Grid\\Column\\' . $matches[1] . 'Column';
+			//dodaje Column
+			return $this->addColumn(new $ColumnClass(isset($params[0]) ? $params[0] : null));
 		}
 		//obsługa nadrzędnych
 		return parent::__call($name, $params);

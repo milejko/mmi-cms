@@ -8,10 +8,10 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace CmsAdmin\Grid\Element;
+namespace CmsAdmin\Grid\Column;
 
 /**
- * Klasa elementu select
+ * Klasa Columnu select
  * 
  * @method array getMultiOptions()
  * @method self setName($name) ustawia nazwę pola
@@ -19,12 +19,12 @@ namespace CmsAdmin\Grid\Element;
  * @method self setLabel($label) ustawia labelkę
  * @method string getLabel() pobiera labelkę
  */
-class SelectElement extends ElementAbstract {
+class SelectColumn extends ColumnAbstract {
 
 	/**
 	 * Ustawia opcje selecta
 	 * @param array $options
-	 * @return SelectElement
+	 * @return SelectColumn
 	 */
 	public function setMultiOptions(array $options = []) {
 		return $this->setOption('multiOptions', $options);
@@ -46,8 +46,8 @@ class SelectElement extends ElementAbstract {
 	 * @return string
 	 */
 	public function renderFilter() {
-		//tworzy element form selecta, ustawia opcje i wartość filtra
-		return (new \Mmi\Form\Element\Select($this->getFormElementName()))
+		//tworzy Column form selecta, ustawia opcje i wartość filtra
+		return (new \Mmi\Form\Element\Select($this->getFormColumnName()))
 				->setMultiOptions($this->getMultiOptions())
 				->setValue($this->_getFilterValue());
 	}
