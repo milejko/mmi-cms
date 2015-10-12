@@ -13,33 +13,34 @@ namespace CmsAdmin\Plugin;
 /**
  * Grid artykułów
  */
-class ArticleGrid extends \CmsAdmin\Plugin\Grid {
+class ArticleGrid extends \CmsAdmin\Grid\Grid {
 
 	public function init() {
 
+		//domyślne zapytanie
 		$this->setQuery(\Cms\Orm\CmsArticleQuery::factory());
+		
+		//indeks
+		$this->addElementIndex();
 
-		$this->addColumn('text', 'title', [
-			'label' => 'tytuł',
-		]);
+		//tytuł
+		$this->addElementText('title')
+			->setLabel('tytuł');
 
-		$this->addColumn('text', 'text', [
-			'label' => 'treść',
-			'sortable' => false,
-			'seekable' => false
-		]);
+		//treść
+		$this->addElementText('text')
+			->setLabel('treść');
 
-		$this->addColumn('text', 'dateAdd', [
-			'label' => 'data dodania'
-		]);
+		//data dodania
+		$this->addElementText('dateAdd')
+			->setLabel('data dodania');
 
-		$this->addColumn('text', 'dateModify', [
-			'label' => 'data modyfikacji'
-		]);
+		//data modyfikacji
+		$this->addElementText('dateModify')
+			->setLabel('data modyfikacji');
 
-		$this->addColumn('buttons', 'buttons', [
-			'label' => 'operacje'
-		]);
+		//operacje
+		$this->addElementOperation();
 	}
 
 }

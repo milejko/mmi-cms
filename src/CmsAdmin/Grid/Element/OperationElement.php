@@ -28,8 +28,36 @@ class OperationElement extends ElementAbstract {
 	 * pole bez nazwy
 	 */
 	public function __construct() {
-		$this->setLabel('operacje');
+		//ustawia domyślne parametry
+		$this->setLabel('operacje')
+			->setEditParams()
+			->setDeleteParams();
+		//ustawia nazwę na _operation_
 		parent::__construct('_operation_');
+	}
+	
+	/**
+	 * Ustawia parametry linku edycyjnego
+	 * ['action' => 'edit', 'id' => '%id%']
+	 * %pole% zastępowany jest przez $record->pole
+	 * 
+	 * @param array $params
+	 * @return OperationElement
+	 */
+	public function setEditParams(array $params = ['action' => 'edit', 'id' => '%id%']) {
+		return $this->setOption('editParams', $params);
+	}
+	
+	/**
+	 * Ustawia parametry linku usuwającego
+	 * ['action' => 'delete', 'id' => '%id%']
+	 * %pole% zastępowany jest przez $record->pole
+	 * 
+	 * @param array $params
+	 * @return OperationElement
+	 */
+	public function setDeleteParams(array $params = ['action' => 'delete', 'id' => '%id%']) {
+		return $this->setOption('deleteParams', $params);
 	}
 
 	/**
@@ -39,8 +67,39 @@ class OperationElement extends ElementAbstract {
 	 */
 	public function renderCell(\Mmi\Orm\RecordRo $record) {
 		$view = FrontController::getInstance()->getView();
-		return '<a href="' . $view->url(['action' => 'edit', 'id' => $record->getPk()]) . '"><i class="icon-pencil"></i></a> ' .
-			'<a href="' . $view->url(['action' => 'delete', 'id' => $record->getPk()]) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>';
+		$html = '';
+		//link edycyjny
+		if (!empty($this->getOption('editParams'))) {
+			$html .= ' <a href="' . $view->url($this->_parseParams($this->getOption('editParams'), $record)) . '"><i class="icon-pencil"></i></a>';
+		}
+		//link kasujący
+		if (!empty($this->getOption('deleteParams'))) {
+			$html .= ' <a href="' . $view->url($this->_parseParams($this->getOption('deleteParams'), $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>';
+		}
+		return $html;
+	}
+	
+	/**
+	 * Zwraca tablicę sparsowanych parametrów do linku
+	 * @param array $params
+	 * @param \Mmi\Orm\RecordRo $record
+	 * @return array
+	 */
+	protected function _parseParams(array $params, \Mmi\Orm\RecordRo $record) {
+		//inicjalizacja parametrów
+		$parsedParams = [];
+		$matches = [];
+		//iteracja po parametrach
+		foreach ($params as $key => $param) {
+			//parametr %pole%
+			if (preg_match('/%([a-zA-Z]+)%/', $param, $matches)) {
+				$parsedParams[$key] = $record->{$matches[1]};
+				continue;
+			}
+			//w pozostałych przypadkach przepisanie parametru
+			$parsedParams[$key] = $param;
+		}
+		return $parsedParams;
 	}
 
 }

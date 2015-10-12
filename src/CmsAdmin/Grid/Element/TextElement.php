@@ -26,7 +26,9 @@ class TextElement extends ElementAbstract {
 	 * @return string
 	 */
 	public function renderCell(\Mmi\Orm\RecordRo $record) {
-		return property_exists($record, $this->getName()) ? $record->{$this->getName()} : '?';
+		$escape = new \Mmi\Filter\Escape();
+		$truncate = new \Mmi\Filter\Truncate();
+		return $truncate->filter($escape->filter(property_exists($record, $this->getName()) ? $record->{$this->getName()} : '?'));
 	}
 
 }

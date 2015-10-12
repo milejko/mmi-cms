@@ -10,42 +10,41 @@
 
 namespace CmsAdmin\Plugin;
 
-use CmsAdmin\Grid\Grid;
-use CmsAdmin\Grid\Element;
-
 /**
  * Klasa grid loga CMS
  */
-class LogGrid extends Grid {
+class LogGrid extends \CmsAdmin\Grid\Grid {
 
 	public function init() {
 
+		//domyślnie posortowane po dacie i czasie
 		$this->setQuery(\Cms\Orm\CmsLogQuery::factory()
 				->orderDescDateTime());
 
+		//indeks
 		$this->addElementIndex();
 
+		//data i czas
 		$this->addElementText('dateTime')
 			->setLabel('data i czas');
 
+		//operacja
 		$this->addElementText('operation')
 			->setLabel('operacja');
 
+		//url
 		$this->addElementText('url')
 			->setLabel('URL');
 
+		//dane
 		$this->addElementText('data')
 			->setLabel('dane');
 
+		//ip
 		$this->addElementText('ip')
 			->setLabel('adres IP');
 
-		$this->addElementCustom('ids')
-			->setLabel('xyz')
-			->setTemplateCode('{$record->id}');
-		
-		$this->addElementOperation();
-		
+		//sukces
 		$this->addElementCheckbox('success')
 			->setLabel('sukces');
 	}
