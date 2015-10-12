@@ -13,19 +13,20 @@ namespace CmsAdmin\Plugin;
 /**
  * Grid plików
  */
-class FileGrid extends \CmsAdmin\Plugin\Grid {
+class FileGrid extends \CmsAdmin\Grid\Grid {
 
 	public function init() {
 
 		//źródło danych
 		$this->setQuery(\Cms\Orm\CmsFileQuery::factory());
+		
+		//indeks
+		$this->addColumnIndex();
 
 		//miniatura (lub ikona)
-		$this->addColumn('custom', 'thumb', [
-			'label' => 'miniatura',
-			'seekable' => false,
-			'sortable' => false,
-			'value' => '{if ($rowData->class ==\'image\')}<img src="{thumb($rowData, \'scaley\', \'30\')}" />{else}' .
+		$this->addColumnCustom('thumb')
+			->setLabel('miniatura')
+			->setTemplateCode('{if ($record->class ==\'image\')}<img src="{thumb($record, \'scaley\', \'30\')}" />{else}' .
 			'{$mime = \'%mimeType%\'}' .
 			'{if $mime == \'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\'}' .
 			'	<img src="{$baseUrl}/resource/cmsAdmin/images/types/xlsx-32.png" alt="Microsoft Office - OOXML - Spreadsheet" />' .
@@ -55,54 +56,43 @@ class FileGrid extends \CmsAdmin\Plugin\Grid {
 			'	<img src="{$baseUrl}/resource/cmsAdmin/images/types/mp3-32.png" alt="Music File" />' .
 			'{/if}' .
 			'{/if}'
-		]);
+		);
 
 		//rozmiar pliku
-		$this->addColumn('text', 'size', [
-			'label' => 'rozmiar',
-		]);
+		$this->addColumnText('size')
+			->setLabel('rozmiar');
 
 		//nazwa pliku
-		$this->addColumn('text', 'original', [
-			'label' => 'nazwa pliku',
-		]);
+		$this->addColumnText('original')
+			->setLabel('nazwa pliku');
 
 		//tytuł
-		$this->addColumn('text', 'title', [
-			'label' => 'tytuł'
-		]);
+		$this->addColumnText('title')
+			->setLabel('tytuł');
 
 		//autor
-		$this->addColumn('text', 'author', [
-			'label' => 'autor'
-		]);
+		$this->addColumnText('author')
+			->setLabel('autor');
 
 		//źródło
-		$this->addColumn('text', 'source', [
-			'label' => 'źródło'
-		]);
+		$this->addColumnText('source')
+			->setLabel('źródło');
 
 		//zasób
-		$this->addColumn('text', 'object', [
-			'label' => 'zasób'
-		]);
+		$this->addColumnText('object')
+			->setLabel('zasób');
 
 		//id zasobu
-		$this->addColumn('text', 'objectId', [
-			'label' => 'id zasobu'
-		]);
+		$this->addColumnText('objectId')
+			->setLabel('id zasobu');
 
 		//checkbox aktywności
-		$this->addColumn('checkbox', 'active', [
-			'label' => 'widoczny'
-		]);
-
-		$this->addColumn('buttons', 'buttons', [
-			'label' => 'operacje',
-			'links' => [
-				'edit' => null
-			]
-		]);
+		$this->addColumnCheckbox('active')
+			->setLabel('widoczny');
+		
+		//operacje
+		$this->addColumnOperation()
+			->setEditParams([]);
 	}
 
 }

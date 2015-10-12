@@ -13,36 +13,39 @@ namespace CmsAdmin\Plugin;
 /**
  * Grid komentarzy
  */
-class CommentGrid extends \CmsAdmin\Plugin\Grid {
+class CommentGrid extends \CmsAdmin\Grid\Grid {
 
 	public function init() {
 
+		//zapytanie
 		$this->setQuery(\Cms\Orm\CmsCommentQuery::factory());
 
-		$this->addColumn('text', 'dateAdd', [
-			'label' => 'data dodania'
-		]);
-		$this->addColumn('text', 'text', [
-			'label' => 'komentarz'
-		]);
-		$this->addColumn('text', 'signature', [
-			'label' => 'podpis'
-		]);
+		//indeks
+		$this->addColumnIndex();
 
-		$this->addColumn('text', 'object', [
-			'label' => 'zasób'
-		]);
+		//data dodania
+		$this->addColumnText('dateAdd')
+			->setLabel('data dodania');
 
-		$this->addColumn('text', 'objectId', [
-			'label' => 'id zasobu'
-		]);
+		//komentarz
+		$this->addColumnText('text')
+			->setLabel('komentarz');
 
-		$this->addColumn('buttons', 'buttons', [
-			'label' => 'operacje',
-			'links' => [
-				'edit' => null
-			]
-		]);
+		//podpis
+		$this->addColumnText('signature')
+			->setLabel('podpis');
+
+		//zasób
+		$this->addColumnText('object')
+			->setLabel('zasób');
+
+		//id zasobu
+		$this->addColumnText('objectId')
+			->setLabel('id zasobu');
+
+		//operacje bez edycji
+		$this->addColumnOperation()
+			->setEditParams([]);
 	}
 
 }

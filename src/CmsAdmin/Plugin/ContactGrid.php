@@ -10,62 +10,51 @@
 
 namespace CmsAdmin\Plugin;
 
-class ContactGrid extends \CmsAdmin\Plugin\Grid {
+/**
+ * Grid kontaktu
+ */
+class ContactGrid extends \CmsAdmin\Grid\Grid {
 
 	public function init() {
 
+		//zapytanie
 		$this->setQuery(\Cms\Orm\CmsContactQuery::factory());
+		
+		//indeks
+		$this->addColumnIndex();
 
-		$this->addColumn('custom', 'id', [
-			'label' => 'ticket',
-			'value' => '#{$rowData->id}'
-		]);
+		//id
+		$this->addColumnCustom('id')
+			->setTemplateCode('#{$record->id');
 
-		$this->addColumn('text', 'dateAdd', [
-			'label' => 'data dodania'
-		]);
+		//data dodania
+		$this->addColumnText('dateAdd')
+			->setLabel('data dodania');
 
-		$this->addColumn('text', 'dateAdd', [
-			'label' => 'data dodania'
-		]);
+		//tekst
+		$this->addColumnText('text')
+			->setLabel('zapytanie');
 
-		$this->addColumn('text', 'text', [
-			'label' => 'zapytanie'
-		]);
+		//email
+		$this->addColumnText('email')
+			->setLabel('e-mail');
 
-		$this->addColumn('text', 'email', [
-			'label' => 'e-mail'
-		]);
+		//strona wejściowa
+		$this->addColumnText('uri')
+			->setLabel('strona wejściowa');
 
-		$this->addColumn('text', 'uri', [
-			'label' => 'strona wejściowa'
-		]);
+		//ip
+		$this->addColumnText('ip')
+			->setLabel('ip');
 
-		$this->addColumn('text', 'ip', [
-			'label' => 'ip'
-		]);
+		//aktywny
+		$this->addColumnCheckbox('active')
+			->setLabel('czeka');
 
-		$this->addColumn('checkbox', 'active', [
-			'label' => 'czeka'
-		]);
-
-		$this->addColumn('buttons', 'buttons', [
-			'label' => 'operacje',
-			'links' => [
-				'edit' => $this->_view->url([
-					'module' => 'cmsAdmin',
-					'controller' => 'contact',
-					'action' => 'edit',
-					'id' => '%id%'
-				]),
-				'delete' => $this->_view->url([
-					'module' => 'cmsAdmin',
-					'controller' => 'contact',
-					'action' => 'delete',
-					'id' => '%id%'
-				])
-			]
-		]);
+		//operacje
+		$this->addColumnOperation()
+			->setDeleteParams(['module' => 'cmsAdmin', 'controller' => 'contact', 'action' => 'edit', 'id' => '%id%'])
+			->setEditParams(['module' => 'cmsAdmin', 'controller' => 'contact', 'action' => 'delete', 'id' => '%id%']);
 	}
 
 }

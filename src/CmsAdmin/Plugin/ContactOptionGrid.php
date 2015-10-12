@@ -10,40 +10,44 @@
 
 namespace CmsAdmin\Plugin;
 
-class ContactOptionGrid extends \CmsAdmin\Plugin\Grid {
+/**
+ * Grid opcji kontaktu
+ */
+class ContactOptionGrid extends \CmsAdmin\Grid\Grid {
 
 	public function init() {
 
+		//zapytanie
 		$this->setQuery(\Cms\Orm\CmsContactOptionQuery::factory());
 
-		$this->addColumn('text', 'name', [
-			'label' => 'temat pytania'
-		]);
+		//indeks
+		$this->addColumnIndex();
 
-		$this->addColumn('text', 'sendTo', [
-			'label' => 'prześlij na e-mail'
-		]);
+		//temat
+		$this->addColumnText('name')
+			->setLabel('temat pytania');
 
-		$this->addColumn('text', 'order', [
-			'label' => 'kolejność'
-		]);
+		//forward
+		$this->addColumnText('sendTo')
+			->setLabel('prześlij na e-mail');
 
-		$this->addColumn('buttons', 'buttons', [
-			'label' => 'operacje',
-			'links' => [
-				'edit' => $this->_view->url([
-					'module' => 'cmsAdmin',
-					'controller' => 'contact',
-					'action' => 'editSubject',
-					'id' => '%id%'
-				]),
-				'delete' => $this->_view->url([
-					'module' => 'cmsAdmin',
-					'controller' => 'contact',
-					'action' => 'deleteSubject',
-					'id' => '%id%'
-				]),
-			]
+		//kolejność
+		$this->addColumnText('order')
+			->setLabel('kolejność');
+
+		//operacje
+		$this->addColumnOperation()
+			->setDeleteParams([
+				'module' => 'cmsAdmin',
+				'controller' => 'contact',
+				'action' => 'editSubject',
+				'id' => '%id%'
+			])
+			->setEditParams([
+				'module' => 'cmsAdmin',
+				'controller' => 'contact',
+				'action' => 'deleteSubject',
+				'id' => '%id%'
 		]);
 	}
 

@@ -10,42 +10,46 @@
 
 namespace CmsAdmin\Plugin;
 
-class CronGrid extends \CmsAdmin\Plugin\Grid {
+/**
+ * Grid harmonogramu
+ */
+class CronGrid extends \CmsAdmin\Grid\Grid {
 
 	public function init() {
 
+		//zapytanie
 		$this->setQuery(\Cms\Orm\CmsCronQuery::factory());
 
-		$this->addColumn('text', 'name', [
-			'label' => 'Nazwa',
-		]);
+		//indeks
+		$this->addColumnIndex();
 
-		$this->addColumn('text', 'description', [
-			'label' => 'Opis',
-		]);
+		//nazwa
+		$this->addColumnText('name')
+			->setLabel('nazwa');
 
-		$this->addColumn('custom', 'Cron', [
-			'label' => 'Cron',
-			'value' => '{$rowData->minute} {$rowData->hour} {$rowData->dayOfMonth} {$rowData->month} {$rowData->dayOfWeek}'
-		]);
-		$this->addColumn('custom', 'Object', [
-			'label' => 'Wywołanie',
-			'value' => '{$rowData->module}: {$rowData->controller} - {$rowData->action}'
-		]);
-		$this->addColumn('text', 'dateAdd', [
-			'label' => 'Data dodania',
-		]);
-		$this->addColumn('text', 'dateLastExecute', [
-			'label' => 'Ostatnie wywołanie',
-		]);
+		//opis
+		$this->addColumnText('description')
+			->setLabel('opis');
 
-		$this->addColumn('checkbox', 'active', [
-			'label' => 'Włączony',
-		]);
+		//crontab
+		$this->addColumnCustom('crontab')
+			->setLabel('crontab')
+			->setTemplateCode('{$record->minute} {$record->hour} {$record->dayOfMonth} {$record->month} {$record->dayOfWeek}');
 
-		$this->addColumn('buttons', 'buttons', [
-			'label' => 'operacje',
-		]);
+		//data dodania
+		$this->addColumnText('dateAdd')
+			->setLabel('data dodania');
+
+		//ostatnie wywołanie
+		$this->addColumnText('dateLastExecute')
+			->setLabel('ostatnie wywołanie');
+
+		//aktywny
+		$this->addColumnCheckbox('active')
+			->setLabel('włączony');
+
+		//operacje
+		$this->addColumnOperation();
 	}
 
 }
