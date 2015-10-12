@@ -20,9 +20,6 @@ class CommentGrid extends \CmsAdmin\Grid\Grid {
 		//zapytanie
 		$this->setQuery(\Cms\Orm\CmsCommentQuery::factory());
 
-		//indeks
-		$this->addColumnIndex();
-
 		//data dodania
 		$this->addColumnText('dateAdd')
 			->setLabel('data dodania');

@@ -10,32 +10,34 @@
 
 namespace CmsAdmin\Plugin;
 
-class NewsGrid extends \CmsAdmin\Plugin\Grid {
+/**
+ * Grid aktualności
+ */
+class NewsGrid extends \CmsAdmin\Grid\Grid {
 
 	public function init() {
 
+		//zapytanie
 		$this->setQuery(\Cms\Orm\CmsNewsQuery::factory());
 
-		$this->addColumn('text', 'dateAdd', [
-			'label' => 'data dodania'
-		]);
+		//data dodania
+		$this->addColumnText('dateAdd')
+			->setLabel('data dodania');
 
-		$this->addColumn('text', 'dateModify', [
-			'label' => 'data modyfikacji'
-		]);
+		//data modyfikacji
+		$this->addColumnText('dateModify')
+			->setLabel('data modyfikacji');
 
-		$this->addColumn('text', 'title', [
-			'label' => 'tytuł'
-		]);
+		//tytuł
+		$this->addColumnText('title')
+			->setLabel('tytuł');
 
-		$this->addColumn('text', 'text', [
-			'sortable' => false,
-			'label' => 'treść aktualności'
-		]);
+		//treść
+		$this->addColumnText('text')
+			->setLabel('treść aktualności');
 
-		$this->addColumn('buttons', 'buttons', [
-			'label' => 'operacje'
-		]);
+		//operacje
+		$this->addColumnOperation();
 	}
 
 }

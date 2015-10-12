@@ -10,36 +10,35 @@
 
 namespace CmsAdmin\Plugin;
 
-class TextGrid extends \CmsAdmin\Plugin\Grid {
+/**
+ * Grid tekstów stałych
+ */
+class TextGrid extends \CmsAdmin\Grid\Grid {
 
 	public function init() {
 
+		//zapytanie
 		$this->setQuery(\Cms\Orm\CmsTextQuery::lang()
 				->orderAscKey());
 
-		$this->setOption('rows', 100);
+		//język
+		$this->addColumnText('lang')
+			->setLabel('język');
 
-		$this->addColumn('text', 'lang', [
-			'label' => 'język'
-		]);
+		//klucz
+		$this->addColumnText('key')
+			->setLabel('klucz');
 
-		$this->addColumn('text', 'key', [
-			'label' => 'klucz',
-		]);
+		//zawartość
+		$this->addColumnText('content')
+			->setLabel('treść');
 
-		$this->addColumn('text', 'content', [
-			'label' => 'treść',
-			'sortable' => false,
-			'seekable' => false
-		]);
+		//data modyfikacji
+		$this->addColumnText('dateModify')
+			->setLabel('data modyfikacji');
 
-		$this->addColumn('text', 'dateModify', [
-			'label' => 'data modyfikacji',
-		]);
-
-		$this->addColumn('buttons', 'buttons', [
-			'label' => 'operacje'
-		]);
+		//operacje
+		$this->addColumnOperation();
 	}
 
 }

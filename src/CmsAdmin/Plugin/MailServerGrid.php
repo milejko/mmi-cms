@@ -10,44 +10,46 @@
 
 namespace CmsAdmin\Plugin;
 
-class MailServerGrid extends \CmsAdmin\Plugin\Grid {
+/**
+ * Grid serwerów
+ */
+class MailServerGrid extends \CmsAdmin\Grid\Grid {
 
 	public function init() {
 
 		$this->setQuery(\Cms\Orm\CmsMailServerQuery::factory()
 				->orderDescId());
 
-		$this->addColumn('text', 'address', [
-			'label' => 'Adres serwera',
-		]);
+		//adres serwera
+		$this->addColumnText('address')
+			->setLabel('adres serwera');
 
-		$this->addColumn('text', 'port', [
-			'label' => 'Port',
-		]);
+		//port
+		$this->addColumnText('port')
+			->setLabel('port');
 
-		$this->addColumn('text', 'ssl', [
-			'label' => 'Szyfrowanie',
-		]);
+		//ssl
+		$this->addColumnText('ssl')
+			->setLabel('szyfrowanie');
 
-		$this->addColumn('text', 'username', [
-			'label' => 'Użytkownik',
-		]);
+		//użytkownik
+		$this->addColumnText('username')
+			->setLabel('użytkownik');
 
-		$this->addColumn('text', 'from', [
-			'label' => 'Domyślny nadawca',
-		]);
+		//nadawca
+		$this->addColumnText('from')
+			->setLabel('domyślny nadawca');
 
-		$this->addColumn('text', 'dateAdd', [
-			'label' => 'Data dodania',
-		]);
+		//data dodania
+		$this->addColumnText('dateAdd')
+			->setLabel('data dodania');
 
-		$this->addColumn('text', 'dateModify', [
-			'label' => 'Data modyfikacji',
-		]);
+		//data modyfikacji
+		$this->addColumnText('dateModify')
+			->setLabel('data modyfikacji');
 
-		$this->addColumn('buttons', 'buttons', [
-			'label' => 'operacje',
-		]);
+		//operacje
+		$this->addColumnOperation();
 	}
 
 }

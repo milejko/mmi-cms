@@ -20,9 +20,6 @@ class ArticleGrid extends \CmsAdmin\Grid\Grid {
 		//domyślne zapytanie
 		$this->setQuery(\Cms\Orm\CmsArticleQuery::factory());
 		
-		//indeks
-		$this->addColumnIndex();
-
 		//tytuł
 		$this->addColumnText('title')
 			->setLabel('tytuł');

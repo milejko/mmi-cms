@@ -10,55 +10,59 @@
 
 namespace CmsAdmin\Plugin;
 
-class MailDefinitionGrid extends \CmsAdmin\Plugin\Grid {
+/**
+ * Grid definicji maila
+ */
+class MailDefinitionGrid extends \CmsAdmin\Grid\Grid {
 
 	public function init() {
 
+		//zapytanie
 		$this->setQuery(\Cms\Orm\CmsMailDefinitionQuery::lang());
 
-		$this->addColumn('text', 'lang', [
-			'label' => 'język'
-		]);
+		//język
+		$this->addColumnCustom('lang')
+			->setLabel('język');
 
-		$this->addColumn('text', 'name', [
-			'label' => 'nazwa'
-		]);
+		//nazwa
+		$this->addColumnText('name')
+			->setLabel('nazwa');
 
-		$this->addColumn('checkbox', 'html', [
-			'label' => 'HTML'
-		]);
+		//treść w html
+		$this->addColumnCheckbox('html')
+			->setLabel('HTML');
 
-		$this->addColumn('text', 'subject', [
-			'label' => 'temat'
-		]);
+		//temat
+		$this->addColumnText('subject')
+			->setLabel('temat');
 
-		$this->addColumn('text', 'fromName', [
-			'label' => 'nazwa od'
-		]);
+		//nazwa od
+		$this->addColumnText('fromName')
+			->setLabel('nazwa od');
 
-		$this->addColumn('text', 'replyTo', [
-			'label' => 'odpowiedz'
-		]);
+		//odpowiedz
+		$this->addColumnText('replyTo')
+			->setLabel('odpowiedz');
+		
+		//serwer
+		$this->addColumnSelect('cmsMailServerId')
+			->setMultiOptions(\Cms\Orm\CmsMailServerQuery::factory()->findPairs('id', 'address'))
+			->setLabel('serwer');
 
-		$this->addColumn('text', 'mailServerId', [
-			'label' => 'id połączenia'
-		]);
+		//data dodania
+		$this->addColumnText('dateAdd')
+			->setLabel('data dodania');
 
-		$this->addColumn('text', 'dateAdd', [
-			'label' => 'data dodania'
-		]);
+		//data modyfikacji
+		$this->addColumnText('dateModify')
+			->setLabel('data modyfikacji');
 
-		$this->addColumn('text', 'dateModify', [
-			'label' => 'data modyfikacji'
-		]);
+		//aktywny
+		$this->addColumnCheckbox('active')
+			->setLabel('aktywny');
 
-		$this->addColumn('checkbox', 'active', [
-			'label' => 'aktywny'
-		]);
-
-		$this->addColumn('buttons', 'buttons', [
-			'label' => 'operacje'
-		]);
+		//operacje
+		$this->addColumnOperation();
 	}
 
 }

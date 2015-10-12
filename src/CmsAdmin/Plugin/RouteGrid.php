@@ -10,38 +10,39 @@
 
 namespace CmsAdmin\Plugin;
 
-class RouteGrid extends \CmsAdmin\Plugin\Grid {
+/**
+ * Router z CMS
+ */
+class RouteGrid extends \CmsAdmin\Grid\Grid {
 
 	public function init() {
 
+		//zapytanie
 		$this->setQuery(\Cms\Orm\CmsRouteQuery::factory()
 				->orderAscOrder());
 
-		$this->setOption('rows', 100);
+		//pattern
+		$this->addColumnText('pattern')
+			->setLabel('wzorzec');
 
-		$this->addColumn('text', 'pattern', [
-			'label' => 'wzorzec',
-		]);
+		//zamiany
+		$this->addColumnText('replace')
+			->setLabel('tabela zamian');
 
-		$this->addColumn('text', 'replace', [
-			'label' => 'tabela zamian',
-		]);
+		//domyślne
+		$this->addColumnText('default')
+			->setLabel('tabela wartości domyślnych');
 
-		$this->addColumn('text', 'default', [
-			'label' => 'tabela wartości domyślnych',
-		]);
+		//kolejność
+		$this->addColumnText('order')
+			->setLabel('indeks kolejności');
 
-		$this->addColumn('text', 'order', [
-			'label' => 'indeks kolejności',
-		]);
+		//aktywna
+		$this->addColumnCheckbox('active')
+			->setLabel('aktywna');
 
-		$this->addColumn('checkbox', 'active', [
-			'label' => 'aktywna',
-		]);
-
-		$this->addColumn('buttons', 'buttons', [
-			'label' => 'operacje'
-		]);
+		//operacje
+		$this->addColumnOperation();
 	}
 
 }

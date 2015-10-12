@@ -20,9 +20,6 @@ class ContactOptionGrid extends \CmsAdmin\Grid\Grid {
 		//zapytanie
 		$this->setQuery(\Cms\Orm\CmsContactOptionQuery::factory());
 
-		//indeks
-		$this->addColumnIndex();
-
 		//temat
 		$this->addColumnText('name')
 			->setLabel('temat pytania');

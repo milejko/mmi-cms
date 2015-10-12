@@ -19,9 +19,6 @@ class AuthGrid extends \CmsAdmin\Grid\Grid {
 
 		//domyślne zapytanie
 		$this->setQuery(\Cms\Orm\CmsAuthQuery::factory());
-		
-		//indeks
-		$this->addColumnIndex();
 
 		//nazwa
 		$this->addColumnText('username')

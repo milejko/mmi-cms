@@ -10,28 +10,31 @@
 
 namespace CmsAdmin\Plugin;
 
-class StatLabelGrid extends \CmsAdmin\Plugin\Grid {
+/**
+ * Grid opisu statystyk
+ */
+class StatLabelGrid extends \CmsAdmin\Grid\Grid {
 
 	public function init() {
 
+		//zapytanie
 		$this->setQuery(\Cms\Orm\CmsStatLabelQuery::factory());
 
-		$this->addColumn('text', 'object', [
-			'label' => 'klucz'
-		]);
+		//obiekt
+		$this->addColumnText('object')
+			->setLabel('klucz');
 
-		$this->addColumn('text', 'label', [
-			'label' => 'nazwa statystyki'
-		]);
+		//nazwa
+		$this->addColumnText('label')
+			->setLabel('nazwa statystyki');
 
-		$this->addColumn('text', 'description', [
-			'label' => 'opis'
-		]);
+		//opis
+		$this->addColumnText('description')
+			->setLabel('opis');
 
-		$this->addColumn('buttons', 'buttons', [
-			'label' => 'operacje',
-			['links' => ['remove' => null]]
-		]);
+		//operacje bez usuwania
+		$this->addColumnOperation()
+			->setDeleteParams([]);
 	}
 
 }

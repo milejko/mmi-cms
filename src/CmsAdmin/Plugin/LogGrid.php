@@ -21,9 +21,6 @@ class LogGrid extends \CmsAdmin\Grid\Grid {
 		$this->setQuery(\Cms\Orm\CmsLogQuery::factory()
 				->orderDescDateTime());
 
-		//indeks
-		$this->addColumnIndex();
-
 		//data i czas
 		$this->addColumnText('dateTime')
 			->setLabel('data i czas');

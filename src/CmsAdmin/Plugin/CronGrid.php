@@ -20,9 +20,6 @@ class CronGrid extends \CmsAdmin\Grid\Grid {
 		//zapytanie
 		$this->setQuery(\Cms\Orm\CmsCronQuery::factory());
 
-		//indeks
-		$this->addColumnIndex();
-
 		//nazwa
 		$this->addColumnText('name')
 			->setLabel('nazwa');

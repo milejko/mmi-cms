@@ -10,43 +10,44 @@
 
 namespace CmsAdmin\Plugin;
 
-class MailGrid extends \CmsAdmin\Plugin\Grid {
+/**
+ * Grid maila
+ */
+class MailGrid extends \CmsAdmin\Grid\Grid {
 
 	public function init() {
 
+		//zapytanie
 		$this->setQuery(\Cms\Orm\CmsMailQuery::factory()
 				->orderDescId());
 
-		$this->addColumn('checkbox', 'active', [
-			'label' => 'Wysłany'
-		]);
+		//wysłany
+		$this->addColumnCheckbox('active')
+			->setLabel('wysłany');
 
-		$this->addColumn('text', 'dateAdd', [
-			'label' => 'Data dodania'
-		]);
+		//data dodania
+		$this->addColumnText('dateAdd')
+			->setLabel('data dodania');
 
-		$this->addColumn('text', 'dateSent', [
-			'label' => 'Data wysłania'
-		]);
+		//data wysyłki
+		$this->addColumnText('dateSent')
+			->setLabel('data wysłania');
 
-		$this->addColumn('text', 'to', [
-			'label' => 'Do'
-		]);
+		//do
+		$this->addColumnText('to')
+			->setLabel('do');
 
-		$this->addColumn('text', 'subject', [
-			'label' => 'Temat'
-		]);
+		//temat
+		$this->addColumnText('subject')
+			->setLabel('temat');
 
-		$this->addColumn('text', 'fromName', [
-			'label' => 'Od'
-		]);
+		//nazwa od
+		$this->addColumnText('fromName')
+			->setLabel('od');
 
-		$this->addColumn('buttons', 'buttons', [
-			'label' => 'operacje',
-			'links' => [
-				'edit' => $this->_view->url(['module' => 'cmsAdmin', 'controller' => 'mail', 'action' => 'preview', 'id' => '%id%'])
-			]
-		]);
+		//operacje
+		$this->addColumnOperation()
+			->setEditParams(['module' => 'cmsAdmin', 'controller' => 'mail', 'action' => 'preview', 'id' => '%id%']);
 	}
 
 }

@@ -10,20 +10,22 @@
 
 namespace CmsAdmin\Plugin;
 
-class TagGrid extends \CmsAdmin\Plugin\Grid {
+/**
+ * Grid tagów
+ */
+class TagGrid extends \CmsAdmin\Grid\Grid {
 
 	public function init() {
 
+		//zapytanie
 		$this->setQuery(\Cms\Orm\CmsTagQuery::factory());
-		$this->setOption('locked', true);
 
-		$this->addColumn('text', 'tag', [
-			'label' => 'tag',
-		]);
+		//nazwa taga
+		$this->addColumnText('tag')
+			->setLabel('tag');
 
-		$this->addColumn('buttons', 'buttons', [
-			'label' => 'operacje'
-		]);
+		//operacje
+		$this->addColumnOperation();
 	}
 
 }
