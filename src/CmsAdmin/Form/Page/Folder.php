@@ -62,7 +62,7 @@ class Folder extends \Cms\Form\Form {
 			->setLabel('Data i czas wyłączenia');
 
 		$this->addElementCheckbox('active')
-			->setValue(1)
+			->setChecked()
 			->setLabel('Włączony');
 
 		//submit

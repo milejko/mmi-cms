@@ -13,7 +13,7 @@ namespace CmsAdmin\Form\Page;
 /**
  * Formularz obiektów cms w nawigatorze
  */
-class Cms extends \Cms\Form\Form {
+class Cms extends PageAbstract {
 
 	public function init() {
 		//menu label
@@ -59,52 +59,9 @@ class Cms extends \Cms\Form\Form {
 		$this->addElementText('params')
 			->setLabel('Parametry obiektu')
 			->setDescription('Dodatkowe parametry adresu w obiekcie');
-
-		$this->addElementCheckbox('absolute')
-			->setLabel('Link bezwzględny');
-
-		$this->addElementSelect('https')
-			->setLabel('Połączenie HTTPS')
-			->setMultiOptions([
-				null => 'bez zmian',
-				'0' => 'wymuś http',
-				'1' => 'wymuś https',
-		]);
-
-		//optional url
-		$this->addElementSelect('visible')
-			->setLabel('Pokazuj w menu')
-			->setMultiOptions([
-				1 => 'widoczny',
-				0 => 'ukryty',
-		]);
-
-		$this->addElementCheckbox('nofollow')
-			->setLabel('Atrybut rel="nofollow"');
-
-		$this->addElementCheckbox('blank')
-			->setLabel('W nowym oknie');
-
-		//pozycja w drzewie
-		$this->addElementSelect('parentId')
-			->setLabel('Element nadrzędny')
-			->setValue(\Mmi\App\FrontController::getInstance()->getRequest()->parent)
-			->setMultiOptions(\Cms\Model\Navigation::getMultiOptions());
-
-		$this->addElementDateTimePicker('dateStart')
-			->setLabel('Data i czas włączenia');
-
-		$this->addElementDateTimePicker('dateEnd')
-			->setLabel('Data i czas wyłączenia');
-
-		$this->addElementCheckbox('active')
-			->setValue(true)
-			->setLabel('Włączony');
-
-		//submit
-		$this->addElementSubmit('submit')
-			->setLabel('Zapisz')
-			->setIgnore();
+		
+		//nadrzędne pola
+		parent::init();
 	}
 
 	/**

@@ -8,7 +8,7 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace Cms\Article;
+namespace Cms\Model;
 
 class Article {
 

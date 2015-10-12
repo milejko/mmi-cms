@@ -7,12 +7,41 @@ namespace Cms\Orm;
  */
 class CmsCronRecord extends \Mmi\Orm\Record {
 
+	/**
+	 * Identyfikator
+	 * @var integer
+	 */
 	public $id;
 	public $active;
+	
+	/**
+	 * Minuta
+	 * @var integer 
+	 */
 	public $minute;
+	
+	/**
+	 * Godzina
+	 * @var string 
+	 */
 	public $hour;
+	
+	/**
+	 * Dzień miesiąca
+	 * @var type 
+	 */
 	public $dayOfMonth;
+	
+	/**
+	 * Miesiąc
+	 * @var integer
+	 */
 	public $month;
+	
+	/**
+	 * Dzień tygodnia
+	 * @var integer
+	 */
 	public $dayOfWeek;
 	public $name;
 	public $description;
@@ -21,6 +50,11 @@ class CmsCronRecord extends \Mmi\Orm\Record {
 	public $action;
 	public $dateAdd;
 	public $dateModified;
+	
+	/**
+	 * Data ostatniego uruchomienia
+	 * @var string
+	 */
 	public $dateLastExecute;
 
 	/**

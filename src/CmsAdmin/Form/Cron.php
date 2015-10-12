@@ -72,7 +72,7 @@ class Cron extends \Mmi\Form\Form {
 
 		$this->addElementCheckbox('active')
 			->setLabel('Aktywny')
-			->setValue(1)
+			->setChecked()
 			->setRequired();
 
 		$this->addElementSubmit('btn_save')->setLabel('zapisz zadanie');

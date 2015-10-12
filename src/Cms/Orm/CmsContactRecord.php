@@ -7,17 +7,41 @@ namespace Cms\Orm;
  */
 class CmsContactRecord extends \Mmi\Orm\Record {
 
+	/**
+	 * Identyfikator
+	 * @var integer
+	 */
 	public $id;
+	
+	/**
+	 * Klucz obcy ID opcji
+	 * @var type 
+	 */
 	public $cmsContactOptionId;
+	
+	/**
+	 * Data dodania
+	 * @var data dodania
+	 */
 	public $dateAdd;
 	public $text;
 	public $reply;
+	
+	/**
+	 * Identyfikator użytkownika odpowiadającego
+	 * @var integer
+	 */
 	public $cmsAuthIdReply;
 	public $uri;
 	public $name;
 	public $phone;
 	public $email;
 	public $ip;
+	
+	/**
+	 * Identyfikator dodającego użytkownika (jeśli zalogowany)
+	 * @var integer
+	 */
 	public $cmsAuthId;
 	public $active;
 
@@ -26,14 +50,16 @@ class CmsContactRecord extends \Mmi\Orm\Record {
 	 * @return boolean
 	 */
 	public function _insert() {
+		//data dodania
 		$this->dateAdd = date('Y-m-d H:i:s');
+		//adres IP
 		$this->ip = \Mmi\App\FrontController::getInstance()->getEnvironment()->remoteAddress;
 		$this->active = 1;
-		$auth = \App\Registry::$auth;
 		//zapis znanego użytkownika
-		if ($auth->hasIdentity()) {
-			$this->cmsAuthId = $auth->getId();
+		if (\App\Registry::$auth->hasIdentity()) {
+			$this->cmsAuthId = \App\Registry::$auth->getId();
 		}
+		//namespace w sesji
 		$namespace = new \Mmi\Session\Space('contact');
 		$this->uri = $namespace->referer;
 		//wysyłka do maila zdefiniowanego w opcjach

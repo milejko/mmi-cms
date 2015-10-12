@@ -27,7 +27,7 @@ class News extends \Cms\Form\Form {
 		//wewnętrzny
 		$this->addElementCheckbox('internal')
 			->setLabel('Artykuł wewnętrzny')
-			->setValue(1);
+			->setChecked();
 
 		//url
 		$this->addElementText('uri')

@@ -13,7 +13,7 @@ namespace CmsAdmin\Form\Page;
 /**
  * Formularz linków w nawigatorze
  */
-class Link extends \Cms\Form\Form {
+class Link extends PageAbstract {
 
 	public function init() {
 		//menu label
@@ -33,39 +33,7 @@ class Link extends \Cms\Form\Form {
 		$this->addElementText('title')
 			->setLabel('Tytuł linku');
 
-		//optional url
-		$this->addElementSelect('visible')
-			->setLabel('Pokazuj w menu')
-			->setMultiOptions([
-				1 => 'widoczny',
-				0 => 'ukryty',
-			]);
-
-		$this->addElementCheckbox('nofollow')
-			->setLabel('Atrybut rel="nofollow"');
-
-		$this->addElementCheckbox('blank')
-			->setLabel('W nowym oknie');
-
-		//pozycja w drzewie
-		$this->addElementSelect('parentId')
-			->setLabel('Element nadrzędny')
-			->setValue(\Mmi\App\FrontController::getInstance()->getRequest()->parent)
-			->setMultiOptions(\Cms\Model\Navigation::getMultiOptions());
-
-		$this->addElementDateTimePicker('dateStart')
-			->setLabel('Data i czas włączenia');
-
-		$this->addElementDateTimePicker('dateEnd')
-			->setLabel('Data i czas wyłączenia');
-
-		$this->addElementCheckbox('active')
-			->setValue(1)
-			->setLabel('Włączony');
-
-		//submit
-		$this->addElementSubmit('submit')
-			->setLabel('Zapisz');
+		parent::init();
 	}
 
 	/**

@@ -146,7 +146,7 @@ abstract class Grid extends \Mmi\OptionObject {
 	public function __call($name, $params) {
 		$matches = [];
 		//obsługa addColumn
-		if (preg_match('/addColumn([a-zA-Z0-9]+)/', $name, $matches)) {
+		if (preg_match('/^addColumn([a-zA-Z0-9]+)/', $name, $matches)) {
 			$ColumnClass = '\\CmsAdmin\\Grid\\Column\\' . $matches[1] . 'Column';
 			//dodaje Column
 			return $this->addColumn(new $ColumnClass(isset($params[0]) ? $params[0] : null));
