@@ -21,7 +21,7 @@ class Antirobot extends \Mmi\Form\Element\Hidden {
 	public function init() {
 		$this->setIgnore()
 			->setRequired()
-			->addValidator('Antirobot', ['name' => $this->getOption('name')]);
+			->addValidator(new \Cms\Validator\Antirobot());
 	}
 
 	/**
@@ -29,7 +29,7 @@ class Antirobot extends \Mmi\Form\Element\Hidden {
 	 * @return string
 	 */
 	public function fetchField() {
-		$this->setValue(\Mmi\Validator\Antirobot::generateCrc());
+		$this->setValue(\Cms\Validator\Antirobot::generateCrc());
 		return parent::fetchField();
 	}
 

@@ -21,7 +21,7 @@ class Captcha extends \Mmi\Form\Element\ElementAbstract {
 	public function init() {
 		$this->setIgnore()
 			->setRequired()
-			->addValidator('Captcha', ['name' => $this->getOption('name')]);
+			->addValidator('Captcha', ['name' => $this->getName()]);
 	}
 
 	/**

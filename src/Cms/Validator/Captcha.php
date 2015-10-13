@@ -8,11 +8,29 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace Mmi\Validator;
+namespace Cms\Validator;
 
-class Captcha extends ValidatorAbstract {
+/**
+ * Walidator dla elementu captcha
+ * @see \Cms\Form\Element\Captcha
+ * 
+ * @method self setName($name) ustawia nazwę
+ * @method string getName() pobiera nazwę
+ */
+class Captcha extends \Mmi\Validator\ValidatorAbstract {
 
+	/**
+	 * Komunikat błędnego kodu zabezpieczającego
+	 */
 	const INVALID = 'Przepisany kod jest niepoprawny';
+	
+	/**
+	 * Konstruktor z nazwą captcha
+	 * @param string $name
+	 */
+	public function __construct($name) {
+		$this->setName($name);
+	}
 
 	/**
 	 * Waliduje poprawność captcha
@@ -21,9 +39,8 @@ class Captcha extends ValidatorAbstract {
 	 */
 	public function isValid($value) {
 		$this->_error(self::INVALID);
-		$session = new \Mmi\Session\Space('MmiForm');
 		$name = 'captcha-' . $this->_options['name'];
-		return ($session->$name == strtoupper($value));
+		return ((new \Mmi\Session\Space('CmsForm'))->$name == strtoupper($value));
 	}
 
 }
