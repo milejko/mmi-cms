@@ -60,12 +60,12 @@ abstract class Grid extends \Mmi\OptionObject {
 
 	/**
 	 * Dodaje Column grida
-	 * @param \CmsAdmin\Grid\Column\ColumnAbstract $Column
+	 * @param \CmsAdmin\Grid\Column\ColumnAbstract $column
 	 * @return Column\ColumnAbstract
 	 */
-	public final function addColumn(Column\ColumnAbstract $Column) {
+	public final function addColumn(Column\ColumnAbstract $column) {
 		//dodawanie Columnu (nazwa unikalna)
-		return $this->_Columns[$Column->getName()] = $Column->setGrid($this);
+		return $this->_Columns[$column->getName()] = $column->setGrid($this);
 	}
 
 	/**
@@ -147,9 +147,9 @@ abstract class Grid extends \Mmi\OptionObject {
 		$matches = [];
 		//obsługa addColumn
 		if (preg_match('/^addColumn([a-zA-Z0-9]+)/', $name, $matches)) {
-			$ColumnClass = '\\CmsAdmin\\Grid\\Column\\' . $matches[1] . 'Column';
+			$columnClass = '\\CmsAdmin\\Grid\\Column\\' . $matches[1] . 'Column';
 			//dodaje Column
-			return $this->addColumn(new $ColumnClass(isset($params[0]) ? $params[0] : null));
+			return $this->addColumn(new $columnClass(isset($params[0]) ? $params[0] : null));
 		}
 		//obsługa nadrzędnych
 		return parent::__call($name, $params);

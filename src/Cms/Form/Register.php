@@ -27,7 +27,7 @@ class Register extends \Cms\Form\Form {
 			->addValidatorAlnum()
 			->addValidatorRecordUnique(CmsAuthQuery::factory(), 'username')
 			->addValidatorStringLength(4, 25)
-			->addFilter('lowercase');
+			->addFilterLowercase();
 
 		//email
 		$this->addElementText('email')
@@ -36,7 +36,7 @@ class Register extends \Cms\Form\Form {
 			->addValidatorEmailAddress()
 			->addValidatorRecordUnique(CmsAuthQuery::factory(), 'email')
 			->addValidatorStringLength(4, 150)
-			->addFilter('lowercase');
+			->addFilterLowercase();
 
 		//password
 		$this->addElementPassword('password')

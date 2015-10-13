@@ -18,11 +18,11 @@ class Login extends \Mmi\Form\Form {
 	public function init() {
 		$this->addElementText('username')
 			->setLabel('Nazwa użytkownika')
-			->addFilter('stringTrim');
+			->addFilterStringTrim();
 
 		$this->addElementPassword('password')
 			->setLabel('Hasło')
-			->addFilter('stringTrim');
+			->addFilterStringTrim();
 
 		$this->addElementCheckbox('remember')
 			->setLabel('Pamiętaj mnie');

@@ -17,7 +17,7 @@ class Login extends \Mmi\Form\Form {
 		$this->addElementText('username')
 			->setLabel('nazwa użytkownika')
 			->setDescription('Wpisz swój unikalny identyfikator')
-			->addFilter('stringTrim');
+			->addFilterStringTrim();
 
 		$this->addElementPassword('password')
 			->setLabel('hasło')

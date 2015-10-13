@@ -19,7 +19,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	 * Funkcja użytkownika, jest wykonywana na końcu konstruktora
 	 */
 	public function init() {
-		$this->addFilter('tinyMce');
+		$this->addFilterTinyMce();
 		return parent::init();
 	}
 

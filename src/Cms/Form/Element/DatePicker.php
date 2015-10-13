@@ -19,7 +19,7 @@ class DatePicker extends \Mmi\Form\Element\ElementAbstract {
 	 * Funkcja użytkownika, jest wykonywana na końcu konstruktora
 	 */
 	public function init() {
-		$this->addFilter('emptyToNull');
+		$this->addFilterEmptyToNull();
 	}
 
 	/**

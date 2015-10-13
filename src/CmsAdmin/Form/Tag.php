@@ -17,7 +17,7 @@ class Tag extends \Mmi\Form\Form {
 		$this->addElementText('tag')
 			->setLabel('tag')
 			->setRequired()
-			->addFilter('StringTrim')
+			->addFilterStringTrim()
 			->addValidatorStringLength(2, 64);
 
 		$this->addElementSubmit('submit')

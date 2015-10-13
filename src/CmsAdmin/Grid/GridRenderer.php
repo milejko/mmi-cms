@@ -39,9 +39,9 @@ class GridRenderer {
 		//wiersz nagłówka
 		$html = '<tr>';
 		//iteracja po Columnach
-		foreach ($this->_grid->getColumns() as $Column) {
+		foreach ($this->_grid->getColumns() as $column) {
 			//renderuje kolumnę z labelką i filtrem
-			$html .= '<th>' . $Column->renderLabel() . '<br />' . $Column->renderFilter() . '</th>';
+			$html .= '<th>' . $column->renderLabel() . '<br />' . $column->renderFilter() . '</th>';
 		}
 		//zwrot html
 		return $html . '</tr>';
@@ -58,9 +58,9 @@ class GridRenderer {
 			//tworzenie wiersza
 			$html .= '<tr>';
 			//iteracja po Columnach
-			foreach ($this->_grid->getColumns() as $Column) {
+			foreach ($this->_grid->getColumns() as $column) {
 				//renderuje krotkę
-				$html .= '<td>' . $Column->renderCell($record) . '</td>';
+				$html .= '<td>' . $column->renderCell($record) . '</td>';
 			}
 			//zamknięcie wiersza
 			$html .= '</tr>';

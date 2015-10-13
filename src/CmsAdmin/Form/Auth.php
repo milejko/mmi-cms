@@ -22,20 +22,20 @@ class Auth extends \Mmi\Form\Form {
 		$this->addElementText('username')
 			->setLabel('nazwa użytkownika')
 			->setRequired()
-			->addFilter('stringTrim')
+			->addFilterStringTrim()
 			->addValidatorNotEmpty()
 			->addValidatorRecordUnique(\Cms\Orm\CmsAuthQuery::factory(), 'username', $this->getRecord()->id);
 
 		//imię i nazwisko użytkownika
 		$this->addElementText('name')
 			->setLabel('pełna nazwa użytkownika (opcjonalna)')
-			->addFilter('stringTrim');
+			->addFilterStringTrim();
 
 		//email
 		$this->addElementText('email')
 			->setLabel('adres e-mail')
 			->setRequired()
-			->addFilter('stringTrim')
+			->addFilterStringTrim()
 			->addValidatorEmailAddress()
 			->addValidatorRecordUnique(\Cms\Orm\CmsAuthQuery::factory(), 'email', $this->getRecord()->id);
 
