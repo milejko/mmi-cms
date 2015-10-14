@@ -30,14 +30,14 @@ class ApiController extends \Mmi\Mvc\Controller {
 			$apiModel = $this->_getModelName($this->obj);
 			//serwer z autoryzacją HTTP
 			if (\Mmi\App\FrontController::getInstance()->getEnvironment()->authUser) {
-				$apiModel .= '_Private';
+				$apiModel .= '\\Private';
 				$auth = new \Mmi\Security\Auth();
 				$auth->setModelName($apiModel);
 				//autoryzacja basic
 				$auth->httpAuth('Private API', 'Access denied!');
 			}
 			//obsługa żądania
-			return \Mmi\JsonRpc\Server::handle($apiModel);
+			return \Mmi\JsonRpc\JsonServer::handle($apiModel);
 		} catch (\Exception $e) {
 			//wyrzucenie internal server error
 			return $this->_internalError($e);
@@ -59,7 +59,7 @@ class ApiController extends \Mmi\Mvc\Controller {
 			];
 			//prywatny serwer
 			if (\Mmi\App\FrontController::getInstance()->getEnvironment()->authUser) {
-				$apiModel .= '_Private';
+				$apiModel .= '\\Private';
 				$auth = new \Mmi\Security\Auth();
 				$auth->setModelName($apiModel);
 				$auth->httpAuth('Private API', 'Access denied!');
@@ -128,7 +128,7 @@ class ApiController extends \Mmi\Mvc\Controller {
 		}
 		$class = $obj[0] . '\\Model\\';
 		unset($obj[0]);
-		return rtrim($class . implode('\\', $obj), '\\') . '\\Api';
+		return rtrim($class . implode('\\', $obj), '\\') . '\\ApiModel';
 	}
 
 	/**
