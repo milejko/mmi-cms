@@ -28,19 +28,15 @@ class ContactOptionGrid extends \CmsAdmin\Grid\Grid {
 		$this->addColumnText('sendTo')
 			->setLabel('prześlij na e-mail');
 
-		//kolejność
-		$this->addColumnText('order')
-			->setLabel('kolejność');
-
 		//operacje
 		$this->addColumnOperation()
-			->setDeleteParams([
+			->setEditParams([
 				'module' => 'cmsAdmin',
 				'controller' => 'contact',
 				'action' => 'editSubject',
 				'id' => '%id%'
 			])
-			->setEditParams([
+			->setDeleteParams([
 				'module' => 'cmsAdmin',
 				'controller' => 'contact',
 				'action' => 'deleteSubject',

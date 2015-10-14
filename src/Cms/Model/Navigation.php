@@ -22,7 +22,7 @@ class Navigation {
 	 * Multiopcje nawigacji
 	 * @return array
 	 */
-	public static function getMultiOptions() {
+	public static function getMultioptions() {
 		return [null => '---'] + CmsNavigationQuery::lang()
 				->orderAscParentId()
 				->orderAscOrder()->findPairs('id', 'label');

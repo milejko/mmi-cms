@@ -28,7 +28,7 @@ class Definition extends \Mmi\Form\Form {
 		$this->addElementSelect('cmsMailServerId')
 			->setLabel('połącznie')
 			->setRequired()
-			->setMultiOptions(\Cms\Model\Mail::getMultioptions());
+			->setMultioptions(\Cms\Model\Mail::getMultioptions());
 
 		//temat
 		$this->addElementText('subject')

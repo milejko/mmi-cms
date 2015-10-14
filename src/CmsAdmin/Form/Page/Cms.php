@@ -41,19 +41,19 @@ class Cms extends PageAbstract {
 		$this->addElementCheckbox('independent')
 			->setLabel('Niezależne meta');
 
+		$options = [null => '---'];
+		foreach (\CmsAdmin\Model\Reflection::getActions() as $action) {
+			$options[$action['path']] = $action['module'] . ': ' . $action['controller'] . ' - ' . $action['action'];
+		}
+		
 		//system object
 		$this->addElementSelect('object')
 			->setLabel('Obiekt CMS')
 			->setDescription('Istniejące obiekty CMS')
 			->setRequired()
+			->setMultioptions($options)
+			->setValue($this->_calculateObject())
 			->setOption('id', 'objectId');
-
-		$object = $this->getElement('object');
-		$object->addMultiOption(null, null);
-		foreach (\CmsAdmin\Model\Reflection::getActions() as $action) {
-			$object->addMultiOption($action['path'], $action['module'] . ': ' . $action['controller'] . ' - ' . $action['action']);
-		}
-		$object->setValue($this->_calculateObject());
 		
 		//optional params
 		$this->addElementText('params')

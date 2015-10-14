@@ -23,7 +23,7 @@ abstract class PageAbstract extends \Cms\Form\Form {
 		//https
 		$this->addElementSelect('https')
 			->setLabel('Połączenie HTTPS')
-			->setMultiOptions([
+			->setMultioptions([
 				null => 'bez zmian',
 				'0' => 'wymuś http',
 				'1' => 'wymuś https']);
@@ -31,7 +31,7 @@ abstract class PageAbstract extends \Cms\Form\Form {
 		//optional url
 		$this->addElementSelect('visible')
 			->setLabel('Pokazuj w menu')
-			->setMultiOptions([
+			->setMultioptions([
 				1 => 'widoczny',
 				0 => 'ukryty',
 		]);
@@ -48,7 +48,7 @@ abstract class PageAbstract extends \Cms\Form\Form {
 		$this->addElementSelect('parentId')
 			->setLabel('Element nadrzędny')
 			->setValue(\Mmi\App\FrontController::getInstance()->getRequest()->parent)
-			->setMultiOptions(\Cms\Model\Navigation::getMultiOptions());
+			->setMultioptions(\Cms\Model\Navigation::getMultioptions());
 
 		//data rozpoczęcia publikacji
 		$this->addElementDateTimePicker('dateStart')

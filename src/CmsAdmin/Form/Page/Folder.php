@@ -44,12 +44,12 @@ class Folder extends \Cms\Form\Form {
 		$this->addElementSelect('parentId')
 			->setLabel('Element nadrzędny')
 			->setValue(\Mmi\App\FrontController::getInstance()->getRequest()->parent)
-			->setMultiOptions(\Cms\Model\Navigation::getMultiOptions());
+			->setMultioptions(\Cms\Model\Navigation::getMultioptions());
 
 		//optional url
 		$this->addElementSelect('visible')
 			->setLabel('Widoczność')
-			->setMultiOptions([
+			->setMultioptions([
 				1 => 'widoczny',
 				0 => 'ukryty',
 			])

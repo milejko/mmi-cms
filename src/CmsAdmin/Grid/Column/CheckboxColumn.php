@@ -24,7 +24,7 @@ class CheckboxColumn extends SelectColumn {
 	 * Domyślne opcje dla checkboxa
 	 */
 	public function __construct($name) {
-		$this->setMultiOptions([
+		$this->setMultioptions([
 			null => '---',
 			0 => 'odznaczone',
 			1 => 'zaznaczone'
@@ -57,7 +57,7 @@ class CheckboxColumn extends SelectColumn {
 	protected function _getCheckedValue() {
 		$checked = 0;
 		//iteracja po opcjach
-		foreach ($this->getMultiOptions() as $option => $caption) {
+		foreach ($this->getMultioptions() as $option => $caption) {
 			$checked = ($option >= $checked) ? $option : $checked;
 		}
 		return $checked;

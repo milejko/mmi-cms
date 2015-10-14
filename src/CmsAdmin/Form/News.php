@@ -40,7 +40,6 @@ class News extends \Cms\Form\Form {
 		//text
 		$this->addElementTinyMce('text')
 			->setLabel('Treść')
-			->setOption('img', 'news:' . $this->_record->id)
 			->setModeAdvanced();
 
 		//publikacjia

@@ -17,7 +17,7 @@ class Contact extends \Cms\Form\Form {
 		if (!$this->getOption('subjectId')) {
 			$this->addElementSelect('cmsContactOptionId')
 				->setLabel('Wybierz temat')
-				->setMultiOptions(\Cms\Model\Contact::getMultioptions())
+				->setMultioptions(\Cms\Model\Contact::getMultioptions())
 				->addValidatorInteger();
 		}
 

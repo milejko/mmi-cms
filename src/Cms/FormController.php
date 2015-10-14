@@ -45,7 +45,7 @@ class FormController extends \Mmi\Mvc\Controller {
 		//ustawienie wartości elementu
 		$element->setValue(urldecode($this->getPost()->value));
 		//walidacja i zwrot wyniku
-		if (!$element->isValid() && $element->hasErrors()) {
+		if (!$element->isValid()) {
 			$this->view->errors = $element->getErrors();
 			return;
 		}

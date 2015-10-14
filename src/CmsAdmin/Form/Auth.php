@@ -43,7 +43,7 @@ class Auth extends \Mmi\Form\Form {
 		$this->addElementMultiCheckbox('cmsRoles')
 			->setLabel('role')
 			->setDescription('Grupa uprawnień')
-			->setMultiOptions(\Cms\Orm\CmsRoleQuery::factory()->findPairs('id', 'name'))
+			->setMultioptions(\Cms\Orm\CmsRoleQuery::factory()->findPairs('id', 'name'))
 			->setValue(\Cms\Orm\CmsAuthRoleQuery::byAuthId($this->_record->id)->findPairs('cms_role_id', 'cms_role_id'));
 
 		$languages = [];
@@ -54,7 +54,7 @@ class Auth extends \Mmi\Form\Form {
 		if (!empty($languages)) {
 			$this->addElementSelect('lang')
 				->setLabel('język')
-				->setMultiOptions($languages)
+				->setMultioptions($languages)
 				->setDescription('Preferowany przez użytkownika język interfejsu');
 		}
 

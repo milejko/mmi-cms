@@ -24,7 +24,6 @@ class Comment extends \Mmi\Form\Form {
 			->setLabel('komentarz')
 			->addValidatorNotEmpty();
 
-
 		if (!\App\Registry::$auth->hasIdentity()) {
 			$this->addElementText('signature')
 				->setLabel('podpis');

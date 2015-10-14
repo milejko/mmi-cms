@@ -25,21 +25,13 @@ class Captcha extends \Mmi\Validator\ValidatorAbstract {
 	const INVALID = 'Przepisany kod jest niepoprawny';
 	
 	/**
-	 * Konstruktor z nazwą captcha
-	 * @param string $name
-	 */
-	public function __construct($name) {
-		$this->setName($name);
-	}
-
-	/**
 	 * Waliduje poprawność captcha
 	 * @param string $value
 	 * @return boolean
 	 */
 	public function isValid($value) {
 		$this->_error(self::INVALID);
-		$name = 'captcha-' . $this->_options['name'];
+		$name = 'captcha-' . $this->getName();
 		return ((new \Mmi\Session\Space('CmsForm'))->$name == strtoupper($value));
 	}
 

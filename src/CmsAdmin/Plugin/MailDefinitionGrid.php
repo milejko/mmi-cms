@@ -46,7 +46,7 @@ class MailDefinitionGrid extends \CmsAdmin\Grid\Grid {
 		
 		//serwer
 		$this->addColumnSelect('cmsMailServerId')
-			->setMultiOptions(\Cms\Orm\CmsMailServerQuery::factory()->findPairs('id', 'address'))
+			->setMultioptions(\Cms\Orm\CmsMailServerQuery::factory()->findPairs('id', 'address'))
 			->setLabel('serwer');
 
 		//data dodania

@@ -17,10 +17,10 @@ class Acl extends \Mmi\Form\Form {
 		$this->_record->cmsRoleId = \Mmi\App\FrontController::getInstance()->getRequest()->roleId;
 
 		$this->addElementSelect('object')
-			->setMultiOptions(array_merge(['' => '---'], \CmsAdmin\Model\Reflection::getOptionsWildcard()));
+			->setMultioptions(array_merge(['' => '---'], \CmsAdmin\Model\Reflection::getOptionsWildcard()));
 
 		$this->addElementSelect('access')
-			->setMultiOptions([
+			->setMultioptions([
 				'allow' => 'dozwolone',
 				'deny' => 'zabronione'
 			]);

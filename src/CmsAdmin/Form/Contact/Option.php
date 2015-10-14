@@ -22,10 +22,6 @@ class Option extends \Mmi\Form\Form {
 			->setDescription('Wysyła kopię wiadomości od użytkownika bezpośrednio na podane adres\'y e-mail oddzielone ";"')
 			->addValidatorEmailAddressList();
 		
-		$this->addElementText('order')
-			->setLabel('kolejność')
-			->setValue(0);
-
 		$this->addElementSubmit('submit')
 			->setLabel('dodaj/zmień temat');
 	}

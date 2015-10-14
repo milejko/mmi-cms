@@ -18,7 +18,7 @@ class Label extends \Mmi\Form\Form {
 			->setLabel('klucz')
 			->addValidatorNotEmpty()
 			->setRequired()
-			->setMultiOptions(\Cms\Model\Stat::getUniqueObjects());
+			->setMultioptions(\Cms\Model\Stat::getUniqueObjects());
 
 		$this->addElementText('label')
 			->setLabel('nazwa statystyki')

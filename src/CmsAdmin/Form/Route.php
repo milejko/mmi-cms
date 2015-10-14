@@ -36,7 +36,7 @@ class Route extends \Mmi\Form\Form {
 
 		$this->addElementSelect('active')
 			->setLabel('Aktywna')
-			->setMultiOptions([0 => 'nie', '1' => 'tak'])
+			->setMultioptions([0 => 'nie', '1' => 'tak'])
 			->addValidatorInteger();
 
 		$this->addElementSubmit('submit')

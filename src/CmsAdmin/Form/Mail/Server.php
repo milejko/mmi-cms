@@ -20,7 +20,7 @@ class Server extends \Mmi\Form\Form {
 		$this->addElementSelect('ssl')
 			->setLabel('Rodzaj połączenia')
 			->setRequired()
-			->setMultiOptions(['plain' => 'plain', 'tls' => 'tls', 'ssl' => 'ssl']);
+			->setMultioptions(['plain' => 'plain', 'tls' => 'tls', 'ssl' => 'ssl']);
 
 		$this->addElementText('port')
 			->setLabel('Port')

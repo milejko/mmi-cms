@@ -10,6 +10,11 @@
 
 namespace Cms\Form;
 
+use Cms\Form\Element;
+
+/**
+ * Formularz CMS
+ */
 abstract class Form extends \Mmi\Form\Form {
 
 	/**
@@ -24,12 +29,12 @@ abstract class Form extends \Mmi\Form\Form {
 	 * @param array $options opcje
 	 * @param string $className nazwa klasy
 	 */
-	public function __construct(\Mmi\Orm\Record $record = null, array $options = []) {
+	public function __construct(\Mmi\Orm\Record $record = null) {
 		//kalkulacja nazwy plików dla active record
 		if ($record) {
 			$this->_fileObjectName = $this->_classToFileObject(get_class($record));
 		}
-		parent::__construct($record, $options);
+		parent::__construct($record);
 	}
 
 	/**
@@ -49,7 +54,7 @@ abstract class Form extends \Mmi\Form\Form {
 	 * @return \Cms\Form\Element\Antirobot
 	 */
 	public function addElementAntirobot($name) {
-		return $this->addElement(new \Cms\Form\Element\Antirobot($name));
+		return $this->addElement(new Element\Antirobot($name));
 	}
 
 	/**
@@ -58,7 +63,7 @@ abstract class Form extends \Mmi\Form\Form {
 	 * @return \Cms\Form\Element\Captcha
 	 */
 	public function addElementCaptcha($name) {
-		return $this->addElement(new \Cms\Form\Element\Captcha($name));
+		return $this->addElement(new Element\Captcha($name));
 	}
 
 	/**
@@ -67,7 +72,7 @@ abstract class Form extends \Mmi\Form\Form {
 	 * @return \Cms\Form\Element\ColorPicker
 	 */
 	public function addElementColorPicker($name) {
-		return $this->addElement(new \Cms\Form\Element\ColorPicker($name));
+		return $this->addElement(new Element\ColorPicker($name));
 	}
 
 	/**
@@ -76,7 +81,7 @@ abstract class Form extends \Mmi\Form\Form {
 	 * @return \Cms\Form\Element\DatePicker
 	 */
 	public function addElementDatePicker($name) {
-		return $this->addElement(new \Cms\Form\Element\DatePicker($name));
+		return $this->addElement(new Element\DatePicker($name));
 	}
 
 	/**
@@ -85,7 +90,7 @@ abstract class Form extends \Mmi\Form\Form {
 	 * @return \Cms\Form\Element\DateTimePicker
 	 */
 	public function addElementDateTimePicker($name) {
-		return $this->addElement(new \Cms\Form\Element\DateTimePicker($name));
+		return $this->addElement(new Element\DateTimePicker($name));
 	}
 
 	/**
@@ -94,7 +99,7 @@ abstract class Form extends \Mmi\Form\Form {
 	 * @return \Cms\Form\Element\TinyMce
 	 */
 	public function addElementTinyMce($name) {
-		return $this->addElement(new \Cms\Form\Element\TinyMce($name));
+		return $this->addElement(new Element\TinyMce($name));
 	}
 
 	/**
@@ -103,7 +108,7 @@ abstract class Form extends \Mmi\Form\Form {
 	 * @return \Cms\Form\Element\Uploader
 	 */
 	public function addElementUploader($name) {
-		return $this->addElement(new \Cms\Form\Element\Uploader($name));
+		return $this->addElement(new Element\Uploader($name));
 	}
 
 	/**

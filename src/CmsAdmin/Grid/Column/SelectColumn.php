@@ -13,7 +13,7 @@ namespace CmsAdmin\Grid\Column;
 /**
  * Klasa Columnu select
  * 
- * @method array getMultiOptions()
+ * @method array getMultioptions()
  * @method self setName($name) ustawia nazwę pola
  * @method string getName() pobiera nazwę pola
  * @method self setLabel($label) ustawia labelkę
@@ -26,8 +26,8 @@ class SelectColumn extends ColumnAbstract {
 	 * @param array $options
 	 * @return SelectColumn
 	 */
-	public function setMultiOptions(array $options = []) {
-		return $this->setOption('multiOptions', $options);
+	public function setMultioptions(array $options = []) {
+		return $this->setOption('multioptions', $options);
 	}
 	
 	/**
@@ -36,9 +36,9 @@ class SelectColumn extends ColumnAbstract {
 	 * @return string
 	 */
 	public function getMultiOptionByKey($key) {
-		$multiOptions = $this->getMultiOptions();
+		$multioptions = $this->getMultioptions();
 		//wyszukiwanie w multiopcjach
-		return isset($multiOptions[$key]) ? $multiOptions[$key] : null;
+		return isset($multioptions[$key]) ? $multioptions[$key] : null;
 	}
 
 	/**
@@ -48,7 +48,7 @@ class SelectColumn extends ColumnAbstract {
 	public function renderFilter() {
 		//tworzy Column form selecta, ustawia opcje i wartość filtra
 		return (new \Mmi\Form\Element\Select($this->getFormColumnName()))
-				->setMultiOptions($this->getMultiOptions())
+				->setMultioptions($this->getMultioptions())
 				->setValue($this->_getFilterValue());
 	}
 

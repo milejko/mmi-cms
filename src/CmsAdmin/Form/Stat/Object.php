@@ -17,19 +17,19 @@ class Object extends \Mmi\Form\Form {
 		$this->addElementSelect('object')
 			->setLabel('statystyka')
 			->setValue($this->getOption('object'))
-			->setMultiOptions([null => '---'] + \Cms\Orm\CmsStatLabelQuery::factory()->orderAsc('label')->findPairs('object', 'label'));
+			->setMultioptions([null => '---'] + \Cms\Orm\CmsStatLabelQuery::factory()->orderAsc('label')->findPairs('object', 'label'));
 
 		$this->addElementSelect('year')
 			->setLabel('rok')
 			->setValue($this->getOption('year'))
-			->setMultiOptions([date('Y') - 1 => date('Y') - 1, date('Y') => date('Y')]);
+			->setMultioptions([date('Y') - 1 => date('Y') - 1, date('Y') => date('Y')]);
 
 		$view = \Mmi\App\FrontController::getInstance()->getView();
 
 		$this->addElementSelect('month')
 			->setLabel('miesiąc')
 			->setValue($this->getOption('month'))
-			->setMultiOptions([1 => $view->getTranslate()->_('styczeń'),
+			->setMultioptions([1 => $view->getTranslate()->_('styczeń'),
 				2 => $view->getTranslate()->_('luty'),
 				3 => $view->getTranslate()->_('marzec'),
 				4 => $view->getTranslate()->_('kwiecień'),

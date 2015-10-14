@@ -52,23 +52,23 @@ class Cron extends \Mmi\Form\Form {
 			$value = $this->_record->module . '_' . $this->_record->controller . '_' . $this->_record->action;
 		}
 
+		$options = [null => '---'];
+		foreach (\CmsAdmin\Model\Reflection::getActions() as $action) {
+			if ($action['controller'] == 'cron') {
+				$options[$action['path']] = $action['module'] . ': ' . $action['controller'] . ' - ' . $action['action'];
+			}
+		}
+
 		//system object
 		$this->addElementSelect('object')
 			->setLabel('Obiekt CMS')
 			->setDescription('Istniejące obiekty CMS')
 			->setRequired()
 			->addValidatorNotEmpty()
+			->setMultioptions($options)
+			
 			->setOption('id', 'objectId')
 			->setValue($value);
-
-		$object = $this->getElement('object');
-		$object->setDisableTranslator(true);
-		$object->addMultiOption(null, '---');
-		foreach (\CmsAdmin\Model\Reflection::getActions() as $action) {
-			if ($action['controller'] == 'cron') {
-				$object->addMultiOption($action['path'], $action['module'] . ': ' . $action['controller'] . ' - ' . $action['action']);
-			}
-		}
 
 		$this->addElementCheckbox('active')
 			->setLabel('Aktywny')

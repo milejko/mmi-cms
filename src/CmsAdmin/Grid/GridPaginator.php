@@ -58,7 +58,7 @@ class GridPaginator {
 	protected function _renderSelect() {
 		//ustawienie opcji i zaznaczenia
 		return (new \Mmi\Form\Element\Select($this->_grid->getClass() . '[_paginator_]'))
-				->setMultiOptions($this->_getPages())
+				->setMultioptions($this->_getPages())
 				->setValue($this->_grid->getState()->getPage());
 	}
 	
@@ -67,11 +67,11 @@ class GridPaginator {
 	 * @return array
 	 */
 	protected function _getPages() {
-		$multiOptions = [];
+		$multioptions = [];
 		for ($i = 1; $i <= $this->getPagesCount(); $i++) {
-			$multiOptions[$i] = $i;
+			$multioptions[$i] = $i;
 		}
-		return $multiOptions;
+		return $multioptions;
 	}
 
 }

@@ -24,7 +24,7 @@ class Contact extends \Mmi\Form\Form {
 				->setDisabled()
 				->setIgnore()
 				->setValue($this->getOption('subjectId'))
-				->setMultiOptions(\Cms\Model\Contact::getMultioptions())
+				->setMultioptions(\Cms\Model\Contact::getMultioptions())
 				->setLabel('temat zapytania');
 		}
 
