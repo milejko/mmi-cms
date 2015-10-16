@@ -8,20 +8,15 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace CmsAdmin\App\Config\Navigation;
+namespace CmsAdmin\App\NavPart;
 
-class Cron extends \Mmi\Navigation\Config {
+class NavPartFile extends \Mmi\Navigation\NavigationConfig {
 
 	public static function getMenu() {
 		return self::newElement()
-				->setLabel('Cron')
+				->setLabel('Pliki')
 				->setModule('cmsAdmin')
-				->setController('cron')
-				->addChild(self::newElement()
-					->setLabel('Dodaj')
-					->setModule('cmsAdmin')
-					->setController('cron')
-					->setAction('edit'));
+				->setController('file');
 	}
 
 }

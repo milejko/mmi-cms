@@ -8,25 +8,21 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace CmsAdmin\App\Config\Navigation;
+namespace CmsAdmin\App\NavPart;
 
-class Stat extends \Mmi\Navigation\Config {
+class NavPartNavigation extends \Mmi\Navigation\NavigationConfig {
 
 	public static function getMenu() {
 		return self::newElement()
-				->setLabel('Statystyki')
+				->setLabel('Menu serwisu')
 				->setModule('cmsAdmin')
-				->setController('stat')
+				->setController('navigation')
 				->addChild(self::newElement()
-					->setLabel('Nazwy')
+					->setVisible(false)
+					->setLabel('Dodaj element menu')
 					->setModule('cmsAdmin')
-					->setController('stat')
-					->setAction('label')
-					->addChild(self::newElement()
-						->setLabel('Dodaj')
-						->setModule('cmsAdmin')
-						->setController('stat')
-						->setAction('edit')));
+					->setController('navigation')
+					->setAction('edit'));
 	}
 
 }

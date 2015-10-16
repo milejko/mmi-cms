@@ -8,9 +8,9 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace CmsAdmin\App\Config\Navigation;
+namespace CmsAdmin\App\NavPart;
 
-class Route extends \Mmi\Navigation\Config {
+class NavPartRoute extends \Mmi\Navigation\NavigationConfig {
 
 	public static function getMenu() {
 		return self::newElement()

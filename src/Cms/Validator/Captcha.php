@@ -32,7 +32,7 @@ class Captcha extends \Mmi\Validator\ValidatorAbstract {
 	public function isValid($value) {
 		$this->_error(self::INVALID);
 		$name = 'captcha-' . $this->getName();
-		return ((new \Mmi\Session\Space('CmsForm'))->$name == strtoupper($value));
+		return ((new \Mmi\Session\SessionSpace('CmsForm'))->$name == strtoupper($value));
 	}
 
 }

@@ -19,7 +19,7 @@ class NavigationController extends Mvc\Controller {
 	 * Lista pozycji
 	 */
 	public function indexAction() {
-		$config = new \Mmi\Navigation\Config();
+		$config = new \Mmi\Navigation\NavigationConfig();
 		\Cms\Model\Navigation::decorateConfiguration($config);
 		$this->view->navigation = $config->findById($this->id, true);
 	}

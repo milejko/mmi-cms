@@ -30,9 +30,9 @@ class Navigation {
 
 	/**
 	 * Dodaje do konfiguracji dane z bazy danych
-	 * @param \Mmi\Navigation\Config $config
+	 * @param \Mmi\Navigation\NavigationConfig $config
 	 */
-	public static function decorateConfiguration(\Mmi\Navigation\Config $config) {
+	public static function decorateConfiguration(\Mmi\Navigation\NavigationConfig $config) {
 		$objectArray = CmsNavigationQuery::lang()
 			->orderAscParentId()
 			->orderAscOrder()
@@ -42,7 +42,7 @@ class Navigation {
 			if ($record->parentId != 0) {
 				continue;
 			}
-			$element = \Mmi\Navigation\Config::newElement($record->id);
+			$element = \Mmi\Navigation\NavigationConfig::newElement($record->id);
 			self::_setNavigationElementFromRecord($record, $element);
 			$config->addElement($element);
 			unset($objectArray[$key]);
@@ -71,15 +71,15 @@ class Navigation {
 	/**
 	 * 
 	 * @param \Cms\Orm\CmsNavigationRecord $record
-	 * @param \Mmi\Navigation\Config\Element $element
+	 * @param \Mmi\Navigation\NavigationConfigElement $element
 	 * @param array $objectArray
 	 */
-	protected static function _buildChildren(\Cms\Orm\CmsNavigationRecord $record, \Mmi\Navigation\Config\Element $element, array $objectArray) {
+	protected static function _buildChildren(\Cms\Orm\CmsNavigationRecord $record, \Mmi\Navigation\NavigationConfigElement $element, array $objectArray) {
 		foreach ($objectArray as $key => $child) {/* @var $child CmsNavigationRecord */
 			if ($child->parentId != $record->id) {
 				continue;
 			}
-			$childElement = \Mmi\Navigation\Config::newElement($child->id);
+			$childElement = \Mmi\Navigation\NavigationConfig::newElement($child->id);
 			self::_setNavigationElementFromRecord($child, $childElement);
 			$element->addChild($childElement);
 			unset($objectArray[$key]);
@@ -90,10 +90,10 @@ class Navigation {
 	/**
 	 * 
 	 * @param \Cms\Orm\CmsNavigationRecord $record
-	 * @param \Mmi\Navigation\Config\Element $element
-	 * @return \Mmi\Navigation\Config\Element
+	 * @param \Mmi\Navigation\NavigationConfigElement $element
+	 * @return \Mmi\Navigation\NavigationConfigElement
 	 */
-	protected static function _setNavigationElementFromRecord(CmsNavigationRecord $record, \Mmi\Navigation\Config\Element $element) {
+	protected static function _setNavigationElementFromRecord(CmsNavigationRecord $record, \Mmi\Navigation\NavigationConfigElement $element) {
 		$https = null;
 		if ($record->https === 0) {
 			$https = false;

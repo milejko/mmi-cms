@@ -70,7 +70,7 @@ class CaptchaController extends \Mmi\Mvc\Controller {
 		}
 
 		//zapis do sesji
-		$formSession = new \Mmi\Session\Space('CmsForm');
+		$formSession = new \Mmi\Session\SessionSpace('CmsForm');
 		$name = 'captcha-' . $this->name;
 		$formSession->$name = $word;
 

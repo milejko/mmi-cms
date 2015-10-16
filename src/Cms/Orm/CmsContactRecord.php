@@ -60,7 +60,7 @@ class CmsContactRecord extends \Mmi\Orm\Record {
 			$this->cmsAuthId = \App\Registry::$auth->getId();
 		}
 		//namespace w sesji
-		$namespace = new \Mmi\Session\Space('contact');
+		$namespace = new \Mmi\Session\SessionSpace('contact');
 		$this->uri = $namespace->referer;
 		//wysyłka do maila zdefiniowanego w opcjach
 		$option = CmsContactOptionQuery::factory()->findPk($this->cmsContactOptionId);

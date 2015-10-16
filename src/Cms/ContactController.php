@@ -20,7 +20,7 @@ class ContactController extends \Mmi\Mvc\Controller {
 	 */
 	public function indexAction() {
 		//ciasteczko sesyjne - zapamietanie sciezki
-		$namespace = new \Mmi\Session\Space('contact');
+		$namespace = new \Mmi\Session\SessionSpace('contact');
 		//formularz kontaktowy z rekordem kontaktu
 		$form = new \Cms\Form\Contact(new \Cms\Orm\CmsContactRecord(), [
 			'subjectId' => $this->subjectId

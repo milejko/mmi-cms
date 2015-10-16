@@ -8,15 +8,12 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace CmsAdmin\App\Config\Navigation;
+namespace CmsAdmin\App\NavPart;
 
-class Comment extends \Mmi\Navigation\Config {
+class NavPartTag extends \Mmi\Navigation\NavigationConfig {
 
 	public static function getMenu() {
-		return self::newElement()
-				->setLabel('Komentarze')
-				->setModule('cmsAdmin')
-				->setController('comment');
+		
 	}
 
 }

@@ -58,7 +58,7 @@ class IndexController extends Mvc\Controller {
 	 * Akcja ustawiania języka (w sesji)
 	 */
 	public function languageAction() {
-		$session = new \Mmi\Session\Space('cms-language');
+		$session = new \Mmi\Session\SessionSpace('cms-language');
 		$session->lang = in_array($this->locale, \App\Registry::$config->languages) ? $this->locale : null;
 		$referer = \Mmi\App\FrontController::getInstance()->getRequest()->getReferer();
 		//przekierowanie na referer

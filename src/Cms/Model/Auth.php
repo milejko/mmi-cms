@@ -147,11 +147,7 @@ class Auth implements \Mmi\Security\AuthInterface {
 		}
 		try {
 			//tworzenie klienta
-			$ldapClient = new \Mmi\Ldap\LdapClient(\Mmi\Ldap\LdapConfig::factory()
-					->setAddress(\App\Registry::$config->ldap->address)
-					->setUser(\App\Registry::$config->ldap->user)
-					->setPassword(\App\Registry::$config->ldap->password)
-					->setDomain(\App\Registry::$config->ldap->domain));
+			$ldapClient = new \Mmi\Ldap\LdapClient(\App\Registry::$config->ldap);
 
 			//kalkulacja DN na podstawie patternu z konfiguracji
 			$dn = sprintf(\App\Registry::$config->ldap->dnPattern, str_replace('@' . \App\Registry::$config->ldap->domain, '', $identity->username));

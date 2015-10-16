@@ -14,7 +14,7 @@ use Cms\Orm\CmsRouteQuery;
 /**
  * Plugin front kontrolera (hooki)
  */
-class FrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
+class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 
 	/**
 	 * Hook przed routingiem
