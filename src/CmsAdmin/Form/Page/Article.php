@@ -54,7 +54,7 @@ class Article extends PageAbstract {
 	 * @return boolean
 	 */
 	public function beforeSave() {
-		if (null === ($article = \Cms\Orm\CmsArticleQuery::factory()->findPk($this->getElement('articleId')->getValue()))) {
+		if (null === ($article = (new \Cms\Orm\CmsArticleQuery)->findPk($this->getElement('articleId')->getValue()))) {
 			return true;
 		}
 		$this->getRecord()->module = 'cms';

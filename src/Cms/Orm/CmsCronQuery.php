@@ -118,18 +118,11 @@ class CmsCronQuery extends \Mmi\Orm\Query {
 	protected $_tableName = 'cms_cron';
 
 	/**
-	 * @return CmsCronQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
-	/**
 	 * Zapytanie o aktywne cron'y
 	 * @return CmsCronQuery
 	 */
 	public static function active() {
-		return self::factory()
+		return (new self)
 				->whereActive()->equals(1)
 				->orderAscId();
 	}

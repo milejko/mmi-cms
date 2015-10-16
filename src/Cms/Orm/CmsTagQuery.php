@@ -40,19 +40,12 @@ class CmsTagQuery extends \Mmi\Orm\Query {
 	protected $_tableName = 'cms_tag';
 
 	/**
-	 * @return CmsTagQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
-	/**
 	 * Po nazwie
 	 * @param string $tagName
 	 * @return CmsTagQuery
 	 */
 	public static function byName($tagName) {
-		return self::factory()
+		return (new self)
 				->whereTag()->equals($tagName);
 	}
 

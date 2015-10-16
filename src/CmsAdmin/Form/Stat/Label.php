@@ -16,7 +16,6 @@ class Label extends \Mmi\Form\Form {
 
 		$this->addElementSelect('object')
 			->setLabel('klucz')
-			->addValidatorNotEmpty()
 			->setRequired()
 			->setMultioptions(\Cms\Model\Stat::getUniqueObjects());
 

@@ -19,7 +19,7 @@ class MailServerController extends Mvc\Controller {
 	 * Lista serwerów
 	 */
 	public function indexAction() {
-		$grid = new \CmsAdmin\Plugin\MailServerGrid();
+		$grid = new \CmsAdmin\Plugin\MailServerGrid;
 		$this->view->grid = $grid;
 	}
 
@@ -39,7 +39,7 @@ class MailServerController extends Mvc\Controller {
 	 * Usuwanie serwera
 	 */
 	public function deleteAction() {
-		$server = \Cms\Orm\CmsMailServerQuery::factory()->findPk($this->id);
+		$server = (new \Cms\Orm\CmsMailServerQuery)->findPk($this->id);
 		try {
 			if ($server && $server->delete()) {
 				$this->getMessenger()->addMessage('Usunięto serwer');

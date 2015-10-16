@@ -51,11 +51,4 @@ class CmsStatQuery extends \Mmi\Orm\Query {
 
 	protected $_tableName = 'cms_stat';
 
-	/**
-	 * @return CmsStatQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
 }

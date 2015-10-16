@@ -19,7 +19,7 @@ class ArticleController extends Mvc\Controller {
 	 * Lista artykułów
 	 */
 	public function indexAction() {
-		$this->view->grid = new \CmsAdmin\Plugin\ArticleGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\ArticleGrid;
 	}
 
 	/**
@@ -38,7 +38,7 @@ class ArticleController extends Mvc\Controller {
 	 * Usuwanie artykułu
 	 */
 	public function deleteAction() {
-		$record = \Cms\Orm\CmsArticleQuery::factory()->findPk($this->id);
+		$record = (new \Cms\Orm\CmsArticleQuery)->findPk($this->id);
 		if ($record && $record->delete()) {
 			$this->getMessenger()->addMessage('Poprawnie usunięto artykuł', true);
 		}

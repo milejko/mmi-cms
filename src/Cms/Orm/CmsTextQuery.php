@@ -58,21 +58,14 @@ class CmsTextQuery extends \Mmi\Orm\Query {
 	protected $_tableName = 'cms_text';
 
 	/**
-	 * @return CmsTextQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
-	/**
 	 * Zapytanie po langu z requesta
 	 * @return CmsTextQuery
 	 */
 	public static function lang() {
 		if (!\Mmi\App\FrontController::getInstance()->getRequest()->lang) {
-			return self::factory();
+			return new self;
 		}
-		return self::factory()
+		return (new self)
 				->whereLang()->equals(\Mmi\App\FrontController::getInstance()->getRequest()->lang)
 				->orFieldLang()->equals(null)
 				->orderDescLang();
@@ -84,7 +77,7 @@ class CmsTextQuery extends \Mmi\Orm\Query {
 	 * @return CmsTextQuery
 	 */
 	public static function byLang($lang) {
-		return self::factory()
+		return (new self)
 				->whereLang()->equals($lang);
 	}
 

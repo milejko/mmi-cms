@@ -19,7 +19,7 @@ class UserController extends \Mmi\Mvc\Controller {
 	 * Logowanie
 	 */
 	public function loginAction() {
-		$form = new \Cms\Form\Login();
+		$form = new \Cms\Form\Login;
 		$this->view->loginForm = $form;
 		if (!$form->isMine()) {
 			return;

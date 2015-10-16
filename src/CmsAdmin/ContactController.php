@@ -19,14 +19,14 @@ class ContactController extends Mvc\Controller {
 	 * Lista zgłoszeń
 	 */
 	public function indexAction() {
-		$this->view->grid = new \CmsAdmin\Plugin\ContactGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\ContactGrid;
 	}
 
 	/**
 	 * Lista tematów zgłoszeń
 	 */
 	public function subjectAction() {
-		$this->view->grid = new \CmsAdmin\Plugin\ContactOptionGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\ContactOptionGrid;
 	}
 
 	/**
@@ -45,7 +45,7 @@ class ContactController extends Mvc\Controller {
 	 * Usuwanie tematu
 	 */
 	public function deleteSubjectAction() {
-		$option = \Cms\Orm\CmsContactOptionQuery::factory()->findPk($this->id);
+		$option = (new \Cms\Orm\CmsContactOptionQuery)->findPk($this->id);
 		if ($option && $option->delete()) {
 			$this->getMessenger()->addMessage('Poprawnie usunięto temat', true);
 		}
@@ -56,7 +56,7 @@ class ContactController extends Mvc\Controller {
 	 * Usuwanie zgłoszenia
 	 */
 	public function deleteAction() {
-		$contact = \Cms\Orm\CmsContactQuery::factory()->findPk($this->id);
+		$contact = (new \Cms\Orm\CmsContactQuery)->findPk($this->id);
 		if ($contact && $contact->delete()) {
 			$this->getMessenger()->addMessage('Poprawnie usunięto wiadomość', true);
 		}

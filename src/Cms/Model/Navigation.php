@@ -57,7 +57,7 @@ class Navigation {
 	 */
 	public static function sortBySerial(array $serial = []) {
 		foreach ($serial as $order => $id) {
-			$record = CmsNavigationQuery::factory()
+			$record = (new CmsNavigationQuery)
 				->findPk($id);
 			if (!$record) {
 				continue;

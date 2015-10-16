@@ -160,21 +160,14 @@ class CmsNavigationQuery extends \Mmi\Orm\Query {
 	protected $_tableName = 'cms_navigation';
 
 	/**
-	 * @return CmsNavigationQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
-	/**
 	 * Filtruje bieżący język
 	 * @return CmsNavigationQuery
 	 */
 	public static function lang() {
 		if (!\Mmi\App\FrontController::getInstance()->getRequest()->lang) {
-			return \Cms\Orm\CmsNavigationQuery::factory();
+			return new self;
 		}
-		return self::factory()
+		return (new self)
 				->whereLang()->equals(\Mmi\App\FrontController::getInstance()->getRequest()->lang)
 				->orFieldLang()->equals(null)
 				->orderDescLang();
@@ -186,7 +179,7 @@ class CmsNavigationQuery extends \Mmi\Orm\Query {
 	 * @return CmsNavigationQuery
 	 */
 	public static function byArticleUri($uri) {
-		return self::factory()
+		return (new self)
 				->whereModule()->equals('cms')
 				->andFieldController()->equals('article')
 				->andFieldAction()->equals('index')
@@ -199,7 +192,7 @@ class CmsNavigationQuery extends \Mmi\Orm\Query {
 	 * @return CmsNavigationQuery
 	 */
 	public static function byParentId($parentId) {
-		return self::factory()
+		return (new self)
 				->whereParentId()->equals($parentId);
 	}
 

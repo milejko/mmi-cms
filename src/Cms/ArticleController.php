@@ -33,7 +33,7 @@ class ArticleController extends \Mmi\Mvc\Controller {
 			if (isset($uri)) {
 				$article = \Cms\Orm\CmsArticleQuery::byUri($uri)->findFirst();
 			} else {
-				$article = \Cms\Orm\CmsArticleQuery::factory()->findPk($id);
+				$article = (new \Cms\Orm\CmsArticleQuery)->findPk($id);
 			}
 			if ($article === null) {
 				$this->getResponse()->redirectToUrl('/');

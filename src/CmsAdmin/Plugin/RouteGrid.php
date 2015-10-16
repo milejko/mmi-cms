@@ -18,7 +18,7 @@ class RouteGrid extends \CmsAdmin\Grid\Grid {
 	public function init() {
 
 		//zapytanie
-		$this->setQuery(\Cms\Orm\CmsRouteQuery::factory()
+		$this->setQuery((new \Cms\Orm\CmsRouteQuery)
 				->orderAscOrder());
 
 		//pattern

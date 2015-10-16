@@ -19,14 +19,14 @@ class MailController extends Mvc\Controller {
 	 * Kolejka maili
 	 */
 	public function indexAction() {
-		$this->view->grid = new \CmsAdmin\Plugin\MailGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\MailGrid;
 	}
 
 	/**
 	 * Usuniecie maila
 	 */
 	public function deleteAction() {
-		$mail = \Cms\Orm\CmsMailQuery::factory()->findPk($this->id);
+		$mail = (new \Cms\Orm\CmsMailQuery)->findPk($this->id);
 		if ($mail && $mail->delete()) {
 			$this->getMessenger()->addMessage('Email został usunięty z kolejki', true);
 		}
@@ -37,7 +37,7 @@ class MailController extends Mvc\Controller {
 	 * Podglad treści maila
 	 */
 	public function previewAction() {
-		$mail = \Cms\Orm\CmsMailQuery::factory()->findPk($this->id);
+		$mail = (new \Cms\Orm\CmsMailQuery)->findPk($this->id);
 		$this->view->message = $mail->message;
 	}
 	

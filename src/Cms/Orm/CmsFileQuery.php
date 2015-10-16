@@ -130,13 +130,6 @@ class CmsFileQuery extends \Mmi\Orm\Query {
 	protected $_tableName = 'cms_file';
 
 	/**
-	 * @return CmsFileQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
-	/**
 	 * Po obiekcie i id
 	 * @param string $object
 	 * @param string $objectId
@@ -144,7 +137,7 @@ class CmsFileQuery extends \Mmi\Orm\Query {
 	 */
 	public static function byObject($object = null, $objectId = null) {
 		//zapytanie o pliki po obiektach i id
-		return self::factory()
+		return (new self)
 				->whereObject()->equals($object)
 				->andFieldObjectId()->equals($objectId)
 				//posortowane po kolejności

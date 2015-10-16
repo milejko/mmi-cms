@@ -87,11 +87,4 @@ class CmsMailServerQuery extends \Mmi\Orm\Query {
 
 	protected $_tableName = 'cms_mail_server';
 
-	/**
-	 * @return CmsMailServerQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
 }

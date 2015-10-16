@@ -18,7 +18,7 @@ class FileGrid extends \CmsAdmin\Grid\Grid {
 	public function init() {
 
 		//źródło danych
-		$this->setQuery(\Cms\Orm\CmsFileQuery::factory());
+		$this->setQuery(new \Cms\Orm\CmsFileQuery);
 		
 		//miniatura (lub ikona)
 		$this->addColumnCustom('thumb')

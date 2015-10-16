@@ -47,7 +47,7 @@ class Text {
 	protected static function _initDictionary() {
 		if (null === (self::$_texts = \App\Registry::$cache->load('Cms-text'))) {
 			self::$_texts = [];
-			foreach (Orm\CmsTextQuery::factory()->find() as $text) {
+			foreach ((new Orm\CmsTextQuery)->find() as $text) {
 				if ($text->lang === null) {
 					self::$_texts['none'][$text->key] = $text->content;
 					continue;

@@ -23,7 +23,7 @@ class CmsNewsRecord extends \Mmi\Orm\Record {
 	 * @return boolean
 	 */
 	public function save() {
-		$filter = new \Mmi\Filter\Url();
+		$filter = new \Mmi\Filter\Url;
 		$uri = $filter->filter($this->title);
 		//identyfikatory dla linków wewnętrznych
 		if ($this->internal == 1) {

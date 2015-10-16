@@ -94,13 +94,6 @@ class CmsCommentQuery extends \Mmi\Orm\Query {
 	protected $_tableName = 'cms_comment';
 
 	/**
-	 * @return CmsCommentQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
-	/**
 	 * Zapytanie o komentarze po obiekcie, id obiektu z sortowaniem
 	 * @param string $object
 	 * @param integer $objectId
@@ -108,7 +101,7 @@ class CmsCommentQuery extends \Mmi\Orm\Query {
 	 * @return CmsCommentQuery
 	 */
 	public static function byObject($object, $objectId, $descending = false) {
-		$q = self::factory()
+		$q = (new self)
 				->whereObject()->equals($object)
 				->andFieldObjectId()->equals($objectId);
 		if ($descending) {

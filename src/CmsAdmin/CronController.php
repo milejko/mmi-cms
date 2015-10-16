@@ -19,7 +19,7 @@ class CronController extends Mvc\Controller {
 	 * Lista zadań
 	 */
 	public function indexAction() {
-		$grid = new \CmsAdmin\Plugin\CronGrid();
+		$grid = new \CmsAdmin\Plugin\CronGrid;
 		$this->view->grid = $grid;
 	}
 
@@ -39,7 +39,7 @@ class CronController extends Mvc\Controller {
 	 * Usuwanie zadania
 	 */
 	public function deleteAction() {
-		$record = \Cms\Orm\CmsCronQuery::factory()->findPk($this->id);
+		$record = (new \Cms\Orm\CmsCronQuery)->findPk($this->id);
 		if ($record && $record->delete()) {
 			$this->getMessenger()->addMessage('Zadanie CRON poprawnie usunięte', true);
 		}

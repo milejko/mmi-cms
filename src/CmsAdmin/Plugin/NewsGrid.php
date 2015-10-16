@@ -18,7 +18,7 @@ class NewsGrid extends \CmsAdmin\Grid\Grid {
 	public function init() {
 
 		//zapytanie
-		$this->setQuery(\Cms\Orm\CmsNewsQuery::factory());
+		$this->setQuery((new \Cms\Orm\CmsNewsQuery));
 
 		//data dodania
 		$this->addColumnText('dateAdd')

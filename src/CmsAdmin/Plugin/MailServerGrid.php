@@ -17,7 +17,7 @@ class MailServerGrid extends \CmsAdmin\Grid\Grid {
 
 	public function init() {
 
-		$this->setQuery(\Cms\Orm\CmsMailServerQuery::factory()
+		$this->setQuery((new \Cms\Orm\CmsMailServerQuery)
 				->orderDescId());
 
 		//adres serwera

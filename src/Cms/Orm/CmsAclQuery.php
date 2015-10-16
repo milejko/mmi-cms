@@ -63,11 +63,4 @@ class CmsAclQuery extends \Mmi\Orm\Query {
 
 	protected $_tableName = 'cms_acl';
 
-	/**
-	 * @return CmsAclQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
 }

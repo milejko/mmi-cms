@@ -108,7 +108,7 @@ class File {
 	public static function sortBySerial(array $serial = []) {
 		foreach ($serial as $order => $id) {
 			//brak rekordu o danym ID
-			if (null === ($record = CmsFileQuery::factory()->findPk($id))) {
+			if (null === ($record = (new CmsFileQuery)->findPk($id))) {
 				continue;
 			}
 			//ustawianie kolejności i zapis
@@ -124,7 +124,7 @@ class File {
 	 */
 	protected static function _newRecordFromRequestFile(\Mmi\Http\RequestFile $file) {
 		//nowy rekord
-		$record = new CmsFileRecord();
+		$record = new CmsFileRecord;
 		//typ zasobu
 		$record->mimeType = $file->type;
 		//klasa zasobu

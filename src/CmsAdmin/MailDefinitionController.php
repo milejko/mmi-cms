@@ -19,7 +19,7 @@ class MailDefinitionController extends Mvc\Controller {
 	 * Lista szablonów
 	 */
 	public function indexAction() {
-		$grid = new \CmsAdmin\Plugin\MailDefinitionGrid();
+		$grid = new \CmsAdmin\Plugin\MailDefinitionGrid;
 		$this->view->grid = $grid;
 	}
 
@@ -39,7 +39,7 @@ class MailDefinitionController extends Mvc\Controller {
 	 * Usuwanie szablonu
 	 */
 	public function deleteAction() {
-		$definition = \Cms\Orm\CmsMailDefinitionQuery::factory()->findPk($this->id);
+		$definition = (new \Cms\Orm\CmsMailDefinitionQuery)->findPk($this->id);
 		try {
 			if ($definition && $definition->delete()) {
 				$this->getMessenger()->addMessage('Poprawnie skasowano definicję maila');

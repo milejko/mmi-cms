@@ -18,7 +18,7 @@ class CommentGrid extends \CmsAdmin\Grid\Grid {
 	public function init() {
 
 		//zapytanie
-		$this->setQuery(\Cms\Orm\CmsCommentQuery::factory());
+		$this->setQuery((new \Cms\Orm\CmsCommentQuery));
 
 		//data dodania
 		$this->addColumnText('dateAdd')

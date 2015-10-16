@@ -26,8 +26,8 @@ class TextColumn extends ColumnAbstract {
 	 * @return string
 	 */
 	public function renderCell(\Mmi\Orm\RecordRo $record) {
-		$escape = new \Mmi\Filter\Escape();
-		$truncate = new \Mmi\Filter\Truncate();
+		$escape = new \Mmi\Filter\Escape;
+		$truncate = new \Mmi\Filter\Truncate;
 		return $truncate->filter($escape->filter(property_exists($record, $this->getName()) ? $record->{$this->getName()} : '?'));
 	}
 

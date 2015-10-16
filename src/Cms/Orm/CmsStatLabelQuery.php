@@ -58,19 +58,12 @@ class CmsStatLabelQuery extends \Mmi\Orm\Query {
 	protected $_tableName = 'cms_stat_label';
 
 	/**
-	 * @return CmsStatLabelQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
-	/**
 	 * Po obiekcie
 	 * @param string $object
 	 * @return CmsStatLabelQuery
 	 */
 	public static function byObject($object) {
-		return self::factory()
+		return (new self)
 				->whereObject()->equals($object);
 	}
 

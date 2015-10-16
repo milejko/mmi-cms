@@ -25,7 +25,7 @@ class Register extends \Cms\Form\Form {
 			->setLabel('nazwa użytkownika (nick)')
 			->setRequired()
 			->addValidatorAlnum()
-			->addValidatorRecordUnique(CmsAuthQuery::factory(), 'username')
+			->addValidatorRecordUnique(new CmsAuthQuery, 'username')
 			->addValidatorStringLength(4, 25)
 			->addFilterLowercase();
 
@@ -34,7 +34,7 @@ class Register extends \Cms\Form\Form {
 			->setLabel('e-mail')
 			->setRequired()
 			->addValidatorEmailAddress()
-			->addValidatorRecordUnique(CmsAuthQuery::factory(), 'email')
+			->addValidatorRecordUnique(new CmsAuthQuery, 'email')
 			->addValidatorStringLength(4, 150)
 			->addFilterLowercase();
 

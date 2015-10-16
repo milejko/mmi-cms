@@ -76,20 +76,12 @@ class CmsArticleQuery extends \Mmi\Orm\Query {
 	protected $_tableName = 'cms_article';
 
 	/**
-	 * @return CmsArticleQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
-	/**
 	 * Po uri
 	 * @param string $uri
 	 * @return CmsArticleQuery
 	 */
 	public static function byUri($uri) {
-		return self::factory()
-				->whereUri()->equals($uri);
+		return (new self)->whereUri()->equals($uri);
 	}
 
 }

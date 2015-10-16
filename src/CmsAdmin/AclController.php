@@ -19,7 +19,7 @@ class AclController extends Mvc\Controller {
 	 * Lista uprawnień
 	 */
 	public function indexAction() {
-		$this->view->roles = \Cms\Orm\CmsRoleQuery::factory()->find();
+		$this->view->roles = (new \Cms\Orm\CmsRoleQuery)->find();
 		if ($this->roleId) {
 			$this->view->rules = \Cms\Model\Acl::getMultioptionsByRoleId($this->roleId);
 			$this->view->options = [null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard();
@@ -48,7 +48,7 @@ class AclController extends Mvc\Controller {
 		if (!($this->id > 0)) {
 			return 0;
 		}
-		$rule = \Cms\Orm\CmsAclQuery::factory()->findPk($this->id);
+		$rule = (new \Cms\Orm\CmsAclQuery)->findPk($this->id);
 		//skasowane
 		if ($rule && $rule->delete()) {
 			return 1;
@@ -67,7 +67,7 @@ class AclController extends Mvc\Controller {
 		if (!($this->value) || count($params) != 3) {
 			return $msg;
 		}
-		$record = \Cms\Orm\CmsAclQuery::factory()->findPk($params[2]);
+		$record = (new \Cms\Orm\CmsAclQuery)->findPk($params[2]);
 		if (!$record) {
 			return;
 		}

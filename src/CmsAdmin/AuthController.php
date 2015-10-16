@@ -19,7 +19,7 @@ class AuthController extends Mvc\Controller {
 	 * Lista użytkowników
 	 */
 	public function indexAction() {
-		$this->view->grid = new \CmsAdmin\Plugin\AuthGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\AuthGrid;
 	}
 
 	/**
@@ -38,7 +38,7 @@ class AuthController extends Mvc\Controller {
 	 * Kasowanie użytkownika
 	 */
 	public function deleteAction() {
-		$auth = \Cms\Orm\CmsAuthQuery::factory()->findPk($this->id);
+		$auth = (new \Cms\Orm\CmsAuthQuery)->findPk($this->id);
 		if ($auth && $auth->delete()) {
 			$this->getMessenger()->addMessage('Poprawnie skasowano użytkownika', true);
 		}

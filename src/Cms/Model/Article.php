@@ -17,7 +17,7 @@ class Article {
 	 * @return array
 	 */
 	public static function getMultioptions() {
-		return [null => '---'] + \Cms\Orm\CmsArticleQuery::factory()
+		return [null => '---'] + (new \Cms\Orm\CmsArticleQuery)
 				->orderAscTitle()
 				->findPairs('id', 'title');
 	}

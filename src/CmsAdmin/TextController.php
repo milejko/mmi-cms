@@ -62,7 +62,7 @@ class TextController extends Mvc\Controller {
 	 * Usuwanie tekstu
 	 */
 	public function deleteAction() {
-		$text = \Cms\Orm\CmsTextQuery::factory()->findPk($this->id);
+		$text = (new \Cms\Orm\CmsTextQuery)->findPk($this->id);
 		//jeśli znaleziono tekst i udało się usunąć
 		if ($text && $text->delete()) {
 			$this->getMessenger()->addMessage('Poprawnie skasowano tekst', true);

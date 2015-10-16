@@ -85,7 +85,7 @@ class FileGarbageCollector extends \Mmi\Tools\CliAbstract {
 			return;
 		}
 		//brak pliku w plikach CMS
-		if (null === $fr = \Cms\Orm\CmsFileQuery::factory()
+		if (null === $fr = (new \Cms\Orm\CmsFileQuery)
 			->whereName()->equals($file)
 			->findFirst()
 		) {

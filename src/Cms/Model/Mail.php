@@ -19,7 +19,7 @@ class Mail {
 	 * @return integer ilość usuniętych
 	 */
 	public static function clean() {
-		return Orm\CmsMailQuery::factory()
+		return (new Orm\CmsMailQuery)
 				->whereActive()->equals(1)
 				->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-1 week')))
 				->find()
@@ -46,12 +46,12 @@ class Mail {
 			return false;
 		}
 		//walidacja listy adresów "do"
-		$email = new \Mmi\Validator\EmailAddressList();
+		$email = new \Mmi\Validator\EmailAddressList;
 		if (!$email->isValid($to)) {
 			return false;
 		}
 		//nowy rekord maila
-		$mail = new Orm\CmsMailRecord();
+		$mail = new Orm\CmsMailRecord;
 		$mail->cmsMailDefinitionId = $def->id;
 		$mail->to = $to;
 		$mail->fromName = $fromName ? $fromName : $def->fromName;
@@ -93,7 +93,7 @@ class Mail {
 		//rezultat wysyłania
 		$result = ['error' => 0, 'success' => 0];
 		//pobieranie maili
-		$emails = Orm\CmsMailQuery::factory()
+		$emails = (new Orm\CmsMailQuery)
 			->join('cms_mail_definition')->on('cms_mail_definition_id')
 			->join('cms_mail_server', 'cms_mail_definition')->on('cms_mail_server_id')
 			->whereActive()->equals(0)
@@ -188,7 +188,7 @@ class Mail {
 	 * @return array lista
 	 */
 	public static function getMultioptions() {
-		$rows = Orm\CmsMailServerQuery::factory()
+		$rows = (new Orm\CmsMailServerQuery)
 			->whereActive()->equals(1)
 			->find();
 		$pairs = [];

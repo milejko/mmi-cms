@@ -20,7 +20,7 @@ class Stat {
 	 * @return boolean
 	 */
 	public static function hit($object, $objectId = null) {
-		$stat = new Orm\CmsStatRecord();
+		$stat = new Orm\CmsStatRecord;
 		$stat->object = $object;
 		$stat->objectId = is_numeric($objectId) ? intval($objectId) : null;
 		$stat->dateTime = date('Y-m-d H:i:s');
@@ -34,7 +34,7 @@ class Stat {
 	public static function agregate() {
 		$start = microtime(true);
 		$processed = 0;
-		foreach (Orm\CmsStatQuery::factory()->limit(10000)->find() as $item) {
+		foreach ((new Orm\CmsStatQuery)->limit(10000)->find() as $item) {
 			$processed++;
 			$dateTime = explode(' ', $item->dateTime);
 			$date = explode('-', $dateTime[0]);
@@ -89,7 +89,7 @@ class Stat {
 	 * @return boolean
 	 */
 	protected static function _push($object, $objectId, $hour, $day, $month, $year) {
-		$o = Orm\CmsStatDateQuery::factory()
+		$o = (new Orm\CmsStatDateQuery)
 			->whereObject()->equals($object)
 			->andFieldObjectId()->equals($objectId)
 			->andFieldHour()->equals($hour)
@@ -98,7 +98,7 @@ class Stat {
 			->andFieldYear()->equals($year)
 			->findFirst();
 		if ($o === null) {
-			$o = new Orm\CmsStatDateRecord();
+			$o = new Orm\CmsStatDateRecord;
 		}
 		$o->count = intval($o->count) + 1;
 		$o->object = $object;
@@ -115,7 +115,7 @@ class Stat {
 	 * @return array
 	 */
 	public static function getUniqueObjects() {
-		$all = Orm\CmsStatDateQuery::factory()
+		$all = (new Orm\CmsStatDateQuery)
 			->whereHour()->equals(null)
 			->andFieldDay()->equals(null)
 			->andFieldMonth()->equals(null)
@@ -277,7 +277,7 @@ class Stat {
 	 */
 	public static function getRows($object, $objectId, $year = null, $month = null, $day = null, $hour = null) {
 		//nowa quera filtrująca po obiekcie i ID
-		$q = Orm\CmsStatDateQuery::factory()
+		$q = (new Orm\CmsStatDateQuery)
 				->whereObject()->equals($object)
 				->andFieldObjectId()->equals($objectId);
 		//wiązanie roku

@@ -38,7 +38,7 @@ class RouteController extends Mvc\Controller {
 	 * Usuwanie trasy
 	 */
 	public function deleteAction() {
-		$text = \Cms\Orm\CmsRouteQuery::factory()->findPk($this->id);
+		$text = (new \Cms\Orm\CmsRouteQuery)->findPk($this->id);
 		if ($text && $text->delete()) {
 			$this->getMessenger()->addMessage('Poprawnie skasowano trasę');
 		}

@@ -34,14 +34,14 @@ class Role {
 		//iteracja po rolach
 		foreach ($roles as $roleId) {
 			//rola istnieje
-			if (null !== CmsAuthRoleQuery::factory()
+			if (null !== (new CmsAuthRoleQuery)
 					->whereCmsRoleId()->equals($roleId)
 					->andFieldCmsAuthId()->equals($cmsAuthId)
 					->findFirst()) {
 				continue;
 			}
 			//zapis rekordu
-			$record = new CmsAuthRoleRecord();
+			$record = new CmsAuthRoleRecord;
 			$record->cmsAuthId = $cmsAuthId;
 			$record->cmsRoleId = $roleId;
 			$record->save();

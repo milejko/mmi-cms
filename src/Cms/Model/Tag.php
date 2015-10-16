@@ -22,7 +22,7 @@ class Tag {
 	 */
 	public static function tag($tagId, $object, $objectId = null) {
 		try {
-			$record = new Orm\CmsTagLinkRecord();
+			$record = new Orm\CmsTagLinkRecord;
 			$record->cmsTagId = $tagId;
 			$record->object = $object;
 			$record->objectId = $objectId;
@@ -56,7 +56,7 @@ class Tag {
 	 * @return boolean
 	 */
 	public static function unTag($tagId, $object, $objectId = null) {
-		return Orm\CmsTagLinkQuery::factory()
+		return (new Orm\CmsTagLinkQuery)
 				->whereCmsTagId()->equals($tagId)
 				->andFieldObject()->equals($object)
 				->andFieldObjectId()->equals($objectId)
@@ -87,7 +87,7 @@ class Tag {
 	 * @return int ilość usuniętych
 	 */
 	public static function clearTags($object, $objectId = null) {
-		return Orm\CmsTagLinkQuery::factory()
+		return (new Orm\CmsTagLinkQuery)
 				->whereObject()->equals($object)
 				->andFieldObjectId()->equals($objectId)
 				->find()
@@ -124,7 +124,7 @@ class Tag {
 				->findFirst();
 			//tworzy tag jeśli jeszcze nie utworzony
 			if ($tag == null) {
-				$tag = new Record();
+				$tag = new \Cms\Orm\CmsTagRecord;
 				$tag->tag = $tagName;
 				$tag->save();
 			}

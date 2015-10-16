@@ -17,7 +17,6 @@ class Article extends \Cms\Form\Form {
 		//tytuł
 		$this->addElementText('title')
 			->setRequired()
-			->addValidatorNotEmpty()
 			->setLabel('tytuł');
 
 		//treść

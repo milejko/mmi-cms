@@ -23,7 +23,7 @@ class Log {
 	 * @return bool czy dodano
 	 */
 	public static function add($operation = null, array $data = []) {
-		$record = new Orm\CmsLogRecord();
+		$record = new Orm\CmsLogRecord;
 		$env = \Mmi\App\FrontController::getInstance()->getEnvironment();
 		$record->cmsAuthId = \App\Registry::$auth->getId() ? \App\Registry::$auth->getId() : null;
 		$record->url = $env->requestUri;
@@ -62,7 +62,7 @@ class Log {
 	 * @return integer
 	 */
 	public static function clean($months = 24) {
-		return Orm\CmsLogQuery::factory()
+		return (new Orm\CmsLogQuery)
 				->whereDateTime()->less(date('Y-m-d H:i:s', strtotime('-' . $months . ' month')))
 				->find()
 				->delete();

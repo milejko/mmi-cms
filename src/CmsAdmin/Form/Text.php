@@ -16,7 +16,6 @@ class Text extends \Mmi\Form\Form {
 
 		$this->addElementText('key')
 			->setLabel('klucz')
-			->addValidatorNotEmpty()
 			->setRequired();
 
 		$this->addElementTextarea('content')

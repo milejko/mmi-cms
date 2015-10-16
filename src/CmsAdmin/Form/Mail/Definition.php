@@ -22,7 +22,7 @@ class Definition extends \Mmi\Form\Form {
 			->setLabel('unikalna nazwa')
 			->setRequired()
 			->addValidatorStringLength(6, 25)
-			->addValidatorRecordUnique(\Cms\Orm\CmsMailDefinitionQuery::factory(), 'name', $this->_record->id);
+			->addValidatorRecordUnique((new \Cms\Orm\CmsMailDefinitionQuery), 'name', $this->getRecord()->id);
 
 		//wybór połączenia
 		$this->addElementSelect('cmsMailServerId')

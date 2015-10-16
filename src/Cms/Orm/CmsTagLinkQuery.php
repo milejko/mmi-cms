@@ -52,20 +52,13 @@ class CmsTagLinkQuery extends \Mmi\Orm\Query {
 	protected $_tableName = 'cms_tag_link';
 
 	/**
-	 * @return CmsTagLinkQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
-	/**
 	 * Tagi po obiekcie tagi
 	 * @param string $object
 	 * @param integer $objectId
 	 * @return CmsTagLinkQuery
 	 */
 	public static function tagsByObject($object, $objectId = null) {
-		return self::factory()
+		return (new self)
 				->join('cms_tag')->on('cms_tag_id')
 				->whereObject()->equals($object)
 				->andFieldObjectId()->equals($objectId)

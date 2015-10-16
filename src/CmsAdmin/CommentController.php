@@ -19,14 +19,14 @@ class CommentController extends Mvc\Controller {
 	 * Lista komentarzy
 	 */
 	public function indexAction() {
-		$this->view->grid = new \CmsAdmin\Plugin\CommentGrid();
+		$this->view->grid = new \CmsAdmin\Plugin\CommentGrid;
 	}
 
 	/**
 	 * Usuwanie komentarza
 	 */
 	public function deleteAction() {
-		$comment = \Cms\Orm\CmsCommentQuery::factory()->findPk($this->id);
+		$comment = (new \Cms\Orm\CmsCommentQuery)->findPk($this->id);
 		if ($comment && $comment->delete()) {
 			$this->getMessenger()->addMessage('Poprawnie usunięto artykuł', true);
 		}

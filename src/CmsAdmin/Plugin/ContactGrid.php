@@ -18,7 +18,7 @@ class ContactGrid extends \CmsAdmin\Grid\Grid {
 	public function init() {
 
 		//zapytanie
-		$this->setQuery(\Cms\Orm\CmsContactQuery::factory());
+		$this->setQuery(new \Cms\Orm\CmsContactQuery);
 
 		//id
 		$this->addColumnCustom('id')

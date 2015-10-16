@@ -46,19 +46,12 @@ class CmsAuthRoleQuery extends \Mmi\Orm\Query {
 	protected $_tableName = 'cms_auth_role';
 
 	/**
-	 * @return CmsAuthRoleQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
-	/**
 	 * Zapytanie po authId
 	 * @param integer $authId
 	 * @return CmsAuthRoleQuery
 	 */
 	public static function byAuthId($authId) {
-		return self::factory()
+		return (new self)
 				->whereCmsAuthId()->equals($authId);
 	}
 

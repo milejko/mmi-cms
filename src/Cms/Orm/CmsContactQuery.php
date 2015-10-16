@@ -105,11 +105,4 @@ class CmsContactQuery extends \Mmi\Orm\Query {
 
 	protected $_tableName = 'cms_contact';
 
-	/**
-	 * @return CmsContactQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
 }

@@ -22,8 +22,7 @@ class CmsArticleRecord extends \Mmi\Orm\Record {
 	 */
 	public function save() {
 		$this->dateModify = date('Y-m-d H:i:s');
-		$filter = new \Mmi\Filter\Url();
-		$this->uri = $filter->filter(strip_tags($this->title));
+		$this->uri = (new \Mmi\Filter\Url)->filter(strip_tags($this->title));
 		return parent::save() && $this->_deleteCache();
 	}
 

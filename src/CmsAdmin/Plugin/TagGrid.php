@@ -18,7 +18,7 @@ class TagGrid extends \CmsAdmin\Grid\Grid {
 	public function init() {
 
 		//zapytanie
-		$this->setQuery(\Cms\Orm\CmsTagQuery::factory());
+		$this->setQuery(new \Cms\Orm\CmsTagQuery);
 
 		//nazwa taga
 		$this->addColumnText('tag')

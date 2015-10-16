@@ -39,11 +39,4 @@ class CmsRoleQuery extends \Mmi\Orm\Query {
 
 	protected $_tableName = 'cms_role';
 
-	/**
-	 * @return CmsRoleQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
 }

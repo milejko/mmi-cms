@@ -38,7 +38,7 @@ class TagController extends Mvc\Controller {
 	 * Usuwanie tagu
 	 */
 	public function deleteAction() {
-		$tag = \Cms\Orm\CmsTagQuery::factory()->findPk($this->id);
+		$tag = (new \Cms\Orm\CmsTagQuery)->findPk($this->id);
 		if ($tag && $tag->delete()) {
 			$this->getMessenger()->addMessage('Tag usunięty', true);
 		}

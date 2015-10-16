@@ -19,7 +19,7 @@ class LogController extends Mvc\Controller {
 	 * Lista logów
 	 */
 	public function indexAction() {
-		$grid = new \CmsAdmin\Plugin\LogGrid();
+		$grid = new \CmsAdmin\Plugin\LogGrid;
 		$this->view->grid = $grid;
 	}
 

@@ -64,18 +64,11 @@ class CmsRouteQuery extends \Mmi\Orm\Query {
 	protected $_tableName = 'cms_route';
 
 	/**
-	 * @return CmsRouteQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
-	/**
 	 * Aktywne
 	 * @return CmsRouteQuery
 	 */
 	public static function active() {
-		return self::factory()
+		return (new self)
 				->whereActive()->equals(1)
 				->orderAscOrder();
 	}

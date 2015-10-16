@@ -31,7 +31,7 @@ class ApiController extends \Mmi\Mvc\Controller {
 			//serwer z autoryzacją HTTP
 			if (\Mmi\App\FrontController::getInstance()->getEnvironment()->authUser) {
 				$apiModel .= '\\Private';
-				$auth = new \Mmi\Security\Auth();
+				$auth = new \Mmi\Security\Auth;
 				$auth->setModelName($apiModel);
 				//autoryzacja basic
 				$auth->httpAuth('Private API', 'Access denied!');
@@ -60,7 +60,7 @@ class ApiController extends \Mmi\Mvc\Controller {
 			//prywatny serwer
 			if (\Mmi\App\FrontController::getInstance()->getEnvironment()->authUser) {
 				$apiModel .= '\\Private';
-				$auth = new \Mmi\Security\Auth();
+				$auth = new \Mmi\Security\Auth;
 				$auth->setModelName($apiModel);
 				$auth->httpAuth('Private API', 'Access denied!');
 				$wsdlParams['type'] = 'private';
@@ -104,7 +104,7 @@ class ApiController extends \Mmi\Mvc\Controller {
 			//@TODO: przepisać do ZF2
 			require_once BASE_PATH . '/vendors/Zend/Soap/AutoDiscover.php';
 			//rozpoznanie usługi (klasy)
-			$autodiscover = new \Zend_Soap_AutoDiscover();
+			$autodiscover = new \Zend_Soap_AutoDiscover;
 			$autodiscover->setClass($apiModel);
 			$autodiscover->setUri($url);
 			//obsługa żądania

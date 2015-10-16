@@ -19,7 +19,7 @@ class NavigationController extends Mvc\Controller {
 	 * Lista pozycji
 	 */
 	public function indexAction() {
-		$config = new \Mmi\Navigation\NavigationConfig();
+		$config = new \Mmi\Navigation\NavigationConfig;
 		\Cms\Model\Navigation::decorateConfiguration($config);
 		$this->view->navigation = $config->findById($this->id, true);
 	}
@@ -53,8 +53,7 @@ class NavigationController extends Mvc\Controller {
 	 * Usuwanie elementu
 	 */
 	public function deleteAction() {
-		/* @var $record \Cms\Orm\CmsNavigationRecord */
-		$record = \Cms\Orm\CmsNavigationQuery::factory()->findPk($this->id);
+		$record = (new \Cms\Orm\CmsNavigationQuery)->findPk($this->id);
 		if ($record !== null && $record->delete()) {
 			$this->getMessenger()->addMessage('Poprawnie usunięto element nawigacyjny', true);
 		}

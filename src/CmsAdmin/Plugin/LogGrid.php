@@ -18,7 +18,7 @@ class LogGrid extends \CmsAdmin\Grid\Grid {
 	public function init() {
 
 		//domyślnie posortowane po dacie i czasie
-		$this->setQuery(\Cms\Orm\CmsLogQuery::factory()
+		$this->setQuery((new \Cms\Orm\CmsLogQuery)
 				->orderDescDateTime());
 
 		//data i czas

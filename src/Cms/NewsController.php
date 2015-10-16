@@ -23,7 +23,7 @@ class NewsController extends \Mmi\Mvc\Controller {
 		if ($this->getPost()->pages) {
 			$this->getResponse()->redirect('cms', 'news', 'index', ['pages' => intval($this->getPost()->pages)]);
 		}
-		$paginator = new \Mmi\Paginator\Paginator();
+		$paginator = new \Mmi\Paginator\Paginator;
 		$pages = 10;
 		//ustawianie ilości stron na liście
 		if ($this->pages) {

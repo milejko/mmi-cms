@@ -32,24 +32,24 @@ abstract class CmsKernelConfig extends \Mmi\App\KernelConfig {
 		parent::__construct();
 		
 		//konfiguracja LDAP
-		$this->ldap = new \Mmi\Ldap\LdapConfig();
+		$this->ldap = new \Mmi\Ldap\LdapConfig;
 		
 		//konfiguracja pluginów
 		$this->plugins = ['\Cms\App\CmsFrontControllerPlugin'];
 
 		//dodawanie rout CMS
-		$this->router->setRoutes((new \Cms\App\CmsRouterConfig())->toArray());
+		$this->router->setRoutes((new \Cms\App\CmsRouterConfig)->toArray());
 		
 		//nazwa sesji
 		$this->session->name = 'mmi-cms';
 
 		//konfiguracja nawigatora
-		$this->navigation = new \Mmi\Navigation\NavigationConfig();
+		$this->navigation = new \Mmi\Navigation\NavigationConfig;
 		//dodawanie nawigatora CMS
 		$this->navigation->addElement(\CmsAdmin\App\CmsNavigationConfig::getMenu());
 
 		//konfiguracja bazy danych
-		$this->db = new \Mmi\Db\DbConfig();
+		$this->db = new \Mmi\Db\DbConfig;
 		$this->db->driver = 'sqlite';
 		$this->db->host = BASE_PATH . '/var/cms-db.sqlite';
 	}

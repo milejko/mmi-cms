@@ -19,14 +19,14 @@ class IndexController extends Mvc\Controller {
 	 * Strona główna admina
 	 */
 	public function indexAction() {
-		$this->view->user = \Cms\Orm\CmsAuthQuery::factory()->findPk(\App\Registry::$auth->getId());
+		$this->view->user = (new \Cms\Orm\CmsAuthQuery)->findPk(\App\Registry::$auth->getId());
 	}
 
 	/**
 	 * Logowanie
 	 */
 	public function loginAction() {
-		$form = new \CmsAdmin\Form\Login();
+		$form = new \CmsAdmin\Form\Login;
 		$this->view->loginForm = $form;
 		//brak wysłanych danych
 		if (!$form->isMine()) {
@@ -79,7 +79,7 @@ class IndexController extends Mvc\Controller {
 	 * Zmiana hasła
 	 */
 	public function passwordAction() {
-		$form = new \CmsAdmin\Form\Password();
+		$form = new \CmsAdmin\Form\Password;
 		$this->view->passwordForm = $form;
 		//brak wysłanych danych
 		if (!$form->isMine()) {

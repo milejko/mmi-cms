@@ -75,11 +75,4 @@ class CmsStatDateQuery extends \Mmi\Orm\Query {
 
 	protected $_tableName = 'cms_stat_date';
 
-	/**
-	 * @return CmsStatDateQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
 }

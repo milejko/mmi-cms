@@ -88,21 +88,14 @@ class CmsNewsQuery extends \Mmi\Orm\Query {
 	protected $_tableName = 'cms_news';
 
 	/**
-	 * @return CmsNewsQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
-	/**
 	 * Zapytanie językowe
 	 * @return CmsNewsQuery
 	 */
 	public static function lang() {
 		if (!\Mmi\App\FrontController::getInstance()->getRequest()->lang) {
-			return self::factory();
+			return (new self);
 		}
-		return self::factory()
+		return (new self)
 				->whereLang()->equals(\Mmi\App\FrontController::getInstance()->getRequest()->lang)
 				->orFieldLang()->equals(null)
 				->orderDescLang();

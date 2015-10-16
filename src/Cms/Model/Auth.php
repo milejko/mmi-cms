@@ -109,7 +109,7 @@ class Auth implements \Mmi\Security\AuthInterface {
 			'message' => 'LOGGED: ' . $record->username
 		]);
 		//nowy obiekt autoryzacji
-		$authRecord = new \Mmi\Security\AuthRecord();
+		$authRecord = new \Mmi\Security\AuthRecord;
 		//ustawianie pól rekordu
 		$authRecord->id = $record->id;
 		$authRecord->name = $record->name;
@@ -167,9 +167,9 @@ class Auth implements \Mmi\Security\AuthInterface {
 	 * @return CmsAuthRecord
 	 */
 	protected static function _findUserByIdentity($identity) {
-		return CmsAuthQuery::factory()
+		return (new CmsAuthQuery)
 				->whereActive()->equals(true)
-				->andQuery(CmsAuthQuery::factory()
+				->andQuery((new CmsAuthQuery)
 					->whereUsername()->equals($identity)
 					->orFieldEmail()->equals($identity)
 					->orFieldId()->equals((integer) $identity))

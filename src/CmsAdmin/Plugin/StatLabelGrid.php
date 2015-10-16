@@ -18,7 +18,7 @@ class StatLabelGrid extends \CmsAdmin\Grid\Grid {
 	public function init() {
 
 		//zapytanie
-		$this->setQuery(\Cms\Orm\CmsStatLabelQuery::factory());
+		$this->setQuery(new \Cms\Orm\CmsStatLabelQuery);
 
 		//obiekt
 		$this->addColumnText('object')

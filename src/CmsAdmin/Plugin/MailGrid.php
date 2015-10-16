@@ -18,7 +18,7 @@ class MailGrid extends \CmsAdmin\Grid\Grid {
 	public function init() {
 
 		//zapytanie
-		$this->setQuery(\Cms\Orm\CmsMailQuery::factory()
+		$this->setQuery((new \Cms\Orm\CmsMailQuery)
 				->orderDescId());
 
 		//wysłany

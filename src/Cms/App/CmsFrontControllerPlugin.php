@@ -44,14 +44,14 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 		$this->_viewSetup($request);
 
 		//konfiguracja autoryzacji
-		$auth = new \Mmi\Security\Auth();
+		$auth = new \Mmi\Security\Auth;
 		$auth->setSalt(\App\Registry::$config->salt);
 		$auth->setModelName(\App\Registry::$config->session->authModel ? \App\Registry::$config->session->authModel : '\Cms\Model\Auth');
 		\App\Registry::$auth = $auth;
 		\Mmi\Mvc\ActionHelper::getInstance()->setAuth($auth);
 
 		//funkcja pamiętaj mnie realizowana poprzez cookie
-		$cookie = new \Mmi\Http\Cookie();
+		$cookie = new \Mmi\Http\Cookie;
 		$remember = \App\Registry::$config->session->authRemember ? \App\Registry::$config->session->authRemember : 0;
 		if ($remember > 0 && !$auth->hasIdentity() && $cookie->match('remember')) {
 			$params = [];

@@ -121,7 +121,7 @@ class StatController extends Mvc\Controller {
 	 * Usuwanie statystyki
 	 */
 	public function deleteAction() {
-		$label = \Cms\Orm\CmsStatLabelQuery::factory()->findPk($this->id);
+		$label = (new \Cms\Orm\CmsStatLabelQuery)->findPk($this->id);
 		if ($label && $label->delete()) {
 			$this->getMessenger()->addMessage('Nazwa statystyki została usunięta', true);
 		}

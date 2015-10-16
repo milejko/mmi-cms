@@ -93,11 +93,4 @@ class CmsLogQuery extends \Mmi\Orm\Query {
 
 	protected $_tableName = 'cms_log';
 
-	/**
-	 * @return CmsLogQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
 }

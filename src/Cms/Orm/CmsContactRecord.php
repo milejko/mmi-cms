@@ -63,7 +63,7 @@ class CmsContactRecord extends \Mmi\Orm\Record {
 		$namespace = new \Mmi\Session\SessionSpace('contact');
 		$this->uri = $namespace->referer;
 		//wysyłka do maila zdefiniowanego w opcjach
-		$option = CmsContactOptionQuery::factory()->findPk($this->cmsContactOptionId);
+		$option = (new CmsContactOptionQuery)->findPk($this->cmsContactOptionId);
 		//niepoprawna opcja
 		if (!$option || !\Cms\Model\Mail::pushEmail('admin_cms_contact', $option->sendTo, ['contact' => $this, 'option' => $option], null, $this->email)) {
 			return false;

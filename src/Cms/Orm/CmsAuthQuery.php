@@ -106,20 +106,13 @@ class CmsAuthQuery extends \Mmi\Orm\Query {
 	protected $_tableName = 'cms_auth';
 
 	/**
-	 * @return CmsAuthQuery
-	 */
-	public static function factory($tableName = null) {
-		return new self($tableName);
-	}
-
-	/**
 	 * Zapytanie filtrujące użytkowników z daną rolą
 	 * @param string $role
 	 * @return CmsAuthQuery
 	 */
 	public static function byRole($role) {
 		//wyszukuje konta z podaną rolą
-		return self::factory()
+		return (new self)
 				->join('cms_auth_role')->on('id', 'cms_auth_id')
 				->join('cms_role', 'cms_auth_role')->on('cms_role_id', 'id')
 				->where('name', 'cms_role')->equals($role);

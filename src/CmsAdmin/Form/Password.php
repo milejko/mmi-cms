@@ -20,8 +20,7 @@ class Password extends \Mmi\Form\Form {
 
 		$this->addElementPassword('password')
 			->setLabel('obecne hasło')
-			->setRequired()
-			->addValidatorNotEmpty();
+			->setRequired();
 
 		$this->addElementPassword('changePassword')
 			->setLabel('nowe hasło')
@@ -43,7 +42,7 @@ class Password extends \Mmi\Form\Form {
 	 * @return boolean
 	 */
 	public function beforeSave() {
-		$auth = new \Cms\Model\Auth();
+		$auth = new \Cms\Model\Auth;
 		$record = $auth->authenticate(\App\Registry::$auth->getUsername(), $this->getElement('password')->getValue());
 		//logowanie niepoprawne
 		if (!$record) {
@@ -56,7 +55,7 @@ class Password extends \Mmi\Form\Form {
 			return false;
 		}
 		//znajdowanie rekordu użytkownika
-		$authRecord = \Cms\Orm\CmsAuthQuery::factory()->findPk(\App\Registry::$auth->getId());
+		$authRecord = (new \Cms\Orm\CmsAuthQuery)->findPk(\App\Registry::$auth->getId());
 		if (null === $authRecord) {
 			return false;
 		}

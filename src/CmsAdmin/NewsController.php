@@ -38,7 +38,7 @@ class NewsController extends Mvc\Controller {
 	 * Usuwanie artykułu
 	 */
 	public function deleteAction() {
-		$article = \Cms\Orm\CmsNewsQuery::factory()->findPk($this->id);
+		$article = (new \Cms\Orm\CmsNewsQuery)->findPk($this->id);
 		if ($article && $article->delete()) {
 			$this->getMessenger()->addMessage('News usunięty poprawnie', true);
 		}
