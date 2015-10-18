@@ -15,6 +15,7 @@ CMS.grid = function () {
 				return;
 			}
 			var field = $(this);
+			var fieldName = $(this).attr('name');
 			clearTimeout(stoptyping);
 			stoptyping = setTimeout(function () {
 				field.change();
@@ -24,9 +25,11 @@ CMS.grid = function () {
 		$('table.grid').on('change', 'th > div.field > .field', function () {
 			var field = $(this).attr('name'),
 					value = $(this).val(),
+					fieldName = $(this).attr('name'),
 					gridId = $(this).parent('div').parent('th').parent('tr').parent('tbody').parent('table').attr('id');
 			$.post(window.location, {filter: field, value: value}, function(data) {
 				$('#' + gridId).html(data);
+				$('input[name=\'' + fieldName + '\']').focus().val($('input[name=\'' + fieldName + '\']').val());
 			});
 		});
 

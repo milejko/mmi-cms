@@ -167,7 +167,7 @@ class GridState extends \Mmi\OptionObject {
 	 */
 	private function _applyFilters(\Mmi\Orm\Query $query) {
 		//resetowanie where
-		$query->resetWhere();
+		//$query->resetWhere();
 		foreach ($this->getFilters() as $filter) {
 			//filtr nie jest prawidłowy
 			if (!($filter instanceof GridStateFilter)) {
