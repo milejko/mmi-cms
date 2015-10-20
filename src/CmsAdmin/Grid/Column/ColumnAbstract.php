@@ -103,7 +103,7 @@ abstract class ColumnAbstract extends \Mmi\OptionObject {
 		//iteracja po filtrache w gridzie
 		foreach ($this->_grid->getState()->getFilters() as $filter) {
 			//znaleziony filtr dla tego pola
-			if ($filter->getField() == $this->getName()) {
+			if ($filter->getField() == $this->getName() || $filter->getTableName() . '.' . $filter->getField() == $this->getName()) {
 				//zwrot wartości filtra
 				return $filter->getValue();
 			}
@@ -115,7 +115,28 @@ abstract class ColumnAbstract extends \Mmi\OptionObject {
 	 * @return boolean
 	 */
 	protected function _fieldInRecord() {
+		if (strpos($this->getName(), '.')) {
+			$table = explode('.', $this->getName());
+			$recordClass = \Mmi\Orm\DbConnector::getRecordNameByTable($table[0]);
+			return property_exists($recordClass, $table[1]);
+		}
 		return property_exists($this->_grid->getQuery()->getRecordName(), $this->getName());
+	}
+	
+	/**
+	 * Wybiera wartość z rekordu
+	 * @param \Mmi\Orm\RecordRo $record
+	 * @return string
+	 */
+	protected function _getValueFromRecord(\Mmi\Orm\RecordRo $record) {
+		if (!$this->_fieldInRecord()) {
+			return '?';
+		}
+		if (strpos($this->getName(), '.')) {
+			$table = explode('.', $this->getName());
+			return $record->getJoined($table[0])->{$table[1]};
+		}
+		return $record->{$this->getName()};
 	}
 
 	/**

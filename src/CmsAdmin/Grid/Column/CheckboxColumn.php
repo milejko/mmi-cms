@@ -39,7 +39,7 @@ class CheckboxColumn extends SelectColumn {
 	 */
 	public function renderCell(\Mmi\Orm\RecordRo $record) {
 		//brak pola
-		if (!property_exists($record, $this->getName())) {
+		if (!$this->_fieldInRecord()) {
 			return '?';
 		}
 		//nowy Column select
@@ -47,7 +47,7 @@ class CheckboxColumn extends SelectColumn {
 			//ustawia wartość na odpowiadającą zaznaczeniu
 			->setValue($this->_getCheckedValue())
 			//ustawia zaznaczenie
-			->setChecked($this->_getCheckedValue() == $record->{$this->getName()});
+			->setChecked($this->_getCheckedValue() == $this->_getValueFromRecord($record));
 	}
 	
 	/**

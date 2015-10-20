@@ -78,9 +78,17 @@ class GridRequestHandler {
 		if (false === strpos($post->filter, $this->_grid->getClass())) {
 			return;
 		}
+		$fieldName = substr($post->filter, strpos($post->filter, '[') + 1, -1);
+		$tableName = null;
+		if (strpos($fieldName, '.')) {
+			$fieldTable = explode('.', $fieldName);
+			$tableName = $fieldTable[0];
+			$fieldName = $fieldTable[1];
+		}
 		//ustawianie filtra
 		return (new GridStateFilter())
-				->setField(substr($post->filter, strpos($post->filter, '[') + 1, -1))
+				->setField($fieldName)
+				->setTableName($tableName)
 				->setMethod($post->method ? $post->method : 'like')
 				->setValue($post->value);
 	}

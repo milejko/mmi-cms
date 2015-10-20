@@ -59,11 +59,11 @@ class SelectColumn extends ColumnAbstract {
 	 */
 	public function renderCell(\Mmi\Orm\RecordRo $record) {
 		//brak pola
-		if (!property_exists($record, $this->getName())) {
+		if (!$this->_fieldInRecord()) {
 			return '?';
 		}
 		//zwrot z mapy opcji
-		return $this->getMultiOptionByKey($record->{$this->getName()});
+		return $this->getMultiOptionByKey($this->_getValueFromRecord($record));
 	}
 
 }
