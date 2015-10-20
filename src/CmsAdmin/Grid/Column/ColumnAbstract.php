@@ -147,7 +147,7 @@ abstract class ColumnAbstract extends \Mmi\OptionObject {
 		//iteracja po sortowaniach w gridzie
 		foreach ($this->_grid->getState()->getOrder() as $order) {
 			//znalezione sortowanie tego pola
-			if ($order->getField() == $this->getName()) {
+			if ($order->getField() == $this->getName() || $order->getTableName() . '.' . $order->getField() == $this->getName()) {
 				//zwrot metody sortowania
 				return $order->getMethod();
 			}

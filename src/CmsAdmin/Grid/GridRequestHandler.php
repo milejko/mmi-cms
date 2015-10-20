@@ -78,6 +78,7 @@ class GridRequestHandler {
 		if (false === strpos($post->filter, $this->_grid->getClass())) {
 			return;
 		}
+		//obsługa joinowanych
 		$fieldName = substr($post->filter, strpos($post->filter, '[') + 1, -1);
 		$tableName = null;
 		if (strpos($fieldName, '.')) {
@@ -103,9 +104,18 @@ class GridRequestHandler {
 		if (false === strpos($post->order, $this->_grid->getClass())) {
 			return;
 		}
+		//obsługa joinowanych
+		$fieldName = substr($post->order, strpos($post->order, '[') + 1, -1);
+		$tableName = null;
+		if (strpos($fieldName, '.')) {
+			$fieldTable = explode('.', $fieldName);
+			$tableName = $fieldTable[0];
+			$fieldName = $fieldTable[1];
+		}
 		//nowy obiekt sortowania
 		$gso = (new GridStateOrder())
-			->setField(substr($post->order, strpos($post->order, '[') + 1, -1));
+			->setField($fieldName)
+			->setTableName($tableName);
 		//kalkulacja metody sortowania
 		switch ($post->method) {
 			//poprzednia metoda to DESC - usuwanie sortowania
