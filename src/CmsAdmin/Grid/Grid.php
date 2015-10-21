@@ -26,7 +26,7 @@ abstract class Grid extends \Mmi\OptionObject {
 	 * Columny grida
 	 * @var array
 	 */
-	protected $_Columns = [];
+	protected $_columns = [];
 
 	/**
 	 * Obiekt zapytania
@@ -65,7 +65,7 @@ abstract class Grid extends \Mmi\OptionObject {
 	 */
 	public final function addColumn(Column\ColumnAbstract $column) {
 		//dodawanie Columnu (nazwa unikalna)
-		return $this->_Columns[$column->getName()] = $column->setGrid($this);
+		return $this->_columns[$column->getName()] = $column->setGrid($this);
 	}
 
 	/**
@@ -73,7 +73,7 @@ abstract class Grid extends \Mmi\OptionObject {
 	 * @return \CmsAdmin\Grid\Column\ColumnAbstract[]
 	 */
 	public final function getColumns() {
-		return $this->_Columns;
+		return $this->_columns;
 	}
 
 	/**
@@ -133,7 +133,7 @@ abstract class Grid extends \Mmi\OptionObject {
 			//rendering grida HTML
 			return (new GridRenderer($this))->render();
 		} catch (\Exception $e) {
-			return $e->getMessage();
+			return $e->getMessage() . ' ' . $e->getTraceAsString();
 		}
 	}
 

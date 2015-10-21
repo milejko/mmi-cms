@@ -115,11 +115,11 @@ abstract class ColumnAbstract extends \Mmi\OptionObject {
 	 * @return boolean
 	 */
 	protected function _fieldInRecord() {
+		//zażądany join
 		if (strpos($this->getName(), '.')) {
-			$table = explode('.', $this->getName());
-			$recordClass = \Mmi\Orm\DbConnector::getRecordNameByTable($table[0]);
-			return property_exists($recordClass, $table[1]);
+			return true;
 		}
+		//sorawdzenie w rekordzie
 		return property_exists($this->_grid->getQuery()->getRecordName(), $this->getName());
 	}
 	
