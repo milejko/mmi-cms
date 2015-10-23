@@ -30,7 +30,7 @@ class ApiController extends \Mmi\Mvc\Controller {
 			$apiModel = $this->_getModelName($this->obj);
 			//serwer z autoryzacją HTTP
 			if (\Mmi\App\FrontController::getInstance()->getEnvironment()->authUser) {
-				$apiModel .= '\\Private';
+				$apiModel .= 'Private';
 				$auth = new \Mmi\Security\Auth;
 				$auth->setModelName($apiModel);
 				//autoryzacja basic
@@ -59,7 +59,7 @@ class ApiController extends \Mmi\Mvc\Controller {
 			];
 			//prywatny serwer
 			if (\Mmi\App\FrontController::getInstance()->getEnvironment()->authUser) {
-				$apiModel .= '\\Private';
+				$apiModel .= 'Private';
 				$auth = new \Mmi\Security\Auth;
 				$auth->setModelName($apiModel);
 				$auth->httpAuth('Private API', 'Access denied!');
@@ -95,7 +95,7 @@ class ApiController extends \Mmi\Mvc\Controller {
 			];
 			//serwer z autoryzacją (WSDL jest publiczny)
 			if ($this->type == 'private' || \Mmi\App\FrontController::getInstance()->getEnvironment()->authUser) {
-				$apiModel .= '_Private';
+				$apiModel .= 'Private';
 			}
 			//link do serwera SOAP
 			$url = $this->view->url($serverParams, true, true, $this->_isSsl());
@@ -122,13 +122,13 @@ class ApiController extends \Mmi\Mvc\Controller {
 	 * @return string
 	 */
 	protected function _getModelName($object) {
-		$obj = explode('\\', preg_replace('/[^\p{L}\p{N}-_]/u', '', $object));
+		$obj = explode('-', preg_replace('/[^\p{L}\p{N}-_]/u', '', $object));
 		foreach ($obj as $k => $v) {
 			$obj[$k] = ucfirst($v);
 		}
-		$class = $obj[0] . '\\Model\\';
+		$class = $obj[0] . '\\Model\\' . $obj[0];
 		unset($obj[0]);
-		return rtrim($class . implode('\\', $obj), '\\') . '\\ApiModel';
+		return rtrim($class . implode('', $obj)) . 'Api';
 	}
 
 	/**
