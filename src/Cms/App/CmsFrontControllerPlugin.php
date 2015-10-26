@@ -76,7 +76,12 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 		\Mmi\App\FrontController::getInstance()->getView()->acl = $acl;
 
 		//zablokowane na ACL
-		if (!$acl->isAllowed($auth->getRoles(), strtolower($request->getModuleName() . ':' . $request->getControllerName() . ':' . $request->getActionName()))) {
+		if (!$acl->isAllowed($auth->getRoles(), $actionLabel = strtolower($request->getModuleName() . ':' . $request->getControllerName() . ':' . $request->getActionName()))) {
+			$moduleStructure = \Mmi\App\FrontController::getInstance()->getStructure('module');
+			//brak w strukturze
+			if (!isset($moduleStructure[$request->getModuleName()][$request->getControllerName()][$request->getActionName()])) {
+				throw new \Mmi\Mvc\MvcNotFoundException('Component not found: ' . $actionLabel);
+			}
 			//brak autoryzacji i kontroler admina - przekierowanie na logowanie
 			if (!$auth->hasIdentity() && $request->getModuleName() == 'cmsAdmin') {
 				//logowanie admina
