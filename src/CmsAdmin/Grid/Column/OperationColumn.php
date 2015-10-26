@@ -68,13 +68,17 @@ class OperationColumn extends ColumnAbstract {
 	public function renderCell(\Mmi\Orm\RecordRo $record) {
 		$view = FrontController::getInstance()->getView();
 		$html = '';
+		//pobieranie parametrów linku edycji
+		$editParams = $this->getOption('editParams');
+		//pobieranie parametrów linku usuwania
+		$deleteParams = $this->getOption('deleteParams');
 		//link edycyjny
-		if (!empty($this->getOption('editParams'))) {
-			$html .= ' <a href="' . $view->url($this->_parseParams($this->getOption('editParams'), $record)) . '"><i class="icon-pencil"></i></a>';
+		if (!empty($editParams)) {
+			$html .= ' <a href="' . $view->url($this->_parseParams($editParams, $record)) . '"><i class="icon-pencil"></i></a>';
 		}
 		//link kasujący
-		if (!empty($this->getOption('deleteParams'))) {
-			$html .= ' <a href="' . $view->url($this->_parseParams($this->getOption('deleteParams'), $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>';
+		if (!empty($deleteParams)) {
+			$html .= ' <a href="' . $view->url($this->_parseParams($deleteParams, $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>';
 		}
 		return $html;
 	}
