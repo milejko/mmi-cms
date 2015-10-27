@@ -171,17 +171,8 @@ abstract class Form extends \Mmi\Form\Form {
 	 * @return string
 	 */
 	protected function _classToFileObject($name) {
-		$name = explode('\\', $name);
-		$fileObject = '';
-		foreach ($name as $part) {
-			$part = strtolower($part);
-			if (isset($first) && $part == $first || $part == 'orm' || $part == 'record') {
-				continue;
-			}
-			$first = $part;
-			$fileObject .= $part;
-		}
-		return $fileObject;
+		$parts = \explode('\\', strtolower($name));
+		return substr(end($parts), 0, -6);
 	}
 
 }
