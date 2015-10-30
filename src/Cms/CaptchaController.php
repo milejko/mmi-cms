@@ -42,7 +42,7 @@ class CaptchaController extends \Mmi\Mvc\Controller {
 		$darkGray = imagecolorallocate($img, 0x99, 0x99, 0x99);
 		
 		//czcionka
-		$font = PUBLIC_PATH . '/resource/cmsAdmin/ttf/dejavu.ttf';
+		$font = BASE_PATH . '/web/resource/cmsAdmin/ttf/dejavu.ttf';
 
 		//ramka
 		imagefilledrectangle($img, 0, 0, 129, 49, $darkGray);
