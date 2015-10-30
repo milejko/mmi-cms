@@ -24,7 +24,7 @@ class FileGrid extends \CmsAdmin\Grid\Grid {
 		$this->addColumnCustom('thumb')
 			->setLabel('miniatura')
 			->setTemplateCode('{if ($record->class ==\'image\')}<img src="{thumb($record, \'scaley\', \'30\')}" />{else}' .
-			'{$mime = \'%mimeType%\'}' .
+			'{$mime = $record->mimeType}' .
 			'{if $mime == \'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\'}' .
 			'	<img src="{$baseUrl}/resource/cmsAdmin/images/types/xlsx-32.png" alt="Microsoft Office - OOXML - Spreadsheet" />' .
 			'{elseif $mime == \'application/vnd.ms-excel\'}' .
