@@ -26,37 +26,43 @@ class Cron extends \Mmi\Form\Form {
 		//opis
 		$this->addElementTextarea('description')
 			->setRequired()
+			->addValidatorNotEmpty()
 			->setLabel('Opis');
 
 		//minuta
 		$this->addElementText('minute')
 			->setLabel('Minuta')
 			->setDescription('minuta (0 - 59) lub np ( */5 wykonaj co 5 minut), (10,20 w dziesiątej i dwudziestej minucie godziny) , ( * w każdej minucie)')
-			->setRequired();
+			->setRequired()
+			->addValidatorNotEmpty();
 
 		//godzina
 		$this->addElementText('hour')
 			->setLabel('Godzina')
 			->setDescription('godzina (0 - 23)')
-			->setRequired();
+			->setRequired()
+			->addValidatorNotEmpty();
 
 		//dzień miesiąca
 		$this->addElementText('dayOfMonth')
 			->setLabel('Dzień miesiąca')
 			->setDescription('dzień miesiąca (1 - 31)')
-			->setRequired();
+			->setRequired()
+			->addValidatorNotEmpty();
 
 		//miesiąc
 		$this->addElementText('month')
 			->setLabel('Miesiąc')
 			->setDescription('miesiąc (1 - 12)')
-			->setRequired();
+			->setRequired()
+			->addValidatorNotEmpty();
 
 		//dzień tygodnia
 		$this->addElementText('dayOfWeek')
 			->setLabel('Dzień tygodnia')
 			->setDescription('dzień tygodnia (1 - 7) (Poniedziałek=1, Wtorek=2,..., Niedziela=7)')
-			->setRequired();
+			->setRequired()
+			->addValidatorNotEmpty();
 
 		//obiekt
 		$value = null;
@@ -76,6 +82,7 @@ class Cron extends \Mmi\Form\Form {
 			->setLabel('Obiekt CMS')
 			->setDescription('Istniejące obiekty CMS')
 			->setRequired()
+			->addValidatorNotEmpty()
 			->setMultioptions($options)
 			->setOption('id', 'objectId')
 			->setValue($value);
@@ -84,7 +91,8 @@ class Cron extends \Mmi\Form\Form {
 		$this->addElementCheckbox('active')
 			->setLabel('Aktywny')
 			->setChecked()
-			->setRequired();
+			->setRequired()
+			->addValidatorNotEmpty();
 
 		//zapis
 		$this->addElementSubmit('submit')

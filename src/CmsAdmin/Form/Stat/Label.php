@@ -17,11 +17,13 @@ class Label extends \Mmi\Form\Form {
 		$this->addElementSelect('object')
 			->setLabel('klucz')
 			->setRequired()
+			->addValidatorNotEmpty()
 			->setMultioptions(\Cms\Model\Stat::getUniqueObjects());
 
 		$this->addElementText('label')
 			->setLabel('nazwa statystyki')
-			->setRequired();
+			->setRequired()
+			->addValidatorNotEmpty();
 
 		$this->addElementTextarea('description')
 			->setLabel('opis');

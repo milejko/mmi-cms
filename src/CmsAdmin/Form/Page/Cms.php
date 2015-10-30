@@ -51,6 +51,7 @@ class Cms extends PageAbstract {
 			->setLabel('Obiekt CMS')
 			->setDescription('Istniejące obiekty CMS')
 			->setRequired()
+			->addValidatorNotEmpty()
 			->setMultioptions($options)
 			->setValue($this->_calculateObject())
 			->setOption('id', 'objectId');

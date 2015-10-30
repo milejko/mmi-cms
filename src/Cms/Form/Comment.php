@@ -21,6 +21,7 @@ class Comment extends \Mmi\Form\Form {
 
 		$this->addElementTextarea('text')
 			->setRequired()
+			->addValidatorNotEmpty()
 			->setLabel('komentarz');
 
 		if (!\App\Registry::$auth->hasIdentity()) {

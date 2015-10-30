@@ -20,6 +20,7 @@ class Article extends PageAbstract {
 		$this->addElementText('label')
 			->setLabel('Nazwa w menu')
 			->setRequired()
+			->addValidatorNotEmpty()
 			->addValidatorStringLength(2, 64);
 
 		//opcjonalny opis

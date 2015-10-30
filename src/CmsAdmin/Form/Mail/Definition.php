@@ -28,6 +28,7 @@ class Definition extends \Mmi\Form\Form {
 		$this->addElementSelect('cmsMailServerId')
 			->setLabel('połącznie')
 			->setRequired()
+			->addValidatorNotEmpty()
 			->setMultioptions(\Cms\Model\Mail::getMultioptions());
 
 		//temat
@@ -39,12 +40,14 @@ class Definition extends \Mmi\Form\Form {
 		//treść
 		$this->addElementTextarea('message')
 			->setLabel('treść')
-			->setRequired();
+			->setRequired()
+			->addValidatorNotEmpty();
 
 		//treść html
 		$this->addElementCheckbox('html')
 			->setLabel('treść HTML')
-			->setRequired();
+			->setRequired()
+			->addValidatorNotEmpty();
 
 		//od
 		$this->addElementText('fromName')
@@ -63,8 +66,9 @@ class Definition extends \Mmi\Form\Form {
 		//aktywny
 		$this->addElementCheckbox('active')
 			->setLabel('aktywny')
-			//->setChecked()
-			->setRequired();
+			->setChecked()
+			->setRequired()
+			->addValidatorNotEmpty();
 
 		//submit
 		$this->addElementSubmit('submit')

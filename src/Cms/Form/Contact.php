@@ -32,6 +32,7 @@ class Contact extends \Cms\Form\Form {
 		$this->addElementTextarea('text')
 			->setLabel('Wiadomość')
 			->setRequired()
+			->addValidatorNotEmpty()
 			->addFilterStripTags();
 
 		//captcha dla niezalogowanych

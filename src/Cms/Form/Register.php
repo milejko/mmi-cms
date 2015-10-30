@@ -51,6 +51,7 @@ class Register extends \Cms\Form\Form {
 		//regulamin
 		$this->addElementCheckbox('regulations')
 			->setLabel('Akceptuję regulamin')
+			->addValidatorNotEmpty()
 			->setRequired();
 
 		$this->addElementSubmit('submit')

@@ -16,11 +16,13 @@ class Route extends \Mmi\Form\Form {
 
 		$this->addElementText('pattern')
 			->setLabel('Wzorzec')
-			->setRequired();
+			->setRequired()
+			->addValidatorNotEmpty();
 
 		$this->addElementText('replace')
 			->setLabel('Tabela zastąpień')
 			->setRequired()
+			->addValidatorNotEmpty()
 			->setDescription('zmienna1=foo&zmienna2=bar');
 
 		$this->addElementText('default')

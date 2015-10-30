@@ -43,6 +43,7 @@ class Contact extends \Mmi\Form\Form {
 		//odpowiedz na zgloszenie
 		$this->addElementTextarea('reply')
 			->setRequired()
+			->addValidatorNotEmpty()
 			->setLabel('odpowiedź');
 
 		$this->addElementSubmit('submit')

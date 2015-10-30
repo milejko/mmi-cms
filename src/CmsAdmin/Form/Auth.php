@@ -25,6 +25,7 @@ class Auth extends \Mmi\Form\Form {
 			->setLabel('nazwa użytkownika')
 			->setRequired()
 			->addFilterStringTrim()
+			->addValidatorNotEmpty()
 			->addValidatorRecordUnique(new CmsAuthQuery, 'username', $this->getRecord()->id);
 
 		//imię i nazwisko użytkownika

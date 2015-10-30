@@ -21,6 +21,7 @@ class News extends \Cms\Form\Form {
 		$this->addElementText('title')
 			->setLabel('Tytuł artykułu')
 			->setRequired()
+			->addValidatorNotEmpty()
 			->addFilterStringTrim();
 
 		//wewnętrzny
