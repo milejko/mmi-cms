@@ -43,9 +43,9 @@ class FileGarbageCollector extends \Mmi\Tools\CliAbstract {
 
 	public function run() {
 		//dane (tylko podkatalogi jednoznakowe)
-		$this->_scanDir(DATA_PATH, 1);
+		$this->_scanDir(BASE_PATH . '/var/data', 1);
 		//miniatury (podkatalogi do 12 znaków)
-		$this->_scanDir(PUBLIC_PATH . '/data', 12);
+		$this->_scanDir(BASE_PATH . '/web/data', 12);
 		echo "\n";
 	}
 

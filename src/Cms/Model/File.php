@@ -59,7 +59,7 @@ class File {
 		//kalkulacja nazwy systemowej
 		$name = md5(microtime(true) . $file->tmpName) . substr($file->name, strrpos($file->name, '.'));
 		//określanie ścieżki
-		$dir = DATA_PATH . '/' . $name[0] . '/' . $name[1] . '/' . $name[2] . '/' . $name[3];
+		$dir = BASE_PATH . '/var/data/' . $name[0] . '/' . $name[1] . '/' . $name[2] . '/' . $name[3];
 		//tworzenie ścieżki
 		if (!file_exists($dir)) {
 			mkdir($dir, 0777, true);

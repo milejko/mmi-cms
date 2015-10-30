@@ -101,7 +101,7 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 			return;
 		}
 		//ścieżka na dysku
-		return DATA_PATH . '/' . $this->name[0] . '/' . $this->name[1] . '/' . $this->name[2] . '/' . $this->name[3] . '/' . $this->name;
+		return BASE_PATH . '/var/data/' . $this->name[0] . '/' . $this->name[1] . '/' . $this->name[2] . '/' . $this->name[3] . '/' . $this->name;
 	}
 
 	/**
