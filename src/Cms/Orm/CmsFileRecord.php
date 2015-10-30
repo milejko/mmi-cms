@@ -146,7 +146,7 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 			return $baseUrl . $fileName;
 		}
 		//istnieje plik - zwrot ścieżki publicznej
-		if (file_exists(PUBLIC_PATH . '/data' . $fileName)) {
+		if (file_exists(BASE_PATH . '/web/data' . $fileName)) {
 			\App\Registry::$cache->save(true, $cacheKey);
 			return $baseUrl . $fileName;
 		}
@@ -155,11 +155,11 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 			return;
 		}
 		//klasa obrazu - uruchomienie skalera
-		if ($this->class == 'image' && !$this->_scaler($inputFile, PUBLIC_PATH . '/data' . $fileName, $scaleType, $scale)) {
+		if ($this->class == 'image' && !$this->_scaler($inputFile, BASE_PATH . '/web/data' . $fileName, $scaleType, $scale)) {
 			return;
 		}
 		//klasa inna niż obraz - kopiowanie zasobu publicznie
-		if ($this->class != 'image' && !copy($inputFile, PUBLIC_PATH . '/data' . $fileName)) {
+		if ($this->class != 'image' && !copy($inputFile, BASE_PATH . '/web/data' . $fileName)) {
 			return;
 		}
 		//zwrot ścieżki publicznej
@@ -237,7 +237,7 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 			unlink($this->getRealPath());
 		}
 		//usuwa miniatury
-		$this->_unlink(PUBLIC_PATH . '/data/' . $this->name[0] . '/' . $this->name[1] . '/' . $this->name[2] . '/' . $this->name[3], $this->name);
+		$this->_unlink(BASE_PATH . '/web/data/' . $this->name[0] . '/' . $this->name[1] . '/' . $this->name[2] . '/' . $this->name[3], $this->name);
 		//usuwa rekord
 		return parent::delete();
 	}
