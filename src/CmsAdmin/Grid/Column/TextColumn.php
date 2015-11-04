@@ -27,7 +27,7 @@ class TextColumn extends ColumnAbstract {
 	 */
 	public function renderCell(\Mmi\Orm\RecordRo $record) {
 		return (new \Mmi\Filter\Truncate)->filter(
-				(new \Mmi\Filter\Escape)->filter($this->_getValueFromRecord($record)
+				(new \Mmi\Filter\Escape)->filter($this->getValueFromRecord($record)
 		));
 	}
 

@@ -63,7 +63,7 @@ class SelectColumn extends ColumnAbstract {
 			return '?';
 		}
 		//zwrot z mapy opcji
-		return $this->getMultiOptionByKey($this->_getValueFromRecord($record));
+		return $this->getMultiOptionByKey($this->getValueFromRecord($record));
 	}
 
 }

@@ -47,7 +47,7 @@ class CheckboxColumn extends SelectColumn {
 			//ustawia wartość na odpowiadającą zaznaczeniu
 			->setValue($this->_getCheckedValue())
 			//ustawia zaznaczenie
-			->setChecked($this->_getCheckedValue() == $this->_getValueFromRecord($record));
+			->setChecked($this->_getCheckedValue() == $this->getValueFromRecord($record));
 	}
 	
 	/**

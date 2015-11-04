@@ -48,12 +48,27 @@ class GridExporter {
 	 * @return array
 	 */
 	protected function _getData() {
-		return $this->_grid->getState()
-				->setupQuery($this->_grid->getQuery())
-				//eksport maksimum 100k rekordów
-				->limit(100000)
-				->offset(null)
-				->find()->toArray();
+		//pobranie kolekcji rekordów
+		$rawCollection = $this->_grid->getState()
+			->setupQuery($this->_grid->getQuery())
+			//eksport maksimum 100k rekordów
+			->limit(100000)
+			->offset(null)
+			->find();
+		$exportTable = [];
+		//iteracja po kolekcji
+		foreach ($rawCollection as $record) {
+			$recordTable = [];
+			//iteracja po kolumnach
+			foreach ($this->_grid->getColumns() as $column) {
+				if ('?' === $value = $column->getValueFromRecord($record)) {
+					continue;
+				}
+				$recordTable[] = $value;
+			}
+			$exportTable[] = $recordTable;
+		}
+		return $exportTable;
 	}
 
 }

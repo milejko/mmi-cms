@@ -43,7 +43,9 @@ abstract class Grid extends \Mmi\OptionObject {
 	/**
 	 * Konstruktor
 	 */
-	public function __construct() {
+	public function __construct(array $options = []) {
+		//parametry wejściowe do grida
+		$this->setOptions($options);
 		//tworzy obiekt stanu
 		$this->_state = (new GridState)->setGrid($this);
 		//indeks

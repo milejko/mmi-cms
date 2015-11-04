@@ -96,6 +96,22 @@ abstract class ColumnAbstract extends \Mmi\OptionObject {
 	abstract public function renderCell(\Mmi\Orm\RecordRo $record);
 
 	/**
+	 * Wybiera wartość z rekordu
+	 * @param \Mmi\Orm\RecordRo $record
+	 * @return string
+	 */
+	public function getValueFromRecord(\Mmi\Orm\RecordRo $record) {
+		if (!$this->_fieldInRecord()) {
+			return '?';
+		}
+		if (strpos($this->getName(), '.')) {
+			$table = explode('.', $this->getName());
+			return $record->getJoined($table[0])->{$table[1]};
+		}
+		return $record->{$this->getName()};
+	}
+
+	/**
 	 * Zwraca filtr dla pola
 	 * @return string
 	 */
@@ -121,22 +137,6 @@ abstract class ColumnAbstract extends \Mmi\OptionObject {
 		}
 		//sorawdzenie w rekordzie
 		return property_exists($this->_grid->getQuery()->getRecordName(), $this->getName());
-	}
-	
-	/**
-	 * Wybiera wartość z rekordu
-	 * @param \Mmi\Orm\RecordRo $record
-	 * @return string
-	 */
-	protected function _getValueFromRecord(\Mmi\Orm\RecordRo $record) {
-		if (!$this->_fieldInRecord()) {
-			return '?';
-		}
-		if (strpos($this->getName(), '.')) {
-			$table = explode('.', $this->getName());
-			return $record->getJoined($table[0])->{$table[1]};
-		}
-		return $record->{$this->getName()};
 	}
 
 	/**
