@@ -29,13 +29,13 @@ class GridState extends \Mmi\OptionObject {
 	 * @var \Mmi\Session\SessionSpace
 	 */
 	protected $_space;
-	
+
 	/**
 	 * Rozmiar danych
 	 * @var integer
 	 */
 	protected $_dataCount = 0;
-	
+
 	/**
 	 * Obiekt grida
 	 * @var Grid
@@ -52,7 +52,7 @@ class GridState extends \Mmi\OptionObject {
 			->setPage(1)
 			->setRowsPerPage(20);
 	}
-	
+
 	/**
 	 * Przypina grida
 	 * @param Grid $grid
@@ -69,7 +69,7 @@ class GridState extends \Mmi\OptionObject {
 		}
 		return $this;
 	}
-	
+
 	/**
 	 * Dodaje filtr
 	 * @param GridStateFilter $filter
@@ -81,7 +81,7 @@ class GridState extends \Mmi\OptionObject {
 		$filters[$filter->getField()] = $filter;
 		return $this->setFilters($filters);
 	}
-	
+
 	/**
 	 * Usuwa filtrację
 	 * @param GridStateFilter $filter
@@ -105,7 +105,7 @@ class GridState extends \Mmi\OptionObject {
 		$orders[$order->getField()] = $order;
 		return $this->setOrder($orders);
 	}
-	
+
 	/**
 	 * Usuwa sortowanie
 	 * @param GridStateOrder $order
@@ -117,7 +117,7 @@ class GridState extends \Mmi\OptionObject {
 		unset($orders[$order->getField()]);
 		return $this->setOrder($orders);
 	}
-	
+
 	/**
 	 * Ustawianie opcji
 	 * @param type $key
@@ -129,7 +129,7 @@ class GridState extends \Mmi\OptionObject {
 		$this->_space ? $this->_space->__set($key, $value) : null;
 		return parent::setOption($key, $value);
 	}
-	
+
 	/**
 	 * Dekoruje querę na podstawie filtrów
 	 * @param \Mmi\Orm\Query $query
@@ -152,7 +152,7 @@ class GridState extends \Mmi\OptionObject {
 			->offset($offset);
 		return $query;
 	}
-	
+
 	/**
 	 * Zwraca rozmiar danych
 	 * @return integer
@@ -160,15 +160,14 @@ class GridState extends \Mmi\OptionObject {
 	public function getDataCount() {
 		return $this->_dataCount;
 	}
-	
+
 	/**
 	 * Stosuje filtry na zapytaniu
 	 * @param \Mmi\Orm\Query $query
 	 * @return GridState
 	 */
 	private function _applyFilters(\Mmi\Orm\Query $query) {
-		//resetowanie where
-		//$query->resetWhere();
+		//iteracja po filtrach
 		foreach ($this->getFilters() as $filter) {
 			//filtr nie jest prawidłowy
 			if (!($filter instanceof GridStateFilter)) {
@@ -179,15 +178,18 @@ class GridState extends \Mmi\OptionObject {
 		}
 		return $this;
 	}
-	
+
 	/**
 	 * Stosuje sortowania na zapytaniu
 	 * @param \Mmi\Orm\Query $query
 	 * @return GridState
 	 */
 	private function _applyOrder(\Mmi\Orm\Query $query) {
-		//resetowanie orderu
-		$query->resetOrder();
+		//resetowanie domyślnego orderu jeśli podany
+		if (!empty($this->getOrder())) {
+			$query->resetOrder();
+		}
+		//iteracja po orderze
 		foreach ($this->getOrder() as $order) {
 			//order nie jest obiektem sortowania
 			if (!($order instanceof GridStateOrder)) {
