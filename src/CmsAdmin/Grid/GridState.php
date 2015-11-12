@@ -80,7 +80,7 @@ class GridState extends \Mmi\OptionObject {
 	public function addFilter(GridStateFilter $filter) {
 		$filters = $this->getFilters();
 		//dodaje filtr
-		$filters[$filter->getField()] = $filter;
+		$filters[$filter->getTableName() . '.' . $filter->getField()] = $filter;
 		return $this->setFilters($filters);
 	}
 
@@ -92,7 +92,7 @@ class GridState extends \Mmi\OptionObject {
 	public function removeFilter(GridStateFilter $filter) {
 		$filters = $this->getFilters();
 		//usuwa filtr
-		unset($filters[$filter->getField()]);
+		unset($filters[$filter->getTableName() . '.' . $filter->getField()]);
 		return $this->setFilters($filters);
 	}
 
@@ -104,7 +104,7 @@ class GridState extends \Mmi\OptionObject {
 	public function addOrder(GridStateOrder $order) {
 		$orders = $this->getOrder();
 		//dodaje order
-		$orders[$order->getField()] = $order;
+		$orders[$order->getTableName() . '.' . $order->getField()] = $order;
 		return $this->setOrder($orders);
 	}
 
@@ -116,7 +116,7 @@ class GridState extends \Mmi\OptionObject {
 	public function removeOrder(GridStateOrder $order) {
 		$orders = $this->getOrder();
 		//usuwa sortowanie
-		unset($orders[$order->getField()]);
+		unset($orders[$order->getTableName() . '.' . $order->getField()]);
 		return $this->setOrder($orders);
 	}
 

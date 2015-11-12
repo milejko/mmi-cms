@@ -30,9 +30,8 @@ CMS.grid = function () {
 			var filter = field.attr('name'),
 				value = field.val(),
 				fieldName = field.attr('name'),
-				gridId = field.parent('div').parent('th').parent('tr').parent('tbody').parent('table').attr('id'),
-				method = field.attr('data-method');
-			$.post(window.location, {filter: filter, value: value, method: method}, function (data) {
+				gridId = field.parent('div').parent('th').parent('tr').parent('tbody').parent('table').attr('id');
+			$.post(window.location, {filter: filter, value: value}, function (data) {
 				$('#' + gridId).html(data);
 				$('input[name=\'' + fieldName + '\']').focus().val($('input[name=\'' + fieldName + '\']').val());
 			});
