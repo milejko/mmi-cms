@@ -132,8 +132,13 @@ abstract class ColumnAbstract extends \Mmi\OptionObject {
 	protected function _getFilterValue() {
 		//iteracja po filtrache w gridzie
 		foreach ($this->_grid->getState()->getFilters() as $filter) {
-			//znaleziony filtr dla tego pola
-			if ($filter->getField() == $this->getName() || $filter->getTableName() . '.' . $filter->getField() == $this->getName()) {
+			//znaleziony filtr dla tego pola z tabelą
+			if ($filter->getTableName() . '.' . $filter->getField() == $this->getName()) {
+				//zwrot wartości filtra
+				return $filter->getValue();
+			}
+			//znaleziony filtr dla tego pola (bez tabeli)
+			if (!$filter->getTableName() && $filter->getField() == $this->getName()) {
 				//zwrot wartości filtra
 				return $filter->getValue();
 			}

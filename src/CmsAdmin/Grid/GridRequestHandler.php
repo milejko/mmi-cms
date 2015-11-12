@@ -86,6 +86,13 @@ class GridRequestHandler {
 			$tableName = $fieldTable[0];
 			$fieldName = $fieldTable[1];
 		}
+		//paginator
+		if ($fieldName == '_paginator_') {
+			//ustawianie filtra
+			return (new GridStateFilter())
+					->setField($fieldName)
+					->setValue($post->value);
+		}
 		//iteracja po kolumnach
 		foreach ($this->_grid->getColumns() as $column) {
 			if ($column->getName() != $fieldName) {
