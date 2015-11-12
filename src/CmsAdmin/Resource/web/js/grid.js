@@ -15,9 +15,10 @@ CMS.grid = function () {
 			if (event.which === 27) {
 				return;
 			}
+			var field = $(this);
 			clearTimeout(stoptyping);
 			stoptyping = setTimeout(function () {
-				filter($(this));
+				filter(field);
 			}, 500);
 		});
 

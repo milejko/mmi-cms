@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Grid;
 
+use Mmi\App\FrontController;
+
 /**
  * Klasa stanu grida
  * @method GridState setFilters()
@@ -67,6 +69,8 @@ class GridState extends \Mmi\OptionObject {
 		if (!empty($spaceArray)) {
 			$this->setOptions($spaceArray);
 		}
+		//ustawianie z geta
+		$this->setOptions(FrontController::getInstance()->getRequest()->getGet()->toArray());
 		return $this;
 	}
 
