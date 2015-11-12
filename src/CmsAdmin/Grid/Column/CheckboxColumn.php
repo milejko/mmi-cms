@@ -24,12 +24,25 @@ class CheckboxColumn extends SelectColumn {
 	 * Domyślne opcje dla checkboxa
 	 */
 	public function __construct($name) {
+		
 		$this->setMultioptions([
-			null => '---',
 			0 => 'odznaczone',
 			1 => 'zaznaczone'
 		]);
 		parent::__construct($name);
+	}
+	
+	/**
+	 * Ustawia grid
+	 * @param \CmsAdmin\Grid\Grid $grid
+	 * @return \CmsAdmin\Grid\Column\CheckboxColumn
+	 */
+	public function setGrid(\CmsAdmin\Grid\Grid $grid) {
+		parent::setGrid($grid);
+		//obsługa zapisu rekordu
+		(new CheckboxRequestHandler($this))->handleRequest();
+		//zwrot siebie
+		return $this;
 	}
 
 	/**
@@ -46,6 +59,7 @@ class CheckboxColumn extends SelectColumn {
 		return (new \Mmi\Form\Element\Checkbox($this->getFormColumnName()))
 			//ustawia wartość na odpowiadającą zaznaczeniu
 			->setValue($this->_getCheckedValue())
+			->setId($this->getFormColumnName() . '-' . $record->id)
 			//ustawia zaznaczenie
 			->setChecked($this->_getCheckedValue() == $this->getValueFromRecord($record));
 	}

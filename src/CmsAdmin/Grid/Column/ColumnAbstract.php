@@ -51,6 +51,14 @@ abstract class ColumnAbstract extends \Mmi\OptionObject {
 		$this->_grid = $grid;
 		return $this;
 	}
+	
+	/**
+	 * Pobiera obiekt grida
+	 * @return \CmsAdmin\Grid\Grid
+	 */
+	public function getGrid() {
+		return $this->_grid;
+	}
 
 	/**
 	 * Renderuje labelkę kolumny

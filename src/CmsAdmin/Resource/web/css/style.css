@@ -90,10 +90,10 @@ ul#messenger {
 	padding:0;
 }
 
-.navbar li{
+.navbar li {
 	margin:0;
 	padding:0;
-	list-style-type:0;
+	list-style-type: none;
 	display:inline-block;
 	color: #efefef;
 	text-transform: uppercase;
@@ -198,6 +198,18 @@ table.grid tr th.paginator div.field {
 	display: inline-block;
 	position: relative;
 	top: 8px;
+}
+
+table.grid tr:nth-child(odd) td {
+    background: #f5f5f5;
+}
+
+table.grid tr th div.field {
+	max-width: 200px;
+}
+
+table.grid tr th div.field .field {
+	max-width: 200px;
 }
 
 div.errors ul {
@@ -475,8 +487,4 @@ ul.mdlist .field.checkbox label {
 
 ul.mdlist .hide-active {
 	color: #bbbbbb;
-}
-
-.grid-spot {
-	max-width: 200px;
 }

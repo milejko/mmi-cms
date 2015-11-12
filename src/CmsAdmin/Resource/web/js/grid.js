@@ -5,7 +5,8 @@ var CMS = {};
 CMS.grid = function () {
 	"use strict";
 	var initGridFilter,
-			initGridOrder;
+		initGridOrder,
+		initGridOperation;
 
 	initGridFilter = function () {
 
@@ -24,10 +25,10 @@ CMS.grid = function () {
 
 		$('table.grid').on('change', 'th > div.field > .field', function () {
 			var field = $(this).attr('name'),
-					value = $(this).val(),
-					fieldName = $(this).attr('name'),
-					gridId = $(this).parent('div').parent('th').parent('tr').parent('tbody').parent('table').attr('id');
-			$.post(window.location, {filter: field, value: value}, function(data) {
+				value = $(this).val(),
+				fieldName = $(this).attr('name'),
+				gridId = $(this).parent('div').parent('th').parent('tr').parent('tbody').parent('table').attr('id');
+			$.post(window.location, {filter: field, value: value}, function (data) {
 				$('#' + gridId).html(data);
 				$('input[name=\'' + fieldName + '\']').focus().val($('input[name=\'' + fieldName + '\']').val());
 			});
@@ -41,15 +42,31 @@ CMS.grid = function () {
 			var field = $(this).attr('href'),
 				gridId = $(this).parent('th').parent('tr').parent('tbody').parent('table').attr('id'),
 				method = $(this).attr('data-method');
-			$.post(window.location, {order: field, method: method}, function(data) {
+			$.post(window.location, {order: field, method: method}, function (data) {
 				$('#' + gridId).html(data);
 			});
 			return false;
 		});
 	};
 
+	initGridOperation = function () {
+		//zapytanie o kasowanie
+		$('table.grid').on('click', 'td > a.confirm', function () {
+			return window.confirm($(this).attr('title') + '?');
+		});
+		//zapytanie o kasowanie
+		$('table.grid').on('change', 'td > div.checkbox > input.checkbox', function () {
+			var id = $(this).attr('id').split('-');
+			$.post(window.location, {id: id[1], name: id[0], value: $(this).val(), checked: $(this).is(':checked')}, function (data) {
+				return;
+			});
+		});
+	};
+
+
 	initGridFilter();
 	initGridOrder();
+	initGridOperation();
 };
 
 $(document).ready(function () {

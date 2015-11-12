@@ -48,7 +48,7 @@ class SelectColumn extends ColumnAbstract {
 	public function renderFilter() {
 		//tworzy Column form selecta, ustawia opcje i wartość filtra
 		return (new \Mmi\Form\Element\Select($this->getFormColumnName()))
-				->setMultioptions($this->getMultioptions())
+				->setMultioptions([null => '---'] + $this->getMultioptions())
 				->setValue($this->_getFilterValue());
 	}
 
