@@ -17,20 +17,20 @@ class Copy extends \Mmi\Form\Form {
 
 	public function init() {
 
-		$langMultiOptions = [];
+		$langMultioptions = [];
 		//wybór z dostępnych języków
 		foreach (\App\Registry::$config->languages as $lang) {
 			if ($lang == \Mmi\App\FrontController::getInstance()->getRequest()->lang) {
 				continue;
 			}
-			$langMultiOptions[$lang] = $lang;
+			$langMultioptions[$lang] = $lang;
 		}
 
 		//źródło
 		$this->addElementSelect('source')
 			->setLabel('Wybierz język źródłowy')
 			->setDescription('Brakujące klucze w bieżącym języku zostaną utworzone, wartości zostaną uzupełnione wartościami z języka źródłowego')
-			->setMultioptions($langMultiOptions);
+			->setMultioptions($langMultioptions);
 
 		$this->addElementSubmit('submit')
 			->setLabel('klonuj teksty');
