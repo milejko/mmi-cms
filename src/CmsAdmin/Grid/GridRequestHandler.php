@@ -68,10 +68,6 @@ class GridRequestHandler {
 		exit;
 	}
 
-	protected function _retrieveFromRequest() {
-		
-	}
-
 	/**
 	 * Zwraca obiekt filtra na podstawie post
 	 * @param \Mmi\Http\RequestPost $post
