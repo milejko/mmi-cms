@@ -69,8 +69,9 @@ class GridState extends \Mmi\OptionObject {
 		if (!empty($spaceArray)) {
 			$this->setOptions($spaceArray);
 		}
-		//ustawianie z geta
-		$this->setOptions(FrontController::getInstance()->getRequest()->getGet()->toArray());
+		//ustawianie filtrów z GET
+		$this->_setFiltersFromGet()
+			->_setOrdersFromGet();
 		return $this;
 	}
 
@@ -211,6 +212,43 @@ class GridState extends \Mmi\OptionObject {
 			}
 			//aplikacja na querę
 			$query->{$order->getMethod()}($order->getField(), $order->getTableName());
+		}
+		return $this;
+	}
+
+	/**
+	 * Ustawianie filtrów na podstawie GET
+	 */
+	private function _setFiltersFromGet() {
+		//ustawianie z geta
+		$get = FrontController::getInstance()->getRequest()->getGet();
+		if (!isset($get->{$this->_grid->getClass()}['filters'])) {
+			return $this;
+		}
+		//iteracja po filtrach
+		foreach ($get->{$this->_grid->getClass()}['filters'] as $field => $value) {
+			$this->addFilter((new GridStateFilter())
+					->setField($field)
+					->setValue($value));
+		}
+		return $this;
+	}
+
+	/**
+	 * Ustawianie orderów na podstawie GET
+	 */
+	private function _setOrdersFromGet() {
+		//ustawianie z geta
+		$get = FrontController::getInstance()->getRequest()->getGet();
+		if (!isset($get->{$this->_grid->getClass()}['orders'])) {
+			return $this;
+		}
+		//iteracja po filtrach
+		foreach ($get->{$this->_grid->getClass()}['orders'] as $field => $method) {
+			$this->addOrder((new GridStateOrder())
+					->setField($field)
+					->setMethod($method)
+			);
 		}
 		return $this;
 	}
