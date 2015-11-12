@@ -16,24 +16,22 @@ CMS.grid = function () {
 				return;
 			}
 			var field = $(this);
-			var fieldName = $(this).attr('name');
 			clearTimeout(stoptyping);
 			stoptyping = setTimeout(function () {
-				field.change();
+				filter(field);
 			}, 500);
 		});
-
-		$('table.grid').on('change', 'th > div.field > .field', function () {
-			var field = $(this).attr('name'),
-				value = $(this).val(),
-				method =  $(this).attr('data-method'),
-				fieldName = $(this).attr('name'),
-				gridId = $(this).parent('div').parent('th').parent('tr').parent('tbody').parent('table').attr('id');
-			$.post(window.location, {method: method, filter: field, value: value}, function (data) {
+		
+		function filter(field) {
+			var filter = field.attr('name'),
+				value = field.val(),
+				fieldName = field.attr('name'),
+				gridId = field.parent('div').parent('th').parent('tr').parent('tbody').parent('table').attr('id');
+			$.post(window.location, {filter: filter, value: value}, function (data) {
 				$('#' + gridId).html(data);
 				$('input[name=\'' + fieldName + '\']').focus().val($('input[name=\'' + fieldName + '\']').val());
 			});
-		});
+		}
 
 	};
 
@@ -63,6 +61,7 @@ CMS.grid = function () {
 			});
 		});
 	};
+
 
 	initGridFilter();
 	initGridOrder();
