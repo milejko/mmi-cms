@@ -83,7 +83,7 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 				throw new \Mmi\Mvc\MvcNotFoundException('Component not found: ' . $actionLabel);
 			}
 			//brak autoryzacji i kontroler admina - przekierowanie na logowanie
-			if (!$auth->hasIdentity() && $request->getModuleName() == 'cmsAdmin') {
+			if (!$auth->hasIdentity() && strpos($request->getModuleName(), 'Admin')) {
 				//logowanie admina
 				$this->_setAdminLoginRequest($request);
 			} elseif (!$auth->hasIdentity()) {

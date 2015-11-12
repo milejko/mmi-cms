@@ -90,7 +90,7 @@ class GridRequestHandler {
 		return (new GridStateFilter())
 				->setField($fieldName)
 				->setTableName($tableName)
-				->setMethod($post->method ? $post->method : 'like')
+				->setMethod($post->method)
 				->setValue($post->value);
 	}
 

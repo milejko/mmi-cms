@@ -173,8 +173,18 @@ class GridState extends \Mmi\OptionObject {
 			if (!($filter instanceof GridStateFilter)) {
 				throw new GridException('Invalid state filter object');
 			}
-			//aplikacja na querę
-			$query->andField($filter->getField(), $filter->getTableName())->{$filter->getMethod()}(($filter->getMethod() == 'like' ? '%' . $filter->getValue() . '%' : $filter->getValue()));
+			//operator równości
+			if ($filter->getMethod() == 'equals') {
+				$query->andField($filter->getField(), $filter->getTableName())->equals($filter->getValue());
+				continue;
+			}
+			//podobieństwo
+			if ($filter->getMethod() == 'like') {
+				$query->andField($filter->getField(), $filter->getTableName())->like($filter->getValue() . '%');
+				continue;
+			}
+			//domyślnie - wyszukanie
+			$query->andField($filter->getField(), $filter->getTableName())->like('%' . $filter->getValue() . '%');
 		}
 		return $this;
 	}

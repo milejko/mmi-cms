@@ -18,6 +18,11 @@ namespace CmsAdmin\Grid\Column;
  * @method string getName() pobiera nazwę pola
  * @method self setLabel($label) ustawia labelkę
  * @method string getLabel() pobiera labelkę
+ * 
+ * @method self setFilterMethodEquals() ustawia metodę filtracji na równość
+ * @method self setFilterMethodLike() ustawia metodę filtracji na podobny
+ * @method self setFilterMethodSearch() ustawia metodę filtracji na wyszukaj
+ * @method self setFilterMethodBetween() ustawia metodę filtracji na pomiędzy
  */
 class SelectColumn extends ColumnAbstract {
 
@@ -38,7 +43,7 @@ class SelectColumn extends ColumnAbstract {
 	public function getMultiOptionByKey($key) {
 		$multioptions = $this->getMultioptions();
 		//wyszukiwanie w multiopcjach
-		return isset($multioptions[$key]) ? $multioptions[$key] : null;
+		return isset($multioptions[$key]) ? $multioptions[$key] : $key;
 	}
 
 	/**

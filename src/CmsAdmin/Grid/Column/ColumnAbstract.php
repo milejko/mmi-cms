@@ -17,6 +17,11 @@ namespace CmsAdmin\Grid\Column;
  * @method string getName() pobiera nazwę pola
  * @method self setLabel($label) ustawia labelkę
  * @method string getLabel() pobiera labelkę
+ * 
+ * @method self setFilterMethodEquals() ustawia metodę filtracji na równość
+ * @method self setFilterMethodLike() ustawia metodę filtracji na podobny
+ * @method self setFilterMethodSearch() ustawia metodę filtracji na wyszukaj
+ * @method self setFilterMethodBetween() ustawia metodę filtracji na pomiędzy
  */
 abstract class ColumnAbstract extends \Mmi\OptionObject {
 
@@ -51,7 +56,7 @@ abstract class ColumnAbstract extends \Mmi\OptionObject {
 		$this->_grid = $grid;
 		return $this;
 	}
-	
+
 	/**
 	 * Pobiera obiekt grida
 	 * @return \CmsAdmin\Grid\Grid
@@ -93,6 +98,7 @@ abstract class ColumnAbstract extends \Mmi\OptionObject {
 		}
 		//zwrot filtra
 		return (new \Mmi\Form\Element\Text($this->getFormColumnName()))
+				->setOption('data-method', $this->getOption('method'))
 				->setValue($this->_getFilterValue());
 	}
 
@@ -160,6 +166,21 @@ abstract class ColumnAbstract extends \Mmi\OptionObject {
 				return $order->getMethod();
 			}
 		}
+	}
+	
+	/**
+	 * Obsługa setFilterMethod
+	 * @param string $name
+	 * @param array $params
+	 * @return mixed
+	 */
+	public function __call($name, $params) {
+		$matches = [];
+		//obsługa getterów
+		if (preg_match('/^setFilterMethod([a-zA-Z0-9]+)/', $name, $matches)) {
+			return $this->setOption('method', lcfirst($matches[1]));
+		}
+		return parent::__call($name, $params);
 	}
 
 }

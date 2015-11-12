@@ -26,9 +26,10 @@ CMS.grid = function () {
 		$('table.grid').on('change', 'th > div.field > .field', function () {
 			var field = $(this).attr('name'),
 				value = $(this).val(),
+				method =  $(this).attr('data-method'),
 				fieldName = $(this).attr('name'),
 				gridId = $(this).parent('div').parent('th').parent('tr').parent('tbody').parent('table').attr('id');
-			$.post(window.location, {filter: field, value: value}, function (data) {
+			$.post(window.location, {method: method, filter: field, value: value}, function (data) {
 				$('#' + gridId).html(data);
 				$('input[name=\'' + fieldName + '\']').focus().val($('input[name=\'' + fieldName + '\']').val());
 			});
@@ -62,7 +63,6 @@ CMS.grid = function () {
 			});
 		});
 	};
-
 
 	initGridFilter();
 	initGridOrder();
