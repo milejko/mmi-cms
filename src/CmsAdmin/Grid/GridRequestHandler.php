@@ -48,7 +48,7 @@ class GridRequestHandler {
 			$this->_render();
 		}
 	}
-	
+
 	/**
 	 * Obsługa eksportera CSV
 	 * @param \Mmi\Http\Request $request
@@ -66,6 +66,10 @@ class GridRequestHandler {
 		//przesyła CSV do klienta
 		(new GridExporter($this->_grid))->passCsv();
 		exit;
+	}
+
+	protected function _retrieveFromRequest() {
+		
 	}
 
 	/**

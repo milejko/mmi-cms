@@ -15,19 +15,22 @@ CMS.grid = function () {
 			if (event.which === 27) {
 				return;
 			}
-			var field = $(this);
 			clearTimeout(stoptyping);
 			stoptyping = setTimeout(function () {
-				filter(field);
+				filter($(this));
 			}, 500);
 		});
-		
+
+		$('table.grid').on('change', "th > div.field > select.field", function () {
+			filter($(this));
+		});
+
 		function filter(field) {
 			var filter = field.attr('name'),
 				value = field.val(),
 				fieldName = field.attr('name'),
 				gridId = field.parent('div').parent('th').parent('tr').parent('tbody').parent('table').attr('id'),
-				method = $(this).attr('data-method');
+				method = field.attr('data-method');
 			$.post(window.location, {filter: filter, value: value, method: method}, function (data) {
 				$('#' + gridId).html(data);
 				$('input[name=\'' + fieldName + '\']').focus().val($('input[name=\'' + fieldName + '\']').val());
