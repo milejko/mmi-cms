@@ -31,10 +31,18 @@ CMS.grid = function () {
 				value = field.val(),
 				fieldName = field.attr('name'),
 				gridId = field.parent('div').parent('th').parent('tr').parent('tbody').parent('table').attr('id');
-			$.post(window.location, {filter: filter, value: value}, function (data) {
-				$('#' + gridId).html(data);
-				$('input[name=\'' + fieldName + '\']').focus().val($('input[name=\'' + fieldName + '\']').val());
-			});
+			$.ajax({
+				url: window.location,
+				type: 'POST',
+				data: {filter: filter, value: value},
+				beforeSend: function() {
+					field.addClass('ajax-loader');
+				},
+				success: function(data) {
+					$('#' + gridId).html(data);
+					$('input[name=\'' + fieldName + '\']').focus().val($('input[name=\'' + fieldName + '\']').val());
+				}
+			});				
 		}
 
 	};
@@ -45,8 +53,13 @@ CMS.grid = function () {
 			var field = $(this).attr('href'),
 				gridId = $(this).parent('th').parent('tr').parent('tbody').parent('table').attr('id'),
 				method = $(this).attr('data-method');
-			$.post(window.location, {order: field, method: method}, function (data) {
-				$('#' + gridId).html(data);
+			$.ajax({
+				url: window.location,
+				type: 'POST',
+				data: {order: field, method: method},
+				success: function(data) {
+					$('#' + gridId).html(data);
+				}
 			});
 			return false;
 		});
@@ -60,8 +73,12 @@ CMS.grid = function () {
 		//zapytanie o kasowanie
 		$('table.grid').on('change', 'td > div.checkbox > input.checkbox', function () {
 			var id = $(this).attr('id').split('-');
-			$.post(window.location, {id: id[1], name: id[0], value: $(this).val(), checked: $(this).is(':checked')}, function (data) {
-				return;
+			$.ajax({
+				url: window.location,
+				data: {id: id[1], name: id[0], value: $(this).val(), checked: $(this).is(':checked')},
+				success: function(data) {
+					return;
+				}
 			});
 		});
 	};
