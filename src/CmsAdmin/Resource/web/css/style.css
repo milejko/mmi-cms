@@ -331,7 +331,7 @@ label.mce-wordcount {
 	transition: none !important;
 	-webkit-transition: none !important;
 	-moz-transition: none !important;
-	background: url("img/bx_loader.gif") no-repeat scroll center center transparent;
+	background: url("img/bx_loader.gif") no-repeat scroll right transparent;
 	width: 100%;
 }
 
