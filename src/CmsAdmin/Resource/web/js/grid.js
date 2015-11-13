@@ -75,10 +75,8 @@ CMS.grid = function () {
 			var id = $(this).attr('id').split('-');
 			$.ajax({
 				url: window.location,
+				type: 'POST',
 				data: {id: id[1], name: id[0], value: $(this).val(), checked: $(this).is(':checked')},
-				success: function(data) {
-					return;
-				}
 			});
 		});
 	};
