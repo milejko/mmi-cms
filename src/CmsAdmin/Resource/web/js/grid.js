@@ -70,7 +70,7 @@ CMS.grid = function () {
 		$('table.grid').on('click', 'td > a.confirm', function () {
 			return window.confirm($(this).attr('title') + '?');
 		});
-		//zapytanie o kasowanie
+		//akcja na zmianie checkboxa
 		$('table.grid').on('change', 'td > div.checkbox > input.checkbox', function () {
 			var id = $(this).attr('id').split('-');
 			$.ajax({
