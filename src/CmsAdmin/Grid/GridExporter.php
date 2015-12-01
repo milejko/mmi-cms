@@ -62,9 +62,19 @@ class GridExporter {
 			//iteracja po kolumnach
 			foreach ($this->_grid->getColumns() as $column) {
 				if ('?' === $value = $column->getValueFromRecord($record)) {
+					//jeśli kolumna typu custom i eksportowalna
+					if ($column instanceof Column\CustomColumn && $column->getExporting()) {
+						$recordTable[] = $column->renderCell($record);
+					}
 					continue;
 				}
-				$recordTable[] = $value;
+				//jeśli kolumna typu słownikowego z multiopcjami
+				if ($column instanceof Column\SelectColumn) {
+					$recordTable[] = html_entity_decode($column->renderCell($record));
+				} else {
+					//domyślnie przepisujemy wartość z rekordu
+					$recordTable[] = $value;
+				}
 			}
 			$exportTable[] = $recordTable;
 		}

@@ -30,6 +30,23 @@ use Mmi\App\FrontController;
 class CustomColumn extends ColumnAbstract {
 	
 	/**
+	 * Ustawia, czy kolumna eksportowalna
+	 * @param boolean $exporting
+	 * @return CustomColumn
+	 */
+	public function setExporting($exporting = true) {
+		return $this->setOption('exporting', $exporting);
+	}
+	
+	/**
+	 * Zwraca, czy kolumna eksportowalna
+	 * @return boolean
+	 */
+	public function getExporting() {
+		return boolval($this->getOption('exporting'));
+	}
+	
+	/**
 	 * Renderuje customowe Columny
 	 * @param \Mmi\Orm\RecordRo $record
 	 * @return string
