@@ -20,12 +20,19 @@ class Route {
 	 */
 	public static function updateRouterConfig(\Mmi\Mvc\RouterConfig $config, \Mmi\Orm\RecordCollection $routes) {
 		$i = 0;
+		$previousRoutes = $config->getRoutes();
+		$resultRoutes = [];
 		foreach ($routes as $route) { /* @var $route \Cms\Orm\RouteRecord */
 			$i++;
 			$route = $route->toRouteArray();
-			$config->setRoute('cms-' . $i, $route['pattern'], $route['replace'], $route['default']);
+			$routeConfig = new \Mmi\Mvc\RouterConfigRoute();
+			$routeConfig->default = $route['default'];
+			$routeConfig->replace = $route['replace'];
+			$routeConfig->pattern = $route['pattern'];
+			$routeConfig->name = 'cms-' . $i;
+			$resultRoutes[$i] = $routeConfig;
 		}
-		return $config;
+		return $config->setRoutes(array_merge($resultRoutes, $previousRoutes), true);
 	}
 
 }

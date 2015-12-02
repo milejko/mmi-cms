@@ -23,11 +23,11 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 	 */
 	public function routeStartup(\Mmi\Http\Request $request) {
 		//routy z cms
-		if (null === ($routes = \App\Registry::$cache->load('Mmi-Route'))) {
+		if (null === ($routes = \App\Registry::$cache->load('Cms-Route'))) {
 			//zapis rout do cache
-			\App\Registry::$cache->save($routes = CmsRouteQuery::active()->find(), 'Mmi-Route', 0);
+			\App\Registry::$cache->save($routes = CmsRouteQuery::active()->find(), 'Cms-Route', 0);
 		}
-		//aktualizacja konfiguracji routera  routy CMS
+		//aktualizacja konfiguracji routera routy CMS
 		\Cms\Model\Route::updateRouterConfig(\Mmi\App\FrontController::getInstance()->getRouter()->getConfig(), $routes);
 	}
 
