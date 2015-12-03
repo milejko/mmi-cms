@@ -85,7 +85,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	
 	/**
 	 * Ustawia tryb zaawansowany
-	 * @return \Mmi\Form\Element\TinyMce
+	 * @return \Cms\Form\Element\TinyMce
 	 */
 	public function setModeAdvanced() {
 		return $this->setOption('mode', 'advanced');
@@ -93,7 +93,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 
 	/**
 	 * Ustawia tryb domyślny
-	 * @return \Mmi\Form\Element\TinyMce
+	 * @return \Cms\Form\Element\TinyMce
 	 */
 	public function setModeDefault() {
 		return $this->setOption('mode', null);
@@ -101,7 +101,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 
 	/**
 	 * Ustawia tryb prosty
-	 * @return \Mmi\Form\Element\TinyMce
+	 * @return \Cms\Form\Element\TinyMce
 	 */
 	public function setModeSimple() {
 		return $this->setOption('mode', 'simple');
@@ -110,7 +110,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	/**
 	 * Ustawia szerokość w px
 	 * @param int $width
-	 * @return \Mmi\Form\Element\TinyMce
+	 * @return \Cms\Form\Element\TinyMce
 	 */
 	public function setWidth($width) {
 		return $this->setOption('width', intval($width));
@@ -119,7 +119,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	/**
 	 * Ustawia wysokość w px
 	 * @param int $height
-	 * @return \Mmi\Form\Element\TinyMce
+	 * @return \Cms\Form\Element\TinyMce
 	 */
 	public function setHeight($height) {
 		return $this->setOption('heigth', intval($height));
@@ -128,10 +128,10 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	/**
 	 * Ustawia parametr oninit
 	 * @param string $oninit
-	 * @return \Mmi\Form\Element\TinyMce
+	 * @return \Cms\Form\Element\TinyMce
 	 */
 	public function setOnInit($oninit) {
-		return $this->setOption('oninit', intval($oninit));
+		return $this->setOption('oninit', $oninit);
 	}
 
 	/**

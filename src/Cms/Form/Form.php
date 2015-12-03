@@ -101,6 +101,15 @@ abstract class Form extends \Mmi\Form\Form {
 	public function addElementTinyMce($name) {
 		return $this->addElement(new Element\TinyMce($name));
 	}
+	
+	/**
+	 * Plupload
+	 * @param string $name nazwa
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function addElementPlupload($name) {
+		return $this->addElement(new Element\Plupload($name));
+	}
 
 	/**
 	 * Uploader
