@@ -6,7 +6,7 @@ var PLUPLOADCONF = PLUPLOADCONF || {};
 
 PLUPLOADCONF.settings = {
 	runtimes: 'html5',
-	url: request.uploadUrl + '/cmsAdmin/upload/plupload',
+	url: request.baseUrl + '/cmsAdmin/upload/plupload',
 	chunk_size: '8mb',
 	file_data_name: 'file',
 	rename: true,

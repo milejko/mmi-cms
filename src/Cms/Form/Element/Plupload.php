@@ -125,8 +125,10 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 			$(document).ready(function () {
 				'use strict';
 				var conf = $.extend({}, PLUPLOADCONF.settings);
-				conf.log_element = '" . $id . "-console';
 				//modyfikacja konfiguracji
+				conf.log_element = '" . $id . "-console';
+				" . ($this->getOption('chunkSize') ? 'conf.chunk_size = \'' . $this->getOption('chunkSize') . '\';' : '') . "
+				//console.log(conf);
 				$('#$id').plupload(conf);
 			});
 		");
@@ -135,7 +137,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$html .= '<p>Twoja przeglądarka nie posiada wsparcia dla HTML5.</p>';
 		$html .= '<p>Proszę zaktualizować oprogramowanie.</p>';
 		$html .= '</div>';
-		$html .= '<div class="plupload-log-container">';
+		$html .= '<div class="plupload-log-container" style="margin-top: 10px;">';
 		$html .= '<pre class="plupload-log-console" id="' . $id . '-console"></pre>';
 		$html .= '</div>';
 		return $html;
