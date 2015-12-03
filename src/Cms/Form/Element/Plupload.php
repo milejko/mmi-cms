@@ -98,8 +98,10 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	 */
 	public function fetchField() {
 		$view = \Mmi\App\FrontController::getInstance()->getView();
+		$view->headLink()->appendStyleSheet($view->baseUrl . '/resource/cmsAdmin/css/ui.css');
 		$view->headLink()->appendStyleSheet($view->baseUrl . '/resource/cmsAdmin/js/plupload/jquery.ui.plupload/css/jquery.ui.plupload.css');
 		$view->headScript()->prependFile($view->baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js');
+		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/jquery/ui.js');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/plupload/plupload.full.min.js');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/plupload/i18n/pl.js');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/plupload/jquery.ui.plupload/jquery.ui.plupload.min.js');
