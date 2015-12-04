@@ -119,18 +119,17 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/plupload/jquery.ui.plupload/jquery.ui.plupload.min.js');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/plupload/plupload.conf.js');
 		
-		$class = $this->getOption('id');
-		$this->setOption('class', trim($this->getOption('class') . ' ' . $class));
-		$object = '';
-		$objectId = '';
-		//odczyt zmiennych z rekordu
+		$id = $this->getOption('id');
+		$object = 'library';
+		$objectId = null;
 		if ($this->_form->hasRecord()) {
 			$object = $this->_form->getFileObjectName();
 			$objectId = $this->_form->getRecord()->getPk();
 		}
-		$t = round(microtime(true));
-		$hash = md5(\Mmi\Session\Session::getId() . '+' . $t . '+' . $objectId);
-		$id = $this->getOption('id');
+		if (!$objectId) {
+			$object = 'tmp-' . $object;
+			$objectId = \Mmi\Session\Session::getNumericId();
+		}
 		
 		//dołączanie skryptu
 		$view->headScript()->appendScript("
@@ -138,6 +137,8 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 				'use strict';
 				var conf = $.extend({}, PLUPLOADCONF.settings);
 				//modyfikacja konfiguracji
+				conf.form_object = '$object';
+				conf.form_object_id = '$objectId';
 				" . ($this->getOption('showConsole') ? "conf.log_element = '" . $id . "-console';" : "") . "
 				" . ($this->getOption('chunkSize') ? "conf.chunk_size = '" . $this->getOption('chunkSize') . "';" : "") . "
 				//console.log(conf);

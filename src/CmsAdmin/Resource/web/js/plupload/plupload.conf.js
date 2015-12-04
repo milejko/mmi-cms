@@ -26,7 +26,9 @@ PLUPLOADCONF.settings = {
 	},
 	flash_swf_url: request.baseUrl + '/resource/cmsAdmin/js/plupload/Moxie.swf',
 	silverlight_xap_url: request.baseUrl + '/resource/cmsAdmin/js/plupload/Moxie.xap',
-	log_element: ''
+	log_element: '',
+	form_object: 'library',
+	form_object_id: null
 };
 
 //zdarzenia
@@ -36,7 +38,9 @@ PLUPLOADCONF.settings.preinit = {
 	},
 	UploadFile: function (up, file) {
 		up.setOption('multipart_params', {
-			fileId: file.id
+			fileId: file.id,
+			formObject: up.getOption('form_object'),
+			formObjectId: up.getOption('form_object_id')
 		});
 	}
 };
