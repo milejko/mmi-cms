@@ -142,6 +142,12 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 				" . ($this->getOption('chunkSize') ? "conf.chunk_size = '" . $this->getOption('chunkSize') . "';" : "") . "
 				//console.log(conf);
 				$('#$id').plupload(conf);
+				//kliknięcie w górną belkę
+				$('#$id').on('click', 'div.plupload_logo,div.plupload_header_title', function () {
+					if ($('#$id div.moxie-shim-html5').size() > 0) {
+						$('#$id div.moxie-shim-html5 input[type=file]').trigger('click');
+					}
+				});
 			});
 		");
 
