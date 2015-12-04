@@ -91,7 +91,16 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	public function setChunkSize($size) {
 		return $this->setOption('chunkSize', $size);
 	}
-
+	
+	/**
+	 * Ustawia, czy pokazać konsolę z komunikatami
+	 * @param boolean $show
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function setShowConsole($show = true) {
+		return $this->setOption('showConsole', boolval($show));
+	}
+	
 	/**
 	 * Buduje pole
 	 * @return string
@@ -99,7 +108,10 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	public function fetchField() {
 		$view = \Mmi\App\FrontController::getInstance()->getView();
 		$view->headLink()->appendStyleSheet($view->baseUrl . '/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.css');
+		$view->headLink()->appendStyleSheet($view->baseUrl . '/resource/cmsAdmin/js/jquery-ui/jquery-ui.structure.min.css');
+		$view->headLink()->appendStyleSheet($view->baseUrl . '/resource/cmsAdmin/js/jquery-ui/jquery-ui.theme.min.css');
 		$view->headLink()->appendStyleSheet($view->baseUrl . '/resource/cmsAdmin/js/plupload/jquery.ui.plupload/css/jquery.ui.plupload.css');
+		$view->headLink()->appendStyleSheet($view->baseUrl . '/resource/cmsAdmin/js/plupload/plupload.conf.css');
 		$view->headScript()->prependFile($view->baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.js');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/plupload/plupload.full.min.js');
@@ -126,8 +138,8 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 				'use strict';
 				var conf = $.extend({}, PLUPLOADCONF.settings);
 				//modyfikacja konfiguracji
-				conf.log_element = '" . $id . "-console';
-				" . ($this->getOption('chunkSize') ? 'conf.chunk_size = \'' . $this->getOption('chunkSize') . '\';' : '') . "
+				" . ($this->getOption('showConsole') ? "conf.log_element = '" . $id . "-console';" : "") . "
+				" . ($this->getOption('chunkSize') ? "conf.chunk_size = '" . $this->getOption('chunkSize') . "';" : "") . "
 				//console.log(conf);
 				$('#$id').plupload(conf);
 			});
@@ -137,9 +149,11 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$html .= '<p>Twoja przeglądarka nie posiada wsparcia dla HTML5.</p>';
 		$html .= '<p>Proszę zaktualizować oprogramowanie.</p>';
 		$html .= '</div>';
-		$html .= '<div class="plupload-log-container" style="margin-top: 10px;">';
-		$html .= '<pre class="plupload-log-console" id="' . $id . '-console"></pre>';
-		$html .= '</div>';
+		if ($this->getOption('showConsole')) {
+			$html .= '<div class="plupload-log-container">';
+			$html .= '<pre class="plupload-log-console" id="' . $id . '-console"></pre>';
+			$html .= '</div>';
+		}
 		return $html;
 	}
 

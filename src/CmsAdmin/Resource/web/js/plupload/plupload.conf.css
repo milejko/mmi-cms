@@ -1,0 +1,15 @@
+div.plupload-log-container pre.plupload-log-console {
+	height: 150px;
+	overflow: auto;
+	border-radius: 0px;
+}
+
+div.plupload_header_content div.plupload_view_switch label {
+	float: left;
+}
+
+div.plupload_view_list div.plupload_content div.plupload_file_size,
+div.plupload_view_list div.plupload_content div.plupload_file_status,
+div.plupload_view_list div.plupload_content div.plupload_file_action {
+	top: 5px;
+}
