@@ -30,6 +30,17 @@ PLUPLOADCONF.settings = {
 };
 
 //zdarzenia
+PLUPLOADCONF.settings.preinit = {
+	Init: function (up, info) {
+		PLUPLOADCONF.log(up, 'Uploader zasobów gotowy do przesyłania plików w trybie ' + info.runtime);
+	},
+	UploadFile: function (up, file) {
+		up.setOption('multipart_params', {
+			fileId: file.id
+		});
+	}
+};
+
 PLUPLOADCONF.settings.init = {
 	FilesAdded: function (up, files) {
 		plupload.each(files, function (file) {

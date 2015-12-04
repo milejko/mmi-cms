@@ -14,6 +14,6 @@ div.plupload_view_list div.plupload_content div.plupload_file_action {
 	top: 5px;
 }
 
-div.plupload_view_list div.plupload_logo, div.plupload_view_list div.plupload_header_title {
+div.plupload_header div.plupload_logo, div.plupload_header div.plupload_header_title {
 	cursor: pointer;
 }
