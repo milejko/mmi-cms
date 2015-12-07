@@ -39,6 +39,7 @@ PLUPLOADCONF.settings.preinit = {
 	UploadFile: function (up, file) {
 		up.setOption('multipart_params', {
 			fileId: file.id,
+			fileSize: file.origSize,
 			formObject: up.getOption('form_object'),
 			formObjectId: up.getOption('form_object_id')
 		});

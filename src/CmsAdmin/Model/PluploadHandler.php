@@ -54,10 +54,28 @@ class PluploadHandler {
 	private $_fileId;
 	
 	/**
-	 * Id zasobu z bazy
+	 * Rozmiar przesłanego pliku
+	 * @var integer
+	 */
+	private $_fileSize;
+	
+	/**
+	 * Typ obiektu formularza
 	 * @var string
 	 */
-	private $_recordFileId;
+	private $_formObject;
+	
+	/**
+	 * Id obiektu z formularza
+	 * @var integer
+	 */
+	private $_formObjectId = null;
+	
+	/**
+	 * Id rekordu Cms w bazie
+	 * @var integer
+	 */
+	private $_cmsFileId;
 
 	/**
 	 * Ścieżka do katalogu do zapisu plików tymczasowych
@@ -220,8 +238,11 @@ class PluploadHandler {
 		$this->_chunks = ($post->chunks) ? intval($post->chunks) : 0;
 		$this->_fileName = $post->name;
 		$this->_fileId = $post->fileId;
-		$this->_recordFileId = $post->recordFileId;
-		if (!$this->_fileName || !$this->_fileId) {
+		$this->_fileSize = $post->fileSize;
+		$this->_formObject = $post->formObject;
+		$this->_formObjectId = ($post->formObjectId) ? $post->formObjectId : null;
+		$this->_cmsFileId = ($post->cmsFileId) ? $post->cmsFileId : null;
+		if (!$this->_fileName || !$this->_fileId || !$this->_fileSize || !$this->_formObject) {
 			$this->_setError(PLUPLOAD_INPUT_ERR, "Błąd: niekompletne parametry żądania");
 			return false;
 		}
@@ -310,7 +331,7 @@ class PluploadHandler {
 			return false;
 		}
 		$file = reset($files['file']);
-		/* @var $file \Mmi\Controller\Request\File */
+		/* @var $file \Mmi\Http\RequestFile */
 		if ($file->tmpName && is_uploaded_file($file->tmpName)) {
 			if (!$this->_readWrite($file->tmpName, true)) {
 				return false;
@@ -365,7 +386,7 @@ class PluploadHandler {
 
 	/**
 	 * Sprawdza czy odebrano już cały plik i wywołuje akcje na zakończenie uploadu,
-	 * między innymi zapis danych do kubełka i bazy
+	 * między innymi zapis pliku i rekordu do bazy
 	 * @return boolean
 	 */
 	private function _ifComplete() {
@@ -379,49 +400,41 @@ class PluploadHandler {
 			return false;
 		}
 		//zapis rekordu pliku
-		/*if (!$this->_saveFile()) {
+		if (!$this->_saveFile()) {
 			if ($this->_errorCode === null) {
 				$this->_setError(PLUPLOAD_MOVE_ERR);
 			}
 			return false;
-		}*/
+		}
 		return true;
 	}
 
 	/**
-	 * Zapis pliku zależny od decyzji użytkownika
+	 * Zapis pliku zależny danych wejściowych
 	 * @return boolean
 	 */
 	private function _saveFile() {
-		//pomijanie pliku - tylko usuwamy tymczasowy
-		if ($this->_decision === 'skip') {
-			@unlink($this->_filePath);
-			return true;
-		}
 		//jeśli przesłano plik dla konkretnego id w bazie
-		if ($this->_recordFileId) {
-			if (null !== $existFile = \File\Orm\Query::factory()->findPk($this->_recordFileId)) {
-				$existFile->fileName = $this->_fileName;
+		if ($this->_cmsFileId) {
+			if (null !== $existFile = (new \Cms\Orm\CmsFileQuery)->findPk($this->_cmsFileId)) {
+				return true;
 			}
-		} else {
-			$existFile = \File\Orm\Query::notDeletedByCategoryIdFileName($this->_categoryId, $this->_fileName)->findFirst();
 		}
 		//nie było pliku - tworzymy nowy
-		if (null === $existFile) {
-			return $this->_createNewFile();
-		}
-		switch ($this->_decision) {
-			case 'replace': //podmiana pliku
-				return $this->_replaceFile($existFile);
-			case 'replaceFull': //podmiana pliku i status na new
-				return $this->_replaceFile($existFile, true);
-			case 'copy': //kopia rekordu i nowe źródło pliku
-				return $this->_copyFile($existFile);
-			case 'new':
-			default:
-				$this->_setError(PLUPLOAD_INPUT_ERR);
-		}
-		return false;
+		return $this->_createNewFile();
+	}
+	
+	/**
+	 * Zwraca obiekt pliku request
+	 * @return \Mmi\Http\RequestFile
+	 */
+	private function _getRequestFile() {
+		$data = [
+			'name' => $this->_fileName,
+			'size' => $this->_fileSize,
+			'tmp_name' => $this->_filePath
+		];
+		return new \Mmi\Http\RequestFile($data);
 	}
 
 	/**
@@ -429,15 +442,15 @@ class PluploadHandler {
 	 * @return boolean
 	 */
 	private function _createNewFile() {
-		$fileRecord = new \File\Orm\Record();
-		$fileRecord->setUploadedFileTmpPath($this->_filePath);
-		$fileRecord->fileName = $this->_fileName;
-		$fileRecord->fileCategoryId = $this->_categoryId;
-		if (!$fileRecord->save()) {
+		if (!\Cms\Model\File::appendFile($this->_getRequestFile(), $this->_formObject, $this->_formObjectId)) {
 			$this->_setError(PLUPLOAD_MOVE_ERR, "Błąd tworzenia nowego rekordu pliku");
-			return false;
+			$result = false;
+		} else {
+			$result = true;
 		}
-		return true;
+		//usuwamy plik z katalogu plupload
+		@unlink($this->_filePath);
+		return $result;
 	}
 
 	/**
@@ -456,19 +469,6 @@ class PluploadHandler {
 		}
 		$this->_setError(PLUPLOAD_MOVE_ERR, "Błąd podczas nadpisywania pliku");
 		return false;
-	}
-
-	/**
-	 * Kopiuje rekord istniejącego pliku i podstawia nowe źródło
-	 * @param \File\Orm\Record $existFile istniejący plik
-	 * @return boolean
-	 */
-	private function _copyFile(\File\Orm\Record $existFile) {
-		if ($existFile->copy($this->_filePath, true) === null) {
-			$this->_setError(PLUPLOAD_MOVE_ERR, "Błąd podczas kopiowania pliku");
-			return false;
-		}
-		return true;
 	}
 
 }
