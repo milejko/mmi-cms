@@ -72,10 +72,16 @@ class PluploadHandler {
 	private $_formObjectId = null;
 	
 	/**
-	 * Id rekordu Cms w bazie
+	 * Id rekordu pliku Cms w bazie
 	 * @var integer
 	 */
 	private $_cmsFileId;
+	
+	/**
+	 * Zapisany rekord pliku Cms
+	 * @var \Cms\Orm\CmsFileRecord
+	 */
+	private $_cmsFileRecord;
 
 	/**
 	 * Ścieżka do katalogu do zapisu plików tymczasowych
@@ -299,6 +305,17 @@ class PluploadHandler {
 	public function getErrorMessage() {
 		return $this->_errorMessage;
 	}
+	
+	/**
+	 * Zwraca id zapisanego rekordu pliku
+	 * @return integer
+	 */
+	public function getSavedCmsFileId() {
+		if ($this->_cmsFileRecord) {
+			return $this->_cmsFileRecord->id;
+		}
+		return null;
+	}
 
 	/**
 	 * Ustawia błąd, jaki wystąpił podczas odbierania pliku
@@ -416,7 +433,7 @@ class PluploadHandler {
 	private function _saveFile() {
 		//jeśli przesłano plik dla konkretnego id w bazie
 		if ($this->_cmsFileId) {
-			if (null !== $existFile = (new \Cms\Orm\CmsFileQuery)->findPk($this->_cmsFileId)) {
+			if (null !== $this->_cmsFileRecord = (new \Cms\Orm\CmsFileQuery)->findPk($this->_cmsFileId)) {
 				return true;
 			}
 		}
@@ -442,7 +459,7 @@ class PluploadHandler {
 	 * @return boolean
 	 */
 	private function _createNewFile() {
-		if (!\Cms\Model\File::appendFile($this->_getRequestFile(), $this->_formObject, $this->_formObjectId)) {
+		if (null === $this->_cmsFileRecord = \Cms\Model\File::appendFile($this->_getRequestFile(), $this->_formObject, $this->_formObjectId)) {
 			$this->_setError(PLUPLOAD_MOVE_ERR, "Błąd tworzenia nowego rekordu pliku");
 			$result = false;
 		} else {

@@ -17,3 +17,11 @@ div.plupload_view_list div.plupload_content div.plupload_file_action {
 div.plupload_header div.plupload_logo, div.plupload_header div.plupload_header_title {
 	cursor: pointer;
 }
+
+div.plupload-confirm-container {
+	display: none;
+}
+
+div.ui-dialog button.ui-button {
+	left: auto;
+}

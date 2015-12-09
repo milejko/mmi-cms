@@ -28,7 +28,23 @@ class UploadController extends Mvc\Controller {
 		if (!$pluploadHandler->handle()) {
 			return $this->_jsonError($pluploadHandler->getErrorCode(), $pluploadHandler->getErrorMessage());
 		}
-		return json_encode(['result' => 'OK']);
+		return json_encode(['result' => 'OK', 'cmsFileId' => $pluploadHandler->getSavedCmsFileId()]);
+	}
+	
+	/**
+	 * Zwraca listę aktualnych plików przypiętych do obiektu formularza
+	 */
+	public function currentAction() {
+		$this->view->setLayoutDisabled();
+		$this->getResponse()->setTypeJson(true);
+		//zwrot json'a z plikami
+		return json_encode([
+			'result' => 'OK',
+			'files' => \Cms\Orm\CmsFileQuery::byObject($this->getPost()->object, $this->getPost()->objectId)
+						->orderAscDateAdd()
+						->find()
+						->toArray()
+		]);
 	}
 	
 	/**

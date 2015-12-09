@@ -137,6 +137,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 				'use strict';
 				var conf = $.extend({}, PLUPLOADCONF.settings);
 				//modyfikacja konfiguracji
+				conf.form_element_id = '$id';
 				conf.form_object = '$object';
 				conf.form_object_id = '$objectId';
 				" . ($this->getOption('showConsole') ? "conf.log_element = '" . $id . "-console';" : "") . "
@@ -155,6 +156,9 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$html = '<div id="' . $id . '">';
 		$html .= '<p>Twoja przeglądarka nie posiada wsparcia dla HTML5.</p>';
 		$html .= '<p>Proszę zaktualizować oprogramowanie.</p>';
+		$html .= '</div>';
+		$html .= '<div id="' . $id . '-confirm" class="plupload-confirm-container" title="Usunąć plik?">';
+		$html .= '<p>Czy na pewno trwale usunąć plik<span></span>?</p>';
 		$html .= '</div>';
 		if ($this->getOption('showConsole')) {
 			$html .= '<div class="plupload-log-container">';

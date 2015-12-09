@@ -45,7 +45,7 @@ class File {
 	 * @param string $object obiekt
 	 * @param integer $id id obiektu
 	 * @param array $allowedTypes dozwolone typy plików
-	 * @return boolean
+	 * @return \Cms\Orm\CmsFileRecord
 	 */
 	public static function appendFile(\Mmi\Http\RequestFile $file, $object, $id = null, $allowedTypes = []) {
 		//pomijanie plików typu bmp (bitmapy windows - nieobsługiwane w PHP)
@@ -76,7 +76,7 @@ class File {
 		$record->object = $object;
 		$record->objectId = $id;
 		//zapis rekordu
-		return $record->save();
+		return ($record->save())? $record : null;
 	}
 
 	/**
