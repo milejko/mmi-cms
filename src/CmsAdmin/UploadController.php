@@ -48,6 +48,28 @@ class UploadController extends Mvc\Controller {
 	}
 	
 	/**
+	 * Usuwa wybrany rekord pliku
+	 */
+	public function deleteAction() {
+		$this->view->setLayoutDisabled();
+		$this->getResponse()->setTypeJson(true);
+		if (!$this->getPost()->cmsFileId) {
+			return $this->_jsonError(178);
+		}
+		//szukamy rekordu pliku
+		if (null !== $record = (new \Cms\Orm\CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
+			//sprawdzenie zgodności z obiektem formularza
+			if ($record->object === $this->getPost()->object && $record->objectId == $this->getPost()->objectId) {
+				//usuwanie
+				if ($record->delete()) {
+					return json_encode(['result' => 'OK']);
+				}
+			}
+		}
+		return $this->_jsonError(178);
+	}
+	
+	/**
 	 * Zwraca sformatowany błąd JSON
 	 * @param integer $code
 	 * @param string $message

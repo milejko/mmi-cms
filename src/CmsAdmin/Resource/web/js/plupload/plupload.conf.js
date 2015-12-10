@@ -110,8 +110,18 @@ PLUPLOADCONF.settings.init = {
 						closeText: 'Zamknij',
 						buttons: {
 							'Usuń': function () {
-								$('#' + file.id).remove();
-								up.removeFile(file);
+								$.post(request.baseUrl + '/cmsAdmin/upload/delete', {cmsFileId: file.cmsFileId, object: up.getOption('form_object'), objectId: up.getOption('form_object_id')}, 'json')
+								.done(function (data) {
+									if (data.result === 'OK') {
+										$('#' + file.id).remove();
+										up.removeFile(file);
+									} else {
+										up.trigger("Error", {code: 178, message: 'Usunięcie pliku nie powiodło się'});
+									}
+								})
+								.fail(function () {
+									up.trigger("Error", {code: 178, message: 'Usunięcie pliku nie powiodło się'});
+								});
 								$(this).dialog('close');
 							},
 							'Anuluj': function () {
