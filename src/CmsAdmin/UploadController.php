@@ -96,6 +96,24 @@ class UploadController extends Mvc\Controller {
 	}
 	
 	/**
+	 * Zapisuje kolejność plików
+	 */
+	public function sortAction() {
+		$this->view->setLayoutDisabled();
+		$this->getResponse()->setTypeJson(true);
+		$order = $this->getPost()->order;
+		if (empty($order) || !is_array($order)) {
+			return json_encode(['result' => 'OK']);
+		}
+		try {
+			\Cms\Model\File::sortBySerial($order);
+		} catch (\Exception $ex) {
+			return $this->_jsonError(180);
+		}
+		return json_encode(['result' => 'OK']);
+	}
+	
+	/**
 	 * Zwraca sformatowany błąd JSON
 	 * @param integer $code
 	 * @param string $message

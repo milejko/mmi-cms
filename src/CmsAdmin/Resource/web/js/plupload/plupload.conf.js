@@ -10,7 +10,7 @@ PLUPLOADCONF.settings = {
 	chunk_size: '8mb',
 	file_data_name: 'file',
 	rename: true,
-	sortable: true,
+	sortable: false,
 	dragdrop: true,
 	multi_selection: true,
 	multiple_queues: true,
@@ -144,6 +144,7 @@ PLUPLOADCONF.settings.init = {
 				}
 			});
 		});
+		PLUPLOADCONF.sortable(up);
 	},
 	FileUploaded: function (up, file, info) {
 		PLUPLOADCONF.parseResponse(up, file, info);
@@ -155,6 +156,7 @@ PLUPLOADCONF.settings.init = {
 		plupload.each(files, function (file) {
 			$('#' + file.id + ' div.ui-icon-circle-check').removeClass('ui-icon-circle-check').addClass('ui-icon-circle-minus');
 		});
+		PLUPLOADCONF.sortable(up);
 		PLUPLOADCONF.log(up, 'Przesyłanie plików zakończone...');
 	},
 	Error: function (up, err) {
@@ -202,4 +204,40 @@ PLUPLOADCONF.parseResponse = function(up, file, info) {
 		file: file
 	});
 	return false;
+};
+
+PLUPLOADCONF.sortable = function(up) {
+	var selector = '#' + up.getOption('form_element_id') + '_filelist';
+	$(selector).sortable({
+		items: '> li.plupload_file',
+		cursor: 'move',
+		disabled: true,
+		stop: function(e, ui) {
+			var i, files = [];
+			$.each($(this).sortable('toArray'), function(i, id) {
+				var file = up.getFile(id);
+				if (file.cmsFileId) {
+					files[files.length] = file.cmsFileId;
+				}
+			});
+			$.post(request.baseUrl + '/cmsAdmin/upload/sort', {order: files}, 'json')
+			.done(function (data) {
+				if (data.result !== 'OK') {
+					up.trigger("Error", {code: 180, message: 'Zapis kolejności plików nie powiódł się'});
+				}
+			})
+			.fail(function () {
+				up.trigger("Error", {code: 180, message: 'Zapis kolejności plików nie powiódł się'});
+			});
+		}
+	});
+	var enable = true;
+	plupload.each(up.files, function (file) {
+		if (!file.cmsFileId) {
+			enable = false;
+		}
+	});
+	if (enable) {
+		$(selector).sortable('enable');
+	}
 };
