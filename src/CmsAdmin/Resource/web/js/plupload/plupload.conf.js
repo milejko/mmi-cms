@@ -84,12 +84,24 @@ PLUPLOADCONF.settings.init = {
 		plupload.each(files, function (file) {
 			if (!file.cmsFileId) {
 				PLUPLOADCONF.log(up, 'Dodano do kolejki plik: ' + file.name);
+			} else if(file.type.indexOf('image') >= 0) { //plik odtworzony z serwera - pobranie minaiturki
+				$.post(request.baseUrl + '/cmsAdmin/upload/thumbnail', {cmsFileId: file.cmsFileId}, 'json')
+				.done(function (data) {
+					if (data.result === 'OK' && data.url) {
+						$('li#' + file.id + ' div.plupload_file_dummy').html('<img src="' + data.url + '" alt="" />');
+					}
+				})
+				.fail(function () {});
 			}
 		});
 	},
 	FilesRemoved: function (up, files) {
 		plupload.each(files, function (file) {
-			PLUPLOADCONF.log(up, 'Usunięto z kolejki plik: ' + file.name);
+			if (!file.cmsFileId) {
+				PLUPLOADCONF.log(up, 'Usunięto z kolejki plik: ' + file.name);
+			} else {
+				PLUPLOADCONF.log(up, 'Usunięto trwale plik: ' + file.name);
+			}
 		});
 	},
 	QueueChanged: function(up) {

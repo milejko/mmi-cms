@@ -70,6 +70,32 @@ class UploadController extends Mvc\Controller {
 	}
 	
 	/**
+	 * Zwraca minaturę wybranego rekord pliku
+	 */
+	public function thumbnailAction() {
+		$this->view->setLayoutDisabled();
+		$this->getResponse()->setTypeJson(true);
+		if (!$this->getPost()->cmsFileId) {
+			return $this->_jsonError(179);
+		}
+		//szukamy rekordu pliku
+		if (null !== $record = (new \Cms\Orm\CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
+			//sprawdzenie czy obrazek
+			if ($record->class === 'image') {
+				try {
+					$thumb = new \Cms\Mvc\ViewHelper\Thumb();
+					$url = $thumb->thumb($record, 'scalecrop', '100x60');
+					if (!empty($url)) {
+						return json_encode(['result' => 'OK', 'url' => $url]);
+					}
+				} catch (\Exception $ex) {
+				}
+			}
+		}
+		return $this->_jsonError(179);
+	}
+	
+	/**
 	 * Zwraca sformatowany błąd JSON
 	 * @param integer $code
 	 * @param string $message
