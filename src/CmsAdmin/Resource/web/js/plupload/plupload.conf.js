@@ -87,15 +87,19 @@ PLUPLOADCONF.settings.init = {
 		var max = up.getOption('max_file_cnt');
 		if (max > 0) {
 			var removed = [], selectedCount = files.length;
-			var extraCount = up.files.length + selectedCount - max;
+			var extraCount = up.files.length - max;
 			if (extraCount > 0) {
 				removed = files.splice(selectedCount - extraCount, extraCount);
-				plupload.each(removed, function (file) {
-					up.removeFile(file);
-				});
 				up.trigger("Error", {
 					code: 190,
-					message: 'Maksymalna ilość plików do przesłania to ' + max + '. Nadliczbowe pliki zostały usunięte!'
+					message: 'Maksymalna ilość plików do przesłania to ' + max + '. Nadliczbowe pliki zostały usunięte',
+					file: removed
+				});
+				plupload.each(removed, function (file) {
+					try {
+						setTimeout(function(){ up.removeFile(file); }, 100);
+					} catch(err) {
+					}
 				});
 			}
 		}
@@ -123,7 +127,6 @@ PLUPLOADCONF.settings.init = {
 		});
 	},
 	QueueChanged: function(up) {
-		console.log('change');
 		plupload.each(up.files, function (file) {
 			$('#' + file.id + '.plupload_delete .ui-icon, #' + file.id + '.plupload_done .ui-icon').unbind('click');
 			$('#' + file.id + '.plupload_delete .ui-icon, #' + file.id + '.plupload_done .ui-icon').click(function(event) {
@@ -179,7 +182,12 @@ PLUPLOADCONF.settings.init = {
 		PLUPLOADCONF.log(up, 'Przesyłanie plików zakończone...');
 	},
 	Error: function (up, err) {
-		var str = "Wystąpił błąd: " + err.code + " - " + err.message + (err.file ? ", plik: " + err.file.name : "");
+		var str = "Wystąpił błąd: " + err.code + " - " + err.message;
+		if (err.file !== undefined) {
+			plupload.each(err.file, function (file) {
+				str += ", plik: " + file.name;
+			});
+		}
 		PLUPLOADCONF.log(up, str);
 		up.refresh();
 	}
