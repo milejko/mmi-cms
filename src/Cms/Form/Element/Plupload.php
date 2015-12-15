@@ -93,6 +93,24 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	}
 	
 	/**
+	 * Ustawia maksymalny rozmiar pliku
+	 * @param string $size
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function setMaxFileSize($size) {
+		return $this->setOption('maxFileSize', $size);
+	}
+	
+	/**
+	 * Ustawia maksymalną ilość plików możliwą do wgrania
+	 * @param integer $count
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function setMaxFileCount($count) {
+		return $this->setOption('maxFileCount', intval($count));
+	}
+	
+	/**
 	 * Ustawia, czy pokazać konsolę z komunikatami
 	 * @param boolean $show
 	 * @return \Cms\Form\Element\Plupload
@@ -142,6 +160,8 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 				conf.form_object_id = '$objectId';
 				" . ($this->getOption('showConsole') ? "conf.log_element = '" . $id . "-console';" : "") . "
 				" . ($this->getOption('chunkSize') ? "conf.chunk_size = '" . $this->getOption('chunkSize') . "';" : "") . "
+				" . ($this->getOption('maxFileSize') ? "conf.max_file_size = '" . $this->getOption('maxFileSize') . "';" : "") . "
+				" . ($this->getOption('maxFileCount') ? "conf.max_file_cnt = " . $this->getOption('maxFileCount') . ";" : "") . "
 				//console.log(conf);
 				$('#$id').plupload(conf);
 				//kliknięcie w górną belkę

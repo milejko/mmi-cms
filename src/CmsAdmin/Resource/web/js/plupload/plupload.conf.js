@@ -7,8 +7,8 @@ var PLUPLOADCONF = PLUPLOADCONF || {};
 PLUPLOADCONF.settings = {
 	runtimes: 'html5',
 	url: request.baseUrl + '/cmsAdmin/upload/plupload',
-	chunk_size: '8mb',
 	file_data_name: 'file',
+	chunk_size: '8mb',
 	rename: true,
 	sortable: false,
 	dragdrop: true,
@@ -16,13 +16,15 @@ PLUPLOADCONF.settings = {
 	multiple_queues: true,
 	multipart: true,
 	max_retries: 3,
+	flash_swf_url: request.baseUrl + '/resource/cmsAdmin/js/plupload/Moxie.swf',
+	silverlight_xap_url: request.baseUrl + '/resource/cmsAdmin/js/plupload/Moxie.xap',
+	max_file_size: 0,
+	max_file_cnt: 0,
 	views: {
 		list: true,
 		thumbs: true,
 		active: 'thumbs'
 	},
-	flash_swf_url: request.baseUrl + '/resource/cmsAdmin/js/plupload/Moxie.swf',
-	silverlight_xap_url: request.baseUrl + '/resource/cmsAdmin/js/plupload/Moxie.xap',
 	log_element: '',
 	form_element_id: '',
 	form_object: 'library',
@@ -81,6 +83,22 @@ PLUPLOADCONF.settings.preinit = {
 
 PLUPLOADCONF.settings.init = {
 	FilesAdded: function (up, files) {
+		//maksymalna ilość plików możliwa do przesłania
+		var max = up.getOption('max_file_cnt');
+		if (max > 0) {
+			var removed = [], selectedCount = files.length;
+			var extraCount = up.files.length + selectedCount - max;
+			if (extraCount > 0) {
+				removed = files.splice(selectedCount - extraCount, extraCount);
+				plupload.each(removed, function (file) {
+					up.removeFile(file);
+				});
+				up.trigger("Error", {
+					code: 190,
+					message: 'Maksymalna ilość plików do przesłania to ' + max + '. Nadliczbowe pliki zostały usunięte!'
+				});
+			}
+		}
 		plupload.each(files, function (file) {
 			if (!file.cmsFileId) {
 				PLUPLOADCONF.log(up, 'Dodano do kolejki plik: ' + file.name);
@@ -105,6 +123,7 @@ PLUPLOADCONF.settings.init = {
 		});
 	},
 	QueueChanged: function(up) {
+		console.log('change');
 		plupload.each(up.files, function (file) {
 			$('#' + file.id + '.plupload_delete .ui-icon, #' + file.id + '.plupload_done .ui-icon').unbind('click');
 			$('#' + file.id + '.plupload_delete .ui-icon, #' + file.id + '.plupload_done .ui-icon').click(function(event) {
