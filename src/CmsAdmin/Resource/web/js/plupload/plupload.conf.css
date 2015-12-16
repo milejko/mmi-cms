@@ -22,6 +22,10 @@ div.plupload-confirm-container {
 	display: none;
 }
 
+div.plupload-confirm-container span.confirm-file {
+	font-weight: bold;
+}
+
 div.ui-dialog button.ui-button {
 	left: auto;
 }

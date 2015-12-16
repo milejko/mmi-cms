@@ -9,7 +9,7 @@ PLUPLOADCONF.settings = {
 	url: request.baseUrl + '/cmsAdmin/upload/plupload',
 	file_data_name: 'file',
 	chunk_size: '8mb',
-	rename: true,
+	rename: false,
 	sortable: false,
 	dragdrop: true,
 	multi_selection: true,
@@ -121,12 +121,16 @@ PLUPLOADCONF.settings.init = {
 					$('#' + file.id).remove();
 					up.removeFile(file);
 				} else {
-					$('#' + up.getOption('form_element_id') + '-confirm p span').text(' ' + file.name);
-					$('#' + up.getOption('form_element_id') + '-confirm').dialog({
+					var confirm = '#' + up.getOption('form_element_id') + '-confirm';
+					$(confirm + ' p span.confirm-info').text('Czy na pewno trwale usunąć plik ');
+					$(confirm + ' p span.confirm-file').text(file.name);
+					$(confirm + ' p span.confirm-info-2').text('?');
+					$(confirm).dialog({
 						resizable: false,
 						width: 500,
 						modal: true,
 						closeText: 'Zamknij',
+						title: 'Usunąć plik?',
 						buttons: {
 							'Usuń': function () {
 								$.post(request.baseUrl + '/cmsAdmin/upload/delete', {cmsFileId: file.cmsFileId, object: up.getOption('form_object'), objectId: up.getOption('form_object_id')}, 'json')
@@ -186,6 +190,37 @@ PLUPLOADCONF.settings.init = {
 		PLUPLOADCONF.log(up, str);
 		up.refresh();
 	}
+};
+
+PLUPLOADCONF.settings.ready = function (event, args) {
+	var list = 'ul#' + args.up.getOption('form_element_id') + '_filelist';
+	$(list).on('click', 'li', function (e) {
+		e.stopPropagation();
+		var id = $(this).attr('id');
+		var file = args.up.getFile(id);
+		if (!file || !file.cmsFileId) {
+			//alert, że nie można edytować
+			var confirm = '#' + args.up.getOption('form_element_id') + '-confirm';
+			$(confirm + ' p span.confirm-info').text('Plik ');
+			$(confirm + ' p span.confirm-file').text(file.name);
+			$(confirm + ' p span.confirm-info-2').text(' nie został jeszcze prawidłowo przesłany na serwer. Nie można teraz edytować jego opisu!');
+			$(confirm).dialog({
+				resizable: false,
+				width: 500,
+				modal: true,
+				closeText: 'Zamknij',
+				title: 'Nie można edytować opisu pliku!',
+				buttons: {
+					'Ok': function () {
+						$(this).dialog('close');
+					}
+				}
+			});
+		} else {
+			//okienko edycji
+		}
+		return false;
+	});
 };
 
 PLUPLOADCONF.settings.selected = function (event, args) {

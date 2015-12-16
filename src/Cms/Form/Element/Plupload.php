@@ -198,8 +198,8 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$html .= '<p>Twoja przeglądarka nie posiada wsparcia dla HTML5.</p>';
 		$html .= '<p>Proszę zaktualizować oprogramowanie.</p>';
 		$html .= '</div>';
-		$html .= '<div id="' . $id . '-confirm" class="plupload-confirm-container" title="Usunąć plik?">';
-		$html .= '<p>Czy na pewno trwale usunąć plik<span></span>?</p>';
+		$html .= '<div id="' . $id . '-confirm" class="plupload-confirm-container" title="">';
+		$html .= '<p><span class="confirm-info"></span><span class="confirm-file"></span><span class="confirm-info-2"></span></p>';
 		$html .= '</div>';
 		if ($this->getOption('showConsole')) {
 			$html .= '<div class="plupload-log-container">';
