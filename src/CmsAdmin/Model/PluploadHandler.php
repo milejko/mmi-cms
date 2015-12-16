@@ -142,6 +142,12 @@ class PluploadHandler {
 	 * @var string
 	 */
 	private $_contentType;
+	
+	/**
+	 * Filtry dla akceptowanych plików
+	 * @var array
+	 */
+	private $_filters;
 
 	/**
 	 * Konstruktor
@@ -248,6 +254,7 @@ class PluploadHandler {
 		$this->_formObject = $post->formObject;
 		$this->_formObjectId = ($post->formObjectId) ? $post->formObjectId : null;
 		$this->_cmsFileId = ($post->cmsFileId) ? $post->cmsFileId : null;
+		$this->_filters = ($post->filters) ? $post->filters : [];
 		if (!$this->_fileName || !$this->_fileId || !$this->_fileSize || !$this->_formObject) {
 			$this->_setError(PLUPLOAD_INPUT_ERR, "Błąd: niekompletne parametry żądania");
 			return false;
@@ -431,6 +438,14 @@ class PluploadHandler {
 	 * @return boolean
 	 */
 	private function _saveFile() {
+		$requestFile = $this->_getRequestFile();
+		//jeśli niedopuszczony plik
+		if (!$this->_filterFile($requestFile)) {
+			//usuwamy plik z katalogu plupload
+			@unlink($this->_filePath);
+			$this->_setError(PLUPLOAD_TYPE_ERR, "Niedopuszczony typ pliku");
+			return false;
+		}
 		//jeśli przesłano plik dla konkretnego id w bazie
 		if ($this->_cmsFileId) {
 			if (null !== $this->_cmsFileRecord = (new \Cms\Orm\CmsFileQuery)->findPk($this->_cmsFileId)) {
@@ -438,7 +453,7 @@ class PluploadHandler {
 			}
 		}
 		//nie było pliku - tworzymy nowy
-		return $this->_createNewFile();
+		return $this->_createNewFile($requestFile);
 	}
 	
 	/**
@@ -453,13 +468,48 @@ class PluploadHandler {
 		];
 		return new \Mmi\Http\RequestFile($data);
 	}
+	
+	/**
+	 * Sprawdza, czy plik spełnia warunki filtrowania
+	 * @param \Mmi\Http\RequestFile $requestFile
+	 * @return boolean
+	 */
+	private function _filterFile(\Mmi\Http\RequestFile $requestFile) {
+		if (empty($this->_filters)) {
+			return true;
+		}
+		if (!isset($this->_filters['mime_types']) || empty($this->_filters['mime_types'])) {
+			return true;
+		}
+		$allowedTypes = $allowedExts = [];
+		foreach ($this->_filters['mime_types'] as $mt) {
+			if (array_key_exists('mime', $mt)) {
+				$allowedTypes[] = strtolower($mt['mime']);
+			} elseif (array_key_exists('extensions', $mt)) {
+				$allowedExts = array_merge($allowedExts, explode(",", strtolower($mt['extensions'])));
+			}
+		}
+		//sprawdzamy typy mime
+		if (in_array($requestFile->type, $allowedTypes)) {
+			return true;
+		}
+		//sprawdzamy rozszerzenie
+		if (strrpos($this->_fileName, '.') > 0) {
+			$ext = substr($this->_fileName, strrpos($this->_fileName, '.') + 1);
+			if (in_array($ext, $allowedExts)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Tworzy nowy rekord pliku i zapisuje go
+	 * @param \Mmi\Http\RequestFile $requestFile
 	 * @return boolean
 	 */
-	private function _createNewFile() {
-		if (null === $this->_cmsFileRecord = \Cms\Model\File::appendFile($this->_getRequestFile(), $this->_formObject, $this->_formObjectId)) {
+	private function _createNewFile(\Mmi\Http\RequestFile $requestFile) {
+		if (null === $this->_cmsFileRecord = \Cms\Model\File::appendFile($requestFile, $this->_formObject, $this->_formObjectId)) {
 			$this->_setError(PLUPLOAD_MOVE_ERR, "Błąd tworzenia nowego rekordu pliku");
 			$result = false;
 		} else {

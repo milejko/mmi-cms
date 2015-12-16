@@ -20,6 +20,9 @@ PLUPLOADCONF.settings = {
 	silverlight_xap_url: request.baseUrl + '/resource/cmsAdmin/js/plupload/Moxie.xap',
 	max_file_size: 0,
 	max_file_cnt: 0,
+	filters: {
+		mime_types: []
+	},
 	views: {
 		list: true,
 		thumbs: true,
@@ -77,7 +80,8 @@ PLUPLOADCONF.settings.preinit = {
 			fileId: file.id,
 			fileSize: file.origSize,
 			formObject: up.getOption('form_object'),
-			formObjectId: up.getOption('form_object_id')
+			formObjectId: up.getOption('form_object_id'),
+			filters: up.getOption('filters')
 		});
 	}
 };
@@ -299,7 +303,7 @@ PLUPLOADCONF.sortable = function(up) {
 			enable = false;
 		}
 	});
-	if (enable) {
+	if (enable && up.files.length > 1) {
 		$(selector).sortable('enable');
 	}
 };

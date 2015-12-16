@@ -120,6 +120,26 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	}
 	
 	/**
+	 * Dodaje dozwolony typ pliku
+	 * @param string $mime typ pliku mime, np. image/jpeg
+	 * @param string $extensions lista rozszerzeń po przecinku, np. jpg,jpeg
+	 * @param string $title opis, np. Obrazki Jpg
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function addAllowedType($mime, $extensions, $title = '') {
+		$types = $this->getOption('mimeTypes');
+		//brak typów - pusta lista
+		if (null === $types) {
+			$types = [];
+		}
+		if (empty($title)) {
+			$title = $extensions;
+		}
+		$types[] = ['title' => $title, 'extensions' => $extensions, 'mime' => $mime];
+		return $this->setOption('mimeTypes', $types);
+	}
+	
+	/**
 	 * Buduje pole
 	 * @return string
 	 */
@@ -162,6 +182,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 				" . ($this->getOption('chunkSize') ? "conf.chunk_size = '" . $this->getOption('chunkSize') . "';" : "") . "
 				" . ($this->getOption('maxFileSize') ? "conf.max_file_size = '" . $this->getOption('maxFileSize') . "';" : "") . "
 				" . ($this->getOption('maxFileCount') ? "conf.max_file_cnt = " . $this->getOption('maxFileCount') . ";" : "") . "
+				" . ($this->getOption('mimeTypes') ? "conf.filters.mime_types = " . json_encode($this->getOption('mimeTypes')) . ";" : "") . "
 				//console.log(conf);
 				$('#$id').plupload(conf);
 				//kliknięcie w górną belkę
