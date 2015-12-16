@@ -3,6 +3,7 @@
 
 //konfiguracja ogólna pluploada
 var PLUPLOADCONF = PLUPLOADCONF || {};
+var plupload = plupload || {};
 
 PLUPLOADCONF.settings = {
 	runtimes: 'html5',
