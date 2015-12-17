@@ -18,11 +18,11 @@ div.plupload_header div.plupload_logo, div.plupload_header div.plupload_header_t
 	cursor: pointer;
 }
 
-div.plupload-confirm-container {
+div.plupload-confirm-container, div.plupload-edit-container {
 	display: none;
 }
 
-div.plupload-confirm-container span.confirm-file {
+div.plupload-confirm-container span.dialog-file, div.plupload-edit-container span.dialog-file {
 	font-weight: bold;
 }
 

@@ -183,7 +183,6 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 				" . ($this->getOption('maxFileSize') ? "conf.max_file_size = '" . $this->getOption('maxFileSize') . "';" : "") . "
 				" . ($this->getOption('maxFileCount') ? "conf.max_file_cnt = " . $this->getOption('maxFileCount') . ";" : "") . "
 				" . ($this->getOption('mimeTypes') ? "conf.filters.mime_types = " . json_encode($this->getOption('mimeTypes')) . ";" : "") . "
-				//console.log(conf);
 				$('#$id').plupload(conf);
 				//kliknięcie w górną belkę
 				$('#$id').on('click', 'div.plupload_logo,div.plupload_header_title', function () {
@@ -199,7 +198,10 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$html .= '<p>Proszę zaktualizować oprogramowanie.</p>';
 		$html .= '</div>';
 		$html .= '<div id="' . $id . '-confirm" class="plupload-confirm-container" title="">';
-		$html .= '<p><span class="confirm-info"></span><span class="confirm-file"></span><span class="confirm-info-2"></span></p>';
+		$html .= '<p><span class="dialog-info"></span><span class="dialog-file"></span><span class="dialog-info-2"></span></p>';
+		$html .= '</div>';
+		$html .= '<div id="' . $id . '-edit" class="plupload-edit-container" title="">';
+		$html .= '<p><span class="dialog-info"></span><span class="dialog-file"></span><span class="dialog-info-2"></span></p>';
 		$html .= '</div>';
 		if ($this->getOption('showConsole')) {
 			$html .= '<div class="plupload-log-container">';
