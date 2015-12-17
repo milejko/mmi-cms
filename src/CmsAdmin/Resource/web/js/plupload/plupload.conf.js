@@ -32,7 +32,8 @@ PLUPLOADCONF.settings = {
 	log_element: '',
 	form_element_id: '',
 	form_object: 'library',
-	form_object_id: null
+	form_object_id: null,
+	replace_file_id: null
 };
 
 //zdarzenia
@@ -92,6 +93,13 @@ PLUPLOADCONF.settings.init = {
 		plupload.each(files, function (file) {
 			if (!file.cmsFileId) {
 				PLUPLOADCONF.log(up, 'Dodano do kolejki plik: ' + file.name);
+				//jeśli plik ma zastąpić inny
+				var replaceFileId = up.getOption('replace_file_id');
+				if (replaceFileId !== null) {
+					file.cmsFileId = replaceFileId;
+					up.setOption('replace_file_id', null);
+					PLUPLOADCONF.editable(up, file);
+				}
 			} else if(file.type.indexOf('image') >= 0) { //plik odtworzony z serwera - pobranie minaiturki
 				$.post(request.baseUrl + '/cmsAdmin/upload/thumbnail', {cmsFileId: file.cmsFileId}, 'json')
 				.done(function (data) {
@@ -155,18 +163,14 @@ PLUPLOADCONF.settings.init = {
 					});
 				}
 			});
-			if (file.cmsFileId && $('#' + file.id + ' div.plupload_file_name span span.ui-icon-pencil').size() === 0) {
-				$('#' + file.id + ' div.plupload_file_name span').prepend('<span class="ui-icon ui-icon-pencil"></span>');
-			}
+			PLUPLOADCONF.editable(up, file);
 		});
 		PLUPLOADCONF.sortable(up);
 	},
 	FileUploaded: function (up, file, info) {
 		var result = PLUPLOADCONF.parseResponse(up, file, info);
 		if (result === true) {
-			if (file.cmsFileId && $('#' + file.id + ' div.plupload_file_name span span.ui-icon-pencil').size() === 0) {
-				$('#' + file.id + ' div.plupload_file_name span').prepend('<span class="ui-icon ui-icon-pencil"></span>');
-			}
+			PLUPLOADCONF.editable(up, file);
 		}
 		$('#' + file.id + ' div.ui-icon-circle-check').removeClass('ui-icon-circle-check').addClass('ui-icon-circle-minus');
 	},
@@ -246,7 +250,10 @@ PLUPLOADCONF.settings.ready = function (event, args) {
 								$(this).dialog('close');
 							},
 							'Zastąp plik': function () {
+								args.up.setOption('replace_file_id', file.cmsFileId);
+								args.up.removeFile(file);
 								$(this).dialog('close');
+								$('#' + args.up.getOption('form_element_id') + ' div.moxie-shim-html5 input[type=file]').trigger('click');
 							},
 							'Anuluj': function () {
 								$(this).dialog('close');
@@ -385,5 +392,11 @@ PLUPLOADCONF.sortable = function(up) {
 	});
 	if (enable && up.files.length > 1) {
 		$(selector).sortable('enable');
+	}
+};
+
+PLUPLOADCONF.editable = function(up, file) {
+	if (file.cmsFileId && $('#' + file.id + ' div.plupload_file_name span span.ui-icon-pencil').size() === 0) {
+		$('#' + file.id + ' div.plupload_file_name span').prepend('<span class="ui-icon ui-icon-pencil"></span>');
 	}
 };
