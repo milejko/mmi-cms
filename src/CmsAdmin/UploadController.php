@@ -96,6 +96,22 @@ class UploadController extends Mvc\Controller {
 	}
 	
 	/**
+	 * Zwraca dane opisujące rekord pliku
+	 */
+	public function detailsAction() {
+		$this->view->setLayoutDisabled();
+		$this->getResponse()->setTypeJson(true);
+		if (!$this->getPost()->cmsFileId) {
+			return $this->_jsonError(185);
+		}
+		//szukamy rekordu pliku
+		if (null !== $record = (new \Cms\Orm\CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
+			return json_encode(['result' => 'OK', 'record' => $record]);
+		}
+		return $this->_jsonError(185);
+	}
+	
+	/**
 	 * Zapisuje kolejność plików
 	 */
 	public function sortAction() {

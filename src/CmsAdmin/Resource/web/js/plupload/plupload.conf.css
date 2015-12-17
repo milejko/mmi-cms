@@ -29,3 +29,17 @@ div.plupload-confirm-container span.confirm-file {
 div.ui-dialog button.ui-button {
 	left: auto;
 }
+
+div.plupload_file_name span span.ui-icon {
+	float: right;
+}
+
+div.plupload_view_thumbs li.plupload_file {
+	position: relative;
+}
+
+div.plupload_view_thumbs div.plupload_file_name span span.ui-icon {
+	position: absolute;
+	right: 1px;
+	bottom: 1px;
+}

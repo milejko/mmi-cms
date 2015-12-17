@@ -115,7 +115,7 @@ PLUPLOADCONF.settings.init = {
 	QueueChanged: function(up) {
 		plupload.each(up.files, function (file) {
 			$('#' + file.id + '.plupload_delete .ui-icon, #' + file.id + '.plupload_done .ui-icon').unbind('click');
-			$('#' + file.id + '.plupload_delete .ui-icon, #' + file.id + '.plupload_done .ui-icon').click(function(event) {
+			$('#' + file.id + '.plupload_delete .plupload_file_action .ui-icon, #' + file.id + '.plupload_done .plupload_file_action .ui-icon').click(function(event) {
 				event.stopPropagation();
 				//jeśli nowy plik - można łatwo usunąć
 				if (!file.cmsFileId) {
@@ -155,19 +155,25 @@ PLUPLOADCONF.settings.init = {
 					});
 				}
 			});
+			if (file.cmsFileId && $('#' + file.id + ' div.plupload_file_name span span.ui-icon-pencil').size() === 0) {
+				$('#' + file.id + ' div.plupload_file_name span').prepend('<span class="ui-icon ui-icon-pencil"></span>');
+			}
 		});
 		PLUPLOADCONF.sortable(up);
 	},
 	FileUploaded: function (up, file, info) {
-		PLUPLOADCONF.parseResponse(up, file, info);
+		var result = PLUPLOADCONF.parseResponse(up, file, info);
+		if (result === true) {
+			if (file.cmsFileId && $('#' + file.id + ' div.plupload_file_name span span.ui-icon-pencil').size() === 0) {
+				$('#' + file.id + ' div.plupload_file_name span').prepend('<span class="ui-icon ui-icon-pencil"></span>');
+			}
+		}
+		$('#' + file.id + ' div.ui-icon-circle-check').removeClass('ui-icon-circle-check').addClass('ui-icon-circle-minus');
 	},
 	ChunkUploaded: function (up, file, info) {
 		PLUPLOADCONF.parseResponse(up, file, info);
 	},
-	UploadComplete: function (up, files) {
-		plupload.each(files, function (file) {
-			$('#' + file.id + ' div.ui-icon-circle-check').removeClass('ui-icon-circle-check').addClass('ui-icon-circle-minus');
-		});
+	UploadComplete: function (up) {
 		PLUPLOADCONF.sortable(up);
 		PLUPLOADCONF.log(up, 'Przesyłanie plików zakończone...');
 	},
@@ -195,15 +201,15 @@ PLUPLOADCONF.settings.init = {
 
 PLUPLOADCONF.settings.ready = function (event, args) {
 	var list = 'ul#' + args.up.getOption('form_element_id') + '_filelist';
-	$(list).on('click', 'li', function (e) {
+	$(list).on('click', 'li div.plupload_file_name span.ui-icon-pencil', function (e) {
 		e.stopPropagation();
-		var id = $(this).attr('id');
+		var id = $(this).parents('li.plupload_file').attr('id');
 		var file = args.up.getFile(id);
 		if (!file || !file.cmsFileId) {
 			//alert, że nie można edytować
 			var confirm = '#' + args.up.getOption('form_element_id') + '-confirm';
 			$(confirm + ' p span.confirm-info').text('Plik ');
-			$(confirm + ' p span.confirm-file').text(file.name);
+			$(confirm + ' p span.confirm-file').text((file) ? file.name : '');
 			$(confirm + ' p span.confirm-info-2').text(' nie został jeszcze prawidłowo przesłany na serwer. Nie można teraz edytować jego opisu!');
 			$(confirm).dialog({
 				resizable: false,
@@ -218,7 +224,18 @@ PLUPLOADCONF.settings.ready = function (event, args) {
 				}
 			});
 		} else {
-			//okienko edycji
+			//okienko edycji - pobieramy dane rekordu z bazy
+			$.post(request.baseUrl + '/cmsAdmin/upload/details', {cmsFileId: file.cmsFileId}, 'json')
+			.done(function (data) {
+				if (data.result === 'OK' && data.record) {
+					//przygotowujemy zawartość okienka edycji i pokazujemy go
+				} else {
+					args.up.trigger("Error", {code: 185, message: 'Pobranie opisu pliku nie powiodło się! Spróbuj ponownie'});
+				}
+			})
+			.fail(function () {
+				args.up.trigger("Error", {code: 185, message: 'Pobranie opisu pliku nie powiodło się! Spróbuj ponownie'});
+			});
 		}
 		return false;
 	});
