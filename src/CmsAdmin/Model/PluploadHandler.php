@@ -253,7 +253,7 @@ class PluploadHandler {
 		$this->_fileSize = $post->fileSize;
 		$this->_formObject = $post->formObject;
 		$this->_formObjectId = ($post->formObjectId) ? $post->formObjectId : null;
-		$this->_cmsFileId = ($post->cmsFileId) ? $post->cmsFileId : null;
+		$this->_cmsFileId = ($post->cmsFileId > 0) ? $post->cmsFileId : null;
 		$this->_filters = ($post->filters) ? $post->filters : [];
 		if (!$this->_fileName || !$this->_fileId || !$this->_fileSize || !$this->_formObject) {
 			$this->_setError(PLUPLOAD_INPUT_ERR, "Błąd: niekompletne parametry żądania");
@@ -449,7 +449,7 @@ class PluploadHandler {
 		//jeśli przesłano plik dla konkretnego id w bazie
 		if ($this->_cmsFileId) {
 			if (null !== $this->_cmsFileRecord = (new \Cms\Orm\CmsFileQuery)->findPk($this->_cmsFileId)) {
-				return true;
+				return $this->_replaceFile($requestFile);
 			}
 		}
 		//nie było pliku - tworzymy nowy
@@ -522,20 +522,21 @@ class PluploadHandler {
 
 	/**
 	 * Zamienia plik w istniejącym rekordzie
-	 * @param \File\Orm\Record $existFile istniejący plik
-	 * @param boolean $full czy zamiana razem z parametrami
+	 * @param \Mmi\Http\RequestFile $requestFile
 	 * @return boolean
 	 */
-	private function _replaceFile(\File\Orm\Record $existFile, $full = false) {
-		$newStatus = null;
-		if ($full) {
-			$newStatus = \File\Orm\Record::STATUS_NEW;
+	private function _replaceFile(\Mmi\Http\RequestFile $requestFile) {
+		if ($this->_cmsFileRecord === null) {
+			$result = false;
+		} else {
+			$result = true;
 		}
-		if ($existFile->replaceFileSource($this->_filePath, $newStatus)) {
-			return true;
+		if ($result === false) {
+			$this->_setError(PLUPLOAD_MOVE_ERR, "Błąd podczas nadpisywania pliku");
 		}
-		$this->_setError(PLUPLOAD_MOVE_ERR, "Błąd podczas nadpisywania pliku");
-		return false;
+		//usuwamy plik z katalogu plupload
+		@unlink($this->_filePath);
+		return $result;
 	}
 
 }

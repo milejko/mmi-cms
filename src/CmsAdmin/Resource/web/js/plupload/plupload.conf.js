@@ -83,6 +83,7 @@ PLUPLOADCONF.settings.preinit = {
 			fileSize: file.origSize,
 			formObject: up.getOption('form_object'),
 			formObjectId: up.getOption('form_object_id'),
+			cmsFileId: ((file.cmsFileId) ? file.cmsFileId : 0),
 			filters: up.getOption('filters')
 		});
 	}
