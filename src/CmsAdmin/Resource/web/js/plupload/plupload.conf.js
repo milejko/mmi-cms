@@ -205,6 +205,11 @@ PLUPLOADCONF.settings.init = {
 };
 
 PLUPLOADCONF.settings.ready = function (event, args) {
+	//kliknięcie w górną belkę
+	$('div#' + args.up.getOption('form_element_id')).on('click', 'div.plupload_logo,div.plupload_header_title', function () {
+		$('div#' + args.up.getOption('form_element_id')  + ' div.moxie-shim-html5 input[type=file]').trigger('click');
+	});
+	//lista plików
 	var list = 'ul#' + args.up.getOption('form_element_id') + '_filelist';
 	$(list).on('click', 'li div.plupload_file_name span.ui-icon-pencil', function (e) {
 		e.stopPropagation();
@@ -266,7 +271,7 @@ PLUPLOADCONF.settings.ready = function (event, args) {
 								args.up.setOption('replace_file_id', file.cmsFileId);
 								args.up.removeFile(file);
 								$(this).dialog('close');
-								$('#' + args.up.getOption('form_element_id') + ' div.moxie-shim-html5 input[type=file]').trigger('click');
+								$('div#' + args.up.getOption('form_element_id') + ' div.moxie-shim-html5 input[type=file]').trigger('click');
 							},
 							'Anuluj': function () {
 								$(this).dialog('close');

@@ -174,7 +174,6 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 			$(document).ready(function () {
 				'use strict';
 				var conf = $.extend({}, PLUPLOADCONF.settings);
-				//modyfikacja konfiguracji
 				conf.form_element_id = '$id';
 				conf.form_object = '$object';
 				conf.form_object_id = '$objectId';
@@ -184,12 +183,6 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 				" . ($this->getOption('maxFileCount') ? "conf.max_file_cnt = " . $this->getOption('maxFileCount') . ";" : "") . "
 				" . ($this->getOption('mimeTypes') ? "conf.filters.mime_types = " . json_encode($this->getOption('mimeTypes')) . ";" : "") . "
 				$('#$id').plupload(conf);
-				//kliknięcie w górną belkę
-				$('#$id').on('click', 'div.plupload_logo,div.plupload_header_title', function () {
-					if ($('#$id div.moxie-shim-html5').size() > 0) {
-						$('#$id div.moxie-shim-html5 input[type=file]').trigger('click');
-					}
-				});
 			});
 		");
 
