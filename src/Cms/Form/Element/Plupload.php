@@ -201,7 +201,15 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$html .= '<p><span class="dialog-info"></span><span class="dialog-file"></span><span class="dialog-info-2"></span></p>';
 		$html .= '</div>';
 		$html .= '<div id="' . $id . '-edit" class="plupload-edit-container" title="">';
-		$html .= '<p><span class="dialog-info"></span><span class="dialog-file"></span><span class="dialog-info-2"></span></p>';
+		$html .= '<fieldset>';
+		$html .= '<label>Tytuł:</label>';
+		$html .= '<input type="text" name="title" value="" class="text ui-widget-content ui-corner-all">';
+		$html .= '<label>Autor:</label>';
+		$html .= '<input type="text" name="author" value="" class="text ui-widget-content ui-corner-all">';
+		$html .= '<label>Źródło:</label>';
+		$html .= '<input type="text" name="source" value="" class="text ui-widget-content ui-corner-all">';
+		$html .= '</fieldset>';
+		$html .= '<div class="dialog-error"><p></p><span class="ui-icon ui-icon-alert"></span></div>';
 		$html .= '</div>';
 		if ($this->getOption('showConsole')) {
 			$html .= '<div class="plupload-log-container">';

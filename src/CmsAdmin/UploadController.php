@@ -112,6 +112,31 @@ class UploadController extends Mvc\Controller {
 	}
 	
 	/**
+	 * Aktualizuje dane opisujące rekord pliku: tytuł, autora, źródło
+	 */
+	public function describeAction() {
+		$this->view->setLayoutDisabled();
+		$this->getResponse()->setTypeJson(true);
+		//sprawdzamy, czy jest id pliku i form
+		if (!$this->getPost()->cmsFileId || !is_array($this->getPost()->form)) {
+			return $this->_jsonError(186);
+		}
+		//szukamy rekordu pliku
+		if (null === $record = (new \Cms\Orm\CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
+			return $this->_jsonError(186);
+		}
+		$form = [];
+		foreach ($this->getPost()->form as $field) {
+			$form[$field['name']] = $field['value'];
+		}
+		$record->setFromArray($form);
+		if ($record->save()) {
+			return json_encode(['result' => 'OK']);
+		}
+		return $this->_jsonError(186);
+	}
+	
+	/**
 	 * Zapisuje kolejność plików
 	 */
 	public function sortAction() {

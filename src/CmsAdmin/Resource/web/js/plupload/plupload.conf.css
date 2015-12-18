@@ -43,3 +43,36 @@ div.plupload_view_thumbs div.plupload_file_name span span.ui-icon {
 	right: 1px;
 	bottom: 1px;
 }
+
+div.plupload-edit-container label, div.plupload-edit-container input {
+	display: block;
+}
+
+div.plupload-edit-container input.text {
+	margin-bottom: 10px;
+	width: 100%;
+	padding: .3em;
+}
+
+div.plupload-edit-container .dialog-error {
+	display: none;
+}
+
+div.plupload-edit-container .dialog-error span.ui-icon {
+	float: right;
+	margin-top: 3px;
+}
+
+div.plupload-edit-container .dialog-error p {
+	float: right;
+	font-size: 12px;
+	margin: 0 5px;
+}
+
+.ui-front {
+	z-index: 1000 !important;
+}
+
+.ui-dialog {
+	z-index: 1001 !important;
+}

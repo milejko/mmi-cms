@@ -208,7 +208,7 @@ PLUPLOADCONF.settings.ready = function (event, args) {
 	var list = 'ul#' + args.up.getOption('form_element_id') + '_filelist';
 	$(list).on('click', 'li div.plupload_file_name span.ui-icon-pencil', function (e) {
 		e.stopPropagation();
-		var id = $(this).parents('li.plupload_file').attr('id');
+		var id = $(this).parents('li.plupload_file').first().attr('id');
 		var file = args.up.getFile(id);
 		if (!file || !file.cmsFileId) {
 			//alert, że nie można edytować
@@ -237,18 +237,30 @@ PLUPLOADCONF.settings.ready = function (event, args) {
 				if (data.result === 'OK' && data.record) {
 					//przygotowujemy zawartość okienka edycji i pokazujemy go
 					var edit = 'div#' + args.up.getOption('form_element_id') + '-edit';
-					$(edit + ' p span.dialog-info').text('Edycja opisu pliku ');
-					$(edit + ' p span.dialog-file').text((file) ? file.name : '');
-					$(edit + ' p span.dialog-info-2').text('');
-					$(edit).dialog({
+					$(edit + ' input[name="title"]').val(data.record.title);
+					$(edit + ' input[name="author"]').val(data.record.author);
+					$(edit + ' input[name="source"]').val(data.record.source);
+					$(edit + ' .dialog-error').hide().find('p').text('');
+					var editDialog = $(edit).dialog({
 						resizable: false,
 						width: 600,
 						modal: true,
 						closeText: 'Zamknij',
-						title: 'Edycja opisu pliku',
+						title: 'Edycja opisu pliku: ' + file.name,
+						dialogClass: 'ui-state-default',
 						buttons: {
 							'Zapisz': function () {
-								$(this).dialog('close');
+								$.post(request.baseUrl + '/cmsAdmin/upload/describe', {cmsFileId: file.cmsFileId, form: $(edit + ' input.text').serializeArray()}, 'json')
+								.done(function (data) {
+									if (data.result === 'OK') {
+										editDialog.dialog('close');
+									} else {
+										$(edit + ' .dialog-error p').text('Nie udało się zapisać zmian! Spróbuj ponownie!').parent().show();
+									}
+								})
+								.fail(function () {
+									$(edit + ' .dialog-error p').text('Nie udało się zapisać zmian! Spróbuj ponownie!').parent().show();
+								});
 							},
 							'Zastąp plik': function () {
 								args.up.setOption('replace_file_id', file.cmsFileId);
@@ -343,8 +355,7 @@ PLUPLOADCONF.parseResponse = function(up, file, info) {
 		}
 		return true;
 	}
-	var code;
-	var message;
+	var code, message;
 	if (typeof response !== 'undefined' && typeof response.error !== 'undefined') {
 		code = response.error.code;
 		message = response.error.message;
@@ -352,11 +363,7 @@ PLUPLOADCONF.parseResponse = function(up, file, info) {
 		code = 111;
 		message = "Wystąpił nieznany błąd";
 	}
-	up.trigger("Error", {
-		code: code,
-		message: message,
-		file: file
-	});
+	up.trigger("Error", {code: code, message: message, file: file});
 	return false;
 };
 
