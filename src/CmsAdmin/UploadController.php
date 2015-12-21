@@ -125,12 +125,15 @@ class UploadController extends Mvc\Controller {
 		if (null === $record = (new \Cms\Orm\CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
 			return $this->_jsonError(186);
 		}
-		$form = [];
+		$form = ['active' => 0, 'sticky' => 0];
 		foreach ($this->getPost()->form as $field) {
 			$form[$field['name']] = $field['value'];
 		}
 		$record->setFromArray($form);
-		if ($record->save()) {
+		if ($form['sticky'] && $record->setSticky()) {
+			return json_encode(['result' => 'OK']);
+		}
+		elseif ($record->save()) {
 			return json_encode(['result' => 'OK']);
 		}
 		return $this->_jsonError(186);

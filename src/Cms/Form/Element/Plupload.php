@@ -252,6 +252,10 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$html .= '<input type="text" name="author" value="" class="text ui-widget-content ui-corner-all">';
 		$html .= '<label>' . ($this->getOption('sourceLabel') ? $this->getOption('sourceLabel') : 'Źródło') . ':</label>';
 		$html .= '<input type="text" name="source" value="" class="text ui-widget-content ui-corner-all">';
+		$html .= '<div id="' . $id . '-edit-buttons" class="plupload-edit-buttons">';
+		$html .= '<input type="checkbox" name="active" id="' . $id . '-edit-active" value="1"><label for="' . $id . '-edit-active">Aktywny</label>';
+		$html .= '<input type="checkbox" name="sticky" id="' . $id . '-edit-sticky" value="1"><label for="' . $id . '-edit-sticky">Wyróżniony</label>';
+		$html .= '</div>';
 		$html .= '</fieldset>';
 		$html .= '<div class="dialog-error"><p></p><span class="ui-icon ui-icon-alert"></span></div>';
 		$html .= '</div>';
