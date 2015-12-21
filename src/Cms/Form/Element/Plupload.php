@@ -140,6 +140,57 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	}
 	
 	/**
+	 * Dodaje dozwolony typ pliku JPG
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function addAllowedJpg() {
+		return $this->addAllowedType('image/jpeg', 'jpg,jpeg,jpe');
+	}
+	
+	/**
+	 * Dodaje dozwolony typ pliku PNG
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function addAllowedPng() {
+		return $this->addAllowedType('image/png', 'png');
+	}
+	
+	/**
+	 * Dodaje dozwolony typ pliku GIF
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function addAllowedGif() {
+		return $this->addAllowedType('image/gif', 'gif');
+	}
+	
+	/**
+	 * Ustawia label dla pola title
+	 * @param string $label
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function setTitleLabel($label) {
+		return $this->setOption('titleLabel', $label);
+	}
+	
+	/**
+	 * Ustawia label dla pola author
+	 * @param string $label
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function setAuthorLabel($label) {
+		return $this->setOption('authorLabel', $label);
+	}
+	
+	/**
+	 * Ustawia label dla pola source
+	 * @param string $label
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function setSourceLabel($label) {
+		return $this->setOption('sourceLabel', $label);
+	}
+	
+	/**
 	 * Buduje pole
 	 * @return string
 	 */
@@ -195,11 +246,11 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$html .= '</div>';
 		$html .= '<div id="' . $id . '-edit" class="plupload-edit-container" title="">';
 		$html .= '<fieldset>';
-		$html .= '<label>Tytuł:</label>';
+		$html .= '<label>' . ($this->getOption('titleLabel') ? $this->getOption('titleLabel') : 'Tytuł') . ':</label>';
 		$html .= '<input type="text" name="title" value="" class="text ui-widget-content ui-corner-all">';
-		$html .= '<label>Autor:</label>';
+		$html .= '<label>' . ($this->getOption('authorLabel') ? $this->getOption('authorLabel') : 'Autor') . ':</label>';
 		$html .= '<input type="text" name="author" value="" class="text ui-widget-content ui-corner-all">';
-		$html .= '<label>Źródło:</label>';
+		$html .= '<label>' . ($this->getOption('sourceLabel') ? $this->getOption('sourceLabel') : 'Źródło') . ':</label>';
 		$html .= '<input type="text" name="source" value="" class="text ui-widget-content ui-corner-all">';
 		$html .= '</fieldset>';
 		$html .= '<div class="dialog-error"><p></p><span class="ui-icon ui-icon-alert"></span></div>';
