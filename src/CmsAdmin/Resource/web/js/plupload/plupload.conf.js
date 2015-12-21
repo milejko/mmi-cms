@@ -105,7 +105,7 @@ PLUPLOADCONF.settings.init = {
 				$.post(request.baseUrl + '/cmsAdmin/upload/thumbnail', {cmsFileId: file.cmsFileId}, 'json')
 				.done(function (data) {
 					if (data.result === 'OK' && data.url) {
-						$('li#' + file.id + ' div.plupload_file_dummy').html('<img src="' + data.url + '" alt="" />');
+						$('div#' + up.getOption('form_element_id') + ' li#' + file.id + ' div.plupload_file_dummy').html('<img src="' + data.url + '" alt="" />');
 					}
 				})
 				.fail(function () {});
@@ -123,12 +123,12 @@ PLUPLOADCONF.settings.init = {
 	},
 	QueueChanged: function(up) {
 		plupload.each(up.files, function (file) {
-			$('#' + file.id + '.plupload_delete .ui-icon, #' + file.id + '.plupload_done .ui-icon').unbind('click');
-			$('#' + file.id + '.plupload_delete .plupload_file_action .ui-icon, #' + file.id + '.plupload_done .plupload_file_action .ui-icon').click(function(event) {
+			$('div#' + up.getOption('form_element_id') + ' li#' + file.id + '.plupload_delete .ui-icon, div#' + up.getOption('form_element_id') + ' li#' + file.id + '.plupload_done .ui-icon').unbind('click');
+			$('div#' + up.getOption('form_element_id') + ' li#' + file.id + '.plupload_delete .plupload_file_action .ui-icon, div#' + up.getOption('form_element_id') + ' li#' + file.id + '.plupload_done .plupload_file_action .ui-icon').click(function(event) {
 				event.stopPropagation();
 				//jeśli nowy plik - można łatwo usunąć
 				if (!file.cmsFileId) {
-					$('#' + file.id).remove();
+					$('div#' + up.getOption('form_element_id') + ' li#' + file.id).remove();
 					up.removeFile(file);
 				} else {
 					var confirm = 'div#' + up.getOption('form_element_id') + '-confirm';
@@ -146,7 +146,7 @@ PLUPLOADCONF.settings.init = {
 								$.post(request.baseUrl + '/cmsAdmin/upload/delete', {cmsFileId: file.cmsFileId, object: up.getOption('form_object'), objectId: up.getOption('form_object_id')}, 'json')
 								.done(function (data) {
 									if (data.result === 'OK') {
-										$('#' + file.id).remove();
+										$('div#' + up.getOption('form_element_id') + ' li#' + file.id).remove();
 										up.removeFile(file);
 									} else {
 										up.trigger("Error", {code: 178, message: 'Usunięcie pliku nie powiodło się'});
@@ -173,7 +173,7 @@ PLUPLOADCONF.settings.init = {
 		if (result === true) {
 			PLUPLOADCONF.editable(up, file);
 		}
-		$('#' + file.id + ' div.ui-icon-circle-check').removeClass('ui-icon-circle-check').addClass('ui-icon-circle-minus');
+		$('div#' + up.getOption('form_element_id') + ' li#' + file.id + ' div.ui-icon-circle-check').removeClass('ui-icon-circle-check').addClass('ui-icon-circle-minus');
 	},
 	ChunkUploaded: function (up, file, info) {
 		PLUPLOADCONF.parseResponse(up, file, info);
@@ -307,7 +307,7 @@ PLUPLOADCONF.settings.selected = function (event, args) {
 				file: removed
 			});
 			plupload.each(removed, function (file) {
-				var selector = '#' + args.up.getOption('form_element_id') + ' li#' + file.id;
+				var selector = 'div#' + args.up.getOption('form_element_id') + ' li#' + file.id;
 				$(selector).remove();
 				args.up.removeFile(file);
 			});
@@ -373,7 +373,7 @@ PLUPLOADCONF.parseResponse = function(up, file, info) {
 };
 
 PLUPLOADCONF.sortable = function(up) {
-	var selector = '#' + up.getOption('form_element_id') + '_filelist';
+	var selector = 'ul#' + up.getOption('form_element_id') + '_filelist';
 	$(selector).sortable({
 		items: '> li.plupload_file',
 		cursor: 'move',
@@ -409,7 +409,7 @@ PLUPLOADCONF.sortable = function(up) {
 };
 
 PLUPLOADCONF.editable = function(up, file) {
-	if (file.cmsFileId && $('#' + file.id + ' div.plupload_file_name span span.ui-icon-pencil').size() === 0) {
-		$('#' + file.id + ' div.plupload_file_name span').prepend('<span class="ui-icon ui-icon-pencil"></span>');
+	if (file.cmsFileId && $('div#' + up.getOption('form_element_id') + ' li#' + file.id + ' div.plupload_file_name span span.ui-icon-pencil').size() === 0) {
+		$('div#' + up.getOption('form_element_id') + ' li#' + file.id + ' div.plupload_file_name span').prepend('<span class="ui-icon ui-icon-pencil"></span>');
 	}
 };

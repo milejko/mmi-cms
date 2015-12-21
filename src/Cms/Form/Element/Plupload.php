@@ -224,7 +224,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$view->headScript()->appendScript("
 			$(document).ready(function () {
 				'use strict';
-				var conf = $.extend({}, PLUPLOADCONF.settings);
+				var conf = $.extend(true, {}, PLUPLOADCONF.settings);
 				conf.form_element_id = '$id';
 				conf.form_object = '$object';
 				conf.form_object_id = '$objectId';
