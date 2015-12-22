@@ -31,7 +31,7 @@ class File {
 			//pliki w polu formularza
 			foreach ($fileSet as $file) {
 				/* @var $file \Mmi\Http\RequestFile */
-				if (!self::appendFile($file, $object, $id, $allowedTypes)) {
+				if (null === self::appendFile($file, $object, $id, $allowedTypes)) {
 					return false;
 				}
 			}
@@ -45,16 +45,16 @@ class File {
 	 * @param string $object obiekt
 	 * @param integer $id id obiektu
 	 * @param array $allowedTypes dozwolone typy plików
-	 * @return boolean
+	 * @return \Cms\Orm\CmsFileRecord
 	 */
 	public static function appendFile(\Mmi\Http\RequestFile $file, $object, $id = null, $allowedTypes = []) {
 		//pomijanie plików typu bmp (bitmapy windows - nieobsługiwane w PHP)
 		if ($file->type == 'image/x-ms-bmp') {
-			return false;
+			return null;
 		}
 		//plik nie jest dozwolony
 		if (!empty($allowedTypes) && !in_array($file->type, $allowedTypes)) {
-			return false;
+			return null;
 		}
 		//kalkulacja nazwy systemowej
 		$name = md5(microtime(true) . $file->tmpName) . substr($file->name, strrpos($file->name, '.'));
@@ -76,7 +76,7 @@ class File {
 		$record->object = $object;
 		$record->objectId = $id;
 		//zapis rekordu
-		return $record->save();
+		return ($record->save())? $record : null;
 	}
 
 	/**

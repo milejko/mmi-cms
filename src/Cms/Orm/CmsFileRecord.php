@@ -165,6 +165,116 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 		//zwrot ścieżki publicznej
 		return $baseUrl . $fileName;
 	}
+	
+	/**
+	 * Zapisuje plik przesłany na serwer i aktualizuje pola w rekordzie
+	 * Uwaga! Metoda nie zapisuje zmian w rekordzie (nie wywołuje save)!
+	 * @param \Mmi\Http\RequestFile $file obiekt pliku
+	 * @param array $allowedTypes dozwolone typy plików
+	 * @return boolean
+	 */
+	public function replaceFile(\Mmi\Http\RequestFile $file, $allowedTypes = []) {
+		//jeśli brak danych pliku
+		if (empty($file->name) || empty($file->tmpName)) {
+			return false;
+		}
+		//plik nie jest dozwolony
+		if (!empty($allowedTypes) && !in_array($file->type, $allowedTypes)) {
+			return false;
+		}
+		//zapamiętujemy nazwę obecnego pliku na dysku
+		if ($this->getOption('currentFile') === null) {
+			$this->setOption('currentFile', $this->name);
+		}
+		//kalkulacja nazwy systemowej
+		$name = md5(microtime(true) . $file->tmpName) . substr($file->name, strrpos($file->name, '.'));
+		//określanie ścieżki
+		$dir = BASE_PATH . '/var/data/' . $name[0] . '/' . $name[1] . '/' . $name[2] . '/' . $name[3];
+		//tworzenie ścieżki
+		if (!file_exists($dir)) {
+			mkdir($dir, 0777, true);
+		}
+		//zmiana uprawnień
+		chmod($file->tmpName, 0664);
+		//kopiowanie pliku
+		if (!copy($file->tmpName, $dir . '/' . $name)) {
+			return false;
+		}
+		//ustawienie nazwy pliku
+		$this->name = $name;
+		//typ zasobu
+		$this->mimeType = $file->type;
+		//klasa zasobu
+		$class = explode('/', $file->type);
+		$this->class = $class[0];
+		//oryginalna nazwa pliku
+		$this->original = $file->name;
+		//rozmiar pliku
+		$this->size = $file->size;
+		return true;
+	}
+	
+	/**
+	 * Zapis danych do obiektu
+	 * @return bool
+	 */
+	public function save() {
+		$res = parent::save();
+		//jeśli udało się zapisać rekord
+		if ($res) {
+			//usunięcie obecnego pliku z dysku
+			$this->_unlinkCurrent();
+		}
+		return $res;
+	}
+	
+	/**
+	 * Wstawienie danych (przez save)
+	 * @return boolean
+	 */
+	protected function _insert() {
+		//data dodania
+		if (!$this->dateAdd) {
+			$this->dateAdd = date('Y-m-d H:i:s');
+		}
+		//właściciel pliku
+		if (!$this->cmsAuthId) {
+			$this->cmsAuthId = \App\Registry::$auth ? \App\Registry::$auth->getId() : null;
+		}
+		return parent::_insert();
+	}
+
+	/**
+	 * Aktualizacja danych (przez save)
+	 * @return boolean
+	 */
+	protected function _update() {
+		//data modyfikacji
+		$this->dateModify = date('Y-m-d H:i:s');
+		return parent::_update();
+	}
+	
+	/**
+	 * Usuwa obecny plik, fizycznie z dysku
+	 * @return boolean
+	 */
+	protected function _unlinkCurrent() {
+		$name = $this->getOption('currentFile');
+		if (empty($name) || strlen($name) < 4) {
+			return true;
+		}
+		//ścieżka do obecnego pliku
+		$path = BASE_PATH . '/var/data/' . $name[0] . '/' . $name[1] . '/' . $name[2] . '/' . $name[3] . '/' . $name;
+		//usuwa plik
+		if (file_exists($path) && is_writable($path)) {
+			unlink($path);
+		}
+		//usuwa miniatury
+		$this->_unlink(BASE_PATH . '/web/data/' . $name[0] . '/' . $name[1] . '/' . $name[2] . '/' . $name[3], $name);
+		//reset obecnego pliku
+		$this->setOption('currentFile', null);
+		return true;
+	}
 
 	/**
 	 * Makes the tumb and return its address
