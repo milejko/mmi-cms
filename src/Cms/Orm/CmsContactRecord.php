@@ -65,8 +65,12 @@ class CmsContactRecord extends \Mmi\Orm\Record {
 		//wysyłka do maila zdefiniowanego w opcjach
 		$option = (new CmsContactOptionQuery)->findPk($this->cmsContactOptionId);
 		//niepoprawna opcja
-		if (!$option || !\Cms\Model\Mail::pushEmail('admin_cms_contact', $option->sendTo, ['contact' => $this, 'option' => $option], null, $this->email)) {
+		if (!$option) {
 			return false;
+		}
+		//wysyłka maila
+		if ($option->sendTo) {
+			\Cms\Model\Mail::pushEmail('admin_cms_contact', $option->sendTo, ['contact' => $this, 'option' => $option], null, $this->email);
 		}
 		return parent::_insert();
 	}
