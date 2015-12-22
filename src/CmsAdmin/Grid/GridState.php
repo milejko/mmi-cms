@@ -197,12 +197,13 @@ class GridState extends \Mmi\OptionObject {
 	 * @return GridState
 	 */
 	private function _applyOrder(\Mmi\Orm\Query $query) {
+		$orders = $this->getOrder();
 		//resetowanie domyślnego orderu jeśli podany
-		if (!empty($this->getOrder())) {
+		if (!empty($orders)) {
 			$query->resetOrder();
 		}
 		//iteracja po orderze
-		foreach ($this->getOrder() as $order) {
+		foreach ($orders as $order) {
 			//order nie jest obiektem sortowania
 			if (!($order instanceof GridStateOrder)) {
 				throw new GridException('Invalid state order object');
