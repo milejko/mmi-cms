@@ -154,7 +154,7 @@ class PluploadHandler {
 	 */
 	function __construct($path = '') {
 		if (!$path) {
-			$path = BASE_PATH . '/var/plupload/';
+			$path = BASE_PATH . '/var/data/plupload/';
 		}
 		$this->setTargetDir($path);
 	}
