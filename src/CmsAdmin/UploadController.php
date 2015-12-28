@@ -23,7 +23,7 @@ class UploadController extends Mvc\Controller {
 		$this->view->setLayoutDisabled();
 		$this->getResponse()->setTypeJson(true);
 		//obiekt handlera plupload
-		$pluploadHandler = new Model\PluploadHandler(BASE_PATH . '/var/plupload/');
+		$pluploadHandler = new Model\PluploadHandler();
 		//jeśli wystąpił błąd
 		if (!$pluploadHandler->handle()) {
 			return $this->_jsonError($pluploadHandler->getErrorCode(), $pluploadHandler->getErrorMessage());
