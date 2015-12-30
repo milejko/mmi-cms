@@ -45,9 +45,12 @@ class NotEmptyCmsFiles extends \Mmi\Validator\ValidatorAbstract {
 	 * @return boolean
 	 */
 	public function isValid($value) {
-		if (!(new \Cms\Orm\CmsFileQuery)
-			->byObject($this->getObject(), $this->getObjectId())
-			->count()) {
+		$query = (new \Cms\Orm\CmsFileQuery)
+			->byObject($this->getObject(), $this->getObjectId());
+		if ($this->getClass()) {
+			$query->andFieldClass()->equals($this->getClass());
+		}
+		if (!$query->count()) {
 				$this->_error(self::INVALID);
 				return false;
 		}

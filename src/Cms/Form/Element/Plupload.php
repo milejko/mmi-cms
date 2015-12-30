@@ -164,6 +164,22 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	}
 	
 	/**
+	 * Ustawia, że z aktualnej listy plików wyświetla tylko obrazki
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function setTypeImages() {
+		return $this->setOption('fileTypes', 'images');
+	}
+	
+	/**
+	 * Ustawia, że z aktualnej listy plików wyświetla wszystkie poza obrazkami
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function setTypeNotImages() {
+		return $this->setOption('fileTypes', 'notImages');
+	}
+	
+	/**
 	 * Ustawia label dla pola title
 	 * @param string $label
 	 * @return \Cms\Form\Element\Plupload
@@ -233,6 +249,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 				" . ($this->getOption('maxFileSize') ? "conf.max_file_size = '" . $this->getOption('maxFileSize') . "';" : "") . "
 				" . ($this->getOption('maxFileCount') ? "conf.max_file_cnt = " . $this->getOption('maxFileCount') . ";" : "") . "
 				" . ($this->getOption('mimeTypes') ? "conf.filters.mime_types = " . json_encode($this->getOption('mimeTypes')) . ";" : "") . "
+				" . ($this->getOption('fileTypes') ? "conf.file_types = '" . $this->getOption('fileTypes') . "';" : "") . "
 				$('#$id').plupload(conf);
 			});
 		");

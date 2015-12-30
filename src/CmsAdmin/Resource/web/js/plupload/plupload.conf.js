@@ -33,14 +33,15 @@ PLUPLOADCONF.settings = {
 	form_element_id: '',
 	form_object: 'library',
 	form_object_id: null,
-	replace_file_id: null
+	replace_file_id: null,
+	file_types: ''
 };
 
 //zdarzenia
 PLUPLOADCONF.settings.preinit = {
 	Init: function (up, info) {
 		PLUPLOADCONF.log(up, 'Uploader zasobów gotowy do przesyłania plików w trybie ' + info.runtime);
-		$.post(request.baseUrl + '/cmsAdmin/upload/current', {object: up.getOption('form_object'), objectId: up.getOption('form_object_id')}, 'json')
+		$.post(request.baseUrl + '/cmsAdmin/upload/current', {object: up.getOption('form_object'), objectId: up.getOption('form_object_id'), fileTypes: up.getOption('file_types')}, 'json')
 		.done(function (data) {
 			if (data.result === 'OK') {
 				var i, cf;
