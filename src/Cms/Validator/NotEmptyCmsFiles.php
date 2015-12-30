@@ -11,7 +11,7 @@
 namespace Cms\Validator;
 
 /**
- * Walidator liczba pomiędzy
+ * Walidator - niepusta lista plików w Cms (musi być conajmniej jeden)
  * 
  * @method self setObject($object) ustawia obiekt
  * @method self setObjectId($objectId) ustawia ID obiektu
@@ -21,7 +21,7 @@ namespace Cms\Validator;
  * @method integer getObjectId() pobiera ID obiektu
  * @method string getMessage() pobiera wiadomość 
  */
-class EmptyCmsFiles extends \Mmi\Validator\ValidatorAbstract {
+class NotEmptyCmsFiles extends \Mmi\Validator\ValidatorAbstract {
 
 	/**
 	 * Komunikat błędnego kodu zabezpieczającego
