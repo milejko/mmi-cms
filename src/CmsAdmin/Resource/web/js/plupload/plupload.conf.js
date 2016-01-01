@@ -34,7 +34,10 @@ PLUPLOADCONF.settings = {
 	form_object: 'library',
 	form_object_id: null,
 	replace_file_id: null,
-	file_types: ''
+	file_types: '',
+	after_upload: {},
+	after_delete: {},
+	after_edit: {}
 };
 
 //zdarzenia
@@ -85,7 +88,8 @@ PLUPLOADCONF.settings.preinit = {
 			formObject: up.getOption('form_object'),
 			formObjectId: up.getOption('form_object_id'),
 			cmsFileId: ((file.cmsFileId) ? file.cmsFileId : 0),
-			filters: up.getOption('filters')
+			filters: up.getOption('filters'),
+			afterUpload: up.getOption('after_upload')
 		});
 	}
 };
@@ -144,7 +148,7 @@ PLUPLOADCONF.settings.init = {
 						title: 'Usunąć plik?',
 						buttons: {
 							'Usuń': function () {
-								$.post(request.baseUrl + '/cmsAdmin/upload/delete', {cmsFileId: file.cmsFileId, object: up.getOption('form_object'), objectId: up.getOption('form_object_id')}, 'json')
+								$.post(request.baseUrl + '/cmsAdmin/upload/delete', {cmsFileId: file.cmsFileId, object: up.getOption('form_object'), objectId: up.getOption('form_object_id'), afterDelete: up.getOption('after_delete')}, 'json')
 								.done(function (data) {
 									if (data.result === 'OK') {
 										$('div#' + up.getOption('form_element_id') + ' li#' + file.id).remove();
@@ -258,7 +262,7 @@ PLUPLOADCONF.settings.ready = function (event, args) {
 						dialogClass: 'ui-state-default',
 						buttons: {
 							'Zapisz': function () {
-								$.post(request.baseUrl + '/cmsAdmin/upload/describe', {cmsFileId: file.cmsFileId, form: $(edit + ' input').serializeArray()}, 'json')
+								$.post(request.baseUrl + '/cmsAdmin/upload/describe', {cmsFileId: file.cmsFileId, form: $(edit + ' input').serializeArray(), afterEdit: args.up.getOption('after_edit')}, 'json')
 								.done(function (data) {
 									if (data.result === 'OK') {
 										editDialog.dialog('close');

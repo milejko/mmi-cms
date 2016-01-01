@@ -50,6 +50,9 @@ class NotEmptyCmsFiles extends \Mmi\Validator\ValidatorAbstract {
 		if ($this->getClass()) {
 			$query->andFieldClass()->equals($this->getClass());
 		}
+		if ($this->getActive() !== null) {
+			$query->andFieldActive()->equals($this->getActive());
+		}
 		if (!$query->count()) {
 				$this->_error(self::INVALID);
 				return false;

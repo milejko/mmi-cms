@@ -323,6 +323,14 @@ class PluploadHandler {
 		}
 		return null;
 	}
+	
+	/**
+	 * Zwraca zapisany rekord pliku
+	 * @return \Cms\Orm\CmsFileRecord
+	 */
+	public function getSavedCmsFileRecord() {
+		return $this->_cmsFileRecord;
+	}
 
 	/**
 	 * Ustawia błąd, jaki wystąpił podczas odbierania pliku

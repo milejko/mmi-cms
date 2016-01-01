@@ -28,6 +28,10 @@ class UploadController extends Mvc\Controller {
 		if (!$pluploadHandler->handle()) {
 			return $this->_jsonError($pluploadHandler->getErrorCode(), $pluploadHandler->getErrorMessage());
 		}
+		//jeśli wykonać operację po przesłaniu całego pliku i zapisaniu rekordu
+		if ($this->getPost()->afterUpload && null !== $record = $pluploadHandler->getSavedCmsFileRecord()) {
+			$this->_operationAfter($this->getPost()->afterUpload, $record);
+		}
 		return json_encode(['result' => 'OK', 'cmsFileId' => $pluploadHandler->getSavedCmsFileId()]);
 	}
 	
@@ -65,17 +69,19 @@ class UploadController extends Mvc\Controller {
 	public function deleteAction() {
 		$this->view->setLayoutDisabled();
 		$this->getResponse()->setTypeJson(true);
-		if (!$this->getPost()->cmsFileId) {
+		//szukamy rekordu pliku
+		if (!$this->getPost()->cmsFileId || null === $record = (new \Cms\Orm\CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
 			return $this->_jsonError(178);
 		}
-		//szukamy rekordu pliku
-		if (null !== $record = (new \Cms\Orm\CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
-			//sprawdzenie zgodności z obiektem formularza
-			if ($record->object === $this->getPost()->object && $record->objectId == $this->getPost()->objectId) {
-				//usuwanie
-				if ($record->delete()) {
-					return json_encode(['result' => 'OK']);
+		//sprawdzenie zgodności z obiektem formularza
+		if ($record->object === $this->getPost()->object && $record->objectId == $this->getPost()->objectId) {
+			//usuwanie
+			if ($record->delete()) {
+				//jeśli wykonać operację po usunięciu
+				if ($this->getPost()->afterDelete) {
+					$this->_operationAfter($this->getPost()->afterDelete, $record);
 				}
+				return json_encode(['result' => 'OK']);
 			}
 		}
 		return $this->_jsonError(178);
@@ -142,10 +148,16 @@ class UploadController extends Mvc\Controller {
 			$form[$field['name']] = $field['value'];
 		}
 		$record->setFromArray($form);
-		if ($form['sticky'] && $record->setSticky()) {
-			return json_encode(['result' => 'OK']);
+		if ($form['sticky']) {
+			$result = $record->setSticky();
+		} else {
+			$result = $record->save();
 		}
-		elseif ($record->save()) {
+		if ($result) {
+			//jeśli wykonać operację po edycji
+			if ($this->getPost()->afterEdit) {
+				$this->_operationAfter($this->getPost()->afterEdit, $record);
+			}
 			return json_encode(['result' => 'OK']);
 		}
 		return $this->_jsonError(186);
@@ -183,6 +195,17 @@ class UploadController extends Mvc\Controller {
 				'message' => $message
 			]
 		]);
+	}
+	
+	/**
+	 * Wykonuje dodatkową operację po innym zdarzeniu
+	 * @param array $action
+	 * @param \Cms\Orm\CmsFileRecord $record
+	 * @return mixed
+	 */
+	protected function _operationAfter($action, $record) {
+		$params = array_merge($record->toArray(), $action);
+		return \Mmi\Mvc\ActionHelper::getInstance()->action($params);
 	}
 
 }

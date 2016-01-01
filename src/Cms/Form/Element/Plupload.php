@@ -207,6 +207,39 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	}
 	
 	/**
+	 * Ustawia akcję wykonywaną po przesłaniu całego pliku i zapisaniu rekordu
+	 * @param string $module
+	 * @param string $controller
+	 * @param string $action
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function setAfterUploadAction($module, $controller, $action) {
+		return $this->setOption('afterUpload', ['module' => $module, 'controller' => $controller, 'action' => $action]);
+	}
+	
+	/**
+	 * Ustawia akcję wykonywaną po usunięciu pliku
+	 * @param string $module
+	 * @param string $controller
+	 * @param string $action
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function setAfterDeleteAction($module, $controller, $action) {
+		return $this->setOption('afterDelete', ['module' => $module, 'controller' => $controller, 'action' => $action]);
+	}
+	
+	/**
+	 * Ustawia akcję wykonywaną po edycji opisu pliku
+	 * @param string $module
+	 * @param string $controller
+	 * @param string $action
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function setAfterEditAction($module, $controller, $action) {
+		return $this->setOption('afterEdit', ['module' => $module, 'controller' => $controller, 'action' => $action]);
+	}
+	
+	/**
 	 * Buduje pole
 	 * @return string
 	 */
@@ -250,6 +283,9 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 				" . ($this->getOption('maxFileCount') ? "conf.max_file_cnt = " . $this->getOption('maxFileCount') . ";" : "") . "
 				" . ($this->getOption('mimeTypes') ? "conf.filters.mime_types = " . json_encode($this->getOption('mimeTypes')) . ";" : "") . "
 				" . ($this->getOption('fileTypes') ? "conf.file_types = '" . $this->getOption('fileTypes') . "';" : "") . "
+				" . ($this->getOption('afterUpload') ? "conf.after_upload = " . json_encode($this->getOption('afterUpload')) . ";" : "") . "
+				" . ($this->getOption('afterDelete') ? "conf.after_delete = " . json_encode($this->getOption('afterDelete')) . ";" : "") . "
+				" . ($this->getOption('afterEdit') ? "conf.after_edit = " . json_encode($this->getOption('afterEdit')) . ";" : "") . "
 				$('#$id').plupload(conf);
 			});
 		");
