@@ -207,6 +207,14 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	}
 	
 	/**
+	 * Ustawia, że pole do edycji source to textarea zamiast text
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function setSourceAsTextarea() {
+		return $this->setOption('sourceAsTextarea', true);
+	}
+	
+	/**
 	 * Ustawia akcję wykonywaną po przesłaniu całego pliku i zapisaniu rekordu
 	 * @param string $module
 	 * @param string $controller
@@ -300,11 +308,15 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$html .= '<div id="' . $id . '-edit" class="plupload-edit-container" title="">';
 		$html .= '<fieldset>';
 		$html .= '<label>' . ($this->getOption('titleLabel') ? $this->getOption('titleLabel') : 'Tytuł') . ':</label>';
-		$html .= '<input type="text" name="title" value="" class="text ui-widget-content ui-corner-all">';
+		$html .= '<input type="text" name="title" value="" class="text ui-widget-content ui-corner-all" maxlength="255">';
 		$html .= '<label>' . ($this->getOption('authorLabel') ? $this->getOption('authorLabel') : 'Autor') . ':</label>';
-		$html .= '<input type="text" name="author" value="" class="text ui-widget-content ui-corner-all">';
+		$html .= '<input type="text" name="author" value="" class="text ui-widget-content ui-corner-all" maxlength="255">';
 		$html .= '<label>' . ($this->getOption('sourceLabel') ? $this->getOption('sourceLabel') : 'Źródło') . ':</label>';
-		$html .= '<input type="text" name="source" value="" class="text ui-widget-content ui-corner-all">';
+		if ($this->getOption('sourceAsTextarea')) {
+			$html .= '<textarea name="source" class="text ui-widget-content ui-corner-all" maxlength="255" placeholder="do 255 znaków"></textarea>';
+		} else {
+			$html .= '<input type="text" name="source" value="" class="text ui-widget-content ui-corner-all" maxlength="255">';
+		}
 		$html .= '<div id="' . $id . '-edit-buttons" class="plupload-edit-buttons">';
 		$html .= '<input type="checkbox" name="active" id="' . $id . '-edit-active" value="1"><label for="' . $id . '-edit-active">Aktywny</label>';
 		$html .= '<input type="checkbox" name="sticky" id="' . $id . '-edit-sticky" value="1"><label for="' . $id . '-edit-sticky">Wyróżniony</label>';

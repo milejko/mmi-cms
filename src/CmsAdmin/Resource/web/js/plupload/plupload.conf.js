@@ -249,7 +249,7 @@ PLUPLOADCONF.settings.ready = function (event, args) {
 					var edit = 'div#' + args.up.getOption('form_element_id') + '-edit';
 					$(edit + ' input[name="title"]').val(data.record.title);
 					$(edit + ' input[name="author"]').val(data.record.author);
-					$(edit + ' input[name="source"]').val(data.record.source);
+					$(edit + ' [name="source"]').val(data.record.source);
 					$(edit + ' input[name="active"]').prop('checked', (parseInt(data.record.active) > 0) ? 'checked' : '');
 					$(edit + ' input[name="sticky"]').prop('checked', (parseInt(data.record.sticky) > 0) ? 'checked' : '');
 					$(edit + ' .dialog-error').hide().find('p').text('');
@@ -262,7 +262,7 @@ PLUPLOADCONF.settings.ready = function (event, args) {
 						dialogClass: 'ui-state-default',
 						buttons: {
 							'Zapisz': function () {
-								$.post(request.baseUrl + '/cmsAdmin/upload/describe', {cmsFileId: file.cmsFileId, form: $(edit + ' input').serializeArray(), afterEdit: args.up.getOption('after_edit')}, 'json')
+								$.post(request.baseUrl + '/cmsAdmin/upload/describe', {cmsFileId: file.cmsFileId, form: $(edit + ' input,' + edit + ' textarea').serializeArray(), afterEdit: args.up.getOption('after_edit')}, 'json')
 								.done(function (data) {
 									if (data.result === 'OK') {
 										editDialog.dialog('close');
