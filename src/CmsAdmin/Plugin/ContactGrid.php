@@ -22,7 +22,7 @@ class ContactGrid extends \CmsAdmin\Grid\Grid {
 
 		//id
 		$this->addColumnCustom('id')
-			->setTemplateCode('#{$record->id');
+			->setTemplateCode('#{$record->id}');
 
 		//data dodania
 		$this->addColumnText('dateAdd')
