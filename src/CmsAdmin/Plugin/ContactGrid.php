@@ -50,8 +50,8 @@ class ContactGrid extends \CmsAdmin\Grid\Grid {
 
 		//operacje
 		$this->addColumnOperation()
-			->setDeleteParams(['module' => 'cmsAdmin', 'controller' => 'contact', 'action' => 'edit', 'id' => '%id%'])
-			->setEditParams(['module' => 'cmsAdmin', 'controller' => 'contact', 'action' => 'delete', 'id' => '%id%']);
+			->setEditParams(['module' => 'cmsAdmin', 'controller' => 'contact', 'action' => 'edit', 'id' => '%id%'])
+			->setDeleteParams([]);
 	}
 
 }

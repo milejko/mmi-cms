@@ -104,12 +104,10 @@ class Mail {
 		if (count($emails) == 0) {
 			return $result;
 		}
-		//autoloader PHPMailer'a
-		require_once BASE_PATH . '/vendors/PHPMailer/PHPMailerAutoload.php';
 		//wysyłka pojedynczego maila
 		foreach ($emails as $email) {
 			//instancja PHPMailer'a
-			$mail = new \PHPMailer(true);
+			$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
 			try {
 				$mail->CharSet = 'utf-8';
 				//ustawiam SMTP
