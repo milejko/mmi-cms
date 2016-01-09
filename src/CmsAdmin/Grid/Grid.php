@@ -33,7 +33,13 @@ abstract class Grid extends \Mmi\OptionObject {
 	 * @var \Mmi\Orm\Query
 	 */
 	protected $_query;
-
+	
+	/**
+	 * Dane
+	 * @var \Mmi\Orm\RecordCollection
+	 */
+	protected $_data;
+	
 	/**
 	 * Stan siatki
 	 * @var GridState
@@ -121,8 +127,11 @@ abstract class Grid extends \Mmi\OptionObject {
 	 * @return \Mmi\Orm\RecordCollection
 	 */
 	public final function getDataCollection() {
+		if (null !== $this->_data) {
+			return $this->_data;
+		}
 		//aktualizuje zapytanie i pobiera dane
-		return $this->getState()
+		return $this->_data = $this->getState()
 				->setupQuery($this->getQuery())
 				->find();
 	}

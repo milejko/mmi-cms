@@ -160,6 +160,8 @@ class GridState extends \Mmi\OptionObject {
 	 * @return integer
 	 */
 	public function getDataCount() {
+		//aktualizacja danych
+		$this->_grid->getDataCollection();
 		return $this->_dataCount;
 	}
 
