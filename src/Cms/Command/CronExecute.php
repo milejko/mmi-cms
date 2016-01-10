@@ -11,17 +11,13 @@
 
 namespace Cms\Command;
 
-//kalkulacja ścieżki
-foreach ([__DIR__ . '/..', __DIR__ . '/../../..', __DIR__ . '/../../../../../..'] as $path) {
-	if (file_exists($path . '/vendor/mmi')) {
-		include $path . '/vendor/mmi/mmi/src/Mmi/Tools/CliAbstract.php';
-	}
-}
+//nie ma tu jeszcze autoloadera ładowanie CliAbstract
+require_once 'CommandAbstract.php';
 
 /**
  * Usuwa pliki bez powiązań w strukturze
  */
-class CronExecute extends \Mmi\Tools\CliAbstract {
+class CronExecute extends \Mmi\Command\CommandAbstract {
 
 	public function run() {
 		\Cms\Model\Cron::run();
