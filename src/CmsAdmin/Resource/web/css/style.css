@@ -180,6 +180,24 @@ table.grid {
 	max-width: 100%;
 }
 
+@media screen and (max-width: 1100px){
+	table {
+		zoom: 80%;
+	}
+}
+
+@media screen and (max-width: 900px){
+	table {
+		zoom: 60%;
+	}
+}
+
+@media screen and (max-width: 700px){
+	table {
+		zoom: 50%;
+	}
+}
+
 table.grid tr th {
 	vertical-align: bottom;
 }
@@ -208,8 +226,10 @@ table.grid tr th div.field {
 	max-width: 200px;
 }
 
-table.grid tr th div.field .field {
-	max-width: 200px;
+table.grid tr th div.field select.field {
+	max-width: 100px;
+	overflow: hidden;
+	height: 27px;
 }
 
 div.errors ul {

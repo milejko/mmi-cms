@@ -24,14 +24,6 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig {
 				->setLabel('Panel administracyjny')
 				->setModule('cmsAdmin')
 				->setController('index')
-				->setVisible(true)
-				->addChild(self::newElement()
-					->setLabel('Zmiana hasła')
-					->setModule('cmsAdmin')
-					->setController('index')
-					->setAction('password')
-					->setVisible(false)
-				)
 				->addChild(self::_getContentPart());
 	}
 
@@ -60,6 +52,11 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig {
 		return self::newElement()
 				->setLabel('Administracja')
 				->setModule('cmsAdmin')
+				->addChild(self::newElement()
+					->setModule('cmsAdmin')
+					->setController('index')
+					->setAction('password')
+					->setLabel('Zmiana hasła'))
 				->addChild(NavPart\NavPartCron::getMenu())
 				->addChild(NavPart\NavPartLog::getMenu())
 				->addChild(NavPart\NavPartMail::getMenu())

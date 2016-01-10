@@ -19,7 +19,7 @@
 				</tr>
 				<tr>
 					{$passwordHash = $user->password|length}
-					<th>{#Hasło#}</th><td>{if $passwordHash > 0}{#zakodowane#} - {$user->password|length} {#znaków#}{else}LDAP{/if} (<a href="{@module=cms&controller=admin&action=password@}">zmiana hasła</a>)</td>
+					<th>{#Hasło#}</th><td>{if $passwordHash > 0}{#zakodowane#} - {$user->password|length} {#znaków#}{else}LDAP{/if} (<a href="{@module=cmsAdmin&controller=index&action=password@}">zmiana hasła</a>)</td>
 				</tr>
 				<tr>
 					<th>{#Ilość błędnych logowań#}</th><td>{$user->failLogCount}</td>

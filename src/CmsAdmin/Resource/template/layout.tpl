@@ -18,15 +18,9 @@
 				<li>
 					<a href="{@module=cmsAdmin&controller=index&action=index@}"><span>{$domain|replace:'www.':''}</span></a>
 				</li>
-				<li>
-					<a href="{$baseUrl}/" target="_blank">{#Podgląd frontu#}</a>
-				</li>
 				{if $auth && $acl->isAllowed($auth->getRoles(), 'cms:admin:password')}
 				<li>
-					<a href="{@module=cmsAdmin&controller=index&action=password@}">{#Zmiana hasła#}</a>
-				</li>
-				<li>
-					<a href="{@module=cmsAdmin&controller=index&action=logout@}">{#Wyloguj się#}<span>{if $auth} {$auth->getUsername()}</span> ({foreach name=role $auth->getRoles() as $role}{$role}{if !$_roleLast}, {/if}{/foreach}){/if}</a>
+					<a href="{@module=cmsAdmin&controller=index&action=logout@}">{#Wyloguj#}<span>{if $auth} {$auth->getUsername()}</span> ({foreach name=role $auth->getRoles() as $role}{$role}{if !$_roleLast}, {/if}{/foreach}){/if}</a>
 				</li>
 				{/if}
 			</ul>
