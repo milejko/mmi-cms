@@ -29,6 +29,12 @@ PLUPLOADCONF.settings = {
 		thumbs: true,
 		active: 'thumbs'
 	},
+	autostart: true,
+	buttons: {
+		browse: true,
+		start: false,
+		stop: false
+	},
 	log_element: '',
 	form_element_id: '',
 	form_object: 'library',
