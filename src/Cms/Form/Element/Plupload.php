@@ -313,7 +313,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$html .= '<input type="text" name="author" value="" class="text ui-widget-content ui-corner-all" maxlength="255">';
 		$html .= '<label>' . ($this->getOption('sourceLabel') ? $this->getOption('sourceLabel') : 'Źródło') . ':</label>';
 		if ($this->getOption('sourceAsTextarea')) {
-			$html .= '<textarea name="source" class="text ui-widget-content ui-corner-all" maxlength="255" placeholder="do 255 znaków"></textarea>';
+			$html .= '<textarea name="source" class="text ui-widget-content ui-corner-all" maxlength="255"></textarea>';
 		} else {
 			$html .= '<input type="text" name="source" value="" class="text ui-widget-content ui-corner-all" maxlength="255">';
 		}
