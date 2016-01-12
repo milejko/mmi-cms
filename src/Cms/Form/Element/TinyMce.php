@@ -133,6 +133,14 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	public function setOnInit($oninit) {
 		return $this->setOption('oninit', $oninit);
 	}
+	
+	/**
+	 * Ustawia główny blok treści jako pusty
+	 * @return \Cms\Form\Element\TinyMce
+	 */
+	public function setEmptyRootBlock() {
+		return $this->setOption('emptyRootBlock', true);
+	}
 
 	/**
 	 * Buduje pole
@@ -196,6 +204,10 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 		if (isset($this->_options['oninit']) && $this->_options['oninit']) {
 			$onInit = "oninit : '" . $this->_options['oninit'] . "',";
 		}
+		$emptyRootBlock = "";
+		if ($this->getOption('emptyRootBlock')) {
+			$emptyRootBlock = "forced_root_block : '',force_br_newlines : true,force_p_newlines : false,";
+		}
 		//odczyt zmiennych z rekordu
 		if ($this->_form->hasRecord()) {
 			$object = $this->_form->getFileObjectName();
@@ -214,6 +226,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 				" . $toolbarOptions . "
 				" . $themeOptions . "
 				" . $onInit . "
+				" . $emptyRootBlock . "
 				autoresize_min_height: 300,
 				image_list: request.baseUrl + '/cms/file/list?object=$object&objectId=$objectId&t=$t&hash=$hash',
 				document_base_url: request.baseUrl,
