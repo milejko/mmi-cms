@@ -1,5 +1,18 @@
 /*jslint unparam: true */
 /*global $, document, window, request */
+
+jQuery.fn.putCursorAtEnd = function() {
+  return this.each(function() {
+    $(this).focus()
+    if (this.setSelectionRange) {
+      var len = $(this).val().length * 2;
+      this.setSelectionRange(len, len);
+    } else {
+      $(this).val($(this).val());
+    }
+  });
+};
+
 var CMS = {};
 
 CMS.grid = function () {
@@ -40,7 +53,7 @@ CMS.grid = function () {
 				},
 				success: function(data) {
 					$('#' + gridId).html(data);
-					$('input[name=\'' + fieldName + '\']').focus().val($('input[name=\'' + fieldName + '\']').val());
+					$('input[name=\'' + fieldName + '\']').putCursorAtEnd();
 				}
 			});				
 		}
