@@ -330,6 +330,11 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 			case 'image/gif':
 				imagegif($imgRes, $outputFile);
 				return true;
+			//PNG
+			case 'image/png':
+				imagesavealpha($imgRes, true);
+				imagepng($imgRes, $outputFile);
+				return true;
 			//domyślnie jpeg
 			default:
 				imagejpeg($imgRes, $outputFile, 92);
