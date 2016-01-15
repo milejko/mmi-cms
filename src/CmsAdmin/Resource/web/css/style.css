@@ -493,3 +493,12 @@ ul.mdlist .field.checkbox label {
 ul.mdlist .hide-active {
 	color: #bbbbbb;
 }
+
+//poprawki dla tinyMce
+button.mce-close {
+	left: auto;
+}
+
+.mce-window-head button {
+	left: auto;
+}
