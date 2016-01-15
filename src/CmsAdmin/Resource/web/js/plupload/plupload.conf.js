@@ -4,6 +4,7 @@
 //konfiguracja ogólna pluploada
 var PLUPLOADCONF = PLUPLOADCONF || {};
 var plupload = plupload || {};
+var tinymce = tinymce || {};
 
 PLUPLOADCONF.settings = {
 	runtimes: 'html5',
@@ -259,15 +260,19 @@ PLUPLOADCONF.settings.ready = function (event, args) {
 					$(edit + ' input[name="active"]').prop('checked', (parseInt(data.record.active) > 0) ? 'checked' : '');
 					$(edit + ' input[name="sticky"]').prop('checked', (parseInt(data.record.sticky) > 0) ? 'checked' : '');
 					$(edit + ' .dialog-error').hide().find('p').text('');
+					//inicjalizacja tinyMce
+					PLUPLOADCONF.initTinyMce(args.up);
 					var editDialog = $(edit).dialog({
 						resizable: false,
-						width: 600,
+						width: 700,
 						modal: true,
 						closeText: 'Zamknij',
 						title: 'Edycja opisu pliku: ' + file.name,
 						dialogClass: 'ui-state-default',
 						buttons: {
 							'Zapisz': function () {
+								//trigger odświeżający dane
+								tinymce.triggerSave();
 								$.post(request.baseUrl + '/cmsAdmin/upload/describe', {cmsFileId: file.cmsFileId, form: $(edit + ' input,' + edit + ' textarea').serializeArray(), afterEdit: args.up.getOption('after_edit')}, 'json')
 								.done(function (data) {
 									if (data.result === 'OK') {
@@ -425,4 +430,12 @@ PLUPLOADCONF.editable = function(up, file) {
 	if (file.cmsFileId && $('div#' + up.getOption('form_element_id') + ' li#' + file.id + ' div.plupload_file_name span span.ui-icon-pencil').size() === 0) {
 		$('div#' + up.getOption('form_element_id') + ' li#' + file.id + ' div.plupload_file_name span').prepend('<span class="ui-icon ui-icon-pencil"></span>');
 	}
+};
+
+PLUPLOADCONF.initTinyMce = function(up) {
+	var selector = 'div#' + up.getOption('form_element_id') + '-edit textarea.plupload-edit-tinymce';
+	tinymce.init({
+		selector: selector,
+		language: 'pl'
+	});
 };

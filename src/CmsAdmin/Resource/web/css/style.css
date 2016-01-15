@@ -494,7 +494,7 @@ ul.mdlist .hide-active {
 	color: #bbbbbb;
 }
 
-//poprawki dla tinyMce
+/*poprawki dla tinyMce*/
 button.mce-close {
 	left: auto;
 }

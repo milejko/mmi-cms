@@ -215,6 +215,14 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	}
 	
 	/**
+	 * Ustawia, że pole do edycji source to tinyMce zamiast text
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function setSourceAsTinyMce() {
+		return $this->setOption('sourceAsTinyMce', true);
+	}
+	
+	/**
 	 * Ustawia akcję wykonywaną po przesłaniu całego pliku i zapisaniu rekordu
 	 * @param string $module
 	 * @param string $controller
@@ -260,6 +268,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$view->headLink()->appendStyleSheet($view->baseUrl . '/resource/cmsAdmin/js/plupload/plupload.conf.css');
 		$view->headScript()->prependFile($view->baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.js');
+		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/tiny/tinymce.min.js');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/plupload/plupload.full.min.js');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/plupload/i18n/pl.js');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/plupload/jquery.ui.plupload/jquery.ui.plupload.min.js');
@@ -312,7 +321,9 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$html .= '<label>' . ($this->getOption('authorLabel') ? $this->getOption('authorLabel') : 'Autor') . ':</label>';
 		$html .= '<input type="text" name="author" value="" class="text ui-widget-content ui-corner-all" maxlength="255">';
 		$html .= '<label>' . ($this->getOption('sourceLabel') ? $this->getOption('sourceLabel') : 'Źródło') . ':</label>';
-		if ($this->getOption('sourceAsTextarea')) {
+		if ($this->getOption('sourceAsTinyMce')) {
+			$html .= '<textarea name="source" class="plupload-edit-tinymce text ui-widget-content ui-corner-all" maxlength="255"></textarea>';
+		} elseif ($this->getOption('sourceAsTextarea')) {
 			$html .= '<textarea name="source" class="text ui-widget-content ui-corner-all" maxlength="255"></textarea>';
 		} else {
 			$html .= '<input type="text" name="source" value="" class="text ui-widget-content ui-corner-all" maxlength="255">';
