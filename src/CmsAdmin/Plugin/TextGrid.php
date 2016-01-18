@@ -21,13 +21,13 @@ class TextGrid extends \CmsAdmin\Grid\Grid {
 		$this->setQuery(\Cms\Orm\CmsTextQuery::lang()
 				->orderAscKey());
 
-		//język
-		$this->addColumnText('lang')
-			->setLabel('język');
-
 		//klucz
 		$this->addColumnText('key')
 			->setLabel('klucz');
+		
+		//język
+		$this->addColumnText('lang')
+			->setLabel('język');
 
 		//zawartość
 		$this->addColumnText('content')

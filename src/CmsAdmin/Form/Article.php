@@ -29,8 +29,8 @@ class Article extends \Cms\Form\Form {
 		$this->addElementCheckbox('noindex')
 			->setLabel('Bez indeksowania w google');
 
-		//uploader
-		$this->addElementUploader('uploader')
+		//uploader - plupload
+		$this->addElementPlupload('uploader')
 			->setLabel('Załaduj pliki');
 
 		$this->addElementSubmit('submit')
