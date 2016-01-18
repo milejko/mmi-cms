@@ -9,6 +9,7 @@
  */
 
 namespace Cms\Model;
+
 use \Cms\Orm;
 
 class Stat {
@@ -44,34 +45,30 @@ class Stat {
 			if (!$item->objectId) {
 				$objectId = null;
 			}
+			if ($objectId !== null) {
+				//godziny ogólnie - same obiekty
+				self::_push($item->object, null, $time[0], null, null, null);
+				//dni w dokładnej dacie - osame obiekty
+				self::_push($item->object, null, null, $date[2], $date[1], $date[0]);
+				//miesiące w dokładnej dacie - same obiekty
+				self::_push($item->object, null, null, null, $date[1], $date[0]);
+				//lata - same obiekty
+				self::_push($item->object, null, null, null, null, $date[0]);
+				//od poczatku - same obiekty
+				self::_push($item->object, null, null, null, null, null);
+			}
 			//godziny ogólnie - obiekty z id
 			self::_push($item->object, $objectId, $time[0], null, null, null);
-			//godziny ogólnie - same obiekty
-			if ($objectId !== null) {
-				self::_push($item->object, null, $time[0], null, null, null);
-			}
 			//godziny ogólnie w roku/miesiącu - same obiekty
 			self::_push($item->object, null, $time[0], null, $date[1], $date[0]);
-
 			//dni w dokładnej dacie - obiekty z id
 			self::_push($item->object, $objectId, null, $date[2], $date[1], $date[0]);
-			//dni w dokładnej dacie - osame obiekty
-			if ($objectId !== null) {
-				self::_push($item->object, null, null, $date[2], $date[1], $date[0]);
-			}
-
 			//miesiące w dokładnej dacie - obiekty z id
 			self::_push($item->object, $objectId, null, null, $date[1], $date[0]);
-			//miesiące w dokładnej dacie - same obiekty
-			if ($objectId !== null) {
-				self::_push($item->object, null, null, null, $date[1], $date[0]);
-			}
 			//lata - obiekty z id
 			self::_push($item->object, $objectId, null, null, null, $date[0]);
-			//lata - same obiekty
-			if ($objectId !== null) {
-				self::_push($item->object, null, null, null, null, $date[0]);
-			}
+			//od poczatku - obiekty z id
+			self::_push($item->object, $objectId, null, null, null, null);
 			$item->delete();
 		}
 		$time = microtime(true) - $start;
