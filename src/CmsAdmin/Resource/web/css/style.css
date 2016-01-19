@@ -230,6 +230,11 @@ form div.field {
 
 form div.field input, form div.field select, form div.field div.errors {
 	max-width: 360px;
+	background-color: #fff;
+}
+
+form div.field input:disabled, form div.field select:disabled, form div.field textarea:disabled {
+	background-color: #eee;	
 }
 
 form div.field.submit input {
