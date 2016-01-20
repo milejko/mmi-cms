@@ -61,6 +61,13 @@ $(document).ready(function () {
 	$('input[type="checkbox"].validate').on('change', function () {
 		$(this).trigger('blur');
 	});
+	
+	//on focus na submit
+	$('input[type="submit"]').on('focus', function () {
+		setTimeout(function () {
+			$(this).closest('form').trigger('submit');
+		}, 1000);
+	});
 
 	//pola do przeciwdziałania robotom bez JS
 	$('div.antirobot > input').val('js-' + $('div.antirobot > input').val() + '-js');
