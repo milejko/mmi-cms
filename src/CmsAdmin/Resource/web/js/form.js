@@ -38,9 +38,12 @@ function fieldValidationOnBlur(element) {
 		value: urlencode(fieldValue)
 	},
 	function (result) {
-		$('#' + errorsId).parent().removeClass('error');
 		if (result) {
 			$('#' + errorsId).parent().addClass('error');
+			$(element).addClass('error');
+		} else {
+			$('#' + errorsId).parent().removeClass('error');
+			$(element).removeClass('error');
 		}
 		$('#' + errorsId).html(result);
 	});
@@ -51,7 +54,7 @@ $(document).ready(function () {
 
 	//podłączenie walidacji na blurze
 	$('.validate').on('blur', function () {
-		fieldValidationOnBlur($(this));
+		fieldValidationOnBlur(this);
 	});
 
 	//checkbox na change robi blur (walidacja)
