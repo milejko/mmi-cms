@@ -63,10 +63,11 @@ $(document).ready(function () {
 	});
 	
 	//on focus na submit
-	$('input[type="submit"]').on('click', function () {
+	$('input[type="submit"]').on('focus', function () {
+		var submitBtn = $(this);
 		setTimeout(function () {
-			$(this).closest('form').trigger('submit');
-		}, 500);
+			submitBtn.closest('form').trigger('submit');
+		}, 3000);
 	});
 
 	//pola do przeciwdziałania robotom bez JS
