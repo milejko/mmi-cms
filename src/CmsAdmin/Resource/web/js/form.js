@@ -71,10 +71,7 @@ $(document).ready(function () {
         for (var x = 0; x < blurXhrs.length; x++) {
 			blurXhrs[x].abort();
 		}
-		var submitBtn = $(this);
-		setTimeout(function () {
-			submitBtn.closest('form').trigger('submit');
-		}, 2000);
+		$(this).trigger('click');
 	});
 
 	//pola do przeciwdziałania robotom bez JS
