@@ -15,7 +15,7 @@ namespace Cms\Validator;
  * 
  * @see \Cms\Form\Element\Antirobot
  */
-class Antirobot extends ValidatorAbstract {
+class Antirobot extends \Mmi\Validator\ValidatorAbstract {
 
 	/**
 	 * Komunikat błędnego kodu zabezpieczającego
