@@ -16,6 +16,8 @@ function urlencode(str) {
 	return str;
 }
 
+var blurXhrs = [];
+
 function fieldValidationOnBlur(element) {
 	"use strict";
 	var fieldValue = $(element).val(),
@@ -30,7 +32,7 @@ function fieldValidationOnBlur(element) {
 	if ('checkbox' === $(element).attr('type') && !$(element).is(':checked')) {
 		fieldValue = '0';
 	}
-	$.post(request.baseUrl + '/?module=cms&controller=form&action=validate', {
+	var newXhr = $.post(request.baseUrl + '/?module=cms&controller=form&action=validate', {
 		field: name, 
 		class: formClass,
 		recordClass: recordClass,
@@ -47,6 +49,7 @@ function fieldValidationOnBlur(element) {
 		}
 		$('#' + errorsId).html(result);
 	});
+	blurXhrs.push(newXhr);
 }
 
 $(document).ready(function () {
@@ -68,6 +71,10 @@ $(document).ready(function () {
 		setTimeout(function () {
 			submitBtn.closest('form').trigger('submit');
 		}, 3000);
+        //abort ALL ajax request
+        for (var x = 0; x < blurXhrs.length; x++) {
+			blurXhrs[x].abort();
+		}
 	});
 
 	//pola do przeciwdziałania robotom bez JS
