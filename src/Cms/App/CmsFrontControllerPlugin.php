@@ -89,6 +89,7 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 			} elseif (!$auth->hasIdentity()) {
 				//logowanie użytkownika
 				$this->_setUserLoginRequest($request);
+				//$this->_setAdminLoginRequest($request);
 			} else {
 				\App\Registry::$auth->clearIdentity();
 				//zalogowany na nieuprawnioną rolę

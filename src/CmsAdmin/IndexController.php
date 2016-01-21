@@ -40,6 +40,11 @@ class IndexController extends Mvc\Controller {
 		//zalogowano
 		$this->getMessenger()->addMessage('Zalogowano poprawnie', true);
 		\Cms\Model\Stat::hit('admin-login');
+		$referer = $this->getRequest()->getReferer();
+		//przekierowanie na referer
+		if ($referer && $referer != \Mmi\App\FrontController::getInstance()->getEnvironment()->requestUri) {
+			return $this->getResponse()->redirectToUrl($referer);
+		}
 		$this->getResponse()->redirect('cmsAdmin');
 	}
 

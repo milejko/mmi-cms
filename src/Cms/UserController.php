@@ -26,12 +26,17 @@ class UserController extends \Mmi\Mvc\Controller {
 		}
 		//błędne logowanie
 		if (!$form->isSaved()) {
-			$this->getMessenger()->addMessage('Logowanie błędne', false);
+			$this->getMessenger()->addMessage('Logowanie niepoprawne', false);
 			return;
 		}
 		//lowowanie poprawne
 		$this->getMessenger()->addMessage('Zalogowano poprawnie', true);
 		\Cms\Model\Stat::hit('user-login');
+		$referer = $this->getRequest()->getReferer();
+		//przekierowanie na referer
+		if ($referer && $referer != \Mmi\App\FrontController::getInstance()->getEnvironment()->requestUri) {
+			return $this->getResponse()->redirectToUrl($referer);
+		}
 		$this->getResponse()->redirectToUrl('/');
 	}
 
