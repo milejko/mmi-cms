@@ -67,10 +67,6 @@ $(document).ready(function () {
 	
 	//on focus na submit
 	$('input[type="submit"]').on('focus', function () {
-		var submitBtn = $(this);
-		setTimeout(function () {
-			submitBtn.closest('form').trigger('submit');
-		}, 3000);
         //abort ALL ajax request
         for (var x = 0; x < blurXhrs.length; x++) {
 			blurXhrs[x].abort();
