@@ -40,11 +40,12 @@ PLUPLOADCONF.settings = {
 	form_element_id: '',
 	form_object: 'library',
 	form_object_id: null,
-	replace_file: null,
 	file_types: '',
 	after_upload: {},
 	after_delete: {},
-	after_edit: {}
+	after_edit: {},
+	replace_file: null,
+	edit_dialog: null
 };
 
 //zdarzenia
@@ -112,6 +113,11 @@ PLUPLOADCONF.settings.init = {
 					file.cmsFileId = replaceFile.cmsFileId;
 					up.setOption('replace_file', null);
 					up.removeFile(replaceFile);
+					//czy jest otwarte okienko edycji pliku
+					var editDialog = up.getOption('edit_dialog');
+					if (editDialog !== null) {
+						editDialog.dialog('close');
+					}
 					PLUPLOADCONF.editable(up, file);
 				}
 			} else if(file.type.indexOf('image') >= 0) { //plik odtworzony z serwera - pobranie minaiturki
@@ -289,11 +295,26 @@ PLUPLOADCONF.settings.ready = function (event, args) {
 							'Zastąp plik': function () {
 								args.up.setOption('replace_file', file);
 								$('div#' + args.up.getOption('form_element_id')).plupload("enable");
-								$(this).dialog('close');
-								$('div#' + args.up.getOption('form_element_id') + ' div.moxie-shim-html5 input[type=file]').trigger('click');
+								setTimeout(function () {
+									$('div#' + args.up.getOption('form_element_id') + ' div.moxie-shim-html5 input[type=file]').trigger('click');
+								}, 500);
 							},
 							'Anuluj': function () {
 								$(this).dialog('close');
+							}
+						},
+						open: function(event, ui) {
+							args.up.setOption('edit_dialog', $(this));
+						},
+						close: function(event, ui) {
+							args.up.setOption('replace_file', null);
+							args.up.setOption('edit_dialog', null);
+							//maksymalna ilość plików możliwa do przesłania
+							var max = args.up.getOption('max_file_cnt');
+							if (max > 0) {
+								if (max - args.up.files.length <= 0) {
+									$('div#' + args.up.getOption('form_element_id')).plupload("disable");
+								}
 							}
 						}
 					});
@@ -344,7 +365,7 @@ PLUPLOADCONF.settings.selected = function (event, args) {
 PLUPLOADCONF.settings.removed = function (event, args) {
 	//maksymalna ilość plików możliwa do przesłania
 	var max = args.up.getOption('max_file_cnt');
-	if (max > 0) {;
+	if (max > 0) {
 		if (max - args.up.files.length > 0) {
 			$(this).plupload("enable");
 		}
@@ -354,7 +375,7 @@ PLUPLOADCONF.settings.removed = function (event, args) {
 PLUPLOADCONF.settings.complete = function (event, args) {
 	//maksymalna ilość plików możliwa do przesłania
 	var max = args.up.getOption('max_file_cnt');
-	if (max > 0) {;
+	if (max > 0) {
 		if (max - args.up.files.length === 0) {
 			$(this).plupload("disable");
 		}
