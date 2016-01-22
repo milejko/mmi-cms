@@ -40,7 +40,7 @@ PLUPLOADCONF.settings = {
 	form_element_id: '',
 	form_object: 'library',
 	form_object_id: null,
-	replace_file_id: null,
+	replace_file: null,
 	file_types: '',
 	after_upload: {},
 	after_delete: {},
@@ -107,10 +107,11 @@ PLUPLOADCONF.settings.init = {
 			if (!file.cmsFileId) {
 				PLUPLOADCONF.log(up, 'Dodano do kolejki plik: ' + file.name);
 				//jeśli plik ma zastąpić inny
-				var replaceFileId = up.getOption('replace_file_id');
-				if (replaceFileId !== null) {
-					file.cmsFileId = replaceFileId;
-					up.setOption('replace_file_id', null);
+				var replaceFile = up.getOption('replace_file');
+				if (replaceFile !== null) {
+					file.cmsFileId = replaceFile.cmsFileId;
+					up.setOption('replace_file', null);
+					up.removeFile(replaceFile);
 					PLUPLOADCONF.editable(up, file);
 				}
 			} else if(file.type.indexOf('image') >= 0) { //plik odtworzony z serwera - pobranie minaiturki
@@ -286,8 +287,8 @@ PLUPLOADCONF.settings.ready = function (event, args) {
 								});
 							},
 							'Zastąp plik': function () {
-								args.up.setOption('replace_file_id', file.cmsFileId);
-								args.up.removeFile(file);
+								args.up.setOption('replace_file', file);
+								$('div#' + args.up.getOption('form_element_id')).plupload("enable");
 								$(this).dialog('close');
 								$('div#' + args.up.getOption('form_element_id') + ' div.moxie-shim-html5 input[type=file]').trigger('click');
 							},
@@ -317,6 +318,11 @@ PLUPLOADCONF.settings.selected = function (event, args) {
 	if (max > 0) {
 		var removed = [], selectedCount = args.files.length;
 		var extraCount = args.up.files.length - max;
+		//jeśli jakiś plik ma zastąpić inny, chwilowo dopuszczamy o jeden za dużo na liście
+		var replaceFile = args.up.getOption('replace_file');
+		if (replaceFile !== null) {
+			extraCount--;
+		}
 		if (extraCount > 0) {
 			removed = args.files.splice(selectedCount - extraCount, extraCount);
 			args.up.trigger("Error", {
