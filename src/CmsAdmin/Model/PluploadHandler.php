@@ -447,11 +447,11 @@ class PluploadHandler {
 	 */
 	private function _saveFile() {
 		$requestFile = $this->_getRequestFile();
-		//jeśli niedopuszczony plik
+		//jeśli niedopuszczalny plik
 		if (!$this->_filterFile($requestFile)) {
 			//usuwamy plik z katalogu plupload
 			@unlink($this->_filePath);
-			$this->_setError(PLUPLOAD_TYPE_ERR, "Niedopuszczony typ pliku");
+			$this->_setError(PLUPLOAD_TYPE_ERR, "Niedopuszczalny typ pliku");
 			return false;
 		}
 		//jeśli przesłano plik dla konkretnego id w bazie
@@ -494,16 +494,16 @@ class PluploadHandler {
 			if (array_key_exists('mime', $mt)) {
 				$allowedTypes[] = strtolower($mt['mime']);
 			} elseif (array_key_exists('extensions', $mt)) {
-				$allowedExts = array_merge($allowedExts, explode(",", strtolower($mt['extensions'])));
+				$allowedExts = array_merge($allowedExts, explode(",", strtolower(preg_replace('/ \s/', '', $mt['extensions']))));
 			}
 		}
 		//sprawdzamy typy mime
-		if (in_array($requestFile->type, $allowedTypes)) {
+		if (in_array(strtolower($requestFile->type), $allowedTypes)) {
 			return true;
 		}
 		//sprawdzamy rozszerzenie
 		if (strrpos($this->_fileName, '.') > 0) {
-			$ext = substr($this->_fileName, strrpos($this->_fileName, '.') + 1);
+			$ext = strtolower(substr($this->_fileName, strrpos($this->_fileName, '.') + 1));
 			if (in_array($ext, $allowedExts)) {
 				return true;
 			}
