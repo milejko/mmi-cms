@@ -45,49 +45,16 @@ PLUPLOADCONF.settings = {
 	after_delete: {},
 	after_edit: {},
 	replace_file: null,
-	edit_dialog: null
+	edit_dialog: null,
+	refresh_current: false
 };
 
 //zdarzenia
 PLUPLOADCONF.settings.preinit = {
 	Init: function (up, info) {
 		PLUPLOADCONF.log(up, 'Uploader zasobów gotowy do przesyłania plików w trybie ' + info.runtime);
-		$.post(request.baseUrl + '/cmsAdmin/upload/current', {object: up.getOption('form_object'), objectId: up.getOption('form_object_id'), fileTypes: up.getOption('file_types')}, 'json')
-		.done(function (data) {
-			if (data.result === 'OK') {
-				var i, cf;
-				$.each(data.files, function(i, cf) {
-					var file = new plupload.File({
-						name: cf.original,
-						size: parseInt(cf.size),
-						origSize: parseInt(cf.size),
-						type: cf.mimeType,
-						loaded: 0,
-						percent: 0,
-						status: plupload.QUEUED
-					});
-					file.cmsFileId = cf.id;
-					file.getSource = function () {
-						return false;
-					};
-					up.addFile(file);
-				});
-				plupload.each(up.files, function (file) {
-					if (file.cmsFileId) {
-						file.status = plupload.DONE;
-						file.percent = 100;
-						file.loaded = file.size;
-						up.trigger("UploadProgress", {file: file});
-					}
-				});
-				up.refresh();
-			} else {
-				up.trigger("Error", {code: 177, message: 'Pobranie aktualnych plików nie powiodło się'});
-			}
-		})
-		.fail(function () {
-			up.trigger("Error", {code: 177, message: 'Pobranie aktualnych plików nie powiodło się'});
-		});
+		//pobranie i odtworzenie aktualnej listy z serwera
+		PLUPLOADCONF.getCurrent(up);
 	},
 	UploadFile: function (up, file) {
 		up.setOption('multipart_params', {
@@ -107,6 +74,7 @@ PLUPLOADCONF.settings.init = {
 		plupload.each(files, function (file) {
 			if (!file.cmsFileId) {
 				PLUPLOADCONF.log(up, 'Dodano do kolejki plik: ' + file.name);
+				up.setOption('refresh_current', true);
 				//jeśli plik ma zastąpić inny
 				var replaceFile = up.getOption('replace_file');
 				if (replaceFile !== null) {
@@ -380,6 +348,8 @@ PLUPLOADCONF.settings.complete = function (event, args) {
 			$(this).plupload("disable");
 		}
 	}
+	//pobranie i odświeżenie aktualnej listy z serwera
+	PLUPLOADCONF.getCurrent(args.up, $(this));
 };
 
 PLUPLOADCONF.log = function(up, str) {
@@ -415,6 +385,54 @@ PLUPLOADCONF.parseResponse = function(up, file, info) {
 	}
 	up.trigger("Error", {code: code, message: message, file: file});
 	return false;
+};
+
+PLUPLOADCONF.getCurrent = function(up, pluploadObject) {
+	if (pluploadObject) {
+		if (up.getOption('refresh_current') === true) {
+			up.setOption('refresh_current', false);
+			$('ul#' + up.getOption('form_element_id') + '_filelist > li').remove();
+			pluploadObject.plupload("clearQueue");
+		} else {
+			return;
+		}
+	}
+	$.post(request.baseUrl + '/cmsAdmin/upload/current', {object: up.getOption('form_object'), objectId: up.getOption('form_object_id'), fileTypes: up.getOption('file_types')}, 'json')
+	.done(function (data) {
+		if (data.result === 'OK') {
+			var i, cf;
+			$.each(data.files, function(i, cf) {
+				var file = new plupload.File({
+					name: cf.original,
+					size: parseInt(cf.size),
+					origSize: parseInt(cf.size),
+					type: cf.mimeType,
+					loaded: 0,
+					percent: 0,
+					status: plupload.QUEUED
+				});
+				file.cmsFileId = cf.id;
+				file.getSource = function () {
+					return false;
+				};
+				up.addFile(file);
+			});
+			plupload.each(up.files, function (file) {
+				if (file.cmsFileId) {
+					file.status = plupload.DONE;
+					file.percent = 100;
+					file.loaded = file.size;
+					up.trigger("UploadProgress", {file: file});
+				}
+			});
+			up.refresh();
+		} else {
+			up.trigger("Error", {code: 177, message: 'Pobranie aktualnych plików nie powiodło się'});
+		}
+	})
+	.fail(function () {
+		up.trigger("Error", {code: 177, message: 'Pobranie aktualnych plików nie powiodło się'});
+	});
 };
 
 PLUPLOADCONF.sortable = function(up) {
