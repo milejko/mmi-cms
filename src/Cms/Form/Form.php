@@ -44,8 +44,16 @@ abstract class Form extends \Mmi\Form\Form {
 	public function save() {
 		if ($this->hasRecord() && parent::save()) {
 			$this->_appendFiles($this->_record->getPk(), $this->getFiles());
+			$this->afterUpload();
 		}
 		return $this->isSaved();
+	}
+
+	/**
+	 * Wywołuje metodę po uploadzie
+	 */
+	public function afterUpload() {
+		
 	}
 
 	/**
@@ -101,7 +109,7 @@ abstract class Form extends \Mmi\Form\Form {
 	public function addElementTinyMce($name) {
 		return $this->addElement(new Element\TinyMce($name));
 	}
-	
+
 	/**
 	 * Plupload
 	 * @param string $name nazwa

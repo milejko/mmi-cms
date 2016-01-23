@@ -65,6 +65,12 @@ class OperationColumn extends ColumnAbstract {
 	public function setDeleteParams(array $params = ['action' => 'delete', 'id' => '%id%']) {
 		return $this->setOption('deleteParams', $params);
 	}
+	
+	public function addCustomButton($iconName, array $params = []) {
+		$customButtons = is_array($this->getOption('customButtons')) ?: [];
+		$customButtons[] = ['iconName' => $iconName, 'params' => $params];
+		return $this->setOption('customButtons', $customButtons);
+	}
 
 	/**
 	 * Renderuje komórkę
@@ -78,6 +84,16 @@ class OperationColumn extends ColumnAbstract {
 		$editParams = $this->getOption('editParams');
 		//pobieranie parametrów linku usuwania
 		$deleteParams = $this->getOption('deleteParams');
+		//przyciski dodatkowe
+		$customButtons = $this->getOption('customButtons');
+		//przyciski dodatkowe
+		if (!empty($customButtons)) {
+			//iteracja po przyciskach
+			foreach ($customButtons as $button) {
+				//html przycisku
+				$html .= ' <a href="' . $view->url($this->_parseParams($button['params'], $record)) . '"><i class="icon-' . $button['iconName'] . '"></i></a>';
+			}
+		}
 		//link edycyjny
 		if (!empty($editParams)) {
 			$html .= ' <a href="' . $view->url($this->_parseParams($editParams, $record)) . '"><i class="icon-pencil"></i></a>';
