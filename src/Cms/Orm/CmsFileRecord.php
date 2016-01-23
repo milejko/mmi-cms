@@ -155,11 +155,15 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 			return;
 		}
 		//klasa obrazu - uruchomienie skalera
-		if ($this->class == 'image' && !$this->_scaler($inputFile, BASE_PATH . '/web/data' . $fileName, $scaleType, $scale)) {
+		if ($this->class == 'image' && !$this->_scaler($inputFile, BASE_PATH . '/web/data/' . $fileName, $scaleType, $scale)) {
 			return;
 		}
+		//tworzenie katalogów
+		if (!file_exists(dirname(BASE_PATH . '/web/data/' . $fileName)) && !@mkdir(dirname(BASE_PATH . '/web/data/' . $fileName), 0777, true)) {
+			return true;
+		}
 		//klasa inna niż obraz - kopiowanie zasobu publicznie
-		if ($this->class != 'image' && !copy($inputFile, BASE_PATH . '/web/data' . $fileName)) {
+		if ($this->class != 'image' && !copy($inputFile, BASE_PATH . '/web/data/' . $fileName)) {
 			return;
 		}
 		//zwrot ścieżki publicznej
