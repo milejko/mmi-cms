@@ -31,9 +31,11 @@ class TextColumn extends ColumnAbstract {
 	 * @return string
 	 */
 	public function renderCell(\Mmi\Orm\RecordRo $record) {
-		return (new \Mmi\Filter\Truncate)->filter(
-				(new \Mmi\Filter\Escape)->filter($this->getValueFromRecord($record)
-		));
+		$value = (new \Mmi\Filter\Escape)->filter($this->getValueFromRecord($record));
+		$truncated = (new \Mmi\Filter\Truncate)->filter($value);
+		return ($value == $truncated) ? $value : '<span title="' . $value . '">' .
+			$truncated .
+			'</span>';
 	}
 
 }
