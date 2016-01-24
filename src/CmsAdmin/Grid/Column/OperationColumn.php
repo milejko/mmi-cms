@@ -67,7 +67,7 @@ class OperationColumn extends ColumnAbstract {
 	}
 	
 	public function addCustomButton($iconName, array $params = []) {
-		$customButtons = is_array($this->getOption('customButtons')) ?: [];
+		$customButtons = is_array($this->getOption('customButtons')) ? $this->getOption('customButtons') : [];
 		$customButtons[] = ['iconName' => $iconName, 'params' => $params];
 		return $this->setOption('customButtons', $customButtons);
 	}
@@ -91,16 +91,16 @@ class OperationColumn extends ColumnAbstract {
 			//iteracja po przyciskach
 			foreach ($customButtons as $button) {
 				//html przycisku
-				$html .= ' <a href="' . $view->url($this->_parseParams($button['params'], $record)) . '"><i class="icon-' . $button['iconName'] . '"></i></a>';
+				$html .= '<a href="' . $view->url($this->_parseParams($button['params'], $record)) . '"><i class="icon-' . $button['iconName'] . '"></i></a>&nbsp;&nbsp;';
 			}
 		}
 		//link edycyjny
 		if (!empty($editParams)) {
-			$html .= ' <a href="' . $view->url($this->_parseParams($editParams, $record)) . '"><i class="icon-pencil"></i></a>';
+			$html .= '<a href="' . $view->url($this->_parseParams($editParams, $record)) . '"><i class="icon-pencil"></i></a>&nbsp;&nbsp;';
 		}
 		//link kasujący
 		if (!empty($deleteParams)) {
-			$html .= ' <a href="' . $view->url($this->_parseParams($deleteParams, $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>';
+			$html .= '<a href="' . $view->url($this->_parseParams($deleteParams, $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
 		}
 		return $html;
 	}
