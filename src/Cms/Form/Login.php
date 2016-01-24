@@ -24,9 +24,6 @@ class Login extends \Mmi\Form\Form {
 			->setLabel('Hasło')
 			->addFilterStringTrim();
 
-		$this->addElementCheckbox('remember')
-			->setLabel('Pamiętaj mnie');
-
 		$this->addElementSubmit('submit')
 			->setLabel('Zaloguj się');
 	}
