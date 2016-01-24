@@ -33,22 +33,22 @@ function fieldValidationOnBlur(element) {
 		fieldValue = '0';
 	}
 	var newXhr = $.post(request.baseUrl + '/?module=cms&controller=form&action=validate', {
-		field: name, 
+		field: name,
 		class: formClass,
 		recordClass: recordClass,
 		recordId: recordId,
 		value: urlencode(fieldValue)
 	},
-	function (result) {
-		if (result) {
-			$('#' + errorsId).parent().addClass('error');
-			$(element).addClass('error');
-		} else {
-			$('#' + errorsId).parent().removeClass('error');
-			$(element).removeClass('error');
-		}
-		$('#' + errorsId).html(result);
-	});
+			function (result) {
+				if (result) {
+					$('#' + errorsId).parent().addClass('error');
+					$(element).addClass('error');
+				} else {
+					$('#' + errorsId).parent().removeClass('error');
+					$(element).removeClass('error');
+				}
+				$('#' + errorsId).html(result);
+			});
 	blurXhrs.push(newXhr);
 }
 
@@ -64,14 +64,14 @@ $(document).ready(function () {
 	$('input[type="checkbox"].validate').on('change', function () {
 		$(this).trigger('blur');
 	});
-	
+
 	//on focus na submit
 	$('input[type="submit"]').on('mousedown', function () {
-        //abort ALL ajax request
-        for (var x = 0; x < blurXhrs.length; x++) {
+		//abort ALL ajax request
+		for (var x = 0; x < blurXhrs.length; x++) {
 			blurXhrs[x].abort();
 		}
-		$(this).trigger('click');
+		//$(this).trigger('click');
 	});
 
 	//pola do przeciwdziałania robotom bez JS
