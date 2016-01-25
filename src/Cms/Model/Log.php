@@ -25,7 +25,9 @@ class Log {
 	public static function add($operation = null, array $data = []) {
 		$record = new Orm\CmsLogRecord;
 		$env = \Mmi\App\FrontController::getInstance()->getEnvironment();
-		$record->cmsAuthId = \App\Registry::$auth->getId() ? \App\Registry::$auth->getId() : null;
+		if (\App\Registry::$auth && \App\Registry::$auth->getId()) {
+			$record->cmsAuthId = null;
+		}
 		$record->url = $env->requestUri;
 		$record->ip = $env->remoteAddress;
 		$record->browser = $env->httpUserAgent;
