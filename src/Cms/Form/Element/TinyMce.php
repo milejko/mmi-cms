@@ -122,7 +122,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	 * @return \Cms\Form\Element\TinyMce
 	 */
 	public function setHeight($height) {
-		return $this->setOption('heigth', intval($height));
+		return $this->setOption('height', intval($height));
 	}
 
 	/**
@@ -160,8 +160,8 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 				$tskin = "skin : 'lightgray',";
 				$themeOptions = "image_advtab: true,
 				contextmenu: 'link image inserttable | cell row column deletetable',
-				width: '" . (isset($this->_options['width']) ? $this->_options['width'] : 400) . "',
-				height: '" . (isset($this->_options['height']) ? $this->_options['height'] : 200) . "',
+				width: " . (isset($this->_options['width']) ? $this->_options['width'] : "''") . ",
+				height: " . (isset($this->_options['height']) ? $this->_options['height'] : 200) . ",
 				menubar: false,
 				resize : false,
 				";
@@ -176,8 +176,8 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 				$tskin = "skin : 'lightgray',";
 				$themeOptions = "image_advtab: true,
 				contextmenu: 'link image inserttable | cell row column deletetable',
-				width: '" . (isset($this->_options['width']) ? $this->_options['width'] : 400) . "',
-				height: '" . (isset($this->_options['height']) ? $this->_options['height'] : 200) . "',
+				width: " . (isset($this->_options['width']) ? $this->_options['width'] : "''") . ",
+				height: " . (isset($this->_options['height']) ? $this->_options['height'] : 320) . ",
 				resize : true,
 				";
 				break;
@@ -190,8 +190,8 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 				$tskin = "skin : 'lightgray',";
 				$themeOptions = "image_advtab: true,
 				contextmenu: 'link image inserttable | cell row column deletetable',
-				width: '" . (isset($this->_options['width']) ? $this->_options['width'] : '') . "',
-				height: '" . (isset($this->_options['height']) ? $this->_options['height'] : 320) . "',
+				width: " . (isset($this->_options['width']) ? $this->_options['width'] : "''") . ",
+				height: " . (isset($this->_options['height']) ? $this->_options['height'] : 320) . ",
 				";
 		}
 		$this->unsetOption('mode');
@@ -227,7 +227,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 				" . $themeOptions . "
 				" . $onInit . "
 				" . $emptyRootBlock . "
-				autoresize_min_height: 300,
+				autoresize_min_height: " . ($this->getOption('height')? $this->getOption('height') : 300) . ",
 				image_list: request.baseUrl + '/cms/file/list?object=$object&objectId=$objectId&t=$t&hash=$hash',
 				document_base_url: request.baseUrl,
 				convert_urls: false,
