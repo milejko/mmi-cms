@@ -9,6 +9,7 @@
  */
 
 namespace Cms\App;
+
 use Cms\Orm\CmsRouteQuery;
 
 /**
@@ -40,13 +41,14 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 		if ($request->__get('lang') && !in_array($request->__get('lang'), \App\Registry::$config->languages)) {
 			throw new \Mmi\Mvc\MvcNotFoundException('Language not found');
 		}
+		
 		//ustawianie widoku
 		$this->_viewSetup($request);
 
 		//konfiguracja autoryzacji
 		$auth = new \Mmi\Security\Auth;
-		$auth->setSalt(\App\Registry::$config->salt);
-		$auth->setModelName(\App\Registry::$config->session->authModel ? \App\Registry::$config->session->authModel : '\Cms\Model\Auth');
+		$auth->setSalt(\App\Registry::$config->salt)
+			->setModelName(\App\Registry::$config->session->authModel ? \App\Registry::$config->session->authModel : '\Cms\Model\Auth');
 		\App\Registry::$auth = $auth;
 		\Mmi\Mvc\ActionHelper::getInstance()->setAuth($auth);
 
@@ -61,6 +63,7 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 				$auth->idAuthenticate();
 			}
 		}
+		
 		//autoryzacja do widoku
 		if ($auth->hasIdentity()) {
 			\Mmi\App\FrontController::getInstance()->getView()->auth = $auth;
@@ -96,6 +99,7 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 				throw new \Mmi\Mvc\MvcNotFoundException('Unauthorized access');
 			}
 		}
+		
 		//ustawienie nawigatora
 		if (null === ($navigation = \App\Registry::$cache->load('Mmi-Navigation-' . $request->__get('lang')))) {
 			/* @var $config \App\Config\Navigation */
@@ -105,6 +109,7 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 			\App\Registry::$cache->save($navigation, 'Mmi-Navigation-' . $request->__get('lang'), 0);
 		}
 		$navigation->setup($request);
+		
 		//przypinanie nawigatora do helpera widoku nawigacji
 		\Mmi\Mvc\ViewHelper\Navigation::setAcl($acl);
 		\Mmi\Mvc\ViewHelper\Navigation::setAuth($auth);
