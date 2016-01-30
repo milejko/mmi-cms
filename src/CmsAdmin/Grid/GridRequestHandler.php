@@ -78,15 +78,14 @@ class GridRequestHandler {
 		if (false === strpos($post->filter, $this->_grid->getClass())) {
 			return;
 		}
-		//obsługa joinowanych
 		$columnName = substr($post->filter, strpos($post->filter, '[') + 1, -1);
+		$tableName = null;
+		$fieldName = $columnName;
+		//obsługa joinowanych
 		if (strpos($columnName, '.')) {
 			$fieldTable = explode('.', $columnName);
 			$tableName = $fieldTable[0];
 			$fieldName = $fieldTable[1];
-		} else {
-			$tableName = null;
-			$fieldName = $columnName;
 		}
 		//paginator
 		if ($fieldName == '_paginator_') {
