@@ -79,12 +79,14 @@ class GridRequestHandler {
 			return;
 		}
 		//obsługa joinowanych
-		$fieldName = substr($post->filter, strpos($post->filter, '[') + 1, -1);
-		$tableName = null;
-		if (strpos($fieldName, '.')) {
-			$fieldTable = explode('.', $fieldName);
+		$columnName = substr($post->filter, strpos($post->filter, '[') + 1, -1);
+		if (strpos($columnName, '.')) {
+			$fieldTable = explode('.', $columnName);
 			$tableName = $fieldTable[0];
 			$fieldName = $fieldTable[1];
+		} else {
+			$tableName = null;
+			$fieldName = $columnName;
 		}
 		//paginator
 		if ($fieldName == '_paginator_') {
@@ -95,7 +97,7 @@ class GridRequestHandler {
 		}
 		//iteracja po kolumnach
 		foreach ($this->_grid->getColumns() as $column) {
-			if ($column->getName() != $fieldName) {
+			if ($column->getName() != $columnName) {
 				continue;
 			}
 			//ustawianie filtra

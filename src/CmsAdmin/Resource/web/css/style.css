@@ -342,6 +342,14 @@ label.mce-wordcount {
 	width: 100%;
 }
 
+.grid-loader {
+	transition: none !important;
+	-webkit-transition: none !important;
+	-moz-transition: none !important;
+	background: url("img/grid_loader.gif") no-repeat scroll right transparent;
+	width: 100%;
+}
+
 /*---------------------------------
 	MULTI-DIRECTION-SORT
 -----------------------------------*/

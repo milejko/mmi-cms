@@ -49,7 +49,7 @@ CMS.grid = function () {
 				type: 'POST',
 				data: {filter: filter, value: value},
 				beforeSend: function() {
-					field.addClass('ajax-loader');
+					field.addClass('grid-loader');
 				},
 				success: function(data) {
 					$('#' + gridId).html(data);
