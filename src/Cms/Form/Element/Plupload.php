@@ -84,6 +84,15 @@ namespace Cms\Form\Element;
 class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	
 	/**
+	 * Ustawia objekt cms_
+	 * @param string $object
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function setObject($object) {
+		return $this->setOption('object', $object);
+	}
+	
+	/**
 	 * Ustawia rozmiar chunka
 	 * @param string $size
 	 * @return \Cms\Form\Element\Plupload
@@ -292,7 +301,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 				'use strict';
 				var conf = $.extend(true, {}, PLUPLOADCONF.settings);
 				conf.form_element_id = '$id';
-				conf.form_object = '$object';
+				conf.form_object = '" . ($this->getOption('object') ? $this->getOption('object') : $object) . "';
 				conf.form_object_id = '$objectId';
 				" . ($this->getOption('showConsole') ? "conf.log_element = '" . $id . "-console';" : "") . "
 				" . ($this->getOption('chunkSize') ? "conf.chunk_size = '" . $this->getOption('chunkSize') . "';" : "") . "
