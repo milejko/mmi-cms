@@ -41,18 +41,19 @@ class UploadController extends Mvc\Controller {
 	public function currentAction() {
 		$this->view->setLayoutDisabled();
 		$this->getResponse()->setTypeJson(true);
+		$objectId = !empty($this->getPost()->objectId) ? $this->getPost()->objectId : null;
 		switch ($this->getPost()->fileTypes) {
 			case 'images' :
 				//zapytanie o obrazki
-				$query = \Cms\Orm\CmsFileQuery::imagesByObject($this->getPost()->object, $this->getPost()->objectId);
+				$query = \Cms\Orm\CmsFileQuery::imagesByObject($this->getPost()->object, $objectId);
 				break;
 			case 'notImages' :
 				//wszystkie pliki bez obrazków
-				$query = \Cms\Orm\CmsFileQuery::notImagesByObject($this->getPost()->object, $this->getPost()->objectId);
+				$query = \Cms\Orm\CmsFileQuery::notImagesByObject($this->getPost()->object, $objectId);
 				break;
 			default :
 				//domyślne zapytanie o wszystkie pliki
-				$query = \Cms\Orm\CmsFileQuery::byObject($this->getPost()->object, $this->getPost()->objectId);
+				$query = \Cms\Orm\CmsFileQuery::byObject($this->getPost()->object, $objectId);
 		}
 		//zwrot json'a z plikami
 		return json_encode([

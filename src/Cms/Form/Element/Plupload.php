@@ -294,6 +294,9 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 			$object = 'tmp-' . $object;
 			$objectId = \Mmi\Session\Session::getNumericId();
 		}
+		if (!$this->_form->hasRecord()) {
+			$objectId = null;
+		}
 		
 		//dołączanie skryptu
 		$view->headScript()->appendScript("
