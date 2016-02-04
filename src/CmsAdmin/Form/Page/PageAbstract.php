@@ -52,11 +52,13 @@ abstract class PageAbstract extends \Cms\Form\Form {
 
 		//data rozpoczęcia publikacji
 		$this->addElementDateTimePicker('dateStart')
-			->setLabel('Data i czas włączenia');
+			->setLabel('Data i czas włączenia')
+			->addFilterEmptyToNull();
 
 		//data zakończenia
 		$this->addElementDateTimePicker('dateEnd')
-			->setLabel('Data i czas wyłączenia');
+			->setLabel('Data i czas wyłączenia')
+			->addFilterEmptyToNull();
 
 		//włączony
 		$this->addElementCheckbox('active')

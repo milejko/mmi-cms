@@ -11,7 +11,7 @@
 namespace CmsAdmin\Form\Page;
 
 /**
- * Formularz folderó w nawigatorze
+ * Formularz folderów w nawigatorze
  * @method \Cms\Orm\CmsNavigationRecord getRecord()
  */
 class Folder extends \Cms\Form\Form {
@@ -56,10 +56,12 @@ class Folder extends \Cms\Form\Form {
 			->setDescription('Jeśli niewidoczny, jego dane nie wejdą do ścieżki tytułu i okruchów');
 
 		$this->addElementDateTimePicker('dateStart')
-			->setLabel('Data i czas włączenia');
+			->setLabel('Data i czas włączenia')
+			->addFilterEmptyToNull();
 
 		$this->addElementDateTimePicker('dateEnd')
-			->setLabel('Data i czas wyłączenia');
+			->setLabel('Data i czas wyłączenia')
+			->addFilterEmptyToNull();
 
 		$this->addElementCheckbox('active')
 			->setChecked()
