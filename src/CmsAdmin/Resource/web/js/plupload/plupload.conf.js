@@ -10,7 +10,7 @@ PLUPLOADCONF.settings = {
 	runtimes: 'html5',
 	url: request.baseUrl + '/cmsAdmin/upload/plupload',
 	file_data_name: 'file',
-	chunk_size: '8mb',
+	chunk_size: '2mb',
 	rename: false,
 	sortable: false,
 	dragdrop: true,
