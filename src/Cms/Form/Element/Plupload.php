@@ -334,11 +334,11 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$html .= '<input type="text" name="author" value="" class="text ui-widget-content ui-corner-all" maxlength="255">';
 		$html .= '<label>' . ($this->getOption('sourceLabel') ? $this->getOption('sourceLabel') : 'Źródło') . ':</label>';
 		if ($this->getOption('sourceAsTinyMce')) {
-			$html .= '<textarea name="source" class="plupload-edit-tinymce text ui-widget-content ui-corner-all" maxlength="255"></textarea>';
+			$html .= '<textarea name="source" class="plupload-edit-tinymce text ui-widget-content ui-corner-all"></textarea>';
 		} elseif ($this->getOption('sourceAsTextarea')) {
-			$html .= '<textarea name="source" class="text ui-widget-content ui-corner-all" maxlength="255"></textarea>';
+			$html .= '<textarea name="source" class="text ui-widget-content ui-corner-all"></textarea>';
 		} else {
-			$html .= '<input type="text" name="source" value="" class="text ui-widget-content ui-corner-all" maxlength="255">';
+			$html .= '<input type="text" name="source" value="" class="text ui-widget-content ui-corner-all">';
 		}
 		$html .= '<div id="' . $id . '-edit-buttons" class="plupload-edit-buttons">';
 		$html .= '<input type="checkbox" name="active" id="' . $id . '-edit-active" value="1"><label for="' . $id . '-edit-active">Aktywny</label>';
