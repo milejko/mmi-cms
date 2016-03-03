@@ -53,7 +53,16 @@ abstract class Form extends \Mmi\Form\Form {
 	 * Wywołuje metodę po uploadzie
 	 */
 	public function afterUpload() {
-		
+		if (!$this->getRecord()->getPk()) {
+			return;
+		}
+		//przenoszenie z uploadera plików ze zmienionym object
+		foreach ($this->getElements() as $element) {
+			if (!$element instanceof \Cms\Form\Element\Plupload || !$element->getObject()) {
+				continue;
+			}
+			\Cms\Model\File::move('tmp-' . $element->getObject(), \Mmi\Session\Session::getNumericId(), $element->getObject(), $this->getRecord()->getPk());
+		}
 	}
 
 	/**

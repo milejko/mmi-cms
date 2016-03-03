@@ -290,6 +290,10 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 			$object = $this->_form->getFileObjectName();
 			$objectId = $this->_form->getRecord()->getPk();
 		}
+		//jeśli wymuszony inny object
+		if ($this->getOption('object')) {
+			$object = $this->getOption('object');
+		}
 		if (!$objectId) {
 			$object = 'tmp-' . $object;
 			$objectId = \Mmi\Session\Session::getNumericId();
@@ -304,7 +308,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 				'use strict';
 				var conf = $.extend(true, {}, PLUPLOADCONF.settings);
 				conf.form_element_id = '$id';
-				conf.form_object = '" . ($this->getOption('object') ? $this->getOption('object') : $object) . "';
+				conf.form_object = '$object';
 				conf.form_object_id = '$objectId';
 				" . ($this->getOption('showConsole') ? "conf.log_element = '" . $id . "-console';" : "") . "
 				" . ($this->getOption('chunkSize') ? "conf.chunk_size = '" . $this->getOption('chunkSize') . "';" : "") . "
