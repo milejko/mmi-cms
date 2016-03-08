@@ -47,7 +47,7 @@ class News extends \Cms\Form\Form {
 			->setLabel('Publikacja');
 
 		//dołączenie plików
-		$this->addElementUploader('uploader')
+		$this->addElementPlupload('uploader')
 			->setLabel('Dołącz pliki');
 
 		//zapis

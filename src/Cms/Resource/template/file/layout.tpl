@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-		{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/jquery/ui.js')}
+		{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.js')}
 		{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/uploader.js')}
 		{if $ajaxParams['js']}
 			{headScript()->appendFile($baseUrl . $ajaxParams['js'])}

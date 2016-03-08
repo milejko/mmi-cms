@@ -1,5 +1,5 @@
 {headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js')}
-{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/jquery/ui.js')}
+{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.js')}
 {headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/navigation.js')}
 <div class="content-box">
 	<div class="content-box-header">
