@@ -31,6 +31,15 @@ class Tree extends \Mmi\Form\Element\ElementAbstract {
 	}
 
 	/**
+	 * Ustawia wielokrotny wybór na drzewku
+	 * @return \Cms\Form\Element\Tree
+	 */
+	public function setMultiple($multiple = true) {
+		$this->setOption('multiple', $multiple);
+		return $this;
+	}
+
+	/**
 	 * Buduje pole
 	 * @return string
 	 */
@@ -128,7 +137,7 @@ class Tree extends \Mmi\Form\Element\ElementAbstract {
 							'responsive' : true,
 							'stripes' : true
 						},
-						'multiple': false,
+						'multiple': " . ($this->getOption('multiple') ? 'true' : 'false') . ",
 						'expand_selected_onload': true,
 						'check_callback' : false
 					}
