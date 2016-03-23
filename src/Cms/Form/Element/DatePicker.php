@@ -11,7 +11,7 @@
 namespace Cms\Form\Element;
 
 /**
- * Element tinymce
+ * Element DateTimePicker
  * 
  * Metody add
  * @method self addClass($className) dodaje klasę HTML
