@@ -99,11 +99,13 @@ class Tree extends \Mmi\Form\Element\ElementAbstract {
 		if (!isset($node['children']) || !is_array($node['children']) || count($node['children']) == 0) {
 			return $html;
 		}
+		//zaznaczone wartości
+		$values = explode(';', $this->getValue());
 		$html .= '<ul>';
 		//iteracja po dzieciakach i budowa lisci drzewa
 		foreach ($node['children'] as $child) {
 			$select = 'false';
-			if ($child['id'] == $this->getValue()) {
+			if (in_array($child['id'], $values)) {
 				$select = 'true';
 			}
 			$disabled = 'false';
@@ -143,9 +145,14 @@ class Tree extends \Mmi\Form\Element\ElementAbstract {
 					}
 				})
 				.on('changed.jstree', function (e, data) {
+					var selectedStr = '';
 					if (0 in data.selected) {
-						$('#$id').val(data.selected[0]);
+						selectedStr = data.selected[0];
 					}
+					for (idx = 1, len = data.selected.length; idx < len; ++idx) {
+						selectedStr = selectedStr.concat(';' + data.selected[idx]) 
+					}
+					$('#$id').val(selectedStr);
 				});
 				$('#$treeClearId').click(function () {
 					$('#$id').val('');

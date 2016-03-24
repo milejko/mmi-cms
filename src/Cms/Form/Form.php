@@ -46,6 +46,9 @@ abstract class Form extends \Mmi\Form\Form {
 			$this->_appendFiles($this->_record->getPk(), $this->getFiles());
 			$this->afterUpload();
 		}
+		if (!$this->hasRecord()) {
+			parent::save();
+		}
 		return $this->isSaved();
 	}
 
