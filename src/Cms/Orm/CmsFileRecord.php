@@ -169,7 +169,7 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 		//zwrot ścieżki publicznej
 		return $baseUrl . $fileName;
 	}
-	
+
 	/**
 	 * Zapisuje plik przesłany na serwer i aktualizuje pola w rekordzie
 	 * Uwaga! Metoda nie zapisuje zmian w rekordzie (nie wywołuje save)!
@@ -217,7 +217,7 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 		$this->size = $file->size;
 		return true;
 	}
-	
+
 	/**
 	 * Zapis danych do obiektu
 	 * @return bool
@@ -231,7 +231,7 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 		}
 		return $res;
 	}
-	
+
 	/**
 	 * Wstawienie danych (przez save)
 	 * @return boolean
@@ -257,7 +257,7 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 		$this->dateModify = date('Y-m-d H:i:s');
 		return parent::_update();
 	}
-	
+
 	/**
 	 * Usuwa obecny plik, fizycznie z dysku
 	 * @return boolean
@@ -336,7 +336,6 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 				return true;
 			//PNG
 			case 'image/png':
-				imagesavealpha($imgRes, true);
 				imagepng($imgRes, $outputFile);
 				return true;
 			//domyślnie jpeg
