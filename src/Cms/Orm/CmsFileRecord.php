@@ -332,10 +332,14 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 		switch (\Mmi\FileSystem::mimeType($inputFile)) {
 			//GIF
 			case 'image/gif':
+				imagealphablending($imgRes, false);
+				imagesavealpha($imgRes, true);
 				imagegif($imgRes, $outputFile);
 				return true;
 			//PNG
 			case 'image/png':
+				imagealphablending($imgRes, false);
+				imagesavealpha($imgRes, true);
 				imagepng($imgRes, $outputFile);
 				return true;
 			//domyślnie jpeg
