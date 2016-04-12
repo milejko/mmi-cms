@@ -26,6 +26,8 @@ class AuthController extends Mvc\Controller {
 	 * Edycja użytkownika
 	 */
 	public function editAction() {
+		$this->view->ldap = \App\Registry::$config->ldap->active;
+		
 		$form = new \CmsAdmin\Form\Auth(new \Cms\Orm\CmsAuthRecord($this->id));
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Poprawnie zapisano użytkownika', true);
@@ -45,4 +47,18 @@ class AuthController extends Mvc\Controller {
 		$this->getResponse()->redirect('cmsAdmin', 'auth');
 	}
 
+	/**
+	 * Akcja jsonowa wyszukująca użytkowników w LDAP
+	 */
+	public function autocompleteAction() {
+		//typ odpowiedzi
+		$this->getResponse()->setTypeJson();
+		//za krótki ciąg
+		if (strlen(trim($this->term)) < 3) {
+			return json_encode([]);
+		}
+		//zwraca odpowiedz JSON
+		return json_encode((new \Cms\Model\Auth)->ldapAutocomplete($this->term . '*'));
+	}
+	
 }

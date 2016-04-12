@@ -79,6 +79,33 @@ class Auth implements \Mmi\Security\AuthInterface {
 	}
 
 	/**
+	 * Zapytanie o użytkowników
+	 * @param string $query
+	 * @return array
+	 */
+	public function ldapAutocomplete($query = '*') {
+		//tworzenie klienta
+		$ldapClient = new \Mmi\Ldap\LdapClient(\App\Registry::$config->ldap);
+		try {
+			//wyszukiwanie w LDAPie
+			$ldapResults = $ldapClient->findUser($query, 10, ['sAMAccountname']);
+		} catch (\Mmi\Ldap\LdapException $e) {
+			//błąd usługi
+			\Mmi\App\FrontController::getInstance()->getLogger()->addCritical($e);
+			return [];
+		}
+		//budowa tablicy z użytkownikami
+		$userTable = [];
+		foreach ($ldapResults as $key => $user) {
+			/* @var $user \Mmi\Ldap\LdapUserRecord */
+			$userTable[$key]['label'] = $user->sAMAccountname;
+			$userTable[$key]['name'] = $user->cn;
+			$userTable[$key]['email'] = $user->mail;
+		}
+		return $userTable;
+	}
+
+	/**
 	 * Obsługa błędnego logowania znanego użytkownika
 	 * @param string $identity
 	 */
