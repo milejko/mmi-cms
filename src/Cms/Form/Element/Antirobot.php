@@ -11,17 +11,18 @@
 namespace Cms\Form\Element;
 
 /**
- * Element utrudniający wysłanie formularza robotom
+ * Element utrudniający wysłanie formularza robotom, poprzez dodanie wartości przepisywanej JS'em
  */
 class Antirobot extends \Mmi\Form\Element\Hidden {
-
+	
 	/**
 	 * Ignorowanie tego pola, pole obowiązkowe, automatyczna walidacja
 	 */
-	public function init() {
+	public function __construct($name) {
+		parent::__construct($name);
 		$this->setIgnore()
 			->setRequired()
-			->addValidator(new \Cms\Validator\Antirobot());
+			->addValidator(new \Cms\Validator\Antirobot);
 	}
 
 	/**

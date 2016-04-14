@@ -28,8 +28,10 @@ class Antirobot extends \Mmi\Validator\ValidatorAbstract {
 	 * @return boolean
 	 */
 	public function isValid($value) {
-		$this->_error(self::INVALID);
-		return (('js-' . self::generateCrc() . '-js') == $value);
+		if (('js-' . self::generateCrc() . '-js') == $value) {
+			return true;
+		}
+		return $this->_error(self::INVALID);
 	}
 
 	/**
