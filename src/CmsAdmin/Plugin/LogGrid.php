@@ -31,11 +31,13 @@ class LogGrid extends \CmsAdmin\Grid\Grid {
 
 		//url
 		$this->addColumnText('url')
-			->setLabel('URL');
+			->setLabel('URL')
+			->setFilterMethodLike();
 
 		//dane
 		$this->addColumnText('data')
-			->setLabel('dane');
+			->setLabel('dane')
+			->setFilterMethodLike();
 
 		//ip
 		$this->addColumnText('ip')
