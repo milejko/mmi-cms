@@ -39,14 +39,15 @@ class Cron {
 				\App\Registry::$db->connect();
 				Log::add('Cron exception', $logData);
 			}
-			//Zmień datę ostatniego wywołania
+			//zmień datę ostatniego wywołania
 			$cron->dateLastExecute = date('Y-m-d H:i:s');
+			//ponowne łączenie
+			\App\Registry::$db->connect();
+			//zapis do bazy
 			$cron->save();
 			if (!$output) {
 				continue;
 			}
-			//ponowne łączenie
-			\App\Registry::$db->connect();
 			Log::add('Cron done', $logData);
 		}
 	}

@@ -65,7 +65,7 @@ class Auth implements \Mmi\Security\AuthInterface {
 			'object' => 'cms_auth',
 			'objectId' => \App\Registry::$auth->getId(),
 			'success' => true,
-			'message' => 'LOGGED OUT: ' . \App\Registry::$auth->getUsername()
+			'message' => 'LOGGED OUT: ' . \App\Registry::$auth->getEmail()
 		]);
 	}
 

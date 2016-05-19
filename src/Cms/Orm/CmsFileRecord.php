@@ -281,7 +281,7 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 	}
 
 	/**
-	 * Makes the tumb and return its address
+	 * Makes the thumb and return its address
 	 *
 	 * @param string $inputFile
 	 * @param string $outputFile
