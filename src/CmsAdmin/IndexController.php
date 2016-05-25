@@ -26,6 +26,11 @@ class IndexController extends Mvc\Controller {
 	 * Logowanie
 	 */
 	public function loginAction() {
+		//jesli zalogowany
+		if (\App\Registry::$auth->hasIdentity()) {
+			return $this->getResponse()->redirect('cmsAdmin');
+		}
+		//formularz logowania
 		$form = new \CmsAdmin\Form\Login;
 		$this->view->loginForm = $form;
 		//brak wysłanych danych
