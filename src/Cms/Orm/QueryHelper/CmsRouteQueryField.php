@@ -11,6 +11,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsRouteQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsRouteQuery like($value)
  * @method \Cms\Orm\CmsRouteQuery ilike($value)
+ * @method \Cms\Orm\CmsRouteQuery between($from, $to)
  * @method \Cms\Orm\CmsRouteQuery equalsColumnId()
  * @method \Cms\Orm\CmsRouteQuery notEqualsColumnId()
  * @method \Cms\Orm\CmsRouteQuery greaterThanColumnId()

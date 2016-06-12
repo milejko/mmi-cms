@@ -11,6 +11,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsStatDateQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsStatDateQuery like($value)
  * @method \Cms\Orm\CmsStatDateQuery ilike($value)
+ * @method \Cms\Orm\CmsStatDateQuery between($from, $to)
  * @method \Cms\Orm\CmsStatDateQuery equalsColumnId()
  * @method \Cms\Orm\CmsStatDateQuery notEqualsColumnId()
  * @method \Cms\Orm\CmsStatDateQuery greaterThanColumnId()

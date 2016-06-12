@@ -11,6 +11,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsNavigationQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsNavigationQuery like($value)
  * @method \Cms\Orm\CmsNavigationQuery ilike($value)
+ * @method \Cms\Orm\CmsNavigationQuery between($from, $to)
  * @method \Cms\Orm\CmsNavigationQuery equalsColumnId()
  * @method \Cms\Orm\CmsNavigationQuery notEqualsColumnId()
  * @method \Cms\Orm\CmsNavigationQuery greaterThanColumnId()

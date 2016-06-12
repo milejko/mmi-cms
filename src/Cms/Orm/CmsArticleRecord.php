@@ -14,7 +14,8 @@ class CmsArticleRecord extends \Mmi\Orm\Record {
 	public $dateAdd;
 	public $dateModify;
 	public $text;
-	public $noindex;
+	public $index;
+	public $active;
 
 	/**
 	 * Zapis z filtracją url
