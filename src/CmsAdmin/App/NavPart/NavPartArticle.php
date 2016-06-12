@@ -21,7 +21,11 @@ class NavPartArticle extends \Mmi\Navigation\NavigationConfig {
 					->setLabel('Dodaj')
 					->setModule('cmsAdmin')
 					->setController('article')
-					->setAction('edit'));
+					->setAction('edit'))
+				->addChild(self::newElement()
+					->setLabel('Bloki')
+					->setModule('cmsAdmin')
+					->setController('block'));
 	}
 
 }

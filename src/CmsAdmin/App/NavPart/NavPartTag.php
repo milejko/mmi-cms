@@ -13,7 +13,10 @@ namespace CmsAdmin\App\NavPart;
 class NavPartTag extends \Mmi\Navigation\NavigationConfig {
 
 	public static function getMenu() {
-		
+		return self::newElement()
+				->setLabel('Tagi')
+				->setModule('cmsAdmin')
+				->setController('tag');
 	}
 
 }
