@@ -8,6 +8,9 @@ UPDATE `cms_article` SET `index` = 0 WHERE `index` = 1;
 UPDATE `cms_article` SET `index` = 1 WHERE `index` = 2;
 
 ALTER TABLE `cms_article`
+ADD `lead` text AFTER `text`;
+
+ALTER TABLE `cms_article`
 ADD `active` tinyint(4) NOT NULL DEFAULT '0';
 
 ALTER TABLE `cms_article`

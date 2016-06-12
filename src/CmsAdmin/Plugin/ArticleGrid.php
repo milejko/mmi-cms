@@ -24,10 +24,6 @@ class ArticleGrid extends \CmsAdmin\Grid\Grid {
 		$this->addColumnText('title')
 			->setLabel('tytuł');
 
-		//treść
-		$this->addColumnText('text')
-			->setLabel('treść');
-
 		//data dodania
 		$this->addColumnText('dateAdd')
 			->setLabel('data dodania');
@@ -36,6 +32,14 @@ class ArticleGrid extends \CmsAdmin\Grid\Grid {
 		$this->addColumnText('dateModify')
 			->setLabel('data modyfikacji');
 
+		//indeksacja (google)
+		$this->addColumnCheckbox('index')
+			->setLabel('indeksacja');
+
+		//aktywność
+		$this->addColumnCheckbox('active')
+			->setLabel('aktywny');
+		
 		//operacje
 		$this->addColumnOperation();
 	}

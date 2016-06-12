@@ -19,6 +19,18 @@ class Article extends \Cms\Form\Form {
 			->setRequired()
 			->addValidatorNotEmpty()
 			->setLabel('tytuł');
+		
+		//kategorie
+		$this->addElementSelect('cmsCategoryId')
+			->setMultiple()
+			->setMultioptions([])
+			->setLabel('kategorie')
+			->setDescription('nie jest obowiązkowa, wybór wielu kategorii z CTRL');
+
+		//nagłówek
+		$this->addElementTinyMce('lead')
+			->setLabel('nagłówek artykułu')
+			->setModeAdvanced();
 
 		//treść
 		$this->addElementTinyMce('text')
@@ -26,12 +38,18 @@ class Article extends \Cms\Form\Form {
 			->setModeAdvanced();
 
 		//opcja noindex
-		$this->addElementCheckbox('noindex')
-			->setLabel('Bez indeksowania w google');
+		$this->addElementCheckbox('index')
+			->setChecked()
+			->setLabel('indeksowanie w wyszukiwarkach');
 
 		//uploader - plupload
 		$this->addElementPlupload('uploader')
-			->setLabel('Załaduj pliki');
+			->setLabel('załaduj pliki');
+
+		//aktywny
+		$this->addElementCheckbox('active')
+			->setChecked()
+			->setLabel('włączony');
 
 		$this->addElementSubmit('submit')
 			->setLabel('zapisz stronę');

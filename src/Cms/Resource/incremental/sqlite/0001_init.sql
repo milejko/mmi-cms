@@ -45,6 +45,7 @@ CREATE TABLE cms_article (
     uri character varying(160) NOT NULL,
     "dateAdd" DATETIME,
     "dateModify" DATETIME,
+	"lead" text,
     "text" text,
 	"index" smallint DEFAULT 1 NOT NULL,
 	"active" TINYINT DEFAULT 0 NOT NULL
