@@ -20,24 +20,6 @@ CREATE INDEX cms_acl_controller_idx ON cms_acl (controller);
 CREATE INDEX cms_acl_module_idx ON cms_acl (module);
 CREATE INDEX fki_cms_acl_cms_role_id_fkey ON cms_acl (cms_role_id);
 
-CREATE TABLE `cms_block` (
-    `id` INTEGER PRIMARY KEY,
-	`lang` character varying(2)  DEFAULT NULL,
-    `title` character varying(160) NOT NULL,
-    `lead` text,
-	`text` text,
-	`object` character varying(32) NOT NULL,
-	`objectId` integer,
-    `dateAdd` DATETIME NOT NULL,
-    `dateModify` DATETIME
-);
-
-CREATE INDEX cms_block_lang_idx ON cms_block (lang);
-CREATE INDEX cms_block_title_idx ON cms_block (title);
-CREATE INDEX cms_block_object_idx ON cms_block ("object","objectId");
-CREATE INDEX cms_block_dateAdd_idx ON cms_block ("dateAdd");
-CREATE INDEX cms_block_dateModify_idx ON cms_block ("dateModify");
-
 CREATE TABLE cms_article (
     id INTEGER PRIMARY KEY,
     lang character varying(2),
@@ -48,6 +30,8 @@ CREATE TABLE cms_article (
 	"lead" text,
     "text" text,
 	"index" smallint DEFAULT 1 NOT NULL,
+	"object" character varying(32),
+    "objectId" integer,
 	"active" TINYINT DEFAULT 0 NOT NULL
 );
 
@@ -57,6 +41,7 @@ CREATE INDEX cms_article_lang_idx ON cms_article (lang);
 CREATE INDEX cms_article_title_idx ON cms_article (title);
 CREATE INDEX cms_article_uri_idx ON cms_article (uri);
 CREATE INDEX cms_article_active_idx ON cms_article (active);
+CREATE INDEX cms_article_object_objectId_idx ON cms_article ("object", "objectId");
 
 CREATE TABLE "cms_category" (
     "id" INTEGER PRIMARY KEY,
@@ -81,26 +66,15 @@ CREATE INDEX cms_category_uri_idx ON cms_category (uri);
 CREATE INDEX cms_category_active_idx ON cms_category (active);
 CREATE INDEX cms_category_parent_id_idx ON cms_category (parent_id);
 
-CREATE TABLE "cms_article_category" (
+CREATE TABLE "cms_category_relation" (
     id integer INTEGER PRIMARY KEY,
-    "cms_article_id" integer NOT NULL,
     "cms_category_id" integer NOT NULL,
-	FOREIGN KEY(cms_article_id) REFERENCES cms_article(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    "object" character varying(32) NOT NULL,
+    "objectId" integer,
 	FOREIGN KEY(cms_category_id) REFERENCES cms_category(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
-CREATE INDEX fki_cms_article_category_cms_article_id_fkey ON cms_article_category (cms_article_id);
-CREATE INDEX fki_cms_article_category_cms_category_id_fkey ON cms_article_category (cms_category_id);
-
-CREATE TABLE cms_article_tag (
-    id integer INTEGER PRIMARY KEY,
-    cms_article_id integer NOT NULL,
-    cms_tag_id integer NOT NULL,
-	FOREIGN KEY(cms_article_id) REFERENCES cms_article(id) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY(cms_tag_id) REFERENCES cms_tag(id) ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-CREATE INDEX fki_cms_article_tag_cms_article_id_fkey ON cms_article_tag (cms_article_id);
-CREATE INDEX fki_cms_article_tag_cms_tag_id_fkey ON cms_article_tag (cms_tag_id);
+CREATE INDEX fki_cms_category_relation_cms_category_id_fkey ON cms_category_relation (cms_category_id);
+CREATE INDEX "cms_category_relation_object_objectId_idx" ON cms_category_relation ("object", "objectId");
 
 CREATE TABLE cms_auth (
     id INTEGER PRIMARY KEY,
@@ -144,7 +118,7 @@ CREATE TABLE cms_comment (
     signature character varying(64),
     ip character varying(16),
     stars real DEFAULT 0,
-    object character varying(32) NOT NULL,
+    "object" character varying(32) NOT NULL,
     "objectId" integer NOT NULL,
 	FOREIGN KEY (cms_auth_id) REFERENCES cms_auth(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -303,6 +277,16 @@ CREATE TABLE cms_tag
 );
 
 CREATE UNIQUE INDEX cms_tag_tag_idx ON cms_tag ("tag");
+
+CREATE TABLE "cms_tag_relation" (
+    id integer INTEGER PRIMARY KEY,
+    "cms_tag_id" integer NOT NULL,
+    "object" character varying(32) NOT NULL,
+    "objectId" integer,
+	FOREIGN KEY(cms_tag_id) REFERENCES cms_tag(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+CREATE INDEX fki_cms_tag_relation_cms_article_id_fkey ON cms_tag_relation (cms_tag_id);
+CREATE INDEX "cms_tag_relation_object_objectId_idx" ON cms_tag_relation ("object", "objectId");
 
 CREATE TABLE cms_text
 (
