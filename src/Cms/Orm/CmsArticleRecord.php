@@ -16,6 +16,8 @@ class CmsArticleRecord extends \Mmi\Orm\Record {
 	public $lead;
 	public $text;
 	public $index;
+	public $object;
+	public $objectId;
 	public $active;
 
 	/**
