@@ -279,7 +279,7 @@ CREATE TABLE cms_tag
 CREATE UNIQUE INDEX cms_tag_tag_idx ON cms_tag ("tag");
 
 CREATE TABLE "cms_tag_relation" (
-    id integer INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY,
     "cms_tag_id" integer NOT NULL,
     "object" character varying(32) NOT NULL,
     "objectId" integer,
