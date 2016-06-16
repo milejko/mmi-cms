@@ -2,6 +2,6 @@
 
 namespace Cms\Model;
 
-class TagModel {
+class CategoryModel {
 	
 }

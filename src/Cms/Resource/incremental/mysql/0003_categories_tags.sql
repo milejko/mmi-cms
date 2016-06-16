@@ -1,17 +1,19 @@
 RENAME TABLE cms_tag_link TO cms_tag_relation;
 drop table IF EXISTS `cms_news`;
-ALTER TABLE `cms_article`
-CHANGE `noindex` `index` tinyint(4) NOT NULL DEFAULT '1' AFTER `text`;
 
-UPDATE `cms_article` SET `index` = 2 WHERE `index` = 0;
-UPDATE `cms_article` SET `index` = 0 WHERE `index` = 1;
-UPDATE `cms_article` SET `index` = 1 WHERE `index` = 2;
+CREATE TABLE `cms_article_type` (
+    `id` integer NOT NULL AUTO_INCREMENT,
+    `name` varchar(128) NOT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+
+ALTER TABLE `cms_article` DROP COLUMN `noindex`;
 
 ALTER TABLE `cms_article`
 ADD `lead` text AFTER `dateModify`;
 
 ALTER TABLE `cms_article`
-ADD `object` varchar(32) AFTER `index`,
+ADD `object` varchar(32) AFTER `dateModify`,
 ADD `objectId` integer AFTER `object`;
 
 ALTER TABLE `cms_article`

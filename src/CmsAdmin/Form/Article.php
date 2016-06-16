@@ -19,13 +19,6 @@ class Article extends \Cms\Form\Form {
 			->setRequired()
 			->addValidatorNotEmpty()
 			->setLabel('tytuł');
-		
-		//kategorie
-		$this->addElementSelect('cmsCategoryId')
-			->setMultiple()
-			->setMultioptions([])
-			->setLabel('kategorie')
-			->setDescription('nie jest obowiązkowa, wybór wielu kategorii z CTRL');
 
 		//nagłówek
 		$this->addElementTinyMce('lead')
@@ -36,6 +29,20 @@ class Article extends \Cms\Form\Form {
 		$this->addElementTinyMce('text')
 			->setLabel('treść artykułu')
 			->setModeAdvanced();
+
+		//kategorie
+		$this->addElementSelect('cmsCategoryId')
+			->setMultiple()
+			->setMultioptions([])
+			->setLabel('kategorie')
+			->setDescription('nie jest obowiązkowa, wybór wielu kategorii z CTRL');
+
+		//tagi
+		$this->addElementText('tags')
+			->setLabel('tagi')
+			->setDescription('lista tagów oddzielonych spacją')
+			->setValue($this->getRecord()->id ? implode(' ', \Cms\Model\TagModel::getTags('article', $this->getRecord()->id)) : '')
+			->addFilterStringTrim();
 
 		//opcja noindex
 		$this->addElementCheckbox('index')
@@ -53,6 +60,12 @@ class Article extends \Cms\Form\Form {
 
 		$this->addElementSubmit('submit')
 			->setLabel('zapisz stronę');
+	}
+	
+	public function afterSave() {
+//		$categories = $this->getElement('cmsCategoryId')->getValue();
+		\Cms\Model\TagModel::setTags(explode(' ', $this->getElement('tags')->getValue()), 'article', $this->getRecord()->id);
+		return true;
 	}
 
 }

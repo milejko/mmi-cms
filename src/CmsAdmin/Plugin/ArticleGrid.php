@@ -18,7 +18,7 @@ class ArticleGrid extends \CmsAdmin\Grid\Grid {
 	public function init() {
 
 		//domyślne zapytanie
-		$this->setQuery((new \Cms\Orm\CmsArticleQuery));
+		$this->setQuery((new \Cms\Orm\CmsArticleQuery)->whereObject()->equals(null));
 		
 		//tytuł
 		$this->addColumnText('title')

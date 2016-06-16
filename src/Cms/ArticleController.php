@@ -40,10 +40,6 @@ class ArticleController extends \Mmi\Mvc\Controller {
 			}
 			\App\Registry::$cache->save($article, $cacheKey);
 		}
-		//opcja noindex
-		if ($article->noindex) {
-			$this->view->headMeta(['name' => 'robots', 'content' => 'noindex,nofollow']);
-		}
 		//przekazanie do widoku
 		$this->view->article = $article;
 		//seo
