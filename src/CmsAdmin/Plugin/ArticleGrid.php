@@ -23,6 +23,10 @@ class ArticleGrid extends \CmsAdmin\Grid\Grid {
 		//tytuł
 		$this->addColumnText('title')
 			->setLabel('tytuł');
+		
+		$this->addColumnSelect('cmsArticleTypeId')
+			->setMultioptions([null => '---'] + (new \Cms\Orm\CmsArticleTypeQuery)->findPairs('id', 'name'))
+			->setLabel('typ');
 
 		//data dodania
 		$this->addColumnText('dateAdd')
@@ -31,10 +35,6 @@ class ArticleGrid extends \CmsAdmin\Grid\Grid {
 		//data modyfikacji
 		$this->addColumnText('dateModify')
 			->setLabel('data modyfikacji');
-
-		//indeksacja (google)
-		$this->addColumnCheckbox('index')
-			->setLabel('indeksacja');
 
 		//aktywność
 		$this->addColumnCheckbox('active')

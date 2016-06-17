@@ -33,10 +33,10 @@ CREATE TABLE cms_article (
     uri character varying(160) NOT NULL,
     "dateAdd" DATETIME,
     "dateModify" DATETIME,
-	"lead" text,
-    "text" text,
 	"object" character varying(32),
     "objectId" integer,
+	"lead" text,
+    "text" text,
 	"active" TINYINT DEFAULT 0 NOT NULL,
 	FOREIGN KEY(cms_article_type_id) REFERENCES cms_article_type(id) ON UPDATE CASCADE ON DELETE SET NULL
 );

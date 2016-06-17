@@ -10,6 +10,9 @@
 
 namespace CmsAdmin\Form;
 
+/**
+ * Formularz artykułów
+ */
 class Article extends \Cms\Form\Form {
 
 	public function init() {
@@ -17,8 +20,18 @@ class Article extends \Cms\Form\Form {
 		//tytuł
 		$this->addElementText('title')
 			->setRequired()
+			->addFilterStringTrim()
 			->addValidatorNotEmpty()
 			->setLabel('tytuł');
+
+		$types = (new \Cms\Orm\CmsArticleTypeQuery)->findPairs('id', 'name');
+
+		if (!empty($types)) {
+			//typ artykułu
+			$this->addElementSelect('cmsArticleTypeId')
+				->setMultioptions([null => '---'] + $types)
+				->setLabel('typ artykułu');
+		}
 
 		//nagłówek
 		$this->addElementTinyMce('lead')
@@ -44,11 +57,6 @@ class Article extends \Cms\Form\Form {
 			->setValue($this->getRecord()->id ? implode(' ', \Cms\Model\TagModel::getTags('article', $this->getRecord()->id)) : '')
 			->addFilterStringTrim();
 
-		//opcja noindex
-		$this->addElementCheckbox('index')
-			->setChecked()
-			->setLabel('indeksowanie w wyszukiwarkach');
-
 		//uploader - plupload
 		$this->addElementPlupload('uploader')
 			->setLabel('załaduj pliki');
@@ -61,7 +69,7 @@ class Article extends \Cms\Form\Form {
 		$this->addElementSubmit('submit')
 			->setLabel('zapisz stronę');
 	}
-	
+
 	public function afterSave() {
 //		$categories = $this->getElement('cmsCategoryId')->getValue();
 		\Cms\Model\TagModel::setTags(explode(' ', $this->getElement('tags')->getValue()), 'article', $this->getRecord()->id);
