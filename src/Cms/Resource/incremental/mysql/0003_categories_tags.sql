@@ -7,6 +7,10 @@ CREATE TABLE `cms_article_type` (
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 
+ALTER TABLE `cms_article`
+ADD `cms_article_type` int(11) NULL AFTER `id`,
+ADD FOREIGN KEY (`cms_article_type`) REFERENCES `cms_article_type` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
 ALTER TABLE `cms_article` DROP COLUMN `noindex`;
 
 ALTER TABLE `cms_article`

@@ -430,7 +430,7 @@ INSERT INTO cms_auth_role (id, cms_auth_id, cms_role_id) VALUES (1, 1, 3);
 INSERT INTO cms_contact_option (id, name) VALUES (1, 'Inne');
 INSERT INTO cms_contact_option (id, name) VALUES (2, 'Propozycje zmian');
 
-INSERT INTO "cms_article" ("id", "lang", "title", "uri", "dateAdd", "dateModify", "text", "index") VALUES (1,	NULL,	'Hello admin',	'hello-admin',	'2014-03-20 12:06:56',	'2014-03-20 12:33:47',	'<h4>Witaj!</h4>
+INSERT INTO "cms_article" ("id", "lang", "title", "uri", "dateAdd", "dateModify", "text") VALUES (1,	NULL,	'Hello admin',	'hello-admin',	'2014-03-20 12:06:56',	'2014-03-20 12:33:47',	'<h4>Witaj!</h4>
 <p>To jest panel administracyjny systemu DEMO, pozwalający na zarządzanie treścią stron. Podłączone moduły umożliwiają dodawanie aktualności, artykułów (typu regulamin), zarządzanie strukturą menu i wiele innych, które zostaną krótko omówione w tym artykule.</p>
 <p><strong>Górna sekcja została podzielona na 3 obszary:</strong></p>
 <ol>
@@ -457,7 +457,7 @@ INSERT INTO "cms_article" ("id", "lang", "title", "uri", "dateAdd", "dateModify"
 <li>Użytkownicy - zarządzanie bazą zarejestrowanych użytkowników (oraz administratorów)<ol style="list-style-type: lower-alpha;">
 <li>Uprawnienia - umożliwia nadawanie i odbieranie uprawnień wybranym rolom (ACL)</li>
 </ol></li>
-</ol>',	'0');
+</ol>');
 
 INSERT INTO "cms_navigation" ("id", "lang", "parent_id", "order", "module", "controller", "action", "params", "label", "title", "keywords", "description", "uri", "independent", "nofollow", "blank", "visible", "dateStart", "dateEnd", "active") VALUES (1,	'pl',	'0',	'0',	NULL,	NULL,	NULL,	'',	'Górne menu',	'Demo',	'',	'',	NULL,	'0',	'0',	'0',	'0',	NULL,	NULL,	1);
 INSERT INTO "cms_navigation" ("id", "lang", "parent_id", "order", "module", "controller", "action", "params", "label", "title", "keywords", "description", "uri", "independent", "nofollow", "blank", "visible", "dateStart", "dateEnd", "active") VALUES (2,	'pl',	1,	'0',	'mmi',	'index',	'index',	'',	'Strona główna',	'',	'',	'',	NULL,	'0',	'0',	'0',	1,	NULL,	NULL,	1);
