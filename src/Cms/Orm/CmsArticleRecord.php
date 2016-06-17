@@ -8,16 +8,16 @@ namespace Cms\Orm;
 class CmsArticleRecord extends \Mmi\Orm\Record {
 
 	public $id;
+	public $cmsArticleTypeId;
 	public $lang;
 	public $title;
 	public $uri;
 	public $dateAdd;
 	public $dateModify;
-	public $lead;
-	public $text;
-	public $index;
 	public $object;
 	public $objectId;
+	public $lead;
+	public $text;
 	public $active;
 
 	/**
