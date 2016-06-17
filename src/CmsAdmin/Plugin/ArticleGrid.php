@@ -24,6 +24,7 @@ class ArticleGrid extends \CmsAdmin\Grid\Grid {
 		$this->addColumnText('title')
 			->setLabel('tytuł');
 		
+		//typ artykułu
 		$this->addColumnSelect('cmsArticleTypeId')
 			->setMultioptions([null => '---'] + (new \Cms\Orm\CmsArticleTypeQuery)->findPairs('id', 'name'))
 			->setLabel('typ');

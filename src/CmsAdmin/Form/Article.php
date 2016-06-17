@@ -46,7 +46,8 @@ class Article extends \Cms\Form\Form {
 		//kategorie
 		$this->addElementSelect('cmsCategoryId')
 			->setMultiple()
-			->setMultioptions([])
+			->setMultioptions(\Cms\Model\CategoryModel::getCategoryList())
+			->setValue(array_keys(\Cms\Model\CategoryModel::getCategories('article', $this->getRecord()->id)))
 			->setLabel('kategorie')
 			->setDescription('nie jest obowiązkowa, wybór wielu kategorii z CTRL');
 
@@ -70,8 +71,14 @@ class Article extends \Cms\Form\Form {
 			->setLabel('zapisz stronę');
 	}
 
+	/**
+	 * Po zapisie rekordu
+	 * @return boolean
+	 */
 	public function afterSave() {
-//		$categories = $this->getElement('cmsCategoryId')->getValue();
+		//zapis kategorii
+		\Cms\Model\CategoryModel::setCategories($this->getElement('cmsCategoryId')->getValue(), 'article', $this->getRecord()->id);
+		//zapis tagów
 		\Cms\Model\TagModel::setTags(explode(' ', $this->getElement('tags')->getValue()), 'article', $this->getRecord()->id);
 		return true;
 	}

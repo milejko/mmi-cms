@@ -11,10 +11,12 @@
 namespace Cms\Model;
 
 use Cms\Orm\CmsCategoryQuery,
-	Cms\Orm\CmsCategoryRecord,
 	Cms\Orm\CmsCategoryRelationQuery,
 	Cms\Orm\CmsCategoryRelationRecord;
 
+/**
+ * Model kategorii
+ */
 class CategoryModel {
 
 	/**
@@ -25,13 +27,10 @@ class CategoryModel {
 	 * @return boolean
 	 */
 	public static function addCategory($categoryId, $object, $objectId = null) {
-		//kreacja categoryu jeśli brak
+		//niepoprawna kategoria
 		if (null === $categoryRecord = (new CmsCategoryQuery)
-				->whereTag()->equals($filteredTag)
-				->findFirst()) {
-			$categoryRecord = new CmsCategoryRecord;
-			$categoryRecord->category = $filteredTag;
-			$categoryRecord->save();
+				->findPk($categoryId)) {
+			return false;
 		}
 		//wyszukiwanie relacji
 		$relationRecord = (new CmsCategoryRelationQuery)
@@ -45,7 +44,7 @@ class CategoryModel {
 		}
 		//tworzenie relacji
 		$newRelationRecord = new CmsCategoryRelationRecord;
-		$newRelationRecord->cmsTagId = $categoryRecord->id;
+		$newRelationRecord->cmsCategoryId = $categoryRecord->id;
 		$newRelationRecord->object = $object;
 		$newRelationRecord->objectId = $objectId;
 		//zapis
@@ -105,6 +104,11 @@ class CategoryModel {
 			->whereObject()->equals($object)
 			->andFieldObjectId()->equals($objectId)
 			->findPairs('cms_category.id', 'cms_category.name');
+	}
+
+	public static function getCategoryList() {
+		return (new CmsCategoryQuery)
+			->findPairs('id', 'name');
 	}
 	
 }
