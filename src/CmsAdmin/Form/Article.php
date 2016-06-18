@@ -11,7 +11,8 @@
 namespace CmsAdmin\Form;
 
 use \Cms\Model\TagModel,
-	\Cms\Model\CategoryModel;
+	\Cms\Model\CategoryModel,
+	\Cms\Model\CategoryTreeModel;
 
 /**
  * Formularz artykułów
@@ -49,7 +50,7 @@ class Article extends \Cms\Form\Form {
 		//kategorie
 		$this->addElementSelect('cmsCategoryId')
 			->setMultiple()
-			->setMultioptions((new CategoryModel('x'))->getCategoryList())
+			->setMultioptions((new CategoryTreeModel)->getCategoriesFlat())
 			->setValue($this->getRecord()->id ? array_keys((new CategoryModel('article', $this->getRecord()->id))->getCategoryRelations()) : [])
 			->setLabel('kategorie')
 			->setDescription('nie jest obowiązkowa, wybór wielu kategorii z CTRL');

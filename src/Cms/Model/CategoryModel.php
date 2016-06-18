@@ -132,13 +132,4 @@ class CategoryModel {
 				->findPairs('cms_category.id', 'cms_category.name');
 	}
 
-	/**
-	 * Pobiera listę kategorii
-	 * @return array
-	 */
-	public function getCategoryList() {
-		return (new CmsCategoryQuery)
-				->findPairs('id', 'name');
-	}
-
 }
