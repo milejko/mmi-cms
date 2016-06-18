@@ -10,6 +10,9 @@
 
 namespace CmsAdmin\Form;
 
+use \Cms\Model\TagModel,
+	\Cms\Model\CategoryModel;
+
 /**
  * Formularz artykułów
  */
@@ -46,8 +49,8 @@ class Article extends \Cms\Form\Form {
 		//kategorie
 		$this->addElementSelect('cmsCategoryId')
 			->setMultiple()
-			->setMultioptions(\Cms\Model\CategoryModel::getCategoryList())
-			->setValue(array_keys(\Cms\Model\CategoryModel::getCategories('article', $this->getRecord()->id)))
+			->setMultioptions((new CategoryModel('x'))->getCategoryList())
+			->setValue($this->getRecord()->id ? array_keys((new CategoryModel('article', $this->getRecord()->id))->getCategoryRelations()) : [])
 			->setLabel('kategorie')
 			->setDescription('nie jest obowiązkowa, wybór wielu kategorii z CTRL');
 
@@ -55,7 +58,7 @@ class Article extends \Cms\Form\Form {
 		$this->addElementText('tags')
 			->setLabel('tagi')
 			->setDescription('lista tagów oddzielonych spacją')
-			->setValue($this->getRecord()->id ? implode(' ', \Cms\Model\TagModel::getTags('article', $this->getRecord()->id)) : '')
+			->setValue($this->getRecord()->id ? implode(' ', (new TagModel('article', $this->getRecord()->id))->getTagRelations()) : '')
 			->addFilterStringTrim();
 
 		//uploader - plupload
@@ -67,6 +70,7 @@ class Article extends \Cms\Form\Form {
 			->setChecked()
 			->setLabel('włączony');
 
+		//button
 		$this->addElementSubmit('submit')
 			->setLabel('zapisz stronę');
 	}
@@ -77,9 +81,9 @@ class Article extends \Cms\Form\Form {
 	 */
 	public function afterSave() {
 		//zapis kategorii
-		\Cms\Model\CategoryModel::setCategories($this->getElement('cmsCategoryId')->getValue(), 'article', $this->getRecord()->id);
+		(new CategoryModel('article', $this->getRecord()->id))->createCategoryRelations($this->getElement('cmsCategoryId')->getValue());
 		//zapis tagów
-		\Cms\Model\TagModel::setTags(explode(' ', $this->getElement('tags')->getValue()), 'article', $this->getRecord()->id);
+		(new TagModel('article', $this->getRecord()->id))->createTagRelations(explode(' ', $this->getElement('tags')->getValue()));
 		return true;
 	}
 

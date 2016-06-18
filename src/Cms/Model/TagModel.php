@@ -15,63 +15,96 @@ use Cms\Orm\CmsTagQuery,
 	Cms\Orm\CmsTagRelationQuery,
 	Cms\Orm\CmsTagRelationRecord;
 
+/**
+ * Model tagów
+ */
 class TagModel {
+	
+	/**
+	 * Obiekt
+	 * @var string
+	 */
+	private $_object;
+	
+	/**
+	 * Id obiektu
+	 * @var integer
+	 */
+	private $_objectId;
+	
+	/**
+	 * Konstruktor
+	 * @param string $object obiekt
+	 * @param integer $objectId nieobowiązkowe id
+	 */
+	public function __construct($object, $objectId = null) {
+		//przypisania
+		$this->_object = $object;
+		$this->_objectId = $objectId;
+	}
 
 	/**
 	 * Taguje tagiem po nazwie
 	 * @param string $tag tag
-	 * @param string $object obiekt
-	 * @param int $objectId identyfikator obiektu
-	 * @return boolean
 	 */
-	public static function addTag($tag, $object, $objectId = null) {
+	public function createTagRelation($tag) {
 		//filtrowanie tagu
 		$filteredTag = (new \Mmi\Filter\Alnum)->filter($tag);
 		//kreacja tagu jeśli brak
 		if (null === $tagRecord = (new CmsTagQuery)
-				->whereTag()->equals($filteredTag)
-				->findFirst()) {
+			->whereTag()->equals($filteredTag)
+			->findFirst()) {
 			$tagRecord = new CmsTagRecord;
 			$tagRecord->tag = $filteredTag;
 			$tagRecord->save();
 		}
-		//wyszukiwanie relacji
-		$relationRecord = (new CmsTagRelationQuery)
-			->whereCmsTagId()->equals($tagRecord->id)
-			->andFieldObject()->equals($object)
-			->andFieldObjectId()->equals($objectId)
-			->findFirst();
 		//znaleziona relacja - nic do zrobienia
-		if (null !== $relationRecord) {
-			return true;
+		if (null !== (new CmsTagRelationQuery)
+				->whereCmsTagId()->equals($tagRecord->id)
+				->andFieldObject()->equals($this->_object)
+				->andFieldObjectId()->equals($this->_objectId)
+				->findFirst()) {
+			return;
 		}
 		//tworzenie relacji
 		$newRelationRecord = new CmsTagRelationRecord;
 		$newRelationRecord->cmsTagId = $tagRecord->id;
-		$newRelationRecord->object = $object;
-		$newRelationRecord->objectId = $objectId;
+		$newRelationRecord->object = $this->_object;
+		$newRelationRecord->objectId = $this->_objectId;
 		//zapis
-		return $newRelationRecord->save();
+		$newRelationRecord->save();
+	}
+
+	/**
+	 * Tworzy relacje tagu obiektu z id
+	 * @param array $tags
+	 */
+	public function createTagRelations(array $tags) {
+		//usuwanie relacji
+		self::deleteTagRelations();
+		//iteracja po tagach
+		foreach ($tags as $tag) {
+			//tworzenie pojedynczego tagu
+			self::createTagRelation($tag, $this->_object, $this->_objectId);
+		}
 	}
 
 	/**
 	 * Usuwa tag
 	 * @param string $tag tag
-	 * @param string $object obiekt
-	 * @param int $objectId identyfikator obiektu
-	 * @return boolean
 	 */
-	public static function removeTag($tag, $object, $objectId = null) {
+	public function deleteTagRelation($tag) {
 		//brak tagu - nic do zrobienia
 		if (null === $tagRecord = (new CmsTagQuery)
-				->whereTag()->equals($tag)) {
+				->whereTag()->equals($tag)
+				->findFirst()) {
 			return false;
 		}
 		//wyszukiwanie relacji
 		if (null === $relationRecord = (new CmsTagRelationQuery)
 			->whereCmsTagId()->equals($tagRecord->id)
-			->andFieldObject()->equals($object)
-			->andFieldObjectId()->equals($objectId)
+			->andFieldObject()->equals($this->_object)
+			->andFieldObjectId()->equals($this->_objectId)
 			->findFirst()) {
 			//brak relacji - nic do zrobienia
 			return false;
@@ -81,32 +114,28 @@ class TagModel {
 	}
 
 	/**
-	 * 
-	 * @param array $tags
-	 * @param string $object
-	 * @param int $objectId
-	 * @return boolean
+	 * Usuwa relację tagów
 	 */
-	public static function setTags(array $tags, $object, $objectId = null) {
+	public function deleteTagRelations() {
 		//czyszczenie relacji
 		(new CmsTagRelationQuery)
-			->whereObject()->equals($object)
-			->andFieldObjectId()->equals($objectId)
+			->whereObject()->equals($this->_object)
+			->andFieldObjectId()->equals($this->_objectId)
 			->find()
 			->delete();
-		//dodawanie tagów
-		foreach ($tags as $tag) {
-			self::addTag($tag, $object, $objectId);
-		}
-		return true;
 	}
-	
-	public static function getTags($object, $objectId) {
+
+	/**
+	 * Pobiera relacje tagów dla obiektu z id
+	 * @return array
+	 */
+	public function getTagRelations() {
+		//pobranie relacji
 		return (new CmsTagRelationQuery)
-			->join('cms_tag')->on('cms_tag_id')
-			->whereObject()->equals($object)
-			->andFieldObjectId()->equals($objectId)
-			->findPairs('cms_tag.id', 'cms_tag.tag');
+				->join('cms_tag')->on('cms_tag_id')
+				->whereObject()->equals($this->_object)
+				->andFieldObjectId()->equals($this->_objectId)
+				->findPairs('cms_tag.id', 'cms_tag.tag');
 	}
-	
+
 }
