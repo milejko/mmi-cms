@@ -17,6 +17,20 @@ use Cms\Orm\CmsCategoryQuery,
  * Model kategorii
  */
 class CategoryTreeModel {
+	
+	/**
+	 * Kolekcja kategorii
+	 * @var \Mmi\Orm\RecordCollection
+	 */
+	private $_categoryCollection;
+	
+	/**
+	 * Konstruktor pobiera kategorie
+	 */
+	public function __construct() {
+		//pobranie kategorii
+		$this->_categoryCollection = (new CmsCategoryQuery)->find();
+	}
 
 	/**
 	 * Pobiera listę kategorii
