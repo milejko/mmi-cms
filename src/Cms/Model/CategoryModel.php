@@ -11,8 +11,7 @@
 namespace Cms\Model;
 
 use Cms\Orm\CmsCategoryQuery,
-	Cms\Orm\CmsCategoryRelationQuery,
-	Cms\Orm\CmsCategoryRelationRecord;
+	Cms\Orm\CmsCategoryRecord;
 
 /**
  * Model kategorii
@@ -20,116 +19,53 @@ use Cms\Orm\CmsCategoryQuery,
 class CategoryModel {
 
 	/**
-	 * Obiekt
-	 * @var string
+	 * Kolekcja kategorii
+	 * @var array
 	 */
-	private $_object;
+	private $_categoryCollection;
 
 	/**
-	 * Id obiektu
-	 * @var integer
+	 * Drzewo kategorii
+	 * @var array
 	 */
-	private $_objectId;
+	private $_categoryTree = [];
 
 	/**
-	 * Konstruktor
-	 * @param string $object obiekt
-	 * @param integer $objectId nieobowiązkowe id
+	 * Konstruktor pobiera kategorie
 	 */
-	public function __construct($object, $objectId = null) {
-		//przypisania
-		$this->_object = $object;
-		$this->_objectId = $objectId;
-	}
-
-	/**
-	 * Przypina kategorię do obiektu z id
-	 * @param integer $categoryId id kategorii
-	 */
-	public function createCategoryRelation($categoryId) {
-		//niepoprawna kategoria
-		if (null === $categoryRecord = (new CmsCategoryQuery)
-			->findPk($categoryId)) {
-			return;
-		}
-		//wyszukiwanie relacji
-		$relationRecord = (new CmsCategoryRelationQuery)
-			->whereCmsCategoryId()->equals($categoryRecord->id)
-			->andFieldObject()->equals($this->_object)
-			->andFieldObjectId()->equals($this->_objectId)
-			->findFirst();
-		//znaleziona relacja - nic do zrobienia
-		if (null !== $relationRecord) {
-			return;
-		}
-		//tworzenie relacji
-		$newRelationRecord = new CmsCategoryRelationRecord;
-		$newRelationRecord->cmsCategoryId = $categoryRecord->id;
-		$newRelationRecord->object = $this->_object;
-		$newRelationRecord->objectId = $this->_objectId;
-		//zapis
-		$newRelationRecord->save();
-	}
-
-	/**
-	 * Ustawia relację z obiektu z id
-	 * @param array $categories tablica z id kategorii
-	 */
-	public function createCategoryRelations(array $categories) {
-		//usuwanie relacji
-		self::deleteCategoryRelations();
-		//iteracja po kategoriach
-		foreach ($categories as $categoryId) {
-			//tworzenie relacji
-			self::createCategoryRelation($categoryId, $this->_object, $this->_objectId);
-		}
-	}
-
-	/**
-	 * Usuwa kategorię z obiektu i id
-	 * @param integer $categoryId id kategorii
-	 */
-	public function deleteCategoryRelation($categoryId) {
-		//brak kategorii - nic do zrobienia
-		if (null === $categoryRecord = (new CmsCategoryQuery)
-			->findPk($categoryId)) {
-			return;
-		}
-		//wyszukiwanie relacji
-		if (null === $relationRecord = (new CmsCategoryRelationQuery)
-			->whereCmsCategoryId()->equals($categoryRecord->id)
-			->andFieldObject()->equals($this->_object)
-			->andFieldObjectId()->equals($this->_objectId)
-			->findFirst()) {
-			//brak relacji - nic do zrobienia
-			return;
-		}
-		//usunięcie relacji
-		$relationRecord->delete();
-	}
-
-	/**
-	 * Usunięcie wszystkich relacji z obiektu i id
-	 */
-	public function deleteCategoryRelations() {
-		//czyszczenie relacji
-		(new CmsCategoryRelationQuery)
-			->whereObject()->equals($this->_object)
-			->andFieldObjectId()->equals($this->_objectId)
+	public function __construct() {
+		//pobranie kategorii
+		$this->_categoryCollection = (new CmsCategoryQuery)
+			->orderAscOrder()
 			->find()
-			->delete();
+			->toObjectArray();
+		$this->_buildRecursive($this->_categoryTree, null);
 	}
 
 	/**
-	 * Pobiera relacje dla obiektu z id
+	 * 
+	 * @param array $tree
+	 * @param type $parentId
+	 */
+	private function _buildRecursive(array &$tree, $parentId = null) {
+		/* @var $categoryRecord CmsCategoryRecord */
+		foreach ($this->_categoryCollection as $key => $categoryRecord) {
+			if ($categoryRecord->parentId == $parentId) {
+				$tree[$categoryRecord->id] = $categoryRecord->toArray();
+				$tree[$categoryRecord->id]['record'] = $categoryRecord;
+				$tree[$categoryRecord->id]['children'] = [];
+				$this->_buildRecursive($tree[$categoryRecord->id]['children'], $categoryRecord->id);
+			}
+		}
+	}
+
+	/**
+	 * Pobiera listę kategorii
 	 * @return array
 	 */
-	public function getCategoryRelations() {
-		return (new CmsCategoryRelationQuery)
-				->join('cms_category')->on('cms_category_id')
-				->whereObject()->equals($this->_object)
-				->andFieldObjectId()->equals($this->_objectId)
-				->findPairs('cms_category.id', 'cms_category.name');
+	public function getCategoriesFlat() {
+		return (new CmsCategoryQuery)
+				->findPairs('id', 'name');
 	}
 
 }

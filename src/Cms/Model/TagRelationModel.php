@@ -16,9 +16,9 @@ use Cms\Orm\CmsTagQuery,
 	Cms\Orm\CmsTagRelationRecord;
 
 /**
- * Model tagów
+ * Model relacji tagów
  */
-class TagModel {
+class TagRelationModel {
 	
 	/**
 	 * Obiekt

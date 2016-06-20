@@ -10,9 +10,9 @@
 
 namespace CmsAdmin\Form;
 
-use \Cms\Model\TagModel,
+use \Cms\Model\TagRelationModel,
 	\Cms\Model\CategoryModel,
-	\Cms\Model\CategoryTreeModel;
+	\Cms\Model\CategoryRelationModel;
 
 /**
  * Formularz artykułów
@@ -50,8 +50,8 @@ class Article extends \Cms\Form\Form {
 		//kategorie
 		$this->addElementSelect('cmsCategoryId')
 			->setMultiple()
-			->setMultioptions((new CategoryTreeModel)->getCategoriesFlat())
-			->setValue($this->getRecord()->id ? array_keys((new CategoryModel('article', $this->getRecord()->id))->getCategoryRelations()) : [])
+			->setMultioptions((new CategoryModel)->getCategoriesFlat())
+			->setValue($this->getRecord()->id ? array_keys((new CategoryRelationModel('article', $this->getRecord()->id))->getCategoryRelations()) : [])
 			->setLabel('kategorie')
 			->setDescription('nie jest obowiązkowa, wybór wielu kategorii z CTRL');
 
@@ -59,7 +59,7 @@ class Article extends \Cms\Form\Form {
 		$this->addElementText('tags')
 			->setLabel('tagi')
 			->setDescription('lista tagów oddzielonych spacją')
-			->setValue($this->getRecord()->id ? implode(' ', (new TagModel('article', $this->getRecord()->id))->getTagRelations()) : '')
+			->setValue($this->getRecord()->id ? implode(' ', (new CategoryRelationModel('article', $this->getRecord()->id))->getTagRelations()) : '')
 			->addFilterStringTrim();
 
 		//uploader - plupload
@@ -84,7 +84,7 @@ class Article extends \Cms\Form\Form {
 		//zapis kategorii
 		(new CategoryModel('article', $this->getRecord()->id))->createCategoryRelations($this->getElement('cmsCategoryId')->getValue());
 		//zapis tagów
-		(new TagModel('article', $this->getRecord()->id))->createTagRelations(explode(' ', $this->getElement('tags')->getValue()));
+		(new TagRelationModel('article', $this->getRecord()->id))->createTagRelations(explode(' ', $this->getElement('tags')->getValue()));
 		return true;
 	}
 
