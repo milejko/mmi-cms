@@ -24,6 +24,12 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsArticleTypeQuery lessThanColumnName()
  * @method \Cms\Orm\CmsArticleTypeQuery greaterOrEqualsColumnName()
  * @method \Cms\Orm\CmsArticleTypeQuery lessOrEqualsColumnName()
+ * @method \Cms\Orm\CmsArticleTypeQuery equalsColumnKey()
+ * @method \Cms\Orm\CmsArticleTypeQuery notEqualsColumnKey()
+ * @method \Cms\Orm\CmsArticleTypeQuery greaterThanColumnKey()
+ * @method \Cms\Orm\CmsArticleTypeQuery lessThanColumnKey()
+ * @method \Cms\Orm\CmsArticleTypeQuery greaterOrEqualsColumnKey()
+ * @method \Cms\Orm\CmsArticleTypeQuery lessOrEqualsColumnKey()
  */
 class CmsArticleTypeQueryField extends \Mmi\Orm\QueryHelper\QueryField {
 
