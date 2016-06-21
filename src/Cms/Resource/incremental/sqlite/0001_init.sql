@@ -7,9 +7,9 @@ CREATE TABLE "DB_CHANGELOG"
 CREATE TABLE cms_acl (
     id INTEGER PRIMARY KEY,
     cms_role_id integer NOT NULL,
-    module character varying(32),
+    "module" character varying(32),
     controller character varying(32),
-    action character varying(32),
+    "action" character varying(32),
     access TEXT 'deny',
 	FOREIGN KEY(cms_role_id) REFERENCES cms_role(id)
 );
@@ -20,10 +20,12 @@ CREATE INDEX cms_acl_controller_idx ON cms_acl (controller);
 CREATE INDEX cms_acl_module_idx ON cms_acl (module);
 CREATE INDEX fki_cms_acl_cms_role_id_fkey ON cms_acl (cms_role_id);
 
-CREATE TABLE `cms_article_type` (
-    `id` INTEGER PRIMARY KEY,
-    `name` character varying(128) NOT NULL
+CREATE TABLE cms_article_type (
+    id INTEGER PRIMARY KEY,
+    "name" character varying(128) NOT NULL,
+    "key" character varying(128) NOT NULL
 );
+CREATE UNIQUE INDEX cms_article_type_key_idx ON cms_article_type ("key");
 
 CREATE TABLE cms_article (
     id INTEGER PRIMARY KEY,

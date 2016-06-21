@@ -22,11 +22,17 @@ class ArticleType extends \Cms\Form\Form {
 			->setRequired()
 			->addFilterStringTrim()
 			->addValidatorNotEmpty()
+			->addValidatorRecordUnique(new \Cms\Orm\CmsArticleTypeQuery, 'name', $this->getRecord()->id)
 			->setLabel('nazwa');
 
 		//zapis
 		$this->addElementSubmit('submit')
 			->setLabel('zapisz stronę');
+	}
+	
+	public function beforeSave() {
+		$this->getRecord()->key = (new \Mmi\Filter\Url)->filter($this->getRecord()->name);
+		return true;
 	}
 
 }

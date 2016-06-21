@@ -4,7 +4,9 @@ drop table IF EXISTS `cms_news`;
 CREATE TABLE `cms_article_type` (
     `id` integer NOT NULL AUTO_INCREMENT,
     `name` varchar(128) NOT NULL,
-	PRIMARY KEY (`id`)
+	`key` varchar(128) NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE `key` (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 
 ALTER TABLE `cms_article`

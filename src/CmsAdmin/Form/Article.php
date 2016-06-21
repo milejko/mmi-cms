@@ -28,8 +28,10 @@ class Article extends \Cms\Form\Form {
 			->addValidatorNotEmpty()
 			->setLabel('tytuł');
 
+		//pobranie typów
 		$types = (new \Cms\Orm\CmsArticleTypeQuery)->findPairs('id', 'name');
 
+		//są dodane typy
 		if (!empty($types)) {
 			//typ artykułu
 			$this->addElementSelect('cmsArticleTypeId')
@@ -59,7 +61,7 @@ class Article extends \Cms\Form\Form {
 		$this->addElementText('tags')
 			->setLabel('tagi')
 			->setDescription('lista tagów oddzielonych spacją')
-			->setValue($this->getRecord()->id ? implode(' ', (new CategoryRelationModel('article', $this->getRecord()->id))->getTagRelations()) : '')
+			->setValue($this->getRecord()->id ? implode(' ', (new TagRelationModel('article', $this->getRecord()->id))->getTagRelations()) : '')
 			->addFilterStringTrim();
 
 		//uploader - plupload
@@ -82,9 +84,11 @@ class Article extends \Cms\Form\Form {
 	 */
 	public function afterSave() {
 		//zapis kategorii
-		(new CategoryModel('article', $this->getRecord()->id))->createCategoryRelations($this->getElement('cmsCategoryId')->getValue());
+		(new CategoryRelationModel('article', $this->getRecord()->id))
+			->createCategoryRelations($this->getElement('cmsCategoryId')->getValue());
 		//zapis tagów
-		(new TagRelationModel('article', $this->getRecord()->id))->createTagRelations(explode(' ', $this->getElement('tags')->getValue()));
+		(new TagRelationModel('article', $this->getRecord()->id))
+			->createTagRelations(explode(' ', $this->getElement('tags')->getValue()));
 		return true;
 	}
 
