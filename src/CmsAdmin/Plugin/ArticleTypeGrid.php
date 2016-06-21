@@ -11,7 +11,7 @@
 namespace CmsAdmin\Plugin;
 
 /**
- * Grid artykułów
+ * Grid typów artykułu
  */
 class ArticleTypeGrid extends \CmsAdmin\Grid\Grid {
 
@@ -24,6 +24,10 @@ class ArticleTypeGrid extends \CmsAdmin\Grid\Grid {
 		$this->addColumnText('name')
 			->setLabel('nazwa');
 
+		//klucz
+		$this->addColumnText('key')
+			->setLabel('klucz');
+		
 		//operacje
 		$this->addColumnOperation();
 	}

@@ -19,44 +19,34 @@ use Cms\Orm\CmsCategoryQuery,
 class CategoryModel {
 
 	/**
-	 * Kolekcja kategorii
-	 * @var array
-	 */
-	private $_categoryCollection;
-
-	/**
 	 * Drzewo kategorii
 	 * @var array
 	 */
-	private $_categoryTree = [];
+	private $_categoryTree;
 
 	/**
-	 * Konstruktor pobiera kategorie
+	 * Konstruktor pobiera kategorie i buduje drzewo
 	 */
 	public function __construct() {
-		//pobranie kategorii
-		$this->_categoryCollection = (new CmsCategoryQuery)
-			->orderAscOrder()
-			->find()
-			->toObjectArray();
-		$this->_buildRecursive($this->_categoryTree, null);
-	}
-
-	/**
-	 * 
-	 * @param array $tree
-	 * @param type $parentId
-	 */
-	private function _buildRecursive(array &$tree, $parentId = null) {
-		/* @var $categoryRecord CmsCategoryRecord */
-		foreach ($this->_categoryCollection as $key => $categoryRecord) {
-			if ($categoryRecord->parentId == $parentId) {
-				$tree[$categoryRecord->id] = $categoryRecord->toArray();
-				$tree[$categoryRecord->id]['record'] = $categoryRecord;
-				$tree[$categoryRecord->id]['children'] = [];
-				$this->_buildRecursive($tree[$categoryRecord->id]['children'], $categoryRecord->id);
-			}
+		//ładowanie kategorii z cache
+		if (null !== $this->_categoryTree = \App\Registry::$cache->load('cms-category-tree')) {
+			return;
 		}
+		$this->_categoryTree = [];
+		$this->_buildTree($this->_categoryTree, (new CmsCategoryQuery)
+				->orderAscOrder()
+				->find()
+				->toObjectArray());
+		//zapis cache
+		\App\Registry::$cache->save($this->_categoryTree, 'cms-category-tree');
+	}
+	
+	/**
+	 * Zwraca drzewo kategorii
+	 * @return array
+	 */
+	public function getCategoryTree() {
+		return $this->_categoryTree;
 	}
 
 	/**
@@ -64,8 +54,61 @@ class CategoryModel {
 	 * @return array
 	 */
 	public function getCategoriesFlat() {
-		return (new CmsCategoryQuery)
-				->findPairs('id', 'name');
+		$flatTree = [];
+		//budowanie drzewa
+		$this->_buildFlatTree(0, $flatTree, $this->_categoryTree);
+		return $flatTree;
+	}
+	
+	public function getBreadcrumbsById($categoryId) {
+		
+	}
+
+	/**
+	 * 
+	 * @param integer $level
+	 * @param array $flatTree
+	 * @param array $categories
+	 */
+	private function _buildFlatTree($level, array &$flatTree, array $categories) {
+		//funkcja prefixu
+		$prefix = function ($level) {
+			$prefix = '';
+			for ($i = 0; $i < $level; $i++) {
+				$prefix .= '&nbsp;&nbsp;&nbsp;';
+			}
+			return $prefix . '&boxur;&gt; ';
+		};
+		//iteracja po kategoriach
+		foreach ($categories as $id => $leaf) {
+			//dodanie rekordu z prefixem i nazwą
+			$flatTree[$id] = $prefix($level) . $leaf['record']->name;
+			//zejście rekurencyjne
+			$this->_buildFlatTree($level + 1, $flatTree, $leaf['children']);
+		}
+	}
+
+	/**
+	 * Buduje drzewo rekurencyjnie
+	 * @param array $tree
+	 * @param integer $parentId
+	 */
+	private function _buildTree(array &$tree, array $orderedCategories, $parentId = null) {
+		/* @var $categoryRecord CmsCategoryRecord */
+		foreach ($orderedCategories as $key => $categoryRecord) {
+			//niezgodny rodzic
+			if ($categoryRecord->parentId != $parentId) {
+				continue;
+			}
+			//usuwanie wykorzystanego rekordu kategorii
+			unset($orderedCategories[$key]);
+			//zapis do drzewa
+			$tree[$categoryRecord->id] = [];
+			$tree[$categoryRecord->id]['record'] = $categoryRecord;
+			$tree[$categoryRecord->id]['children'] = [];
+			//zejście rekurencyjne do dzieci
+			$this->_buildTree($tree[$categoryRecord->id]['children'], $orderedCategories, $categoryRecord->id);
+		}
 	}
 
 }
