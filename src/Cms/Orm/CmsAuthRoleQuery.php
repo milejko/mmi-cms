@@ -60,7 +60,7 @@ class CmsAuthRoleQuery extends \Mmi\Orm\Query {
 	 * @param integer $authId
 	 * @return CmsAuthRoleQuery
 	 */
-	public static function joinedRolebyAuthId($authId) {
+	public static function joinedRoleByAuthId($authId) {
 		return self::byAuthId($authId)
 				->join('cms_role')->on('cms_role_id');
 	}

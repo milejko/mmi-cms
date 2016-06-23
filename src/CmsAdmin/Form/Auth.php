@@ -22,7 +22,7 @@ class Auth extends \Mmi\Form\Form {
 
 		//nazwa użytkownika
 		$this->addElementText('username')
-			->setLabel('nazwa użytkownika')
+			->setLabel('nazwa użytkownika (login)')
 			->setRequired()
 			->addFilterStringTrim()
 			->addValidatorNotEmpty()
@@ -46,7 +46,8 @@ class Auth extends \Mmi\Form\Form {
 			->setLabel('role')
 			->setDescription('Grupa uprawnień')
 			->setMultioptions((new \Cms\Orm\CmsRoleQuery)->findPairs('id', 'name'))
-			->setValue(\Cms\Orm\CmsAuthRoleQuery::byAuthId($this->_record->id)->findPairs('cms_role_id', 'cms_role_id'));
+			->setValue(\Cms\Orm\CmsAuthRoleQuery::byAuthId($this->_record->id)->findPairs('cms_role_id', 'cms_role_id'))
+			->addValidatorNotEmpty('Wymagane jest wybranie roli');
 
 		$languages = [];
 		foreach (\App\Registry::$config->languages as $language) {
@@ -67,7 +68,7 @@ class Auth extends \Mmi\Form\Form {
 		//zmiana hasła
 		$this->addElementText('changePassword')
 			->setLabel('zmiana hasła')
-			->setDescription('Jeśli nie chcesz zmienić hasła nie wypełniaj tego pola')
+			->setDescription('Jeśli nie chcesz zmienić hasła lub używać domenowego, nie wypełniaj tego pola')
 			->addValidatorStringLength(4, 128);
 
 		$this->addElementSubmit('submit')
