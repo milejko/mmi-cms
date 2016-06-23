@@ -33,6 +33,7 @@ class CategoryModel {
 			return;
 		}
 		$this->_categoryTree = [];
+		//budowanie drzewa z płaskiej struktury orm
 		$this->_buildTree($this->_categoryTree, (new CmsCategoryQuery)
 				->orderAscOrder()
 				->find()
@@ -43,48 +44,85 @@ class CategoryModel {
 	
 	/**
 	 * Zwraca drzewo kategorii
+	 * @param integer $parentCategoryId identyfikator kategorii rodzica (opcjonalny)
 	 * @return array
 	 */
-	public function getCategoryTree() {
-		return $this->_categoryTree;
+	public function getCategoryTree($parentCategoryId = null) {
+		//brak zdefiniowanej kategorii
+		if ($parentCategoryId === null) {
+			return $this->_categoryTree;
+		}
+		//wyszukiwanie kategorii
+		return $this->_searchChildren($this->_categoryTree, $parentCategoryId);
 	}
 
 	/**
-	 * Pobiera listę kategorii
+	 * Pobiera listę kategorii w postaci płaskiej tabeli z odwzorowaniem drzewa
+	 * @param integer $parentCategoryId identyfikator kategorii (opcjonalny)
 	 * @return array
 	 */
-	public function getCategoriesFlat() {
+	public function getCategoryFlatTree($parentCategoryId = null) {
 		$flatTree = [];
-		//budowanie drzewa
-		$this->_buildFlatTree(0, $flatTree, $this->_categoryTree);
+		//budowanie płaskie drzewo
+		$this->_buildFlatTree('', $flatTree, $this->getCategoryTree($parentCategoryId));
 		return $flatTree;
 	}
 	
+	/**
+	 * Pobiera breadcrumby dla 
+	 * @param integer $categoryId identyfikator kategorii (opcjonalny)
+	 */
 	public function getBreadcrumbsById($categoryId) {
 		
 	}
+	
+	/**
+	 * Wyszukiwanie dzieci
+	 * @param array $categories
+	 * @param integer $parentCategoryId
+	 * @return array
+	 */
+	private function _searchChildren(array $categories, $parentCategoryId = null) {
+		foreach ($categories as $id => $category) {
+			if ($id == $parentCategoryId) {
+				return $category['children'];
+			}
+			if (null !== $child = $this->_search($category['children'], $parentCategoryId)) {
+				return $child;
+			}
+		}
+	}
+	
+	/**
+	 * Wyszukiwanie rodziców
+	 * @param array $categories
+	 * @param integer $categoryId
+	 * @return array
+	 */
+	private function _searchParents(array $categories, $categoryId = null) {
+		foreach ($categories as $id => $category) {
+			if ($id == $categoryId) {
+				return $category['children'];
+			}
+			if (null !== $child = $this->_search($category['children'], $categoryId)) {
+				return $child;
+			}
+		}
+	}
 
 	/**
-	 * 
-	 * @param integer $level
+	 * Buduje płaskie drzewo
+	 * @param string $prefix
 	 * @param array $flatTree
 	 * @param array $categories
 	 */
-	private function _buildFlatTree($level, array &$flatTree, array $categories) {
-		//funkcja prefixu
-		$prefix = function ($level) {
-			$prefix = '';
-			for ($i = 0; $i < $level; $i++) {
-				$prefix .= '&nbsp;&nbsp;&nbsp;';
-			}
-			return $prefix . '&boxur;&gt; ';
-		};
+	private function _buildFlatTree($prefix, array &$flatTree, array $categories) {
 		//iteracja po kategoriach
 		foreach ($categories as $id => $leaf) {
 			//dodanie rekordu z prefixem i nazwą
-			$flatTree[$id] = $prefix($level) . $leaf['record']->name;
+			$flatTree[$id] = ltrim($prefix . ' > ' . $leaf['record']->name, ' >');
 			//zejście rekurencyjne
-			$this->_buildFlatTree($level + 1, $flatTree, $leaf['children']);
+			$this->_buildFlatTree($prefix . ' > ' . $leaf['record']->name, $flatTree, $leaf['children']);
 		}
 	}
 
