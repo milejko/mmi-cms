@@ -16,13 +16,7 @@ class NavPartCategory extends \Mmi\Navigation\NavigationConfig {
 		return self::newElement()
 				->setLabel('Kategorie')
 				->setModule('cmsAdmin')
-				->setController('category')
-				->addChild(self::newElement()
-					->setLabel('Dodaj')
-					->setModule('cmsAdmin')
-					->setController('category')
-					->setAction('edit'));
-		;
+				->setController('category');
 	}
 
 }

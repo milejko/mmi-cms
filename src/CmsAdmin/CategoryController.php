@@ -16,10 +16,11 @@ namespace CmsAdmin;
 class CategoryController extends Mvc\Controller {
 
 	/**
-	 * Lista kategorii
+	 * Lista kategorii - prezentacja w formie drzewa
 	 */
 	public function indexAction() {
-		//pobranie kategorii
+		//pobranie drzewiastej struktury kategorii
+		$this->view->categoryTree = (new \Cms\Model\CategoryModel)->getCategoryTree();
 	}
 
 	/**
