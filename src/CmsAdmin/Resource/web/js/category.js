@@ -32,7 +32,12 @@ $(document).ready(function () {
 			},
 			'multiple': false,
 			'expand_selected_onload': true,
-			'check_callback' : true
+            'check_callback': function (op) {
+				if (op === 'delete_node') {
+					return confirm("Czy na pewno usunąć kategorię?");
+				}
+				return true;
+			}
         },
 		'state' : {
 			'key' : CATEGORYCONF.stateKey
@@ -64,5 +69,19 @@ $(document).ready(function () {
 			}
 		},
 		'plugins' : [ "state", "unique", "types", "contextmenu", "dnd", "wholerow" ]
-    });
+    })
+	.on('delete_node.jstree', function (e, data) {
+		$.post(request.baseUrl + '/cmsAdmin/category/delete', {'id': data.node.id})
+			.done(function (d) {
+				if (!d.status) {
+					data.instance.refresh();
+				} else {
+					$('#jstree').jstree('deselect_all');
+					$('#jstree').jstree('select_node', data.parent);
+				}
+			})
+			.fail(function () {
+				data.instance.refresh();
+			});
+	});
 });

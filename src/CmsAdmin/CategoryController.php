@@ -50,11 +50,12 @@ class CategoryController extends Mvc\Controller {
 	 * Usuwanie kategorii
 	 */
 	public function deleteAction() {
-		$cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id);
+		$this->getResponse()->setTypeJson();
+		$cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id);
 		if ($cat && $cat->delete()) {
-			$this->getMessenger()->addMessage('Kategoria usunięta', true);
+			return json_encode(['status' => true, 'message' => 'Kategoria usunięta']);
 		}
-		$this->getResponse()->redirect('cmsAdmin', 'category', 'index');
+		return json_encode(['status' => false, 'error' => 'Nie udało się usunąć kategorii']);
 	}
 
 }

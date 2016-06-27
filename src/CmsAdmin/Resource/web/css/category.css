@@ -1,0 +1,13 @@
+/** Style dla akcji do obsługi zarządzania kategoriami **/
+
+div#categoryTreeContainer {
+	width: 580px;
+	height: 600px;
+	float: left;
+	overflow: auto;
+}
+
+div#categoryNodeContainer {
+	margin-left: 40px;
+	float: left;
+}
