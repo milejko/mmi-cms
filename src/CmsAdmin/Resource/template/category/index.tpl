@@ -5,7 +5,7 @@
 	</div>
 	<div class="content-box-content clearfix">
 		<div id="jstree">
-			{jsTree($categoryTree, $baseUrl . '/resource/cmsAdmin/js/category.js')}
+			{jsTree([], $baseUrl . '/resource/cmsAdmin/js/category.js')}
 		</div>
 	</div>
 </div>

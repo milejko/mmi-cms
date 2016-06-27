@@ -14,6 +14,12 @@ CATEGORYCONF.delay = 200;
 $(document).ready(function () {
 	$('#jstree').jstree({
         'core': {
+			'data': {
+				'url': request.baseUrl + '/cmsAdmin/category/node',
+				'data': function (node) {
+					return {'parentId': node.id};
+				}
+			},
             'themes': {
                 'name': 'default',
 				'variant': 'small',
@@ -21,7 +27,8 @@ $(document).ready(function () {
 				'stripes' : true
             },
 			'strings': {
-				'New node': 'Nowa kategoria'
+				'New node': 'Nowa kategoria',
+				'Loading ...': 'Ładowanie ...'
 			},
 			'multiple': false,
 			'expand_selected_onload': true,

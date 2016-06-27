@@ -8,7 +8,7 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace Cms\Mvc\ViewHelper;
+namespace CmsAdmin\Mvc\ViewHelper;
 
 class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract {
 	
@@ -50,8 +50,7 @@ class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract {
 	 */
 	private function _getHtmlTree($tree) {
 		//obudowujemy sztucznym rootem
-		$select = 'false';
-		$html = '<ul><li id="0" data-jstree=\'{"type":"root", "opened":true, "selected":' . $select . '}\'>' . self::ROOT;
+		$html = '<ul><li id="0" data-jstree=\'{"type":"root", "opened":true, "selected":false}\'>' . self::ROOT;
 		$html = $this->_generateTree(['children' => $tree], $html);
 		$html .= '</li></ul>';
 		return $html;
@@ -69,7 +68,7 @@ class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract {
 			return $html;
 		}
 		$html .= '<ul>';
-		//iteracja po dzieciakach i budowa liści drzewa
+		//iteracja po dzieciakach i budowa węzłów drzewa
 		foreach ($node['children'] as $child) {
 			$select = 'false';
 			$disabled = 'false';

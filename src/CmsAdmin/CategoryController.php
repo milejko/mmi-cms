@@ -19,8 +19,19 @@ class CategoryController extends Mvc\Controller {
 	 * Lista kategorii - prezentacja w formie drzewa
 	 */
 	public function indexAction() {
+		//w szablonie podłączenie ajaxowego ładowania drzewka
+	}
+	
+	/**
+	 * Renderowanie fragmentu drzewa kategorii na podstawie parentId
+	 */
+	public function nodeAction() {
+		//wyłączenie layout
+		$this->view->setLayoutDisabled();
+		//id węzła rodzica
+		$this->view->parentId = ($this->parentId > 0)? $this->parentId : null;
 		//pobranie drzewiastej struktury kategorii
-		$this->view->categoryTree = (new \Cms\Model\CategoryModel)->getCategoryTree();
+		$this->view->categoryTree = (new \Cms\Model\CategoryModel)->getCategoryTree($this->view->parentId);
 	}
 
 	/**
