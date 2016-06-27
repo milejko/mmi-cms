@@ -58,15 +58,14 @@ CREATE TABLE "cms_category" (
     "name" character varying(160) NOT NULL,
     "description" text,
     "uri" character varying(160) NOT NULL,
-    "code" character varying(160) NOT NULL,
 	"parent_id" INTEGER,
 	"order" integer DEFAULT 0 NOT NULL,
     "dateAdd" DATETIME NOT NULL,
     "dateModify" DATETIME,
-    "active" TINYINT DEFAULT 0 NOT NULL
+    "active" TINYINT DEFAULT 0 NOT NULL,
+	FOREIGN KEY(parent_id) REFERENCES cms_category(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE UNIQUE INDEX cms_category_code_idx ON cms_category (code);
 CREATE INDEX "cms_category_dateAdd_idx" ON cms_category ("dateAdd");
 CREATE INDEX "cms_category_dateModify_idx" ON cms_category ("dateModify");
 CREATE INDEX cms_category_lang_idx ON cms_category (lang);
