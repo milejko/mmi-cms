@@ -73,11 +73,40 @@ $(document).ready(function () {
 	.on('delete_node.jstree', function (e, data) {
 		$.post(request.baseUrl + '/cmsAdmin/category/delete', {'id': data.node.id})
 			.done(function (d) {
-				if (!d.status) {
-					data.instance.refresh();
-				} else {
+				if (d.status) {
 					$('#jstree').jstree('deselect_all');
 					$('#jstree').jstree('select_node', data.parent);
+				} else {
+					data.instance.refresh();
+				}
+			})
+			.fail(function () {
+				data.instance.refresh();
+			});
+	})
+	.on('create_node.jstree', function (e, data) {
+		$.post(request.baseUrl + '/cmsAdmin/category/create', {'parentId': data.node.parent, 'order': data.position, 'name': data.node.text})
+			.done(function (d) {
+				if (d.status) {
+					data.instance.set_id(data.node, d.id);
+					$('#jstree').jstree('deselect_all');
+					$('#jstree').jstree('select_node', d.id);
+				} else {
+					data.instance.refresh();
+				}
+			})
+			.fail(function () {
+				data.instance.refresh();
+			});
+	})
+	.on('rename_node.jstree', function (e, data) {
+		$.post(request.baseUrl + '/cmsAdmin/category/rename', {'id': data.node.id, 'name': data.text})
+			.done(function (d) {
+				if (d.status) {
+					$('#jstree').jstree('deselect_all');
+					$('#jstree').jstree('select_node', d.id);
+				} else {
+					data.instance.refresh();
 				}
 			})
 			.fail(function () {

@@ -45,6 +45,37 @@ class CategoryController extends Mvc\Controller {
 		}
 		$this->view->categoryForm = $form;
 	}
+	
+	/**
+	 * Tworzenie nowej kategorii
+	 */
+	public function createAction() {
+		$this->getResponse()->setTypeJson();
+		$cat = new \Cms\Orm\CmsCategoryRecord();
+		$cat->name = $this->getPost()->name;
+		$cat->parentId = ($this->getPost()->parentId > 0)? $this->getPost()->parentId : null;
+		$cat->order = $this->getPost()->order;
+		$cat->active = true;
+		if ($cat->save()) {
+			return json_encode(['status' => true, 'id' => $cat->id, 'message' => 'Kategoria została utworzona']);
+		}
+		return json_encode(['status' => false, 'error' => 'Nie udało się utworzyć kategorii']);
+	}
+	
+	/**
+	 * Zmiana nazwy kategorii
+	 */
+	public function renameAction() {
+		$this->getResponse()->setTypeJson();
+		$cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id);
+		if ($cat) {
+			$cat->name = $this->getPost()->name;
+			if ($cat->save()) {
+				return json_encode(['status' => true, 'id' => $cat->id, 'message' => 'Nazwa kategorii została zmieniona']);
+			}
+		}
+		return json_encode(['status' => false, 'error' => 'Nie udało się zmienić nazwy kategorii']);
+	}
 
 	/**
 	 * Usuwanie kategorii
@@ -53,7 +84,7 @@ class CategoryController extends Mvc\Controller {
 		$this->getResponse()->setTypeJson();
 		$cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id);
 		if ($cat && $cat->delete()) {
-			return json_encode(['status' => true, 'message' => 'Kategoria usunięta']);
+			return json_encode(['status' => true, 'message' => 'Kategoria została usunięta']);
 		}
 		return json_encode(['status' => false, 'error' => 'Nie udało się usunąć kategorii']);
 	}
