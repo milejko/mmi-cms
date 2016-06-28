@@ -70,11 +70,27 @@ class CategoryController extends Mvc\Controller {
 		$cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id);
 		if ($cat) {
 			$cat->name = $this->getPost()->name;
-			if ($cat->save()) {
+			if ($cat->save() !== false) {
 				return json_encode(['status' => true, 'id' => $cat->id, 'message' => 'Nazwa kategorii została zmieniona']);
 			}
 		}
 		return json_encode(['status' => false, 'error' => 'Nie udało się zmienić nazwy kategorii']);
+	}
+	
+	/**
+	 * Przenoszenie kategorii w drzewie
+	 */
+	public function moveAction() {
+		$this->getResponse()->setTypeJson();
+		$cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id);
+		if ($cat) {
+			$cat->parentId = ($this->getPost()->parentId > 0)? $this->getPost()->parentId : null;
+			$cat->order = $this->getPost()->order;
+			if ($cat->save() !== false) {
+				return json_encode(['status' => true, 'id' => $cat->id, 'message' => 'Kategoria została przeniesiona']);
+			}
+		}
+		return json_encode(['status' => false, 'error' => 'Nie udało się przenieść kategorii']);
 	}
 
 	/**

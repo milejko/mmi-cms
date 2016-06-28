@@ -112,5 +112,20 @@ $(document).ready(function () {
 			.fail(function () {
 				data.instance.refresh();
 			});
+	})
+	.on('move_node.jstree', function (e, data) {
+		var params = {'id': data.node.id, 'parentId': data.parent, 'oldParentId': data.old_parent, 'order': data.position, 'oldOrder': data.old_position};
+		$.post(request.baseUrl + '/cmsAdmin/category/move', params)
+			.done(function (d) {
+				if (d.status) {
+					$('#jstree').jstree('deselect_all');
+					$('#jstree').jstree('select_node', d.id);
+				} else {
+					data.instance.refresh();
+				}
+			})
+			.fail(function () {
+				data.instance.refresh();
+			});
 	});
 });

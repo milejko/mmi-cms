@@ -2,7 +2,7 @@
 
 div#categoryTreeContainer {
 	width: 580px;
-	height: 600px;
+	height: 580px;
 	float: left;
 	overflow: auto;
 }
@@ -10,4 +10,8 @@ div#categoryTreeContainer {
 div#categoryNodeContainer {
 	margin-left: 40px;
 	float: left;
+}
+
+ul.jstree-contextmenu {
+	font-size: 12px;
 }
