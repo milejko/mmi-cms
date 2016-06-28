@@ -87,7 +87,7 @@ class CategoryModel {
 			if ($id == $parentCategoryId) {
 				return $category['children'];
 			}
-			if (null !== $child = $this->_search($category['children'], $parentCategoryId)) {
+			if (null !== $child = $this->_searchChildren($category['children'], $parentCategoryId)) {
 				return $child;
 			}
 		}
