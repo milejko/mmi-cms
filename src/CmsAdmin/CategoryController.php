@@ -21,17 +21,19 @@ class CategoryController extends Mvc\Controller {
 	public function indexAction() {
 		//w szablonie podłączenie ajaxowego ładowania drzewka
 		//zapis forma edycji
-		if (!$this->saveId) {
+		$formPost = $this->getPost()->{'cmsadmin-form-category'};
+		if (empty($formPost) || !isset($formPost['id']) || !$formPost['id']) {
 			return;
 		}
-		if (null !== $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->saveId)) {
+		if (null !== $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($formPost['id'])) {
 			$form = (new \CmsAdmin\Form\Category($cat));
+			if ($form->isMine()) {
+				$this->view->headScript()->appendScript('request.showCategoryForm = true;');
+				$this->view->categoryForm = $form;
+			}
 			if ($form->isSaved()) {
 				$this->getMessenger()->addMessage('Zmiany w kategorii zostały zapisane', true);
-			} else {
-				$this->view->headScript()->appendScript('request.categoryFormError = true;');
 			}
-			$this->view->categoryForm = $form;
 		}
 	}
 	
@@ -54,8 +56,7 @@ class CategoryController extends Mvc\Controller {
 		//wyłączenie layout
 		$this->view->setLayoutDisabled();
 		if (null !== $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
-			$this->view->categoryForm = (new \CmsAdmin\Form\Category($cat))
-											->setAction('?saveId=' . $this->getPost()->id);
+			$this->view->categoryForm = (new \CmsAdmin\Form\Category($cat));
 		}
 	}
 	

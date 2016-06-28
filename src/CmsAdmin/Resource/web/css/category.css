@@ -25,3 +25,7 @@ ul#messenger {
 div#categoryNodeContainer ul#messenger {
 	margin-top: 0px;
 }
+
+div.field.hidden {
+	margin: 0;
+}

@@ -1,4 +1,5 @@
 {headLink()->appendStyleSheet($baseUrl . '/resource/cmsAdmin/css/category.css')}
+{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/tiny/tinymce.min.js')}
 <div class="content-box">
 	<div class="content-box-header">
 		<h3>{#Zarządzanie kategoriami#}</h3>

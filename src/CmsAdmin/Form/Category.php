@@ -13,7 +13,7 @@ namespace CmsAdmin\Form;
 /**
  * Formularz edycji szegółów kategorii
  */
-class Category extends \Mmi\Form\Form {
+class Category extends \Cms\Form\Form {
 
 	public function init() {
 
@@ -23,6 +23,19 @@ class Category extends \Mmi\Form\Form {
 			->setRequired()
 			->addFilterStringTrim()
 			->addValidatorStringLength(2, 64);
+		
+		//opis
+		$this->addElementTinyMce('description')
+			->setHeight(200)
+			->setLabel('opis');
+		
+		//aktywna
+		$this->addElementCheckbox('active')
+			->setChecked()
+			->setLabel('włączona');
+		
+		//id
+		$this->addElementHidden('id');
 
 		//zapis
 		$this->addElementSubmit('submit')
