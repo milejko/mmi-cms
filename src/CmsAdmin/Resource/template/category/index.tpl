@@ -11,7 +11,10 @@
 			</div>
 		</div>
 		<div id="categoryNodeContainer">
-			
+			<div id="categoryMessageContainer"></div>
+			<div id="categoryContentContainer">
+				{$categoryForm}
+			</div>
 		</div>
 		<div class="cl"></div>
 	</div>

@@ -20,6 +20,19 @@ class CategoryController extends Mvc\Controller {
 	 */
 	public function indexAction() {
 		//w szablonie podłączenie ajaxowego ładowania drzewka
+		//zapis forma edycji
+		if (!$this->saveId) {
+			return;
+		}
+		if (null !== $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->saveId)) {
+			$form = (new \CmsAdmin\Form\Category($cat));
+			if ($form->isSaved()) {
+				$this->getMessenger()->addMessage('Zmiany w kategorii zostały zapisane', true);
+			} else {
+				$this->view->headScript()->appendScript('request.categoryFormError = true;');
+			}
+			$this->view->categoryForm = $form;
+		}
 	}
 	
 	/**
@@ -35,15 +48,15 @@ class CategoryController extends Mvc\Controller {
 	}
 
 	/**
-	 * Edycja kategorii
+	 * Edycja kategorii - formularz ładowany ajaxem
 	 */
 	public function editAction() {
-		$form = new \CmsAdmin\Form\Category(new \Cms\Orm\CmsCategoryRecord($this->id));
-		if ($form->isSaved()) {
-			$this->getMessenger()->addMessage('Kategoria zapisana poprawnie', true);
-			$this->getResponse()->redirect('cmsAdmin', 'category', 'index');
+		//wyłączenie layout
+		$this->view->setLayoutDisabled();
+		if (null !== $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
+			$this->view->categoryForm = (new \CmsAdmin\Form\Category($cat))
+											->setAction('?saveId=' . $this->getPost()->id);
 		}
-		$this->view->categoryForm = $form;
 	}
 	
 	/**
@@ -67,8 +80,7 @@ class CategoryController extends Mvc\Controller {
 	 */
 	public function renameAction() {
 		$this->getResponse()->setTypeJson();
-		$cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id);
-		if ($cat) {
+		if (null !== $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
 			$cat->name = $this->getPost()->name;
 			if ($cat->save() !== false) {
 				return json_encode(['status' => true, 'id' => $cat->id, 'message' => 'Nazwa kategorii została zmieniona']);
@@ -82,8 +94,7 @@ class CategoryController extends Mvc\Controller {
 	 */
 	public function moveAction() {
 		$this->getResponse()->setTypeJson();
-		$cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id);
-		if ($cat) {
+		if (null !== $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
 			$cat->parentId = ($this->getPost()->parentId > 0)? $this->getPost()->parentId : null;
 			$cat->order = $this->getPost()->order;
 			if ($cat->save() !== false) {

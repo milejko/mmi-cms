@@ -10,8 +10,18 @@ div#categoryTreeContainer {
 div#categoryNodeContainer {
 	margin-left: 40px;
 	float: left;
+	width: 960px;
+	overflow: auto;
 }
 
 ul.jstree-contextmenu {
 	font-size: 12px;
+}
+
+ul#messenger {
+	display: none;
+}
+
+div#categoryNodeContainer ul#messenger {
+	margin-top: 0px;
 }
