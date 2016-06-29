@@ -51,8 +51,9 @@ class JsTreeNode extends \Mmi\Mvc\ViewHelper\HelperAbstract {
 		foreach ($node['children'] as $child) {
 			$select = 'false';
 			$disabled = 'false';
+			$type = ($child['record']->active)? 'default' : 'inactive';
 			$html .= '<li id="' . $child['record']->id . '" class="' . ((isset($child['children']) && count($child['children']))? 'jstree-closed' : '') . '"';
-			$html .= ' data-jstree=\'{"type":"default", "disabled":' . $disabled . ', "selected":' . $select . '}\'>' . $child['record']->name . '</li>';
+			$html .= ' data-jstree=\'{"type":"' . $type . '", "disabled":' . $disabled . ', "selected":' . $select . '}\'>' . $child['record']->name . '</li>';
 		}
 		$html .= '</ul>';
 		return $html;

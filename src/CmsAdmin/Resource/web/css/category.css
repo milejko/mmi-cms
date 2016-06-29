@@ -5,6 +5,7 @@ div#categoryTreeContainer {
 	height: 580px;
 	float: left;
 	overflow: auto;
+	background-color: #F2F2F2;
 }
 
 div#categoryNodeContainer {
@@ -28,4 +29,11 @@ div#categoryNodeContainer ul#messenger {
 
 div.field.hidden {
 	margin: 0;
+}
+
+.jstree-default-small .jstree-inactive.jstree-themeicon-custom {
+	background-color: transparent;
+	background-image: url("../js/jstree/themes/default/32px.png");
+	background-position: -263px -7px;
+	filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'jstree-grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#jstree-grayscale");
 }
