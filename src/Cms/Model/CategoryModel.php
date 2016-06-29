@@ -34,7 +34,7 @@ class CategoryModel {
 		}
 		$this->_categoryTree = [];
 		//budowanie drzewa z płaskiej struktury orm
-		$this->_buildTree($this->_categoryTree, (new CmsCategoryQuery)
+		$this->_buildTree($this->_categoryTree, [], (new CmsCategoryQuery)
 				->orderAscOrder()
 				->find()
 				->toObjectArray());
@@ -69,11 +69,22 @@ class CategoryModel {
 	}
 	
 	/**
-	 * Pobiera breadcrumby dla 
+	 * Wyszukuje kategorię po ID
+	 * @param integer $categoryId identyfikator rekordu
+	 * @return \Cms\Orm\CmsCategoryRecord
+	 */
+	public function getCategoryById($categoryId) {
+		
+	}
+	
+	/**
+	 * Pobiera breadcrumby dla wybranej kategorii
 	 * @param integer $categoryId identyfikator kategorii (opcjonalny)
+	 * @retur array
 	 */
 	public function getBreadcrumbsById($categoryId) {
-		
+		dump($this->getCategoryTree());
+		exit;
 	}
 	
 	/**
@@ -88,23 +99,6 @@ class CategoryModel {
 				return $category['children'];
 			}
 			if (null !== $child = $this->_searchChildren($category['children'], $parentCategoryId)) {
-				return $child;
-			}
-		}
-	}
-	
-	/**
-	 * Wyszukiwanie rodziców
-	 * @param array $categories
-	 * @param integer $categoryId
-	 * @return array
-	 */
-	private function _searchParents(array $categories, $categoryId = null) {
-		foreach ($categories as $id => $category) {
-			if ($id == $categoryId) {
-				return $category['children'];
-			}
-			if (null !== $child = $this->_search($category['children'], $categoryId)) {
 				return $child;
 			}
 		}
@@ -131,7 +125,11 @@ class CategoryModel {
 	 * @param array $tree
 	 * @param integer $parentId
 	 */
-	private function _buildTree(array &$tree, array $orderedCategories, $parentId = null) {
+	private function _buildTree(array &$tree, array $parents, array $orderedCategories, $parentId = null) {
+		//uzupełnienie rodziców
+		if ($parentId !== null) {
+			$parents[$parentId] = $parentId;
+		}
 		/* @var $categoryRecord CmsCategoryRecord */
 		foreach ($orderedCategories as $key => $categoryRecord) {
 			//niezgodny rodzic
@@ -143,9 +141,10 @@ class CategoryModel {
 			//zapis do drzewa
 			$tree[$categoryRecord->id] = [];
 			$tree[$categoryRecord->id]['record'] = $categoryRecord;
+			$tree[$categoryRecord->id]['parents'] = $parents;
 			$tree[$categoryRecord->id]['children'] = [];
 			//zejście rekurencyjne do dzieci
-			$this->_buildTree($tree[$categoryRecord->id]['children'], $orderedCategories, $categoryRecord->id);
+			$this->_buildTree($tree[$categoryRecord->id]['children'], $parents, $orderedCategories, $categoryRecord->id);
 		}
 	}
 
