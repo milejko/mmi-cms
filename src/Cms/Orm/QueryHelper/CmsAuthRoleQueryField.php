@@ -11,6 +11,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsAuthRoleQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsAuthRoleQuery like($value)
  * @method \Cms\Orm\CmsAuthRoleQuery ilike($value)
+ * @method \Cms\Orm\CmsAuthRoleQuery between($from, $to)
  * @method \Cms\Orm\CmsAuthRoleQuery equalsColumnId()
  * @method \Cms\Orm\CmsAuthRoleQuery notEqualsColumnId()
  * @method \Cms\Orm\CmsAuthRoleQuery greaterThanColumnId()

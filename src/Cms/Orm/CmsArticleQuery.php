@@ -19,6 +19,12 @@ namespace Cms\Orm;
  * @method CmsArticleQuery orderAscId()
  * @method CmsArticleQuery orderDescId()
  * @method CmsArticleQuery groupById()
+ * @method QueryHelper\CmsArticleQueryField whereCmsArticleTypeId()
+ * @method QueryHelper\CmsArticleQueryField andFieldCmsArticleTypeId()
+ * @method QueryHelper\CmsArticleQueryField orFieldCmsArticleTypeId()
+ * @method CmsArticleQuery orderAscCmsArticleTypeId()
+ * @method CmsArticleQuery orderDescCmsArticleTypeId()
+ * @method CmsArticleQuery groupByCmsArticleTypeId()
  * @method QueryHelper\CmsArticleQueryField whereLang()
  * @method QueryHelper\CmsArticleQueryField andFieldLang()
  * @method QueryHelper\CmsArticleQueryField orFieldLang()
@@ -49,23 +55,41 @@ namespace Cms\Orm;
  * @method CmsArticleQuery orderAscDateModify()
  * @method CmsArticleQuery orderDescDateModify()
  * @method CmsArticleQuery groupByDateModify()
+ * @method QueryHelper\CmsArticleQueryField whereObject()
+ * @method QueryHelper\CmsArticleQueryField andFieldObject()
+ * @method QueryHelper\CmsArticleQueryField orFieldObject()
+ * @method CmsArticleQuery orderAscObject()
+ * @method CmsArticleQuery orderDescObject()
+ * @method CmsArticleQuery groupByObject()
+ * @method QueryHelper\CmsArticleQueryField whereObjectId()
+ * @method QueryHelper\CmsArticleQueryField andFieldObjectId()
+ * @method QueryHelper\CmsArticleQueryField orFieldObjectId()
+ * @method CmsArticleQuery orderAscObjectId()
+ * @method CmsArticleQuery orderDescObjectId()
+ * @method CmsArticleQuery groupByObjectId()
+ * @method QueryHelper\CmsArticleQueryField whereLead()
+ * @method QueryHelper\CmsArticleQueryField andFieldLead()
+ * @method QueryHelper\CmsArticleQueryField orFieldLead()
+ * @method CmsArticleQuery orderAscLead()
+ * @method CmsArticleQuery orderDescLead()
+ * @method CmsArticleQuery groupByLead()
  * @method QueryHelper\CmsArticleQueryField whereText()
  * @method QueryHelper\CmsArticleQueryField andFieldText()
  * @method QueryHelper\CmsArticleQueryField orFieldText()
  * @method CmsArticleQuery orderAscText()
  * @method CmsArticleQuery orderDescText()
  * @method CmsArticleQuery groupByText()
- * @method QueryHelper\CmsArticleQueryField whereNoindex()
- * @method QueryHelper\CmsArticleQueryField andFieldNoindex()
- * @method QueryHelper\CmsArticleQueryField orFieldNoindex()
- * @method CmsArticleQuery orderAscNoindex()
- * @method CmsArticleQuery orderDescNoindex()
- * @method CmsArticleQuery groupByNoindex()
+ * @method QueryHelper\CmsArticleQueryField whereActive()
+ * @method QueryHelper\CmsArticleQueryField andFieldActive()
+ * @method QueryHelper\CmsArticleQueryField orFieldActive()
+ * @method CmsArticleQuery orderAscActive()
+ * @method CmsArticleQuery orderDescActive()
+ * @method CmsArticleQuery groupByActive()
  * @method QueryHelper\CmsArticleQueryField andField($fieldName, $tableName = null)
  * @method QueryHelper\CmsArticleQueryField where($fieldName, $tableName = null)
  * @method QueryHelper\CmsArticleQueryField orField($fieldName, $tableName = null)
- * @method QueryHelper\CmsArticleQueryJoin join($tableName, $targetTableName = null)
- * @method QueryHelper\CmsArticleQueryJoin joinLeft($tableName, $targetTableName = null)
+ * @method QueryHelper\CmsArticleQueryJoin join($tableName, $targetTableName = null, $alias = null)
+ * @method QueryHelper\CmsArticleQueryJoin joinLeft($tableName, $targetTableName = null, $alias = null)
  * @method CmsArticleRecord[] find()
  * @method CmsArticleRecord findFirst()
  * @method CmsArticleRecord findPk($value)
@@ -80,8 +104,18 @@ class CmsArticleQuery extends \Mmi\Orm\Query {
 	 * @param string $uri
 	 * @return CmsArticleQuery
 	 */
-	public static function byUri($uri) {
-		return (new self)->whereUri()->equals($uri);
+	public function joinedByUri($uri) {
+		return $this->joined()
+				->whereUri()->equals($uri);
+	}
+
+	/**
+	 * Pobiera złączenie
+	 * @return CmsArticleQuery
+	 */
+	public function joined() {
+		return (new CmsArticleQuery)
+				->joinLeft('cms_article_type')->on('cms_article_type_id');
 	}
 
 }

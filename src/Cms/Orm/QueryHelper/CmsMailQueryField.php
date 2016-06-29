@@ -11,6 +11,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsMailQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsMailQuery like($value)
  * @method \Cms\Orm\CmsMailQuery ilike($value)
+ * @method \Cms\Orm\CmsMailQuery between($from, $to)
  * @method \Cms\Orm\CmsMailQuery equalsColumnId()
  * @method \Cms\Orm\CmsMailQuery notEqualsColumnId()
  * @method \Cms\Orm\CmsMailQuery greaterThanColumnId()

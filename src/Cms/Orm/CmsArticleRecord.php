@@ -8,13 +8,17 @@ namespace Cms\Orm;
 class CmsArticleRecord extends \Mmi\Orm\Record {
 
 	public $id;
+	public $cmsArticleTypeId;
 	public $lang;
 	public $title;
 	public $uri;
 	public $dateAdd;
 	public $dateModify;
+	public $object;
+	public $objectId;
+	public $lead;
 	public $text;
-	public $noindex;
+	public $active;
 
 	/**
 	 * Zapis z filtracją url

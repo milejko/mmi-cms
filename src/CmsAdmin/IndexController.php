@@ -42,6 +42,8 @@ class IndexController extends Mvc\Controller {
 			$this->getMessenger()->addMessage('Logowanie niepoprawne', false);
 			return;
 		}
+		//regeneracja ID sesji
+		\Mmi\Session\Session::regenerateId();
 		//zalogowano
 		$this->getMessenger()->addMessage('Zalogowano poprawnie', true);
 		\Cms\Model\Stat::hit('admin-login');

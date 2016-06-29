@@ -7,9 +7,9 @@ CREATE TABLE "DB_CHANGELOG"
 CREATE TABLE cms_acl (
     id INTEGER PRIMARY KEY,
     cms_role_id integer NOT NULL,
-    module character varying(32),
+    "module" character varying(32),
     controller character varying(32),
-    action character varying(32),
+    "action" character varying(32),
     access TEXT 'deny',
 	FOREIGN KEY(cms_role_id) REFERENCES cms_role(id)
 );
@@ -20,22 +20,69 @@ CREATE INDEX cms_acl_controller_idx ON cms_acl (controller);
 CREATE INDEX cms_acl_module_idx ON cms_acl (module);
 CREATE INDEX fki_cms_acl_cms_role_id_fkey ON cms_acl (cms_role_id);
 
+CREATE TABLE cms_article_type (
+    id INTEGER PRIMARY KEY,
+    "name" character varying(128) NOT NULL,
+    "key" character varying(128) NOT NULL
+);
+CREATE UNIQUE INDEX cms_article_type_key_idx ON cms_article_type ("key");
+
 CREATE TABLE cms_article (
     id INTEGER PRIMARY KEY,
+	cms_article_type_id integer,
     lang character varying(2),
     title character varying(160) NOT NULL,
     uri character varying(160) NOT NULL,
     "dateAdd" DATETIME,
     "dateModify" DATETIME,
+	"object" character varying(32),
+    "objectId" integer,
+	"lead" text,
     "text" text,
-	noindex smallint DEFAULT 0 NOT NULL
+	"active" TINYINT DEFAULT 0 NOT NULL,
+	FOREIGN KEY(cms_article_type_id) REFERENCES cms_article_type(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
+CREATE INDEX fki_cms_article_cms_article_type_id_fkey ON cms_article (cms_article_type_id);
 CREATE INDEX "cms_article_dateAdd_idx" ON cms_article ("dateAdd");
 CREATE INDEX "cms_article_dateModify_idx" ON cms_article ("dateModify");
 CREATE INDEX cms_article_lang_idx ON cms_article (lang);
 CREATE INDEX cms_article_title_idx ON cms_article (title);
 CREATE INDEX cms_article_uri_idx ON cms_article (uri);
+CREATE INDEX cms_article_active_idx ON cms_article (active);
+CREATE INDEX cms_article_object_objectId_idx ON cms_article ("object", "objectId");
+
+CREATE TABLE "cms_category" (
+    "id" INTEGER PRIMARY KEY,
+	"lang" character varying(2) DEFAULT NULL,
+    "name" character varying(160) NOT NULL,
+    "description" text,
+    "uri" character varying(160) NOT NULL,
+	"parent_id" INTEGER,
+	"order" integer DEFAULT 0 NOT NULL,
+    "dateAdd" DATETIME NOT NULL,
+    "dateModify" DATETIME,
+    "active" TINYINT DEFAULT 0 NOT NULL,
+	FOREIGN KEY(parent_id) REFERENCES cms_category(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE INDEX "cms_category_dateAdd_idx" ON cms_category ("dateAdd");
+CREATE INDEX "cms_category_dateModify_idx" ON cms_category ("dateModify");
+CREATE INDEX cms_category_lang_idx ON cms_category (lang);
+CREATE INDEX cms_category_name_idx ON cms_category (name);
+CREATE INDEX cms_category_uri_idx ON cms_category (uri);
+CREATE INDEX cms_category_active_idx ON cms_category (active);
+CREATE INDEX cms_category_parent_id_idx ON cms_category (parent_id);
+
+CREATE TABLE "cms_category_relation" (
+    id integer INTEGER PRIMARY KEY,
+    "cms_category_id" integer NOT NULL,
+    "object" character varying(32) NOT NULL,
+    "objectId" integer,
+	FOREIGN KEY(cms_category_id) REFERENCES cms_category(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+CREATE INDEX fki_cms_category_relation_cms_category_id_fkey ON cms_category_relation (cms_category_id);
+CREATE INDEX "cms_category_relation_object_objectId_idx" ON cms_category_relation ("object", "objectId");
 
 CREATE TABLE cms_auth (
     id INTEGER PRIMARY KEY,
@@ -79,7 +126,7 @@ CREATE TABLE cms_comment (
     signature character varying(64),
     ip character varying(16),
     stars real DEFAULT 0,
-    object character varying(32) NOT NULL,
+    "object" character varying(32) NOT NULL,
     "objectId" integer NOT NULL,
 	FOREIGN KEY (cms_auth_id) REFERENCES cms_auth(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -237,19 +284,17 @@ CREATE TABLE cms_tag
   tag character varying(64) NOT NULL
 );
 
-CREATE INDEX cms_tag_tag_idx ON cms_tag ("tag");
+CREATE UNIQUE INDEX cms_tag_tag_idx ON cms_tag ("tag");
 
-CREATE TABLE cms_tag_link
-(
-  id INTEGER PRIMARY KEY,
-  cms_tag_id integer NOT NULL,
-  "object" character varying(32) NOT NULL,
-  "objectId" integer NOT NULL,
-  FOREIGN KEY (cms_tag_id) REFERENCES cms_tag(id) ON UPDATE CASCADE ON DELETE CASCADE
+CREATE TABLE "cms_tag_relation" (
+    id INTEGER PRIMARY KEY,
+    "cms_tag_id" integer NOT NULL,
+    "object" character varying(32) NOT NULL,
+    "objectId" integer,
+	FOREIGN KEY(cms_tag_id) REFERENCES cms_tag(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
-
-CREATE INDEX fki_cms_tag_link_cms_tag_id_fkey ON cms_tag_link (cms_tag_id);
-CREATE INDEX cms_tag_link_object_objectId_idx ON cms_tag_link ("object", "objectId");
+CREATE INDEX fki_cms_tag_relation_cms_article_id_fkey ON cms_tag_relation (cms_tag_id);
+CREATE INDEX "cms_tag_relation_object_objectId_idx" ON cms_tag_relation ("object", "objectId");
 
 CREATE TABLE cms_text
 (
@@ -336,21 +381,6 @@ CREATE TABLE cms_mail_server (
     ssl character varying(16) DEFAULT 'tls'
 );
 
-CREATE TABLE cms_news (
-    id INTEGER PRIMARY KEY,
-    lang character varying(2),
-    title character varying(255) NOT NULL,
-    lead text,
-    text text,
-    "dateAdd" DATETIME,
-    "dateModify" DATETIME,
-    uri character varying(255),
-	internal smallint DEFAULT 1 NOT NULL,
-    visible smallint DEFAULT 1 NOT NULL
-);
-
-CREATE INDEX cms_news_uri_idx ON cms_news (uri);
-
 CREATE TABLE cms_stat
 (
   id INTEGER PRIMARY KEY,
@@ -401,7 +431,7 @@ INSERT INTO cms_auth_role (id, cms_auth_id, cms_role_id) VALUES (1, 1, 3);
 INSERT INTO cms_contact_option (id, name) VALUES (1, 'Inne');
 INSERT INTO cms_contact_option (id, name) VALUES (2, 'Propozycje zmian');
 
-INSERT INTO "cms_article" ("id", "lang", "title", "uri", "dateAdd", "dateModify", "text", "noindex") VALUES (1,	NULL,	'Hello admin',	'hello-admin',	'2014-03-20 12:06:56',	'2014-03-20 12:33:47',	'<h4>Witaj!</h4>
+INSERT INTO "cms_article" ("id", "lang", "title", "uri", "dateAdd", "dateModify", "text") VALUES (1,	NULL,	'Hello admin',	'hello-admin',	'2014-03-20 12:06:56',	'2014-03-20 12:33:47',	'<h4>Witaj!</h4>
 <p>To jest panel administracyjny systemu DEMO, pozwalający na zarządzanie treścią stron. Podłączone moduły umożliwiają dodawanie aktualności, artykułów (typu regulamin), zarządzanie strukturą menu i wiele innych, które zostaną krótko omówione w tym artykule.</p>
 <p><strong>Górna sekcja została podzielona na 3 obszary:</strong></p>
 <ol>
@@ -428,7 +458,7 @@ INSERT INTO "cms_article" ("id", "lang", "title", "uri", "dateAdd", "dateModify"
 <li>Użytkownicy - zarządzanie bazą zarejestrowanych użytkowników (oraz administratorów)<ol style="list-style-type: lower-alpha;">
 <li>Uprawnienia - umożliwia nadawanie i odbieranie uprawnień wybranym rolom (ACL)</li>
 </ol></li>
-</ol>',	'0');
+</ol>');
 
 INSERT INTO "cms_navigation" ("id", "lang", "parent_id", "order", "module", "controller", "action", "params", "label", "title", "keywords", "description", "uri", "independent", "nofollow", "blank", "visible", "dateStart", "dateEnd", "active") VALUES (1,	'pl',	'0',	'0',	NULL,	NULL,	NULL,	'',	'Górne menu',	'Demo',	'',	'',	NULL,	'0',	'0',	'0',	'0',	NULL,	NULL,	1);
 INSERT INTO "cms_navigation" ("id", "lang", "parent_id", "order", "module", "controller", "action", "params", "label", "title", "keywords", "description", "uri", "independent", "nofollow", "blank", "visible", "dateStart", "dateEnd", "active") VALUES (2,	'pl',	1,	'0',	'mmi',	'index',	'index',	'',	'Strona główna',	'',	'',	'',	NULL,	'0',	'0',	'0',	1,	NULL,	NULL,	1);

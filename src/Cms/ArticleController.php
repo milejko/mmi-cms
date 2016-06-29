@@ -31,18 +31,14 @@ class ArticleController extends \Mmi\Mvc\Controller {
 		//ładowanie z bufora
 		if (null === ($article = \App\Registry::$cache->load($cacheKey))) {
 			if (isset($uri)) {
-				$article = \Cms\Orm\CmsArticleQuery::byUri($uri)->findFirst();
+				$article = (new \Cms\Orm\CmsArticleQuery)->joinedByUri($uri)->findFirst();
 			} else {
-				$article = (new \Cms\Orm\CmsArticleQuery)->findPk($id);
+				$article = (new \Cms\Orm\CmsArticleQuery)->joined()->findPk($id);
 			}
 			if ($article === null) {
 				$this->getResponse()->redirectToUrl('/');
 			}
 			\App\Registry::$cache->save($article, $cacheKey);
-		}
-		//opcja noindex
-		if ($article->noindex) {
-			$this->view->headMeta(['name' => 'robots', 'content' => 'noindex,nofollow']);
 		}
 		//przekazanie do widoku
 		$this->view->article = $article;
@@ -57,7 +53,7 @@ class ArticleController extends \Mmi\Mvc\Controller {
 		$uri = $this->uri;
 		$cacheKey = 'Cms-Article-' . $uri;
 		if (null === ($article = \App\Registry::$cache->load($cacheKey))) {
-			$article = \Cms\Orm\CmsArticleQuery::byUri($uri)
+			$article = (new \Cms\Orm\CmsArticleQuery)->joinedByUri($uri)
 				->findFirst();
 			\App\Registry::$cache->save($article, $cacheKey);
 		}

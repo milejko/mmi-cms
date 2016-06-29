@@ -36,12 +36,15 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig {
 				->setLabel('CMS')
 				->setModule('cmsAdmin')
 				->addChild(self::_getAdminPart())
-				->addChild(NavPart\NavPartNews::getMenu())
 				->addChild(NavPart\NavPartArticle::getMenu())
+				->addChild(NavPart\NavPartCategory::getMenu())
 				->addChild(NavPart\NavPartComment::getMenu())
 				->addChild(NavPart\NavPartContact::getMenu())
+				->addChild(NavPart\NavPartFile::getMenu())
 				->addChild(NavPart\NavPartStat::getMenu())
-				->addChild(NavPart\NavPartText::getMenu());
+				->addChild(NavPart\NavPartTag::getMenu())
+				->addChild(NavPart\NavPartText::getMenu())
+				->addChild(NavPart\NavPartAuth::getMenu());
 	}
 
 	/**
@@ -61,15 +64,14 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig {
 					->setModule('cmsAdmin')
 					->setController('index')
 					->setAction('login')
-					->setLabel('Logowanie CMS'))
+					->setLabel('Logowanie CMS')
+					->setVisible(false))
 				->addChild(NavPart\NavPartCron::getMenu())
 				->addChild(NavPart\NavPartLog::getMenu())
-				->addChild(NavPart\NavPartMail::getMenu())
 				->addChild(NavPart\NavPartNavigation::getMenu())
-				->addChild(NavPart\NavPartFile::getMenu())
+				->addChild(NavPart\NavPartMail::getMenu())
 				->addChild(NavPart\NavPartRoute::getMenu())
-				->addChild(NavPart\NavPartAcl::getMenu())
-				->addChild(NavPart\NavPartAuth::getMenu());
+				->addChild(NavPart\NavPartAcl::getMenu());
 	}
 
 }

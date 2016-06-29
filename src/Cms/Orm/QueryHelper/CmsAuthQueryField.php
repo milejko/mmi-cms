@@ -11,6 +11,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsAuthQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsAuthQuery like($value)
  * @method \Cms\Orm\CmsAuthQuery ilike($value)
+ * @method \Cms\Orm\CmsAuthQuery between($from, $to)
  * @method \Cms\Orm\CmsAuthQuery equalsColumnId()
  * @method \Cms\Orm\CmsAuthQuery notEqualsColumnId()
  * @method \Cms\Orm\CmsAuthQuery greaterThanColumnId()

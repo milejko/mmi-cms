@@ -18,15 +18,16 @@ class ArticleGrid extends \CmsAdmin\Grid\Grid {
 	public function init() {
 
 		//domyślne zapytanie
-		$this->setQuery((new \Cms\Orm\CmsArticleQuery));
+		$this->setQuery((new \Cms\Orm\CmsArticleQuery)->whereObject()->equals(null));
 		
 		//tytuł
 		$this->addColumnText('title')
 			->setLabel('tytuł');
-
-		//treść
-		$this->addColumnText('text')
-			->setLabel('treść');
+		
+		//typ artykułu
+		$this->addColumnSelect('cmsArticleTypeId')
+			->setMultioptions([null => '---'] + (new \Cms\Orm\CmsArticleTypeQuery)->findPairs('id', 'name'))
+			->setLabel('typ');
 
 		//data dodania
 		$this->addColumnText('dateAdd')
@@ -36,6 +37,10 @@ class ArticleGrid extends \CmsAdmin\Grid\Grid {
 		$this->addColumnText('dateModify')
 			->setLabel('data modyfikacji');
 
+		//aktywność
+		$this->addColumnCheckbox('active')
+			->setLabel('aktywny');
+		
 		//operacje
 		$this->addColumnOperation();
 	}
