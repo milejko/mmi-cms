@@ -72,8 +72,9 @@ class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract {
 		foreach ($node['children'] as $child) {
 			$select = 'false';
 			$disabled = 'false';
+			$type = ($child['record']->active)? 'default' : 'inactive';
 			$html .= '<li id="' . $child['record']->id . '"';
-			$html .= ' data-jstree=\'{"type":"default", "disabled":' . $disabled . ', "selected":' . $select . '}\'>' . $child['record']->name;
+			$html .= ' data-jstree=\'{"type":"' . $type . '", "disabled":' . $disabled . ', "selected":' . $select . '}\'>' . $child['record']->name;
 			$html = self::_generateTree($child, $html);
 			$html .= '</li>';
 		}

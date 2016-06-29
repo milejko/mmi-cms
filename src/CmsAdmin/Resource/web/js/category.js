@@ -9,7 +9,7 @@ var CATEGORYCONF = CATEGORYCONF || {};
 //klucz do stanu drzewka
 CATEGORYCONF.stateKey = 'cms-category-jstree';
 //po jakim czasie ukryć message
-CATEGORYCONF.msgDelay = 2000;
+CATEGORYCONF.msgDelay = 2500;
 
 //zarządzanie kategoriami
 $(document).ready(function () {
@@ -29,7 +29,7 @@ $(document).ready(function () {
             'themes': {
                 'name': 'default',
 				'variant': 'small',
-				'responsive' : true,
+				'responsive' : false,
 				'stripes' : true
             },
 			'strings': {
@@ -41,7 +41,7 @@ $(document).ready(function () {
             'check_callback': function (op) {
 				if (op === 'delete_node') {
 					return confirm("Czy na pewno usunąć kategorię?");
-				}
+					}
 				return true;
 			}
         },
@@ -55,8 +55,9 @@ $(document).ready(function () {
 		},
 		'types': {
 			'#': { 'valid_children': ["root"] },
-			'root': { 'valid_children': ["default"], 'icon': request.baseUrl + '/resource/cmsAdmin/images/tree.png' },
-			'default': { 'valid_children': ["default"] }
+			'root': { 'valid_children': ["default", "inactive"], 'icon': request.baseUrl + '/resource/cmsAdmin/images/tree.png' },
+			'default': { 'valid_children': ["default", "inactive"] },
+			'inactive': { 'valid_children': ["default", "inactive"], 'icon': 'jstree-inactive' }
 		},
 		'contextmenu': {
 			'items': function (node) {

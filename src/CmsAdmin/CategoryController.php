@@ -25,15 +25,16 @@ class CategoryController extends Mvc\Controller {
 		if (empty($formPost) || !isset($formPost['id']) || !$formPost['id']) {
 			return;
 		}
-		if (null !== $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($formPost['id'])) {
-			$form = (new \CmsAdmin\Form\Category($cat));
-			if ($form->isMine()) {
-				$this->view->headScript()->appendScript('request.showCategoryForm = true;');
-				$this->view->categoryForm = $form;
-			}
-			if ($form->isSaved()) {
-				$this->getMessenger()->addMessage('Zmiany w kategorii zostały zapisane', true);
-			}
+		if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($formPost['id'])) {
+			return;
+		}
+		$form = (new \CmsAdmin\Form\Category($cat));
+		if ($form->isMine()) {
+			$this->view->headScript()->appendScript('request.showCategoryForm = true;');
+			$this->view->categoryForm = $form;
+		}
+		if ($form->isSaved()) {
+			$this->getMessenger()->addMessage('Zmiany w kategorii zostały zapisane', true);
 		}
 	}
 	
@@ -82,6 +83,12 @@ class CategoryController extends Mvc\Controller {
 	public function renameAction() {
 		$this->getResponse()->setTypeJson();
 		if (null !== $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
+			if (mb_strlen($this->getPost()->name) < 2) {
+				return json_encode(['status' => false, 'error' => 'Nazwa kategorii jest zbyt krótka - wymagane minimum to 2 znaki']);
+			}
+			if (mb_strlen($this->getPost()->name) > 64) {
+				return json_encode(['status' => false, 'error' => 'Nazwa kategorii jest zbyt długa - maksimum to 64 znaki']);
+			}
 			$cat->name = $this->getPost()->name;
 			if ($cat->save() !== false) {
 				return json_encode(['status' => true, 'id' => $cat->id, 'message' => 'Nazwa kategorii została zmieniona']);
