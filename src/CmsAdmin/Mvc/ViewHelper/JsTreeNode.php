@@ -15,7 +15,7 @@ class JsTreeNode extends \Mmi\Mvc\ViewHelper\HelperAbstract {
 	/**
 	 * Nazwa sztucznego korzenia
 	 */
-	CONST ROOT = 'Korzeń';
+	CONST ROOT = '';
 
 	/**
 	 * Renderuje fragment drzewka pod obsługę przez plugin jsTree
