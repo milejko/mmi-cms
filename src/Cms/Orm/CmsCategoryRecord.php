@@ -151,18 +151,18 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @param integer $parentId rodzic
 	 */
 	protected function _sortChildren() {
-		$i = 0;
 		$children = $this->_getChildren($this->parentId);
-		//iteracja po dzieciach (przestawianie kategorii)
+		//usuwanie bieżącej kategorii
 		foreach ($children as $key => $categoryRecord) {
-			if (isset($children[$key + 1]) && $children[$key + 1]->id == $this->id && $children[$key + 1]->order == $i) {
-				$nextCategoryRecord = $children[$key + 1];
-				$children[$key + 1] = $categoryRecord;
-				$children[$key] = $nextCategoryRecord;
+			if ($categoryRecord->id == $this->id) {
+				unset($children[$key]);
 			}
 		}
+		//sklejanie kategorii
+		$ordered = array_merge(array_slice($children, 0, $this->order, true), [$this->order => $this], array_slice($children, $this->order, count($children), true));
+		$i = 0;
 		//ustawianie orderów
-		foreach ($children as $key => $categoryRecord) {
+		foreach ($ordered as $key => $categoryRecord) {
 			//wyznaczanie kolejności
 			$categoryRecord->order = $i++;
 			$categoryRecord->setOption('block-ordering', true);
