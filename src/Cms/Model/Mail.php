@@ -107,7 +107,7 @@ class Mail {
 		//wysyłka pojedynczego maila
 		foreach ($emails as $email) {
 			//instancja PHPMailer'a
-			$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+			$mail = new \PHPMailer(true);
 			try {
 				$mail->CharSet = 'utf-8';
 				//ustawiam SMTP
