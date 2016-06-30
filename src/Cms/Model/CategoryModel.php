@@ -22,26 +22,27 @@ class CategoryModel {
 	 * Drzewo kategorii
 	 * @var array
 	 */
-	private $_categoryTree;
+	private $_categoryTree = [];
+
+	/**
+	 * Lista kategorii z id jako kluczem
+	 * @var array
+	 */
+	private $_flatCategories = [];
 
 	/**
 	 * Konstruktor pobiera kategorie i buduje drzewo
 	 */
 	public function __construct() {
-		//ładowanie kategorii z cache
-		if (null !== $this->_categoryTree = \App\Registry::$cache->load('cms-category-tree')) {
-			return;
-		}
-		$this->_categoryTree = [];
+		//pobieranie kategorii
+		$categories = (new CmsCategoryQuery)
+			->orderAscOrder()
+			->find()
+			->toObjectArray();
 		//budowanie drzewa z płaskiej struktury orm
-		$this->_buildTree($this->_categoryTree, [], (new CmsCategoryQuery)
-				->orderAscOrder()
-				->find()
-				->toObjectArray());
-		//zapis cache
-		\App\Registry::$cache->save($this->_categoryTree, 'cms-category-tree');
+		$this->_buildTree($this->_categoryTree, [], $categories);
 	}
-	
+
 	/**
 	 * Zwraca drzewo kategorii
 	 * @param integer $parentCategoryId identyfikator kategorii rodzica (opcjonalny)
@@ -67,26 +68,17 @@ class CategoryModel {
 		$this->_buildFlatTree('', $flatTree, $this->getCategoryTree($parentCategoryId));
 		return $flatTree;
 	}
-	
+
 	/**
 	 * Wyszukuje kategorię po ID
 	 * @param integer $categoryId identyfikator rekordu
 	 * @return \Cms\Orm\CmsCategoryRecord
 	 */
 	public function getCategoryById($categoryId) {
-		
+		//wyszukanie w płaskiej liście
+		return isset($this->_flatCategories[$categoryId]) ? $this->_flatCategories[$categoryId] : null;
 	}
-	
-	/**
-	 * Pobiera breadcrumby dla wybranej kategorii
-	 * @param integer $categoryId identyfikator kategorii (opcjonalny)
-	 * @retur array
-	 */
-	public function getBreadcrumbsById($categoryId) {
-		dump($this->getCategoryTree());
-		exit;
-	}
-	
+
 	/**
 	 * Wyszukiwanie dzieci
 	 * @param array $categories
@@ -125,26 +117,30 @@ class CategoryModel {
 	 * @param array $tree
 	 * @param integer $parentId
 	 */
-	private function _buildTree(array &$tree, array $parents, array $orderedCategories, $parentId = null) {
+	private function _buildTree(array &$tree, array $parents, array $orderedCategories, CmsCategoryRecord $parentCategory = null) {
 		//uzupełnienie rodziców
-		if ($parentId !== null) {
-			$parents[$parentId] = $parentId;
+		if ($parentCategory !== null) {
+			$parents[$parentCategory->id] = $parentCategory;
+		} else {
+			$parentCategory = new CmsCategoryRecord;
+			$parentCategory->id = null;
 		}
 		/* @var $categoryRecord CmsCategoryRecord */
 		foreach ($orderedCategories as $key => $categoryRecord) {
 			//niezgodny rodzic
-			if ($categoryRecord->parentId != $parentId) {
+			if ($categoryRecord->parentId != $parentCategory->id) {
 				continue;
 			}
+			//dodawanie do płaskiej listy
+			$this->_flatCategories[$categoryRecord->id] = $categoryRecord;
 			//usuwanie wykorzystanego rekordu kategorii
 			unset($orderedCategories[$key]);
 			//zapis do drzewa
 			$tree[$categoryRecord->id] = [];
-			$tree[$categoryRecord->id]['record'] = $categoryRecord;
-			$tree[$categoryRecord->id]['parents'] = $parents;
+			$tree[$categoryRecord->id]['record'] = $categoryRecord->setOption('parents', $parents);
 			$tree[$categoryRecord->id]['children'] = [];
 			//zejście rekurencyjne do dzieci
-			$this->_buildTree($tree[$categoryRecord->id]['children'], $parents, $orderedCategories, $categoryRecord->id);
+			$this->_buildTree($tree[$categoryRecord->id]['children'], $parents, $orderedCategories, $categoryRecord);
 		}
 	}
 

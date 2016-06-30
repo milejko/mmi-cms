@@ -50,8 +50,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		if (null === $this->order) {
 			$this->order = $this->_maxChildOrder() + 1;
 		}
-		//usunięcie cache drzewa kategorii
-		\App\Registry::$cache->remove('cms-category-tree');
 		//zapis
 		return parent::save();
 	}
