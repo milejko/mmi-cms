@@ -87,4 +87,9 @@ class CmsCategoryQuery extends \Mmi\Orm\Query {
 
 	protected $_tableName = 'cms_category';
 
+	public function searchByUri($uri) {
+		return (new CmsCategoryQuery)
+			->whereUri()->equals($uri);
+	}
+
 }

@@ -104,8 +104,8 @@ class CmsArticleQuery extends \Mmi\Orm\Query {
 	 * @param string $uri
 	 * @return CmsArticleQuery
 	 */
-	public function joinedByUri($uri) {
-		return $this->joined()
+	public function joinedTypeByUri($uri) {
+		return $this->joinedType()
 				->whereUri()->equals($uri);
 	}
 
@@ -113,9 +113,9 @@ class CmsArticleQuery extends \Mmi\Orm\Query {
 	 * Pobiera złączenie
 	 * @return CmsArticleQuery
 	 */
-	public function joined() {
+	public function joinedType() {
 		return (new CmsArticleQuery)
 				->joinLeft('cms_article_type')->on('cms_article_type_id');
 	}
-
+	
 }

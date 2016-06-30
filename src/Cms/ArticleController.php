@@ -16,48 +16,60 @@ namespace Cms;
 class ArticleController extends \Mmi\Mvc\Controller {
 
 	/**
-	 * Akcja strony
+	 * Akcja wyświetlania artykułu
 	 */
-	public function indexAction() {
-		//po uri
-		if ($this->uri) {
-			$uri = $this->uri;
-			$cacheKey = 'Cms-Article-' . $uri;
-			//po id
-		} else {
-			$id = intval($this->id);
-			$cacheKey = 'Cms-Article-' . $id;
+	public function displayAction() {
+		//wyszukanie kategorii
+		$this->_category = (new Model\CategoryModel)
+			->getCategoryByUri($this->path);
+		//forward do kategorii
+		if ($this->_category !== null) {
+			//wywołanie akcji
+			$this->displayCategoryAction();
+			//render akcji kategorii
+			return $this->view->setPlaceholder('content', $this->view->renderTemplate('cms', 'article', 'displayCategory'))
+				->renderLayout('cms', 'article');
 		}
-		//ładowanie z bufora
-		if (null === ($article = \App\Registry::$cache->load($cacheKey))) {
-			if (isset($uri)) {
-				$article = (new \Cms\Orm\CmsArticleQuery)->joinedByUri($uri)->findFirst();
-			} else {
-				$article = (new \Cms\Orm\CmsArticleQuery)->joined()->findPk($id);
-			}
-			if ($article === null) {
-				$this->getResponse()->redirectToUrl('/');
-			}
-			\App\Registry::$cache->save($article, $cacheKey);
+		//wyszykanie artykułu
+		$article = (new Model\ArticleModel)
+			->searchByPath($this->path);
+		//nie znaleziono artykułu
+		if (null === $article) {
+			//przekierowanie
+			$this->getResponse()->redirectToUrl('/');
 		}
-		//przekazanie do widoku
+		//artykuł ma podpiętą kategorię
+		if ($article->getOption('category') !== null) {
+			//iteracja po dzieciach kategorii
+			foreach ($article->getOption('category')->getOption('parents') as $category) {
+				//dodawanie okruszka
+				$this->view->navigation()->appendBreadcrumb($category->name, $this->view->url(['path' => $category->uri]));
+			}
+			//dodawanie okruszka najwyższej kategorii
+			$this->view->navigation()->appendBreadcrumb($article->getOption('category')->name, $this->view->url(['path' => $article->getOption('category')->uri]));
+		}
+		//dodawanie okruszka
+		$this->view->navigation()->appendBreadcrumb($article->title, $this->view->url(), $article->title, mb_substr($article->lead . $article->text, 0, 150) . '...');
 		$this->view->article = $article;
-		//seo
-		$this->view->navigation()->modifyLastBreadcrumb(strip_tags($article->title), $this->view->url(), strip_tags($article->title), strip_tags($article->title . ', ' . mb_substr(strip_tags($article->text), 0, 150) . '...'));
 	}
 
 	/**
-	 * Widget strony
+	 * Wyświetlenie kategorii
 	 */
-	public function widgetAction() {
-		$uri = $this->uri;
-		$cacheKey = 'Cms-Article-' . $uri;
-		if (null === ($article = \App\Registry::$cache->load($cacheKey))) {
-			$article = (new \Cms\Orm\CmsArticleQuery)->joinedByUri($uri)
-				->findFirst();
-			\App\Registry::$cache->save($article, $cacheKey);
+	public function displayCategoryAction() {
+		//brak kategorii
+		if (null === $this->_category) {
+			//przekierowanie
+			$this->getResponse()->redirectToUrl('/');
 		}
-		$this->view->article = $article;
+		//iteracja po dzieciach kategorii
+		foreach ($this->_category->getOption('parents') as $category) {
+			//dodawanie okruszka
+			$this->view->navigation()->appendBreadcrumb($category->name, $this->view->url(['path' => $category->uri]));
+		}
+		$this->view->navigation()->appendBreadcrumb($this->_category->name, $this->view->url(['path' => $this->_category->uri]));
+		//przekazanie kategorii
+		$this->view->category = $this->_category;
 	}
 
 }
