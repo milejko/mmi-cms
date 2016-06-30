@@ -55,14 +55,6 @@ class Folder extends \Cms\Form\Form {
 			])
 			->setDescription('Jeśli niewidoczny, jego dane nie wejdą do ścieżki tytułu i okruchów');
 
-		$this->addElementDateTimePicker('dateStart')
-			->setLabel('Data i czas włączenia')
-			->addFilterEmptyToNull();
-
-		$this->addElementDateTimePicker('dateEnd')
-			->setLabel('Data i czas wyłączenia')
-			->addFilterEmptyToNull();
-
 		$this->addElementCheckbox('active')
 			->setChecked()
 			->setLabel('Włączony');

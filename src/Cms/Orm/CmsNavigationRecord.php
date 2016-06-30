@@ -38,8 +38,6 @@ class CmsNavigationRecord extends \Mmi\Orm\Record {
 	public $description;
 	public $uri;
 	public $visible;
-	public $dateStart;
-	public $dateEnd;
 
 	/**
 	 * Czy link absolutny

@@ -50,16 +50,6 @@ abstract class PageAbstract extends \Cms\Form\Form {
 			->setValue(\Mmi\App\FrontController::getInstance()->getRequest()->parent)
 			->setMultioptions(\Cms\Model\Navigation::getMultioptions());
 
-		//data rozpoczęcia publikacji
-		$this->addElementDateTimePicker('dateStart')
-			->setLabel('Data i czas włączenia')
-			->addFilterEmptyToNull();
-
-		//data zakończenia
-		$this->addElementDateTimePicker('dateEnd')
-			->setLabel('Data i czas wyłączenia')
-			->addFilterEmptyToNull();
-
 		//włączony
 		$this->addElementCheckbox('active')
 			->setChecked()

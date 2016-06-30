@@ -109,8 +109,6 @@ class Navigation {
 			->setAction($record->action ? : null)
 			->setBlank($record->blank ? true : false)
 			->setController($record->controller ? : null)
-			->setDateEnd($record->dateEnd ? : null)
-			->setDateStart($record->dateStart ? : null)
 			->setDescription($record->description ? : null)
 			->setDisabled($record->active ? false : true)
 			->setHttps($https)

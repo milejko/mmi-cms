@@ -14,8 +14,6 @@ class CmsArticleRecord extends \Mmi\Orm\Record {
 	public $uri;
 	public $dateAdd;
 	public $dateModify;
-	public $object;
-	public $objectId;
 	public $lead;
 	public $text;
 	public $active;
