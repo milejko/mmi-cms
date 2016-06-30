@@ -35,8 +35,6 @@ CREATE TABLE cms_article (
     uri character varying(160) NOT NULL,
     "dateAdd" DATETIME,
     "dateModify" DATETIME,
-	"object" character varying(32),
-    "objectId" integer,
 	"lead" text,
     "text" text,
 	"active" TINYINT DEFAULT 0 NOT NULL,
@@ -50,7 +48,6 @@ CREATE INDEX cms_article_lang_idx ON cms_article (lang);
 CREATE INDEX cms_article_title_idx ON cms_article (title);
 CREATE INDEX cms_article_uri_idx ON cms_article (uri);
 CREATE INDEX cms_article_active_idx ON cms_article (active);
-CREATE INDEX cms_article_object_objectId_idx ON cms_article ("object", "objectId");
 
 CREATE TABLE "cms_category" (
     "id" INTEGER PRIMARY KEY,

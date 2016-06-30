@@ -61,6 +61,8 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 			if (isset($params['id']) && isset($params['key']) && $params['key'] == md5(\App\Registry::$config->salt . $params['id'])) {
 				$auth->setIdentity($params['id']);
 				$auth->idAuthenticate();
+				//regeneracja ID sesji po autoryzacji
+				\Mmi\Session\Session::regenerateId();
 			}
 		}
 		
@@ -92,7 +94,6 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 			} elseif (!$auth->hasIdentity()) {
 				//logowanie użytkownika
 				$this->_setUserLoginRequest($request);
-				//$this->_setAdminLoginRequest($request);
 			} else {
 				\App\Registry::$auth->clearIdentity();
 				//zalogowany na nieuprawnioną rolę
