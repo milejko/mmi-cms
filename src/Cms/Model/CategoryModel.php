@@ -80,6 +80,21 @@ class CategoryModel {
 	}
 
 	/**
+	 * Wyszukuje kategorię po uri
+	 * @param string $uri
+	 * @return \Cms\Orm\CmsCategoryRecord
+	 */
+	public function getCategoryByUri($uri) {
+		//iteracja po kategoriach
+		foreach ($this->_flatCategories as $category) {
+			//znaleziono w uri
+			if ($category->uri == $uri) {
+				return $category;
+			}
+		}
+	}
+
+	/**
 	 * Wyszukiwanie dzieci
 	 * @param array $categories
 	 * @param integer $parentCategoryId

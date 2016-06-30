@@ -43,7 +43,7 @@ class Article extends PageAbstract {
 		//id artykułu
 		$this->addElementSelect('articleId')
 			->setLabel('Artykuł')
-			->setMultioptions(\Cms\Model\Article::getMultioptions())
+			->setMultioptions((new \Cms\Model\ArticleModel)->getMultioptions())
 			->setValue($articleId);
 		
 		//nadrzędne pola

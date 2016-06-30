@@ -17,6 +17,9 @@ class CmsRouterConfig extends \Mmi\Mvc\RouterConfig {
 
 	public function __construct() {
 
+		//routa do stron cms i kategorii
+		$this->setRoute('cms-category', '/^strona\/([a-zA-Z\/\-]+)$/', ['module' => 'cms', 'controller' => 'article', 'action' => 'display', 'path' => '$1']);
+
 		//moduł + kontroler index + akcja index np. /news
 		$this->setRoute('cms-module', '/^([a-zA-Z]+)$/', ['module' => '$1'], ['controller' => 'index', 'action' => 'index']);
 
