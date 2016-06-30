@@ -23,7 +23,11 @@ ul#messenger {
 	display: none;
 }
 
-div#categoryNodeContainer ul#messenger {
+div#categoryMessageContainer ul#messenger {
+	margin-top: 0px;
+}
+
+div#categoryMessageContainer ul#messenger .notice {
 	margin-top: 0px;
 }
 
@@ -36,4 +40,6 @@ div.field.hidden {
 	background-image: url("../js/jstree/themes/default/32px.png");
 	background-position: -263px -7px;
 	filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'jstree-grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#jstree-grayscale");
+	-webkit-filter: grayscale(100%);
+	opacity: 0.7;
 }

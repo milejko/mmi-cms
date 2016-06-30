@@ -24,15 +24,15 @@ class Category extends \Cms\Form\Form {
 			->addFilterStringTrim()
 			->addValidatorStringLength(2, 64);
 		
-		//opis
-		$this->addElementTinyMce('description')
-			->setHeight(200)
-			->setLabel('opis');
-		
 		//aktywna
 		$this->addElementCheckbox('active')
 			->setChecked()
 			->setLabel('włączona');
+		
+		//opis
+		$this->addElementTinyMce('description')
+			->setHeight(200)
+			->setLabel('opis');
 		
 		//id
 		$this->addElementHidden('id');

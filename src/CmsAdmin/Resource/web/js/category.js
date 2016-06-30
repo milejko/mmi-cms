@@ -15,7 +15,6 @@ CATEGORYCONF.msgDelay = 2500;
 $(document).ready(function () {
 	//przeniesienie messengera
 	$('ul#messenger').appendTo('#categoryMessageContainer').show();
-	CATEGORYCONF.hideMessage(4000);
 	
 	//odpalenie drzewka
 	$('#jstree').jstree({
@@ -38,6 +37,7 @@ $(document).ready(function () {
 			},
 			'multiple': false,
 			'expand_selected_onload': true,
+			'force_text': true,
             'check_callback': function (op) {
 				if (op === 'delete_node') {
 					return confirm("Czy na pewno usunąć kategorię?");
@@ -89,6 +89,7 @@ $(document).ready(function () {
 		'plugins' : [ "state", "unique", "types", "contextmenu", "dnd", "wholerow" ]
     })
 	.on('delete_node.jstree', function (e, data) {
+		CATEGORYCONF.hideMessage();
 		$.post(request.baseUrl + '/cmsAdmin/category/delete', {'id': data.node.id})
 			.done(function (d) {
 				if (d.status) {
@@ -105,6 +106,7 @@ $(document).ready(function () {
 			});
 	})
 	.on('create_node.jstree', function (e, data) {
+		CATEGORYCONF.hideMessage();
 		$.post(request.baseUrl + '/cmsAdmin/category/create', {'parentId': data.node.parent, 'order': data.position, 'name': data.node.text})
 			.done(function (d) {
 				if (d.status) {
@@ -122,9 +124,11 @@ $(document).ready(function () {
 			});
 	})
 	.on('rename_node.jstree', function (e, data) {
+		CATEGORYCONF.hideMessage();
 		$.post(request.baseUrl + '/cmsAdmin/category/rename', {'id': data.node.id, 'name': data.text})
 			.done(function (d) {
 				if (d.status) {
+					data.node.text = d.name;
 					$('#jstree').jstree('deselect_all');
 					$('#jstree').jstree('select_node', d.id);
 				} else {
@@ -138,6 +142,7 @@ $(document).ready(function () {
 			});
 	})
 	.on('move_node.jstree', function (e, data) {
+		CATEGORYCONF.hideMessage();
 		var params = {'id': data.node.id, 'parentId': data.parent, 'oldParentId': data.old_parent, 'order': data.position, 'oldOrder': data.old_position};
 		$.post(request.baseUrl + '/cmsAdmin/category/move', params)
 			.done(function (d) {
@@ -167,6 +172,7 @@ $(document).ready(function () {
 });
 
 CATEGORYCONF.editForm = function (node) {
+	CATEGORYCONF.hideMessage();
 	var params = {'id': node.id};
 	params.name = node.text;
 	if (node.type) {
@@ -210,19 +216,10 @@ CATEGORYCONF.showMessage = function (data) {
 	html += '</ul>';
 	$('#categoryMessageContainer').html(html);
 	$('#categoryMessageContainer ul#messenger').show();
-	//automatyczne ukrycie message po czasie
-	CATEGORYCONF.hideMessage();
 };
 
-CATEGORYCONF.hideMessage = function (delay) {
-	if (!delay) {
-		delay = CATEGORYCONF.msgDelay;
-	}
-	setTimeout(function () {
-		$('#categoryMessageContainer ul#messenger').fadeOut('slow', function() {
-			$('#categoryMessageContainer').empty();
-		});
-	}, delay);
+CATEGORYCONF.hideMessage = function () {
+	$('#categoryMessageContainer').empty();
 };
 
 CATEGORYCONF.initTinyMce = function() {

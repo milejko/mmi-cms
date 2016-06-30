@@ -83,15 +83,16 @@ class CategoryController extends Mvc\Controller {
 	public function renameAction() {
 		$this->getResponse()->setTypeJson();
 		if (null !== $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
-			if (mb_strlen($this->getPost()->name) < 2) {
+			$name = trim($this->getPost()->name);
+			if (mb_strlen($name) < 2) {
 				return json_encode(['status' => false, 'error' => 'Nazwa kategorii jest zbyt krótka - wymagane minimum to 2 znaki']);
 			}
-			if (mb_strlen($this->getPost()->name) > 64) {
+			if (mb_strlen($name) > 64) {
 				return json_encode(['status' => false, 'error' => 'Nazwa kategorii jest zbyt długa - maksimum to 64 znaki']);
 			}
-			$cat->name = $this->getPost()->name;
+			$cat->name = $name;
 			if ($cat->save() !== false) {
-				return json_encode(['status' => true, 'id' => $cat->id, 'message' => 'Nazwa kategorii została zmieniona']);
+				return json_encode(['status' => true, 'id' => $cat->id, 'name' => $name, 'message' => 'Nazwa kategorii została zmieniona']);
 			}
 		}
 		return json_encode(['status' => false, 'error' => 'Nie udało się zmienić nazwy kategorii']);
