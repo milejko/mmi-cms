@@ -74,19 +74,14 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		$parentModified = $this->isModified('parentId');
 		//zmodyfikowany order
 		$orderModified = $this->isModified('order');
-		//zmodyfikowany parent -> sprawdzenie więzów
-		if ($parentModified && !$orderModified) {
-			//domyślnie wstawienie na koniec
-			$this->order = $this->_maxChildOrder() + 1;
-		}
 		//data modyfikacji
 		$this->dateModify = date('Y-m-d H:i:s');
 		//aktualizacja rekordu
 		if (!parent::_update()) {
 			return false;
 		}
-		//sortowanie dzieci po wstawieniu w miejsce
-		if ($orderModified && !$this->getOption('block-ordering')) {
+		//sortowanie dzieci po przestawieniu rodzica, lub kolejności
+		if (($parentModified || $orderModified) && !$this->getOption('block-ordering')) {
 			//sortuje dzieci
 			$this->_sortChildren();
 		}
