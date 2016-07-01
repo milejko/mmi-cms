@@ -141,7 +141,9 @@ class CmsFileQuery extends \Mmi\Orm\Query {
 				->whereObject()->equals($object)
 				->andFieldObjectId()->equals($objectId)
 				//posortowane po kolejności
-				->orderAscOrder();
+				->orderAscOrder()
+				//sortowanie po ID, jeśli ordery są NULL
+				->orderAscId();
 	}
 
 	/**

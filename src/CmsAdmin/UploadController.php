@@ -58,8 +58,7 @@ class UploadController extends Mvc\Controller {
 		//zwrot json'a z plikami
 		return json_encode([
 			'result' => 'OK',
-			'files' => $query->orderAscDateAdd()
-						->find()
+			'files' => $query->find()
 						->toArray()
 		]);
 	}
