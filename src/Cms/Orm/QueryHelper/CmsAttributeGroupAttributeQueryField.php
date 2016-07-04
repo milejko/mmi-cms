@@ -30,6 +30,18 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsAttributeGroupAttributeQuery lessThanColumnCmsAttributeGroupId()
  * @method \Cms\Orm\CmsAttributeGroupAttributeQuery greaterOrEqualsColumnCmsAttributeGroupId()
  * @method \Cms\Orm\CmsAttributeGroupAttributeQuery lessOrEqualsColumnCmsAttributeGroupId()
+ * @method \Cms\Orm\CmsAttributeGroupAttributeQuery equalsColumnRequired()
+ * @method \Cms\Orm\CmsAttributeGroupAttributeQuery notEqualsColumnRequired()
+ * @method \Cms\Orm\CmsAttributeGroupAttributeQuery greaterThanColumnRequired()
+ * @method \Cms\Orm\CmsAttributeGroupAttributeQuery lessThanColumnRequired()
+ * @method \Cms\Orm\CmsAttributeGroupAttributeQuery greaterOrEqualsColumnRequired()
+ * @method \Cms\Orm\CmsAttributeGroupAttributeQuery lessOrEqualsColumnRequired()
+ * @method \Cms\Orm\CmsAttributeGroupAttributeQuery equalsColumnActive()
+ * @method \Cms\Orm\CmsAttributeGroupAttributeQuery notEqualsColumnActive()
+ * @method \Cms\Orm\CmsAttributeGroupAttributeQuery greaterThanColumnActive()
+ * @method \Cms\Orm\CmsAttributeGroupAttributeQuery lessThanColumnActive()
+ * @method \Cms\Orm\CmsAttributeGroupAttributeQuery greaterOrEqualsColumnActive()
+ * @method \Cms\Orm\CmsAttributeGroupAttributeQuery lessOrEqualsColumnActive()
  */
 class CmsAttributeGroupAttributeQueryField extends \Mmi\Orm\QueryHelper\QueryField {
 

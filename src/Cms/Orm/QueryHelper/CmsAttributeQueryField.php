@@ -72,12 +72,6 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsAttributeQuery lessThanColumnIndexWeight()
  * @method \Cms\Orm\CmsAttributeQuery greaterOrEqualsColumnIndexWeight()
  * @method \Cms\Orm\CmsAttributeQuery lessOrEqualsColumnIndexWeight()
- * @method \Cms\Orm\CmsAttributeQuery equalsColumnActive()
- * @method \Cms\Orm\CmsAttributeQuery notEqualsColumnActive()
- * @method \Cms\Orm\CmsAttributeQuery greaterThanColumnActive()
- * @method \Cms\Orm\CmsAttributeQuery lessThanColumnActive()
- * @method \Cms\Orm\CmsAttributeQuery greaterOrEqualsColumnActive()
- * @method \Cms\Orm\CmsAttributeQuery lessOrEqualsColumnActive()
  */
 class CmsAttributeQueryField extends \Mmi\Orm\QueryHelper\QueryField {
 

@@ -14,6 +14,5 @@ class CmsAttributeRecord extends \Mmi\Orm\Record {
 	public $validatorClasses;
 	public $multiple;
 	public $indexWeight;
-	public $active;
 
 }
