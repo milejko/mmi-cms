@@ -13,6 +13,7 @@ class CmsAttributeRecord extends \Mmi\Orm\Record {
 	public $filterClasses;
 	public $validatorClasses;
 	public $multiple;
+	public $restricted;
 	public $indexWeight;
 
 }
