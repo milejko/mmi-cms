@@ -15,5 +15,8 @@ class CmsAttributeRecord extends \Mmi\Orm\Record {
 	public $multiple;
 	public $restricted;
 	public $indexWeight;
+	public $required;
+	public $unique;
+	public $materialized;
 
 }
