@@ -70,8 +70,9 @@ class CaptchaController extends \Mmi\Mvc\Controller {
 		}
 
 		//zapis do sesji
-		$formSession = new \Mmi\Session\SessionSpace('CmsForm');
-		$name = 'captcha-' . $this->name;
+		$formSession = new \Mmi\Session\SessionSpace('captcha');
+		//filtracja nazwy pola z nazwy formularza + pola
+		$name = strpos($this->name, '[') === false ? $this->name : substr($this->name, strpos($this->name, '[') + 1, -1);
 		$formSession->$name = $word;
 
 		//ustalenie nagłówka na niebuforowany

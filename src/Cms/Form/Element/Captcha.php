@@ -22,7 +22,7 @@ class Captcha extends \Mmi\Form\Element\ElementAbstract {
 		parent::__construct($name);
 		$this->setIgnore()
 			->setRequired()
-			->addValidator(new \Cms\Validator\Captcha());
+			->addValidator(new \Cms\Validator\Captcha(['name' => $name]));
 	}
 
 	/**

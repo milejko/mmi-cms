@@ -23,7 +23,16 @@ class Captcha extends \Mmi\Validator\ValidatorAbstract {
 	 * Komunikat błędnego kodu zabezpieczającego
 	 */
 	const INVALID = 'Przepisany kod jest niepoprawny';
-	
+
+	/**
+	 * Ustawia opcje
+	 * @param array $options
+	 * @return self
+	 */
+	public function setOptions(array $options = [], $reset = false) {
+		return $this->setName(current($options));
+	}
+
 	/**
 	 * Waliduje poprawność captcha
 	 * @param string $value
@@ -34,9 +43,8 @@ class Captcha extends \Mmi\Validator\ValidatorAbstract {
 		if (!$value) {
 			return $this->_error(self::INVALID);
 		}
-		$name = 'captcha-' . $this->getName();
 		//wartości niezgodne
-		if ((new \Mmi\Session\SessionSpace('CmsForm'))->$name != strtoupper($value)) {
+		if ((new \Mmi\Session\SessionSpace('captcha'))->{$this->getOption('name')} != strtoupper($value)) {
 			return $this->_error(self::INVALID);
 		}
 		return true;
