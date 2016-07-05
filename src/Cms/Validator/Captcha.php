@@ -30,9 +30,16 @@ class Captcha extends \Mmi\Validator\ValidatorAbstract {
 	 * @return boolean
 	 */
 	public function isValid($value) {
-		$this->_error(self::INVALID);
+		//brak wartości
+		if (!$value) {
+			return $this->_error(self::INVALID);
+		}
 		$name = 'captcha-' . $this->getName();
-		return ((new \Mmi\Session\SessionSpace('CmsForm'))->$name == strtoupper($value));
+		//wartości niezgodne
+		if ((new \Mmi\Session\SessionSpace('CmsForm'))->$name != strtoupper($value)) {
+			return $this->_error(self::INVALID);
+		}
+		return true;
 	}
 
 }

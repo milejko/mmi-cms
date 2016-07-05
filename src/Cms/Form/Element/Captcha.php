@@ -18,7 +18,8 @@ class Captcha extends \Mmi\Form\Element\ElementAbstract {
 	/**
 	 * Ignorowanie tego pola, pole obowiązkowe, automatyczna walidacja
 	 */
-	public function init() {
+	public function __construct($name) {
+		parent::__construct($name);
 		$this->setIgnore()
 			->setRequired()
 			->addValidator(new \Cms\Validator\Captcha());
