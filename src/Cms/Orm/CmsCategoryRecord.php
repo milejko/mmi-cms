@@ -10,7 +10,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	public $id;
 	public $lang;
 	public $name;
-	public $description;
+	public $lead;
+	public $text;
 
 	/**
 	 * Breadcrumbs
@@ -31,6 +32,11 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	public $order;
 	public $dateAdd;
 	public $dateModify;
+	public $title;
+	public $description;
+	public $https;
+	public $follow;
+	public $blank;
 	public $active;
 
 	/**
