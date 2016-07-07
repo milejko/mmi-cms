@@ -16,9 +16,9 @@ namespace CmsAdmin\Form;
 class Category extends \Cms\Form\Form {
 
 	public function init() {
-		
-		$this->addElementLabel('label-main')
-			->setLabel('Treść artykułu');
+
+		$this->addElementLabel('label-config')
+			->setLabel('Konfiguracja');
 
 		//nazwa kategorii
 		$this->addElementText('name')
@@ -26,6 +26,22 @@ class Category extends \Cms\Form\Form {
 			->setRequired()
 			->addFilterStringTrim()
 			->addValidatorStringLength(2, 128);
+
+		$this->addElementSelect('cms_category_type')
+			->setLabel('typ treści')
+			->setMultioptions((new \Cms\Orm\CmsCategoryTypeQuery)->orderAscName()->findPairs('id', 'name'));
+
+		//aktywna
+		$this->addElementCheckbox('active')
+			->setChecked()
+			->setLabel('włączona');
+
+		//zapis
+		$this->addElementSubmit('submit1')
+			->setLabel('zapisz');
+
+		$this->addElementLabel('label-content')
+			->setLabel('Treść');
 
 		//lead
 		$this->addElementTextarea('lead')
@@ -35,18 +51,8 @@ class Category extends \Cms\Form\Form {
 		$this->addElementTinyMce('text')
 			->setLabel('treść');
 
-		//aktywna
-		$this->addElementCheckbox('active')
-			->setChecked()
-			->setLabel('włączona');
-
-		//widoczność
-		$this->addElementCheckbox('visible')
-			->setChecked()
-			->setLabel('widoczna');
-
 		//zapis
-		$this->addElementSubmit('submit1')
+		$this->addElementSubmit('submit2')
 			->setLabel('zapisz');
 
 		$this->addElementLabel('label-gallery')
@@ -54,9 +60,8 @@ class Category extends \Cms\Form\Form {
 
 		$this->addElementPlupload('files');
 
-
 		$this->addElementLabel('label-seo')
-			->setLabel('Zaawansowane i SEO');
+			->setLabel('SEO i zaawansowane');
 
 		//nazwa kategorii
 		$this->addElementText('title')
@@ -75,18 +80,23 @@ class Category extends \Cms\Form\Form {
 			->setMultioptions([null => 'bez zmian', '0' => 'wymuś brak https', 1 => 'wymuś https'])
 			->addFilterEmptyToNull()
 			->setLabel('https');
+		
+		//widoczność
+		$this->addElementCheckbox('visible')
+			->setChecked()
+			->setLabel('widoczna w menu');
 
 		//blank
 		$this->addElementCheckbox('blank')
-			->setLabel('w nowym oknie');
+			->setLabel('otwórz w nowym oknie');
 
 		//blank
 		$this->addElementCheckbox('follow')
 			->setChecked()
-			->setLabel('widoczny dla wyszukiwarek');
+			->setLabel('widoczna dla wyszukiwarek');
 
 		//zapis
-		$this->addElementSubmit('submit2')
+		$this->addElementSubmit('submit3')
 			->setLabel('zapisz');
 	}
 

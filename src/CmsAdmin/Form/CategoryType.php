@@ -11,19 +11,25 @@
 namespace CmsAdmin\Form;
 
 /**
- * Formularz typu artykułu
+ * Formularz typu kategorii
  */
 class CategoryType extends \Cms\Form\Form {
 
 	public function init() {
 
-		//tytuł
+		//nazwa
 		$this->addElementText('name')
 			->setRequired()
 			->addFilterStringTrim()
 			->addValidatorNotEmpty()
 			->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryTypeQuery, 'name', $this->getRecord()->id)
 			->setLabel('nazwa');
+		
+		//szablon (moduł/kontroler/akcja)
+		$this->addElementText('template')
+			->setLabel('szablon')
+			->addValidatorRegex('/^[a-zA-Z0-9]+\/[a-zA-Z0-9]+\/[a-zA-Z0-9]+$/', 'Szablon w formacie - moduł/kontroler/akcja')
+			->setRequired();
 
 		//zapis
 		$this->addElementSubmit('submit')
