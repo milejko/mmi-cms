@@ -8,6 +8,7 @@ namespace Cms\Orm;
 class CmsCategoryRecord extends \Mmi\Orm\Record {
 
 	public $id;
+	public $cmsCategoryTypeId;
 	public $lang;
 	public $name;
 	public $lead;
