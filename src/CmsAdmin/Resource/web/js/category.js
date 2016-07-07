@@ -3,7 +3,6 @@
  */
 
 var request = request || {};
-var tinymce = tinymce || {};
 //konfiguracja
 var CATEGORYCONF = CATEGORYCONF || {};
 //klucz do stanu drzewka
@@ -163,8 +162,7 @@ $(document).ready(function () {
 		if (!data || !data.selected || !data.selected.length || !(0 in data.selected)) {
 			return;
 		}
-		if (request.showCategoryForm === true) {
-			request.showCategoryForm = false;
+		if (request.id == data.selected) {
 			return;
 		}
 		$('#categoryContentContainer').empty();
@@ -172,26 +170,7 @@ $(document).ready(function () {
 });
 
 CATEGORYCONF.editForm = function (node) {
-	CATEGORYCONF.hideMessage();
-	var params = {'id': node.id};
-	params.name = node.text;
-	if (node.type) {
-		params.type = node.type;
-	} else {
-		params.type = 'default';
-	}
-	if (params.id === "0" || params.type === "root") {
-		$('#categoryContentContainer').empty();
-		return;
-	}
-	$('#categoryContentContainer').load(request.baseUrl + '/cmsAdmin/category/edit', params, function(responseTxt, statusTxt, xhr) {
-		if (statusTxt === "error") {
-			$('#categoryContentContainer').empty();
-			CATEGORYCONF.showMessage({'error': 'Nie udało się pobrać szczegółów kategorii'});
-		} else {
-			CATEGORYCONF.initTinyMce();
-		}
-	});
+	window.location = request.baseUrl + '/cmsAdmin/category/index?id=' + node.id;
 };
 
 CATEGORYCONF.showMessage = function (data) {
@@ -220,47 +199,4 @@ CATEGORYCONF.showMessage = function (data) {
 
 CATEGORYCONF.hideMessage = function () {
 	$('#categoryMessageContainer').empty();
-};
-
-CATEGORYCONF.initTinyMce = function() {
-	tinymce.init({
-		selector: 'textarea.tinymce',
-		language : 'pl',
-		theme : 'modern',
-		skin : 'lightgray',
-		plugins : 'advlist,anchor,autolink,autoresize,charmap,code,contextmenu,fullscreen,hr,image,insertdatetime,link,lists,media,nonbreaking,noneditable,paste,print,preview,searchreplace,tabfocus,table,template,textcolor,visualblocks,visualchars,wordcount',
-		toolbar1 : 'undo redo | bold italic underline strikethrough | forecolor backcolor | styleselect | bullist numlist outdent indent | fontselect fontsizeselect | alignleft aligncenter alignright alignjustify | link unlink anchor image insertfile preview',
-		image_advtab: true,
-		contextmenu: 'link image inserttable | cell row column deletetable',
-		width: '',
-		height: 200,
-		autoresize_min_height: 200,
-		image_list: request.baseUrl + '/cms/file/list?object=$object&objectId=$objectId&t=$t&hash=$hash',
-		document_base_url: request.baseUrl,
-		convert_urls: false,
-		entity_encoding: 'raw',
-		relative_urls: false,
-		paste_data_images: false,
-		font_formats: 'Andale Mono=andale mono,times;'+
-			'Arial=arial,helvetica,sans-serif;'+
-			'Arial Black=arial black,avant garde;'+
-			'Book Antiqua=book antiqua,palatino;'+
-			'Comic Sans MS=comic sans ms,sans-serif;'+
-			'Courier New=courier new,courier;'+
-			'Georgia=georgia,palatino;'+
-			'Helvetica=helvetica;'+
-			'Impact=impact,chicago;'+
-			'Symbol=symbol;'+
-			'Tahoma=tahoma,arial,helvetica,sans-serif;'+
-			'Terminal=terminal,monaco;'+
-			'Times New Roman=times new roman,times;'+
-			'Trebuchet MS=trebuchet ms,geneva;'+
-			'Verdana=verdana,geneva;'+
-			'Webdings=webdings;'+
-			'Wingdings=wingdings,zapf dingbats;'+
-			'EmpikBTT=EmpikBold;'+
-			'EmpikLTT=EmpikLight;'+
-			'EmpikRTT=EmpikRegular',
-		fontsize_formats: '1px 2px 3px 4px 6px 8px 9pc 10px 11px 12px 13px 14px 16px 18px 20px 22px 24px 26px 28px 36px 48px 50px 72px 100px'
-	});
 };

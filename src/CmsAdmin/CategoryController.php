@@ -21,18 +21,11 @@ class CategoryController extends Mvc\Controller {
 	public function indexAction() {
 		//w szablonie podłączenie ajaxowego ładowania drzewka
 		//zapis forma edycji
-		$formPost = $this->getPost()->{'cmsadmin-form-category'};
-		if (empty($formPost) || !isset($formPost['id']) || !$formPost['id']) {
-			return;
-		}
-		if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($formPost['id'])) {
+		if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
 			return;
 		}
 		$form = (new \CmsAdmin\Form\Category($cat));
-		if ($form->isMine()) {
-			$this->view->headScript()->appendScript('request.showCategoryForm = true;');
-			$this->view->categoryForm = $form;
-		}
+		$this->view->categoryForm = $form;
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Zmiany w kategorii zostały zapisane', true);
 		}

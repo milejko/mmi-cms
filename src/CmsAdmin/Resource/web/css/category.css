@@ -1,22 +1,16 @@
 /** Style dla akcji do obsługi zarządzania kategoriami **/
 
 div#categoryTreeContainer {
-	width: 580px;
-	height: 580px;
 	float: left;
+	width: 320px;
+	min-height: 320px;
 	overflow: auto;
-	background-color: #F2F2F2;
 }
 
 div#categoryNodeContainer {
-	margin-left: 40px;
 	float: left;
-	width: 960px;
-	overflow: auto;
-}
-
-ul.jstree-contextmenu {
-	font-size: 12px;
+	margin-left: 20px;
+	width: calc(100% - 340px);
 }
 
 ul#messenger {
@@ -24,11 +18,11 @@ ul#messenger {
 }
 
 div#categoryMessageContainer ul#messenger {
-	margin-top: 0px;
+	margin-top: 0;
 }
 
 div#categoryMessageContainer ul#messenger .notice {
-	margin-top: 0px;
+	margin-top: 0;
 }
 
 div.field.hidden {

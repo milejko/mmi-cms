@@ -168,7 +168,7 @@ table.grid.striped tbody th {
 }
 
 div.grid {
-	max-width: 1680px;
+	max-width: none;
 }
 
 div.grid nav.local {
@@ -267,6 +267,16 @@ div.field div.description {
 	font-style: italic;
 }
 
+form div.field.label {
+	border-bottom: 1px solid #ccc;
+}
+
+form div.field.label label {
+	padding: 5px;
+	background: #eee;
+	font-weight: bold;
+}
+
 ul.list {
 	list-style-type: none;
 	margin: 0; 
@@ -290,10 +300,9 @@ ul.list li div.width-600 {
 }
 
 .content-box-content {
-	border: 1px solid #e5e5e5;
 	background: #fff;
 	clear: both;
-	padding: 20px;
+	padding: 15px;
 	margin: 0 0 40px 0;
 }
 

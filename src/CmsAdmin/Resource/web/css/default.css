@@ -636,6 +636,14 @@ form div.field.checkbox input {
 	margin: 0 5px 0 0;
 }
 
+form div.field.label {
+	border-bottom: 1px solid #ccc;
+}
+
+form div.field.label label {
+	font-weight: bold;
+}
+
 a.button, button, div.field.submit input.field {
 	border: 0;
 	outline: 0;

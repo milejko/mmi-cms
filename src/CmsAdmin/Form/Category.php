@@ -19,28 +19,65 @@ class Category extends \Cms\Form\Form {
 
 		//nazwa kategorii
 		$this->addElementText('name')
-			->setLabel('nazwa kategorii')
+			->setLabel('nazwa')
 			->setRequired()
 			->addFilterStringTrim()
-			->addValidatorStringLength(2, 64);
-		
+			->addValidatorStringLength(2, 128);
+
+		//lead
+		$this->addElementTextarea('lead')
+			->setLabel('podsumowanie');
+
+		//treść
+		$this->addElementTinyMce('text')
+			->setLabel('treść');
+
 		//aktywna
 		$this->addElementCheckbox('active')
 			->setChecked()
 			->setLabel('włączona');
-		
-		//opis
-		$this->addElementTinyMce('description')
-			->setHeight(200)
-			->setLabel('opis');
-		
-		//id
-		$this->addElementHidden('id');
+
+		//widoczność
+		$this->addElementCheckbox('visible')
+			->setChecked()
+			->setLabel('widoczna');
 
 		//zapis
-		$this->addElementSubmit('submit')
+		$this->addElementSubmit('submit1')
 			->setLabel('zapisz');
-		
+
+		$this->addElementLabel('label1')
+			->setLabel('Zaawansowane i SEO');
+
+		//nazwa kategorii
+		$this->addElementText('title')
+			->setLabel('meta tytuł')
+			->setDescription('jeśli brak, użyta zostanie nazwa')
+			->addFilterStringTrim()
+			->addValidatorStringLength(2, 128);
+
+		//meta description
+		$this->addElementTextarea('description')
+			->setLabel('meta opis')
+			->setDescription('jeśli brak, użyte zostanie podsumowanie');
+
+		//https
+		$this->addElementSelect('https')
+			->setMultioptions([null => 'bez zmian', '0' => 'wymuś brak https', 1 => 'wymuś https'])
+			->setLabel('https');
+
+		//blank
+		$this->addElementCheckbox('blank')
+			->setLabel('w nowym oknie');
+
+		//blank
+		$this->addElementCheckbox('follow')
+			->setChecked()
+			->setLabel('widoczny dla wyszukiwarek');
+
+		//zapis
+		$this->addElementSubmit('submit2')
+			->setLabel('zapisz');
 	}
 
 }
