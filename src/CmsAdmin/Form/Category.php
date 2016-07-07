@@ -16,6 +16,9 @@ namespace CmsAdmin\Form;
 class Category extends \Cms\Form\Form {
 
 	public function init() {
+		
+		$this->addElementLabel('label-main')
+			->setLabel('Treść artykułu');
 
 		//nazwa kategorii
 		$this->addElementText('name')
@@ -46,7 +49,13 @@ class Category extends \Cms\Form\Form {
 		$this->addElementSubmit('submit1')
 			->setLabel('zapisz');
 
-		$this->addElementLabel('label1')
+		$this->addElementLabel('label-gallery')
+			->setLabel('Galeria i załączniki');
+
+		$this->addElementPlupload('files');
+
+
+		$this->addElementLabel('label-seo')
 			->setLabel('Zaawansowane i SEO');
 
 		//nazwa kategorii
@@ -64,6 +73,7 @@ class Category extends \Cms\Form\Form {
 		//https
 		$this->addElementSelect('https')
 			->setMultioptions([null => 'bez zmian', '0' => 'wymuś brak https', 1 => 'wymuś https'])
+			->addFilterEmptyToNull()
 			->setLabel('https');
 
 		//blank

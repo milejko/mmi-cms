@@ -28,6 +28,7 @@ class CategoryController extends Mvc\Controller {
 		$this->view->categoryForm = $form;
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Zmiany w kategorii zostały zapisane', true);
+			$this->getResponse()->redirect('cmsAdmin', 'category', 'index');
 		}
 	}
 	
@@ -43,17 +44,6 @@ class CategoryController extends Mvc\Controller {
 		$this->view->categoryTree = (new \Cms\Model\CategoryModel)->getCategoryTree($this->view->parentId);
 	}
 
-	/**
-	 * Edycja kategorii - formularz ładowany ajaxem
-	 */
-	public function editAction() {
-		//wyłączenie layout
-		$this->view->setLayoutDisabled();
-		if (null !== $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
-			$this->view->categoryForm = (new \CmsAdmin\Form\Category($cat));
-		}
-	}
-	
 	/**
 	 * Tworzenie nowej kategorii
 	 */
