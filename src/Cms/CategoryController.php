@@ -31,12 +31,12 @@ class CategoryController extends \Mmi\Mvc\Controller {
 			->setControllerName('category')
 			->setActionName('article');
 		//pobranie typu i ustalenie template
-		if (null !== $type = $category->getJoined('cms_category_type')) {
+		if ($category->getJoined('cms_category_type')->template != '') {
 			//tablica z tpl
-			$mcaArr = explode('/', $type->template);
+			$mcaArr = explode('/', $category->getJoined('cms_category_type')->template);
 			//zła ilość argumentów
 			if (count($mcaArr) != 3) {
-				throw new \Exception('Template invalid: "' . $type->template . '"');
+				throw new \Exception('Template invalid: "' . $category->getJoined('cms_category_type')->template . '"');
 			}
 			//ustawienie request
 			$request->setModuleName($mcaArr[0])
