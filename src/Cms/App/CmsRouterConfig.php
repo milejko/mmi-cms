@@ -16,18 +16,17 @@ namespace Cms\App;
 class CmsRouterConfig extends \Mmi\Mvc\RouterConfig {
 
 	public function __construct() {
+		//moduł - cmsAdmin
+		$this->setRoute('cms-admin-module', 'cmsAdmin', ['module' => 'cmsAdmin'], ['controller' => 'index', 'action' => 'index']);
 
+		//moduł + kontroler + akcja index np. /cmsAdmin/article
+		$this->setRoute('cms-admin-module-controller', '/^cmsAdmin\/([a-zA-Z\-]+)$/', ['module' => 'cmsAdmin', 'controller' => '$1'], ['action' => 'index']);
+
+		//moduł + kontroler + akcja np. /cmsAdmin/article/display
+		$this->setRoute('cms-admin-module-controller-action', '/^cmsAdmin\/([a-zA-Z\-]+)\/([a-zA-Z]+)$/', ['module' => 'cmsAdmin', 'controller' => '$1', 'action' => '$2']);
+		
 		//routa do stron cms i kategorii
-		$this->setRoute('cms-category', '/^strona\/([a-zA-Z0-9\/\-]+)$/', ['module' => 'cms', 'controller' => 'article', 'action' => 'display', 'path' => '$1']);
-
-		//moduł + kontroler index + akcja index np. /news
-		$this->setRoute('cms-module', '/^([a-zA-Z]+)$/', ['module' => '$1'], ['controller' => 'index', 'action' => 'index']);
-
-		//moduł + kontroler + akcja index np. /cms/article
-		$this->setRoute('cms-module-controller', '/^([a-zA-Z]+)\/([a-zA-Z\-]+)$/', ['module' => '$1', 'controller' => '$2'], ['action' => 'index']);
-
-		//moduł + kontroler + akcja np. /cms/article/display
-		$this->setRoute('cms-module-controller-action', '/^([a-zA-Z]+)\/([a-zA-Z\-]+)\/([a-zA-Z]+)$/', ['module' => '$1', 'controller' => '$2', 'action' => '$3']);
+		$this->setRoute('cms-category-dispatch', '/^([a-zA-Z0-9\/\-]+)$/', ['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => '$1']);
 	}
 
 }

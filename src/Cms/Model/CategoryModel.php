@@ -36,6 +36,7 @@ class CategoryModel {
 	public function __construct() {
 		//pobieranie kategorii
 		$categories = (new CmsCategoryQuery)
+			->joinLeft('cms_category_type')->on('cms_category_type_id')
 			->orderAscOrder()
 			->find()
 			->toObjectArray();
