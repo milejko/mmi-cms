@@ -5,6 +5,6 @@
 	</head>
 	<body>
 		{navigation()->breadcrumbs()}
-		{content()}
+		{content()}ok
 	</body>
 </html>

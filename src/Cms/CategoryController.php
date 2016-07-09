@@ -22,20 +22,37 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		//wyszukanie kategorii
 		if (null === $category = (new Model\CategoryModel)
 			->getCategoryByUri($this->uri)) {
-			//przekierowanie
-			$this->getResponse()->redirectToUrl('/');
+			//404
+			throw new \Mmi\Mvc\MvcNotFoundException('Site not found: ' . $this->uri);
 		}
-		$type = $category->getJoined('cms_category_type');
-		dump($type);
-		exit;
-		//wywołanie akcji
-		$this->displayCategoryAction();
-		//render akcji kategorii
-		return $this->view->setPlaceholder('content', $this->view->renderTemplate('cms', 'article', 'displayCategory'))
-				->renderLayout('cms', 'article');
+		//tworzenie nowego requestu na podstawie obecnego
+		$request = new \Mmi\Http\Request($this->getRequest()->toArray());
+		$request->setModuleName('cms')
+			->setControllerName('category')
+			->setActionName('article');
+		//pobranie typu i ustalenie template
+		if (null !== $type = $category->getJoined('cms_category_type')) {
+			//tablica z tpl
+			$mcaArr = explode('/', $type->template);
+			//zła ilość argumentów
+			if (count($mcaArr) != 3) {
+				throw new \Exception('Template invalid: "' . $type->template . '"');
+			}
+			//ustawienie request
+			$request->setModuleName($mcaArr[0])
+				->setControllerName($mcaArr[1])
+				->setActionName($mcaArr[2]);
+		}
+		return \Mmi\Mvc\ActionHelper::getInstance()->forward($request);
 	}
 
 	public function articleAction() {
+		//wyszukanie kategorii
+		if (null === $category = (new Model\CategoryModel)
+			->getCategoryByUri($this->uri)) {
+			//przekierowanie
+			$this->getResponse()->redirectToUrl('/');
+		}
 		//iteracja po dzieciach kategorii
 		foreach ($category->getOption('parents') as $cat) {
 			//dodawanie okruszka

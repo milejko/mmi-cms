@@ -27,7 +27,7 @@ class Category extends \Cms\Form\Form {
 			->addFilterStringTrim()
 			->addValidatorStringLength(2, 128);
 
-		$this->addElementSelect('cms_category_type')
+		$this->addElementSelect('cmsCategoryTypeId')
 			->setLabel('typ treści')
 			->setMultioptions((new \Cms\Orm\CmsCategoryTypeQuery)->orderAscName()->findPairs('id', 'name'));
 
