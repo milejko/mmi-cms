@@ -59,7 +59,7 @@ class Attribute extends \Mmi\Form\Form {
 				'\Mmi\Validator\Numeric' => 'numeryczne',
 				'\Mmi\Validator\Integer' => 'liczby całkowite',
 		]);
-
+		
 		//zapis
 		$this->addElementSubmit('submit')
 			->setLabel('zapisz');

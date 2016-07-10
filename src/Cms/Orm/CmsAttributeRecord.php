@@ -16,5 +16,12 @@ class CmsAttributeRecord extends \Mmi\Orm\Record {
 	public $required;
 	public $unique;
 	public $materialized;
+	
+	public function save() {
+		//klucz
+		$this->key = (new \Mmi\Filter\Url)->filter($this->name);
+		//zapis
+		return parent::save();
+	}
 
 }

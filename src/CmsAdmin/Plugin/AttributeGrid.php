@@ -23,6 +23,10 @@ class AttributeGrid extends \CmsAdmin\Grid\Grid {
 		//nazwa taga
 		$this->addColumnText('name')
 			->setLabel('nazwa');
+		
+		//opis
+		$this->addColumnText('description')
+			->setLabel('opis');
 
 		//klasa pola
 		$this->addColumnText('fieldClass')

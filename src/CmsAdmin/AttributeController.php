@@ -38,8 +38,8 @@ class AttributeController extends Mvc\Controller {
 	 * Usuwanie atrybutu
 	 */
 	public function deleteAction() {
-		$tag = (new \Cms\Orm\CmsTagQuery)->findPk($this->id);
-		if ($tag && $tag->delete()) {
+		$attribute = (new \Cms\Orm\CmsAttributeQuery)->findPk($this->id);
+		if ($attribute && $attribute->delete()) {
 			$this->getMessenger()->addMessage('Atrybut usunięty', true);
 		}
 		$this->getResponse()->redirect('cmsAdmin', 'attribute', 'index');
