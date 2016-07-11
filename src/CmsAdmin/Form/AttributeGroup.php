@@ -32,11 +32,34 @@ class AttributeGroup extends \Mmi\Form\Form {
 		//atrybuty (lista
 		$this->addElementMultiCheckbox('attributes')
 			->setMultioptions((new \Cms\Orm\CmsAttributeQuery)->findPairs('id', 'name'))
+			->setValue((new \Cms\Orm\CmsAttributeGroupAttributeQuery)
+				->whereCmsAttributeGroupId()->equals($this->getRecord()->id)
+				->findPairs('cms_attribute_id', 'cms_attribute_id'))
 			->setLabel('atrybuty');
-		
+
 		//zapis
 		$this->addElementSubmit('submit')
 			->setLabel('zapisz');
+	}
+
+	/**
+	 * Po zapisie - wiązanie atrybutów
+	 * @return boolean
+	 */
+	public function afterSave() {
+		//usuwanie powiązań
+		(new \Cms\Orm\CmsAttributeGroupAttributeQuery)
+			->whereCmsAttributeGroupId()->equals($this->getRecord()->id)
+			->find()
+			->delete();
+		//zapis powiązań
+		foreach ($this->getElement('attributes')->getValue() as $attributeId) {
+			$ag = new \Cms\Orm\CmsAttributeGroupAttributeRecord;
+			$ag->cmsAttributeId = $attributeId;
+			$ag->cmsAttributeGroupId = $this->getRecord()->id;
+			$ag->save();
+		}
+		return true;
 	}
 
 }
