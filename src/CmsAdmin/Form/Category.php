@@ -61,10 +61,22 @@ class Category extends \Cms\Form\Form {
 		$this->addElementLabel('label-gallery')
 			->setLabel('Galeria i załączniki');
 
+		//uploader
 		$this->addElementPlupload('files');
 
 		$this->addElementLabel('label-seo')
 			->setLabel('SEO i zaawansowane');
+		
+		$defaultUri = \Mmi\App\FrontController::getInstance()->getView()->url(['module' => 'cms', 'controller' => 'category' , 'action' => 'dispatch', 'uri' => $this->getRecord()->uri], true);
+		
+		//własny uri
+		$this->addElementText('customUri')
+			->setLabel('własny adres strony')
+			->setDescription('domyślnie: <a target="_blank" href="' . $defaultUri . '">' . $defaultUri . '</a>')
+			->addFilterStringTrim()
+			->addFilterEmptyToNull()
+			->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryQuery, 'customUri', $this->getRecord()->id)
+			->addValidatorStringLength(3, 255);
 
 		//nazwa kategorii
 		$this->addElementText('title')
