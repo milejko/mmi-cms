@@ -88,8 +88,8 @@ class CategoryModel {
 	public function getCategoryByUri($uri) {
 		//iteracja po kategoriach
 		foreach ($this->_flatCategories as $category) {
-			//znaleziono w uri
-			if ($category->uri == $uri) {
+			//znaleziono w uri (lub w customUri)
+			if ($category->uri == $uri || $category->customUri == $uri) {
 				return $category;
 			}
 		}

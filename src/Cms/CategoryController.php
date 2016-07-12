@@ -20,8 +20,8 @@ class CategoryController extends \Mmi\Mvc\Controller {
 	 */
 	public function dispatchAction() {
 		//wyszukanie kategorii
-		if (null === $category = (new Model\CategoryModel)
-			->getCategoryByUri($this->uri)) {
+		if ((null === $category = (new Model\CategoryModel)
+			->getCategoryByUri($this->uri)) || $category->active != 1) {
 			//404
 			throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $this->uri);
 		}
@@ -45,11 +45,15 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		}
 		//iteracja po dzieciach kategorii
 		foreach ($category->getOption('parents') as $cat) {
+			//brak widoczności w menu
+			if (!$cat->active) {
+				continue;
+			}
 			//dodawanie okruszka
-			$this->view->navigation()->appendBreadcrumb($cat->name, $this->view->url(['uri' => $cat->uri]));
+			$this->view->navigation()->appendBreadcrumb($cat->name, $this->view->url(['uri' => $cat->uri]), $cat->title ? $cat->title : $cat->name, $cat->description ? $cat->description : $cat->lead);
 		}
 		//dodawanie okruszka z kategorią główną
-		$this->view->navigation()->appendBreadcrumb($category->name, $this->view->url(['uri' => $category->uri]));
+		$this->view->navigation()->appendBreadcrumb($category->name, $this->view->url(['uri' => $category->uri]), $category->title ? $category->title : $category->name, $category->description ? $category->description : $category->lead);
 
 		return \Mmi\Mvc\ActionHelper::getInstance()->forward($request);
 	}

@@ -27,14 +27,17 @@ class Category extends \Cms\Form\Form {
 			->addFilterStringTrim()
 			->addValidatorStringLength(2, 128);
 
-		$this->addElementSelect('cmsCategoryTypeId')
-			->setLabel('typ treści')
-			->setMultioptions((new \Cms\Orm\CmsCategoryTypeQuery)->orderAscName()->findPairs('id', 'name'));
+		if ([] !== $types = (new \Cms\Orm\CmsCategoryTypeQuery)->orderAscName()->findPairs('id', 'name')) {
+			$this->addElementSelect('cmsCategoryTypeId')
+				->setLabel('typ treści')
+				->addFilterEmptyToNull()
+				->setMultioptions([null => 'Domyślny'] + $types);
+		}
 
 		//aktywna
 		$this->addElementCheckbox('active')
 			->setChecked()
-			->setLabel('włączona');
+			->setLabel('widoczna');
 
 		//zapis
 		$this->addElementSubmit('submit1')
@@ -74,17 +77,18 @@ class Category extends \Cms\Form\Form {
 		$this->addElementTextarea('description')
 			->setLabel('meta opis')
 			->setDescription('jeśli brak, użyte zostanie podsumowanie');
+		
+		//uri
+		$this->addElementText('customUri')
+			->setLabel('własny link do strony')
+			->addFilterEmptyToNull()
+			->addFilterStringTrim();
 
 		//https
 		$this->addElementSelect('https')
 			->setMultioptions([null => 'bez zmian', '0' => 'wymuś brak https', 1 => 'wymuś https'])
 			->addFilterEmptyToNull()
 			->setLabel('https');
-		
-		//widoczność
-		$this->addElementCheckbox('visible')
-			->setChecked()
-			->setLabel('widoczna w menu');
 
 		//blank
 		$this->addElementCheckbox('blank')

@@ -19,6 +19,12 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @var string
 	 */
 	public $uri;
+	
+	/**
+	 * Opcjonalny adres strony
+	 * @var string
+	 */
+	public $customUri;
 
 	/**
 	 * Identyfikator rodzica
@@ -49,7 +55,11 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		$this->uri = '';
 		//ustawiamy uri na podstawie rodzica
 		if ($this->parentId && (null !== $parent = (new CmsCategoryQuery)->findPk($this->parentId))) {
-			$this->uri = $parent->uri . '/';
+			//nieaktywny rodzic -> nie wlicza się do ścieżki
+			if (!$parent->active) {
+				$parent->uri = substr($parent->uri, 0, strrpos($parent->uri, '/'));
+			}
+			$this->uri = ltrim($parent->uri . '/', '/');
 		}
 		//doklejanie do uri przefiltrowanej końcówki
 		$this->uri .= (new \Mmi\Filter\Url)->filter($this->name);
@@ -93,9 +103,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 			$this->_sortChildren();
 		}
 		//przebudowa dzieci
-		if ($parentModified) {
-			$this->_rebuildChildren($this->id);
-		}
+		$this->_rebuildChildren($this->id);
 		return true;
 	}
 
