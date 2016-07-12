@@ -90,12 +90,6 @@ class Category extends \Cms\Form\Form {
 			->setLabel('meta opis')
 			->setDescription('jeśli brak, użyte zostanie podsumowanie');
 		
-		//uri
-		$this->addElementText('customUri')
-			->setLabel('własny link do strony')
-			->addFilterEmptyToNull()
-			->addFilterStringTrim();
-
 		//https
 		$this->addElementSelect('https')
 			->setMultioptions([null => 'bez zmian', '0' => 'wymuś brak https', 1 => 'wymuś https'])
