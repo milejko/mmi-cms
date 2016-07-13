@@ -80,10 +80,11 @@ abstract class Form extends \Mmi\Form\Form {
 	/**
 	 * Captcha
 	 * @param string $name nazwa
+	 * @param string $message wiadomość o błędzie captcha
 	 * @return \Cms\Form\Element\Captcha
 	 */
-	public function addElementCaptcha($name) {
-		return $this->addElement(new Element\Captcha($name));
+	public function addElementCaptcha($name, $message = null) {
+		return $this->addElement(new Element\Captcha($name, $message));
 	}
 
 	/**

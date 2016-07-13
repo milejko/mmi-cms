@@ -14,6 +14,8 @@ namespace Cms\Form\Element;
  * Element captcha
  */
 class Captcha extends \Mmi\Form\Element\ElementAbstract {
+	
+	protected $_renderingOrder = ['fetchBegin', 'fetchLabel', 'fetchField', 'fetchDescription', 'fetchEnd'];
 
 	/**
 	 * Ignorowanie tego pola, pole obowiązkowe, automatyczna walidacja
@@ -21,6 +23,7 @@ class Captcha extends \Mmi\Form\Element\ElementAbstract {
 	public function __construct($name) {
 		parent::__construct($name);
 		$this->setIgnore()
+			->setPlaceholder('Wpisz zielony kod z obrazka')
 			->setRequired()
 			->addValidator(new \Cms\Validator\Captcha(['name' => $name]));
 	}
@@ -30,10 +33,11 @@ class Captcha extends \Mmi\Form\Element\ElementAbstract {
 	 * @return string
 	 */
 	public function fetchField() {
+		$this->setValue('');
 		$view = \Mmi\App\FrontController::getInstance()->getView();
 		$html = '<div class="image"><img src="' . $view->url(['module' => 'cms', 'controller' => 'captcha', 'action' => 'index', 'name' => $this->_options['name']]) . '" alt="" /></div>';
 		$html .= '<div class="input"><input ';
-		$html .= 'type="text" ' . $this->_getHtmlOptions() . '/></div>';
+		$html .= 'type="text"' . $this->_getHtmlOptions() . '/></div>';
 		return $html;
 	}
 
