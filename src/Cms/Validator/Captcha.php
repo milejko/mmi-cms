@@ -30,7 +30,8 @@ class Captcha extends \Mmi\Validator\ValidatorAbstract {
 	 * @return self
 	 */
 	public function setOptions(array $options = [], $reset = false) {
-		return $this->setName(current($options));
+		$this->setName(current($options));
+		return $this->setMessage(next($options));
 	}
 
 	/**
