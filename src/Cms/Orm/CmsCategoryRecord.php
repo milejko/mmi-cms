@@ -178,29 +178,5 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 			$categoryRecord->save();
 		}
 	}
-	
-	/**
-	 * Zwraca aktywne obrazki dla kategorii
-	 * @param integer $limit
-	 * @return \Cms\Orm\CmsFileRecord[]
-	 */
-	public function getActiveImages($limit = null) {
-		return \Cms\Orm\CmsFileQuery::imagesByObject('cmscategory', $this->id)
-				->andFieldActive()->equals(true)
-				->limit($limit)
-				->find();
-	}
-	
-	/**
-	 * Zwraca aktywne załączniki dla kategorii
-	 * @param integer $limit
-	 * @return \Cms\Orm\CmsFileRecord[]
-	 */
-	public function getActiveAttachments($limit = null) {
-		return \Cms\Orm\CmsFileQuery::notImagesByObject('cmscategory', $this->id)
-				->andFieldActive()->equals(true)
-				->limit($limit)
-				->find();
-	}
 
 }
