@@ -32,17 +32,21 @@ class AttributeGrid extends \CmsAdmin\Grid\Grid {
 		$this->addColumnText('fieldClass')
 			->setLabel('klasa pola');
 
-		//wielokrotny
-		$this->addColumnCheckbox('multiple')
-			->setLabel('wielokrotny');
-
-		//ograniczony do listy
-		$this->addColumnCheckbox('restricted')
-			->setLabel('ograniczony do listy');
-
-		//indexWeight
+		//waga
 		$this->addColumnText('indexWeight')
 			->setLabel('waga w indeksie');
+
+		//wymagany
+		$this->addColumnCheckbox('required')
+			->setLabel('wymagany');
+
+		//unikalny
+		$this->addColumnCheckbox('unique')
+			->setLabel('unikalny');
+
+		//zmaterializowany
+		$this->addColumnCheckbox('materialized')
+			->setLabel('zmaterializowany');
 
 		//operacje
 		$this->addColumnOperation();

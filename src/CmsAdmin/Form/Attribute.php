@@ -49,6 +49,7 @@ class Attribute extends \Mmi\Form\Form {
 		//	->setLabel('filtry')
 		//	->setMultioptions([
 		//]);
+
 		//walidatory
 		$this->addElementSelect('validatorClasses')
 			->setLabel('walidator')

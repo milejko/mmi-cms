@@ -27,9 +27,14 @@ class AttributeController extends Mvc\Controller {
 	 */
 	public function editAction() {
 		$form = new \CmsAdmin\Form\Attribute(new \Cms\Orm\CmsAttributeRecord($this->id));
+		//form zapisany
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Atrybut zapisany poprawnie', true);
 			$this->getResponse()->redirect('cmsAdmin', 'attribute', 'index');
+		}
+		//ograniczona lista
+		if ($form->getRecord()->isRestricted()) {
+			$this->view->valueGrid = new Plugin\AttributeValueGrid(['id' => $form->getRecord()->id]);
 		}
 		$this->view->attributeForm = $form;
 	}

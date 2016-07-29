@@ -23,5 +23,13 @@ class CmsAttributeRecord extends \Mmi\Orm\Record {
 		//zapis
 		return parent::save();
 	}
+	
+	/**
+	 * Czy atrybut jest ograniczony do listy
+	 * @return boolean
+	 */
+	public function isRestricted() {
+		return $this->fieldClass == '\Mmi\Form\Element\Select' || $this->fieldClass == '\Mmi\Form\Element\Multicheckbox';
+	}
 
 }
