@@ -24,35 +24,39 @@ class CategoryType extends \Cms\Form\Form {
 			->addValidatorNotEmpty()
 			->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryTypeQuery, 'name', $this->getRecord()->id)
 			->setLabel('nazwa');
-		
+
 		//szablon (moduł/kontroler/akcja)
 		$this->addElementText('template')
 			->setLabel('szablon')
 			->addValidatorRegex('/^[a-zA-Z0-9]+\/[a-zA-Z0-9]+\/[a-zA-Z0-9]+$/', 'Szablon w formacie - moduł/kontroler/akcja')
 			->setRequired();
 
-		$relation = new \Cms\Model\AttributeGroupRelationModel('cmsCategory', $this->getRecord()->id);
-
 		//grupy atrybutów
-		$this->addElementSelect('attributeGroupId')
+		$this->addElementMultiCheckbox('attributeGroupIds')
 			->setLabel('grupa atrybutów')
-			->setMultioptions([null => '---'] + (new \Cms\Orm\CmsAttributeGroupQuery)->orderAscName()->findPairs('id', 'name'))
-			->setValue(current(array_keys($relation->getAttributeGroupRelations())));
-		
+			->setMultioptions((new \Cms\Orm\CmsAttributeGroupQuery)->orderAscName()->findPairs('id', 'name'))
+			->setValue(array_keys((new \Cms\Model\AttributeGroupRelationModel('cms_category_type', $this->getRecord()->id))
+					->getAttributeGroupRelations()));
+
 		//zapis
 		$this->addElementSubmit('submit')
 			->setLabel('zapisz stronę');
 	}
-	
+
+	/**
+	 * Przed zapisem
+	 * @return boolean
+	 */
 	public function beforeSave() {
+		//kalkulacja klucza
 		$this->getRecord()->key = (new \Mmi\Filter\Url)->filter($this->getRecord()->name);
 		return true;
 	}
-	
+
 	public function afterSave() {
-		$relation = new \Cms\Model\AttributeGroupRelationModel('cmsCategory', $this->getRecord()->id);
-		$relation->deleteAttributeGroupRelations();
-		$relation->createAttributeGroupRelation($this->getElement('attributeGroupId')->getValue());
+		//tworzenie relacji
+		(new \Cms\Model\AttributeGroupRelationModel('cms_category_type', $this->getRecord()->id))
+			->createAttributeGroupRelations($this->getElement('attributeGroupIds')->getValue());
 		return true;
 	}
 
