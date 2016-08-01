@@ -73,13 +73,13 @@ class AttributeGroupRelationModel {
 
 	/**
 	 * Ustawia relację z obiektu z id
-	 * @param array $categories tablica z id kategorii
+	 * @param array $attributeGroups tablica z id grup atrybutów
 	 */
-	public function createAttributeGroupRelations(array $categories) {
+	public function createAttributeGroupRelations(array $attributeGroups) {
 		//usuwanie relacji
 		self::deleteAttributeGroupRelations();
-		//iteracja po kategoriach
-		foreach ($categories as $attributeGroupId) {
+		//iteracja po grupach atrybutów
+		foreach ($attributeGroups as $attributeGroupId) {
 			//tworzenie relacji
 			self::createAttributeGroupRelation($attributeGroupId, $this->_object, $this->_objectId);
 		}
@@ -126,10 +126,10 @@ class AttributeGroupRelationModel {
 	 */
 	public function getAttributeGroupRelations() {
 		return (new CmsAttributeGroupRelationQuery)
-				->join('cms_attributeGroup')->on('cms_attributeGroup_id')
+				->join('cms_attribute_group')->on('cms_attribute_group_id')
 				->whereObject()->equals($this->_object)
 				->andFieldObjectId()->equals($this->_objectId)
-				->findPairs('cms_attributeGroup.id', 'cms_attributeGroup.name');
+				->findPairs('cms_attribute_group.id', 'cms_attribute_group.name');
 	}
 
 }

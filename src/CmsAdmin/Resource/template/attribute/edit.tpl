@@ -7,15 +7,24 @@
 	</div>
 </div>
 
+{if $valueForm}
+	<div class="content-box">
+		<div class="content-box-header">
+			<h3>{#Nowa wartość atrybutu#}</h3>
+		</div>
+		<div class="content-box-content clearfix">
+			{$valueForm}
+		</div>
+	</div>
+{/if}
+
 {if $valueGrid}
-<div class="content-box">
-	<div class="content-box-header">
-		<h3>{#Wartości atrybutu#}</h3>
+	<div class="content-box">
+		<div class="content-box-header">
+			<h3>{#Wartości atrybutu#}</h3>
+		</div>
+		<div class="content-box-content clearfix">
+			{$valueGrid}
+		</div>
 	</div>
-	<div class="content-box-content clearfix">
-		<a class="button" href="{@module=cmsAdmin&controller=attributeValue&action=edit&cmsAttributeId={$attributeForm->getRecord()->id}@}">{#Utwórz nową wartość#}</a>
-		<br /><br />
-		{$valueGrid}
-	</div>
-</div>
 {/if}

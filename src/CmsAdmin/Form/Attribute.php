@@ -34,21 +34,25 @@ class Attribute extends \Mmi\Form\Form {
 			->setLabel('pole formularza')
 			->setRequired()
 			->setMultioptions([
-				'\Mmi\Form\Element\Text' => 'Tekst',
-				'\Mmi\Form\Element\Textarea' => 'Długi tekst',
-				'\Cms\Form\Element\TinyMce' => 'Edytor WYSIWYG',
-				'\Cms\Form\Element\DatePicker' => 'Data',
-				'\Cms\Form\Element\DateTimePicker' => 'Data i czas',
-				'\Cms\Form\Element\Plupload' => 'Wgrywarka plików',
-				'\Mmi\Form\Element\Select' => 'Wybór jednokrotny',
-				'\Mmi\Form\Element\MultiCheckbox' => 'Wybór wielokrotny',
+				'\Mmi\Form\Element\Text' => 'tekst',
+				'\Mmi\Form\Element\Textarea' => 'długi tekst',
+				'\Cms\Form\Element\TinyMce' => 'edytor WYSIWYG',
+				'\Cms\Form\Element\DatePicker' => 'data',
+				'\Cms\Form\Element\DateTimePicker' => 'data i czas',
+				'\Cms\Form\Element\Plupload' => 'wgrywarka plików',
+				'\Mmi\Form\Element\Select' => 'wybór jednokrotny',
+				'\Mmi\Form\Element\MultiCheckbox' => 'wybór wielokrotny',
 		]);
-		
-		//@TODO filtry
-		//$this->addElementMultiCheckbox('filterClasses')
-		//	->setLabel('filtry')
-		//	->setMultioptions([
-		//]);
+
+		//filtry
+		$this->addElementSelect('filterClasses')
+			->setLabel('filtry')
+			->setMultioptions([
+				null => '---',
+				'\Mmi\Filter\StripTags' => 'usunięcie HTML',
+				'\Mmi\Filter\StringTrim' => 'usunięcie spacji z początku i końca',
+				'\Mmi\Filter\Url' => 'filtr do url\'a',
+		]);
 
 		//walidatory
 		$this->addElementSelect('validatorClasses')
@@ -60,7 +64,26 @@ class Attribute extends \Mmi\Form\Form {
 				'\Mmi\Validator\Numeric' => 'numeryczne',
 				'\Mmi\Validator\Integer' => 'liczby całkowite',
 		]);
-		
+
+		//waga w indeksie
+		$this->addElementText('indexWeight')
+			->setLabel('waga w indeksie')
+			->setDescription('0-1000, im wyższa waga, tym wyższa pozycja w wyszukiwarce, 0 oznacza brak w wynikach')
+			->setValue(0)
+			->addValidatorNumberBetween(0, 1000);
+
+		//wymagany
+		$this->addElementCheckbox('required')
+			->setLabel('wymagany');
+
+		//unikalny
+		$this->addElementCheckbox('unique')
+			->setLabel('unikalny');
+
+		//zmaterializowany
+		$this->addElementCheckbox('materialized')
+			->setLabel('zmaterializowany');
+
 		//zapis
 		$this->addElementSubmit('submit')
 			->setLabel('zapisz');

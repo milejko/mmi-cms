@@ -28,17 +28,9 @@ class AttributeValueGrid extends \CmsAdmin\Grid\Grid {
 			$attributeQuery->whereId()->equals($this->getOption('id'));
 		}
 		
-		//atrybut
-		$this->addColumnSelect('cmsAttributeId')
-			->setLabel('atrybut')
-			->setMultioptions($attributeQuery->findPairs('id', 'name'));
-
 		//nazwa taga
 		$this->addColumnText('value')
 			->setLabel('wartość');
-
-		//operacje
-		$this->addColumnOperation();
 	}
 
 }

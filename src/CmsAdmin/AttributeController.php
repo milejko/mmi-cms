@@ -30,12 +30,25 @@ class AttributeController extends Mvc\Controller {
 		//form zapisany
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Atrybut zapisany poprawnie', true);
-			$this->getResponse()->redirect('cmsAdmin', 'attribute', 'index');
+			$this->getResponse()->redirect('cmsAdmin', 'attribute', 'edit', ['id' => $form->getRecord()->id]);
 		}
 		//ograniczona lista
 		if ($form->getRecord()->isRestricted()) {
+			//grid wartości atrybutu
 			$this->view->valueGrid = new Plugin\AttributeValueGrid(['id' => $form->getRecord()->id]);
+			$valueRecord = new \Cms\Orm\CmsAttributeValueRecord;
+			$valueRecord->cmsAttributeId = $form->getRecord()->id;
+			//form wartości atrybutu
+			$valueForm = new Form\AttributeValue($valueRecord);
+			//zapis wartości atrybutu
+			if ($valueForm->isSaved()) {
+				$this->getMessenger()->addMessage('Wartość atrybutu zapisana poprawnie', true);
+				$this->getResponse()->redirect('cmsAdmin', 'attribute', 'edit', ['id' => $form->getRecord()->id]);
+			}
+			//form wartości do widoku
+			$this->view->valueForm = $valueForm;
 		}
+		//form atrybutu do widoku
 		$this->view->attributeForm = $form;
 	}
 
