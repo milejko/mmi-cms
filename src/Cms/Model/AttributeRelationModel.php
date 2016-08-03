@@ -134,7 +134,7 @@ class AttributeRelationModel {
 	
 	/**
 	 * Pobiera atrybuty wynikające z relacji
-	 * @return \Mmi\Orm\RecordCollection
+	 * @return \Cms\Orm\CmsAttributeRecord[]
 	 */
 	public function getAttributes() {
 		return (new CmsAttributeQuery)

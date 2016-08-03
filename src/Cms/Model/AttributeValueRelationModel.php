@@ -73,12 +73,12 @@ class AttributeValueRelationModel {
 
 	/**
 	 * Ustawia relację z obiektu z id
-	 * @param array $attributeValues tablica z id grup atrybutów
+	 * @param array $attributeValues tablica z id wartości atrybutów
 	 */
 	public function createAttributeValueRelations(array $attributeValues) {
 		//usuwanie relacji
 		self::deleteAttributeValueRelations();
-		//iteracja po grupach atrybutów
+		//iteracja po wartościach atrybutów
 		foreach ($attributeValues as $attributeValueId) {
 			//tworzenie relacji
 			self::createAttributeValueRelation($attributeValueId, $this->_object, $this->_objectId);
@@ -124,12 +124,24 @@ class AttributeValueRelationModel {
 	 * Pobiera relacje dla obiektu z id
 	 * @return array
 	 */
-	public function getAttributeValueRelations() {
-		return (new CmsAttributeValueRelationQuery)
+	public function getAttributeValueIds() {
+		return array_keys((new CmsAttributeValueRelationQuery)
 				->join('cms_attribute_value')->on('cms_attribute_value_id')
 				->whereObject()->equals($this->_object)
 				->andFieldObjectId()->equals($this->_objectId)
-				->findPairs('cms_attribute_value.id', 'cms_attribute_value.name');
+				->findPairs('cms_attribute_value.id', 'cms_attribute_value.id'));
+	}
+
+	/**
+	 * Pobiera relacje dla obiektu z id
+	 * @return \Cms\Orm\CmsAttributeValueRecord[]
+	 */
+	public function getAttributeValues() {
+		return (new CmsAttributeValueQuery)
+				->join('cms_attribute_value_relation')->on('id', 'cms_attribute_value_id')
+				->where('object', 'cms_attribute_value_relation')->equals($this->_object)
+				->where('objectId', 'cms_attribute_value_relation')->equals($this->_objectId)
+				->find();
 	}
 
 }

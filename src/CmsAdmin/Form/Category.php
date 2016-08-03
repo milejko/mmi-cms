@@ -20,8 +20,6 @@ class Category extends \Cms\Form\AttributeForm {
 		$this->addElementLabel('label-config')
 			->setLabel('Konfiguracja');
 
-		//$this->insertAttributes('category');
-		
 		//nazwa kategorii
 		$this->addElementText('name')
 			->setLabel('nazwa')
@@ -36,6 +34,9 @@ class Category extends \Cms\Form\AttributeForm {
 				->setMultioptions([null => 'Domyślny'] + $types);
 		}
 
+		//atrybuty
+		$this->initAttributes('cms_category_type', $this->getRecord()->cmsCategoryTypeId, 'category');
+		
 		//aktywna
 		$this->addElementCheckbox('active')
 			->setChecked()

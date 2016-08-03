@@ -29,7 +29,15 @@ class CmsAttributeRecord extends \Mmi\Orm\Record {
 	 * @return boolean
 	 */
 	public function isRestricted() {
-		return $this->fieldClass == '\Mmi\Form\Element\Select' || $this->fieldClass == '\Mmi\Form\Element\Multicheckbox';
+		return $this->fieldClass == '\Mmi\Form\Element\Select' || $this->fieldClass == '\Mmi\Form\Element\MultiCheckbox';
+	}
+	
+	/**
+	 * Czy atrybut jest wielokrotny
+	 * @return boolean
+	 */
+	public function isMultiple() {
+		return $this->fieldClass == '\Mmi\Form\Element\MultiCheckbox';
 	}
 
 }

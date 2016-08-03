@@ -134,7 +134,7 @@ class CategoryRelationModel {
 	
 	/**
 	 * Pobiera kategorie wynikające z relacji
-	 * @return \Mmi\Orm\RecordCollection
+	 * @return \Cms\Orm\CmsCategoryRecord[]
 	 */
 	public function getCategories() {
 		return (new CmsCategoryQuery)
