@@ -32,11 +32,10 @@ class CategoryType extends \Cms\Form\Form {
 			->setRequired();
 
 		//grupy atrybutów
-		$this->addElementMultiCheckbox('attributeGroupIds')
-			->setLabel('grupa atrybutów')
-			->setMultioptions((new \Cms\Orm\CmsAttributeGroupQuery)->orderAscName()->findPairs('id', 'name'))
-			->setValue(array_keys((new \Cms\Model\AttributeGroupRelationModel('cms_category_type', $this->getRecord()->id))
-					->getAttributeGroupRelations()));
+		$this->addElementMultiCheckbox('attributeIds')
+			->setLabel('atrybuty')
+			->setMultioptions((new \Cms\Orm\CmsAttributeQuery)->orderAscName()->findPairs('id', 'name'))
+			->setValue(array_keys((new \Cms\Model\AttributeRelationModel('cms_category_type', $this->getRecord()->id))->getAttributeIds()));
 
 		//zapis
 		$this->addElementSubmit('submit')

@@ -13,13 +13,15 @@ namespace CmsAdmin\Form;
 /**
  * Formularz edycji szegółów kategorii
  */
-class Category extends \Cms\Form\Form {
+class Category extends \Cms\Form\AttributeForm {
 
 	public function init() {
 
 		$this->addElementLabel('label-config')
 			->setLabel('Konfiguracja');
 
+		//$this->insertAttributes('category');
+		
 		//nazwa kategorii
 		$this->addElementText('name')
 			->setLabel('nazwa')

@@ -10,14 +10,14 @@
 
 namespace Cms\Model;
 
-use Cms\Orm\CmsAttributeGroupQuery,
-	Cms\Orm\CmsAttributeGroupRelationQuery,
-	Cms\Orm\CmsAttributeGroupRelationRecord;
+use Cms\Orm\CmsAttributeQuery,
+	Cms\Orm\CmsAttributeRelationQuery,
+	Cms\Orm\CmsAttributeRelationRecord;
 
 /**
  * Model kategorii
  */
-class AttributeGroupRelationModel {
+class AttributeRelationModel {
 
 	/**
 	 * Obiekt
@@ -44,17 +44,17 @@ class AttributeGroupRelationModel {
 
 	/**
 	 * Przypina kategorię do obiektu z id
-	 * @param integer $attributeGroupId id kategorii
+	 * @param integer $attributeId id kategorii
 	 */
-	public function createAttributeGroupRelation($attributeGroupId) {
+	public function createAttributeRelation($attributeId) {
 		//niepoprawna kategoria
-		if (null === $attributeGroupRecord = (new CmsAttributeGroupQuery)
-			->findPk($attributeGroupId)) {
+		if (null === $attributeRecord = (new CmsAttributeQuery)
+			->findPk($attributeId)) {
 			return;
 		}
 		//wyszukiwanie relacji
-		$relationRecord = (new CmsAttributeGroupRelationQuery)
-			->whereCmsAttributeGroupId()->equals($attributeGroupRecord->id)
+		$relationRecord = (new CmsAttributeRelationQuery)
+			->whereCmsAttributeId()->equals($attributeRecord->id)
 			->andFieldObject()->equals($this->_object)
 			->andFieldObjectId()->equals($this->_objectId)
 			->findFirst();
@@ -63,8 +63,8 @@ class AttributeGroupRelationModel {
 			return;
 		}
 		//tworzenie relacji
-		$newRelationRecord = new CmsAttributeGroupRelationRecord;
-		$newRelationRecord->cmsAttributeGroupId = $attributeGroupRecord->id;
+		$newRelationRecord = new CmsAttributeRelationRecord;
+		$newRelationRecord->cmsAttributeId = $attributeRecord->id;
 		$newRelationRecord->object = $this->_object;
 		$newRelationRecord->objectId = $this->_objectId;
 		//zapis
@@ -73,31 +73,31 @@ class AttributeGroupRelationModel {
 
 	/**
 	 * Ustawia relację z obiektu z id
-	 * @param array $attributeGroups tablica z id grup atrybutów
+	 * @param array $attributes tablica z id grup atrybutów
 	 */
-	public function createAttributeGroupRelations(array $attributeGroups) {
+	public function createAttributeRelations(array $attributes) {
 		//usuwanie relacji
-		self::deleteAttributeGroupRelations();
+		self::deleteAttributeRelations();
 		//iteracja po grupach atrybutów
-		foreach ($attributeGroups as $attributeGroupId) {
+		foreach ($attributes as $attributeId) {
 			//tworzenie relacji
-			self::createAttributeGroupRelation($attributeGroupId, $this->_object, $this->_objectId);
+			self::createAttributeRelation($attributeId, $this->_object, $this->_objectId);
 		}
 	}
 
 	/**
 	 * Usuwa kategorię z obiektu i id
-	 * @param integer $attributeGroupId id kategorii
+	 * @param integer $attributeId id kategorii
 	 */
-	public function deleteAttributeGroupRelation($attributeGroupId) {
+	public function deleteAttributeRelation($attributeId) {
 		//brak kategorii - nic do zrobienia
-		if (null === $attributeGroupRecord = (new CmsAttributeGroupQuery)
-			->findPk($attributeGroupId)) {
+		if (null === $attributeRecord = (new CmsAttributeQuery)
+			->findPk($attributeId)) {
 			return;
 		}
 		//wyszukiwanie relacji
-		if (null === $relationRecord = (new CmsAttributeGroupRelationQuery)
-			->whereCmsAttributeGroupId()->equals($attributeGroupRecord->id)
+		if (null === $relationRecord = (new CmsAttributeRelationQuery)
+			->whereCmsAttributeId()->equals($attributeRecord->id)
 			->andFieldObject()->equals($this->_object)
 			->andFieldObjectId()->equals($this->_objectId)
 			->findFirst()) {
@@ -111,9 +111,9 @@ class AttributeGroupRelationModel {
 	/**
 	 * Usunięcie wszystkich relacji z obiektu i id
 	 */
-	public function deleteAttributeGroupRelations() {
+	public function deleteAttributeRelations() {
 		//czyszczenie relacji
-		(new CmsAttributeGroupRelationQuery)
+		(new CmsAttributeRelationQuery)
 			->whereObject()->equals($this->_object)
 			->andFieldObjectId()->equals($this->_objectId)
 			->find()
@@ -124,12 +124,24 @@ class AttributeGroupRelationModel {
 	 * Pobiera relacje dla obiektu z id
 	 * @return array
 	 */
-	public function getAttributeGroupRelations() {
-		return (new CmsAttributeGroupRelationQuery)
-				->join('cms_attribute_group')->on('cms_attribute_group_id')
+	public function getAttributeIds() {
+		return array_keys((new CmsAttributeRelationQuery)
+				->join('cms_attribute')->on('cms_attribute_id')
 				->whereObject()->equals($this->_object)
 				->andFieldObjectId()->equals($this->_objectId)
-				->findPairs('cms_attribute_group.id', 'cms_attribute_group.name');
+				->findPairs('cms_attribute.id', 'cms_attribute.id'));
+	}
+	
+	/**
+	 * Pobiera atrybuty wynikające z relacji
+	 * @return \Mmi\Orm\RecordCollection
+	 */
+	public function getAttributes() {
+		return (new CmsAttributeQuery)
+				->join('cms_attribute_relation')->on('id', 'cms_attribute_id')
+				->where('object', 'cms_attribute_relation')->equals($this->_object)
+				->where('objectId', 'cms_attribute_relation')->equals($this->_objectId)
+				->find();
 	}
 
 }

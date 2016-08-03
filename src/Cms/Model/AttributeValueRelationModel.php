@@ -10,14 +10,14 @@
 
 namespace Cms\Model;
 
-use Cms\Orm\CmsCategoryQuery,
-	Cms\Orm\CmsCategoryRelationQuery,
-	Cms\Orm\CmsCategoryRelationRecord;
+use Cms\Orm\CmsAttributeValueQuery,
+	Cms\Orm\CmsAttributeValueRelationQuery,
+	Cms\Orm\CmsAttributeValueRelationRecord;
 
 /**
  * Model kategorii
  */
-class CategoryRelationModel {
+class AttributeValueRelationModel {
 
 	/**
 	 * Obiekt
@@ -43,18 +43,18 @@ class CategoryRelationModel {
 	}
 
 	/**
-	 * Przypina kategorię do obiektu z id
-	 * @param integer $categoryId id kategorii
+	 * Przypina wartość atrybutu do obiektu z id
+	 * @param integer $attributeValueId id kategorii
 	 */
-	public function createCategoryRelation($categoryId) {
+	public function createAttributeValueRelation($attributeValueId) {
 		//niepoprawna kategoria
-		if (null === $categoryRecord = (new CmsCategoryQuery)
-			->findPk($categoryId)) {
+		if (null === $attributeValueRecord = (new CmsAttributeValueQuery)
+			->findPk($attributeValueId)) {
 			return;
 		}
 		//wyszukiwanie relacji
-		$relationRecord = (new CmsCategoryRelationQuery)
-			->whereCmsCategoryId()->equals($categoryRecord->id)
+		$relationRecord = (new CmsAttributeValueRelationQuery)
+			->whereCmsAttributeValueId()->equals($attributeValueRecord->id)
 			->andFieldObject()->equals($this->_object)
 			->andFieldObjectId()->equals($this->_objectId)
 			->findFirst();
@@ -63,8 +63,8 @@ class CategoryRelationModel {
 			return;
 		}
 		//tworzenie relacji
-		$newRelationRecord = new CmsCategoryRelationRecord;
-		$newRelationRecord->cmsCategoryId = $categoryRecord->id;
+		$newRelationRecord = new CmsAttributeValueRelationRecord;
+		$newRelationRecord->cmsAttributeValueId = $attributeValueRecord->id;
 		$newRelationRecord->object = $this->_object;
 		$newRelationRecord->objectId = $this->_objectId;
 		//zapis
@@ -73,31 +73,31 @@ class CategoryRelationModel {
 
 	/**
 	 * Ustawia relację z obiektu z id
-	 * @param array $categories tablica z id kategorii
+	 * @param array $attributeValues tablica z id grup atrybutów
 	 */
-	public function createCategoryRelations(array $categories) {
+	public function createAttributeValueRelations(array $attributeValues) {
 		//usuwanie relacji
-		self::deleteCategoryRelations();
-		//iteracja po kategoriach
-		foreach ($categories as $categoryId) {
+		self::deleteAttributeValueRelations();
+		//iteracja po grupach atrybutów
+		foreach ($attributeValues as $attributeValueId) {
 			//tworzenie relacji
-			self::createCategoryRelation($categoryId, $this->_object, $this->_objectId);
+			self::createAttributeValueRelation($attributeValueId, $this->_object, $this->_objectId);
 		}
 	}
 
 	/**
 	 * Usuwa kategorię z obiektu i id
-	 * @param integer $categoryId id kategorii
+	 * @param integer $attributeValueId id kategorii
 	 */
-	public function deleteCategoryRelation($categoryId) {
+	public function deleteAttributeValueRelation($attributeValueId) {
 		//brak kategorii - nic do zrobienia
-		if (null === $categoryRecord = (new CmsCategoryQuery)
-			->findPk($categoryId)) {
+		if (null === $attributeValueRecord = (new CmsAttributeValueQuery)
+			->findPk($attributeValueId)) {
 			return;
 		}
 		//wyszukiwanie relacji
-		if (null === $relationRecord = (new CmsCategoryRelationQuery)
-			->whereCmsCategoryId()->equals($categoryRecord->id)
+		if (null === $relationRecord = (new CmsAttributeValueRelationQuery)
+			->whereCmsAttributeValueId()->equals($attributeValueRecord->id)
 			->andFieldObject()->equals($this->_object)
 			->andFieldObjectId()->equals($this->_objectId)
 			->findFirst()) {
@@ -111,9 +111,9 @@ class CategoryRelationModel {
 	/**
 	 * Usunięcie wszystkich relacji z obiektu i id
 	 */
-	public function deleteCategoryRelations() {
+	public function deleteAttributeValueRelations() {
 		//czyszczenie relacji
-		(new CmsCategoryRelationQuery)
+		(new CmsAttributeValueRelationQuery)
 			->whereObject()->equals($this->_object)
 			->andFieldObjectId()->equals($this->_objectId)
 			->find()
@@ -124,24 +124,12 @@ class CategoryRelationModel {
 	 * Pobiera relacje dla obiektu z id
 	 * @return array
 	 */
-	public function getCategoryIds() {
-		return array_keys((new CmsCategoryRelationQuery)
-				->join('cms_category')->on('cms_category_id')
+	public function getAttributeValueRelations() {
+		return (new CmsAttributeValueRelationQuery)
+				->join('cms_attribute_value')->on('cms_attribute_value_id')
 				->whereObject()->equals($this->_object)
 				->andFieldObjectId()->equals($this->_objectId)
-				->findPairs('cms_category.id', 'cms_category.id'));
-	}
-	
-	/**
-	 * Pobiera kategorie wynikające z relacji
-	 * @return \Mmi\Orm\RecordCollection
-	 */
-	public function getCategories() {
-		return (new CmsCategoryQuery)
-				->join('cms_category_relation')->on('id', 'cms_category_id')
-				->where('object', 'cms_category_relation')->equals($this->_object)
-				->where('objectId', 'cms_category_relation')->equals($this->_objectId)
-				->find();
+				->findPairs('cms_attribute_value.id', 'cms_attribute_value.name');
 	}
 
 }

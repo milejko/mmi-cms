@@ -53,7 +53,7 @@ class Article extends \Cms\Form\Form {
 		$this->addElementSelect('cmsCategoryId')
 			->setMultiple()
 			->setMultioptions((new CategoryModel)->getCategoryFlatTree())
-			->setValue($this->getRecord()->id ? array_keys((new CategoryRelationModel('article', $this->getRecord()->id))->getCategoryRelations()) : [])
+			->setValue($this->getRecord()->id ? (new CategoryRelationModel('article', $this->getRecord()->id))->getCategoryIds() : [])
 			->setLabel('kategorie')
 			->setDescription('nie jest obowiązkowa, wybór wielu kategorii z CTRL');
 
