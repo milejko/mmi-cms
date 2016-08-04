@@ -23,7 +23,7 @@ class CmsRouterConfig extends \Mmi\Mvc\RouterConfig {
 		$this->setRoute('cms-admin-module-controller', '/^cmsAdmin\/([a-zA-Z\-]+)$/', ['module' => 'cmsAdmin', 'controller' => '$1'], ['action' => 'index']);
 
 		//moduł + kontroler + akcja np. /cmsAdmin/article/display
-		$this->setRoute('cms-module-controller-action', '/^cmsAdmin\/([a-zA-Z\-]+)\/([a-zA-Z]+)$/', ['module' => 'cmsAdmin', 'controller' => '$1', 'action' => '$2']);
+		$this->setRoute('cms-admin-module-controller-action', '/^cmsAdmin\/([a-zA-Z\-]+)\/([a-zA-Z]+)$/', ['module' => 'cmsAdmin', 'controller' => '$1', 'action' => '$2']);
 
 		//moduł - cms
 		$this->setRoute('cms-module', 'cms', ['module' => 'cms'], ['controller' => 'index', 'action' => 'index']);
