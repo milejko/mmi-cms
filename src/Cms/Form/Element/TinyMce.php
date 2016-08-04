@@ -228,7 +228,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 				" . $onInit . "
 				" . $emptyRootBlock . "
 				autoresize_min_height: " . ($this->getOption('height')? $this->getOption('height') : 300) . ",
-				image_list: request.baseUrl + '/cms/file/list?object=$object&objectId=$objectId&t=$t&hash=$hash',
+				image_list: request.baseUrl + '/?module=cms&controller=file&action=list&object=$object&objectId=$objectId&t=$t&hash=$hash',
 				document_base_url: request.baseUrl,
 				convert_urls: false,
 				entity_encoding: 'raw',
