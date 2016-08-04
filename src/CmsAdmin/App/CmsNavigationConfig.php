@@ -37,13 +37,14 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig {
 				->setModule('cmsAdmin')
 				->addChild(self::_getAdminPart())
 				->addChild(NavPart\NavPartArticle::getMenu())
-				->addChild(NavPart\NavPartCategory::getMenu())
+				->addChild(NavPart\NavPartAttribute::getMenu())
 				->addChild(NavPart\NavPartComment::getMenu())
 				->addChild(NavPart\NavPartContact::getMenu())
 				->addChild(NavPart\NavPartFile::getMenu())
 				->addChild(NavPart\NavPartStat::getMenu())
 				->addChild(NavPart\NavPartTag::getMenu())
 				->addChild(NavPart\NavPartText::getMenu())
+				->addChild(NavPart\NavPartCategory::getMenu())
 				->addChild(NavPart\NavPartAuth::getMenu());
 	}
 

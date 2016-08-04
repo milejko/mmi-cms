@@ -1,1 +1,1 @@
-			{$categoryForm}
+{$categoryForm}

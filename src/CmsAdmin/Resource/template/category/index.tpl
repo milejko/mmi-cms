@@ -2,7 +2,7 @@
 {headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/tiny/tinymce.min.js')}
 <div class="content-box">
 	<div class="content-box-header">
-		<h3>{#Zarządzanie kategoriami#}</h3>
+		<h3>{#Zarządzanie treścią#}</h3>
 		<div class="clear"></div>
 	</div>
 	<div class="content-box-content clearfix">

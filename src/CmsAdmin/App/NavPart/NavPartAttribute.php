@@ -10,24 +10,19 @@
 
 namespace CmsAdmin\App\NavPart;
 
-class NavPartCategory extends \Mmi\Navigation\NavigationConfig {
+class NavPartAttribute extends \Mmi\Navigation\NavigationConfig {
 
 	public static function getMenu() {
 		return self::newElement()
-				->setLabel('Treści')
+				->setLabel('Atrybuty')
 				->setModule('cmsAdmin')
-				->setController('category')
+				->setController('attribute')
 				->addChild(self::newElement()
-					->setLabel('Szablony')
+					->setLabel('Dodaj')
 					->setModule('cmsAdmin')
-					->setController('categoryType')
-					->setAction('index')
-					->addChild(self::newElement()
-						->setLabel('Dodaj')
-						->setModule('cmsAdmin')
-						->setController('categoryType')
-						->setAction('edit'))
-		);
+					->setController('attribute')
+					->setAction('edit'))
+		;
 	}
 
 }
