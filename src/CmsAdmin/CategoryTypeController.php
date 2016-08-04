@@ -11,19 +11,19 @@
 namespace CmsAdmin;
 
 /**
- * Artykuły
+ * Typy Artykuły
  */
 class CategoryTypeController extends Mvc\Controller {
 
 	/**
-	 * Lista artykułów
+	 * Lista typów artykułów
 	 */
 	public function indexAction() {
 		$this->view->grid = new \CmsAdmin\Plugin\CategoryTypeGrid;
 	}
 
 	/**
-	 * Edycja artykułu
+	 * Edycja typu artykułu
 	 */
 	public function editAction() {
 		$form = new \CmsAdmin\Form\CategoryType(new \Cms\Orm\CmsCategoryTypeRecord($this->id));
@@ -35,7 +35,7 @@ class CategoryTypeController extends Mvc\Controller {
 	}
 
 	/**
-	 * Usuwanie artykułu
+	 * Usuwanie typu artykułu
 	 */
 	public function deleteAction() {
 		$record = (new \Cms\Orm\CmsCategoryTypeQuery)->findPk($this->id);

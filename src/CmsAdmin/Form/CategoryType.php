@@ -49,14 +49,18 @@ class CategoryType extends \Cms\Form\Form {
 	public function beforeSave() {
 		//kalkulacja klucza
 		$this->getRecord()->key = (new \Mmi\Filter\Url)->filter($this->getRecord()->name);
-		return true;
+		return parent::beforeSave();
 	}
 
+	/**
+	 * Po zapisie
+	 * @return boolean
+	 */
 	public function afterSave() {
 		//tworzenie relacji z atrybutami
 		(new \Cms\Model\AttributeRelationModel('cms_category_type', $this->getRecord()->id))
 			->createAttributeRelations($this->getElement('attributeIds')->getValue());
-		return true;
+		return parent::afterSave();
 	}
 
 }

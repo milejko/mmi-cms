@@ -23,11 +23,18 @@ class Attribute extends \Mmi\Form\Form {
 			->setRequired()
 			->addFilterStringTrim()
 			->addValidatorStringLength(2, 128);
-
+		
 		//opis
 		$this->addElementTextarea('description')
 			->setLabel('opis')
 			->addFilterStringTrim();
+		
+		//klucz pola
+		$this->addElementText('key')
+			->setLabel('klucz')
+			->addFilterUrl()
+			->addValidatorAlnum('klucz może zawierać wyłącznie litery i cyfry')
+			->addValidatorRecordUnique(new \Cms\Orm\CmsAttributeQuery, 'key', $this->getRecord()->id);
 
 		//opis
 		$this->addElementSelect('fieldClass')
@@ -45,20 +52,20 @@ class Attribute extends \Mmi\Form\Form {
 		]);
 
 		//filtry
-		$this->addElementSelect('filterClasses')
+		$this->addElementMultiCheckbox('filterArray')
 			->setLabel('filtry')
+			->setValue(explode(',', $this->getRecord()->filterClasses))
 			->setMultioptions([
-				null => '---',
 				'\Mmi\Filter\StripTags' => 'usunięcie HTML',
 				'\Mmi\Filter\StringTrim' => 'usunięcie spacji z początku i końca',
 				'\Mmi\Filter\Url' => 'filtr do url\'a',
 		]);
 
 		//walidatory
-		$this->addElementSelect('validatorClasses')
-			->setLabel('walidator')
+		$this->addElementMultiCheckbox('validatorArray')
+			->setLabel('walidatory')
+			->setValue(explode(',', $this->getRecord()->validatorClasses))
 			->setMultioptions([
-				null => '---',
 				'\Mmi\Validator\Alnum' => 'alfanumeryczne',
 				'\Mmi\Validator\EmailAddress' => 'e-mail',
 				'\Mmi\Validator\Numeric' => 'numeryczne',
@@ -80,13 +87,19 @@ class Attribute extends \Mmi\Form\Form {
 		$this->addElementCheckbox('unique')
 			->setLabel('unikalny');
 
-		//zmaterializowany
-		$this->addElementCheckbox('materialized')
-			->setLabel('zmaterializowany');
-
 		//zapis
 		$this->addElementSubmit('submit')
 			->setLabel('zapisz');
+	}
+	
+	/**
+	 * Przed zapisem - spłaszczenie walidatorów i filtrów
+	 * @return boolean
+	 */
+	public function beforeSave() {
+		$this->getRecord()->validatorClasses = implode(',', $this->getElement('validatorArray')->getValue());
+		$this->getRecord()->filterClasses = implode(',', $this->getElement('filterArray')->getValue());
+		return true;
 	}
 
 }

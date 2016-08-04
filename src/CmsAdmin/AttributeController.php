@@ -30,7 +30,7 @@ class AttributeController extends Mvc\Controller {
 		//form zapisany
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Atrybut zapisany poprawnie', true);
-			$this->getResponse()->redirect('cmsAdmin', 'attribute', 'edit', ['id' => $form->getRecord()->id]);
+			$this->getResponse()->redirect('cmsAdmin', 'attribute', 'index');
 		}
 		//ograniczona lista
 		if ($form->getRecord()->isRestricted()) {

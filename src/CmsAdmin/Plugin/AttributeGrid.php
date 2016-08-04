@@ -20,17 +20,31 @@ class AttributeGrid extends \CmsAdmin\Grid\Grid {
 		//zapytanie
 		$this->setQuery(new \Cms\Orm\CmsAttributeQuery);
 
-		//nazwa taga
+		//nazwa atrybutu
 		$this->addColumnText('name')
 			->setLabel('nazwa');
-		
+
+		//klucz atrybutu
+		$this->addColumnText('key')
+			->setLabel('klucz');
+
 		//opis
 		$this->addColumnText('description')
 			->setLabel('opis');
 
 		//klasa pola
-		$this->addColumnText('fieldClass')
-			->setLabel('klasa pola');
+		$this->addColumnSelect('fieldClass')
+			->setLabel('klasa pola')
+			->setMultioptions([
+				'\Mmi\Form\Element\Text' => 'tekst',
+				'\Mmi\Form\Element\Textarea' => 'długi tekst',
+				'\Cms\Form\Element\TinyMce' => 'edytor WYSIWYG',
+				'\Cms\Form\Element\DatePicker' => 'data',
+				'\Cms\Form\Element\DateTimePicker' => 'data i czas',
+				'\Cms\Form\Element\Plupload' => 'wgrywarka plików',
+				'\Mmi\Form\Element\Select' => 'wybór jednokrotny',
+				'\Mmi\Form\Element\MultiCheckbox' => 'wybór wielokrotny',
+		]);
 
 		//waga
 		$this->addColumnText('indexWeight')

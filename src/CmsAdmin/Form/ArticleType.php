@@ -30,9 +30,13 @@ class ArticleType extends \Cms\Form\Form {
 			->setLabel('zapisz stronę');
 	}
 	
+	/**
+	 * Przed zapisem
+	 * @return boolean
+	 */
 	public function beforeSave() {
 		$this->getRecord()->key = (new \Mmi\Filter\Url)->filter($this->getRecord()->name);
-		return true;
+		return parent::beforeSave();
 	}
 
 }

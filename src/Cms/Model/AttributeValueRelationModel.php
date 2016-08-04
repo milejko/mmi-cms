@@ -43,7 +43,7 @@ class AttributeValueRelationModel {
 	}
 
 	/**
-	 * Przypina wartość atrybutu do obiektu z id
+	 * Przypina id atrybutu do obiektu z id
 	 * @param integer $attributeValueId id kategorii
 	 */
 	public function createAttributeValueRelation($attributeValueId) {
@@ -69,6 +69,31 @@ class AttributeValueRelationModel {
 		$newRelationRecord->objectId = $this->_objectId;
 		//zapis
 		$newRelationRecord->save();
+	}
+
+	/**
+	 * Przypina wartość atrybutu do obiektu z id
+	 * @param mixed $attributeValue
+	 */
+	public function createAttributeValueRelationByValue($attributeId, $attributeValue) {
+		//wyszukiwanie rekordu
+		if (null === ($valueRecord = (new \Cms\Orm\CmsAttributeValueQuery)
+			->whereCmsAttributeId()->equals($attributeId)
+			->andFieldValue()->equals($attributeValue)
+			->findFirst())
+		) {
+			//tworzenie rekordu
+			$valueRecord = new \Cms\Orm\CmsAttributeValueRecord;
+			$valueRecord->cmsAttributeId = $attributeId;
+			$valueRecord->value = $attributeValue;
+			$valueRecord->save();
+		}
+		//błąd wartości
+		if (!$valueRecord->id) {
+			return;
+		}
+		//zapis relacji
+		return $this->createAttributeValueRelation($valueRecord->id);
 	}
 
 	/**

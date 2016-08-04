@@ -17,13 +17,6 @@ class CmsAttributeRecord extends \Mmi\Orm\Record {
 	public $unique;
 	public $materialized;
 	
-	public function save() {
-		//klucz
-		$this->key = (new \Mmi\Filter\Url)->filter($this->name);
-		//zapis
-		return parent::save();
-	}
-	
 	/**
 	 * Czy atrybut jest ograniczony do listy
 	 * @return boolean

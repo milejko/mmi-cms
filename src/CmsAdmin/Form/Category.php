@@ -27,6 +27,7 @@ class Category extends \Cms\Form\AttributeForm {
 			->addFilterStringTrim()
 			->addValidatorStringLength(2, 128);
 
+		//typy treści (jeśli istnieją)
 		if ([] !== $types = (new \Cms\Orm\CmsCategoryTypeQuery)->orderAscName()->findPairs('id', 'name')) {
 			$this->addElementSelect('cmsCategoryTypeId')
 				->setLabel('typ treści')
@@ -34,13 +35,13 @@ class Category extends \Cms\Form\AttributeForm {
 				->setMultioptions([null => 'Domyślny'] + $types);
 		}
 
-		//atrybuty
-		$this->initAttributes('cms_category_type', $this->getRecord()->cmsCategoryTypeId, 'category');
-		
 		//aktywna
 		$this->addElementCheckbox('active')
 			->setChecked()
 			->setLabel('widoczna');
+
+		//atrybuty
+		$this->initAttributes('cms_category_type', $this->getRecord()->cmsCategoryTypeId, 'category');
 
 		//zapis
 		$this->addElementSubmit('submit1')
@@ -69,9 +70,9 @@ class Category extends \Cms\Form\AttributeForm {
 
 		$this->addElementLabel('label-seo')
 			->setLabel('SEO i zaawansowane');
-		
-		$defaultUri = \Mmi\App\FrontController::getInstance()->getView()->url(['module' => 'cms', 'controller' => 'category' , 'action' => 'dispatch', 'uri' => $this->getRecord()->uri], true);
-		
+
+		$defaultUri = \Mmi\App\FrontController::getInstance()->getView()->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->getRecord()->uri], true);
+
 		//własny uri
 		$this->addElementText('customUri')
 			->setLabel('własny adres strony')
@@ -92,7 +93,7 @@ class Category extends \Cms\Form\AttributeForm {
 		$this->addElementTextarea('description')
 			->setLabel('meta opis')
 			->setDescription('jeśli brak, użyte zostanie podsumowanie');
-		
+
 		//https
 		$this->addElementSelect('https')
 			->setMultioptions([null => 'bez zmian', '0' => 'wymuś brak https', 1 => 'wymuś https'])
