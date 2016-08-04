@@ -168,14 +168,14 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 				break;
 			case 'advanced':
 				$toolbarOptions = "
-					toolbar1 : 'undo redo | cut copy paste pastetext | bold italic underline strikethrough | subscript superscript | alignleft aligncenter alignright alignjustify | fontselect fontsizeselect | forecolor backcolor',
-					toolbar2 : 'styleselect | table | bullist numlist outdent indent blockquote | link unlink anchor image media code |  preview fullscreen | charmap visualchars nonbreaking inserttime hr template | searchreplace',
+					toolbar1 : 'undo redo | cut copy paste pastetext | searchreplace | bold italic underline strikethrough | subscript superscript | alignleft aligncenter alignright alignjustify | fontselect fontsizeselect | forecolor backcolor',
+					toolbar2 : 'styleselect | table | bullist numlist outdent indent blockquote | link unlink anchor | image media | preview fullscreen code | charmap visualchars nonbreaking inserttime hr template',
 				";
 				$plugins = "plugins : 'advlist,anchor,autolink,autoresize,charmap,code,contextmenu,fullscreen,hr,image,insertdatetime,link,lists,media,nonbreaking,noneditable,paste,print,preview,searchreplace,tabfocus,table,template,textcolor,visualblocks,visualchars,wordcount',";
 				$theme = "theme : 'modern',";
 				$tskin = "skin : 'lightgray',";
 				$themeOptions = "image_advtab: true,
-				contextmenu: 'link image inserttable | cell row column deletetable',
+				contextmenu: 'link image media inserttable | cell row column deletetable',
 				width: " . (isset($this->_options['width']) ? $this->_options['width'] : "''") . ",
 				height: " . (isset($this->_options['height']) ? $this->_options['height'] : 320) . ",
 				resize : true,
@@ -183,13 +183,13 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 				break;
 			default:
 				$toolbarOptions = "
-					toolbar1 : 'undo redo | bold italic underline strikethrough | forecolor backcolor | styleselect | bullist numlist outdent indent | fontselect fontsizeselect | alignleft aligncenter alignright alignjustify | link unlink anchor image insertfile preview',
+					toolbar1 : 'undo redo | bold italic underline strikethrough | forecolor backcolor | styleselect | bullist numlist outdent indent | fontselect fontsizeselect | alignleft aligncenter alignright alignjustify | link unlink anchor | image media | preview',
 				";
 				$plugins = "plugins : 'advlist,anchor,autolink,autoresize,charmap,code,contextmenu,fullscreen,hr,image,insertdatetime,link,lists,media,nonbreaking,noneditable,paste,print,preview,searchreplace,tabfocus,table,template,textcolor,visualblocks,visualchars,wordcount',";
 				$theme = "theme : 'modern',";
 				$tskin = "skin : 'lightgray',";
 				$themeOptions = "image_advtab: true,
-				contextmenu: 'link image inserttable | cell row column deletetable',
+				contextmenu: 'link image media inserttable | cell row column deletetable',
 				width: " . (isset($this->_options['width']) ? $this->_options['width'] : "''") . ",
 				height: " . (isset($this->_options['height']) ? $this->_options['height'] : 320) . ",
 				";
@@ -234,6 +234,8 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 				entity_encoding: 'raw',
 				relative_urls: false,
 				paste_data_images: false,
+				plugin_preview_height: 700,
+				plugin_preview_width: 1100,
 				font_formats: 'Andale Mono=andale mono,times;'+
 					'Arial=arial,helvetica,sans-serif;'+
 					'Arial Black=arial black,avant garde;'+
