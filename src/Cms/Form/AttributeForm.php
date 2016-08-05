@@ -43,14 +43,12 @@ abstract class AttributeForm extends Form {
 	private $_cmsAttributeValues = [];
 
 	/**
-	 * 
+	 * Inicjalizacja atrybutów
 	 * @param string $object
 	 * @param string $objectId
 	 * @param string $saveToObject
 	 */
 	public function initAttributes($object, $objectId, $saveToObject) {
-		//dodanie pola label nad polami atrybutów
-		$this->addElementLabel('attributes')->setLabel('Atrybuty');
 		//ustalenie obiektu do zapisu relacji
 		$this->_saveToObject = $saveToObject;
 		//pobranie przypisanych atrybutów
@@ -63,7 +61,7 @@ abstract class AttributeForm extends Form {
 			$this->addElement($this->_createFieldByAttribute($attribute));
 		}
 	}
-
+	
 	/**
 	 * Ustawia w rekordzie zmaterializowane atrybuty
 	 */

@@ -158,15 +158,16 @@ class AttributeValueRelationModel {
 	}
 
 	/**
-	 * Pobiera relacje dla obiektu z id
+	 * Pobiera rekordy wartości
 	 * @return \Cms\Orm\CmsAttributeValueRecord[]
 	 */
 	public function getAttributeValues() {
 		return (new CmsAttributeValueQuery)
+				->join('cms_attribute')->on('cms_attribute_id')
 				->join('cms_attribute_value_relation')->on('id', 'cms_attribute_value_id')
 				->where('object', 'cms_attribute_value_relation')->equals($this->_object)
 				->where('objectId', 'cms_attribute_value_relation')->equals($this->_objectId)
 				->find();
 	}
-
+	
 }

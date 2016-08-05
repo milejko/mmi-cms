@@ -54,6 +54,7 @@ class CategoryType extends \Cms\Form\Form {
 
 	/**
 	 * Po zapisie
+	 * @TODO po zmianie relacji - usunięcie zbędnych wiązań wartości
 	 * @return boolean
 	 */
 	public function afterSave() {
