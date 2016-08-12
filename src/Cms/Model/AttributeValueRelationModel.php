@@ -132,6 +132,20 @@ class AttributeValueRelationModel {
 		//usunięcie relacji
 		$relationRecord->delete();
 	}
+	
+	/**
+	 * Usunięcie relacji z obiektu i id dla podanego id atrybutu
+	 */
+	public function deleteAttributeValueRelationsByAttributeId($attributeId) {
+		//czyszczenie relacji z całego atrybutu
+		(new CmsAttributeValueRelationQuery)
+			->join('cms_attribute_value')->on('cms_attribute_value_id')
+			->whereObject()->equals($this->_object)
+			->andFieldObjectId()->equals($this->_objectId)
+			->andField('cms_attribute_id', 'cms_attribute_value')->equals($attributeId)
+			->find()
+			->delete();
+	}
 
 	/**
 	 * Usunięcie wszystkich relacji z obiektu i id

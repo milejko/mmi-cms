@@ -54,14 +54,41 @@ class CategoryType extends \Cms\Form\Form {
 
 	/**
 	 * Po zapisie
-	 * @TODO po zmianie relacji - usunięcie zbędnych wiązań wartości
 	 * @return boolean
 	 */
 	public function afterSave() {
-		//tworzenie relacji z atrybutami
-		(new \Cms\Model\AttributeRelationModel('cms_category_type', $this->getRecord()->id))
-			->createAttributeRelations($this->getElement('attributeIds')->getValue());
+		//model relacji
+		$relationModel = new \Cms\Model\AttributeRelationModel('cms_category_type', $this->getRecord()->id);
+		//nowe id atrybutów
+		$newAttributeIds = $this->getElement('attributeIds')->getValue();
+		//bieżące id atrybutów
+		$currentAttributeIds = $relationModel->getAttributeIds();
+		//atrybuty do dodania
+		foreach (array_diff($newAttributeIds, $currentAttributeIds) as $attributeId) {
+			//dodawanie relacji
+			$relationModel->createAttributeRelation($attributeId);
+		}
+		//atrybuty do usunięcia
+		foreach (array_diff($currentAttributeIds, $newAttributeIds) as $attributeId) {
+			//usuwanie wartości
+			$this->_deleteValueRelationsByAttributeId($attributeId);
+			//usuwanie relacji
+			$relationModel->deleteAttributeRelation($attributeId);
+		}
 		return parent::afterSave();
+	}
+
+	/**
+	 * Usuwanie relacji ze wszystkich kategorii dla danego atrybutu
+	 * @param integer $attributeId
+	 */
+	protected function _deleteValueRelationsByAttributeId($attributeId	) {
+		foreach ((new \Cms\Orm\CmsCategoryQuery)->whereCmsCategoryTypeId()
+			->equals($this->getRecord()->id)
+			->findPairs('id', 'id') as $categoryId) {
+			(new \Cms\Model\AttributeValueRelationModel('category', $categoryId))
+				->deleteAttributeValueRelationsByAttributeId($attributeId);
+		}
 	}
 
 }
