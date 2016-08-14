@@ -61,7 +61,7 @@ abstract class AttributeForm extends Form {
 			$this->addElement($this->_createFieldByAttribute($attribute));
 		}
 	}
-	
+
 	/**
 	 * Ustawia w rekordzie zmaterializowane atrybuty
 	 */
@@ -119,6 +119,10 @@ abstract class AttributeForm extends Form {
 	 * @param \Mmi\Form\Element\ElementAbstract $element
 	 */
 	private function _createValueRelationByElement($attributeId, \Mmi\Form\Element\ElementAbstract $element) {
+		//element ignorowany
+		if ($element->getIgnore()) {
+			return;
+		}
 		//zwykła, skalarna wartość
 		if (!is_array($element->getValue())) {
 			return (new AttributeValueRelationModel($this->_saveToObject, $this->getRecord()->id))->createAttributeValueRelationByValue($attributeId, $element->getValue());
@@ -149,6 +153,10 @@ abstract class AttributeForm extends Form {
 		if ($attribute->required) {
 			$field->setRequired()->addValidatorNotEmpty();
 		}
+		//czy pole jest wgrywarką plików
+		if ($attribute->isUploader()) {
+			$field->setIgnore();
+		}
 		//walidatory
 		if ($attribute->validatorClasses) {
 			//iteracja po walidatorach
@@ -168,11 +176,9 @@ abstract class AttributeForm extends Form {
 		//unikalność
 		if ($attribute->unique) {
 			$field->addValidatorRecordUnique((new \Cms\Orm\CmsAttributeValueQuery)
-				->join('cms_attribute_value_relation')->on('id', 'cms_attribute_value_id')
-				->whereCmsAttributeId()->equals($attribute->id)
-				->where('object', 'cms_attribute_value_relation')->equals($this->_saveToObject),
-				'value',
-				$this->getRecord()->id
+					->join('cms_attribute_value_relation')->on('id', 'cms_attribute_value_id')
+					->whereCmsAttributeId()->equals($attribute->id)
+					->where('object', 'cms_attribute_value_relation')->equals($this->_saveToObject), 'value', $this->getRecord()->id
 			);
 		}
 		//zwrot skonfigurowanego pola

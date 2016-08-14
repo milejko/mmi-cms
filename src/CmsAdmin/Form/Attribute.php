@@ -40,16 +40,7 @@ class Attribute extends \Mmi\Form\Form {
 		$this->addElementSelect('fieldClass')
 			->setLabel('pole formularza')
 			->setRequired()
-			->setMultioptions([
-				'\Mmi\Form\Element\Text' => 'tekst',
-				'\Mmi\Form\Element\Textarea' => 'długi tekst',
-				'\Cms\Form\Element\TinyMce' => 'edytor WYSIWYG',
-				'\Cms\Form\Element\DatePicker' => 'data',
-				'\Cms\Form\Element\DateTimePicker' => 'data i czas',
-				'\Cms\Form\Element\Plupload' => 'wgrywarka plików',
-				'\Mmi\Form\Element\Select' => 'wybór jednokrotny',
-				'\Mmi\Form\Element\MultiCheckbox' => 'wybór wielokrotny',
-		]);
+			->setMultioptions($this->getRecord()->getFieldClasses());
 
 		//filtry
 		$this->addElementMultiCheckbox('filterArray')
