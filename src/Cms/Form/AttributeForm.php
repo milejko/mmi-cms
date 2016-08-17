@@ -123,6 +123,10 @@ abstract class AttributeForm extends Form {
 		if ($element->getIgnore()) {
 			return;
 		}
+		//checkboxy
+		if ($element instanceof \Mmi\Form\Element\Checkbox) {
+			return (new AttributeValueRelationModel($this->_saveToObject, $this->getRecord()->id))->createAttributeValueRelationByValue($attributeId, (integer)$element->isChecked());
+		}
 		//zwykła, skalarna wartość
 		if (!is_array($element->getValue())) {
 			return (new AttributeValueRelationModel($this->_saveToObject, $this->getRecord()->id))->createAttributeValueRelationByValue($attributeId, $element->getValue());
@@ -144,6 +148,10 @@ abstract class AttributeForm extends Form {
 			->setLabel($attribute->name)
 			->setDescription($attribute->description)
 			->setValue($attribute->isRestricted() ? $this->_arrayValueByAttributeId($attribute->id) : $this->_scalarValueByAttributeId($attribute->id));
+		//checkbox zaznaczony
+		if ($field instanceof \Mmi\Form\Element\Checkbox && $this->_scalarValueByAttributeId($attribute->id)) {
+			$field->setChecked();
+		}
 		//multiopcje
 		if ($attribute->isRestricted()) {
 			$options = (new \Cms\Orm\CmsAttributeValueQuery)->whereCmsAttributeId()->equals($attribute->id)->orderAscValue()->findPairs('value', 'value');
@@ -151,7 +159,7 @@ abstract class AttributeForm extends Form {
 		}
 		//pole wymagane
 		if ($attribute->required) {
-			$field->setRequired()->addValidatorNotEmpty();
+			$field->setRequired();
 		}
 		//czy pole jest wgrywarką plików
 		if ($attribute->isUploader()) {

@@ -35,16 +35,7 @@ class AttributeGrid extends \CmsAdmin\Grid\Grid {
 		//klasa pola
 		$this->addColumnSelect('fieldClass')
 			->setLabel('klasa pola')
-			->setMultioptions([
-				'\Mmi\Form\Element\Text' => 'tekst',
-				'\Mmi\Form\Element\Textarea' => 'długi tekst',
-				'\Cms\Form\Element\TinyMce' => 'edytor WYSIWYG',
-				'\Cms\Form\Element\DatePicker' => 'data',
-				'\Cms\Form\Element\DateTimePicker' => 'data i czas',
-				'\Cms\Form\Element\Plupload' => 'wgrywarka plików',
-				'\Mmi\Form\Element\Select' => 'wybór jednokrotny',
-				'\Mmi\Form\Element\MultiCheckbox' => 'wybór wielokrotny',
-		]);
+			->setMultioptions((new \Cms\Orm\CmsAttributeRecord)->getFieldClasses());
 
 		//waga
 		$this->addColumnText('indexWeight')

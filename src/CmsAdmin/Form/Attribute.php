@@ -33,7 +33,9 @@ class Attribute extends \Mmi\Form\Form {
 		$this->addElementText('key')
 			->setLabel('klucz')
 			->addFilterUrl()
+			->setRequired()
 			->addValidatorAlnum('klucz może zawierać wyłącznie litery i cyfry')
+			->addValidatorStringLength(2, 64)
 			->addValidatorRecordUnique(new \Cms\Orm\CmsAttributeQuery, 'key', $this->getRecord()->id);
 
 		//opis
