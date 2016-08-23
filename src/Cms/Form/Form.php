@@ -29,12 +29,12 @@ abstract class Form extends \Mmi\Form\Form {
 	 * @param array $options opcje
 	 * @param string $className nazwa klasy
 	 */
-	public function __construct(\Mmi\Orm\Record $record = null) {
+	public function __construct(\Mmi\Orm\Record $record = null, array $options = []) {
 		//kalkulacja nazwy plików dla active record
 		if ($record) {
 			$this->_fileObjectName = $this->_classToFileObject(get_class($record));
 		}
-		parent::__construct($record);
+		parent::__construct($record, $options);
 	}
 
 	/**
