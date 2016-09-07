@@ -55,6 +55,9 @@ class Category extends \Cms\Form\AttributeForm {
 		$this->addElementTinyMce('text')
 			->setLabel('treść');
 
+		//uploader
+		$this->addElementPlupload('files');
+
 		//zapis
 		$this->addElementSubmit('submit2')
 			->setLabel('zapisz');
@@ -65,12 +68,6 @@ class Category extends \Cms\Form\AttributeForm {
 			$this->addElementSubmit('submit-attr')
 				->setLabel('zapisz');
 		}
-
-		$this->addElementLabel('label-gallery')
-			->setLabel('Galeria i załączniki');
-
-		//uploader
-		$this->addElementPlupload('files');
 
 		$this->addElementLabel('label-seo')
 			->setLabel('SEO i zaawansowane');

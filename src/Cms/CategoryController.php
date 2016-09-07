@@ -54,7 +54,7 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		}
 		//dodawanie okruszka z kategorią główną
 		$this->view->navigation()->appendBreadcrumb($category->name, $this->view->url(['uri' => $category->uri]), $category->title ? $category->title : $category->name, $category->description ? $category->description : $category->lead);
-
+		//forward do akcji docelowej
 		return \Mmi\Mvc\ActionHelper::getInstance()->forward($request);
 	}
 
