@@ -10,8 +10,7 @@
 
 namespace CmsAdmin\Form;
 
-use \Cms\Model\TagRelationModel,
-	\Cms\Model\CategoryModel,
+use \Cms\Model\CategoryModel,
 	\Cms\Model\CategoryRelationModel;
 
 /**
@@ -57,13 +56,6 @@ class Article extends \Cms\Form\Form {
 			->setLabel('kategorie')
 			->setDescription('nie jest obowiązkowa, wybór wielu kategorii z CTRL');
 
-		//tagi
-		$this->addElementText('tags')
-			->setLabel('tagi')
-			->setDescription('lista tagów oddzielonych spacją')
-			->setValue($this->getRecord()->id ? implode(' ', (new TagRelationModel('article', $this->getRecord()->id))->getTagRelations()) : '')
-			->addFilterStringTrim();
-
 		//uploader - plupload
 		$this->addElementPlupload('uploader')
 			->setLabel('załaduj pliki');
@@ -86,9 +78,6 @@ class Article extends \Cms\Form\Form {
 		//zapis kategorii
 		(new CategoryRelationModel('article', $this->getRecord()->id))
 			->createCategoryRelations($this->getElement('cmsCategoryId')->getValue());
-		//zapis tagów
-		(new TagRelationModel('article', $this->getRecord()->id))
-			->createTagRelations(explode(' ', $this->getElement('tags')->getValue()));
 		return true;
 	}
 

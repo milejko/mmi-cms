@@ -73,25 +73,6 @@ CREATE TABLE `cms_auth_role` (
   CONSTRAINT `cms_auth_role_ibfk_2` FOREIGN KEY (`cms_role_id`) REFERENCES `cms_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 
-CREATE TABLE cms_tag
-(
-  `id` integer NOT NULL AUTO_INCREMENT,
-  tag varchar(64) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `tag` (`tag`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
-
-CREATE TABLE cms_tag_link
-(
-  `id` integer NOT NULL AUTO_INCREMENT,
-  cms_tag_id integer NOT NULL,
-  `object` varchar(32) NOT NULL,
-  `objectId` integer NOT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `cms_tag_link_ibfk_1` FOREIGN KEY (cms_tag_id) REFERENCES cms_tag(id) ON UPDATE CASCADE ON DELETE CASCADE,
-  KEY `object_object_id` (`object`,	`objectId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
-
 CREATE TABLE `cms_comment` (
   `id` integer NOT NULL AUTO_INCREMENT,
   `cms_auth_id` integer DEFAULT NULL,

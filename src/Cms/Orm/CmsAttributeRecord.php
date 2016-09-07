@@ -40,7 +40,23 @@ class CmsAttributeRecord extends \Mmi\Orm\Record {
 	public function isUploader() {
 		return $this->fieldClass == '\Mmi\Form\Element\File' || $this->fieldClass == '\Cms\Form\Element\Plupload';
 	}
-
+	
+	/**
+	 * Czy zmaterializowany
+	 * @return boolean
+	 */
+	public function isMaterialized() {
+		return ($this->materialized == 1);
+	}
+	
+	/**
+	 * Czy zmaterializowany, odziedziczony
+	 * @return boolean
+	 */
+	public function isMaterializedInherited() {
+		return ($this->materialized == 2);
+	}
+	
 	/**
 	 * Pobiera dostępne klasy pól
 	 * @return array

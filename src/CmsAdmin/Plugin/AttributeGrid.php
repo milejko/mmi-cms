@@ -50,7 +50,8 @@ class AttributeGrid extends \CmsAdmin\Grid\Grid {
 			->setLabel('unikalny');
 
 		//zmaterializowany
-		$this->addColumnCheckbox('materialized')
+		$this->addColumnSelect('materialized')
+			->setMultioptions([0 => 'nie', 1 => 'tak', 2 => 'tak, odziedziczony'])
 			->setLabel('zmaterializowany');
 
 		//operacje

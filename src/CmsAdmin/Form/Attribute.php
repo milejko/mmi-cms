@@ -79,6 +79,12 @@ class Attribute extends \Mmi\Form\Form {
 		//unikalny
 		$this->addElementCheckbox('unique')
 			->setLabel('unikalny');
+		
+		//zmaterializowany
+		$this->addElementSelect('materialized')
+			->setMultioptions([0 => 'nie', 1 => 'tak', 2 => 'tak, odziedziczony'])
+			->setLabel('zmaterializowany')
+			->setDescription('opcja administracyjna, zmiana może uszkodzić formularze zawierające ten atrybut');
 
 		//zapis
 		$this->addElementSubmit('submit')

@@ -44,22 +44,39 @@ abstract class AttributeForm extends Form {
 
 	/**
 	 * Inicjalizacja atrybutów
-	 * @param string $object
-	 * @param string $objectId
-	 * @param string $saveToObject
+	 * @param string $object przypięte do obiektu
+	 * @param string $objectId przypięte do id obiektu
+	 * @param string $saveToObject zapis do obiektu
+	 * @param string $label opcjonalna labelka atrybutów
+	 * @return boolean zwraca false jeśli brak atrybutów
 	 */
-	public function initAttributes($object, $objectId, $saveToObject) {
+	public function initAttributes($object, $objectId, $saveToObject, $label) {
 		//ustalenie obiektu do zapisu relacji
 		$this->_saveToObject = $saveToObject;
 		//pobranie przypisanych atrybutów
 		$this->_cmsAttributes = (new AttributeRelationModel($object, $objectId))->getAttributes();
 		//pobranie wartości atrybutów
 		$this->_cmsAttributeValues = (new AttributeValueRelationModel($this->_saveToObject, $this->getRecord()->id))->getAttributeValues();
+		//brak atrybutów
+		if (!$this->_hasPrintableAttributes()) {
+			return false;
+		}
+		//jeśli istnieje labelka i atrybuty
+		if ($label) {
+			//dodawanie label
+			$this->addElementLabel('attributes-' . $object)->setLabel($label);
+		}
 		//iteracja po atrybutach
 		foreach ($this->_cmsAttributes as $attribute) {
+			//zmaterializowany, odziedziczony
+			if ($attribute->isMaterializedInherited()) {
+				continue;
+			}
 			//dodawanie skonfigurowanego pola
 			$this->addElement($this->_createFieldByAttribute($attribute));
 		}
+		//dodano atrybuty
+		return true;
 	}
 
 	/**
@@ -71,7 +88,7 @@ abstract class AttributeForm extends Form {
 			//wyszukiwanie atrybutu
 			$attribute = $this->_findAttributeById($attributeId);
 			//jeśli atrybut jest zmaterializowany
-			if (null !== $attribute && $attribute->materialized) {
+			if (null !== $attribute && $attribute->isMaterialized()) {
 				//ustawienie w wartości rekordzie
 				$this->getRecord()->{$attribute->key} = $element->getValue();
 			}
@@ -93,6 +110,20 @@ abstract class AttributeForm extends Form {
 		foreach ($this->_cmsAttributeElements as $attributeId => $element) {
 			//zapis relacji
 			$this->_createValueRelationByElement($attributeId, $element);
+		}
+		//iteracja po atrybutach
+		foreach ($this->_cmsAttributes as $attribute) {
+			//nie jest zmaterializowany, odziedziczony
+			if (!$attribute->isMaterializedInherited()) {
+				continue;
+			}
+			//brak obiektu do dziedziczenia
+			if (null === $element = $this->getElement($attribute->key)) {
+				throw new \Exception('No inherited attribute: ' . $attribute->key);
+			}
+			//zapis relacji z odziedziczonego elementu formularza (występującego w oryginalnym formularzu)
+			$this->_createValueRelationByElement($attribute->id, $element);
+			
 		}
 		//zapis udany
 		return true;
@@ -227,6 +258,21 @@ abstract class AttributeForm extends Form {
 		}
 		//zwrot wartości
 		return $values;
+	}
+	
+	/**
+	 * Sprawdza posiadanie renderowanych atrybutów
+	 * @return boolean
+	 */
+	private function _hasPrintableAttributes() {
+		//iteracja po atrybutach
+		foreach ($this->_cmsAttributes as $attribute) {
+			//nie jest atrybutem odziedziczonym - czyli będzie wypisany przy renderingu
+			if (!$attribute->isMaterializedInherited()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

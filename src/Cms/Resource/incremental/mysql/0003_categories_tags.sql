@@ -1,4 +1,3 @@
-RENAME TABLE cms_tag_link TO cms_tag_relation;
 drop table IF EXISTS `cms_news`;
 
 CREATE TABLE `cms_article_type` (

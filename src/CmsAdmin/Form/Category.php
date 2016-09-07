@@ -40,9 +40,6 @@ class Category extends \Cms\Form\AttributeForm {
 			->setChecked()
 			->setLabel('widoczna');
 
-		//atrybuty
-		$this->initAttributes('cms_category_type', $this->getRecord()->cmsCategoryTypeId, 'category');
-
 		//zapis
 		$this->addElementSubmit('submit1')
 			->setLabel('zapisz');
@@ -61,6 +58,13 @@ class Category extends \Cms\Form\AttributeForm {
 		//zapis
 		$this->addElementSubmit('submit2')
 			->setLabel('zapisz');
+
+		//atrybuty
+		if ($this->initAttributes('cms_category_type', $this->getRecord()->cmsCategoryTypeId, 'category', 'Atrybuty')) {
+			//jeśli wstawione, dodany button z zapisem
+			$this->addElementSubmit('submit-attr')
+				->setLabel('zapisz');
+		}
 
 		$this->addElementLabel('label-gallery')
 			->setLabel('Galeria i załączniki');
