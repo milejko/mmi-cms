@@ -14,7 +14,20 @@
 		<div id="categoryNodeContainer">
 			<div id="categoryMessageContainer"></div>
 			<div id="categoryContentContainer">
-				{$categoryForm}
+				<ul class="tabs">
+					<li>
+						<a href="#tab-config">Konfiguracja</a>
+					</li>
+					<li>
+						<a href="#tab-section">Sekcje</a>
+					</li>
+				</ul>
+				<div class="tab-content clearfix" id="tab-config">
+					{$categoryForm}
+				</div>
+				<div class="tab-content clearfix" id="tab-section">
+					sekcje
+				</div>
 			</div>
 		</div>
 		<div class="cl"></div>
