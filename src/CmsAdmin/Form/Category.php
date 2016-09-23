@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Form;
 
+use \Cms\Model\TagRelationModel;
+
 /**
  * Formularz edycji szegółów kategorii
  */
@@ -34,6 +36,13 @@ class Category extends \Cms\Form\AttributeForm {
 				->addFilterEmptyToNull()
 				->setMultioptions([null => 'Domyślny'] + $types);
 		}
+
+		//tagi
+		$this->addElementText('tags')
+			->setLabel('tagi')
+			->setDescription('lista tagów oddzielonych spacją')
+			->setValue($this->getRecord()->id ? implode(' ', (new TagRelationModel('category', $this->getRecord()->id))->getTagRelations()) : '')
+			->addFilterStringTrim();
 
 		//aktywna
 		$this->addElementCheckbox('active')
@@ -113,6 +122,17 @@ class Category extends \Cms\Form\AttributeForm {
 		//zapis
 		$this->addElementSubmit('submit3')
 			->setLabel('zapisz');
+	}
+
+	/**
+	 * Po zapisie rekordu
+	 * @return boolean
+	 */
+	public function afterSave() {
+		//zapis tagów
+		(new TagRelationModel('category', $this->getRecord()->id))
+			->createTagRelations(explode(' ', $this->getElement('tags')->getValue()));
+		return true;
 	}
 
 }
