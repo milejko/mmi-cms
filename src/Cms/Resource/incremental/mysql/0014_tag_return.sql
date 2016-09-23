@@ -13,7 +13,7 @@ CREATE TABLE cms_tag_relation
   `object` varchar(64) NOT NULL,
   `objectId` integer NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `cms_tag_relation_ibfk_1` (`cms_attribute_id`),
+  KEY `cms_tag_relation_ibfk_1` (`cms_tag_id`),
   KEY `object_object_id` (`object`,	`objectId`),
   CONSTRAINT `cms_tag_relation_ibfk_1` FOREIGN KEY (cms_tag_id) REFERENCES cms_tag(id) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;

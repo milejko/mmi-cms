@@ -20,35 +20,6 @@ CREATE INDEX cms_acl_controller_idx ON cms_acl (controller);
 CREATE INDEX cms_acl_module_idx ON cms_acl (module);
 CREATE INDEX fki_cms_acl_cms_role_id_fkey ON cms_acl (cms_role_id);
 
-CREATE TABLE cms_article_type (
-    id INTEGER PRIMARY KEY,
-    "name" character varying(128) NOT NULL,
-    "key" character varying(128) NOT NULL
-);
-CREATE UNIQUE INDEX cms_article_type_key_idx ON cms_article_type ("key");
-
-CREATE TABLE cms_article (
-    id INTEGER PRIMARY KEY,
-	cms_article_type_id integer,
-    lang character varying(2),
-    title character varying(160) NOT NULL,
-    uri character varying(160) NOT NULL,
-    "dateAdd" DATETIME,
-    "dateModify" DATETIME,
-	"lead" text,
-    "text" text,
-	"active" TINYINT DEFAULT 0 NOT NULL,
-	FOREIGN KEY(cms_article_type_id) REFERENCES cms_article_type(id) ON UPDATE CASCADE ON DELETE SET NULL
-);
-
-CREATE INDEX fki_cms_article_cms_article_type_id_fkey ON cms_article (cms_article_type_id);
-CREATE INDEX "cms_article_dateAdd_idx" ON cms_article ("dateAdd");
-CREATE INDEX "cms_article_dateModify_idx" ON cms_article ("dateModify");
-CREATE INDEX cms_article_lang_idx ON cms_article (lang);
-CREATE INDEX cms_article_title_idx ON cms_article (title);
-CREATE INDEX cms_article_uri_idx ON cms_article (uri);
-CREATE INDEX cms_article_active_idx ON cms_article (active);
-
 CREATE TABLE "cms_category" (
     "id" INTEGER PRIMARY KEY,
 	"lang" character varying(2) DEFAULT NULL,

@@ -37,13 +37,11 @@
 				<p>{#Brak dodanych elementów menu#}.</p>
 			{/if}
 			<a class="button add" href="{@module=cmsAdmin&controller=navigation&action=edit&type=cms&parent={$navigation.id}@}"><i class="icon-cogs"></i> {#dodaj obiekt cms#}</a>
-			<a class="button add" href="{@module=cmsAdmin&controller=navigation&action=edit&type=simple&parent={$navigation.id}@}"><i class="icon-book"></i> {#dodaj artykuł#}</a>
 			<a class="button add" href="{@module=cmsAdmin&controller=navigation&action=edit&type=link&parent={$navigation.id}@}"><i class="icon-globe"></i> {#dodaj link#}</a>
 			<a class="button add" href="{@module=cmsAdmin&controller=navigation&action=edit&type=folder&parent={$navigation.id}@}"><i class="icon-folder-close"></i> {#dodaj folder#}</a>
 		{else}
 			<p>{#Brak dodanych elementów menu#}.</p>
 			<a class="button add" href="{@module=cmsAdmin&controller=navigation&action=edit&type=cms&parent=0@}"><i class="icon-cogs"></i> {#dodaj obiekt cms#}</a>
-			<a class="button add" href="{@module=cmsAdmin&controller=navigation&action=edit&type=simple&parent=0@}"><i class="icon-book"></i> {#dodaj artykuł#}</a>
 			<a class="button add" href="{@module=cmsAdmin&controller=navigation&action=edit&type=link&parent=0@}"><i class="icon-globe"></i> {#dodaj link#}</a>
 			<a class="button add" href="{@module=cmsAdmin&controller=navigation&action=edit&type=folder&parent=0@}"><i class="icon-folder-close"></i> {#dodaj folder#}</a>
 		{/if}

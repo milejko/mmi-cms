@@ -19,10 +19,10 @@ class CmsRouterConfig extends \Mmi\Mvc\RouterConfig {
 		//moduł - cmsAdmin
 		$this->setRoute('cms-admin-module', 'cmsAdmin', ['module' => 'cmsAdmin'], ['controller' => 'index', 'action' => 'index']);
 
-		//moduł + kontroler + akcja index np. /cmsAdmin/article
+		//moduł + kontroler + akcja index np. /cmsAdmin/text
 		$this->setRoute('cms-admin-module-controller', '/^cmsAdmin\/([a-zA-Z\-]+)$/', ['module' => 'cmsAdmin', 'controller' => '$1'], ['action' => 'index']);
 
-		//moduł + kontroler + akcja np. /cmsAdmin/article/display
+		//moduł + kontroler + akcja np. /cmsAdmin/text/display
 		$this->setRoute('cms-admin-module-controller-action', '/^cmsAdmin\/([a-zA-Z\-]+)\/([a-zA-Z]+)$/', ['module' => 'cmsAdmin', 'controller' => '$1', 'action' => '$2']);
 
 		//routa do stron cms i kategorii

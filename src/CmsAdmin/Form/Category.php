@@ -19,9 +19,6 @@ class Category extends \Cms\Form\AttributeForm {
 
 	public function init() {
 
-		$this->addElementLabel('label-config')
-			->setLabel('Konfiguracja');
-
 		//nazwa kategorii
 		$this->addElementText('name')
 			->setLabel('nazwa')
@@ -49,37 +46,10 @@ class Category extends \Cms\Form\AttributeForm {
 			->setChecked()
 			->setLabel('widoczna');
 
-		//zapis
-		$this->addElementSubmit('submit1')
-			->setLabel('zapisz');
-
-		$this->addElementLabel('label-content')
-			->setLabel('Treść');
-
-		//lead
-		$this->addElementTextarea('lead')
-			->setLabel('podsumowanie');
-
-		//treść
-		$this->addElementTinyMce('text')
-			->setLabel('treść');
-
-		//uploader
-		$this->addElementPlupload('files');
-
-		//zapis
-		$this->addElementSubmit('submit2')
-			->setLabel('zapisz');
-
 		//atrybuty
 		if ($this->initAttributes('cms_category_type', $this->getRecord()->cmsCategoryTypeId, 'category', 'Atrybuty')) {
-			//jeśli wstawione, dodany button z zapisem
-			$this->addElementSubmit('submit-attr')
-				->setLabel('zapisz');
+			
 		}
-
-		$this->addElementLabel('label-seo')
-			->setLabel('SEO i zaawansowane');
 
 		$defaultUri = \Mmi\App\FrontController::getInstance()->getView()->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->getRecord()->uri], true);
 
@@ -95,14 +65,13 @@ class Category extends \Cms\Form\AttributeForm {
 		//nazwa kategorii
 		$this->addElementText('title')
 			->setLabel('meta tytuł')
-			->setDescription('jeśli brak, użyta zostanie nazwa')
+			->setDescription('jeśli brak, użyta zostanie kaskada nazw')
 			->addFilterStringTrim()
 			->addValidatorStringLength(2, 128);
 
 		//meta description
 		$this->addElementTextarea('description')
-			->setLabel('meta opis')
-			->setDescription('jeśli brak, użyte zostanie podsumowanie');
+			->setLabel('meta opis');
 
 		//https
 		$this->addElementSelect('https')

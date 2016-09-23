@@ -36,9 +36,6 @@ class NavigationController extends Mvc\Controller {
 			case 'folder':
 				$form = new \CmsAdmin\Form\Page\Folder($navRecord);
 				break;
-			case 'simple':
-				$form = new \CmsAdmin\Form\Page\Article($navRecord);
-				break;
 			default:
 				$form = new \CmsAdmin\Form\Page\Cms($navRecord);
 				break;

@@ -162,19 +162,6 @@ class CmsNavigationQuery extends \Mmi\Orm\Query {
 	}
 
 	/**
-	 * Po uri artykułu
-	 * @param string $uri
-	 * @return CmsNavigationQuery
-	 */
-	public static function byArticleUri($uri) {
-		return (new self)
-				->whereModule()->equals('cms')
-				->andFieldController()->equals('article')
-				->andFieldAction()->equals('index')
-				->andFieldParams()->equals('uri=' . $uri);
-	}
-
-	/**
 	 * Po rodzicu
 	 * @param integer $parentId
 	 * @return CmsNavigationQuery
