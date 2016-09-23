@@ -26,7 +26,7 @@
 					{$categoryForm}
 				</div>
 				<div class="tab-content clearfix" id="tab-section">
-					sekcje
+					<a class="button" href="{@module=cmsAdmin&controller=category&action=index&addsection=1&id={$request->id}@}#tab-section"><i class="icon-plus"></i> dodaj sekcję</a>
 				</div>
 			</div>
 		</div>
