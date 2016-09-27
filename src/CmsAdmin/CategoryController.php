@@ -24,8 +24,13 @@ class CategoryController extends Mvc\Controller {
 		if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
 			return;
 		}
+		//konfiguracja kategorii
 		$form = (new \CmsAdmin\Form\Category($cat));
 		$this->view->categoryForm = $form;
+		//zakładka sekcje
+		$sectionForm = (new \CmsAdmin\Form\CategorySection($cat));
+		$this->view->categorySectionForm = $sectionForm;
+		//zapis
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Zmiany w stronie zostały zapisane', true);
 			$this->getResponse()->redirect('cmsAdmin', 'category', 'index');

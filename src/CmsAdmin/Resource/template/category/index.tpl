@@ -14,22 +14,68 @@
 		<div id="categoryNodeContainer">
 			<div id="categoryMessageContainer"></div>
 			<div id="categoryContentContainer">
-				<ul class="tabs">
-					<li>
-						<a href="#tab-config">Konfiguracja</a>
-					</li>
-					<li>
-						<a href="#tab-section">Sekcje</a>
-					</li>
-				</ul>
-				<div class="tab-content clearfix" id="tab-config">
-					{$categoryForm}
+				{if $categoryForm}
+					<ul class="tabs">
+						<li>
+							<a href="#tab-config">Konfiguracja</a>
+						</li>
+						<li>
+							<a href="#tab-seo">SEO</a>
+						</li>
+						<li>
+							<a href="#tab-content">Treść i tagi</a>
+						</li>
+						<li>
+							<a href="#tab-advanced">Zaawansowane</a>
+						</li>
+						<li>
+							<a href="#tab-section">Widgety</a>
+						</li>
+					</ul>
+					{$categoryForm->start()}
+					<div class="tab-content clearfix" id="tab-config">
+						{$categoryForm->getElement('cmsCategoryTypeId')}
+						{$categoryForm->getElement('name')}
+						{$categoryForm->getElement('active')}
+						{$categoryForm->getElement('submit1')}
+					</div>
+					<div class="tab-content clearfix" id="tab-seo">
+						{$categoryForm->getElement('title')}
+						{$categoryForm->getElement('description')}
+						{$categoryForm->getElement('customUri')}
+						{$categoryForm->getElement('follow')}
+						{$categoryForm->getElement('submit2')}
+					</div>
+					<div class="tab-content clearfix" id="tab-content">
+						{foreach $categoryForm->getElements() as $element}
+						{if php_substr($element->getName(), 0 ,12) != 'cmsAttribute'}{continue}{/if}
+						{$element}
+					{/foreach}
+					{$categoryForm->getElement('tags')}
+					{$categoryForm->getElement('submit3')}
 				</div>
+				<div class="tab-content clearfix" id="tab-advanced">
+					{$categoryForm->getElement('redirect')}
+					{$categoryForm->getElement('mvcParams')}
+					{$categoryForm->getElement('https')}
+					{$categoryForm->getElement('blank')}
+					{$categoryForm->getElement('submit4')}
+				</div>
+				{$categoryForm->end()}
 				<div class="tab-content clearfix" id="tab-section">
-					<a class="button" href="{@module=cmsAdmin&controller=category&action=index&addsection=1&id={$request->id}@}#tab-section"><i class="icon-plus"></i> dodaj sekcję</a>
+					{$categorySectionForm}
+					<ul class="list ui-sortable" id="navigation-list">
+						<li id="navigation-item-1" class="ui-sortable-handle">
+							<div>
+								<a href="#" class="button edit"><i class="icon-edit"></i> edytuj</a>
+								<a href="#" class="button delete confirm" title="Czy na pewno usunąć widget?"><i class="icon-remove-sign"></i> usuń</a>
+							</div>
+						</li>
+					</ul>
 				</div>
-			</div>
+			{/if}
 		</div>
-		<div class="cl"></div>
 	</div>
+	<div class="cl"></div>
+</div>
 </div>

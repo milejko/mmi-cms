@@ -19,6 +19,15 @@ class Category extends \Cms\Form\AttributeForm {
 
 	public function init() {
 
+		//Konfiguracja
+		//szablony/typy (jeśli istnieją)
+		if ([] !== $types = (new \Cms\Orm\CmsCategoryTypeQuery)->orderAscName()->findPairs('id', 'name')) {
+			$this->addElementSelect('cmsCategoryTypeId')
+				->setLabel('szablon strony')
+				->addFilterEmptyToNull()
+				->setMultioptions([null => 'Domyślny'] + $types);
+		}
+
 		//nazwa kategorii
 		$this->addElementText('name')
 			->setLabel('nazwa')
@@ -26,30 +35,27 @@ class Category extends \Cms\Form\AttributeForm {
 			->addFilterStringTrim()
 			->addValidatorStringLength(2, 128);
 
-		//typy treści (jeśli istnieją)
-		if ([] !== $types = (new \Cms\Orm\CmsCategoryTypeQuery)->orderAscName()->findPairs('id', 'name')) {
-			$this->addElementSelect('cmsCategoryTypeId')
-				->setLabel('typ treści')
-				->addFilterEmptyToNull()
-				->setMultioptions([null => 'Domyślny'] + $types);
-		}
-
-		//tagi
-		$this->addElementText('tags')
-			->setLabel('tagi')
-			->setDescription('lista tagów oddzielonych spacją')
-			->setValue($this->getRecord()->id ? implode(' ', (new TagRelationModel('category', $this->getRecord()->id))->getTagRelations()) : '')
-			->addFilterStringTrim();
 
 		//aktywna
 		$this->addElementCheckbox('active')
 			->setChecked()
-			->setLabel('widoczna');
+			->setLabel('włączona');
 
-		//atrybuty
-		if ($this->initAttributes('cms_category_type', $this->getRecord()->cmsCategoryTypeId, 'category', 'Atrybuty')) {
-			
-		}
+		//zapis
+		$this->addElementSubmit('submit1')
+			->setLabel('zapisz');
+
+		//SEO
+		//nazwa kategorii
+		$this->addElementText('title')
+			->setLabel('meta tytuł')
+			->setDescription('jeśli brak, użyta zostanie kaskada złożona nazw')
+			->addFilterStringTrim()
+			->addValidatorStringLength(2, 128);
+
+		//meta description
+		$this->addElementTextarea('description')
+			->setLabel('meta opis');
 
 		$defaultUri = \Mmi\App\FrontController::getInstance()->getView()->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->getRecord()->uri], true);
 
@@ -62,16 +68,44 @@ class Category extends \Cms\Form\AttributeForm {
 			->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryQuery, 'customUri', $this->getRecord()->id)
 			->addValidatorStringLength(3, 255);
 
-		//nazwa kategorii
-		$this->addElementText('title')
-			->setLabel('meta tytuł')
-			->setDescription('jeśli brak, użyta zostanie kaskada nazw')
-			->addFilterStringTrim()
-			->addValidatorStringLength(2, 128);
+		//blank
+		$this->addElementCheckbox('follow')
+			->setChecked()
+			->setLabel('widoczna dla wyszukiwarek');
 
-		//meta description
-		$this->addElementTextarea('description')
-			->setLabel('meta opis');
+		//zapis
+		$this->addElementSubmit('submit2')
+			->setLabel('zapisz');
+
+		//Treść
+		//atrybuty
+		$this->initAttributes('cms_category_type', $this->getRecord()->cmsCategoryTypeId, 'category');
+
+		//tagi
+		$this->addElementText('tags')
+			->setLabel('tagi')
+			->setDescription('lista tagów oddzielonych spacją')
+			->setValue($this->getRecord()->id ? implode(' ', (new TagRelationModel('category', $this->getRecord()->id))->getTagRelations()) : '')
+			->addFilterStringTrim();
+
+		//jeśli wstawione, dodany button z zapisem
+		$this->addElementSubmit('submit3')
+			->setLabel('zapisz');
+
+		//Zaawansowane
+		//przekierowanie na link
+		$this->addElementText('redirect')
+			->setLabel('przekierowanie na adres')
+			->setDescription('np. http://www.google.pl')
+			->addFilterStringTrim()
+			->addValidatorStringLength(5, 128);
+
+		//przekierowanie na moduł
+		$this->addElementText('mvcParams')
+			->setLabel('przekierowanie na moduł CMS')
+			->setDescription('np. blog/index/index')
+			->addFilterStringTrim()
+			->addValidatorStringLength(5, 128);
 
 		//https
 		$this->addElementSelect('https')
@@ -81,15 +115,10 @@ class Category extends \Cms\Form\AttributeForm {
 
 		//blank
 		$this->addElementCheckbox('blank')
-			->setLabel('otwórz w nowym oknie');
-
-		//blank
-		$this->addElementCheckbox('follow')
-			->setChecked()
-			->setLabel('widoczna dla wyszukiwarek');
+			->setLabel('otwieranie w nowym oknie');
 
 		//zapis
-		$this->addElementSubmit('submit3')
+		$this->addElementSubmit('submit4')
 			->setLabel('zapisz');
 	}
 
@@ -101,7 +130,7 @@ class Category extends \Cms\Form\AttributeForm {
 		//zapis tagów
 		(new TagRelationModel('category', $this->getRecord()->id))
 			->createTagRelations(explode(' ', $this->getElement('tags')->getValue()));
-		return true;
+		return parent::afterSave();
 	}
 
 }
