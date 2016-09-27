@@ -50,7 +50,7 @@ abstract class AttributeForm extends Form {
 	 * @param string $label opcjonalna labelka atrybutów
 	 * @return boolean zwraca false jeśli brak atrybutów
 	 */
-	public function initAttributes($object, $objectId, $saveToObject, $label) {
+	public function initAttributes($object, $objectId, $saveToObject, $label = null) {
 		//ustalenie obiektu do zapisu relacji
 		$this->_saveToObject = $saveToObject;
 		//pobranie przypisanych atrybutów
@@ -194,7 +194,9 @@ abstract class AttributeForm extends Form {
 		}
 		//czy pole jest wgrywarką plików
 		if ($attribute->isUploader()) {
-			$field->setIgnore();
+			//obiektem dla uploadera jest obiekt główny + klucz atrybutu, ignorowanie pola
+			$field->setObject($this->_saveToObject . '-' . $attribute->key);
+			$field->setValue($this->_saveToObject . '-' . $attribute->key);
 		}
 		//walidatory
 		if ($attribute->validatorClasses) {

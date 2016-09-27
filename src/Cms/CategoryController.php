@@ -71,6 +71,7 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		$this->view->category = $category;
 		//przekazanie atrybutów
 		$this->view->attributes = (new Model\AttributeValueRelationModel('category', $category->id))->getAttributeValues();
+		$this->view->tags = (new Model\TagRelationModel('category', $category->id))->getTagRelations();
 	}
 
 }
