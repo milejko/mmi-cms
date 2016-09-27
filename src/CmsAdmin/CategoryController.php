@@ -33,7 +33,6 @@ class CategoryController extends Mvc\Controller {
 		//zapis
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Zmiany w stronie zostały zapisane', true);
-			$this->getResponse()->redirect('cmsAdmin', 'category', 'index');
 		}
 	}
 	

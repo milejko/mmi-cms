@@ -9,6 +9,10 @@ var CATEGORYCONF = CATEGORYCONF || {};
 CATEGORYCONF.stateKey = 'cms-category-jstree';
 //po jakim czasie ukryć message
 CATEGORYCONF.msgDelay = 2500;
+//czy przeładować
+CATEGORYCONF.reload = false;
+//czy otwarto menu kontekstowe
+CATEGORYCONF.contextMenu = false;
 
 //zarządzanie stronami
 $(document).ready(function () {
@@ -61,6 +65,7 @@ $(document).ready(function () {
 		},
 		'contextmenu': {
 			'items': function (node) {
+				CATEGORYCONF.contextMenu = true;
 				var tmp = $.jstree.defaults.contextmenu.items();
 				delete tmp.ccp;
 				tmp.create.label = "Utwórz podstronę";
@@ -95,9 +100,9 @@ $(document).ready(function () {
 		$.post(request.baseUrl + '/cmsAdmin/category/delete', {'id': data.node.id})
 			.done(function (d) {
 				if (d.status) {
+					CATEGORYCONF.reload = true;
 					$('#jstree').jstree('deselect_all');
 					$('#jstree').jstree('select_node', data.parent);
-					data.instance.refresh();
 				} else {
 					data.instance.refresh();
 				}
@@ -116,7 +121,6 @@ $(document).ready(function () {
 					data.instance.set_id(data.node, d.id);
 					$('#jstree').jstree('deselect_all');
 					$('#jstree').jstree('select_node', d.id);
-					data.instance.refresh();
 				} else {
 					data.instance.refresh();
 				}
@@ -132,6 +136,7 @@ $(document).ready(function () {
 		$.post(request.baseUrl + '/cmsAdmin/category/rename', {'id': data.node.id, 'name': data.text})
 			.done(function (d) {
 				if (d.status) {
+					CATEGORYCONF.reload = true;
 					data.node.text = d.name;
 					$('#jstree').jstree('deselect_all');
 					$('#jstree').jstree('select_node', d.id);
@@ -167,10 +172,19 @@ $(document).ready(function () {
 		if (!data || !data.selected || !data.selected.length || !(0 in data.selected)) {
 			return;
 		}
-		if (request.id == data.selected) {
-			return;
-		}
-		$('#categoryContentContainer').empty();
+		setTimeout(function() {
+			if (!CATEGORYCONF.reload && parseFloat(request.id) === parseFloat(data.selected[0])) {
+				return;
+			}
+			if (CATEGORYCONF.contextMenu && !CATEGORYCONF.reload) {
+				CATEGORYCONF.contextMenu = false;
+				return;
+			}
+			if (CATEGORYCONF.reload || parseFloat(request.id) !== parseFloat(data.selected[0])) {
+				window.location = request.baseUrl + '/cmsAdmin/category/index?id=' + data.selected;
+				return;
+			}
+		}, 20);
 	});
 });
 
