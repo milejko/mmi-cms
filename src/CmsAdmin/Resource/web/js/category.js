@@ -184,7 +184,7 @@ $(document).ready(function () {
 				window.location = request.baseUrl + '/cmsAdmin/category/index?id=' + data.selected;
 				return;
 			}
-		}, 20);
+		}, 150);
 	});
 });
 
