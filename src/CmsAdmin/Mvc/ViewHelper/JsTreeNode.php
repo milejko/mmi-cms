@@ -52,6 +52,9 @@ class JsTreeNode extends \Mmi\Mvc\ViewHelper\HelperAbstract {
 			$select = 'false';
 			$disabled = 'false';
 			$type = ($child['record']->active)? 'default' : 'inactive';
+			if (!isset($child['children']) || !count($child['children'])) {
+				$type = 'leaf';
+			}
 			$html .= '<li id="' . $child['record']->id . '" class="' . ((isset($child['children']) && count($child['children']))? 'jstree-closed' : '') . '"';
 			$html .= ' data-jstree=\'{"type":"' . $type . '", "disabled":' . $disabled . ', "selected":' . $select . '}\'>' . $child['record']->name . '</li>';
 		}

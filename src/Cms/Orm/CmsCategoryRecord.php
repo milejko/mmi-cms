@@ -106,6 +106,22 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		$this->_rebuildChildren($this->id);
 		return true;
 	}
+	
+	/**
+	 * Kasowanie obiektu
+	 * @return boolean
+	 * @throws \Cms\Exception\ChildrenExistException
+	 */
+	public function delete() {
+		if ($this->getPk() === null) {
+			return false;
+		}
+		$children = (new \Cms\Model\CategoryModel)->getCategoryTree($this->getPk());
+		if (!empty($children)) {
+			throw new \Cms\Exception\ChildrenExistException();
+		}
+		return parent::delete();
+	}
 
 	/**
 	 * Przebudowuje dzieci (wywołuje save)

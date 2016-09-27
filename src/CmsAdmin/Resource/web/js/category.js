@@ -1,5 +1,5 @@
 /**
- * Obsługa drzewka kategorii CMS
+ * Obsługa drzewka stron CMS
  */
 
 var request = request || {};
@@ -10,7 +10,7 @@ CATEGORYCONF.stateKey = 'cms-category-jstree';
 //po jakim czasie ukryć message
 CATEGORYCONF.msgDelay = 2500;
 
-//zarządzanie kategoriami
+//zarządzanie stronami
 $(document).ready(function () {
 	//przeniesienie messengera
 	$('ul#messenger').appendTo('#categoryMessageContainer').show();
@@ -31,7 +31,7 @@ $(document).ready(function () {
 				'stripes' : true
             },
 			'strings': {
-				'New node': 'Nowa kategoria',
+				'New node': 'Nowa strona',
 				'Loading ...': 'Ładowanie ...'
 			},
 			'multiple': false,
@@ -39,8 +39,8 @@ $(document).ready(function () {
 			'force_text': true,
             'check_callback': function (op) {
 				if (op === 'delete_node') {
-					return confirm("Czy na pewno usunąć kategorię?");
-					}
+					return confirm("Czy na pewno usunąć stronę?");
+				}
 				return true;
 			}
         },
@@ -54,22 +54,25 @@ $(document).ready(function () {
 		},
 		'types': {
 			'#': { 'valid_children': ["root"] },
-			'root': { 'valid_children': ["default", "inactive"], 'icon': request.baseUrl + '/resource/cmsAdmin/images/tree.png' },
-			'default': { 'valid_children': ["default", "inactive"] },
-			'inactive': { 'valid_children': ["default", "inactive"], 'icon': 'jstree-inactive' }
+			'root': { 'valid_children': ["default", "inactive", "leaf"], 'icon': request.baseUrl + '/resource/cmsAdmin/images/tree.png' },
+			'default': { 'valid_children': ["default", "inactive", "leaf"] },
+			'leaf': { 'valid_children': ["default", "inactive", "leaf"] },
+			'inactive': { 'valid_children': ["default", "inactive", "leaf"], 'icon': 'jstree-inactive' }
 		},
 		'contextmenu': {
 			'items': function (node) {
 				var tmp = $.jstree.defaults.contextmenu.items();
 				delete tmp.ccp;
-				tmp.create.label = "Utwórz podkategorię";
+				tmp.create.label = "Utwórz podstronę";
 				tmp.rename.label = "Zmień nazwę";
 				tmp.remove.label = "Usuń";
-				if (this.get_type(node) === "root") {
-					delete tmp.rename;
+				if (this.get_type(node) !== "leaf") {
 					delete tmp.remove;
+				}
+				if (this.get_type(node) === "root") {
+					tmp.create.label = "Utwórz nową stronę";
+					delete tmp.rename;
 					tmp.create.separator_after = false;
-					tmp.create.label = "Utwórz kategorię bazową";
 				} else {
 					tmp.edit = {
 						"separator_before": true,
@@ -80,7 +83,7 @@ $(document).ready(function () {
 							var node = inst.get_node(data.reference);
 							CATEGORYCONF.editForm(node);
 						}
-					}
+					};
 				}
 				return tmp;
 			}
@@ -94,6 +97,7 @@ $(document).ready(function () {
 				if (d.status) {
 					$('#jstree').jstree('deselect_all');
 					$('#jstree').jstree('select_node', data.parent);
+					data.instance.refresh();
 				} else {
 					data.instance.refresh();
 				}
@@ -101,7 +105,7 @@ $(document).ready(function () {
 			})
 			.fail(function () {
 				data.instance.refresh();
-				CATEGORYCONF.showMessage({'error': 'Nie udało się usunąć kategorii'});
+				CATEGORYCONF.showMessage({'error': 'Nie udało się usunąć strony'});
 			});
 	})
 	.on('create_node.jstree', function (e, data) {
@@ -112,6 +116,7 @@ $(document).ready(function () {
 					data.instance.set_id(data.node, d.id);
 					$('#jstree').jstree('deselect_all');
 					$('#jstree').jstree('select_node', d.id);
+					data.instance.refresh();
 				} else {
 					data.instance.refresh();
 				}
@@ -119,7 +124,7 @@ $(document).ready(function () {
 			})
 			.fail(function () {
 				data.instance.refresh();
-				CATEGORYCONF.showMessage({'error': 'Nie udało się utworzyć kategorii'});
+				CATEGORYCONF.showMessage({'error': 'Nie udało się utworzyć strony'});
 			});
 	})
 	.on('rename_node.jstree', function (e, data) {
@@ -137,7 +142,7 @@ $(document).ready(function () {
 			})
 			.fail(function () {
 				data.instance.refresh();
-				CATEGORYCONF.showMessage({'error': 'Nie udało się zmienić nazwy kategorii'});
+				CATEGORYCONF.showMessage({'error': 'Nie udało się zmienić nazwy strony'});
 			});
 	})
 	.on('move_node.jstree', function (e, data) {
@@ -155,7 +160,7 @@ $(document).ready(function () {
 			})
 			.fail(function () {
 				data.instance.refresh();
-				CATEGORYCONF.showMessage({'error': 'Nie udało się przenieść kategorii'});
+				CATEGORYCONF.showMessage({'error': 'Nie udało się przenieść strony'});
 			});
 	})
 	.on('changed.jstree', function (e, data) {

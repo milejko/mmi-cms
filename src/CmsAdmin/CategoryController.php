@@ -11,12 +11,12 @@
 namespace CmsAdmin;
 
 /**
- * Kontroler kategorii
+ * Kontroler kategorii - stron CMS
  */
 class CategoryController extends Mvc\Controller {
 
 	/**
-	 * Lista kategorii - prezentacja w formie drzewa
+	 * Lista stron CMS - prezentacja w formie drzewa
 	 */
 	public function indexAction() {
 		//w szablonie podłączenie ajaxowego ładowania drzewka
@@ -27,25 +27,25 @@ class CategoryController extends Mvc\Controller {
 		$form = (new \CmsAdmin\Form\Category($cat));
 		$this->view->categoryForm = $form;
 		if ($form->isSaved()) {
-			$this->getMessenger()->addMessage('Zmiany w kategorii zostały zapisane', true);
+			$this->getMessenger()->addMessage('Zmiany w stronie zostały zapisane', true);
 			$this->getResponse()->redirect('cmsAdmin', 'category', 'index');
 		}
 	}
 	
 	/**
-	 * Renderowanie fragmentu drzewa kategorii na podstawie parentId
+	 * Renderowanie fragmentu drzewa stron na podstawie parentId
 	 */
 	public function nodeAction() {
 		//wyłączenie layout
 		$this->view->setLayoutDisabled();
 		//id węzła rodzica
 		$this->view->parentId = ($this->parentId > 0)? $this->parentId : null;
-		//pobranie drzewiastej struktury kategorii
+		//pobranie drzewiastej struktury stron CMS
 		$this->view->categoryTree = (new \Cms\Model\CategoryModel)->getCategoryTree($this->view->parentId);
 	}
 
 	/**
-	 * Tworzenie nowej kategorii
+	 * Tworzenie nowej strony
 	 */
 	public function createAction() {
 		$this->getResponse()->setTypeJson();
@@ -55,34 +55,34 @@ class CategoryController extends Mvc\Controller {
 		$cat->order = $this->getPost()->order;
 		$cat->active = true;
 		if ($cat->save()) {
-			return json_encode(['status' => true, 'id' => $cat->id, 'message' => 'Kategoria została utworzona']);
+			return json_encode(['status' => true, 'id' => $cat->id, 'message' => 'Strona została utworzona']);
 		}
-		return json_encode(['status' => false, 'error' => 'Nie udało się utworzyć kategorii']);
+		return json_encode(['status' => false, 'error' => 'Nie udało się utworzyć strony']);
 	}
 	
 	/**
-	 * Zmiana nazwy kategorii
+	 * Zmiana nazwy strony
 	 */
 	public function renameAction() {
 		$this->getResponse()->setTypeJson();
 		if (null !== $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
 			$name = trim($this->getPost()->name);
 			if (mb_strlen($name) < 2) {
-				return json_encode(['status' => false, 'error' => 'Nazwa kategorii jest zbyt krótka - wymagane minimum to 2 znaki']);
+				return json_encode(['status' => false, 'error' => 'Nazwa strony jest zbyt krótka - wymagane minimum to 2 znaki']);
 			}
 			if (mb_strlen($name) > 64) {
-				return json_encode(['status' => false, 'error' => 'Nazwa kategorii jest zbyt długa - maksimum to 64 znaki']);
+				return json_encode(['status' => false, 'error' => 'Nazwa strony jest zbyt długa - maksimum to 64 znaki']);
 			}
 			$cat->name = $name;
 			if ($cat->save() !== false) {
-				return json_encode(['status' => true, 'id' => $cat->id, 'name' => $name, 'message' => 'Nazwa kategorii została zmieniona']);
+				return json_encode(['status' => true, 'id' => $cat->id, 'name' => $name, 'message' => 'Nazwa strony została zmieniona']);
 			}
 		}
-		return json_encode(['status' => false, 'error' => 'Nie udało się zmienić nazwy kategorii']);
+		return json_encode(['status' => false, 'error' => 'Nie udało się zmienić nazwy strony']);
 	}
 	
 	/**
-	 * Przenoszenie kategorii w drzewie
+	 * Przenoszenie strony w drzewie
 	 */
 	public function moveAction() {
 		$this->getResponse()->setTypeJson();
@@ -90,22 +90,26 @@ class CategoryController extends Mvc\Controller {
 			$cat->parentId = ($this->getPost()->parentId > 0)? $this->getPost()->parentId : null;
 			$cat->order = $this->getPost()->order;
 			if ($cat->save() !== false) {
-				return json_encode(['status' => true, 'id' => $cat->id, 'message' => 'Kategoria została przeniesiona']);
+				return json_encode(['status' => true, 'id' => $cat->id, 'message' => 'Strona została przeniesiona']);
 			}
 		}
-		return json_encode(['status' => false, 'error' => 'Nie udało się przenieść kategorii']);
+		return json_encode(['status' => false, 'error' => 'Nie udało się przenieść strony']);
 	}
 
 	/**
-	 * Usuwanie kategorii
+	 * Usuwanie strony
 	 */
 	public function deleteAction() {
 		$this->getResponse()->setTypeJson();
 		$cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id);
-		if ($cat && $cat->delete()) {
-			return json_encode(['status' => true, 'message' => 'Kategoria została usunięta']);
+		try {
+			if ($cat && $cat->delete()) {
+				return json_encode(['status' => true, 'message' => 'Strona została usunięta']);
+			}
+		} catch (\Cms\Exception\ChildrenExistException $e) {
+			return json_encode(['status' => false, 'error' => 'Nie można usunąć strony zawierającej strony podrzędne']);
 		}
-		return json_encode(['status' => false, 'error' => 'Nie udało się usunąć kategorii']);
+		return json_encode(['status' => false, 'error' => 'Nie udało się usunąć strony']);
 	}
 
 }
