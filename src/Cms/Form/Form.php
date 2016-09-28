@@ -149,6 +149,15 @@ abstract class Form extends \Mmi\Form\Form {
 	public function addElementUploader($name) {
 		return $this->addElement(new Element\Uploader($name));
 	}
+        
+        /**
+	 * Multi select
+	 * @param string $name nazwa
+	 * @return \Cms\Form\Element\MultiSelect
+	 */
+	public function addElementMultiSelect($name) {
+		return $this->addElement(new Element\MultiSelect($name));
+	}
 
 	/**
 	 * Zwraca nazwę obiektu do przypięcia plików

@@ -80,14 +80,15 @@ class Category extends \Cms\Form\AttributeForm {
 		//Treść
 		//atrybuty
 		$this->initAttributes('cms_category_type', $this->getRecord()->cmsCategoryTypeId, 'category');
-
+                                
 		//tagi
-		$this->addElementText('tags')
+		$this->addElementMultiSelect('tags')
 			->setLabel('tagi')
-			->setDescription('lista tagów oddzielonych spacją')
-			->setValue($this->getRecord()->id ? implode(' ', (new TagRelationModel('category', $this->getRecord()->id))->getTagRelations()) : '')
-			->addFilterStringTrim();
-
+			->setDescription('lista tagów')
+                        ->setMultiple()
+                        ->setMultioptions((new \Cms\Orm\CmsTagQuery)->orderAscId()->findPairs('tag', 'tag'))
+			->setValue($this->getRecord()->id ? (new TagRelationModel('category', $this->getRecord()->id))->getTagRelations() : '');
+                
 		//jeśli wstawione, dodany button z zapisem
 		$this->addElementSubmit('submit3')
 			->setLabel('zapisz');
@@ -129,7 +130,7 @@ class Category extends \Cms\Form\AttributeForm {
 	public function afterSave() {
 		//zapis tagów
 		(new TagRelationModel('category', $this->getRecord()->id))
-			->createTagRelations(explode(' ', $this->getElement('tags')->getValue()));
+			->createTagRelations($this->getElement('tags')->getValue());
 		return parent::afterSave();
 	}
 
