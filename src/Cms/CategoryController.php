@@ -21,9 +21,19 @@ class CategoryController extends \Mmi\Mvc\Controller {
 	public function dispatchAction() {
 		//wyszukanie kategorii
 		if ((null === $category = (new Model\CategoryModel)
-			->getCategoryByUri($this->uri)) || $category->active != 1) {
+			->getCategoryByUri($this->uri))) {
 			//404
 			throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $this->uri);
+		}
+		//kategoria nieaktywna i brak roli redaktora treści
+		if ($category->active != 1 && !\App\Registry::$acl->isAllowed(\App\Registry::$auth->getRoles(), 'cmsAdmin:category:index')) {
+			//404
+			throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $this->uri);
+		}
+		//kategoria posiada customUri, a wejście jest na natywny uri
+		if ($category->customUri && $this->uri == $category->uri) {
+			//przekierowanie na customUri
+			$this->getResponse()->redirect('cms', 'category', 'dispatch', ['uri' => $category->customUri]);
 		}
 		//tworzenie nowego requestu na podstawie obecnego
 		$request = clone $this->getRequest();

@@ -1,5 +1,4 @@
 {headLink()->appendStyleSheet($baseUrl . '/resource/cmsAdmin/css/category.css')}
-{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/tiny/tinymce.min.js')}
 <div class="content-box">
 	<div class="content-box-header">
 		<h3>{#Zarządzanie treścią#}</h3>
@@ -20,16 +19,19 @@
 							<a href="#tab-config">Konfiguracja</a>
 						</li>
 						<li>
-							<a href="#tab-seo">SEO</a>
+							<a href="#tab-content">Treść i tagi</a>
 						</li>
 						<li>
-							<a href="#tab-content">Treść i tagi</a>
+							<a href="#tab-seo">SEO</a>
 						</li>
 						<li>
 							<a href="#tab-advanced">Zaawansowane</a>
 						</li>
 						<li>
 							<a href="#tab-section">Widgety</a>
+						</li>
+						<li>
+							<a href="#tab-preview">Podgląd</a>
 						</li>
 					</ul>
 					{$categoryForm->start()}
@@ -72,6 +74,9 @@
 							</div>
 						</li>
 					</ul>
+				</div>
+				<div class="tab-content clearfix" id="tab-preview">
+					<iframe id="preview-frame" src="{if $categoryForm->getRecord()->customUri}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->customUri}@}{else}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->uri}@}{/if}"></iframe>
 				</div>
 			{/if}
 		</div>
