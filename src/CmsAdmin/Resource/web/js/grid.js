@@ -13,7 +13,7 @@ jQuery.fn.putCursorAtEnd = function () {
 	});
 };
 
-var CMS = {};
+var CMS = CMS ? CMS : {};
 
 CMS.grid = function () {
 	"use strict";
@@ -94,10 +94,6 @@ CMS.grid = function () {
 	};
 
 	initGridOperation = function () {
-		//zapytanie o kasowanie
-		$('table.grid').on('click', 'td > a.confirm', function () {
-			return window.confirm($(this).attr('title') + '?');
-		});
 		//akcja na zmianie checkboxa
 		$('table.grid').on('change', 'td > div.checkbox > input.checkbox', function () {
 			var id = $(this).attr('id').split('-');

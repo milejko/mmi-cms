@@ -10,6 +10,7 @@
 		{headScript()->prependFile($baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js')}
 		{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/kickstart.js')}
 		{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/form.js')}
+		{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/default.js')}
 		{headScript()}
 	</head>
 	<body>

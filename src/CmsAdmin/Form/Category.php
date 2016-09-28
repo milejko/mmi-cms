@@ -18,7 +18,7 @@ use \Cms\Model\TagRelationModel;
 class Category extends \Cms\Form\AttributeForm {
 
 	public function init() {
-
+		
 		//Konfiguracja
 		//szablony/typy (jeśli istnieją)
 		if ([] !== $types = (new \Cms\Orm\CmsCategoryTypeQuery)->orderAscName()->findPairs('id', 'name')) {
@@ -57,12 +57,13 @@ class Category extends \Cms\Form\AttributeForm {
 		$this->addElementTextarea('description')
 			->setLabel('meta opis');
 
-		$defaultUri = \Mmi\App\FrontController::getInstance()->getView()->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->getRecord()->uri], true);
-
+		$view = \Mmi\App\FrontController::getInstance()->getView();
+		
 		//własny uri
 		$this->addElementText('customUri')
 			->setLabel('własny adres strony')
-			->setDescription('domyślnie: <a target="_blank" href="' . $defaultUri . '">' . $defaultUri . '</a>')
+			//adres domyślny (bez baseUrl)
+			->setDescription('domyślnie: ' . substr($view->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->getRecord()->uri], true), strlen($view->baseUrl) + 1))
 			->addFilterStringTrim()
 			->addFilterEmptyToNull()
 			->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryQuery, 'customUri', $this->getRecord()->id)

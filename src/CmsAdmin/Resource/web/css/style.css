@@ -524,3 +524,9 @@ button.mce-close {
 .mce-window-head button {
 	left: auto;
 }
+
+.tab-content iframe {
+	width: 100%;
+	height: 0px;
+	border: none;
+}
