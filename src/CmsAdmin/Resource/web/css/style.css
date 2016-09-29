@@ -530,3 +530,8 @@ button.mce-close {
 	height: 0px;
 	border: none;
 }
+
+/* deleteTag */
+.confirm.red{
+    color: red;
+}

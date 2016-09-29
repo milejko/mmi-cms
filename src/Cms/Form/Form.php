@@ -150,13 +150,13 @@ abstract class Form extends \Mmi\Form\Form {
 		return $this->addElement(new Element\Uploader($name));
 	}
         
-        /**
-	 * Multi select
+	/**
+	 * Tagi
 	 * @param string $name nazwa
 	 * @return \Cms\Form\Element\MultiSelect
 	 */
-	public function addElementMultiSelect($name) {
-		return $this->addElement(new Element\MultiSelect($name));
+	public function addElementTags($name) {
+		return $this->addElement(new Element\Tags($name));
 	}
 
 	/**

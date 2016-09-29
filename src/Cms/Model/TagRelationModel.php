@@ -49,7 +49,7 @@ class TagRelationModel {
 	 */
 	public function createTagRelation($tag) {
 		//filtrowanie tagu
-		$filteredTag = (new \Mmi\Filter\Alnum)->filter($tag);
+		$filteredTag = (new \Mmi\Filter\Input)->filter($tag);
 		//kreacja tagu jeśli brak
 		if (null === $tagRecord = (new CmsTagQuery)
 			->whereTag()->equals($filteredTag)

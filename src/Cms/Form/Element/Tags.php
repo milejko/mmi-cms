@@ -86,40 +86,32 @@ namespace Cms\Form\Element;
  * @method self addFilterUrlencode() filtr urlencode
  * @method self addFilterZeroToNull() filtr zero do null'a
  */
-class MultiSelect extends \Mmi\Form\Element\ElementAbstract {
+class Tags extends \Mmi\Form\Element\Select {
 
 	/**
-	 * Ustawia multiselect
-	 * @return self
+	 * pole multiselect
 	 */
-	public function setMultiple() {
-		return $this->setOption('multiple', '');
+	public function __construct($name) {
+		parent::__construct($name);
+		$this->setMultiple();
 	}
-
-	/**
-	 * Zwraca czy pole jest multiple
-	 * @return boolean
-	 */
-	public final function getMultiple() {
-		return null !== $this->getOption('multiple');
-	}
-
+        
 	/**
 	 * Buduje pole
 	 * @return string
 	 */
-	public function fetchField() {
-            
+	public function fetchField() {            
                 $id = $this->getOption('id');
             
                 $view = \Mmi\App\FrontController::getInstance()->getView();            
                 $view->headLink()->appendStylesheet($view->baseUrl . '/resource/cmsAdmin/css/chosen.min.css');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/chosen.jquery.min.js');
                 $view->headScript()->appendScript("
-                    $(document).ready(function () {
-                        $('#".$id."').chosen({
-                            no_results_text:'Brak wyników!',
-                            placeholder_text_multiple:'Wybierz tag'
+                    $(document).ready(function ($) {
+                        $('#".$id."').chosen({			    
+			    disable_search_threshold:10,
+			    placeholder_text_multiple:'Wpisz lub wybierz opcję',
+			    no_results_text:'Brak pasujących wyników'
                         });
                     });
 		");
@@ -146,25 +138,4 @@ class MultiSelect extends \Mmi\Form\Element\ElementAbstract {
 		$html .= '</select>';
 		return $html;
 	}
-
-	/**
-	 * Zaznacza element który powinien być zaznaczony
-	 * @param string $key klucz
-	 * @param array $value wartość
-	 * @return string
-	 */
-	protected function _calculateSelected($key, $value) {
-            
-		$selected = ' selected';
-		//typ tablicowy
-		if (is_array($value)) {
-			return in_array($key, $value) ? $selected : '';
-		}
-		//typ skalarny
-		if ((string) $value == (string) $key && !is_null($value)) {
-			return $selected;
-		}
-		return '';
-	}
-
 }

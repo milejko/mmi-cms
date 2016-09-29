@@ -81,13 +81,12 @@ class Category extends \Cms\Form\AttributeForm {
 		//Treść
 		//atrybuty
 		$this->initAttributes('cms_category_type', $this->getRecord()->cmsCategoryTypeId, 'category');
-                                
+                                     
 		//tagi
-		$this->addElementMultiSelect('tags')
+		$this->addElementTags('tags')
 			->setLabel('tagi')
 			->setDescription('lista tagów')
-                        ->setMultiple()
-                        ->setMultioptions((new \Cms\Orm\CmsTagQuery)->orderAscId()->findPairs('tag', 'tag'))
+			->setMultioptions((new \Cms\Orm\CmsTagQuery)->orderAscId()->findPairs('tag', 'tag'))
 			->setValue($this->getRecord()->id ? (new TagRelationModel('category', $this->getRecord()->id))->getTagRelations() : '');
                 
 		//jeśli wstawione, dodany button z zapisem
