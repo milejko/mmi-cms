@@ -19,7 +19,7 @@ class CategoryWidget extends \Cms\Form\AttributeForm {
 
 		//nazwa kategorii
 		$this->addElementSelect('widget')
-			->setMultioptions(['test' => 'test'])
+			->setMultioptions((new \Cms\Orm\CmsCategoryWidgetQuery)->findPairs('id', 'name'))
 			->setLabel('dostępne widgety');
 
 		//zapis
