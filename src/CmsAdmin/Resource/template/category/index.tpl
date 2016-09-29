@@ -59,7 +59,7 @@
 					{$categoryForm->getElement('submit3')}
 				</div>
 				<div class="tab-content clearfix" id="tab-advanced">
-					{$categoryForm->getElement('redirect')}
+					{$categoryForm->getElement('redirectUri')}
 					{$categoryForm->getElement('mvcParams')}
 					{$categoryForm->getElement('https')}
 					{$categoryForm->getElement('blank')}

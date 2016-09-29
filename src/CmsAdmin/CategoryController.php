@@ -41,7 +41,7 @@ class CategoryController extends Mvc\Controller {
 			return;
 		}
 		//zakładka sekcje
-		$widgetForm = (new \CmsAdmin\Form\CategoryWidget($cat));
+		$widgetForm = (new \CmsAdmin\Form\CategoryAddWidget($cat));
 		//zapisany form
 		if ($widgetForm->isSaved()) {
 			$this->getResponse()->redirect('cmsAdmin', 'category', 'widgetConfig', ['widget' => $widgetForm->getElement('widget')->getValue()]);
