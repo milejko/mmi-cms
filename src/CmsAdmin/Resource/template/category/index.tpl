@@ -1,4 +1,6 @@
 {headLink()->appendStyleSheet($baseUrl . '/resource/cmsAdmin/css/category.css')}
+{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.js')}
+{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/category.js')}
 <div class="content-box">
 	<div class="content-box-header">
 		<h3>{#Zarządzanie treścią#}</h3>
@@ -7,7 +9,7 @@
 	<div class="content-box-content clearfix">
 		<div id="categoryTreeContainer">
 			<div id="jstree">
-				{jsTree([], $baseUrl . '/resource/cmsAdmin/js/category.js')}
+				{jsTree([], $baseUrl . '/resource/cmsAdmin/js/tree.js')}
 			</div>
 		</div>
 		<div id="categoryNodeContainer">
@@ -28,7 +30,7 @@
 							<a href="#tab-advanced">Zaawansowane</a>
 						</li>
 						<li>
-							<a href="#tab-section">Widgety</a>
+							<a href="#tab-widget">Widgety</a>
 						</li>
 						<li>
 							<a href="#tab-preview">Podgląd</a>
@@ -64,16 +66,18 @@
 					{$categoryForm->getElement('submit4')}
 				</div>
 				{$categoryForm->end()}
-				<div class="tab-content clearfix" id="tab-section">
-					{$categorySectionForm}
-					<ul class="list ui-sortable" id="navigation-list">
-						<li id="navigation-item-1" class="ui-sortable-handle">
-							<div>
-								<a href="#" class="button edit"><i class="icon-edit"></i> edytuj</a>
-								<a href="#" class="button delete confirm" title="Czy na pewno usunąć widget?"><i class="icon-remove-sign"></i> usuń</a>
-							</div>
-						</li>
-					</ul>
+				<div class="tab-content clearfix" id="tab-widget">
+					<a href="{@module=cmsAdmin&controller=category&action=addWidget&id={$categoryForm->getRecord()->id}@}" class="button new-window" target="_blank"><i class="icon-plus"></i> dodaj widget</a>
+					<div class="widgets">
+						<ul class="list ui-sortable" id="widget-list">
+							<li id="navigation-item-1" class="ui-sortable-handle">
+								<div>
+									<a href="#" class="button edit new-window" target="_blank"><i class="icon-edit"></i> edytuj</a>
+									<a href="#" class="button delete confirm" title="Czy na pewno usunąć widget?" target="_blank"><i class="icon-remove-sign"></i> usuń</a>
+								</div>
+							</li>
+						</ul>
+					</div>
 				</div>
 				<div class="tab-content clearfix" id="tab-preview">
 					<iframe id="preview-frame" src="{if $categoryForm->getRecord()->customUri}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->customUri}@}{else}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->uri}@}{/if}"></iframe>

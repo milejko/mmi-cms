@@ -11,15 +11,15 @@
 namespace CmsAdmin\Form;
 
 /**
- * Formularz edycji sekcji kategorii
+ * Formularz edycji widgetu kategorii
  */
-class CategorySection extends \Cms\Form\AttributeForm {
+class CategoryWidget extends \Cms\Form\AttributeForm {
 
 	public function init() {
 
 		//nazwa kategorii
-		$this->addElementSelect('widgets')
-			->setMultioptions([])
+		$this->addElementSelect('widget')
+			->setMultioptions(['test' => 'test'])
 			->setLabel('dostępne widgety');
 
 		//zapis
