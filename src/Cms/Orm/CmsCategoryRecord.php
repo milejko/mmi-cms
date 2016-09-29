@@ -25,6 +25,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @var string
 	 */
 	public $customUri;
+	public $mvcParams;
+	public $redirectUri;
 
 	/**
 	 * Identyfikator rodzica
