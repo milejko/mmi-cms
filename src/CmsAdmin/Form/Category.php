@@ -95,18 +95,18 @@ class Category extends \Cms\Form\AttributeForm {
 
 		//Zaawansowane
 		//przekierowanie na link
-		$this->addElementText('redirect')
+		$this->addElementText('redirectUri')
 			->setLabel('przekierowanie na adres')
 			->setDescription('np. http://www.google.pl')
 			->addFilterStringTrim()
-			->addValidatorStringLength(5, 128);
+			->addValidatorRegex('@(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?$@iS', 'Niepoprawny adres url');
 
 		//przekierowanie na moduł
 		$this->addElementText('mvcParams')
 			->setLabel('przekierowanie na moduł CMS')
-			->setDescription('np. blog/index/index')
+			->setDescription('np. module=blog&controller=index&action=index')
 			->addFilterStringTrim()
-			->addValidatorStringLength(5, 128);
+			->addValidatorRegex('@module\=[a-zA-Z0-9\&\=]+@', 'niepoprawny adres modułu cms');
 
 		//https
 		$this->addElementSelect('https')

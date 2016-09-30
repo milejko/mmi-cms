@@ -19,22 +19,42 @@ class CategoryController extends Mvc\Controller {
 	 * Lista stron CMS - prezentacja w formie drzewa
 	 */
 	public function indexAction() {
-		//w szablonie podłączenie ajaxowego ładowania drzewka
-		//zapis forma edycji
+		//wyszukiwanie kategorii
 		if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
 			return;
 		}
 		//konfiguracja kategorii
 		$form = (new \CmsAdmin\Form\Category($cat));
-		$this->view->categoryForm = $form;
-		//zakładka sekcje
-		$sectionForm = (new \CmsAdmin\Form\CategorySection($cat));
-		$this->view->categorySectionForm = $sectionForm;
 		//zapis
 		if ($form->isSaved()) {
 			$this->getMessenger()->addMessage('Zmiany w stronie zostały zapisane', true);
 		}
+		//form do widoku
+		$this->view->categoryForm = $form;	
 	}
+	
+	public function addWidgetAction() {
+		//bez layoutu
+		$this->view->setLayoutDisabled();
+		//wyszukiwanie kategorii
+		if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
+			return;
+		}
+		//zakładka sekcje
+		$widgetForm = (new \CmsAdmin\Form\CategoryAddWidget($cat));
+		//zapisany form
+		if ($widgetForm->isSaved()) {
+			$this->getResponse()->redirect('cmsAdmin', 'category', 'widgetConfig', ['widget' => $widgetForm->getElement('widget')->getValue()]);
+		}
+		//form do widoku
+		$this->view->widgetForm = $widgetForm;
+	}
+	
+	public function widgetConfigAction() {
+		//bez layoutu
+		$this->view->setLayoutDisabled();
+		
+	}	
 	
 	/**
 	 * Renderowanie fragmentu drzewa stron na podstawie parentId

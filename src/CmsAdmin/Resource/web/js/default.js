@@ -3,8 +3,7 @@ var CMS = CMS ? CMS : {};
 CMS.default = function () {
 	"use strict";
 	var initConfirms,
-			initIframes,
-			initAutosave;
+			initIframes;
 
 	initConfirms = function () {
 		//linki potwierdzające
@@ -21,10 +20,6 @@ CMS.default = function () {
 				}, 500);
 			}
 		});
-	};
-	
-	initAutosave = function () {
-		
 	};
 
 	initConfirms();

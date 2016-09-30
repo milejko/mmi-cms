@@ -525,12 +525,6 @@ button.mce-close {
 	left: auto;
 }
 
-.tab-content iframe {
-	width: 100%;
-	height: 0px;
-	border: none;
-}
-
 /* deleteTag */
 .confirm.red{
     color: red;

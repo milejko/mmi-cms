@@ -213,6 +213,10 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 			$object = $this->_form->getFileObjectName();
 			$objectId = $this->_form->getRecord()->getPk();
 		}
+		if (!$objectId) {
+			$object = 'tmp-' . $object;
+			$objectId = \Mmi\Session\Session::getNumericId();
+		}
 		$t = round(microtime(true));
 		$hash = md5(\Mmi\Session\Session::getId() . '+' . $t . '+' . $objectId);
 		//dołączanie skryptu
