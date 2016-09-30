@@ -72,20 +72,6 @@ class CategoryRelationModel {
 	}
 
 	/**
-	 * Ustawia relację z obiektu z id
-	 * @param array $categories tablica z id kategorii
-	 */
-	public function createCategoryRelations(array $categories) {
-		//usuwanie relacji
-		self::deleteCategoryRelations();
-		//iteracja po kategoriach
-		foreach ($categories as $categoryId) {
-			//tworzenie relacji
-			self::createCategoryRelation($categoryId, $this->_object, $this->_objectId);
-		}
-	}
-
-	/**
 	 * Usuwa kategorię z obiektu i id
 	 * @param integer $categoryId id kategorii
 	 */

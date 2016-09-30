@@ -83,20 +83,6 @@ class TagRelationModel {
 	}
 
 	/**
-	 * Tworzy relacje tagu obiektu z id
-	 * @param array $tags
-	 */
-	public function createTagRelations(array $tags) {
-		//usuwanie relacji
-		self::deleteTagRelations();
-		//iteracja po tagach
-		foreach ($tags as $tag) {
-			//tworzenie pojedynczego tagu
-			self::createTagRelation($tag, $this->_object, $this->_objectId);
-		}
-	}
-
-	/**
 	 * Usuwa tag
 	 * @param string $tag tag
 	 */

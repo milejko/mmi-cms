@@ -22,15 +22,17 @@ class CategoryWidget extends \Cms\Form\Form {
 			->setRequired()
 			->addValidatorStringLength(3, 64);
 
-		$this->addElementText('mvcParams')
+		$this->addElementSelect('mvcParams')
 			->setLabel('adres modułu wyświetlania')
+			->setMultioptions([null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard(3))
 			->setRequired()
-			->addValidatorRegex('@module\=[a-zA-Z0-9\&\=]+@', 'niepoprawny adres modułu cms');
+			->addValidatorNotEmpty();
 		
-		$this->addElementText('mvcPreviewParams')
+		$this->addElementSelect('mvcPreviewParams')
 			->setLabel('adres modułu podglądu')
+			->setMultioptions([null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard(3))
 			->setRequired()
-			->addValidatorRegex('@module\=[a-zA-Z0-9\&\=]+@', 'niepoprawny adres modułu cms');
+			->addValidatorNotEmpty();
 		
 		$this->addElementText('recordClass')
 			->setLabel('klasa rekordu danych')
@@ -43,7 +45,7 @@ class CategoryWidget extends \Cms\Form\Form {
 		
 		//zapis
 		$this->addElementSubmit('submit')
-			->setLabel('dodaj widget');
+			->setLabel('zapisz');
 	}
 
 }

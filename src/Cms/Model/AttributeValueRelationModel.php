@@ -97,20 +97,6 @@ class AttributeValueRelationModel {
 	}
 
 	/**
-	 * Ustawia relację z obiektu z id
-	 * @param array $attributeValues tablica z id wartości atrybutów
-	 */
-	public function createAttributeValueRelations(array $attributeValues) {
-		//usuwanie relacji
-		self::deleteAttributeValueRelations();
-		//iteracja po wartościach atrybutów
-		foreach ($attributeValues as $attributeValueId) {
-			//tworzenie relacji
-			self::createAttributeValueRelation($attributeValueId, $this->_object, $this->_objectId);
-		}
-	}
-
-	/**
 	 * Usuwa kategorię z obiektu i id
 	 * @param integer $attributeValueId id kategorii
 	 */

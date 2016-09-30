@@ -14,28 +14,6 @@ use Cms\Orm\CmsAclQuery;
 class Acl {
 
 	/**
-	 * Multiopcje po roli
-	 * @param string $role
-	 * @return array
-	 */
-	public static function getMultioptionsByRoleId($role) {
-		$rules = [];
-		$data = (new CmsAclQuery)
-			->whereCmsRoleId()->equals($role)
-			->find();
-		foreach ($data as $item) {
-			if ($item->action) {
-				$rules[$item->module . ':' . $item->controller . ':' . $item->action] = $item;
-			} elseif ($item->controller) {
-				$rules[$item->module . ':' . $item->controller] = $item;
-			} else {
-				$rules[$item->module] = $item;
-			}
-		}
-		return $rules;
-	}
-
-	/**
 	 * Ustawianie ACL'a
 	 * @return \Mmi\Security\Acl
 	 */

@@ -21,7 +21,7 @@ class AclController extends Mvc\Controller {
 	public function indexAction() {
 		$this->view->roles = (new \Cms\Orm\CmsRoleQuery)->find();
 		if ($this->roleId) {
-			$this->view->rules = \Cms\Model\Acl::getMultioptionsByRoleId($this->roleId);
+			$this->view->rules = (new \Cms\Orm\CmsAclQuery)->whereCmsRoleId()->equals($this->roleId)->find();
 			$this->view->options = [null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard();
 		}
 		$roleForm = new \CmsAdmin\Form\Role($roleRecord = new \Cms\Orm\CmsRoleRecord());

@@ -30,9 +30,12 @@ class CategoryController extends Mvc\Controller {
 			$this->getMessenger()->addMessage('Zmiany w stronie zostały zapisane', true);
 		}
 		//form do widoku
-		$this->view->categoryForm = $form;	
+		$this->view->categoryForm = $form;
 	}
-	
+
+	/**
+	 * 
+	 */
 	public function addWidgetAction() {
 		//bez layoutu
 		$this->view->setLayoutDisabled();
@@ -44,18 +47,23 @@ class CategoryController extends Mvc\Controller {
 		$widgetForm = (new \CmsAdmin\Form\CategoryAddWidget($cat));
 		//zapisany form
 		if ($widgetForm->isSaved()) {
-			$this->getResponse()->redirect('cmsAdmin', 'category', 'widgetConfig', ['widget' => $widgetForm->getElement('widget')->getValue()]);
+			$this->getResponse()->redirect('cmsAdmin', 'category', 'widgetConfig', ['id' => $this->id, 'widgetId' => $widgetForm->getElement('cmsWidgetId')->getValue()]);
 		}
 		//form do widoku
 		$this->view->widgetForm = $widgetForm;
 	}
-	
+
 	public function widgetConfigAction() {
 		//bez layoutu
 		$this->view->setLayoutDisabled();
-		
-	}	
-	
+		if (null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
+			->whereCmsCategoryId()->equals($this->id)
+			->andFieldCmsCategoryWidgetId()->equals($this->widgetId)
+			->findFirst()) {
+			//@TODO: prezentacja
+		};
+	}
+
 	/**
 	 * Renderowanie fragmentu drzewa stron na podstawie parentId
 	 */
@@ -63,7 +71,7 @@ class CategoryController extends Mvc\Controller {
 		//wyłączenie layout
 		$this->view->setLayoutDisabled();
 		//id węzła rodzica
-		$this->view->parentId = ($this->parentId > 0)? $this->parentId : null;
+		$this->view->parentId = ($this->parentId > 0) ? $this->parentId : null;
 		//pobranie drzewiastej struktury stron CMS
 		$this->view->categoryTree = (new \Cms\Model\CategoryModel)->getCategoryTree($this->view->parentId);
 	}
@@ -75,7 +83,7 @@ class CategoryController extends Mvc\Controller {
 		$this->getResponse()->setTypeJson();
 		$cat = new \Cms\Orm\CmsCategoryRecord();
 		$cat->name = $this->getPost()->name;
-		$cat->parentId = ($this->getPost()->parentId > 0)? $this->getPost()->parentId : null;
+		$cat->parentId = ($this->getPost()->parentId > 0) ? $this->getPost()->parentId : null;
 		$cat->order = $this->getPost()->order;
 		$cat->active = true;
 		if ($cat->save()) {
@@ -83,7 +91,7 @@ class CategoryController extends Mvc\Controller {
 		}
 		return json_encode(['status' => false, 'error' => 'Nie udało się utworzyć strony']);
 	}
-	
+
 	/**
 	 * Zmiana nazwy strony
 	 */
@@ -104,14 +112,14 @@ class CategoryController extends Mvc\Controller {
 		}
 		return json_encode(['status' => false, 'error' => 'Nie udało się zmienić nazwy strony']);
 	}
-	
+
 	/**
 	 * Przenoszenie strony w drzewie
 	 */
 	public function moveAction() {
 		$this->getResponse()->setTypeJson();
 		if (null !== $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
-			$cat->parentId = ($this->getPost()->parentId > 0)? $this->getPost()->parentId : null;
+			$cat->parentId = ($this->getPost()->parentId > 0) ? $this->getPost()->parentId : null;
 			$cat->order = $this->getPost()->order;
 			if ($cat->save() !== false) {
 				return json_encode(['status' => true, 'id' => $cat->id, 'message' => 'Strona została przeniesiona']);

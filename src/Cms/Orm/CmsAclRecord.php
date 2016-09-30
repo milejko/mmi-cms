@@ -13,18 +13,29 @@ class CmsAclRecord extends \Mmi\Orm\Record {
 	public $controller;
 	public $action;
 	public $access;
+	
+	/**
+	 * Pobranie parametrów MVC w postaci ciągu
+	 * @return string
+	 */
+	public function getMvcParams() {
+		$mvcParams = 'module=' . $this->module;
+		//kontroler
+		if ($this->controller) {
+			$mvcParams .= '&controller=' . $this->controller;
+		}
+		//akcja
+		if ($this->action) {
+			$mvcParams .= '&action=' . $this->action;
+		}
+		return $mvcParams;
+	}
 
 	/**
 	 * Zapis rekordu uprawnień
 	 * @return boolean
 	 */
 	public function save() {
-		if ($this->getOption('object')) {
-			$object = explode(':', $this->getOption('object'));
-			$this->module = isset($object[0]) ? strtolower($object[0]) : null;
-			$this->controller = isset($object[1]) ? strtolower($object[1]) : null;
-			$this->action = isset($object[2]) ? strtolower($object[2]) : null;
-		}
 		return parent::save() && $this->_clearCache();
 	}
 

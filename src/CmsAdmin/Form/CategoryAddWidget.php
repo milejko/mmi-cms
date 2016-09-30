@@ -18,7 +18,7 @@ class CategoryAddWidget extends \Cms\Form\Form {
 	public function init() {
 
 		//nazwa kategorii
-		$this->addElementSelect('widget')
+		$this->addElementSelect('cmsWidgetId')
 			->setMultioptions((new \Cms\Orm\CmsCategoryWidgetQuery)->findPairs('id', 'name'))
 			->setLabel('dostępne widgety');
 
