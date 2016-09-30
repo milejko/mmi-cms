@@ -54,10 +54,16 @@ class TagRelationModel {
 		if (null === $tagRecord = (new CmsTagQuery)
 			->whereTag()->equals($filteredTag)
 			->findFirst()) {
+		    
+			if (substr($filteredTag,0,5) === '#add#'){
+			    $filteredTag = substr($filteredTag,5);
+			}
+		    
 			$tagRecord = new CmsTagRecord;
 			$tagRecord->tag = $filteredTag;
 			$tagRecord->save();
 		}
+		
 		//znaleziona relacja - nic do zrobienia
 		if (null !== (new CmsTagRelationQuery)
 				->whereCmsTagId()->equals($tagRecord->id)
@@ -66,6 +72,7 @@ class TagRelationModel {
 				->findFirst()) {
 			return;
 		}
+		
 		//tworzenie relacji
 		$newRelationRecord = new CmsTagRelationRecord;
 		$newRelationRecord->cmsTagId = $tagRecord->id;

@@ -102,6 +102,7 @@ class Tags extends \Mmi\Form\Element\Select {
 	 */
 	public function fetchField() {            
                 $id = $this->getOption('id');
+		$id_input = \str_replace('-','_',$id);
             
                 $view = \Mmi\App\FrontController::getInstance()->getView();            
                 $view->headLink()->appendStylesheet($view->baseUrl . '/resource/cmsAdmin/css/chosen.min.css');
@@ -113,6 +114,55 @@ class Tags extends \Mmi\Form\Element\Select {
 			    placeholder_text_multiple:'Wpisz lub wybierz opcję',
 			    no_results_text:'Brak pasujących wyników'
                         });
+			
+			var customTagPrefix = '#add#';
+
+			// event 
+			$('#".$id_input."_chosen input').keyup(function(event) {
+
+				// wiecej niz 3 znaki, entery
+				if (this.value && this.value.length >= 3 && (event.which === 13 || event.which === 188)) {
+
+					// podswietlamy
+					var highlighted = $('#".$id_input."_chosen').find('li.active-result.highlighted').first();
+
+					if (event.which === 13 && highlighted.text() !== '')
+					{
+						//sprawdzamy czy juz jest dodany
+						var customOptionValue = customTagPrefix + highlighted.text();
+						$('#".$id." option').filter(function () { return $(this).val() == customOptionValue; }).remove();
+
+						var tagOption = $('#".$id." option').filter(function () { return $(this).html() == highlighted.text(); });
+						tagOption.attr('selected', 'selected');
+					}
+					// Add the custom tag option
+					else
+					{
+						var customTag = this.value;
+
+						// test czy juz taki tag istnieje
+						var tagOption = $('#".$id." option').filter(function () { return $(this).html() == customTag; });
+						if (tagOption.text() !== '')
+						{
+							tagOption.attr('selected', 'selected');
+						}
+						else
+						{
+							var option = $('<option>');
+							option.text(this.value).val(customTagPrefix + this.value);
+							option.attr('selected','selected');
+
+							//dodanie nowego taga
+							$('#".$id."').append(option);
+						}
+					}
+
+					this.value = '';
+					$('#".$id."').trigger('chosen:updated');
+					event.preventDefault();
+
+				}
+			});
                     });
 		");
             
