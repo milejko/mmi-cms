@@ -34,37 +34,6 @@ class CategoryController extends Mvc\Controller {
 	}
 
 	/**
-	 * 
-	 */
-	public function addWidgetAction() {
-		//bez layoutu
-		$this->view->setLayoutDisabled();
-		//wyszukiwanie kategorii
-		if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
-			return;
-		}
-		//zakładka sekcje
-		$widgetForm = (new \CmsAdmin\Form\CategoryAddWidget($cat));
-		//zapisany form
-		if ($widgetForm->isSaved()) {
-			$this->getResponse()->redirect('cmsAdmin', 'category', 'widgetConfig', ['id' => $this->id, 'widgetId' => $widgetForm->getElement('cmsWidgetId')->getValue()]);
-		}
-		//form do widoku
-		$this->view->widgetForm = $widgetForm;
-	}
-
-	public function widgetConfigAction() {
-		//bez layoutu
-		$this->view->setLayoutDisabled();
-		if (null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
-			->whereCmsCategoryId()->equals($this->id)
-			->andFieldCmsCategoryWidgetId()->equals($this->widgetId)
-			->findFirst()) {
-			//@TODO: prezentacja
-		};
-	}
-
-	/**
 	 * Renderowanie fragmentu drzewa stron na podstawie parentId
 	 */
 	public function nodeAction() {

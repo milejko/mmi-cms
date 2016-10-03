@@ -67,7 +67,7 @@
 				</div>
 				{$categoryForm->end()}
 				<div class="tab-content clearfix" id="tab-widget">
-					<a href="{@module=cmsAdmin&controller=category&action=addWidget&id={$categoryForm->getRecord()->id}@}" class="button new-window" target="_blank"><i class="icon-plus"></i> dodaj widget</a>
+					<a href="{@module=cmsAdmin&controller=categoryConfig&action=add&id={$categoryForm->getRecord()->id}@}" class="button new-window" target="_blank"><i class="icon-plus"></i> dodaj widget</a>
 					<div class="widgets">
 						<ul class="list ui-sortable" id="widget-list">
 							<li id="navigation-item-1" class="ui-sortable-handle">

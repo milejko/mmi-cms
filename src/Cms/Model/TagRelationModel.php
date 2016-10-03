@@ -90,7 +90,21 @@ class TagRelationModel {
 		//zapis
 		$newRelationRecord->save();
 	}
-
+	
+	/**
+	 * Czyści tworzy relacje tagów
+	 * @param array $tags tagi
+	 */
+	public function createTagRelations(array $tags) {
+		//usuwanie relacji
+		$this->deleteTagRelations();
+		//iteracja po tagach
+		foreach ($tags as $tag) {
+			//tworzenie pojedynczego tagu
+			$this->createTagRelation($tag);
+		}
+	}
+	
 	/**
 	 * Usuwa tag
 	 * @param string $tag tag
