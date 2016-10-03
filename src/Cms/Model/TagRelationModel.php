@@ -50,14 +50,23 @@ class TagRelationModel {
 	public function createTagRelation($tag) {
 		//filtrowanie tagu
 		$filteredTag = (new \Mmi\Filter\Input)->filter($tag);
+		
+		//czy nowy wpisany
+		$new = (substr($filteredTag,0,5) === '#add#')?true:false;
+		
 		//kreacja tagu jeśli brak
-		if (null === $tagRecord = (new CmsTagQuery)
+		if ((null === $tagRecord = (new CmsTagQuery)
 			->whereTag()->equals($filteredTag)
-			->findFirst()) {
+			->findFirst()) && !$new) {
 		    
-			if (substr($filteredTag,0,5) === '#add#'){
-			    $filteredTag = substr($filteredTag,5);
-			}
+			$tagRecord = new CmsTagRecord;
+			$tagRecord->tag = $filteredTag;
+			$tagRecord->save();
+		}
+		
+		//kreacja jezeli dodany nowy wpisany
+		if ($new){
+			$filteredTag = substr($filteredTag,5);			
 		    
 			$tagRecord = new CmsTagRecord;
 			$tagRecord->tag = $filteredTag;
