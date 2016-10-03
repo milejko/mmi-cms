@@ -63,23 +63,25 @@ class AclController extends Mvc\Controller {
 		$msg = $this->view->getTranslate()->_('Zmiana właściwości nie powiodła się.');
 		$this->getResponse()->setTypePlain();
 		$params = explode('-', $this->id);
+		
 		//błędne dane wejściowe
-		if (!($this->value) || count($params) != 3) {
+		if (!($this->getPost()->selected) || count($params) != 3) {
 			return $msg;
 		}
 		$record = (new \Cms\Orm\CmsAclQuery)->findPk($params[2]);
 		if (!$record) {
-			return;
+			return $msg;
 		}
 		//zmiana zasobu
 		if ($params[1] == 'resource') {
-			$resource = explode(':', $this->value);
-			$record->module = strtolower($resource[0]);
-			$record->controller = isset($resource[1]) ? strtolower($resource[1]) : null;
-			$record->action = isset($resource[2]) ? strtolower($resource[2]) : null;
+			$resource = [];
+			parse_str($this->getPost()->selected, $resource);
+			$record->module = strtolower($resource['module']);
+			$record->controller = isset($resource['controller']) ? strtolower($resource['controller']) : null;
+			$record->action = isset($resource['action']) ? strtolower($resource['action']) : null;
 		} else {
 			//zmiana uprawnienia z allow na deny lub odwrotnie
-			$record->access = $this->value == 'allow' ? 'allow' : 'deny';
+			$record->access = $this->getPost()->selected == 'allow' ? 'allow' : 'deny';
 		}
 		$record->save();
 		return 1;
