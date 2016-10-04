@@ -50,24 +50,11 @@ class TagRelationModel {
 	public function createTagRelation($tag) {
 		//filtrowanie tagu
 		$filteredTag = (new \Mmi\Filter\Input)->filter($tag);
-		
-		//czy nowy wpisany
-		$new = (substr($filteredTag,0,5) === '#add#')?true:false;
-		
+				
 		//kreacja tagu jeśli brak
-		if ((null === $tagRecord = (new CmsTagQuery)
+		if (null === $tagRecord = (new CmsTagQuery)
 			->whereTag()->equals($filteredTag)
-			->findFirst()) && !$new) {
-		    
-			$tagRecord = new CmsTagRecord;
-			$tagRecord->tag = $filteredTag;
-			$tagRecord->save();
-		}
-		
-		//kreacja jezeli dodany nowy wpisany
-		if ($new){
-			$filteredTag = substr($filteredTag,5);			
-		    
+			->findFirst()) {
 			$tagRecord = new CmsTagRecord;
 			$tagRecord->tag = $filteredTag;
 			$tagRecord->save();
@@ -87,6 +74,7 @@ class TagRelationModel {
 		$newRelationRecord->cmsTagId = $tagRecord->id;
 		$newRelationRecord->object = $this->_object;
 		$newRelationRecord->objectId = $this->_objectId;
+		
 		//zapis
 		$newRelationRecord->save();
 	}

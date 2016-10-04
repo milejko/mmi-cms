@@ -115,7 +115,7 @@ class Tags extends \Mmi\Form\Element\Select {
 			    no_results_text:'Brak pasujących wyników'
                         });
 			
-			var customTagPrefix = '#add#';
+			var customTagPrefix = '';
 
 			// event 
 			$('#".$id_input."_chosen input').keyup(function(event) {
@@ -171,7 +171,9 @@ class Tags extends \Mmi\Form\Element\Select {
 		if ($this->issetOption('multiple')) {
 			$this->setName($this->getName() . '[]');
 		}
-		unset($this->_options['value']);
+				
+		//unset($this->_options['value']);
+		
 		//nagłówek selecta
 		$html = '<select ' . $this->_getHtmlOptions() . '>';
 		//generowanie opcji
@@ -187,5 +189,24 @@ class Tags extends \Mmi\Form\Element\Select {
 		}
 		$html .= '</select>';
 		return $html;
+	}
+	
+	/*
+	 * przerobienie tablicy + klucz
+	 */
+	public function getValue(){
+	    $arr = [];
+	    foreach($this->_options['value'] as $key){
+		$arr[$key] = $key;
+	    }	    
+	    return $arr;
+	}
+	
+	
+	/*
+	 * łączenie wartości
+	 */
+	public function getMultioptions(){
+	    return array_merge($this->getValue(),parent::getMultioptions());
 	}
 }
