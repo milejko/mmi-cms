@@ -171,8 +171,6 @@ class Tags extends \Mmi\Form\Element\Select {
 		if ($this->issetOption('multiple')) {
 			$this->setName($this->getName() . '[]');
 		}
-				
-		//unset($this->_options['value']);
 		
 		//nagłówek selecta
 		$html = '<select ' . $this->_getHtmlOptions() . '>';
@@ -191,8 +189,9 @@ class Tags extends \Mmi\Form\Element\Select {
 		return $html;
 	}
 	
-	/*
+	/**
 	 * przerobienie tablicy + klucz
+	 * @return array
 	 */
 	public function getValue(){
 	    $arr = [];
@@ -202,9 +201,9 @@ class Tags extends \Mmi\Form\Element\Select {
 	    return $arr;
 	}
 	
-	
-	/*
+	/**
 	 * łączenie wartości
+	 * @return array
 	 */
 	public function getMultioptions(){
 	    return array_merge($this->getValue(),parent::getMultioptions());

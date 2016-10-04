@@ -87,7 +87,7 @@ class Category extends \Cms\Form\AttributeForm {
 			->setLabel('tagi')
 			->setDescription('lista tagów')
 			->setMultioptions((new \Cms\Orm\CmsTagQuery)->orderAscId()->findPairs('tag', 'tag'))
-			->setValue($this->getRecord()->id ? (new TagRelationModel('category', $this->getRecord()->id))->getTagRelations() : '');
+			->setValue([]);
                 
 		//jeśli wstawione, dodany button z zapisem
 		$this->addElementSubmit('submit3')
