@@ -7,7 +7,11 @@
 		{if $widgetConfigForm}
 			{$widgetConfigForm}
 		{else}
-			<script>window.close();</script>
+			{* Przeładowanie widgetów *}
+			<script>
+				window.opener.CMS.category().reloadWidgets();
+				window.close();
+			</script>
 		{/if}
 		<div class="cl"></div>
 	</div>

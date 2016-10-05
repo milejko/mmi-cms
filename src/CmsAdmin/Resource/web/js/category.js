@@ -2,14 +2,16 @@ var CMS = CMS ? CMS : {};
 
 CMS.category = function () {
 	"use strict";
-	var initSortableWidgets,
+	var that = {},
+			initSortableWidgets,
 			initIframes,
-			initNewWindowButtons;
+			initNewWindowButtons,
+			initWidgetDeleteButtons,
+			reloadWidgets;
 
 	initSortableWidgets = function () {
 		$('#widget-list').sortable({
 			update: function (event, ui) {
-				console.log($(this));
 				$.post(request.baseUrl + "/?module=cmsAdmin&controller=category&action=sort&id=" + $(this).attr('data-category-id'), $(this).sortable('serialize'),
 						function (result) {
 							if (result) {
@@ -37,9 +39,27 @@ CMS.category = function () {
 		});
 	};
 
+	initWidgetDeleteButtons = function () {
+		$('#widget-list').on('click', '.delete-widget', function () {
+			$.get($(this).attr('href'));
+			$(this).parent('div').parent('li').remove();
+			return false;
+		});
+	};
+
+	reloadWidgets = function () {
+		$.get(request.baseUrl + "/?module=cmsAdmin&controller=category&action=widget&id=" + $('#widget-list').attr('data-category-id'), function (data) {
+			$('#widget-list').html(data);
+		});
+	};
+
+	that.reloadWidgets = reloadWidgets;
+
 	initSortableWidgets();
 	initIframes();
 	initNewWindowButtons();
+	initWidgetDeleteButtons();
+	return that;
 };
 
 $(document).ready(function () {

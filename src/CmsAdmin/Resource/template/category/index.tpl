@@ -69,7 +69,9 @@
 				{$categoryId = $categoryForm->getRecord()->id}
 				<div class="tab-content clearfix" id="tab-widget">
 					<a href="{@module=cmsAdmin&controller=categoryConfig&action=add&id={$categoryId}@}" class="button new-window" target="_blank"><i class="icon-plus"></i> dodaj widget</a>
-					<div class="widgets">{widget('cmsAdmin', 'category', 'widget', ['id' => $categoryId])}</div>
+					<div class="widgets" data-category-id="{$categoryId}">
+						{widget('cmsAdmin', 'category', 'widget', ['id' => $categoryId])}
+					</div>
 				</div>
 				<div class="tab-content clearfix" id="tab-preview">
 					<iframe id="preview-frame" src="{if $categoryForm->getRecord()->customUri}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->customUri}@}{else}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->uri}@}{/if}"></iframe>

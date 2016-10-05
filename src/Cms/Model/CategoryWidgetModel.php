@@ -53,7 +53,7 @@ class CategoryWidgetModel extends \Mmi\OptionObject {
 	 * Pobiera rekordy relacji widget - kategoria
 	 * @return \Cms\Orm\CmsCategoryWidgetCategoryRecord[]
 	 */
-	public function getWidgetCollection() {
+	public function getWidgetRelations() {
 		//zwrot kolekcji widgetów
 		return $this->_widgetCollection;
 	}

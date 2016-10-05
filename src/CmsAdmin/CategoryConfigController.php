@@ -75,10 +75,11 @@ class CategoryConfigController extends Mvc\Controller {
 		if (null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
 			->whereCmsCategoryId()->equals($this->categoryId)
 			->findPk($this->id)) {
-			return;
+			return '';
 		}
 		//usuwanie relacji
 		$widgetRelation->delete();
+		return '';
 	}
 
 }
