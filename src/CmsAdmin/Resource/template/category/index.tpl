@@ -66,18 +66,10 @@
 					{$categoryForm->getElement('submit4')}
 				</div>
 				{$categoryForm->end()}
+				{$categoryId = $categoryForm->getRecord()->id}
 				<div class="tab-content clearfix" id="tab-widget">
-					<a href="{@module=cmsAdmin&controller=categoryConfig&action=add&id={$categoryForm->getRecord()->id}@}" class="button new-window" target="_blank"><i class="icon-plus"></i> dodaj widget</a>
-					<div class="widgets">
-						<ul class="list ui-sortable" id="widget-list">
-							<li id="navigation-item-1" class="ui-sortable-handle">
-								<div>
-									<a href="#" class="button edit new-window" target="_blank"><i class="icon-edit"></i> edytuj</a>
-									<a href="#" class="button delete confirm" title="Czy na pewno usunąć widget?" target="_blank"><i class="icon-remove-sign"></i> usuń</a>
-								</div>
-							</li>
-						</ul>
-					</div>
+					<a href="{@module=cmsAdmin&controller=categoryConfig&action=add&id={$categoryId}@}" class="button new-window" target="_blank"><i class="icon-plus"></i> dodaj widget</a>
+					<div class="widgets">{widget('cmsAdmin', 'category', 'widget', ['id' => $categoryId])}</div>
 				</div>
 				<div class="tab-content clearfix" id="tab-preview">
 					<iframe id="preview-frame" src="{if $categoryForm->getRecord()->customUri}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->customUri}@}{else}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->uri}@}{/if}"></iframe>

@@ -7,7 +7,7 @@
 		{if $widgetConfigForm}
 			{$widgetConfigForm}
 		{else}
-			{#Widget nie może zostać dodany#}.
+			<script>window.close();</script>
 		{/if}
 		<div class="cl"></div>
 	</div>

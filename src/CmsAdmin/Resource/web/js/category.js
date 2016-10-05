@@ -9,7 +9,8 @@ CMS.category = function () {
 	initSortableWidgets = function () {
 		$('#widget-list').sortable({
 			update: function (event, ui) {
-				$.post(request.baseUrl + "/?module=cmsAdmin&controller=category&action=sort", $(this).sortable('serialize'),
+				console.log($(this));
+				$.post(request.baseUrl + "/?module=cmsAdmin&controller=category&action=sort&id=" + $(this).attr('data-category-id'), $(this).sortable('serialize'),
 						function (result) {
 							if (result) {
 								alert(result);
@@ -28,10 +29,10 @@ CMS.category = function () {
 			}
 		});
 	};
-	
+
 	initNewWindowButtons = function () {
 		$('#categoryContentContainer').on('click', 'a.new-window', function () {
-			window.open($(this).attr('href'), '', "width=" + ($(window).width()-200) + ",height=" + ($(window).height()-200) + ",left=150,top=150,toolbar=no,scrollbars=yes,resizable=no");
+			window.open($(this).attr('href'), '', "width=" + ($(window).width() - 200) + ",height=" + ($(window).height() - 200) + ",left=150,top=150,toolbar=no,scrollbars=yes,resizable=no");
 			return false;
 		});
 	};

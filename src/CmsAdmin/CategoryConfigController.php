@@ -66,5 +66,19 @@ class CategoryConfigController extends Mvc\Controller {
 		//form do widoku
 		$this->view->widgetConfigForm = $form;
 	}
+	
+	/**
+	 * Kasowanie widgeta
+	 */
+	public function deleteAction() {
+		//wyszukiwanie relacji do edycji
+		if (null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
+			->whereCmsCategoryId()->equals($this->categoryId)
+			->findPk($this->id)) {
+			return;
+		}
+		//usuwanie relacji
+		$widgetRelation->delete();
+	}
 
 }

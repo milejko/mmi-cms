@@ -124,6 +124,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		}
 		return parent::delete();
 	}
+	
+	/**
+	 * 
+	 */
+	public function getWidgets() {
+		
+	}
 
 	/**
 	 * Przebudowuje dzieci (wywołuje save)
