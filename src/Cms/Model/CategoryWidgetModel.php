@@ -22,7 +22,7 @@ class CategoryWidgetModel extends \Mmi\OptionObject {
 	 * @var \Cms\Orm\CmsCategoryWidgetCategoryRecord[]
 	 */
 	private $_widgetCollection = [];
-	
+
 	/**
 	 * Identyfikator kategorii opakowującej widgety
 	 * @var integer
@@ -46,6 +46,21 @@ class CategoryWidgetModel extends \Mmi\OptionObject {
 			->find()) {
 			//nie znaleziono relacji
 			throw new \Cms\Exception\CategoryWidgetException('Category not found');
+		}
+	}
+
+	/**
+	 * Pobiera rekord konfiguracji widgeta
+	 * @param integer $id
+	 * @return \Cms\Orm\CmsCategoryWidgetCategoryRecord
+	 */
+	public function findWidgetRelationById($id) {
+		//iteracja po relacjach
+		foreach ($this->_widgetCollection as $widgetRelationRecord) {
+			//relacja odnaleziona
+			if ($widgetRelationRecord->id == $id) {
+				return $widgetRelationRecord;
+			}
 		}
 	}
 

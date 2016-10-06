@@ -38,5 +38,11 @@ abstract class CmsKernelRegistry extends \Mmi\App\KernelRegistry {
 	 * @var \Mmi\Translate
 	 */
 	public static $translate;
+	
+	/**
+	 * Model widgetów
+	 * @var \Cms\Model\CategoryWidgetModel
+	 */
+	public static $widget;
 
 }

@@ -10,3 +10,8 @@
 {foreach $tags as $tag}
 	{$tag}
 {/foreach}
+
+{foreach $widgetModel->getWidgetRelations() as $widgetRelation}
+	{$widgetRequest = $widgetRelation->getWidgetRecord()->getMvcParamsAsRequest()}
+	{widget($widgetRequest->module, $widgetRequest->controller, $widgetRequest->action, $widgetRequest->toArray() + ['widgetId' => $widgetRelation->id])}
+{/foreach}

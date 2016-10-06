@@ -64,6 +64,10 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		}
 		//dodawanie okruszka z kategorią główną
 		$this->view->navigation()->appendBreadcrumb($category->name, $this->view->url(['uri' => $category->uri]), $category->title ? $category->title : $category->name, $category->description ? $category->description : $category->lead);
+		//przypisanie modelu widgetów do rejestru
+		\App\Registry::$widget = new Model\CategoryWidgetModel($category->id);
+		//model widgetu do widoku
+		$this->view->widgetModel = \App\Registry::$widget;
 		//forward do akcji docelowej
 		return \Mmi\Mvc\ActionHelper::getInstance()->forward($request);
 	}
