@@ -32,7 +32,7 @@ class CmsCategoryWidgetRecord extends \Mmi\Orm\Record {
 	public function getMvcPreviewParamsAsRequest() {
 		$mvcParams = [];
 		//parsowanie ciągu
-		parse_str($this->mvcParams, $mvcParams);
+		parse_str($this->mvcPreviewParams, $mvcParams);
 		return new \Mmi\Http\Request($mvcParams);
 	}
 
