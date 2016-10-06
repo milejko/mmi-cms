@@ -85,7 +85,7 @@ class CategoryWidgetRelationController extends Mvc\Controller {
 	}
 
 	/**
-	 * Kasowanie widgeta
+	 * Kasowanie relacji
 	 */
 	public function deleteAction() {
 		//wyszukiwanie relacji do edycji
@@ -96,6 +96,21 @@ class CategoryWidgetRelationController extends Mvc\Controller {
 		}
 		//usuwanie relacji
 		$widgetRelation->delete();
+		return '';
+	}
+
+	/**
+	 * Zmiana widoczności relacji
+	 */
+	public function toggleAction() {
+		//wyszukiwanie relacji do edycji
+		if (null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
+			->whereCmsCategoryId()->equals($this->categoryId)
+			->findPk($this->id)) {
+			return '';
+		}
+		//zmiana widoczności relacji
+		$widgetRelation->toggle();
 		return '';
 	}
 

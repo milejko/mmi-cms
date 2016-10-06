@@ -7,7 +7,7 @@ CMS.category = function () {
 			initSortableWidgets,
 			initIframes,
 			initNewWindowButtons,
-			initWidgetDeleteButtons,
+			initWidgetButtons,
 			reloadWidgets;
 
 	initSortableWidgets = function () {
@@ -44,13 +44,23 @@ CMS.category = function () {
 		});
 	};
 
-	initWidgetDeleteButtons = function () {
+	initWidgetButtons = function () {
 		$('#widget-list').on('click', '.delete-widget', function () {
 			if (!window.confirm($(this).attr('title') + '?')) {
 				return false;
 			}
 			$.get($(this).attr('href'));
 			$(this).parent('div').parent('li').remove();
+			return false;
+		});
+		$('#widget-list').on('click', '.toggle-widget', function () {
+			$.get($(this).attr('href'));
+			if ($(this).children('i').attr('class') == 'icon-eye-close') {
+				$(this).children('i').attr('class', 'icon-eye-open');
+			} else {
+				$(this).children('i').attr('class', 'icon-eye-close');
+			}
+
 			return false;
 		});
 	};
@@ -66,7 +76,7 @@ CMS.category = function () {
 	initSortableWidgets();
 	initIframes();
 	initNewWindowButtons();
-	initWidgetDeleteButtons();
+	initWidgetButtons();
 	return that;
 };
 

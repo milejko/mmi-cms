@@ -12,6 +12,7 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 	public $cmsCategoryId;
 	public $recordId;
 	public $configJson;
+	public $active = 1;
 
 	/**
 	 * Kolejność
@@ -56,6 +57,15 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 		} catch (\Exception $e) {
 			return new \stdClass;
 		}
+	}
+	
+	/**
+	 * Aktywacja/deaktywacja
+	 */
+	public function toggle() {
+		//aktywacja/deaktywacja
+		$this->active = $this->active ? false : true;
+		$this->save();
 	}
 
 }
