@@ -94,6 +94,7 @@ class Tags extends \Mmi\Form\Element\Select {
 	public function __construct($name) {
 		parent::__construct($name);
 		$this->setMultiple();
+		$this->setValue([]);
 	}
         
 	/**
