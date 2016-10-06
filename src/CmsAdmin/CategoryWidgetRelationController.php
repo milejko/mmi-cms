@@ -13,7 +13,7 @@ namespace CmsAdmin;
 /**
  * Kontroler konfiguracji kategorii - stron CMS
  */
-class CategoryConfigController extends Mvc\Controller {
+class CategoryWidgetRelationController extends Mvc\Controller {
 
 	/**
 	 * Wybór widgeta do dodania
@@ -27,7 +27,7 @@ class CategoryConfigController extends Mvc\Controller {
 		$widgetForm = (new \CmsAdmin\Form\CategoryAddWidget($cat));
 		//zapisany form
 		if ($widgetForm->isSaved()) {
-			$this->getResponse()->redirect('cmsAdmin', 'categoryConfig', 'config', ['categoryId' => $this->id, 'widgetId' => $widgetForm->getElement('cmsWidgetId')->getValue()]);
+			$this->getResponse()->redirect('cmsAdmin', 'categoryWidgetRelation', 'config', ['categoryId' => $this->id, 'widgetId' => $widgetForm->getElement('cmsWidgetId')->getValue()]);
 		}
 		//form do widoku
 		$this->view->widgetForm = $widgetForm;
@@ -38,33 +38,50 @@ class CategoryConfigController extends Mvc\Controller {
 	 */
 	public function configAction() {
 		//wyszukiwanie widgeta
-		if (null === $widget = (new \Cms\Orm\CmsCategoryWidgetQuery)->findPk($this->widgetId)) {
+		if (null === $widgetRecord = (new \Cms\Orm\CmsCategoryWidgetQuery)->findPk($this->widgetId)) {
 			//brak widgeta
 			return;
 		}
 		//wyszukiwanie relacji do edycji
-		if (null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
+		if (null === $widgetRelationRecord = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
 			->whereCmsCategoryId()->equals($this->categoryId)
-			->andFieldCmsCategoryWidgetId()->equals($widget->id)
+			->andFieldCmsCategoryWidgetId()->equals($widgetRecord->id)
 			->findPk($this->id)) {
 			//nowy rekord relacji
-			$widgetRelation = new \Cms\Orm\CmsCategoryWidgetCategoryRecord();
+			$widgetRelationRecord = new \Cms\Orm\CmsCategoryWidgetCategoryRecord();
 			//parametry relacji
-			$widgetRelation->cmsCategoryWidgetId = $widget->id;
-			$widgetRelation->cmsCategoryId = $this->categoryId;
+			$widgetRelationRecord->cmsCategoryWidgetId = $widgetRecord->id;
+			$widgetRelationRecord->cmsCategoryId = $this->categoryId;
+		}
+		//rekord do formularza to rekord wiązania
+		$record = $widgetRelationRecord;
+		//jeśli widget ma swój rekord, to ten idzie do formularza
+		if ($widgetRecord->recordClass) {
+			$record = new $widgetRecord->recordClass($widgetRelationRecord->recordId);
 		}
 		//instancja formularza
-		$form = new $widget->formClass($widget->recordClass ? new $widget->recordClass($widgetRelation->recordId) : null);
+		$form = new $widgetRecord->formClass($record);
+		$form->setFromArray((array) $widgetRelationRecord->getConfig());
 		//form zapisany
 		if ($form->isSaved()) {
 			//zapis powiązanego id
-			$widgetRelation->recordId = $widget->recordClass ? $form->getRecord()->id : null;
-			$widgetRelation->configJson = \json_encode($widget->recordClass ? $form->getRecord()->getOptions() : $form->getValues());
-			$widgetRelation->save();
-			$this->getResponse()->redirect('cmsAdmin', 'categoryConfig', 'config');
+			$widgetRelationRecord->recordId = $record->id;
+			//zapis konfiguracji
+			$widgetRelationRecord->configJson = \json_encode($record->getOptions());
+			$widgetRelationRecord->save();
+			$this->getResponse()->redirect('cmsAdmin', 'categoryWidgetRelation', 'config');
 		}
 		//form do widoku
-		$this->view->widgetConfigForm = $form;
+		$this->view->widgetRelationForm = $form;
+	}
+
+	/**
+	 * Lista podglądów widgetów
+	 */
+	public function previewAction() {
+		//wyłączenie layout
+		$this->view->setLayoutDisabled();
+		$this->view->widgetModel = new \Cms\Model\CategoryWidgetModel($this->categoryId);
 	}
 
 	/**

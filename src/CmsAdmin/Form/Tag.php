@@ -25,6 +25,10 @@ class Tag extends \Mmi\Form\Form {
 			->addValidatorStringLength(2, 64)
 			->addValidatorRecordUnique((new \Cms\Orm\CmsTagQuery), 'tag', $this->getRecord()->id);
 
+		
+		$this->addElementText('testowa')
+			->setLabel('test');
+		
 		//zapis
 		$this->addElementSubmit('submit')
 			->setLabel('zapisz');

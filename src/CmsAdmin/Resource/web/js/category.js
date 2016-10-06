@@ -13,7 +13,7 @@ CMS.category = function () {
 	initSortableWidgets = function () {
 		$('#widget-list').sortable({
 			update: function (event, ui) {
-				$.post(request.baseUrl + "/?module=cmsAdmin&controller=categoryConfig&action=sort&id=" + $(this).attr('data-category-id'), $(this).sortable('serialize'),
+				$.post(request.baseUrl + "/?module=cmsAdmin&controller=categoryWidgetRelation&action=sort&id=" + $(this).attr('data-category-id'), $(this).sortable('serialize'),
 						function (result) {
 							if (result) {
 								alert(result);
@@ -46,6 +46,9 @@ CMS.category = function () {
 
 	initWidgetDeleteButtons = function () {
 		$('#widget-list').on('click', '.delete-widget', function () {
+			if (!window.confirm($(this).attr('title') + '?')) {
+				return false;
+			}
 			$.get($(this).attr('href'));
 			$(this).parent('div').parent('li').remove();
 			return false;
@@ -53,7 +56,7 @@ CMS.category = function () {
 	};
 
 	reloadWidgets = function () {
-		$.get(request.baseUrl + "/?module=cmsAdmin&controller=category&action=widget&id=" + $('#widget-list').attr('data-category-id'), function (data) {
+		$.get(request.baseUrl + "/?module=cmsAdmin&controller=categoryWidgetRelation&action=preview&categoryId=" + $('#widget-list').attr('data-category-id'), function (data) {
 			$('#widget-list').html(data);
 		});
 	};

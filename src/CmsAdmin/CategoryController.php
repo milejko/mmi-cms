@@ -34,15 +34,6 @@ class CategoryController extends Mvc\Controller {
 	}
 
 	/**
-	 * Lista widgetów
-	 */
-	public function widgetAction() {
-		//wyłączenie layout
-		$this->view->setLayoutDisabled();
-		$this->view->widgetModel = new \Cms\Model\CategoryWidgetModel($this->id);
-	}
-
-	/**
 	 * Renderowanie fragmentu drzewa stron na podstawie parentId
 	 */
 	public function nodeAction() {

@@ -4,8 +4,8 @@
 		<div class="clear"></div>
 	</div>
 	<div class="content-box-content clearfix">
-		{if $widgetConfigForm}
-			{$widgetConfigForm}
+		{if $widgetRelationForm}
+			{$widgetRelationForm}
 		{else}
 			{* Przeładowanie widgetów *}
 			<script>
