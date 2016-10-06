@@ -1,4 +1,5 @@
 var CMS = CMS ? CMS : {};
+var openedWindow = {closed: true};
 
 CMS.category = function () {
 	"use strict";
@@ -34,7 +35,11 @@ CMS.category = function () {
 
 	initNewWindowButtons = function () {
 		$('#categoryContentContainer').on('click', 'a.new-window', function () {
-			window.open($(this).attr('href'), '', "width=" + ($(window).width() - 200) + ",height=" + ($(window).height() - 200) + ",left=150,top=150,toolbar=no,scrollbars=yes,resizable=no");
+			if (openedWindow.closed) {
+				openedWindow = window.open($(this).attr('href'), '', "width=" + ($(window).width() - 200) + ",height=" + ($(window).height() - 200) + ",left=150,top=150,toolbar=no,scrollbars=yes,resizable=no");
+				return false;
+			}
+			openedWindow.focus();
 			return false;
 		});
 	};
