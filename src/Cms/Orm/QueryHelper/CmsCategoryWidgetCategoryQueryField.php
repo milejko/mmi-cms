@@ -48,6 +48,12 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery lessThanColumnOrder()
  * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery greaterOrEqualsColumnOrder()
  * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery lessOrEqualsColumnOrder()
+ * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery equalsColumnActive()
+ * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery notEqualsColumnActive()
+ * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery greaterThanColumnActive()
+ * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery lessThanColumnActive()
+ * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery greaterOrEqualsColumnActive()
+ * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery lessOrEqualsColumnActive()
  */
 class CmsCategoryWidgetCategoryQueryField extends \Mmi\Orm\QueryHelper\QueryField {
 
