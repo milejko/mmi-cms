@@ -43,23 +43,6 @@ class CategoryController extends Mvc\Controller {
 	}
 
 	/**
-	 * Sortowanie ajax widgetów
-	 * @return string
-	 */
-	public function sortAction() {
-		$this->getResponse()->setTypePlain();
-		//brak pola
-		if (null === $serial = $this->getPost()->__get('widget-item')) {
-			return $this->view->getTranslate()->_('Przenoszenie nie powiodło się');
-		}
-		//sortowanie
-		(new \Cms\Model\CategoryWidgetModel($this->id))
-			->sortBySerial($serial);
-		//pusty zwrot
-		return '';
-	}
-
-	/**
 	 * Renderowanie fragmentu drzewa stron na podstawie parentId
 	 */
 	public function nodeAction() {

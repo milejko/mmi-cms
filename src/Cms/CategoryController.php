@@ -64,10 +64,8 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		}
 		//dodawanie okruszka z kategorią główną
 		$this->view->navigation()->appendBreadcrumb($category->name, $this->view->url(['uri' => $category->uri]), $category->title ? $category->title : $category->name, $category->description ? $category->description : $category->lead);
-		//przypisanie modelu widgetów do rejestru
-		\App\Registry::$widget = new Model\CategoryWidgetModel($category->id);
 		//model widgetu do widoku
-		$this->view->widgetModel = \App\Registry::$widget;
+		$this->view->widgetModel = new Model\CategoryWidgetModel($category->id);
 		//forward do akcji docelowej
 		return \Mmi\Mvc\ActionHelper::getInstance()->forward($request);
 	}
@@ -76,15 +74,11 @@ class CategoryController extends \Mmi\Mvc\Controller {
 	 * Akcja artykułu
 	 */
 	public function articleAction() {
-		//wyszukanie kategorii
-		if (null === $category = (new Model\CategoryModel)->getCategoryByUri($this->uri)) {
-			//404
-			throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $this->uri);
-		}
-		//przekazanie kategorii
-		$this->view->category = $category;
+		//pobranie kategorii z modelu
+		$category = $this->view->widgetModel->getCategoryRecord();
 		//przekazanie atrybutów
 		$this->view->attributes = (new Model\AttributeValueRelationModel('category', $category->id))->getAttributeValues();
+		//przekazanie tagów
 		$this->view->tags = (new Model\TagRelationModel('category', $category->id))->getTagRelations();
 	}
 

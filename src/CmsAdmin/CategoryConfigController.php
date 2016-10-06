@@ -66,7 +66,7 @@ class CategoryConfigController extends Mvc\Controller {
 		//form do widoku
 		$this->view->widgetConfigForm = $form;
 	}
-	
+
 	/**
 	 * Kasowanie widgeta
 	 */
@@ -79,6 +79,23 @@ class CategoryConfigController extends Mvc\Controller {
 		}
 		//usuwanie relacji
 		$widgetRelation->delete();
+		return '';
+	}
+
+	/**
+	 * Sortowanie ajax widgetów
+	 * @return string
+	 */
+	public function sortAction() {
+		$this->getResponse()->setTypePlain();
+		//brak pola
+		if (null === $serial = $this->getPost()->__get('widget-item')) {
+			return $this->view->getTranslate()->_('Przenoszenie nie powiodło się');
+		}
+		//sortowanie
+		(new \Cms\Model\CategoryWidgetModel($this->id))
+			->sortBySerial($serial);
+		//pusty zwrot
 		return '';
 	}
 

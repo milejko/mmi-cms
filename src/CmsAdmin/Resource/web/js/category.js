@@ -13,7 +13,7 @@ CMS.category = function () {
 	initSortableWidgets = function () {
 		$('#widget-list').sortable({
 			update: function (event, ui) {
-				$.post(request.baseUrl + "/?module=cmsAdmin&controller=category&action=sort&id=" + $(this).attr('data-category-id'), $(this).sortable('serialize'),
+				$.post(request.baseUrl + "/?module=cmsAdmin&controller=categoryConfig&action=sort&id=" + $(this).attr('data-category-id'), $(this).sortable('serialize'),
 						function (result) {
 							if (result) {
 								alert(result);

@@ -15,7 +15,7 @@ use \Cms\Orm\CmsCategoryWidgetCategoryQuery;
 /**
  * Model widgetów kategorii
  */
-class CategoryWidgetModel extends \Mmi\OptionObject {
+class CategoryWidgetModel {
 
 	/**
 	 * Rekordy relacji widget - kategoria
@@ -63,7 +63,21 @@ class CategoryWidgetModel extends \Mmi\OptionObject {
 			}
 		}
 	}
+	
+	/**
+	 * Pobiera rekord kategorii
+	 * @return \Cms\Orm\CategoryRecord
+	 */
+	public function getCategoryRecord() {
+		//iteracja po relacjach
+		foreach ($this->_widgetCollection as $widgetRelationRecord) {
+			//zwrot pierwszej z brzegu - wszystkie są takie same
+			return $widgetRelationRecord->getJoined('cms_category');
+		}
+	}
+	
 
+	
 	/**
 	 * Pobiera rekordy relacji widget - kategoria
 	 * @return \Cms\Orm\CmsCategoryWidgetCategoryRecord[]
