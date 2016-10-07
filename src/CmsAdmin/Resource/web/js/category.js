@@ -7,6 +7,7 @@ CMS.category = function () {
 			initSortableWidgets,
 			initNewWindowButtons,
 			initWidgetButtons,
+			initPreviewReload,
 			reloadWidgets;
 
 	initSortableWidgets = function () {
@@ -53,6 +54,14 @@ CMS.category = function () {
 			return false;
 		});
 	};
+	
+	initPreviewReload = function () {
+		$('#categoryContentContainer').on('click', 'a.reload-preview', function () {
+			var src = $('#preview-frame').attr('src');
+			$('#preview-frame').attr('src', '');
+			$('#preview-frame').attr('src', src);
+		});
+	};
 
 	reloadWidgets = function () {
 		$.get(request.baseUrl + "/?module=cmsAdmin&controller=categoryWidgetRelation&action=preview&categoryId=" + $('#widget-list').attr('data-category-id'), function (data) {
@@ -65,6 +74,7 @@ CMS.category = function () {
 	initSortableWidgets();
 	initNewWindowButtons();
 	initWidgetButtons();
+	initPreviewReload();
 	return that;
 };
 

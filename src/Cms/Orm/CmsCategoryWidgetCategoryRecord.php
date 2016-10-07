@@ -53,12 +53,19 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 	public function getConfig() {
 		//próba dekodowania konfiguracji json
 		try {
-			return \json_decode($this->configJson);
+			$config = \json_decode($this->configJson);
 		} catch (\Exception $e) {
-			return new \stdClass;
+			
 		}
+		//tworznie pustego configa
+		if (!isset($config)) {
+			$config = new \stdClass();
+		}
+		//domyślnie pusty recordId
+		$config->recordId = isset($config->recordId) ? $config->recordId : null;
+		return $config;
 	}
-	
+
 	/**
 	 * Aktywacja/deaktywacja
 	 */

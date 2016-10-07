@@ -33,7 +33,7 @@
 							<a href="#tab-widget">Widgety</a>
 						</li>
 						<li>
-							<a href="#tab-preview">Podgląd</a>
+							<a class="reload-preview" href="#tab-preview">Podgląd</a>
 						</li>
 					</ul>
 					{$categoryForm->start()}
