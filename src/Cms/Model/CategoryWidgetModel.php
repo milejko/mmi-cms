@@ -30,6 +30,12 @@ class CategoryWidgetModel {
 	private $_categoryId;
 
 	/**
+	 * Rekord kategorii
+	 * @var \Cms\Orm\CmsCategoryRecord;
+	 */
+	private $_categoryRecord;
+
+	/**
 	 * Identyfikator relacji
 	 * @param integer $categoryId
 	 */
@@ -47,6 +53,13 @@ class CategoryWidgetModel {
 			//nie znaleziono relacji
 			throw new \Cms\Exception\CategoryWidgetException('Category not found');
 		}
+		//przypisanie rekordu kategorii
+		foreach ($this->_widgetCollection as $widgetRelationRecord) {
+			//zwrot pierwszej z brzegu - wszystkie są takie same
+			return $this->_categoryRecord = $widgetRelationRecord->getJoined('cms_category');
+		}
+		//brak wyszukanie rekordu kategorii
+		$this->_categoryRecord = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->_categoryId);
 	}
 
 	/**
@@ -63,21 +76,15 @@ class CategoryWidgetModel {
 			}
 		}
 	}
-	
+
 	/**
 	 * Pobiera rekord kategorii
 	 * @return \Cms\Orm\CategoryRecord
 	 */
 	public function getCategoryRecord() {
-		//iteracja po relacjach
-		foreach ($this->_widgetCollection as $widgetRelationRecord) {
-			//zwrot pierwszej z brzegu - wszystkie są takie same
-			return $widgetRelationRecord->getJoined('cms_category');
-		}
+		return $this->_categoryRecord;
 	}
-	
 
-	
 	/**
 	 * Pobiera rekordy relacji widget - kategoria
 	 * @return \Cms\Orm\CmsCategoryWidgetCategoryRecord[]

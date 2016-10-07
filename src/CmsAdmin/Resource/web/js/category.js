@@ -5,7 +5,6 @@ CMS.category = function () {
 	"use strict";
 	var that = {},
 			initSortableWidgets,
-			initIframes,
 			initNewWindowButtons,
 			initWidgetButtons,
 			reloadWidgets;
@@ -13,22 +12,12 @@ CMS.category = function () {
 	initSortableWidgets = function () {
 		$('#widget-list').sortable({
 			update: function (event, ui) {
-				$.post(request.baseUrl + "/?module=cmsAdmin&controller=categoryWidgetRelation&action=sort&id=" + $(this).attr('data-category-id'), $(this).sortable('serialize'),
+				$.post(request.baseUrl + "/?module=cmsAdmin&controller=categoryWidgetRelation&action=sort&categoryId=" + $(this).attr('data-category-id'), $(this).sortable('serialize'),
 						function (result) {
 							if (result) {
 								alert(result);
 							}
 						});
-			}
-		});
-	};
-
-	initIframes = function () {
-		$.each($('iframe'), function (key, frame) {
-			if ($('#' + frame.id).length) {
-				setTimeout(function () {
-					$('#' + frame.id).css('height', document.getElementById(frame.id).contentWindow.document.body.scrollHeight + 20 + 'px');
-				}, 500);
 			}
 		});
 	};
@@ -74,7 +63,6 @@ CMS.category = function () {
 	that.reloadWidgets = reloadWidgets;
 
 	initSortableWidgets();
-	initIframes();
 	initNewWindowButtons();
 	initWidgetButtons();
 	return that;

@@ -14,6 +14,7 @@
 {/foreach}
 
 {foreach $widgetModel->getWidgetRelations() as $widgetRelation}
+	{if !$widgetRelation->active}{continue}{/if}
 	{$widgetRequest = $widgetRelation->getWidgetRecord()->getMvcParamsAsRequest()}
 	{widget($widgetRequest->module, $widgetRequest->controller, $widgetRequest->action, $widgetRequest->toArray() + ['widgetId' => $widgetRelation->id])}
 {/foreach}

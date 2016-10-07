@@ -112,8 +112,8 @@ class Tags extends \Mmi\Form\Element\Select {
                     $(document).ready(function ($) {
                         $('#".$id."').chosen({			    
 			    disable_search_threshold:10,
-			    placeholder_text_multiple:'Wpisz lub wybierz opcję',
-			    no_results_text:'Brak pasujących wyników'
+			    placeholder_text_multiple:'Wpisz lub wybierz tagi',
+			    no_results_text:'Tag nieodnaleziony'
                         });
 			
 			var customTagPrefix = '';

@@ -52,20 +52,25 @@ class CategoryWidgetRelationController extends Mvc\Controller {
 			//parametry relacji
 			$widgetRelationRecord->cmsCategoryWidgetId = $widgetRecord->id;
 			$widgetRelationRecord->cmsCategoryId = $this->categoryId;
+			//maksymalna wartość posortowania
+			$maxOrder = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
+				->whereCmsCategoryId()->equals($this->categoryId)
+				->findMax('order');
+			$widgetRelationRecord->order = $maxOrder !== null ? $maxOrder + 1 : 0;
 		}
 		//rekord do formularza to rekord wiązania
 		$record = $widgetRelationRecord;
 		//jeśli widget ma swój rekord, to ten idzie do formularza
 		if ($widgetRecord->recordClass) {
-			$record = new $widgetRecord->recordClass($widgetRelationRecord->recordId);
+			$record = new $widgetRecord->recordClass($widgetRelationRecord->getConfig()->recordId);
 		}
 		//instancja formularza
 		$form = new $widgetRecord->formClass($record);
 		$form->setFromArray((array) $widgetRelationRecord->getConfig());
 		//form zapisany
 		if ($form->isSaved()) {
-			//zapis powiązanego id
-			$widgetRelationRecord->recordId = $record->id;
+			//zapis powiązanego id do konfiguracji
+			$record->setOption('recordId', $record->id);
 			//zapis konfiguracji
 			$widgetRelationRecord->configJson = \json_encode($record->getOptions());
 			$widgetRelationRecord->save();
@@ -125,7 +130,7 @@ class CategoryWidgetRelationController extends Mvc\Controller {
 			return $this->view->getTranslate()->_('Przenoszenie nie powiodło się');
 		}
 		//sortowanie
-		(new \Cms\Model\CategoryWidgetModel($this->id))
+		(new \Cms\Model\CategoryWidgetModel($this->categoryId))
 			->sortBySerial($serial);
 		//pusty zwrot
 		return '';
