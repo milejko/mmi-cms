@@ -560,6 +560,10 @@ ul.chosen-choices {
 	box-sizing: border-box;
 }
 
+.chosen-container.chosen-with-drop .chosen-drop {
+	margin-top: -10px;
+}
+
 ul.tabs {
 	margin: 0 0 -1px 0;
 }

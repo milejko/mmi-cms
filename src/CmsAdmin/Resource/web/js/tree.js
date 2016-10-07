@@ -181,7 +181,7 @@ $(document).ready(function () {
 				return;
 			}
 			if (CATEGORYCONF.reload || parseFloat(request.id) !== parseFloat(data.selected[0])) {
-				window.location = request.baseUrl + '/cmsAdmin/category/index?id=' + data.selected;
+				window.location = request.baseUrl + '/cmsAdmin/category/edit?id=' + data.selected;
 				return;
 			}
 		}, 150);
@@ -189,7 +189,7 @@ $(document).ready(function () {
 });
 
 CATEGORYCONF.editForm = function (node) {
-	window.location = request.baseUrl + '/cmsAdmin/category/index?id=' + node.id;
+	window.location = request.baseUrl + '/cmsAdmin/category/edit?id=' + node.id;
 };
 
 CATEGORYCONF.showMessage = function (data) {

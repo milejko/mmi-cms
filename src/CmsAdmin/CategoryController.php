@@ -16,9 +16,16 @@ namespace CmsAdmin;
 class CategoryController extends Mvc\Controller {
 
 	/**
-	 * Lista stron CMS - prezentacja w formie drzewa
+	 * Lista stron CMS - prezentacja w formie grida
 	 */
 	public function indexAction() {
+		$this->view->grid = new Plugin\CategoryGrid();
+	}
+
+	/**
+	 * Lista stron CMS - edycja w formie drzewa
+	 */
+	public function editAction() {
 		//wyszukiwanie kategorii
 		if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
 			return;
