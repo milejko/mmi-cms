@@ -85,8 +85,7 @@ class Category extends \Cms\Form\AttributeForm {
 		//tagi
 		$this->addElementTags('tags')
 			->setLabel('tagi')
-			->setDescription('lista tagów')
-			->setMultioptions((new \Cms\Orm\CmsTagQuery)->orderAscId()->findPairs('tag', 'tag'));
+			->setDescription('lista tagów');
                 
 		//jeśli wstawione, dodany button z zapisem
 		$this->addElementSubmit('submit3')
@@ -129,17 +128,6 @@ class Category extends \Cms\Form\AttributeForm {
                 //zapis
 		$this->addElementSubmit('submit5')
 			->setLabel('zapisz');
-	}
-
-	/**
-	 * Po zapisie rekordu
-	 * @return boolean
-	 */
-	public function afterSave() {
-		//zapis tagów
-		(new TagRelationModel('category', $this->getRecord()->id))
-			->createTagRelations($this->getElement('tags')->getValue());
-		return parent::afterSave();
 	}
 
 }

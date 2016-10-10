@@ -79,7 +79,7 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		//przekazanie atrybutów
 		$this->view->attributes = (new Model\AttributeValueRelationModel('category', $category->id))->getAttributeValues();
 		//przekazanie tagów
-		$this->view->tags = (new Model\TagRelationModel('category', $category->id))->getTagRelations();
+		$this->view->tags = (new Model\TagRelationModel('cmscategory', $category->id))->getTagRelations();
 	}
 
 }
