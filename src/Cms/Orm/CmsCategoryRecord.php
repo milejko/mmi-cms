@@ -71,6 +71,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		if (null === $this->order) {
 			$this->order = $this->_maxChildOrder() + 1;
 		}
+                //pola dat
+                if ('' === $this->publishUp) {
+                    $this->publishUp = NULL;
+                }
+                if ('' === $this->publishDown) {
+                    $this->publishDown = NULL;
+                }
 		//zapis
 		return parent::save();
 	}
