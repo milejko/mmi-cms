@@ -25,7 +25,7 @@ class CategoryController extends Mvc\Controller {
 	/**
 	 * Lista stron CMS - edycja w formie drzewa
 	 */
-	public function editAction() {
+	public function editAction() {            
 		//wyszukiwanie kategorii
 		if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
 			return;

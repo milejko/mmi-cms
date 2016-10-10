@@ -26,6 +26,9 @@
 						<li>
 							<a href="#tab-seo">SEO</a>
 						</li>
+                                                <li>
+							<a href="#tab-publish">Publikacja</a>
+						</li>
 						<li>
 							<a href="#tab-advanced">Zaawansowane</a>
 						</li>
@@ -64,6 +67,11 @@
 					{$categoryForm->getElement('https')}
 					{$categoryForm->getElement('blank')}
 					{$categoryForm->getElement('submit4')}
+				</div>
+                                <div class="tab-content clearfix" id="tab-publish">
+					{$categoryForm->getElement('publishUp')}
+					{$categoryForm->getElement('publishDown')}
+                                        {$categoryForm->getElement('submit5')}
 				</div>
 				{$categoryForm->end()}
 				{$categoryId = $categoryForm->getRecord()->id}

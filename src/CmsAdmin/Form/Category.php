@@ -18,7 +18,7 @@ use \Cms\Model\TagRelationModel;
 class Category extends \Cms\Form\AttributeForm {
 
 	public function init() {
-		
+            
 		//Konfiguracja
 		//szablony/typy (jeśli istnieją)
 		if ([] !== $types = (new \Cms\Orm\CmsCategoryTypeQuery)->orderAscName()->findPairs('id', 'name')) {
@@ -116,9 +116,18 @@ class Category extends \Cms\Form\AttributeForm {
 		//blank
 		$this->addElementCheckbox('blank')
 			->setLabel('otwieranie w nowym oknie');
-
+                
 		//zapis
 		$this->addElementSubmit('submit4')
+			->setLabel('zapisz');
+                
+                //okres publikacji
+                $this->addElementDateTimePicker('publishUp')
+                        ->setLabel('Data rozpoczęcia publikacji');
+                $this->addElementDateTimePicker('publishDown')
+                        ->setLabel('Data zakończenia publikacji');
+                //zapis
+		$this->addElementSubmit('submit5')
 			->setLabel('zapisz');
 	}
 

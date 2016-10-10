@@ -47,6 +47,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	public $follow;
 	public $blank;
 	public $active;
+        public $publishUp;
+        public $publishDown;
 
 	/**
 	 * Zapis rekordu
