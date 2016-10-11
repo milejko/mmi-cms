@@ -10,6 +10,8 @@
 
 namespace Cms\Form\Element;
 
+use \Cms\Model\TagRelationModel;
+
 /**
  * Element select
  * 
@@ -35,9 +37,6 @@ namespace Cms\Form\Element;
  * @method self setForm(\Mmi\Form\Form $form) ustawia formularz
  * 
  * @method self setMultioptions(array $multioptions = []) ustawia multiopcje
- * 
- * Gettery
- * @method array getMultioptions() pobiera multiopcje
  * 
  * Walidatory
  * @method self addValidatorAlnum($message = null) walidator alfanumeryczny
@@ -93,24 +92,60 @@ class Tags extends \Mmi\Form\Element\Select {
 	 */
 	public function __construct($name) {
 		parent::__construct($name);
-		$this->setMultiple();
-		$this->setValue([]);
+		$this->setMultiple()
+			->setValue([])
+			->setMultioptions((new \Cms\Orm\CmsTagQuery)->orderAscId()->findPairs('tag', 'tag'));
 	}
-        
+
+	/**
+	 * Ustawia objekt cms_
+	 * @param string $object
+	 * @return \Cms\Form\Element\Tags
+	 */
+	public function setObject($object) {
+		return $this->setOption('object', $object);
+	}
+
+	/**
+	 * Ustawianie tagów na podstawie formularza
+	 * @return \Cms\Form\Element\Tags
+	 */
+	public function setAutoTagValue() {
+		//brak rekordu
+		if (!$this->_form->hasRecord()) {
+			return $this;
+		}
+		//ustawianie wartości
+		$this->setValue((new TagRelationModel($this->getOption('object') ? $this->getOption('object') : $this->_form->getFileObjectName(), $this->_form->getRecord()->getPk()))
+				->getTagRelations());
+		//zwrot obiektu
+		return $this;
+	}
+	
+	/**
+	 * Zapis tagów po zapisie formularza
+	 */
+	public function onFormSaved() {
+		//zapis tagów
+		(new TagRelationModel($this->getOption('object') ? $this->getOption('object') : $this->_form->getFileObjectName(), $this->_form->getRecord()->getPk()))
+				->createTagRelations($this->getValue());
+	}
+
 	/**
 	 * Buduje pole
 	 * @return string
 	 */
-	public function fetchField() {            
-                $id = $this->getOption('id');
-		$id_input = \str_replace('-','_',$id);
-            
-                $view = \Mmi\App\FrontController::getInstance()->getView();            
-                $view->headLink()->appendStylesheet($view->baseUrl . '/resource/cmsAdmin/css/chosen.min.css');
+	public function fetchField() {
+		$id = $this->getOption('id');
+		$inputId = \str_replace('-', '_', $id);
+		//ustawianie wartości
+		$this->setAutoTagValue();
+		$view = \Mmi\App\FrontController::getInstance()->getView();
+		$view->headLink()->appendStylesheet($view->baseUrl . '/resource/cmsAdmin/css/chosen.min.css');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/chosen.jquery.min.js');
-                $view->headScript()->appendScript("
+		$view->headScript()->appendScript("
                     $(document).ready(function ($) {
-                        $('#".$id."').chosen({			    
+                        $('#" . $id . "').chosen({			    
 			    disable_search_threshold:10,
 			    placeholder_text_multiple:'Wpisz lub wybierz tagi',
 			    no_results_text:'Tag nieodnaleziony'
@@ -119,21 +154,21 @@ class Tags extends \Mmi\Form\Element\Select {
 			var customTagPrefix = '';
 
 			// event 
-			$('#".$id_input."_chosen input').keyup(function(event) {
+			$('#" . $inputId . "_chosen input').keyup(function(event) {
 
 				// wiecej niz 3 znaki, entery
 				if (this.value && this.value.length >= 3 && (event.which === 13 || event.which === 188)) {
 
 					// podswietlamy
-					var highlighted = $('#".$id_input."_chosen').find('li.active-result.highlighted').first();
+					var highlighted = $('#" . $inputId . "_chosen').find('li.active-result.highlighted').first();
 
 					if (event.which === 13 && highlighted.text() !== '')
 					{
 						//sprawdzamy czy juz jest dodany
 						var customOptionValue = customTagPrefix + highlighted.text();
-						$('#".$id." option').filter(function () { return $(this).val() == customOptionValue; }).remove();
+						$('#" . $id . " option').filter(function () { return $(this).val() == customOptionValue; }).remove();
 
-						var tagOption = $('#".$id." option').filter(function () { return $(this).html() == highlighted.text(); });
+						var tagOption = $('#" . $id . " option').filter(function () { return $(this).html() == highlighted.text(); });
 						tagOption.attr('selected', 'selected');
 					}
 					// Add the custom tag option
@@ -142,7 +177,7 @@ class Tags extends \Mmi\Form\Element\Select {
 						var customTag = this.value;
 
 						// test czy juz taki tag istnieje
-						var tagOption = $('#".$id." option').filter(function () { return $(this).html() == customTag; });
+						var tagOption = $('#" . $id . " option').filter(function () { return $(this).html() == customTag; });
 						if (tagOption.text() !== '')
 						{
 							tagOption.attr('selected', 'selected');
@@ -154,25 +189,25 @@ class Tags extends \Mmi\Form\Element\Select {
 							option.attr('selected','selected');
 
 							//dodanie nowego taga
-							$('#".$id."').append(option);
+							$('#" . $id . "').append(option);
 						}
 					}
 
 					this.value = '';
-					$('#".$id."').trigger('chosen:updated');
+					$('#" . $id . "').trigger('chosen:updated');
 					event.preventDefault();
 
 				}
 			});
                     });
 		");
-            
+
 		$values = is_array($this->getValue()) ? $this->getValue() : [$this->getValue()];
-                
+
 		if ($this->issetOption('multiple')) {
 			$this->setName($this->getName() . '[]');
 		}
-		
+
 		//nagłówek selecta
 		$html = '<select ' . $this->_getHtmlOptions() . '>';
 		//generowanie opcji
@@ -182,31 +217,32 @@ class Tags extends \Mmi\Form\Element\Select {
 			if (strpos($key, ':disabled') !== false && !is_array($caption)) {
 				$key = '';
 				$disabled = ' disabled="disabled"';
-			}			
+			}
 			//dodawanie pojedynczej opcji
 			$html .= '<option value="' . $key . '"' . $this->_calculateSelected($key, $values) . $disabled . '>' . $caption . '</option>';
 		}
 		$html .= '</select>';
 		return $html;
 	}
-	
+
 	/**
 	 * przerobienie tablicy + klucz
 	 * @return array
 	 */
-	public function getValue(){
-	    $arr = [];
-	    foreach($this->_options['value'] as $key){
-		$arr[$key] = $key;
-	    }	    
-	    return $arr;
+	public function getValue() {
+		$arr = [];
+		foreach ($this->_options['value'] as $key) {
+			$arr[$key] = $key;
+		}
+		return $arr;
 	}
-	
+
 	/**
 	 * łączenie wartości
 	 * @return array
 	 */
-	public function getMultioptions(){
-	    return array_merge($this->getValue(),parent::getMultioptions());
+	public function getMultioptions() {
+		return array_merge($this->getValue(), parent::getMultioptions());
 	}
+
 }
