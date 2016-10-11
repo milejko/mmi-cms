@@ -93,12 +93,13 @@ class Tags extends \Mmi\Form\Element\Select {
 	public function __construct($name) {
 		parent::__construct($name);
 		$this->setMultiple()
+			->setIgnore()
 			->setValue([])
 			->setMultioptions((new \Cms\Orm\CmsTagQuery)->orderAscId()->findPairs('tag', 'tag'));
 	}
 
 	/**
-	 * Ustawia objekt cms_
+	 * Ustawia objekt cms
 	 * @param string $object
 	 * @return \Cms\Form\Element\Tags
 	 */
@@ -121,14 +122,14 @@ class Tags extends \Mmi\Form\Element\Select {
 		//zwrot obiektu
 		return $this;
 	}
-	
+
 	/**
 	 * Zapis tagów po zapisie formularza
 	 */
 	public function onFormSaved() {
 		//zapis tagów
 		(new TagRelationModel($this->getOption('object') ? $this->getOption('object') : $this->_form->getFileObjectName(), $this->_form->getRecord()->getPk()))
-				->createTagRelations($this->getValue());
+			->createTagRelations($this->getValue());
 	}
 
 	/**
