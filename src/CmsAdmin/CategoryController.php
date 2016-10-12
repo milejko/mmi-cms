@@ -30,12 +30,19 @@ class CategoryController extends Mvc\Controller {
 		if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
 			return;
 		}
+		//zapis początkowej kategorii
+		$cmsCategoryTypeId = $cat->cmsCategoryTypeId;
 		//konfiguracja kategorii
 		$form = (new \CmsAdmin\Form\Category($cat));
 		//zapis
 		if ($form->isSaved()) {
-			$this->getMessenger()->addMessage('Zmiany w stronie zostały zapisane', true);
+			//$this->getMessenger()->addMessage('Zmiany w stronie zostały zapisane', true);
 		}
+		//zmiana kategorii
+		if ($cmsCategoryTypeId != $form->getRecord()->cmsCategoryTypeId) {
+			//redirect po zmianie (zmienią się atrybuty)
+			$this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $form->getRecord()->id]);
+		}		
 		//form do widoku
 		$this->view->categoryForm = $form;
 	}

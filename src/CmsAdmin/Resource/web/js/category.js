@@ -8,6 +8,7 @@ CMS.category = function () {
 			initNewWindowButtons,
 			initWidgetButtons,
 			initPreviewReload,
+			initCategoryChange,
 			reloadWidgets;
 
 	initSortableWidgets = function () {
@@ -63,6 +64,13 @@ CMS.category = function () {
 		});
 	};
 
+	initCategoryChange = function () {
+		$('#categoryContentContainer').on('change', '#cmsadmin-form-category-cmsCategoryTypeId', function () {
+			$('#cmsadmin-form-category-submit1').click();
+			return false;
+		});
+	};
+
 	reloadWidgets = function () {
 		$.get(request.baseUrl + "/?module=cmsAdmin&controller=categoryWidgetRelation&action=preview&categoryId=" + $('#widget-list').attr('data-category-id'), function (data) {
 			$('#widget-list').html(data);
@@ -75,6 +83,7 @@ CMS.category = function () {
 	initNewWindowButtons();
 	initWidgetButtons();
 	initPreviewReload();
+	initCategoryChange();
 	return that;
 };
 

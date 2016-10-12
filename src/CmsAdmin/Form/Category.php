@@ -32,6 +32,18 @@ class Category extends \Cms\Form\AttributeForm {
 			->setRequired()
 			->addFilterStringTrim()
 			->addValidatorStringLength(2, 128);
+		
+		//okres publikacji
+		$this->addElementDateTimePicker('publishUp')
+			->setLabel('początek publikacji')
+			->setDateStart(date('Y-m-d H:i:s'))
+			->setDateMin(date('Y-m-d H:i:s'))
+			->setLimitMax('cmsadmin-form-category-publishDown');
+
+		$this->addElementDateTimePicker('publishDown')
+			->setLabel('zakończenie publikacji')
+			->setDateStart(date('Y-m-d H:i:s'))
+			->setLimitMin('cmsadmin-form-category-publishUp');
 
 		//aktywna
 		$this->addElementCheckbox('active')
@@ -116,22 +128,6 @@ class Category extends \Cms\Form\AttributeForm {
 		//zapis
 		$this->addElementSubmit('submit4')
 			->setLabel('zapisz');
-
-		//okres publikacji
-		$this->addElementDateTimePicker('publishUp')
-			->setLabel('Data rozpoczęcia publikacji')
-			->setDateStart(date('Y-m-d G:i:s'))
-			->setDateMin(date('Y-m-d G:i:s'))
-			->setLimitMax('cmsadmin-form-category-publishDown');
-
-		$this->addElementDateTimePicker('publishDown')
-			->setLabel('Data zakończenia publikacji')
-			->setDateStart(date('Y-m-d G:i:s'))
-			->setLimitMin('cmsadmin-form-category-publishUp');
-		
-		//zapis
-		$this->addElementSubmit('submit5')
-			->setLabel('zapisz');		
 	}
 
 }

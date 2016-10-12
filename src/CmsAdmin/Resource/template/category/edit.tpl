@@ -26,9 +26,6 @@
 						<li>
 							<a href="#tab-seo">SEO</a>
 						</li>
-                                                <li>
-							<a href="#tab-publish">Publikacja</a>
-						</li>
 						<li>
 							<a href="#tab-advanced">Zaawansowane</a>
 						</li>
@@ -42,7 +39,10 @@
 					{$categoryForm->start()}
 					<div class="tab-content clearfix" id="tab-config">
 						{$categoryForm->getElement('cmsCategoryTypeId')}
+						{$categoryForm->getElement('cmsCategoryTypeChanged')}
 						{$categoryForm->getElement('name')}
+						{$categoryForm->getElement('publishUp')}
+						{$categoryForm->getElement('publishDown')}
 						{$categoryForm->getElement('active')}
 						{$categoryForm->getElement('submit1')}
 					</div>
@@ -68,11 +68,6 @@
 					{$categoryForm->getElement('blank')}
 					{$categoryForm->getElement('submit4')}
 				</div>
-                                <div class="tab-content clearfix" id="tab-publish">
-					{$categoryForm->getElement('publishUp')}
-					{$categoryForm->getElement('publishDown')}
-                                        {$categoryForm->getElement('submit5')}
-				</div>
 				{$categoryForm->end()}
 				{$categoryId = $categoryForm->getRecord()->id}
 				<div class="tab-content clearfix" id="tab-widget">
@@ -82,7 +77,8 @@
 					</div>
 				</div>
 				<div class="tab-content clearfix" id="tab-preview">
-					<iframe onload="this.style.height = 0;this.style.height=this.contentWindow.document.body.scrollHeight +'px';" id="preview-frame" src="{if $categoryForm->getRecord()->customUri}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->customUri}@}{else}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->uri}@}{/if}"></iframe>
+					<iframe onload="this.style.height = 0;
+							this.style.height = this.contentWindow.document.body.scrollHeight + 'px';" id="preview-frame" src="{if $categoryForm->getRecord()->customUri}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->customUri}@}{else}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->uri}@}{/if}"></iframe>
 				</div>
 			{/if}
 		</div>
