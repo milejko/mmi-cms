@@ -19,7 +19,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @var string
 	 */
 	public $uri;
-	
+
 	/**
 	 * Opcjonalny adres strony
 	 * @var string
@@ -47,8 +47,9 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	public $follow;
 	public $blank;
 	public $active;
-        public $publishUp;
-        public $publishDown;
+	
+	public $publishUp;
+	public $publishDown;
 
 	/**
 	 * Zapis rekordu
@@ -71,13 +72,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		if (null === $this->order) {
 			$this->order = $this->_maxChildOrder() + 1;
 		}
-                //pola dat
-                if ('' === $this->publishUp) {
-                    $this->publishUp = NULL;
-                }
-                if ('' === $this->publishDown) {
-                    $this->publishDown = NULL;
-                }
+		//pola dat
+		if (empty($this->publishUp)) {
+			$this->publishUp = NULL;
+		}
+		if (empty($this->publishDown)) {
+			$this->publishDown = NULL;
+		}
 		//zapis
 		return parent::save();
 	}
@@ -117,7 +118,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		$this->_rebuildChildren($this->id);
 		return true;
 	}
-	
+
 	/**
 	 * Kasowanie obiektu
 	 * @return boolean
@@ -133,7 +134,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		}
 		return parent::delete();
 	}
-	
+
 	/**
 	 * 
 	 */

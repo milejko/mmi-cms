@@ -20,19 +20,22 @@ class DateTimePicker extends \Cms\Form\Element\DatePicker {
 	 * @return string
 	 */
 	public function fetchField() {
-		$view = \Mmi\App\FrontController::getInstance()->getView();
 		$format = isset($this->_options['format']) ? $this->_options['format'] : 'Y-m-d H:i';
+
 		$dateStart = isset($this->_options['dateStart']) ? $this->_options['dateStart'] : 'false';
 		$dateEnd = isset($this->_options['dateEnd']) ? $this->_options['dateEnd'] : 'false';
+		$dateMin = isset($this->_options['dateMin']) ? "'" . $this->_options['dateMin'] . "'" : 'false';
+		$dateMax = isset($this->_options['dateMax']) ? "'" . $this->_options['dateMax'] . "'" : 'false';
 		$datepicker = isset($this->_options['datepicker']) ? $this->_options['datepicker'] : 'true';
-		$view->headLink()->appendStylesheet($view->baseUrl . '/resource/cmsAdmin/css/datetimepicker.css');
-		$view->headScript()->prependFile($view->baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js');
-		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/jquery/datetimepicker.js');
+		
 		$id = $this->getOption('id');
-		$view->headScript()->appendScript("$(document).ready(function () {
-				$('#$id').datetimepicker({'lang':'pl', step: 15, dateStart: '$dateStart', dateEnd: '$dateEnd', datepicker: '$datepicker', format:'$format', validateOnBlur: true, closeOnDateSelect: false});
+
+		$this->view->headScript()->appendScript("$(document).ready(function () {
+				$('#$id').datetimepicker({step: 15, minDate: $dateMin, maxDate: $dateMax, dateStart: '$dateStart', dateEnd: '$dateEnd', datepicker: '$datepicker', format:'$format', validateOnBlur: true, closeOnDateSelect: false $this->dateEvent});
+				$.datetimepicker.setLocale('pl');					
 			});
 		");
+
 		unset($this->_options['dateStart']);
 		unset($this->_options['dateEnd']);
 		unset($this->_options['format']);

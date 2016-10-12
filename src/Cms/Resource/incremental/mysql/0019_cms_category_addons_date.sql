@@ -1,0 +1,2 @@
+ALTER TABLE `cms_category` ADD COLUMN `publishUp` DATETIME DEFAULT NULL AFTER `active`,
+ ADD COLUMN `publishDown` DATETIME DEFAULT NULL AFTER `publishUp`;

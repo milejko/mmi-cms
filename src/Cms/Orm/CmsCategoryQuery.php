@@ -155,7 +155,12 @@ class CmsCategoryQuery extends \Mmi\Orm\Query {
         public function getPublish() {            
             return (new CmsCategoryQuery)
                             ->wherePublishUp()->less(date('Y-m-d G:i:s'))
-                            ->wherePublishDown()->greater(date('Y-m-d G:i:s'));
+							->orFieldPublishUp()->equals(NULL)
+                            ->wherePublishDown()->greater(date('Y-m-d G:i:s'))
+							->orFieldPublishDown()->equals(NULL);			
+			
+			// (publishUp < now() or publishUp is null) and (publishDown > now() or publishDown is null)
+			
         }
 
 }
