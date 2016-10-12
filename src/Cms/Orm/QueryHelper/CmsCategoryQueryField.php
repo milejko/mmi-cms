@@ -132,6 +132,18 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryQuery lessThanColumnActive()
  * @method \Cms\Orm\CmsCategoryQuery greaterOrEqualsColumnActive()
  * @method \Cms\Orm\CmsCategoryQuery lessOrEqualsColumnActive()
+ * @method \Cms\Orm\CmsCategoryQuery equalsColumnPublishUp()
+ * @method \Cms\Orm\CmsCategoryQuery notEqualsColumnPublishUp()
+ * @method \Cms\Orm\CmsCategoryQuery greaterThanColumnPublishUp()
+ * @method \Cms\Orm\CmsCategoryQuery lessThanColumnPublishUp()
+ * @method \Cms\Orm\CmsCategoryQuery greaterOrEqualsColumnPublishUp()
+ * @method \Cms\Orm\CmsCategoryQuery lessOrEqualsColumnPublishUp()
+ * @method \Cms\Orm\CmsCategoryQuery equalsColumnPublishDown()
+ * @method \Cms\Orm\CmsCategoryQuery notEqualsColumnPublishDown()
+ * @method \Cms\Orm\CmsCategoryQuery greaterThanColumnPublishDown()
+ * @method \Cms\Orm\CmsCategoryQuery lessThanColumnPublishDown()
+ * @method \Cms\Orm\CmsCategoryQuery greaterOrEqualsColumnPublishDown()
+ * @method \Cms\Orm\CmsCategoryQuery lessOrEqualsColumnPublishDown()
  */
 class CmsCategoryQueryField extends \Mmi\Orm\QueryHelper\QueryField {
 
