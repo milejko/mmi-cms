@@ -10,8 +10,6 @@
 
 namespace CmsAdmin\Form;
 
-use \Cms\Model\TagRelationModel;
-
 /**
  * Formularz edycji szegółów kategorii
  */
@@ -34,7 +32,6 @@ class Category extends \Cms\Form\AttributeForm {
 			->setRequired()
 			->addFilterStringTrim()
 			->addValidatorStringLength(2, 128);
-
 
 		//aktywna
 		$this->addElementCheckbox('active')
