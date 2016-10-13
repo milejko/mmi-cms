@@ -19,7 +19,7 @@ class TagGrid extends \CmsAdmin\Grid\Grid {
 
 		//zapytanie
 		$this->setQuery((new \Cms\Orm\CmsTagQuery)
-				->joinLeft('cms_tag_relation')->on('id','cms_tag_id')->groupById()->groupBy('id', 'cms_tag_relation')
+				->joinLeft('cms_tag_relation')->on('id','cms_tag_id')->groupById()->groupBy('cms_tag_id', 'cms_tag_relation')
 		);
 		
 		//nazwa taga
