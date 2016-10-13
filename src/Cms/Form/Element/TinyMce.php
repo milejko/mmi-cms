@@ -300,7 +300,10 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 			height: " . ($this->getOption('height') ? $this->getOption('height') : 200) . ",
 			resize: false,
 		";
-		$this->_other = "menubar: false,";
+		$this->_other = "
+			image_advtab: true,
+			menubar: false,
+		";
 	}
 	
 	/**
@@ -317,6 +320,9 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 			height: " . ($this->getOption('height') ? $this->getOption('height') : 320) . ",
 			resize: true,
 		";
+		$this->_other = "
+			image_advtab: true,
+		";
 	}
 	
 	/**
@@ -331,6 +337,9 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 			width: " . ($this->getOption('width') ? $this->getOption('width') : "''") . ",
 			height: " . ($this->getOption('height') ? $this->getOption('height') : 320) . ",
 			resize: true,
+		";
+		$this->_other = "
+			image_advtab: true,
 		";
 	}
 
