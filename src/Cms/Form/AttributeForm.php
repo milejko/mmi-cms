@@ -123,7 +123,6 @@ abstract class AttributeForm extends Form {
 			}
 			//zapis relacji z odziedziczonego elementu formularza (występującego w oryginalnym formularzu)
 			$this->_createValueRelationByElement($attribute->id, $element);
-			
 		}
 		//zapis udany
 		return true;
@@ -156,7 +155,7 @@ abstract class AttributeForm extends Form {
 		}
 		//checkboxy
 		if ($element instanceof \Mmi\Form\Element\Checkbox) {
-			return (new AttributeValueRelationModel($this->_saveToObject, $this->getRecord()->id))->createAttributeValueRelationByValue($attributeId, (integer)$element->isChecked());
+			return (new AttributeValueRelationModel($this->_saveToObject, $this->getRecord()->id))->createAttributeValueRelationByValue($attributeId, (integer) $element->isChecked());
 		}
 		//zwykła, skalarna wartość
 		if (!is_array($element->getValue())) {
@@ -180,8 +179,9 @@ abstract class AttributeForm extends Form {
 			->setDescription($attribute->description)
 			->setValue($attribute->isRestricted() ? $this->_arrayValueByAttributeId($attribute->id) : $this->_scalarValueByAttributeId($attribute->id));
 		//checkbox zaznaczony
-		if ($field instanceof \Mmi\Form\Element\Checkbox && $this->_scalarValueByAttributeId($attribute->id)) {
-			$field->setChecked();
+		if ($field instanceof \Mmi\Form\Element\Checkbox) {
+			$field->setValue(1)
+				->setChecked($this->_scalarValueByAttributeId($attribute->id));
 		}
 		//multiopcje
 		if ($attribute->isRestricted()) {
@@ -261,7 +261,7 @@ abstract class AttributeForm extends Form {
 		//zwrot wartości
 		return $values;
 	}
-	
+
 	/**
 	 * Sprawdza posiadanie renderowanych atrybutów
 	 * @return boolean

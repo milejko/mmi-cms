@@ -10,13 +10,18 @@
 
 namespace CmsAdmin\Form;
 
-class TextWidgetForm extends \Cms\Form\Form {
+/**
+ * Formularz widgetu tekstowego
+ */
+class TextWidgetForm extends \Cms\Form\AttributeForm {
 
 	public function init() {
 
 		$this->addElementTinyMce('text')
 			->setModeSimple()
 			->setLabel('tekst');
+	
+		$this->initAttributes('cms_category_widget', $this->getOption('widgetId'), 'category_widget_relation');
 
 		$this->addElementSubmit('submit')
 			->setLabel('zapisz');

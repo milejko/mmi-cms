@@ -141,6 +141,7 @@ class AttributeRelationModel {
 				->join('cms_attribute_relation')->on('id', 'cms_attribute_id')
 				->where('object', 'cms_attribute_relation')->equals($this->_object)
 				->where('objectId', 'cms_attribute_relation')->equals($this->_objectId)
+				->orderAsc('order', 'cms_attribute_relation')
 				->find();
 	}
 

@@ -31,7 +31,7 @@ class CategoryType extends \Cms\Form\Form {
 			->addValidatorRegex('/^[a-zA-Z0-9]+\/[a-zA-Z0-9]+\/[a-zA-Z0-9]+$/', 'Szablon w formacie - moduł/kontroler/akcja')
 			->setRequired();
 
-		//grupy atrybutów
+		//atrybuty
 		$this->addElementMultiCheckbox('attributeIds')
 			->setLabel('atrybuty')
 			->setMultioptions((new \Cms\Orm\CmsAttributeQuery)->orderAscName()->findPairs('id', 'name'))

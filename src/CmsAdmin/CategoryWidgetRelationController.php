@@ -65,7 +65,7 @@ class CategoryWidgetRelationController extends Mvc\Controller {
 			$record = new $widgetRecord->recordClass($widgetRelationRecord->getConfig()->recordId);
 		}
 		//instancja formularza
-		$form = new $widgetRecord->formClass($record);
+		$form = new $widgetRecord->formClass($record, ['widgetId' => $widgetRecord->id]);
 		$form->setFromArray((array) $widgetRelationRecord->getConfig());
 		//form zapisany
 		if ($form->isSaved()) {
