@@ -14,7 +14,10 @@
 {/foreach}
 
 {foreach $widgetModel->getWidgetRelations() as $widgetRelation}
-	{if !$widgetRelation->active}{continue}{/if}
-	{$widgetRequest = $widgetRelation->getWidgetRecord()->getMvcParamsAsRequest()}
+{if !$widgetRelation->active}{continue}{/if}
+{$widgetRequest = $widgetRelation->getWidgetRecord()->getMvcParamsAsRequest()}
+{$widgetName = $widgetRelation->getWidgetRecord()->name}
+<div class="cms-widget widget-{$widgetRelation->getWidgetRecord()->id} widget-{$widgetName|url}">
 	{widget($widgetRequest->module, $widgetRequest->controller, $widgetRequest->action, $widgetRequest->toArray() + ['widgetId' => $widgetRelation->id])}
+</div>
 {/foreach}

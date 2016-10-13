@@ -10,23 +10,16 @@
 
 namespace CmsAdmin\Form;
 
-/**
- * Formularz edycji widgetu kategorii
- */
-class CategoryAddWidget extends \Cms\Form\Form {
+class TextWidgetForm extends \Cms\Form\Form {
 
 	public function init() {
 
-		//nazwa kategorii
-		$this->addElementSelect('cmsWidgetId')
-			->setMultioptions((new \Cms\Orm\CmsCategoryWidgetQuery)
-				->orderAscName()
-				->findPairs('id', 'name'))
-			->setLabel('dostępne widgety');
+		$this->addElementTinyMce('text')
+			->setModeSimple()
+			->setLabel('tekst');
 
-		//zapis
 		$this->addElementSubmit('submit')
-			->setLabel('dodaj widget');
+			->setLabel('zapisz');
 	}
 
 }

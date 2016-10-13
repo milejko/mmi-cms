@@ -17,6 +17,9 @@ class CategoryWidget extends \Cms\Form\Form {
 
 	public function init() {
 		
+		//lista widgetów
+		$widgets = [null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard(3, '/widget/');
+		
 		$this->addElementText('name')
 			->setLabel('nazwa')
 			->setRequired()
@@ -24,13 +27,13 @@ class CategoryWidget extends \Cms\Form\Form {
 
 		$this->addElementSelect('mvcParams')
 			->setLabel('adres modułu wyświetlania')
-			->setMultioptions([null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard(3))
+			->setMultioptions($widgets)
 			->setRequired()
 			->addValidatorNotEmpty();
 		
 		$this->addElementSelect('mvcPreviewParams')
 			->setLabel('adres modułu podglądu')
-			->setMultioptions([null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard(3))
+			->setMultioptions($widgets)
 			->setRequired()
 			->addValidatorNotEmpty();
 		

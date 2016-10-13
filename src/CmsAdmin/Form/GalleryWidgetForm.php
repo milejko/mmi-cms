@@ -10,23 +10,15 @@
 
 namespace CmsAdmin\Form;
 
-/**
- * Formularz edycji widgetu kategorii
- */
-class CategoryAddWidget extends \Cms\Form\Form {
+class GalleryWidgetForm extends \Cms\Form\Form {
 
 	public function init() {
 
-		//nazwa kategorii
-		$this->addElementSelect('cmsWidgetId')
-			->setMultioptions((new \Cms\Orm\CmsCategoryWidgetQuery)
-				->orderAscName()
-				->findPairs('id', 'name'))
-			->setLabel('dostępne widgety');
+		$this->addElementPlupload('files')
+			->setObject('cmsgallery');
 
-		//zapis
 		$this->addElementSubmit('submit')
-			->setLabel('dodaj widget');
+			->setLabel('zapisz');
 	}
 
 }

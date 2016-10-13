@@ -24,14 +24,18 @@ class CategoryWidgetGrid extends \CmsAdmin\Grid\Grid {
 		//nazwa
 		$this->addColumnText('name')
 			->setLabel('nazwa');
+		
+		$widgets = [null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard(3, '/widget/');
 
 		//klasa modułu wyświetlania
-		$this->addColumnText('mvcParams')
-			->setLabel('adres modułu wyświetlania');
+		$this->addColumnSelect('mvcParams')
+			->setMultioptions($widgets)
+			->setLabel('moduł wyświetlania');
 
 		//klasa modułu wyświetlania
-		$this->addColumnText('mvcPreviewParams')
-			->setLabel('adres modułu wyświetlania podglądu');
+		$this->addColumnSelect('mvcPreviewParams')
+			->setMultioptions($widgets)
+			->setLabel('modułu podglądu');
 
 		//rekord
 		$this->addColumnText('recordClass')
