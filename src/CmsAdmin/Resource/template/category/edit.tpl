@@ -41,8 +41,8 @@
 						{$categoryForm->getElement('cmsCategoryTypeId')}
 						{$categoryForm->getElement('cmsCategoryTypeChanged')}
 						{$categoryForm->getElement('name')}
-						{$categoryForm->getElement('publishUp')}
-						{$categoryForm->getElement('publishDown')}
+						{$categoryForm->getElement('dateStart')}
+						{$categoryForm->getElement('dateEnd')}
 						{$categoryForm->getElement('active')}
 						{$categoryForm->getElement('submit1')}
 					</div>

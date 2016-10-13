@@ -48,8 +48,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	public $blank;
 	public $active;
 	
-	public $publishUp;
-	public $publishDown;
+	public $dateStart;
+	public $dateEnd;
 
 	/**
 	 * Zapis rekordu
@@ -73,11 +73,11 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 			$this->order = $this->_maxChildOrder() + 1;
 		}
 		//pola dat
-		if (empty($this->publishUp)) {
-			$this->publishUp = NULL;
+		if (empty($this->dateStart)) {
+			$this->dateStart = NULL;
 		}
-		if (empty($this->publishDown)) {
-			$this->publishDown = NULL;
+		if (empty($this->dateEnd)) {
+			$this->dateEnd = NULL;
 		}
 		//zapis
 		return parent::save();

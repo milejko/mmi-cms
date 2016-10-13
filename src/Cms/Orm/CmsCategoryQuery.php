@@ -157,22 +157,21 @@ namespace Cms\Orm;
 //</editor-fold>
 class CmsCategoryQuery extends \Mmi\Orm\Query {
 
-        protected $_tableName = 'cms_category';
+	protected $_tableName = 'cms_category';
 
-        public function searchByUri($uri) {
-            return (new CmsCategoryQuery)
-                            ->whereUri()->equals($uri);
-        }
+	public function searchByUri($uri) {
+		return (new CmsCategoryQuery)
+				->whereUri()->equals($uri);
+	}
 
-        public function getPublish() {            
-            return (new CmsCategoryQuery)
-                            ->wherePublishUp()->less(date('Y-m-d G:i:s'))
-							->orFieldPublishUp()->equals(NULL)
-                            ->wherePublishDown()->greater(date('Y-m-d G:i:s'))
-							->orFieldPublishDown()->equals(NULL);			
-			
-			// (publishUp < now() or publishUp is null) and (publishDown > now() or publishDown is null)
-			
-        }
+	public function getPublishCategory() {
+		return (new CmsCategoryQuery)
+				->andQuery(
+					(new CmsCategoryQuery)->whereDateStart()->less(date('Y-m-d H:i:s'))
+					->orFieldDateStart()->equals(NULL))
+				->andQuery(
+					(new CmsCategoryQuery)->whereDateEnd()->greater(date('Y-m-d H:i:s'))
+					->orFieldDateEnd()->equals(NULL));
+	}
 
 }

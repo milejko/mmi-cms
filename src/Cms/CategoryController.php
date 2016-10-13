@@ -25,8 +25,20 @@ class CategoryController extends \Mmi\Mvc\Controller {
 			//404
 			throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $this->uri);
 		}
+		//kategoria nieaktywna i brak roli redaktora treści		
+		if ($category->active != 1 && (
+			$category->dateStart > date('Y-m-d H:i:s') || ($category->dateEnd < date('Y-m-d H:i:s') && !is_null($category->dateEnd))
+			) && !\App\Registry::$acl->isAllowed(\App\Registry::$auth->getRoles(), 'cmsAdmin:category:index')
+		) {
+			//404
+			throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $this->uri);
+		}
+
 		//kategoria nieaktywna i brak roli redaktora treści
-		if ($category->active != 1 && !\App\Registry::$acl->isAllowed(\App\Registry::$auth->getRoles(), 'cmsAdmin:category:index')) {
+		if ($category->active == 1 &&
+			$category->dateStart < date('Y-m-d H:i:s') &&
+			$category->dateEnd > date('Y-m-d H:i:s') &&
+			!\App\Registry::$acl->isAllowed(\App\Registry::$auth->getRoles(), 'cmsAdmin:category:index')) {
 			//404
 			throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $this->uri);
 		}

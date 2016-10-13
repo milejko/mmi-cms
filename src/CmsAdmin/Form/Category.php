@@ -34,16 +34,16 @@ class Category extends \Cms\Form\AttributeForm {
 			->addValidatorStringLength(2, 128);
 		
 		//okres publikacji
-		$this->addElementDateTimePicker('publishUp')
+		$this->addElementDateTimePicker('dateStart')
 			->setLabel('początek publikacji')
 			->setDateStart(date('Y-m-d H:i:s'))
 			->setDateMin(date('Y-m-d H:i:s'))
-			->setLimitMax('cmsadmin-form-category-publishDown');
+			->setLimitMax('cmsadmin-form-category-dateEnd');
 
-		$this->addElementDateTimePicker('publishDown')
+		$this->addElementDateTimePicker('dateEnd')
 			->setLabel('zakończenie publikacji')
 			->setDateStart(date('Y-m-d H:i:s'))
-			->setLimitMin('cmsadmin-form-category-publishUp');
+			->setLimitMin('cmsadmin-form-category-dateStart');
 
 		//aktywna
 		$this->addElementCheckbox('active')
