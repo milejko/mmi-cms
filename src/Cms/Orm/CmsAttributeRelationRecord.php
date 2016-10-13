@@ -8,5 +8,6 @@ class CmsAttributeRelationRecord extends \Mmi\Orm\Record {
 	public $cmsAttributeId;
 	public $object;
 	public $objectId;
+	public $order;
 
 }

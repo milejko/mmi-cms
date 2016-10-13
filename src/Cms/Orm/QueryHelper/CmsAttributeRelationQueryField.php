@@ -36,6 +36,12 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsAttributeRelationQuery lessThanColumnObjectId()
  * @method \Cms\Orm\CmsAttributeRelationQuery greaterOrEqualsColumnObjectId()
  * @method \Cms\Orm\CmsAttributeRelationQuery lessOrEqualsColumnObjectId()
+ * @method \Cms\Orm\CmsAttributeRelationQuery equalsColumnOrder()
+ * @method \Cms\Orm\CmsAttributeRelationQuery notEqualsColumnOrder()
+ * @method \Cms\Orm\CmsAttributeRelationQuery greaterThanColumnOrder()
+ * @method \Cms\Orm\CmsAttributeRelationQuery lessThanColumnOrder()
+ * @method \Cms\Orm\CmsAttributeRelationQuery greaterOrEqualsColumnOrder()
+ * @method \Cms\Orm\CmsAttributeRelationQuery lessOrEqualsColumnOrder()
  */
 class CmsAttributeRelationQueryField extends \Mmi\Orm\QueryHelper\QueryField {
 
