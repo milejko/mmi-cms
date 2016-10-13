@@ -106,6 +106,14 @@ class Tags extends \Mmi\Form\Element\Select {
 	public function setObject($object) {
 		return $this->setOption('object', $object);
 	}
+	
+	/**
+	 * Ustawia możliwość dodania nowego taga z pola
+	 * @return \Cms\Form\Element\Tags
+	 */
+	public function setAddTags() {
+		return $this->setOption('addTags', true);
+	}
 
 	/**
 	 * Ustawianie tagów na podstawie formularza
@@ -141,6 +149,8 @@ class Tags extends \Mmi\Form\Element\Select {
 		$inputId = \str_replace('-', '_', $id);
 		//ustawianie wartości
 		$this->setAutoTagValue();
+		//pobranie czy mozna dodac tag
+		$addTags = $this->getOption('addTags') ? 'true' : 'false';
 		$view = \Mmi\App\FrontController::getInstance()->getView();
 		$view->headLink()->appendStylesheet($view->baseUrl . '/resource/cmsAdmin/css/chosen.min.css');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/chosen.jquery.min.js');
@@ -185,12 +195,15 @@ class Tags extends \Mmi\Form\Element\Select {
 						}
 						else
 						{
-							var option = $('<option>');
-							option.text(this.value).val(customTagPrefix + this.value);
-							option.attr('selected','selected');
+							if ( $addTags ){
+								console.log('aaa');
+								var option = $('<option>');
+								option.text(this.value).val(customTagPrefix + this.value);
+								option.attr('selected','selected');
 
-							//dodanie nowego taga
-							$('#" . $id . "').append(option);
+								//dodanie nowego taga
+								$('#" . $id . "').append(option);
+							}
 						}
 					}
 
