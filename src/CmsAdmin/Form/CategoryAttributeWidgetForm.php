@@ -13,14 +13,10 @@ namespace CmsAdmin\Form;
 /**
  * Formularz widgetu tekstowego
  */
-class TextWidgetForm extends \Cms\Form\AttributeForm {
+class CategoryAttributeWidgetForm extends \Cms\Form\AttributeForm {
 
 	public function init() {
 
-		$this->addElementTinyMce('text')
-			->setModeSimple()
-			->setLabel('tekst');
-	
 		$this->initAttributes('cms_category_widget', $this->getOption('widgetId'), 'category_widget_relation');
 
 		$this->addElementSubmit('submit')

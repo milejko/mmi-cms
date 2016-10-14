@@ -45,6 +45,22 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		//przekazanie tagów
 		$this->view->tags = (new Model\TagRelationModel('cmscategory', $category->id))->getTagRelations();
 	}
+	
+	/**
+	 * Akcja prostego widgetu z atrybutami
+	 */
+	public function widgetAction() {
+		$widgetModel = $this->view->widgetModel;
+		/* @var $widgetModel \Cms\Model\CategoryWidgetModel */
+		//brak widgeta
+		if (null === $widgetRelation = $widgetModel->findWidgetRelationById($this->widgetId)) {
+			return '';
+		}
+		//atrybuty do widoku
+		$this->view->attributes = (new Model\AttributeValueRelationModel('category_widget_relation', $widgetRelation->id))->getAttributeValues();
+		//relacja do widoku
+		$this->view->widgetRelation = $widgetRelation;
+	}
 
 	/**
 	 * Pobiera opublikowaną kategorię po uri

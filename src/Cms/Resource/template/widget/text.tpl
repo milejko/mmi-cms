@@ -1,1 +1,0 @@
-{$widgetModel->findWidgetRelationById($request->widgetId)->getConfig()->text}

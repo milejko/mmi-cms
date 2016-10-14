@@ -25,7 +25,7 @@ class CategoryController extends Mvc\Controller {
 	/**
 	 * Lista stron CMS - edycja w formie drzewa
 	 */
-	public function editAction() {            
+	public function editAction() {
 		//wyszukiwanie kategorii
 		if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
 			return;
@@ -42,9 +42,17 @@ class CategoryController extends Mvc\Controller {
 		if ($cmsCategoryTypeId != $form->getRecord()->cmsCategoryTypeId) {
 			//redirect po zmianie (zmienią się atrybuty)
 			$this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $form->getRecord()->id]);
-		}		
+		}
 		//form do widoku
 		$this->view->categoryForm = $form;
+	}
+
+	/**
+	 * Akcja podglądu widgeta
+	 */
+	public function widgetAction() {
+		return (new \Cms\CategoryController($this->getRequest()))
+			->widgetAction();
 	}
 
 	/**
