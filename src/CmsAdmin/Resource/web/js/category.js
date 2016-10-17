@@ -74,6 +74,11 @@ CMS.category = function () {
 	reloadWidgets = function () {
 		$.get(request.baseUrl + "/?module=cmsAdmin&controller=categoryWidgetRelation&action=preview&categoryId=" + $('#widget-list').attr('data-category-id'), function (data) {
 			$('#widget-list').html(data);
+			
+			if( MathJax !== undefined ){
+				MathJax.Hub.Queue(["Typeset",MathJax.Hub])
+			}
+			
 		});
 	};
 

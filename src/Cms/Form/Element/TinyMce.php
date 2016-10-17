@@ -189,6 +189,11 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	 * @var string
 	 */
 	protected $_font;
+	/**
+	 * Style css
+	 * @var string
+	 */
+	protected $_css;
 
 	/**
 	 * Buduje pole
@@ -237,6 +242,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 				" . $this->_other . "
 				" . $this->_common . "
 				" . $this->_font . "
+				" . $this->_css . "
 				" . $this->getOption('custom') . "
 				image_list: request.baseUrl + '/?module=cms&controller=file&action=list&object=$object&objectId=$objectId&t=$t&hash=$hash'
 			});

@@ -1,0 +1,284 @@
+{
+  "buttonBar": [
+    {
+      "klass": "EquationEditor.Buttons.WriteButtonView",
+      "latex": "+"
+    },
+    {
+      "klass": "EquationEditor.Buttons.WriteButtonView",
+      "latex": "-"
+    },
+    {
+      "klass": "EquationEditor.Buttons.WriteButtonView",
+      "latex": "\\times"
+    },
+    {
+      "klass": "EquationEditor.Buttons.WriteButtonView",
+      "latex": "\\div"
+    },
+    {
+      "klass": "EquationEditor.Buttons.CommandButtonView",
+      "latex": "/",
+      "buttonText": "x/y"
+    },
+    {
+      "klass": "EquationEditor.Buttons.CommandButtonView",
+      "latex": "^",
+      "buttonText": "y^x",
+      "className": "tall"
+    },
+    {
+      "klass": "EquationEditor.Buttons.CommandButtonView",
+      "latex": "_",
+      "buttonText": "y_x",
+      "className": "tall"
+    },
+    {
+      "klass": "EquationEditor.Buttons.CommandButtonView",
+      "latex": "metoda_1",
+      "buttonText": "Y^x_z",
+      "className": "tall"
+    },
+    {
+      "klass": "EquationEditor.Buttons.CommandButtonView",
+      "latex": "\\sqrt",
+      "buttonText": "\\sqrt{x}",
+      "className": "sqrt-button"
+    },
+    {
+      "klass": "EquationEditor.Buttons.WriteButtonView",
+      "latex": "="
+    },
+    {
+      "klass": "EquationEditor.Buttons.WriteButtonView",
+      "latex": "\\approx"
+    },
+    
+    {
+      "klass": "EquationEditor.Buttons.WriteButtonView",
+      "latex": "\\le"
+    },
+    {
+      "klass": "EquationEditor.Buttons.WriteButtonView",
+      "latex": "\\ge"
+    },
+    
+    
+    
+    
+    
+    {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\pm"
+          },
+          {
+            "klass": "EquationEditor.Buttons.CommandButtonView",
+            "latex": "\\rightarrow"
+          },          
+          {
+            "klass": "EquationEditor.Buttons.CommandButtonView",
+            "latex": "\\overline",
+            "buttonText": "\\overline{x}"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\cdot"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\degree"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "%"
+          },
+    
+    
+        {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\int"
+          },
+          
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "dx"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\frac{d}{dx}",
+            "className": "tall"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\sum",
+            "buttonText": "\\sum"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\sum_{i=1}^{n}",
+            "buttonText": "\\sum_{i=1}^{n}",
+            "className": "male"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\infty"
+          },
+          {
+            "klass": "EquationEditor.Buttons.CommandButtonView",
+            "latex": "\\nthroot",
+            "buttonText": "\\nthroot[n]{x}",
+            "className": "sqrt-button tall"
+          },
+    
+    
+    
+    
+    
+    
+        {
+            "klass": "EquationEditor.Buttons.CommandButtonView",
+            "latex": "\\vec",
+            "buttonText": "\\vec{AB}"
+          }, 
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\alpha",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\beta",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\gamma",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\delta",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\epsilon",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\zeta",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\eta",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\theta",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\iota",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\kappa",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\lambda",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\mu",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\nu",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\xi",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\pi",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\rho",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\sigma",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\tau",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\upsilon",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\phi",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\chi",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\psi",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\omega",
+            "className": "kur"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\Delta"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\Omega"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\Sigma"
+          }
+    
+  ],  
+  
+  "buttonGroups": {
+    "basic": [
+      
+    ],
+    "intermediate": [
+        
+    ],
+    "advanced": [
+      
+    ]
+  }
+}
