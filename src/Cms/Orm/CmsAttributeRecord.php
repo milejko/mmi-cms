@@ -2,6 +2,9 @@
 
 namespace Cms\Orm;
 
+/**
+ * Rekord atrybutu
+ */
 class CmsAttributeRecord extends \Mmi\Orm\Record {
 
 	public $id;
@@ -10,6 +13,7 @@ class CmsAttributeRecord extends \Mmi\Orm\Record {
 	public $key;
 	public $description;
 	public $fieldClass;
+	public $fieldOptions;
 	public $filterClasses;
 	public $validatorClasses;
 	public $indexWeight;

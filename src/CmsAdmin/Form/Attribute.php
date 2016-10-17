@@ -38,11 +38,15 @@ class Attribute extends \Mmi\Form\Form {
 			->addValidatorStringLength(2, 64)
 			->addValidatorRecordUnique(new \Cms\Orm\CmsAttributeQuery, 'key', $this->getRecord()->id);
 
-		//opis
+		//pole formularza
 		$this->addElementSelect('fieldClass')
 			->setLabel('pole formularza')
 			->setRequired()
 			->setMultioptions($this->getRecord()->getFieldClasses());
+		
+		//opcje pola formularz
+		$this->addElementTextarea('fieldOptions')
+			->setLabel('opcje pola');
 
 		//filtry
 		$this->addElementMultiCheckbox('filterArray')
