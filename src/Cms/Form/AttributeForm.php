@@ -64,7 +64,7 @@ abstract class AttributeForm extends Form {
 		//jeśli istnieje labelka i atrybuty
 		if ($label) {
 			//dodawanie label
-			$this->addElementLabel('attributes-' . $object)->setLabel($label);
+			$this->addElementLabel('attributes-' . $object)->setIgnore()->setLabel($label);
 		}
 		//iteracja po atrybutach
 		foreach ($this->_cmsAttributes as $attribute) {
@@ -178,6 +178,11 @@ abstract class AttributeForm extends Form {
 			->setLabel($attribute->name)
 			->setDescription($attribute->description)
 			->setValue($attribute->isRestricted() ? $this->_arrayValueByAttributeId($attribute->id) : $this->_scalarValueByAttributeId($attribute->id));
+		$options = [];
+		//parsowanie opcji
+		parse_str($attribute->fieldOptions, $options);
+		//ustawienie opcji
+		$field->setOptions($options);
 		//checkbox zaznaczony
 		if ($field instanceof \Mmi\Form\Element\Checkbox) {
 			$field->setValue(1)
@@ -195,8 +200,8 @@ abstract class AttributeForm extends Form {
 		//czy pole jest wgrywarką plików
 		if ($attribute->isUploader()) {
 			//obiektem dla uploadera jest obiekt główny + klucz atrybutu, ignorowanie pola
-			$field->setObject($this->_saveToObject . '-' . $attribute->key);
-			$field->setValue($this->_saveToObject . '-' . $attribute->key);
+			$field->setObject($this->_saveToObject . ucfirst($attribute->key));
+			$field->setValue($this->_saveToObject . ucfirst($attribute->key));
 		}
 		//walidatory
 		if ($attribute->validatorClasses) {

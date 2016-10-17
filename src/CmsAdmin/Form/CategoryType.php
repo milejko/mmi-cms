@@ -35,7 +35,7 @@ class CategoryType extends \Cms\Form\Form {
 		$this->addElementMultiCheckbox('attributeIds')
 			->setLabel('atrybuty')
 			->setMultioptions((new \Cms\Orm\CmsAttributeQuery)->orderAscName()->findPairs('id', 'name'))
-			->setValue((new \Cms\Model\AttributeRelationModel('cms_category_type', $this->getRecord()->id))->getAttributeIds());
+			->setValue((new \Cms\Model\AttributeRelationModel('cmsCategoryType', $this->getRecord()->id))->getAttributeIds());
 
 		//zapis
 		$this->addElementSubmit('submit')
@@ -58,7 +58,7 @@ class CategoryType extends \Cms\Form\Form {
 	 */
 	public function afterSave() {
 		//model relacji
-		$relationModel = new \Cms\Model\AttributeRelationModel('cms_category_type', $this->getRecord()->id);
+		$relationModel = new \Cms\Model\AttributeRelationModel('cmsCategoryType', $this->getRecord()->id);
 		//nowe id atrybutów
 		$newAttributeIds = $this->getElement('attributeIds')->getValue();
 		//bieżące id atrybutów

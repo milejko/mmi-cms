@@ -50,7 +50,7 @@ class CategoryWidget extends \Cms\Form\Form {
 		$this->addElementMultiCheckbox('attributeIds')
 			->setLabel('atrybuty')
 			->setMultioptions((new \Cms\Orm\CmsAttributeQuery)->orderAscName()->findPairs('id', 'name'))
-			->setValue((new \Cms\Model\AttributeRelationModel('cms_category_widget', $this->getRecord()->id))->getAttributeIds());
+			->setValue((new \Cms\Model\AttributeRelationModel('cmsCategoryWidget', $this->getRecord()->id))->getAttributeIds());
 
 		//zapis
 		$this->addElementSubmit('submit')
@@ -63,7 +63,7 @@ class CategoryWidget extends \Cms\Form\Form {
 	 */
 	public function afterSave() {
 		//model relacji
-		$relationModel = new \Cms\Model\AttributeRelationModel('cms_category_widget', $this->getRecord()->id);
+		$relationModel = new \Cms\Model\AttributeRelationModel('cmsCategoryWidget', $this->getRecord()->id);
 		//nowe id atrybutów
 		$newAttributeIds = $this->getElement('attributeIds')->getValue();
 		//bieżące id atrybutów
@@ -91,7 +91,7 @@ class CategoryWidget extends \Cms\Form\Form {
 		foreach ((new \Cms\Orm\CmsCategoryWidgetCategoryQuery)->whereCmsCategoryWidgetId()
 			->equals($this->getRecord()->id)
 			->findPairs('id', 'id') as $categoryWidgetCategoryId) {
-			(new \Cms\Model\AttributeValueRelationModel('category_widget_relation', $categoryWidgetCategoryId))
+			(new \Cms\Model\AttributeValueRelationModel('categoryWidgetRelation', $categoryWidgetCategoryId))
 				->deleteAttributeValueRelationsByAttributeId($attributeId);
 		}
 	}

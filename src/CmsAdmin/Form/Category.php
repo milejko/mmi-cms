@@ -89,7 +89,7 @@ class Category extends \Cms\Form\AttributeForm {
 
 		//Treść
 		//atrybuty
-		$this->initAttributes('cms_category_type', $this->getRecord()->cmsCategoryTypeId, 'category');
+		$this->initAttributes('cmsCategoryType', $this->getRecord()->cmsCategoryTypeId, 'category');
 
 		//tagi
 		$this->addElementTags('tags')
