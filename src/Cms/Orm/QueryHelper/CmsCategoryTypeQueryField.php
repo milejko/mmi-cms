@@ -30,12 +30,12 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryTypeQuery lessThanColumnKey()
  * @method \Cms\Orm\CmsCategoryTypeQuery greaterOrEqualsColumnKey()
  * @method \Cms\Orm\CmsCategoryTypeQuery lessOrEqualsColumnKey()
- * @method \Cms\Orm\CmsCategoryTypeQuery equalsColumnTemplate()
- * @method \Cms\Orm\CmsCategoryTypeQuery notEqualsColumnTemplate()
- * @method \Cms\Orm\CmsCategoryTypeQuery greaterThanColumnTemplate()
- * @method \Cms\Orm\CmsCategoryTypeQuery lessThanColumnTemplate()
- * @method \Cms\Orm\CmsCategoryTypeQuery greaterOrEqualsColumnTemplate()
- * @method \Cms\Orm\CmsCategoryTypeQuery lessOrEqualsColumnTemplate()
+ * @method \Cms\Orm\CmsCategoryTypeQuery equalsColumnMvcParams()
+ * @method \Cms\Orm\CmsCategoryTypeQuery notEqualsColumnMvcParams()
+ * @method \Cms\Orm\CmsCategoryTypeQuery greaterThanColumnMvcParams()
+ * @method \Cms\Orm\CmsCategoryTypeQuery lessThanColumnMvcParams()
+ * @method \Cms\Orm\CmsCategoryTypeQuery greaterOrEqualsColumnMvcParams()
+ * @method \Cms\Orm\CmsCategoryTypeQuery lessOrEqualsColumnMvcParams()
  */
 class CmsCategoryTypeQueryField extends \Mmi\Orm\QueryHelper\QueryField {
 
