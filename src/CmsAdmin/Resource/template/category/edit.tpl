@@ -21,7 +21,7 @@
 							<a href="#tab-config">Konfiguracja</a>
 						</li>
 						<li>
-							<a href="#tab-content">Treść i tagi</a>
+							<a href="#tab-content">Tagi i atrybuty</a>
 						</li>
 						<li>
 							<a href="#tab-seo">SEO</a>
@@ -72,7 +72,7 @@
 				{$categoryId = $categoryForm->getRecord()->id}
 				<div class="tab-content clearfix" id="tab-widget">
 					<a href="{@module=cmsAdmin&controller=categoryWidgetRelation&action=add&id={$categoryId}@}" class="button new-window" target="_blank"><i class="icon-plus"></i> dodaj widget</a>
-					<div class="widgets" data-category-id="{$categoryId}">
+					<div id="widget-list-container" data-category-id="{$categoryId}">
 						{widget('cmsAdmin', 'categoryWidgetRelation', 'preview', ['categoryId' => $categoryId])}
 					</div>
 				</div>

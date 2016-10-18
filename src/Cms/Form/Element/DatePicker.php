@@ -213,8 +213,8 @@ class DatePicker extends \Mmi\Form\Element\ElementAbstract {
 		unset($this->_options['dateStart']);
 		unset($this->_options['dateEnd']);
 		unset($this->_options['format']);
-		$html = '<div class="field"><input id="' . $id . '" class="datePickerField dp-applied" ';
-		$html .= 'type="text" ' . $this->_getHtmlOptions() . '/></div>';
+		$html = '<input id="' . $id . '" class="datePickerField dp-applied" ';
+		$html .= 'type="text" ' . $this->_getHtmlOptions() . '/>';
 
 		return $html;
 	}

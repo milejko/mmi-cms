@@ -25,11 +25,12 @@ class CategoryType extends \Cms\Form\Form {
 			->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryTypeQuery, 'name', $this->getRecord()->id)
 			->setLabel('nazwa');
 
-		//szablon (moduł/kontroler/akcja)
-		$this->addElementText('template')
-			->setLabel('szablon')
-			->addValidatorRegex('/^[a-zA-Z0-9]+\/[a-zA-Z0-9]+\/[a-zA-Z0-9]+$/', 'Szablon w formacie - moduł/kontroler/akcja')
-			->setRequired();
+		//klasa modułu wyświetlania
+		$this->addElementSelect('mvcParams')
+			->setMultioptions([null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard(3))
+			->setRequired()
+			->addValidatorNotEmpty()
+			->setLabel('moduł wyświetlania');
 
 		//atrybuty
 		$this->addElementMultiCheckbox('attributeIds')
@@ -82,7 +83,7 @@ class CategoryType extends \Cms\Form\Form {
 	 * Usuwanie relacji ze wszystkich kategorii dla danego atrybutu
 	 * @param integer $attributeId
 	 */
-	protected function _deleteValueRelationsByAttributeId($attributeId	) {
+	protected function _deleteValueRelationsByAttributeId($attributeId) {
 		foreach ((new \Cms\Orm\CmsCategoryQuery)->whereCmsCategoryTypeId()
 			->equals($this->getRecord()->id)
 			->findPairs('id', 'id') as $categoryId) {

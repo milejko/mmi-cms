@@ -110,20 +110,15 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		$request->setModuleName('cms')
 			->setControllerName('category')
 			->setActionName('article');
-		//pobranie typu i ustalenie template
-		if (!$category->getJoined('cms_category_type')->template) {
+		//pobranie typu i parametrów mvc
+		if (!$category->getJoined('cms_category_type')->mvcParams) {
 			return $request;
 		}
 		//tablica z tpl
-		$mcaArr = explode('/', $category->getJoined('cms_category_type')->template);
-		//zła ilość argumentów
-		if (count($mcaArr) != 3) {
-			throw new \Mmi\App\KernelException('Template invalid: "' . $category->getJoined('cms_category_type')->template . '"');
-		}
-		//ustawienie request
-		return $request->setModuleName($mcaArr[0])
-				->setControllerName($mcaArr[1])
-				->setActionName($mcaArr[2]);
+		$mvcParams = [];
+		//parsowanie parametrów mvc
+		parse_str($category->getJoined('cms_category_type')->mvcParams, $mvcParams);
+		return new \Mmi\Http\Request($mvcParams);
 	}
 
 	/**

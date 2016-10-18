@@ -7,6 +7,6 @@ class CmsCategoryTypeRecord extends \Mmi\Orm\Record {
 	public $id;
 	public $name;
 	public $key;
-	public $template;
+	public $mvcParams;
 
 }

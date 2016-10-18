@@ -46,16 +46,15 @@ CMS.category = function () {
 		});
 		$('#widget-list').on('click', '.toggle-widget', function () {
 			$.get($(this).attr('href'));
-			if ($(this).children('i').attr('class') == 'icon-eye-close') {
+			if ($(this).children('i').attr('class') === 'icon-eye-close') {
 				$(this).children('i').attr('class', 'icon-eye-open');
 			} else {
 				$(this).children('i').attr('class', 'icon-eye-close');
 			}
-
 			return false;
 		});
 	};
-	
+
 	initPreviewReload = function () {
 		$('#categoryContentContainer').on('click', 'a.reload-preview', function () {
 			var src = $('#preview-frame').attr('src');
@@ -72,13 +71,13 @@ CMS.category = function () {
 	};
 
 	reloadWidgets = function () {
-		$.get(request.baseUrl + "/?module=cmsAdmin&controller=categoryWidgetRelation&action=preview&categoryId=" + $('#widget-list').attr('data-category-id'), function (data) {
-			$('#widget-list').html(data);
-			
-			if( MathJax !== undefined ){
-				MathJax.Hub.Queue(["Typeset",MathJax.Hub])
+		$.get(request.baseUrl + "/?module=cmsAdmin&controller=categoryWidgetRelation&action=preview&categoryId=" + $('#widget-list-container').attr('data-category-id'), function (data) {
+			$('#widget-list-container').html(data);
+			initSortableWidgets();
+			initWidgetButtons();
+			if (MathJax !== undefined) {
+				MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 			}
-			
 		});
 	};
 

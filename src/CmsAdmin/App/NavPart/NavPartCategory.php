@@ -14,12 +14,12 @@ class NavPartCategory extends \Mmi\Navigation\NavigationConfig {
 
 	public static function getMenu() {
 		return self::newElement()
-				->setLabel('Treści')
+				->setLabel('Treść')
 				->setModule('cmsAdmin')
 				->setController('category')
 				->setAction('edit')
 				->addChild(self::newElement()
-					->setLabel('Lista')
+					->setLabel('Lista treści')
 					->setModule('cmsAdmin')
 					->setController('category')
 					->setAction('index')
