@@ -102,7 +102,7 @@ class UploadController extends Mvc\Controller {
 			if ($record->class === 'image') {
 				try {
 					$thumb = new \Cms\Mvc\ViewHelper\Thumb();
-					$url = $thumb->thumb($record, 'scalecrop', '100x60');
+					$url = $thumb->thumb($record, 'scaley', '60');
 					if (!empty($url)) {
 						return json_encode(['result' => 'OK', 'url' => $url]);
 					}
