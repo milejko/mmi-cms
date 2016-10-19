@@ -118,7 +118,7 @@ class AttributeValueRelationModel {
 		//usunięcie relacji
 		$relationRecord->delete();
 	}
-	
+
 	/**
 	 * Usunięcie relacji z obiektu i id dla podanego id atrybutu
 	 */
@@ -169,5 +169,33 @@ class AttributeValueRelationModel {
 				->where('objectId', 'cms_attribute_value_relation')->equals($this->_objectId)
 				->find();
 	}
-	
+
+	/**
+	 * Pobiera rekordy wartości w formie obiektu danych
+	 * @see \Mmi\DataObiect
+	 * @return \Cms\Orm\CmsAttributeValueRecord[]
+	 */
+	public function getGrouppedAttributeValues() {
+		$grouppedByAttributeKey = new \Mmi\DataObject();
+		//wyszukiwanie wartości
+		foreach ($this->getAttributeValues() as $record) {
+			//pobieranie klucza atrybutu (w celu zgrupowania
+			$key = $record->getJoined('cms_attribute')->key;
+			//atrybut to uploader
+			if ($record->getJoined('cms_attribute')->isUploader()) {
+				//dołączanie plików
+				$grouppedByAttributeKey->$key = (new \Cms\Orm\CmsFileQuery)
+					->whereObject()->equals($record->value)
+					->andFieldObjectId()->equals($this->_objectId)
+					->orderAscOrder()
+					->find();
+				continue;
+			}
+			//atrybut zwykły
+			$grouppedByAttributeKey->$key = $record;
+		}
+		//
+		return $grouppedByAttributeKey;
+	}
+
 }
