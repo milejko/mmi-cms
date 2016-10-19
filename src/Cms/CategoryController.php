@@ -57,7 +57,7 @@ class CategoryController extends \Mmi\Mvc\Controller {
 			return '';
 		}
 		//atrybuty do widoku
-		$this->view->attributes = (new Model\AttributeValueRelationModel('categoryWidgetRelation', $widgetRelation->id))->getAttributeValues();
+		$this->view->attributes = (new Model\AttributeValueRelationModel('categoryWidgetRelation', $widgetRelation->id))->getGrouppedAttributeValues();
 		//relacja do widoku
 		$this->view->widgetRelation = $widgetRelation;
 	}
