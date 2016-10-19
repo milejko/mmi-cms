@@ -16,8 +16,11 @@ CMS.default = function () {
 		$.each($('iframe'), function (key, frame) {
 			if ($('#' + frame.id).length) {
 				setTimeout(function () {
+					if (!document.getElementById(frame.id).contentWindow.document.body) {
+						return;
+					}
 					$('#' + frame.id).css('height', document.getElementById(frame.id).contentWindow.document.body.scrollHeight + 20 + 'px');
-				}, 500);
+				}, 1000);
 			}
 		});
 	};

@@ -58,10 +58,9 @@ $(document).ready(function () {
 		},
 		'types': {
 			'#': { 'valid_children': ["root"] },
-			'root': { 'valid_children': ["default", "inactive", "leaf"], 'icon': request.baseUrl + '/resource/cmsAdmin/images/tree.png' },
-			'default': { 'valid_children': ["default", "inactive", "leaf"] },
-			'leaf': { 'valid_children': ["default", "inactive", "leaf"] },
-			'inactive': { 'valid_children': ["default", "inactive", "leaf"], 'icon': 'jstree-inactive' }
+			'root': { 'valid_children': ["default", "leaf"], 'icon': request.baseUrl + '/resource/cmsAdmin/images/tree.png' },
+			'default': { 'valid_children': ["default", "leaf"] },
+			'leaf': { 'valid_children': ["default", "leaf"] }
 		},
 		'contextmenu': {
 			'items': function (node) {
@@ -156,6 +155,7 @@ $(document).ready(function () {
 		$.post(request.baseUrl + '/cmsAdmin/category/move', params)
 			.done(function (d) {
 				if (d.status) {
+					CATEGORYCONF.reload = true;
 					$('#jstree').jstree('deselect_all');
 					$('#jstree').jstree('select_node', d.id);
 				} else {
@@ -181,12 +181,29 @@ $(document).ready(function () {
 				return;
 			}
 			if (CATEGORYCONF.reload || parseFloat(request.id) !== parseFloat(data.selected[0])) {
-				window.location = request.baseUrl + '/cmsAdmin/category/edit?id=' + data.selected;
-				return;
+				CATEGORYCONF.loadUrl(data);
 			}
 		}, 150);
 	});
 });
+
+//przeładowanie strony
+CATEGORYCONF.loadUrl = function (data) {
+	//przerwanie odtwarzania audio i wideo
+	var stopPlaying = function (elem) {
+		if (!isNaN(elem.duration)) {
+			elem.pause();
+			elem.currentTime = elem.duration;
+		}
+	};
+	$('audio, video').each(function () {
+		stopPlaying(this);
+	});
+	$('iframe').contents().find('audio, video').each(function () {
+		stopPlaying(this);
+	});
+	window.location.assign(request.baseUrl + '/cmsAdmin/category/edit?id=' + data.selected[0]);
+};
 
 CATEGORYCONF.editForm = function (node) {
 	window.location = request.baseUrl + '/cmsAdmin/category/edit?id=' + node.id;

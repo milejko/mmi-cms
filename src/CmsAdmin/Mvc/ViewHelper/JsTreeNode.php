@@ -49,14 +49,15 @@ class JsTreeNode extends \Mmi\Mvc\ViewHelper\HelperAbstract {
 		$html .= '<ul>';
 		//iteracja po dzieciakach i budowa węzłów drzewa
 		foreach ($node['children'] as $child) {
-			$select = 'false';
+			$selected = 'false';
 			$disabled = 'false';
-			$type = ($child['record']->active)? 'default' : 'inactive';
+			$type = 'default';
 			if (!isset($child['children']) || !count($child['children'])) {
 				$type = 'leaf';
 			}
-			$html .= '<li id="' . $child['record']->id . '" class="' . ((isset($child['children']) && count($child['children']))? 'jstree-closed' : '') . '"';
-			$html .= ' data-jstree=\'{"type":"' . $type . '", "disabled":' . $disabled . ', "selected":' . $select . '}\'>' . $child['record']->name . '</li>';
+			$html .= '<li id="' . $child['record']->id . '" class="' . (($type !== 'leaf')? 'jstree-closed' : '') . '"';
+			$html .= ' data-jstree=\'{"type":"' . $type . '"' . ((!$child['record']->active)? ', "icon":"jstree-inactive"' : '');
+			$html .= ', "disabled":' . $disabled . ', "selected":' . $selected . '}\'>' . $child['record']->name . '</li>';
 		}
 		$html .= '</ul>';
 		return $html;
