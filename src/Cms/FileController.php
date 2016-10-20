@@ -40,6 +40,29 @@ class FileController extends \Mmi\Mvc\Controller {
 		}
 		return json_encode($files);
 	}
+	
+	/**
+	 * Lista obrazów (na potrzeby tinymce)
+	 * @return view layout
+	 */
+	public function listLayoutAction() {
+		$this->view->setLayoutDisabled();
+		if (!$this->object || !$this->objectId || !$this->hash || !$this->t) {
+			return '';
+		}
+		if ($this->hash != md5(\Mmi\Session\Session::getId() . '+' . $this->t . '+' . $this->objectId)) {
+			return '';
+		}
+		$files = [];
+		$thumb = new \Cms\Mvc\ViewHelper\Thumb();
+		foreach (\Cms\Orm\CmsFileQuery::imagesByObject($this->object, $this->objectId)->find() as $file) {
+			$thumb->thumb($file, 'scalecrop', '100x60');
+			$files[] = ['title' => $file->original, 'full' => $file->getUrl('scalex', '1200', true), 'thumb' => $file->getUrl('scalecrop', '100x60', true)];
+		}
+		
+		//przekazanie danych
+		$this->view->files = $files;
+	}
 
 	/**
 	 * Rendering uploadera
