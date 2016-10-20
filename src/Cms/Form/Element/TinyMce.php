@@ -33,6 +33,9 @@ namespace Cms\Form\Element;
  * @method self setRequired($required = true) ustawia wymagalność
  * @method self setLabelPostfix($labelPostfix) ustawia postfix labelki
  * @method self setForm(\Mmi\Form\Form $form) ustawia formularz
+ * @method self setCss($mixed) ustawia ścieżki do CSS ze stylami kontentu edytora
+ * @method self setTheme($theme) ustawia motyw
+ * @method self setSkin($skin) ustawia skórkę
  * 
  * Walidatory
  * @method self addValidatorAlnum($message = null) walidator alfanumeryczny
@@ -135,12 +138,13 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	}
 
 	/**
-	 * Ustawia dodatkowe parametry do konfiguracji
+	 * Ustawia dodatkowe parametry do konfiguracji - RAW zgodne z dokumentacją TinyMce
+	 * klucz_tiny1: wartosc1, klucz_tiny2: wartosc2
 	 * @param string $custom
 	 * @return \Cms\Form\Element\TinyMce
 	 */
 	public function setCustomConfig($custom) {
-		return $this->setOption('custom', $custom);
+		return $this->setOption('customConfig', $custom);
 	}
 	
 	//Pola do konfiguracji edytora, żeby można było customizować
@@ -154,16 +158,6 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	 * @var string
 	 */
 	protected $_plugins;
-	/**
-	 * Motyw
-	 * @var string
-	 */
-	protected $_theme;
-	/**
-	 * Skórka
-	 * @var string
-	 */
-	protected $_skin;
 	/**
 	 * Rozmiar i możliwość jego zmian
 	 * @var string
@@ -189,11 +183,6 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	 * @var string
 	 */
 	protected $_font;
-	/**
-	 * Style css
-	 * @var string
-	 */
-	protected $_css;
 
 	/**
 	 * Buduje pole
@@ -206,7 +195,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 		//bazowa wspólna konfiguracja
 		$this->_baseConfig();
 		//tryb edytora
-		$mode = $this->getOption('mode') ? $this->getOption('mode') : 'default';
+		$mode = $this->getMode() ? $this->getMode() : 'default';
 		//metoda konfiguracji edytora
 		$modeConfigurator = '_mode' . ucfirst($mode);
 		if (method_exists($this, $modeConfigurator)) {
@@ -231,10 +220,10 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 		//dołączanie skryptu
 		$view->headScript()->appendScript("
 			tinyMCE.init({
-				selector : '." . $class . "',
-				language : 'pl',
-				" . $this->_theme . "
-				" . $this->_skin . "
+				selector: '." . $class . "',
+				language: 'pl',
+				" . $this->_renderConfig('theme', 'theme', 'modern') . "
+				" . $this->_renderConfig('skin', 'skin', 'lightgray') . "
 				" . $this->_plugins . "
 				" . $this->_toolbars . "
 				" . $this->_contextMenu . "
@@ -242,24 +231,53 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 				" . $this->_other . "
 				" . $this->_common . "
 				" . $this->_font . "
-				" . $this->_css . "
-				" . $this->getOption('custom') . "
+				" . $this->_renderConfig('content_css', 'css') . "
+				" . ($this->getCustomConfig() ? trim($this->getCustomConfig(), ",") . "," : "") . "
 				image_list: request.baseUrl + '/?module=cms&controller=file&action=list&object=$object&objectId=$objectId&t=$t&hash=$hash'
 			});
 		");
 		
 		//unsety zbędnych opcji
-		$this->unsetOption('mode')->unsetOption('custom');
+		$this->unsetMode()->unsetCustomConfig()->unsetCss()->unsetTheme()->unsetSkin();
 
 		return parent::fetchField();
+	}
+	
+	/**
+	 * Renderuje opcję konfiguracji TinyMce na podstawie opcji pola formularza
+	 * @param string $tinyKey klucz konfiguracji edytora TinyMce
+	 * @param string $optionKey klucz opcji formularza
+	 * @param mixed $defaultVal wartość domyślna
+	 * @return string
+	 */
+	protected function _renderConfig($tinyKey, $optionKey, $defaultVal = null) {
+		if (null === $optionVal = $this->getOption($optionKey)) {
+			if ($defaultVal === null) {
+				return "";
+			}
+			$optionVal = $defaultVal;
+		}
+		$tinyKey .= ": ";
+		if (is_array($optionVal)) {
+			$tinyKey .= "['" . implode("', '", $optionVal) . "']";
+		} elseif (is_string($optionVal)) {
+			$tinyKey .= "'" . $optionVal . "'";
+		} elseif (is_bool($optionVal)) {
+			$tinyKey .= ($optionVal) ? "true" : "false";
+		} elseif (is_int($optionVal) || is_float($optionVal)) {
+			$tinyKey .= $optionVal;
+		} elseif (is_object($optionVal)) {
+			$tinyKey .= json_encode($optionVal);
+		} else {
+			return "";
+		}
+		return trim($tinyKey, ",") . ",";
 	}
 	
 	/**
 	 * Bazowa konfiguracja dla wszystkich edytorów
 	 */
 	protected function _baseConfig() {
-		$this->_theme = "theme: 'modern',";
-		$this->_skin = "skin: 'lightgray',";
 		$this->_plugins = "plugins: 'advlist,anchor,autolink,autoresize,charmap,code,contextmenu,fullscreen,hr,image,insertdatetime,link,lists,media,nonbreaking,noneditable,paste,print,preview,searchreplace,tabfocus,table,textcolor,visualblocks,visualchars,wordcount',";
 		$this->_common = "
 			autoresize_min_height: " . ($this->getOption('height')? $this->getOption('height') : 300) . ",
