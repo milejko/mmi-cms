@@ -245,6 +245,9 @@ class Tags extends \Mmi\Form\Element\Select {
 	 */
 	public function getValue() {
 		$arr = [];
+		if (!is_array($this->_options['value'])) {
+			return [];
+		}
 		foreach ($this->_options['value'] as $key) {
 			$arr[$key] = $key;
 		}

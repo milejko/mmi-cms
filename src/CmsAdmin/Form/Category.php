@@ -91,11 +91,6 @@ class Category extends \Cms\Form\AttributeForm {
 		//atrybuty
 		$this->initAttributes('cmsCategoryType', $this->getRecord()->cmsCategoryTypeId, 'category');
 
-		//tagi
-		$this->addElementTags('tags')
-			->setLabel('tagi')
-			->setDescription('lista tagów');
-
 		//jeśli wstawione, dodany button z zapisem
 		$this->addElementSubmit('submit3')
 			->setLabel('zapisz');

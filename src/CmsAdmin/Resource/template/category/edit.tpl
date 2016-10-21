@@ -16,13 +16,21 @@
 			<div id="categoryMessageContainer"></div>
 			<div id="categoryContentContainer">
 				{if $categoryForm}
+					{$attributeCount = 0}
+					{* zliczanie atrybutów *}
+					{foreach $categoryForm->getElements() as $element}
+						{if php_substr($element->getName(), 0 ,12) != 'cmsAttribute'}{continue}{/if}
+						{$attributeCount++}
+					{/foreach}
 					<ul class="tabs">
 						<li>
 							<a href="#tab-config">Konfiguracja</a>
 						</li>
+						{if $attributeCount > 0}
 						<li>
-							<a href="#tab-content">Tagi i atrybuty</a>
+							<a href="#tab-content">Atrybuty</a>
 						</li>
+						{/if}
 						<li>
 							<a href="#tab-seo">SEO</a>
 						</li>
@@ -53,14 +61,15 @@
 						{$categoryForm->getElement('follow')}
 						{$categoryForm->getElement('submit2')}
 					</div>
+					{if $attributeCount > 0}
 					<div class="tab-content clearfix" id="tab-content">
-						{foreach $categoryForm->getElements() as $element}
+					{foreach $categoryForm->getElements() as $element}
 						{if php_substr($element->getName(), 0 ,12) != 'cmsAttribute'}{continue}{/if}
 						{$element}
 					{/foreach}
-					{$categoryForm->getElement('tags')}
 					{$categoryForm->getElement('submit3')}
-				</div>
+					</div>
+					{/if}
 				<div class="tab-content clearfix" id="tab-advanced">
 					{$categoryForm->getElement('redirectUri')}
 					{$categoryForm->getElement('mvcParams')}

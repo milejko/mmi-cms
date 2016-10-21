@@ -19,19 +19,19 @@ use Cms\Orm\CmsTagQuery,
  * Model relacji tagów
  */
 class TagRelationModel {
-	
+
 	/**
 	 * Obiekt
 	 * @var string
 	 */
 	private $_object;
-	
+
 	/**
 	 * Id obiektu
 	 * @var integer
 	 */
 	private $_objectId;
-	
+
 	/**
 	 * Konstruktor
 	 * @param string $object obiekt
@@ -50,7 +50,7 @@ class TagRelationModel {
 	public function createTagRelation($tag) {
 		//filtrowanie tagu
 		$filteredTag = (new \Mmi\Filter\Input)->filter($tag);
-				
+
 		//kreacja tagu jeśli brak
 		if (null === $tagRecord = (new CmsTagQuery)
 			->whereTag()->equals($filteredTag)
@@ -59,7 +59,6 @@ class TagRelationModel {
 			$tagRecord->tag = $filteredTag;
 			$tagRecord->save();
 		}
-		
 		//znaleziona relacja - nic do zrobienia
 		if (null !== (new CmsTagRelationQuery)
 				->whereCmsTagId()->equals($tagRecord->id)
@@ -68,17 +67,16 @@ class TagRelationModel {
 				->findFirst()) {
 			return;
 		}
-		
 		//tworzenie relacji
 		$newRelationRecord = new CmsTagRelationRecord;
 		$newRelationRecord->cmsTagId = $tagRecord->id;
 		$newRelationRecord->object = $this->_object;
 		$newRelationRecord->objectId = $this->_objectId;
-		
+
 		//zapis
 		$newRelationRecord->save();
 	}
-	
+
 	/**
 	 * Czyści tworzy relacje tagów
 	 * @param array $tags tagi
@@ -92,7 +90,7 @@ class TagRelationModel {
 			$this->createTagRelation($tag);
 		}
 	}
-	
+
 	/**
 	 * Usuwa tag
 	 * @param string $tag tag
@@ -100,8 +98,8 @@ class TagRelationModel {
 	public function deleteTagRelation($tag) {
 		//brak tagu - nic do zrobienia
 		if (null === $tagRecord = (new CmsTagQuery)
-				->whereTag()->equals($tag)
-				->findFirst()) {
+			->whereTag()->equals($tag)
+			->findFirst()) {
 			return false;
 		}
 		//wyszukiwanie relacji
