@@ -41,6 +41,8 @@ namespace Cms\Form\Element;
  * @method self setResize($resize) ustawia możliwość zmiany rozmiarów
  * @method self setMenubar($menubar) ustawia możliwość wł./wył. menu górnego
  * @method self setImageAdvanceTab($advTab) ustawia możliwość wł./wył. zakł. zaawansowane dla obrazów
+ * @method self setFontFormats($fontFormats) ustawia dostępne rodzaje czcionek
+ * @method self setFontSizeFormats($fontSizeFormats) ustawia dostępne rozmiary czcionek
  * 
  * Walidatory
  * @method self addValidatorAlnum($message = null) walidator alfanumeryczny
@@ -168,11 +170,6 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	 * @var string
 	 */
 	protected $_common;
-	/**
-	 * Kroje i rozmiary czcionek
-	 * @var string
-	 */
-	protected $_font;
 
 	/**
 	 * Buduje pole
@@ -215,16 +212,17 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 				" . $this->_renderConfig('theme', 'theme', 'modern') . "
 				" . $this->_renderConfig('skin', 'skin', 'lightgray') . "
 				" . $this->_renderConfig('plugins', 'plugins') . "
-				" . $this->_toolbars . "
 				" . $this->_renderConfig('contextmenu', 'contextMenu') . "
 				" . $this->_renderConfig('width', 'width', '') . "
 				" . $this->_renderConfig('height', 'height', 320) . "
 				" . $this->_renderConfig('resize', 'resize', true) . "
 				" . $this->_renderConfig('menubar', 'menubar', true) . "
 				" . $this->_renderConfig('image_advtab', 'imageAdvanceTab', true) . "
-				" . $this->_font . "
+				" . $this->_renderConfig('font_formats', 'fontFormats') . "
+				" . $this->_renderConfig('fontsize_formats', 'fontSizeFormats') . "
 				" . $this->_renderConfig('content_css', 'css') . "
 				" . ($this->getCustomConfig() ? trim($this->getCustomConfig(), ",") . "," : "") . "
+				" . $this->_toolbars . "
 				" . $this->_other . "
 				" . $this->_common . "
                 hash: '$hash',
@@ -239,7 +237,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 		//unsety zbędnych opcji
 		$this->unsetMode()->unsetCustomConfig()->unsetCss()->unsetTheme()->unsetSkin()
 			->unsetPlugins()->unsetContextMenu()->unsetResize()->unsetMenubar()
-			->unsetImageAdvanceTab();
+			->unsetImageAdvanceTab()->unsetFontFormats()->unsetFontSizeFormats();
 
 		return parent::fetchField();
 	}
@@ -262,7 +260,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 		if (is_array($optionVal)) {
 			$tinyKey .= "['" . implode("', '", $optionVal) . "']";
 		} elseif (is_string($optionVal)) {
-			$tinyKey .= "'" . $optionVal . "'";
+			$tinyKey .= "'" . trim($optionVal, "'") . "'";
 		} elseif (is_bool($optionVal)) {
 			$tinyKey .= ($optionVal) ? "true" : "false";
 		} elseif (is_int($optionVal) || is_float($optionVal)) {
@@ -286,18 +284,8 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 				'searchreplace,tabfocus,table,textcolor,visualblocks,visualchars,wordcount'
 			]);
 		}
-		$this->_common = "
-			autoresize_min_height: " . ($this->getHeight()? $this->getHeight() : 300) . ",
-			document_base_url: request.baseUrl,
-			convert_urls: false,
-			entity_encoding: 'raw',
-			relative_urls: false,
-			paste_data_images: false,
-			plugin_preview_height: 700,
-			plugin_preview_width: 1100,
-		";
-		$this->_font = "
-			font_formats: 'Andale Mono=andale mono,times;'+
+		if ($this->getFontFormats() === null) {
+			$this->setFontFormats("'Andale Mono=andale mono,times;'+
 				'Arial=arial,helvetica,sans-serif;'+
 				'Arial Black=arial black,avant garde;'+
 				'Book Antiqua=book antiqua,palatino;'+
@@ -313,8 +301,20 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 				'Trebuchet MS=trebuchet ms,geneva;'+
 				'Verdana=verdana,geneva;'+
 				'Webdings=webdings;'+
-				'Wingdings=wingdings,zapf dingbats',
-			fontsize_formats: '1px 2px 3px 4px 6px 8px 9pc 10px 11px 12px 13px 14px 16px 18px 20px 22px 24px 26px 28px 36px 48px 50px 72px 100px',
+				'Wingdings=wingdings,zapf dingbats'");
+		}
+		if ($this->getFontSizeFormats() === null) {
+			$this->setFontSizeFormats('4px 6px 8px 9pc 10px 11px 12px 13px 14px 16px 18px 20px 22px 24px 26px 28px 36px 48px 50px 72px 100px');
+		}
+		$this->_common = "
+			autoresize_min_height: " . ($this->getHeight()? $this->getHeight() : 300) . ",
+			document_base_url: request.baseUrl,
+			convert_urls: false,
+			entity_encoding: 'raw',
+			relative_urls: false,
+			paste_data_images: false,
+			plugin_preview_height: 700,
+			plugin_preview_width: 1100,
 		";
 	}
 	
