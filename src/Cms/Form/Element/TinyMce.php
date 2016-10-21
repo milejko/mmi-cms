@@ -36,6 +36,11 @@ namespace Cms\Form\Element;
  * @method self setCss($mixed) ustawia ścieżki do CSS ze stylami kontentu edytora
  * @method self setTheme($theme) ustawia motyw
  * @method self setSkin($skin) ustawia skórkę
+ * @method self setPlugins($mixed) ustawia włączone pluginy
+ * @method self setContextMenu($menu) ustawia opcje dostępne w menu kontekstowym
+ * @method self setResize($resize) ustawia możliwość zmiany rozmiarów
+ * @method self setMenubar($menubar) ustawia możliwość wł./wył. menu górnego
+ * @method self setImageAdvanceTab($advTab) ustawia możliwość wł./wył. zakł. zaawansowane dla obrazów
  * 
  * Walidatory
  * @method self addValidatorAlnum($message = null) walidator alfanumeryczny
@@ -154,21 +159,6 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	 */
 	protected $_toolbars;
 	/**
-	 * Włączone pluginy
-	 * @var string
-	 */
-	protected $_plugins;
-	/**
-	 * Rozmiar i możliwość jego zmian
-	 * @var string
-	 */
-	protected $_size;
-	/**
-	 * Menu kontekstowe
-	 * @var string
-	 */
-	protected $_contextMenu;
-	/**
 	 * Specyficzne ustawienia dla danego trybu
 	 * @var string
 	 */
@@ -224,15 +214,19 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 				language: 'pl',
 				" . $this->_renderConfig('theme', 'theme', 'modern') . "
 				" . $this->_renderConfig('skin', 'skin', 'lightgray') . "
-				" . $this->_plugins . "
+				" . $this->_renderConfig('plugins', 'plugins') . "
 				" . $this->_toolbars . "
-				" . $this->_contextMenu . "
-				" . $this->_size . "
-				" . $this->_other . "
-				" . $this->_common . "
+				" . $this->_renderConfig('contextmenu', 'contextMenu') . "
+				" . $this->_renderConfig('width', 'width', '') . "
+				" . $this->_renderConfig('height', 'height', 320) . "
+				" . $this->_renderConfig('resize', 'resize', true) . "
+				" . $this->_renderConfig('menubar', 'menubar', true) . "
+				" . $this->_renderConfig('image_advtab', 'imageAdvanceTab', true) . "
 				" . $this->_font . "
 				" . $this->_renderConfig('content_css', 'css') . "
 				" . ($this->getCustomConfig() ? trim($this->getCustomConfig(), ",") . "," : "") . "
+				" . $this->_other . "
+				" . $this->_common . "
                 hash: '$hash',
                 object: '$object',
                 objectId: '$objectId',
@@ -243,7 +237,9 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 		");
 		
 		//unsety zbędnych opcji
-		$this->unsetMode()->unsetCustomConfig()->unsetCss()->unsetTheme()->unsetSkin();
+		$this->unsetMode()->unsetCustomConfig()->unsetCss()->unsetTheme()->unsetSkin()
+			->unsetPlugins()->unsetContextMenu()->unsetResize()->unsetMenubar()
+			->unsetImageAdvanceTab();
 
 		return parent::fetchField();
 	}
@@ -283,7 +279,13 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	 * Bazowa konfiguracja dla wszystkich edytorów
 	 */
 	protected function _baseConfig() {
-		$this->_plugins = "plugins: 'lioniteimages,advlist,anchor,autolink,autoresize,charmap,code,contextmenu,fullscreen,hr,image,insertdatetime,link,lists,media,nonbreaking,noneditable,paste,print,preview,searchreplace,tabfocus,table,textcolor,visualblocks,visualchars,wordcount',";
+		if ($this->getPlugins() === null) {
+			$this->setPlugins([
+				'lioniteimages,advlist,anchor,autolink,autoresize,charmap,code,contextmenu,fullscreen',
+				'hr,image,insertdatetime,link,lists,media,nonbreaking,noneditable,paste,print,preview',
+				'searchreplace,tabfocus,table,textcolor,visualblocks,visualchars,wordcount'
+			]);
+		}
 		$this->_common = "
 			autoresize_min_height: " . ($this->getHeight()? $this->getHeight() : 300) . ",
 			document_base_url: request.baseUrl,
@@ -323,16 +325,15 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 		$this->_toolbars = "
 			toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify',
 		";
-		$this->_contextMenu = "contextmenu: 'link image inserttable | cell row column deletetable',";
-		$this->_size = "
-			width: " . ($this->getOption('width') ? $this->getOption('width') : "''") . ",
-			height: " . ($this->getOption('height') ? $this->getOption('height') : 200) . ",
-			resize: false,
-		";
-		$this->_other = "
-			image_advtab: true,
-			menubar: false,
-		";
+		if ($this->getContextMenu() === null) {
+			$this->setContextMenu('link image inserttable | cell row column deletetable');
+		}
+		if ($this->getResize() === null) {
+			$this->setResize(false);
+		}
+		if ($this->getMenubar() === null) {
+			$this->setMenubar(false);
+		}
 	}
 	
 	/**
@@ -343,15 +344,9 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 			toolbar1: 'undo redo | cut copy paste pastetext | searchreplace | bold italic underline strikethrough | subscript superscript | alignleft aligncenter alignright alignjustify | fontselect fontsizeselect | forecolor backcolor',
 			toolbar2: 'styleselect | table | bullist numlist outdent indent blockquote | link unlink anchor | image media lioniteimages | preview fullscreen code | charmap visualchars nonbreaking inserttime hr',
 		";
-		$this->_contextMenu = "contextmenu: 'link image media inserttable | cell row column deletetable',";
-		$this->_size = "
-			width: " . ($this->getOption('width') ? $this->getOption('width') : "''") . ",
-			height: " . ($this->getOption('height') ? $this->getOption('height') : 320) . ",
-			resize: true,
-		";
-		$this->_other = "
-			image_advtab: true,
-		";
+		if ($this->getContextMenu() === null) {
+			$this->setContextMenu('link image media inserttable | cell row column deletetable');
+		}
 	}
 	
 	/**
@@ -361,15 +356,9 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 		$this->_toolbars = "
 			toolbar1: 'undo redo | bold italic underline strikethrough | forecolor backcolor | styleselect | bullist numlist outdent indent | fontselect fontsizeselect | alignleft aligncenter alignright alignjustify | link unlink anchor | image media lioniteimages | preview',
 		";
-		$this->_contextMenu = "contextmenu: 'link image media inserttable | cell row column deletetable',";
-		$this->_size = "
-			width: " . ($this->getOption('width') ? $this->getOption('width') : "''") . ",
-			height: " . ($this->getOption('height') ? $this->getOption('height') : 320) . ",
-			resize: true,
-		";
-		$this->_other = "
-			image_advtab: true,
-		";
+		if ($this->getContextMenu() === null) {
+			$this->setContextMenu('link image media inserttable | cell row column deletetable');
+		}
 	}
 
 }
