@@ -147,15 +147,6 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 		return $this->setOption('customConfig', $custom);
 	}
 	
-	/**
-	 * Ustawia dodatkowe css do konfiguracji
-	 * @param array $css
-	 * @return \Cms\Form\Element\TinyMce
-	 */
-	public function setCustomCss($css) {
-		return $this->setOption('css', $css);
-	}
-	
 	//Pola do konfiguracji edytora, żeby można było customizować
 	/**
 	 * Paski narzędziowe
@@ -226,10 +217,6 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 		}
 		$t = round(microtime(true));
 		$hash = md5(\Mmi\Session\Session::getId() . '+' . $t . '+' . $objectId);
-		
-		//dołączenie css
-		$css = $this->getOption('css') ? 'content_css: ["'.implode('","', $this->getOption('css')).'"],' : '';
-		
 		//dołączanie skryptu
 		$view->headScript()->appendScript("
 			tinyMCE.init({
@@ -246,6 +233,11 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 				" . $this->_font . "
 				" . $this->_renderConfig('content_css', 'css') . "
 				" . ($this->getCustomConfig() ? trim($this->getCustomConfig(), ",") . "," : "") . "
+                hash: '$hash',
+                object: '$object',
+                objectId: '$objectId',
+                time: '$t',
+                baseUrl: request.baseUrl,
 				image_list: request.baseUrl + '/?module=cms&controller=file&action=list&object=$object&objectId=$objectId&t=$t&hash=$hash'
 			});
 		");
@@ -291,9 +283,9 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	 * Bazowa konfiguracja dla wszystkich edytorów
 	 */
 	protected function _baseConfig() {
-		$this->_plugins = "plugins: 'advlist,anchor,autolink,autoresize,charmap,code,contextmenu,fullscreen,hr,image,insertdatetime,link,lists,media,nonbreaking,noneditable,paste,print,preview,searchreplace,tabfocus,table,textcolor,visualblocks,visualchars,wordcount',";
+		$this->_plugins = "plugins: 'lioniteimages,advlist,anchor,autolink,autoresize,charmap,code,contextmenu,fullscreen,hr,image,insertdatetime,link,lists,media,nonbreaking,noneditable,paste,print,preview,searchreplace,tabfocus,table,textcolor,visualblocks,visualchars,wordcount',";
 		$this->_common = "
-			autoresize_min_height: " . ($this->getOption('height')? $this->getOption('height') : 300) . ",
+			autoresize_min_height: " . ($this->getHeight()? $this->getHeight() : 300) . ",
 			document_base_url: request.baseUrl,
 			convert_urls: false,
 			entity_encoding: 'raw',
@@ -331,7 +323,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 		$this->_toolbars = "
 			toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify',
 		";
-		$this->_contextMenu = "contextmenu: 'link image inserttable | cell row column deletetable | lioniteimages',";
+		$this->_contextMenu = "contextmenu: 'link image inserttable | cell row column deletetable',";
 		$this->_size = "
 			width: " . ($this->getOption('width') ? $this->getOption('width') : "''") . ",
 			height: " . ($this->getOption('height') ? $this->getOption('height') : 200) . ",
@@ -349,7 +341,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	protected function _modeAdvanced() {
 		$this->_toolbars = "
 			toolbar1: 'undo redo | cut copy paste pastetext | searchreplace | bold italic underline strikethrough | subscript superscript | alignleft aligncenter alignright alignjustify | fontselect fontsizeselect | forecolor backcolor',
-			toolbar2: 'styleselect | table | bullist numlist outdent indent blockquote | link unlink anchor | image media | preview fullscreen code | charmap visualchars nonbreaking inserttime hr | lioniteimages',
+			toolbar2: 'styleselect | table | bullist numlist outdent indent blockquote | link unlink anchor | image media lioniteimages | preview fullscreen code | charmap visualchars nonbreaking inserttime hr',
 		";
 		$this->_contextMenu = "contextmenu: 'link image media inserttable | cell row column deletetable',";
 		$this->_size = "
@@ -367,7 +359,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	 */
 	protected function _modeDefault() {
 		$this->_toolbars = "
-			toolbar1: 'undo redo | bold italic underline strikethrough | forecolor backcolor | styleselect | bullist numlist outdent indent | fontselect fontsizeselect | alignleft aligncenter alignright alignjustify | link unlink anchor | image media | preview | lioniteimages',
+			toolbar1: 'undo redo | bold italic underline strikethrough | forecolor backcolor | styleselect | bullist numlist outdent indent | fontselect fontsizeselect | alignleft aligncenter alignright alignjustify | link unlink anchor | image media lioniteimages | preview',
 		";
 		$this->_contextMenu = "contextmenu: 'link image media inserttable | cell row column deletetable',";
 		$this->_size = "

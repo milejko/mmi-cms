@@ -57,7 +57,7 @@ class FileController extends \Mmi\Mvc\Controller {
 		$thumb = new \Cms\Mvc\ViewHelper\Thumb();
 		foreach (\Cms\Orm\CmsFileQuery::imagesByObject($this->object, $this->objectId)->find() as $file) {
 			$thumb->thumb($file, 'scalecrop', '100x60');
-			$files[] = ['title' => $file->original, 'full' => $file->getUrl('scalex', '1200', true), 'thumb' => $file->getUrl('scalecrop', '100x60', true)];
+			$files[] = ['title' => $file->original, 'full' => $file->getUrl('scalex', '1200', true), 'thumb' => $file->getUrl('scaley', '60', true)];
 		}
 		
 		//przekazanie danych
