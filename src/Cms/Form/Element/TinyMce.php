@@ -41,8 +41,10 @@ namespace Cms\Form\Element;
  * @method self setResize($resize) ustawia możliwość zmiany rozmiarów
  * @method self setMenubar($menubar) ustawia możliwość wł./wył. menu górnego
  * @method self setImageAdvanceTab($advTab) ustawia możliwość wł./wył. zakł. zaawansowane dla obrazów
+ * @method self setImageCaption($caption) ustawia możliwość wł./wył. podpisów dla obrazów
  * @method self setFontFormats($fontFormats) ustawia dostępne rodzaje czcionek
  * @method self setFontSizeFormats($fontSizeFormats) ustawia dostępne rozmiary czcionek
+ * @method self setToolbars($mixed) ustawia paski narzędziowe
  * 
  * Walidatory
  * @method self addValidatorAlnum($message = null) walidator alfanumeryczny
@@ -156,11 +158,6 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	
 	//Pola do konfiguracji edytora, żeby można było customizować
 	/**
-	 * Paski narzędziowe
-	 * @var string
-	 */
-	protected $_toolbars;
-	/**
 	 * Specyficzne ustawienia dla danego trybu
 	 * @var string
 	 */
@@ -221,8 +218,9 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 				" . $this->_renderConfig('font_formats', 'fontFormats') . "
 				" . $this->_renderConfig('fontsize_formats', 'fontSizeFormats') . "
 				" . $this->_renderConfig('content_css', 'css') . "
+				" . $this->_renderConfigN('toolbar', 'toolbars') . "
+				" . $this->_renderConfig('image_caption', 'imageCaption', false) . "
 				" . ($this->getCustomConfig() ? trim($this->getCustomConfig(), ",") . "," : "") . "
-				" . $this->_toolbars . "
 				" . $this->_other . "
 				" . $this->_common . "
                 hash: '$hash',
@@ -237,7 +235,8 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 		//unsety zbędnych opcji
 		$this->unsetMode()->unsetCustomConfig()->unsetCss()->unsetTheme()->unsetSkin()
 			->unsetPlugins()->unsetContextMenu()->unsetResize()->unsetMenubar()
-			->unsetImageAdvanceTab()->unsetFontFormats()->unsetFontSizeFormats();
+			->unsetImageAdvanceTab()->unsetFontFormats()->unsetFontSizeFormats()
+			->unsetToolbars()->unsetImageCaption();
 
 		return parent::fetchField();
 	}
@@ -271,6 +270,26 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 			return "";
 		}
 		return trim($tinyKey, ",") . ",";
+	}
+	
+	/**
+	 * Renderuje wielowartościową opcję konfiguracji TinyMce na podstawie opcji pola formularza
+	 * @param string $tinyKeyPrefix prefiks klucza konfiguracji edytora TinyMce
+	 * @param string $optionKey klucz opcji formularza
+	 * @return string
+	 */
+	protected function _renderConfigN($tinyKeyPrefix, $optionKey) {
+		if (null === $optionVal = $this->getOption($optionKey)) {
+			return "";
+		}
+		if (!is_array($optionVal)) {
+			$optionVal = [$optionVal];
+		}
+		$confN = "";
+		foreach ($optionVal as $index => $val) {
+			$confN .= $tinyKeyPrefix . ($index + 1) . ": " . "'" . trim($val, "'") . "',\r\n";
+		}
+		return trim($confN, ",\r\n") . ",";
 	}
 	
 	/**
@@ -322,9 +341,9 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	 * Konfiguracja dla trybu Simple
 	 */
 	protected function _modeSimple() {
-		$this->_toolbars = "
-			toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify',
-		";
+		if ($this->getToolbars() === null) {
+			$this->setToolbars('bold italic underline strikethrough | alignleft aligncenter alignright alignjustify');
+		}
 		if ($this->getContextMenu() === null) {
 			$this->setContextMenu('link image inserttable | cell row column deletetable');
 		}
@@ -340,10 +359,12 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	 * Konfiguracja dla trybu Advanced
 	 */
 	protected function _modeAdvanced() {
-		$this->_toolbars = "
-			toolbar1: 'undo redo | cut copy paste pastetext | searchreplace | bold italic underline strikethrough | subscript superscript | alignleft aligncenter alignright alignjustify | fontselect fontsizeselect | forecolor backcolor',
-			toolbar2: 'styleselect | table | bullist numlist outdent indent blockquote | link unlink anchor | image media lioniteimages | preview fullscreen code | charmap visualchars nonbreaking inserttime hr',
-		";
+		if ($this->getToolbars() === null) {
+			$this->setToolbars([
+				'undo redo | cut copy paste pastetext | searchreplace | bold italic underline strikethrough | subscript superscript | alignleft aligncenter alignright alignjustify | fontselect fontsizeselect | forecolor backcolor',
+				'styleselect | table | bullist numlist outdent indent blockquote | link unlink anchor | image media lioniteimages | preview fullscreen code | charmap visualchars nonbreaking inserttime hr'
+			]);
+		}
 		if ($this->getContextMenu() === null) {
 			$this->setContextMenu('link image media inserttable | cell row column deletetable');
 		}
@@ -353,9 +374,9 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	 * Konfiguracja dla trybu Default
 	 */
 	protected function _modeDefault() {
-		$this->_toolbars = "
-			toolbar1: 'undo redo | bold italic underline strikethrough | forecolor backcolor | styleselect | bullist numlist outdent indent | fontselect fontsizeselect | alignleft aligncenter alignright alignjustify | link unlink anchor | image media lioniteimages | preview',
-		";
+		if ($this->getToolbars() === null) {
+			$this->setToolbars('undo redo | bold italic underline strikethrough | forecolor backcolor | styleselect | bullist numlist outdent indent | fontselect fontsizeselect | alignleft aligncenter alignright alignjustify | link unlink anchor | image media lioniteimages | preview');
+		}
 		if ($this->getContextMenu() === null) {
 			$this->setContextMenu('link image media inserttable | cell row column deletetable');
 		}
