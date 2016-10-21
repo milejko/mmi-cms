@@ -34,7 +34,7 @@ class CmsAttributeRecord extends \Mmi\Orm\Record {
 	 * @return boolean
 	 */
 	public function isMultiple() {
-		return $this->fieldClass == '\Mmi\Form\Element\MultiCheckbox';
+		return $this->fieldClass == '\Mmi\Form\Element\MultiCheckbox' || $this->fieldClass == '\Mmi\Form\Element\Radio';
 	}
 
 	/**
@@ -67,16 +67,18 @@ class CmsAttributeRecord extends \Mmi\Orm\Record {
 	 */
 	public function getFieldClasses() {
 		return [
-			'\Mmi\Form\Element\Checkbox' => 'checkbox',
 			'\Cms\Form\Element\DatePicker' => 'data',
 			'\Cms\Form\Element\DateTimePicker' => 'data i czas',
-			'\Cms\Form\Element\TinyMce' => 'edytor',
-			'\Mmi\Form\Element\Text' => 'tekst',
-			'\Mmi\Form\Element\Textarea' => 'tekst wielolinijkowy',
-			'\Mmi\Form\Element\File' => 'uploader jednego pliku',
-			'\Cms\Form\Element\Plupload' => 'uploader wielu plików',
-			'\Mmi\Form\Element\Select' => 'wybór jednokrotny',
-			'\Mmi\Form\Element\MultiCheckbox' => 'wybór wielokrotny',
+			'\Cms\Form\Element\TinyMce' => 'edytor WYSIWYG',
+			'\Mmi\Form\Element\MultiCheckbox' => 'hasło (input password)',
+			'\Cms\Form\Element\Tags' => 'tagi',
+			'\Mmi\Form\Element\Text' => 'tekst jednolinijkowy (input text)',
+			'\Mmi\Form\Element\Textarea' => 'tekst wielolinijkowy (textarea)',
+			'\Mmi\Form\Element\File' => 'wgrywarka jednego pliku (input file)',
+			'\Cms\Form\Element\Plupload' => 'wgrywarka wielu plików',
+			'\Mmi\Form\Element\Checkbox' => 'wybór tak/nie (checkbox)',
+			'\Mmi\Form\Element\Select' => 'wybór pojedynczy (select)',
+			'\Mmi\Form\Element\MultiCheckbox' => 'wybór wielokrotny (multi checkbox)',
 		];
 	}
 

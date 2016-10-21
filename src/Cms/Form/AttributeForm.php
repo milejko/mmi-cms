@@ -206,17 +206,19 @@ abstract class AttributeForm extends Form {
 		//walidatory
 		if ($attribute->validatorClasses) {
 			//iteracja po walidatorach
-			foreach (explode(',', $attribute->validatorClasses) as $validatorClass) {
+			foreach (explode(',', $attribute->validatorClasses) as $validatorConfig) {
+				$validator = $this->_parseClassWithOptions($validatorConfig)->getClass();
 				//dodawanie walidatora
-				$field->addValidator(new $validatorClass);
+				$field->addValidator((new $validator)->setOptions($this->_parseClassWithOptions($validatorConfig)->getConfig()));
 			}
 		}
 		//filtry
 		if ($attribute->filterClasses) {
 			//iteracja po filtrach
-			foreach (explode(',', $attribute->filterClasses) as $filterClass) {
+			foreach (explode(',', $attribute->filterClasses) as $filterConfig) {
+				$filter = $this->_parseClassWithOptions($filterConfig)->getClass();
 				//dodawanie filtra
-				$field->addFilter(new $filterClass);
+				$field->addFilter((new $filter)->setOptions($this->_parseClassWithOptions($filterConfig)->getConfig()));
 			}
 		}
 		//unikalność
@@ -280,6 +282,20 @@ abstract class AttributeForm extends Form {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Parsowanie nazwy klasy wraz z opcjami
+	 * @param string $classWithOptions
+	 * @return \Mmi\OptionObject
+	 */
+	private function _parseClassWithOptions($classWithOptions) {
+		$config = explode(':', $classWithOptions);
+		$class = array_shift($config);
+		//zwrot konfiguracji
+		return (new \Mmi\OptionObject)
+			->setClass($class)
+			->setConfig($config);
 	}
 
 }

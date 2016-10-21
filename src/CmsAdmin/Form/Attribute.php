@@ -23,12 +23,7 @@ class Attribute extends \Mmi\Form\Form {
 			->setRequired()
 			->addFilterStringTrim()
 			->addValidatorStringLength(2, 128);
-		
-		//opis
-		$this->addElementTextarea('description')
-			->setLabel('opis')
-			->addFilterStringTrim();
-		
+
 		//klucz pola
 		$this->addElementText('key')
 			->setLabel('klucz')
@@ -37,47 +32,37 @@ class Attribute extends \Mmi\Form\Form {
 			->addValidatorAlnum('klucz może zawierać wyłącznie litery i cyfry')
 			->addValidatorStringLength(2, 64)
 			->addValidatorRecordUnique(new \Cms\Orm\CmsAttributeQuery, 'key', $this->getRecord()->id);
+		
+		//opis
+		$this->addElementText('description')
+			->setLabel('opis')
+			->addFilterStringTrim();
 
 		//pole formularza
 		$this->addElementSelect('fieldClass')
 			->setLabel('pole formularza')
 			->setRequired()
 			->setMultioptions($this->getRecord()->getFieldClasses());
-		
+
 		//opcje pola formularz
 		$this->addElementTextarea('fieldOptions')
 			->setLabel('opcje pola');
 
 		//filtry
-		$this->addElementMultiCheckbox('filterArray')
-			->setLabel('filtry')
-			->setValue(explode(',', $this->getRecord()->filterClasses))
-			->setMultioptions([
-				'\Mmi\Filter\StripTags' => 'usunięcie HTML',
-				'\Mmi\Filter\StringTrim' => 'usunięcie spacji z początku i końca',
-				'\Mmi\Filter\Url' => 'filtr do url\'a',
-		]);
+		$this->addElementTextarea('filterClasses')
+			->setLabel('filtry');
 
 		//walidatory
-		$this->addElementMultiCheckbox('validatorArray')
-			->setLabel('walidatory')
-			->setValue(explode(',', $this->getRecord()->validatorClasses))
-			->setMultioptions([
-				'\Mmi\Validator\Alnum' => 'alfanumeryczne',
-				'\Mmi\Validator\Date' => 'data',
-				'\Mmi\Validator\EmailAddress' => 'e-mail',
-				'\Mmi\Validator\Integer' => 'liczby całkowite',
-				'\Mmi\Validator\NotEmpty' => 'niepuste',
-				'\Mmi\Validator\Numeric' => 'numeryczne',
-		]);
+		$this->addElementTextarea('validatorClasses')
+			->setLabel('walidatory');
 
 		//waga w indeksie
-		/*$this->addElementText('indexWeight')
-			->setLabel('waga w indeksie')
-			->setDescription('0-1000, im wyższa waga, tym wyższa pozycja w wyszukiwarce, 0 oznacza brak w wynikach')
-			->setValue(0)
-			->addValidatorNumberBetween(0, 1000);*/
-
+		/* $this->addElementText('indexWeight')
+		  ->setLabel('waga w indeksie')
+		  ->setDescription('0-1000, im wyższa waga, tym wyższa pozycja w wyszukiwarce, 0 oznacza brak w wynikach')
+		  ->setValue(0)
+		  ->addValidatorNumberBetween(0, 1000); */
+		
 		//wymagany
 		$this->addElementCheckbox('required')
 			->setLabel('wymagany');
@@ -85,7 +70,7 @@ class Attribute extends \Mmi\Form\Form {
 		//unikalny
 		$this->addElementCheckbox('unique')
 			->setLabel('unikalny');
-		
+
 		//zmaterializowany
 		$this->addElementSelect('materialized')
 			->setMultioptions([0 => 'nie', 1 => 'tak', 2 => 'tak, odziedziczony'])
@@ -95,16 +80,6 @@ class Attribute extends \Mmi\Form\Form {
 		//zapis
 		$this->addElementSubmit('submit')
 			->setLabel('zapisz');
-	}
-	
-	/**
-	 * Przed zapisem - spłaszczenie walidatorów i filtrów
-	 * @return boolean
-	 */
-	public function beforeSave() {
-		$this->getRecord()->validatorClasses = implode(',', $this->getElement('validatorArray')->getValue());
-		$this->getRecord()->filterClasses = implode(',', $this->getElement('filterArray')->getValue());
-		return true;
 	}
 
 }
