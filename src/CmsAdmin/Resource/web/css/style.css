@@ -159,6 +159,10 @@ nav#main-menu ul.menu {
 	z-index: 91;
 }
 
+ul.menu.depth-2 {
+	z-index: 91;
+}
+
 table tr th input {
 	width: 100%;
 }
