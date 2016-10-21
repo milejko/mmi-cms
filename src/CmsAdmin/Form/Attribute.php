@@ -32,7 +32,7 @@ class Attribute extends \Mmi\Form\Form {
 		//klucz pola
 		$this->addElementText('key')
 			->setLabel('klucz')
-			->addFilterUrl()
+			->addFilterAscii()
 			->setRequired()
 			->addValidatorAlnum('klucz może zawierać wyłącznie litery i cyfry')
 			->addValidatorStringLength(2, 64)
@@ -64,17 +64,19 @@ class Attribute extends \Mmi\Form\Form {
 			->setValue(explode(',', $this->getRecord()->validatorClasses))
 			->setMultioptions([
 				'\Mmi\Validator\Alnum' => 'alfanumeryczne',
+				'\Mmi\Validator\Date' => 'data',
 				'\Mmi\Validator\EmailAddress' => 'e-mail',
-				'\Mmi\Validator\Numeric' => 'numeryczne',
 				'\Mmi\Validator\Integer' => 'liczby całkowite',
+				'\Mmi\Validator\NotEmpty' => 'niepuste',
+				'\Mmi\Validator\Numeric' => 'numeryczne',
 		]);
 
 		//waga w indeksie
-		$this->addElementText('indexWeight')
+		/*$this->addElementText('indexWeight')
 			->setLabel('waga w indeksie')
 			->setDescription('0-1000, im wyższa waga, tym wyższa pozycja w wyszukiwarce, 0 oznacza brak w wynikach')
 			->setValue(0)
-			->addValidatorNumberBetween(0, 1000);
+			->addValidatorNumberBetween(0, 1000);*/
 
 		//wymagany
 		$this->addElementCheckbox('required')

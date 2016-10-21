@@ -1,0 +1,263 @@
+/** Reset **/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+}
+em {
+	font-style:normal;
+}
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+body {
+	line-height: 1;
+	color: black;
+	background: white;
+}
+ol, ul {
+	list-style: none;
+}
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+caption, th, td {
+	text-align: left;
+	font-weight: normal;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: "";
+}
+blockquote, q {
+	quotes: "" "";
+}
+/** Reset end **/
+
+html,body {
+	font-family:Verdana,Arial;
+	font-size:10pt;
+}
+a {
+	color:#3daccc;
+	cursor:pointer;
+}
+
+
+#lionite-gallery-manager {
+	background:#fff;
+	z-index:50;
+	font-family: "Oxygen",sans-serif;
+	padding:30px;
+}
+#lionite-gallery-manager h2 {
+	color:#1497cc;
+	margin-bottom:20px;
+	font-size:16pt;
+}
+#lionite-gallery-manager a {
+	cursor: pointer;
+}
+#lionite-gallery-manager hr {
+	height: 0;
+	border-bottom:0;
+	margin:30px -30px;
+	border-top:1px solid #333;
+}
+#lionite-gallery-manager input[type='text'] {
+	padding:8px;
+	border:1px solid #ccc;
+	font-family:inherit;
+	font-size:12pt;
+	box-shadow:inset 0 2px 2px #f2f2f2;
+	vertical-align: middle;
+	width:400px;
+}
+#lionite-gallery-manager .icon-link-1 {
+	color:#181818;
+	font-size:14pt;
+	vertical-align: middle;
+}
+#lionite-gallery-manager .label {
+	font-weight:bold;
+	display:block;
+	margin-bottom:12px;
+	font-size:11pt;
+}
+#lionite-gallery-manager .urlinsert {
+	vertical-align: middle;
+}
+/** Image Gallery **/
+#lionite-gallery {
+	margin:0 -10px 10px;
+	max-height:320px;
+	overflow:auto;
+	list-style:none;
+}
+
+#lionite-gallery li {
+	float:left;
+	height:auto;
+	width:100px;
+	padding:5px;
+	margin:0 10px 20px;
+	position:relative;
+}
+#lionite-gallery li a {
+	display:none;
+}
+#lionite-gallery li:hover {
+	background:#eaeaea;
+}
+#lionite-gallery li:hover:before {
+	position:absolute;
+	top:5px;
+	right:5px;
+	left:5px;
+	bottom:5px;
+	background:rgba(0,0,0,0.6);
+	content:"";
+}
+#lionite-gallery li:hover a {
+	display:inline;
+	text-decoration: none;
+}
+#lionite-gallery a.insert{
+	cursor:pointer;
+	
+	position:absolute;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+	color:#fff;
+	font-size:14pt;
+	display:none;
+}
+#lionite-gallery a.insert:before {
+	position:absolute;
+	top:50%;
+	left:50%;
+	margin-top:-5px;
+	margin-left:-5px;
+	content:"+";
+}
+#lionite-gallery a.delete {
+	color:#515151;
+	padding:2px;
+	text-align: center;
+	left:0;
+	right:0;
+	position:absolute;
+	bottom:-20px;
+	font-size:8pt;
+	font-weight:bold;
+	text-transform: uppercase;
+	background:#eaeaea;
+	line-height:13pt;
+}
+#lionite-gallery a.delete i {
+	font-size:11pt;
+}
+#lionite-gallery li:hover .delete {
+	display:block;
+}
+#lionite-gallery-manager .button,#lionite-gallery-manager button,.open-lionite-image-manager {
+	background-color: #1497cc;
+	text-align: center;
+	font: normal 11pt/22pt "Roboto Condensed",sans-serif;
+	color:#fff;
+	text-transform: uppercase;
+	padding:3px 10px;
+	display:inline-block;
+	text-decoration: none;
+	border-radius:4px;
+	border:0;
+	cursor: pointer;
+}
+#lionite-gallery-manager .button:hover,#lionite-gallery-manager button:hover,.open-lionite-image-manager:hover {
+	background-color: #23A6D9;
+    text-decoration: none;
+}
+.ie7 #lionite-gallery-manager .button {
+	width:80px;
+}
+#lionite-gallery-manager .lionite-close-link {
+	background:#CCCCCC;
+	padding:5px 20px;
+}
+
+#lionite-gallery-manager .progress {
+	background: transparent;
+    display: block;
+    height:2px;
+    overflow: hidden;
+}
+#lionite-gallery-manager .progress .progress-bar {
+	background-color: #d4360e;
+    height: 2px;
+	width:0;
+}
+#lionite-gallery-manager .lionite-cancel {
+	
+	text-align: center;
+	padding:15px 15px 0;
+}
+#lionite-gallery-manager .dropzone {
+	border:2px dashed #c1c1c1;
+	color:#727272;
+	padding:28px;
+	text-align: center;
+	margin:20px 0;
+	border-radius:5px;
+}
+
+.fileinput-button {
+  position: relative;
+  overflow: hidden;
+}
+.fileinput-button input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 200px;
+  direction: ltr;
+  cursor: pointer;
+}
+
+#lionite-gallery-manager .dropzone strong {
+	text-transform: uppercase;
+	display:inline-block;
+	vertical-align: middle;
+}
+#lionite-gallery-manager .dropzone small {
+	display: inline-block;
+	margin:0 10px;
+	color:#b2b2b2;
+	font-size:12pt;
+	vertical-align: middle;
+}
+#lionite-gallery-manager .dropzone .camera {
+	margin-bottom:5px;
+}
+#lionite-gallery-manager .dropzone .fileinput-button {
+	vertical-align: middle;
+}
