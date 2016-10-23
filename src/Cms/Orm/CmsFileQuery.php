@@ -145,6 +145,25 @@ class CmsFileQuery extends \Mmi\Orm\Query {
 				//sortowanie po ID, jeśli ordery są NULL
 				->orderAscId();
 	}
+	
+	/**
+	 * Po obiekcie i id
+	 * @param string $object
+	 * @param string $objectId
+	 * @param string $class
+	 * @return CmsFileQuery
+	 */
+	public static function byObjectAndClass($object = null, $objectId = null, $class = 'image') {
+		//zapytanie o pliki po obiektach i id
+		return (new self)
+				->whereObject()->equals($object)
+				->andFieldObjectId()->equals($objectId)
+				->whereClass()->equals($class)
+				//posortowane po kolejności
+				->orderAscOrder()
+				//sortowanie po ID, jeśli ordery są NULL
+				->orderAscId();
+	}
 
 	/**
 	 * Zapytanie o obrazy po obiektach i id
