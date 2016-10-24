@@ -190,7 +190,11 @@ abstract class AttributeForm extends Form {
 		}
 		//multiopcje
 		if ($attribute->isRestricted()) {
-			$options = (new \Cms\Orm\CmsAttributeValueQuery)->whereCmsAttributeId()->equals($attribute->id)->orderAscValue()->findPairs('value', 'value');
+			//wyszukiwanie opcji pola
+			$options = (new \Cms\Orm\CmsAttributeValueQuery)->whereCmsAttributeId()->equals($attribute->id)
+				->orderAscLabel()
+				->orderAscValue()
+				->findPairs('value', 'label');
 			$field->setMultioptions($attribute->isMultiple() ? $options : [null => '---'] + $options);
 		}
 		//pole wymagane
@@ -283,7 +287,7 @@ abstract class AttributeForm extends Form {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Parsowanie nazwy klasy wraz z opcjami
 	 * @param string $classWithOptions
@@ -294,8 +298,8 @@ abstract class AttributeForm extends Form {
 		$class = array_shift($config);
 		//zwrot konfiguracji
 		return (new \Mmi\OptionObject)
-			->setClass($class)
-			->setConfig($config);
+				->setClass($class)
+				->setConfig($config);
 	}
 
 }

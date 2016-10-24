@@ -28,9 +28,18 @@ class AttributeValueGrid extends \CmsAdmin\Grid\Grid {
 			$attributeQuery->whereId()->equals($this->getOption('id'));
 		}
 		
-		//nazwa taga
+		//wartość
 		$this->addColumnText('value')
 			->setLabel('wartość');
+		
+		//etykieta
+		$this->addColumnText('label')
+			->setLabel('etykieta');
+		
+		//operacje
+		$this->addColumnOperation()
+			->setEditParams([])
+			->setDeleteParams(['module' => 'cmsAdmin', 'controller' => 'attributeValue', 'action' => 'delete', 'id' => '%id%']);
 	}
 
 }
