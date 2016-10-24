@@ -40,103 +40,95 @@
 			$('#lionite-gallery').click(function (e) {
 				e.preventDefault();
 				var el = $(e.target);
-				if (el.is('a')) {
-					if (el.is('.insert')) {
+								
+				if (el.is('.insert')) {
 
-						if (el.attr('data-typ') == 'image') {
-							var box = '<figure class="image" contenteditable="false"><img contenteditable="true" src="' + el.attr('href') + '" alt="" /><figcaption>opis</figcaption></figure>';
-						}
+					if (el.attr('data-typ') == 'image') {
+						var box = '<figure class="image" contenteditable="false"><img contenteditable="true" src="' + el.attr('href') + '" alt="" /><figcaption>opis</figcaption></figure>';
+					}
 
-						if (el.attr('data-typ') == 'audio') {
-							var box = '<audio src="' + el.attr('href') + '" controls></audio>';
-						}
+					if (el.attr('data-typ') == 'audio') {
+						var box = '<audio src="' + el.attr('href') + '" controls></audio>';
+					}
 
-						if (el.attr('data-typ') == 'video') {
-							var box = '<video src="' + el.attr('href') + '" controls></video>';
-						}
+					if (el.attr('data-typ') == 'video') {
+						var box = '<video src="' + el.attr('href') + '" controls></video>';
+					}
 
-						self.insert(box);
-						self.close();
+					self.insert(box);
+					self.close();
 
-					} else if (el.is('.delete')) {
-						$('#error').html('');
+				} else if (el.is('.delete')) {
+					$('#error').html('');
 
-						var confirm = 'div#dialog-confirm';
-						$(confirm + ' p').html('Czy na pewno trwale usunąć plik ' + el.attr('data-file') + '?');
-						$('#dialog-confirm').dialog({
-							resizable: false,
-							width: 500,
-							modal: true,
-							closeText: 'Zamknij',
-							title: 'Usunąć plik?',
-							buttons: {
-								'Usuń': function () {
-									$.post(o.removeUrl, {cmsFileId: el.attr('data-id'), object: o.params.formObject, objectId: o.params.formObjectId}, 'json')
-											.done(function (data) {
-												if (data.result === 'OK') {
-													el.parents('li:first').remove();
-												} else {
-													$('#error').html('Usunięcie pliku nie powiodło się');
-												}
-											})
-											.fail(function () {
+					var confirm = 'div#dialog-confirm';
+					$(confirm + ' p').html('Czy na pewno trwale usunąć plik ' + el.attr('data-file') + '?');
+					$('#dialog-confirm').dialog({
+						resizable: false,
+						width: 500,
+						modal: true,
+						closeText: 'Zamknij',
+						title: 'Usunąć plik?',
+						buttons: {
+							'Usuń': function () {
+								$.post(o.removeUrl, {cmsFileId: el.attr('data-id'), object: o.params.formObject, objectId: o.params.formObjectId}, 'json')
+										.done(function (data) {
+											if (data.result === 'OK') {
+												el.parents('li:first').remove();
+											} else {
 												$('#error').html('Usunięcie pliku nie powiodło się');
-											});
-									$(this).dialog('close');
-								},
-								'Anuluj': function () {
-									$(this).dialog('close');
-								}
+											}
+										})
+										.fail(function () {
+											$('#error').html('Usunięcie pliku nie powiodło się');
+										});
+								$(this).dialog('close');
+							},
+							'Anuluj': function () {
+								$(this).dialog('close');
 							}
+						}
+					});
+				} else if (el.is('.b_audio')) {
+					var box = el.parent().find('.audio');
+					var getaudio = el.parent().find('audio');
+					if (!box.hasClass("audioplay")) {
+						$('audio').each(function(){
+							$(this).parent().parent().find('.edit').removeClass('fa-volume-up').addClass('fa-volume-off');
+							this.pause();
+							this.currentTime = 0;
 						});
-					} else if (el.is('.b_audio')) {
-						var box = el.parent().find('.audio');
-						var getaudio = el.parent().find('audio')[0];
 
-						if (!box.hasClass("audioplay")) {
-							
-							$('audio').each(function(){
-								$(this).parent().parent().find('.edit').html('Odtwórz');
-								$(this).parent().parent().find('.audio').removeClass('audioplay');
-								this.pause();
-								this.currentTime = 0;
-							});
-							
-							box.addClass('audioplay');
-							getaudio.load();
-							getaudio.play();
-							el.html('Stop');
-						} else if (box.hasClass("audioplay")) {
-							el.html('Odtwórz');
-							getaudio.pause();
-							box.removeClass('audioplay');
-						}
-					} else if (el.is('.b_video')) {
-						var box = el.parent().find('.video');
-						var getvideo = el.parent().find('video');
+						el.removeClass('fa-volume-off').addClass('fa-volume-up');
+						box.addClass('audioplay');
+						getaudio[0].load();
+						getaudio[0].play();
+					} else if (box.hasClass("audioplay")) {
+						el.removeClass('fa-volume-up').addClass('fa-volume-off');
+						getaudio[0].pause();
+						box.removeClass('audioplay');
+					}
+				} else if (el.is('.b_video')) {
+					var box = el.parent().find('.video');
+					var getvideo = el.parent().find('video');
+					if (!box.hasClass("videoplay")) {
+						$('video').each(function(){
+							$(this).parent().parent().find('.edit').removeClass('play').removeClass('fa-times').addClass('fa-play');
+							$(this).parent().parent().find('.video').removeClass('videoplay');
+							this.pause();
+							this.currentTime = 0;
+						});
 
-						if (!box.hasClass("videoplay")) {
-							
-							$('video').each(function(){
-								$(this).parent().parent().find('.edit').removeClass('play').html('Odtwórz');
-								$(this).parent().parent().find('.video').removeClass('audioplay');
-								this.pause();
-								this.currentTime = 0;
-							});
-							
-							el.addClass('play');
-							box.addClass('videoplay');
-							getvideo.prop("controls", true);
-							getvideo[0].load();
-							getvideo[0].play();
-							el.html('Stop');
-						} else if (box.hasClass("videoplay")) {
-							el.html('Odtwórz');
-							el.removeClass('play');
-							getvideo[0].pause();
-							getvideo.prop("controls", false);
-							box.removeClass('videoplay');
-						}
+						el.removeClass('fa-play').addClass('fa-times').addClass('play');
+						box.addClass('videoplay');
+						getvideo.prop("controls", true);
+						getvideo[0].load();
+						getvideo[0].play();
+					} else if (box.hasClass("videoplay")) {
+						el.removeClass('play').removeClass('fa-times').addClass('fa-play');
+						getvideo[0].pause();
+						getvideo.prop("controls", false);
+						box.removeClass('videoplay');
 					}
 				}
 
