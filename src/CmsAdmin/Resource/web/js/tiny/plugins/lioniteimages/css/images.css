@@ -137,9 +137,11 @@ a {
 	display:inline;
 	text-decoration: none;
 }
+#lionite-gallery li a.delete:hover, #lionite-gallery li a.edit:hover {
+	background: #b2b2b2;
+}
 #lionite-gallery a.insert{
 	cursor:pointer;
-	
 	position:absolute;
 	top:0;
 	left:0;
@@ -322,9 +324,22 @@ div.thumbbox.audio {
 div.thumbbox.audioplay {
   background-position: 0 0 !important;
 }
-div.thumbbox.video{
-	
+#lionite-gallery a.b_video.play{
+	background: white !important;
+    display: block !important;
+    height: 15px;
+    left: 0 !important;
+    position: fixed !important;
+    top: 0;
+    width: 30px !important;
+    z-index: 999999;
 }
 div.thumbbox.videoplay {
-	
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;	
+	background: #000;
+	z-index: 99999;
 }

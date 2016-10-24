@@ -113,24 +113,28 @@
 						}
 					} else if (el.is('.b_video')) {
 						var box = el.parent().find('.video');
-						var getaudio = el.parent().find('video')[0];
+						var getvideo = el.parent().find('video');
 
 						if (!box.hasClass("videoplay")) {
 							
 							$('video').each(function(){
-								$(this).parent().parent().find('.edit').html('Odtwórz');
+								$(this).parent().parent().find('.edit').removeClass('play').html('Odtwórz');
 								$(this).parent().parent().find('.video').removeClass('audioplay');
 								this.pause();
 								this.currentTime = 0;
 							});
 							
+							el.addClass('play');
 							box.addClass('videoplay');
-							getaudio.load();
-							getaudio.play();
+							getvideo.prop("controls", true);
+							getvideo[0].load();
+							getvideo[0].play();
 							el.html('Stop');
 						} else if (box.hasClass("videoplay")) {
 							el.html('Odtwórz');
-							getaudio.pause();
+							el.removeClass('play');
+							getvideo[0].pause();
+							getvideo.prop("controls", false);
 							box.removeClass('videoplay');
 						}
 					}
@@ -188,10 +192,6 @@
 				sequentialUploads: true,
 				maxFileSize: config.maxFileSize,
 				maxChunkSize: config.maxChunkSize,
-				processQueue: {
-					action: 'validate',
-					acceptFileTypes: config.dataAccept
-				},
 				formData: function (form) {
 					var params = form.serializeArray();
 
@@ -266,28 +266,6 @@
 						}
 					});
 				}
-			});
-			$(el).on('fileuploaddone', function (e, data) {
-
-				/*
-				 $.each(data.result.files, function (index, file) {
-				 if(file.html) {
-				 $('#lionite-gallery').append(file.html);
-				 $('#progress .progress-bar').css({width:0});
-				 } else if (file.url) {
-				 var link = $('<a>')
-				 .attr('target', '_blank')
-				 .prop('href', file.url);
-				 $(data.context.children()[index])
-				 .wrap(link);
-				 } else if (file.error) {
-				 var error = $('<span class="text-danger"/>').text(file.error);
-				 $(data.context.children()[index])
-				 .append('<br>')
-				 .append(error);
-				 }
-				 });
-				 */
 			});
 			$(el).on('fileuploadfail', function (e, data) {
 				$.each(data.files, function (index, file) {
