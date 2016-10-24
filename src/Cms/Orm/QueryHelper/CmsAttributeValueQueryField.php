@@ -30,6 +30,12 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsAttributeValueQuery lessThanColumnValue()
  * @method \Cms\Orm\CmsAttributeValueQuery greaterOrEqualsColumnValue()
  * @method \Cms\Orm\CmsAttributeValueQuery lessOrEqualsColumnValue()
+ * @method \Cms\Orm\CmsAttributeValueQuery equalsColumnLabel()
+ * @method \Cms\Orm\CmsAttributeValueQuery notEqualsColumnLabel()
+ * @method \Cms\Orm\CmsAttributeValueQuery greaterThanColumnLabel()
+ * @method \Cms\Orm\CmsAttributeValueQuery lessThanColumnLabel()
+ * @method \Cms\Orm\CmsAttributeValueQuery greaterOrEqualsColumnLabel()
+ * @method \Cms\Orm\CmsAttributeValueQuery lessOrEqualsColumnLabel()
  */
 class CmsAttributeValueQueryField extends \Mmi\Orm\QueryHelper\QueryField {
 
