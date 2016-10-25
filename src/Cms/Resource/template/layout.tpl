@@ -22,9 +22,7 @@
 		<link href="https://fonts.googleapis.com/css?family=Bad%20Script" rel="stylesheet" type="text/css" />
 		{headLink()->appendStylesheet($baseUrl . '/resource/css/main.css')}
 		{headLink()}
-		{headScript()->appendFile($baseUrl . '/resource/js/all.js')}
-		{headScript()->prependFile($baseUrl . '/resource/cmsAdmin/js/tiny/plugins/equationeditor/config_mathjax.js')}
-		{headScript()->prependFile('//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML', 'text/javascript')}
+		{headScript()->appendFile($baseUrl . '/resource/js/all.js')}		
 		{headScript()}
 	</head>
 
