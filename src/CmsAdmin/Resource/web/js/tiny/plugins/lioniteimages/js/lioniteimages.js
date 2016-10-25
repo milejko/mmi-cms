@@ -40,7 +40,7 @@
 			$('#lionite-gallery').click(function (e) {
 				e.preventDefault();
 				var el = $(e.target);
-								
+
 				if (el.is('.insert')) {
 
 					if (el.attr('data-typ') == 'image') {
@@ -93,7 +93,7 @@
 					var box = el.parent().find('.audio');
 					var getaudio = el.parent().find('audio');
 					if (!box.hasClass("audioplay")) {
-						$('audio').each(function(){
+						$('audio').each(function () {
 							$(this).parent().parent().find('.edit').removeClass('fa-volume-up').addClass('fa-volume-off');
 							this.pause();
 							this.currentTime = 0;
@@ -112,7 +112,7 @@
 					var box = el.parent().find('.video');
 					var getvideo = el.parent().find('video');
 					if (!box.hasClass("videoplay")) {
-						$('video').each(function(){
+						$('video').each(function () {
 							$(this).parent().parent().find('.edit').removeClass('play').removeClass('fa-times').addClass('fa-play');
 							$(this).parent().parent().find('.video').removeClass('videoplay');
 							this.pause();
@@ -188,10 +188,10 @@
 					var params = form.serializeArray();
 
 					// generowanie fileid
-					if( this.files[0].fileid === undefined ){
+					if (this.files[0].fileid === undefined) {
 						this.files[0].fileid = Math.random().toString(36).substring(2) + this.files[0].lastModified;
 					}
-					
+
 					// dodatkowe dane dla filecontrollera
 					params.push({name: 'fileId', value: this.files[0].fileid});
 					params.push({name: 'name', value: this.files[0].name});
@@ -202,9 +202,9 @@
 						this.files[0].chunks = Math.ceil(this.files[0].size / this.maxChunkSize);
 						if (this.files[0].chunk === undefined) {
 							this.files[0].chunk = 0;
-						}else{
+						} else {
 							this.files[0].chunk = this.files[0].chunk + 1;
-						}						
+						}
 						params.push({name: 'chunks', value: this.files[0].chunks});
 						params.push({name: 'chunk', value: this.files[0].chunk});
 					}
@@ -247,17 +247,7 @@
 				$('#progress .progress-bar').css(
 						'width',
 						progress + '%'
-						);
-
-				if (progress > 99) {
-					$.ajax({
-						url: o.galleryUrl,
-						success: function (response) {
-							$('#lionite-gallery').html(response);
-							$('#progress .progress-bar').css({width: 0});
-						}
-					});
-				}
+				);
 			});
 			$(el).on('fileuploadfail', function (e, data) {
 				$.each(data.files, function (index, file) {
@@ -267,6 +257,16 @@
 							.append(error);
 				});
 			}).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
+
+			$(el).on('fileuploadstop', function (e, data) {
+				$.ajax({
+					url: o.galleryUrl,
+					success: function (response) {
+						$('#lionite-gallery').html(response);
+						$('#progress .progress-bar').css({width: 0});
+					}
+				});
+			});
 
 			$(el).on('fileuploadstart', function (e, data) {
 				$('#error').html('');
