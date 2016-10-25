@@ -125,6 +125,7 @@ a {
 #lionite-gallery li a{
 	font-size: 22px;
 	text-decoration: none;
+	z-index: 5;
 }
 #lionite-gallery li a.insert{
 	color: green;
