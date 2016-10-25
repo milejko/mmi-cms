@@ -66,7 +66,13 @@ class CategoryWidgetRelationController extends Mvc\Controller {
 		}
 		//instancja formularza
 		$form = new $widgetRecord->formClass($record, ['widgetId' => $widgetRecord->id]);
-		$form->setFromArray((array) $widgetRelationRecord->getConfig());
+		//wartości z zapisanej konfiguracji
+		$formValues = (array) $widgetRelationRecord->getConfig();
+		//nadpisanie wartościami z POSTA, jeśli zosały przesłane
+		if (!$this->getPost()->isEmpty() && is_array($this->getPost()->__get($form->getBaseName()))) {
+			$formValues = array_merge($formValues, $this->getPost()->__get($form->getBaseName()));
+		}
+		$form->setFromArray($formValues);
 		//form zapisany
 		if ($form->isSaved()) {
 			//zapis powiązanego id do konfiguracji

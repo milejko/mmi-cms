@@ -27,7 +27,7 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 	public function getCategoryRecord() {
 		//zwrot dołączonegj kategorii
 		if ($this->getJoined('cms_category')) {
-			return $this->getJoined('cms_category_widget');
+			return $this->getJoined('cms_category');
 		}
 		//zwrot znalezionegj kategorii
 		return (new CmsCategoryQuery)->findPk($this->cmsCategoryId);
