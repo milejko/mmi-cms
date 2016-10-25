@@ -206,9 +206,6 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 			tinyMCE.init({
 				selector: '." . $class . "',
 				language: 'pl',
-				formats: {
-					italic: {inline: 'i'}
-				},
 				" . $this->_renderConfig('theme', 'theme', 'modern') . "
 				" . $this->_renderConfig('skin', 'skin', 'lightgray') . "
 				" . $this->_renderConfig('plugins', 'plugins') . "
