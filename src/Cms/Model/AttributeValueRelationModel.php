@@ -173,7 +173,7 @@ class AttributeValueRelationModel {
 	/**
 	 * Pobiera rekordy wartości w formie obiektu danych
 	 * @see \Mmi\DataObiect
-	 * @return \Cms\Orm\CmsAttributeValueRecord[]
+	 * @return \Mmi\DataObject
 	 */
 	public function getGrouppedAttributeValues() {
 		$grouppedByAttributeKey = new \Mmi\DataObject();
@@ -188,6 +188,7 @@ class AttributeValueRelationModel {
 					->whereObject()->equals($record->value)
 					->andFieldObjectId()->equals($this->_objectId)
 					->orderAscOrder()
+					->orderAscId() //sortowanie po ID, jeśli ordery są NULL
 					->find();
 				continue;
 			}
