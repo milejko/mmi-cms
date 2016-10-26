@@ -13,11 +13,11 @@ namespace CmsAdmin\App\NavPart;
 class NavPartRoute extends \Mmi\Navigation\NavigationConfig {
 
 	public static function getMenu() {
-		return self::newElement()
+		return (new \Mmi\Navigation\NavigationConfigElement)
 				->setLabel('Routing')
 				->setModule('cmsAdmin')
 				->setController('route')
-				->addChild(self::newElement()
+				->addChild((new \Mmi\Navigation\NavigationConfigElement)
 					->setLabel('Dodaj')
 					->setModule('cmsAdmin')
 					->setController('route')

@@ -13,11 +13,11 @@ namespace CmsAdmin\App\NavPart;
 class NavPartNavigation extends \Mmi\Navigation\NavigationConfig {
 
 	public static function getMenu() {
-		return self::newElement()
+		return (new \Mmi\Navigation\NavigationConfigElement)
 				->setLabel('Menu serwisu')
 				->setModule('cmsAdmin')
 				->setController('navigation')
-				->addChild(self::newElement()
+				->addChild((new \Mmi\Navigation\NavigationConfigElement)
 					->setVisible(false)
 					->setLabel('Dodaj element menu')
 					->setModule('cmsAdmin')

@@ -10,27 +10,10 @@
 
 namespace Cms\App;
 
-use Cms\Orm\CmsRouteQuery;
-
 /**
  * Plugin front kontrolera (hooki)
  */
 class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
-
-	/**
-	 * Hook przed routingiem
-	 * dodaje do routera routy przechowywane w bazie CMS
-	 * @param \Mmi\Http\Request $request
-	 */
-	public function routeStartup(\Mmi\Http\Request $request) {
-		//routy z cms
-		if (null === ($routes = \App\Registry::$cache->load('Cms-Route'))) {
-			//zapis rout do cache
-			\App\Registry::$cache->save($routes = CmsRouteQuery::active()->find(), 'Cms-Route', 0);
-		}
-		//aktualizacja konfiguracji routera routy CMS
-		\Cms\Model\Route::updateRouterConfig(\Mmi\App\FrontController::getInstance()->getRouter()->getConfig(), $routes);
-	}
 
 	/**
 	 * Przed uruchomieniem dispatchera
@@ -103,10 +86,9 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 		
 		//ustawienie nawigatora
 		if (null === ($navigation = \App\Registry::$cache->load('Mmi-Navigation-' . $request->__get('lang')))) {
-			/* @var $config \App\Config\Navigation */
-			$config = \App\Registry::$config->navigation;
-			\Cms\Model\Navigation::decorateConfiguration($config);
-			$navigation = new \Mmi\Navigation\Navigation($config);
+			(new \Cms\Model\Navigation)->decorateConfiguration(\App\Registry::$config->navigation);
+			$navigation = new \Mmi\Navigation\Navigation(\App\Registry::$config->navigation);
+			//zapis do cache
 			\App\Registry::$cache->save($navigation, 'Mmi-Navigation-' . $request->__get('lang'), 0);
 		}
 		$navigation->setup($request);

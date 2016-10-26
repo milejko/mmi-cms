@@ -13,7 +13,7 @@ namespace CmsAdmin\App\NavPart;
 class NavPartComment extends \Mmi\Navigation\NavigationConfig {
 
 	public static function getMenu() {
-		return self::newElement()
+		return (new \Mmi\Navigation\NavigationConfigElement)
 				->setLabel('Komentarze')
 				->setModule('cmsAdmin')
 				->setController('comment');

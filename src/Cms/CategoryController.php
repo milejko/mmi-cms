@@ -26,8 +26,6 @@ class CategoryController extends \Mmi\Mvc\Controller {
 			//przekierowanie na customUri
 			$this->getResponse()->redirect('cms', 'category', 'dispatch', ['uri' => $category->customUri]);
 		}
-		//tworzy parametry SEO
-		$this->_buildSeoParams($category);
 		//model widgetu do widoku
 		$this->view->widgetModel = new Model\CategoryWidgetModel($category->id);
 		//forward do akcji docelowej
@@ -118,25 +116,7 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		$mvcParams = [];
 		//parsowanie parametrów mvc
 		parse_str($category->getJoined('cms_category_type')->mvcParams, $mvcParams);
-		return new \Mmi\Http\Request($mvcParams);
-	}
-
-	/**
-	 * Buduje parametry SEO
-	 * @param \Cms\Orm\CmsCategoryRecord $category
-	 */
-	private function _buildSeoParams(\Cms\Orm\CmsCategoryRecord $category) {
-		//iteracja po dzieciach kategorii
-		foreach ($category->getOption('parents') as $cat) {
-			//brak widoczności w menu
-			if (!$cat->active) {
-				continue;
-			}
-			//dodawanie okruszka
-			$this->view->navigation()->appendBreadcrumb($cat->name, $this->view->url(['uri' => $cat->uri]), $cat->title ? $cat->title : $cat->name, $cat->description ? $cat->description : $cat->lead);
-		}
-		//dodawanie okruszka z kategorią główną
-		$this->view->navigation()->appendBreadcrumb($category->name, $this->view->url(['uri' => $category->uri]), $category->title ? $category->title : $category->name, $category->description ? $category->description : $category->lead);
+		return $request->setParams($mvcParams);
 	}
 
 }

@@ -159,19 +159,28 @@ class CmsCategoryQuery extends \Mmi\Orm\Query {
 
 	protected $_tableName = 'cms_category';
 
+	/**
+	 * Definicje zgodne z językiem
+	 * @return CmsCategoryQuery
+	 */
+	public function lang() {
+		if (!\Mmi\App\FrontController::getInstance()->getRequest()->lang) {
+			return (new self);
+		}
+		return (new CmsCategoryQuery)
+				->whereLang()->equals(\Mmi\App\FrontController::getInstance()->getRequest()->lang)
+				->orFieldLang()->equals(null)
+				->orderDescLang();
+	}
+
+	/**
+	 * Zapytanie wyszukujące kategorie po uri
+	 * @param string $uri
+	 * @return CmsCategoryQuery
+	 */
 	public function searchByUri($uri) {
 		return (new CmsCategoryQuery)
 				->whereUri()->equals($uri);
-	}
-
-	public function getPublishCategory() {
-		return (new CmsCategoryQuery)
-				->andQuery(
-					(new CmsCategoryQuery)->whereDateStart()->less(date('Y-m-d H:i:s'))
-					->orFieldDateStart()->equals(NULL))
-				->andQuery(
-					(new CmsCategoryQuery)->whereDateEnd()->greater(date('Y-m-d H:i:s'))
-					->orFieldDateEnd()->equals(NULL));
 	}
 
 }

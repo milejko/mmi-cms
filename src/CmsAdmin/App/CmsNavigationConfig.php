@@ -20,7 +20,7 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig {
 	 * @return \Mmi\Navigation\NavigationConfigElement
 	 */
 	public static function getMenu() {
-		return self::newElement()
+		return (new \Mmi\Navigation\NavigationConfigElement)
 				->setLabel('Panel administracyjny')
 				->setModule('cmsAdmin')
 				->setController('index')
@@ -32,7 +32,7 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig {
 	 * @return \Mmi\Navigation\NavigationConfigElement
 	 */
 	protected static function _getContentPart() {
-		return self::newElement()
+		return (new \Mmi\Navigation\NavigationConfigElement)
 				->setLabel('CMS')
 				->setModule('cmsAdmin')
 				->addChild(self::_getAdminPart())
@@ -53,15 +53,15 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig {
 	 * @return \Mmi\Navigation\NavigationConfigElement
 	 */
 	protected static function _getAdminPart() {
-		return self::newElement()
+		return (new \Mmi\Navigation\NavigationConfigElement)
 				->setLabel('Administracja')
 				->setModule('cmsAdmin')
-				->addChild(self::newElement()
+				->addChild((new \Mmi\Navigation\NavigationConfigElement)
 					->setModule('cmsAdmin')
 					->setController('index')
 					->setAction('password')
 					->setLabel('Zmiana hasła'))
-				->addChild(self::newElement()
+				->addChild((new \Mmi\Navigation\NavigationConfigElement)
 					->setModule('cmsAdmin')
 					->setController('index')
 					->setAction('login')

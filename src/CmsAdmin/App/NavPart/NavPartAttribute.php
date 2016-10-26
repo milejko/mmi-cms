@@ -13,11 +13,11 @@ namespace CmsAdmin\App\NavPart;
 class NavPartAttribute extends \Mmi\Navigation\NavigationConfig {
 
 	public static function getMenu() {
-		return self::newElement()
+		return (new \Mmi\Navigation\NavigationConfigElement)
 				->setLabel('Atrybuty')
 				->setModule('cmsAdmin')
 				->setController('attribute')
-				->addChild(self::newElement()
+				->addChild((new \Mmi\Navigation\NavigationConfigElement)
 					->setLabel('Dodaj')
 					->setModule('cmsAdmin')
 					->setController('attribute')
