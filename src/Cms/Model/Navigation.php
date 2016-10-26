@@ -44,7 +44,7 @@ class Navigation {
 			if ($record->parentId != 0) {
 				continue;
 			}
-			$element = new \Mmi\Navigation\NavigationConfigElement($record->id);
+			$element = new \Mmi\Navigation\NavigationConfigElement($record->uri);
 			$this->_setNavigationElementFromRecord($record, $element);
 			$config->addElement($element);
 			unset($objectArray[$key]);
@@ -81,7 +81,7 @@ class Navigation {
 			if ($child->parentId != $record->id) {
 				continue;
 			}
-			$childElement =  new \Mmi\Navigation\NavigationConfigElement($child->id);
+			$childElement =  new \Mmi\Navigation\NavigationConfigElement($child->uri);
 			self::_setNavigationElementFromRecord($child, $childElement);
 			$element->addChild($childElement);
 			unset($objectArray[$key]);
@@ -96,13 +96,6 @@ class Navigation {
 	 * @return \Mmi\Navigation\NavigationConfigElement
 	 */
 	protected function _setNavigationElementFromRecord(CmsCategoryRecord $record, \Mmi\Navigation\NavigationConfigElement $element) {
-		$https = null;
-		if ($record->https === 0) {
-			$https = false;
-		}
-		if ($record->https === 1) {
-			$https = true;
-		}
 		$params = [];
 		parse_str($record->mvcParams, $params);
 		$params['uri'] = $record->customUri ? $record->customUri : $record->uri;
@@ -113,13 +106,14 @@ class Navigation {
 			->setAction(isset($params['action']) ? $params['action'] : 'dispatch')
 			->setParams($params)
 			->setBlank($record->blank ? true : false)
-			->setDescription($record->description ? : null)
+			->setDescription($record->description)
 			->setDisabled($record->active ? false : true)
-			->setHttps($https)
-			->setLabel($record->name ? : null)
-			->setLang($record->lang ? : null)
+			->setHttps($record->https)
+			->setUri($record->redirectUri ? : null)
+			->setLabel($record->name)
+			->setLang($record->lang)
 			->setFollow($record->follow ? true : false)
-			->setTitle($record->title ? : $record->title)
+			->setTitle($record->title)
 			->setVisible(true)
 		;
 		return $element;

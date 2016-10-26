@@ -69,9 +69,7 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig {
 					->setVisible(false))
 				->addChild(NavPart\NavPartCron::getMenu())
 				->addChild(NavPart\NavPartLog::getMenu())
-				->addChild(NavPart\NavPartNavigation::getMenu())
 				->addChild(NavPart\NavPartMail::getMenu())
-				->addChild(NavPart\NavPartRoute::getMenu())
 				->addChild(NavPart\NavPartAcl::getMenu());
 	}
 
