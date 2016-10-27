@@ -23,7 +23,6 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig {
 		return (new \Mmi\Navigation\NavigationConfigElement)
 				->setLabel('Panel administracyjny')
 				->setModule('cmsAdmin')
-			->setDisabled(true)
 				->setController('index')
 				->addChild(self::_getContentPart());
 	}
