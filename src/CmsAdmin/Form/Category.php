@@ -36,12 +36,14 @@ class Category extends \Cms\Form\AttributeForm {
 		//okres publikacji
 		$this->addElementDateTimePicker('dateStart')
 			->setLabel('początek publikacji')
+			->addFilterEmptyToNull()
 			->setDateStart(date('Y-m-d H:i:s'))
 			->setDateMin(date('Y-m-d H:i:s'))
 			->setLimitMax('cmsadmin-form-category-dateEnd');
 
 		$this->addElementDateTimePicker('dateEnd')
 			->setLabel('zakończenie publikacji')
+			->addFilterEmptyToNull()
 			->setDateStart(date('Y-m-d H:i:s'))
 			->setLimitMin('cmsadmin-form-category-dateStart');
 
