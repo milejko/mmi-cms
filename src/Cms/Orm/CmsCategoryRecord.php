@@ -72,13 +72,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		if (null === $this->order) {
 			$this->order = $this->_maxChildOrder() + 1;
 		}
-		//pola dat
-		if (empty($this->dateStart)) {
-			$this->dateStart = NULL;
-		}
-		if (empty($this->dateEnd)) {
-			$this->dateEnd = NULL;
-		}
+		//usuwanie cache po zapisie
+		\App\Registry::$cache->remove('Mmi-Navigation-' . $this->lang);
 		//zapis
 		return parent::save();
 	}
