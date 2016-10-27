@@ -23,6 +23,7 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig {
 		return (new \Mmi\Navigation\NavigationConfigElement)
 				->setLabel('Panel administracyjny')
 				->setModule('cmsAdmin')
+			->setDisabled(true)
 				->setController('index')
 				->addChild(self::_getContentPart());
 	}
@@ -66,7 +67,7 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig {
 					->setController('index')
 					->setAction('login')
 					->setLabel('Logowanie CMS')
-					->setVisible(false))
+					->setDisabled(true))
 				->addChild(NavPart\NavPartCron::getMenu())
 				->addChild(NavPart\NavPartLog::getMenu())
 				->addChild(NavPart\NavPartMail::getMenu())

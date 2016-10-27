@@ -15,6 +15,7 @@ class NavPartCron extends \Mmi\Navigation\NavigationConfig {
 	public static function getMenu() {
 		return (new \Mmi\Navigation\NavigationConfigElement)
 				->setLabel('Cron')
+				->setDisabled()
 				->setModule('cmsAdmin')
 				->setController('cron')
 				->addChild((new \Mmi\Navigation\NavigationConfigElement)

@@ -26,7 +26,7 @@ class Navigation {
 		return [null => '---'] + (new CmsCategoryQuery)
 				->lang()
 				->orderAscParentId()
-				->orderAscOrder()->findPairs('id', 'label');
+				->orderAscOrder()->findPairs('id', 'name');
 	}
 
 	/**
@@ -84,6 +84,7 @@ class Navigation {
 			$childElement =  new \Mmi\Navigation\NavigationConfigElement($child->uri);
 			self::_setNavigationElementFromRecord($child, $childElement);
 			$element->addChild($childElement);
+			//usunięcie wykorzystanego obiektu
 			unset($objectArray[$key]);
 			self::_buildChildren($child, $childElement, $objectArray);
 		}
@@ -114,7 +115,6 @@ class Navigation {
 			->setLang($record->lang)
 			->setFollow($record->follow ? true : false)
 			->setTitle($record->title)
-			->setVisible(true)
 		;
 		return $element;
 	}
