@@ -94,17 +94,17 @@
 					var getaudio = el.parent().find('audio');
 					if (!box.hasClass("audioplay")) {
 						$('audio').each(function () {
-							$(this).parent().parent().find('.edit').removeClass('fa-volume-up').addClass('fa-volume-off');
+							$(this).parent().parent().find('.edit').removeClass('i_stop').addClass('i_play');
 							this.pause();
 							this.currentTime = 0;
 						});
 
-						el.removeClass('fa-volume-off').addClass('fa-volume-up');
+						el.removeClass('i_play').addClass('i_stop');
 						box.addClass('audioplay');
 						getaudio[0].load();
 						getaudio[0].play();
 					} else if (box.hasClass("audioplay")) {
-						el.removeClass('fa-volume-up').addClass('fa-volume-off');
+						el.removeClass('i_stop').addClass('i_play');
 						getaudio[0].pause();
 						box.removeClass('audioplay');
 					}
@@ -113,19 +113,19 @@
 					var getvideo = el.parent().find('video');
 					if (!box.hasClass("videoplay")) {
 						$('video').each(function () {
-							$(this).parent().parent().find('.edit').removeClass('play').removeClass('fa-times').addClass('fa-play');
+							$(this).parent().parent().find('.edit').removeClass('play').removeClass('i_stop').addClass('i_play');
 							$(this).parent().parent().find('.video').removeClass('videoplay');
 							this.pause();
 							this.currentTime = 0;
 						});
 
-						el.removeClass('fa-play').addClass('fa-times').addClass('play');
+						el.removeClass('i_play').addClass('i_stop').addClass('play');
 						box.addClass('videoplay');
 						getvideo.prop("controls", true);
 						getvideo[0].load();
 						getvideo[0].play();
 					} else if (box.hasClass("videoplay")) {
-						el.removeClass('play').removeClass('fa-times').addClass('fa-play');
+						el.removeClass('play').removeClass('i_stop').addClass('i_play');
 						getvideo[0].pause();
 						getvideo.prop("controls", false);
 						box.removeClass('videoplay');

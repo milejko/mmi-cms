@@ -61,7 +61,7 @@ class FileController extends \Mmi\Mvc\Controller {
 				'id' => $file->id,
 				'title' => $file->original, 
 				'full' => '/?module=file&controller=server&action=stream&fileId='.$file->id.'&t='.strtotime($file->dateModify), 
-				'thumb' => $file->getUrl('scaley', '60', true),
+				'thumb' => $file->getUrl('scaley', '60', false),
 				'class' => $file->class,
 				'mime' => $file->mimeType,
 			];
