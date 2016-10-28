@@ -131,10 +131,12 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	}
 
 	/**
-	 * 
+	 * Pobiera url kategorii
+	 * @param boolean $https true - tak, false - nie, null - bez zmiany protokołu
 	 */
-	public function getWidgets() {
-		
+	public function getUrl($https = null) {
+		//pobranie linku z widoku
+		return \Mmi\App\FrontController::getInstance()->getView()->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->customUri ? $this->customUri : $this->uri], true, $https);
 	}
 
 	/**
