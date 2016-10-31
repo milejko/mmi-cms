@@ -123,10 +123,14 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		if ($this->getPk() === null) {
 			return false;
 		}
+		//pobranie dzieci
 		$children = (new \Cms\Model\CategoryModel)->getCategoryTree($this->getPk());
 		if (!empty($children)) {
 			throw new \Cms\Exception\ChildrenExistException();
 		}
+		//usuwanie cache
+		\App\Registry::$cache->remove('Mmi-Navigation-' . $this->lang);
+		//usuwanie kategorii
 		return parent::delete();
 	}
 
