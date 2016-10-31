@@ -13,11 +13,11 @@ namespace CmsAdmin\App\NavPart;
 class NavPartAuth extends \Mmi\Navigation\NavigationConfig {
 
 	public static function getMenu() {
-		return self::newElement()
+		return (new \Mmi\Navigation\NavigationConfigElement)
 				->setLabel('Użytkownicy')
 				->setModule('cmsAdmin')
 				->setController('auth')
-				->addChild(self::newElement()
+				->addChild((new \Mmi\Navigation\NavigationConfigElement)
 					->setLabel('Dodaj')
 					->setModule('cmsAdmin')
 					->setController('auth')

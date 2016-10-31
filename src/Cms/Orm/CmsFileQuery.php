@@ -118,8 +118,8 @@ namespace Cms\Orm;
  * @method QueryHelper\CmsFileQueryField andField($fieldName, $tableName = null)
  * @method QueryHelper\CmsFileQueryField where($fieldName, $tableName = null)
  * @method QueryHelper\CmsFileQueryField orField($fieldName, $tableName = null)
- * @method QueryHelper\CmsFileQueryJoin join($tableName, $targetTableName = null)
- * @method QueryHelper\CmsFileQueryJoin joinLeft($tableName, $targetTableName = null)
+ * @method QueryHelper\CmsFileQueryJoin join($tableName, $targetTableName = null, $alias = null)
+ * @method QueryHelper\CmsFileQueryJoin joinLeft($tableName, $targetTableName = null, $alias = null)
  * @method CmsFileRecord[] find()
  * @method CmsFileRecord findFirst()
  * @method CmsFileRecord findPk($value)
@@ -141,7 +141,28 @@ class CmsFileQuery extends \Mmi\Orm\Query {
 				->whereObject()->equals($object)
 				->andFieldObjectId()->equals($objectId)
 				//posortowane po kolejności
-				->orderAscOrder();
+				->orderAscOrder()
+				//sortowanie po ID, jeśli ordery są NULL
+				->orderAscId();
+	}
+	
+	/**
+	 * Po obiekcie i id
+	 * @param string $object
+	 * @param string $objectId
+	 * @param string $class
+	 * @return CmsFileQuery
+	 */
+	public static function byObjectAndClass($object = null, $objectId = null, $class = 'image') {
+		//zapytanie o pliki po obiektach i id
+		return (new self)
+				->whereObject()->equals($object)
+				->andFieldObjectId()->equals($objectId)
+				->whereClass()->equals($class)
+				//posortowane po kolejności
+				->orderAscOrder()
+				//sortowanie po ID, jeśli ordery są NULL
+				->orderAscId();
 	}
 
 	/**

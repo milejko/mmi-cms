@@ -13,7 +13,7 @@ namespace CmsAdmin\App\NavPart;
 class NavPartAcl extends \Mmi\Navigation\NavigationConfig {
 
 	public static function getMenu() {
-		return self::newElement()
+		return (new \Mmi\Navigation\NavigationConfigElement)
 				->setLabel('Uprawnienia')
 				->setModule('cmsAdmin')
 				->setController('acl');

@@ -11,6 +11,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsContactOptionQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsContactOptionQuery like($value)
  * @method \Cms\Orm\CmsContactOptionQuery ilike($value)
+ * @method \Cms\Orm\CmsContactOptionQuery between($from, $to)
  * @method \Cms\Orm\CmsContactOptionQuery equalsColumnId()
  * @method \Cms\Orm\CmsContactOptionQuery notEqualsColumnId()
  * @method \Cms\Orm\CmsContactOptionQuery greaterThanColumnId()

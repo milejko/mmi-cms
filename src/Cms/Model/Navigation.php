@@ -10,8 +10,8 @@
 
 namespace Cms\Model;
 
-use Cms\Orm\CmsNavigationQuery;
-use Cms\Orm\CmsNavigationRecord;
+use Cms\Orm\CmsCategoryQuery;
+use Cms\Orm\CmsCategoryRecord;
 
 /**
  * Model nawigacji
@@ -23,30 +23,32 @@ class Navigation {
 	 * @return array
 	 */
 	public static function getMultioptions() {
-		return [null => '---'] + CmsNavigationQuery::lang()
+		return [null => '---'] + (new CmsCategoryQuery)
+				->lang()
 				->orderAscParentId()
-				->orderAscOrder()->findPairs('id', 'label');
+				->orderAscOrder()->findPairs('id', 'name');
 	}
 
 	/**
 	 * Dodaje do konfiguracji dane z bazy danych
 	 * @param \Mmi\Navigation\NavigationConfig $config
 	 */
-	public static function decorateConfiguration(\Mmi\Navigation\NavigationConfig $config) {
-		$objectArray = CmsNavigationQuery::lang()
+	public function decorateConfiguration(\Mmi\Navigation\NavigationConfig $config) {
+		$objectArray = (new CmsCategoryQuery)
+			->lang()
 			->orderAscParentId()
 			->orderAscOrder()
 			->find()
 			->toObjectArray();
-		foreach ($objectArray as $key => $record) {/* @var $record \Cms\Orm\CmsNavigationRecord */
+		foreach ($objectArray as $key => $record) {/* @var $record CmsCategoryRecord */
 			if ($record->parentId != 0) {
 				continue;
 			}
-			$element = \Mmi\Navigation\NavigationConfig::newElement($record->id);
-			self::_setNavigationElementFromRecord($record, $element);
+			$element = new \Mmi\Navigation\NavigationConfigElement($record->uri);
+			$this->_setNavigationElementFromRecord($record, $element);
 			$config->addElement($element);
 			unset($objectArray[$key]);
-			self::_buildChildren($record, $element, $objectArray);
+			$this->_buildChildren($record, $element, $objectArray);
 		}
 	}
 
@@ -74,14 +76,15 @@ class Navigation {
 	 * @param \Mmi\Navigation\NavigationConfigElement $element
 	 * @param array $objectArray
 	 */
-	protected static function _buildChildren(\Cms\Orm\CmsNavigationRecord $record, \Mmi\Navigation\NavigationConfigElement $element, array $objectArray) {
+	protected function _buildChildren(\Cms\Orm\CmsCategoryRecord $record, \Mmi\Navigation\NavigationConfigElement $element, array $objectArray) {
 		foreach ($objectArray as $key => $child) {/* @var $child CmsNavigationRecord */
 			if ($child->parentId != $record->id) {
 				continue;
 			}
-			$childElement = \Mmi\Navigation\NavigationConfig::newElement($child->id);
+			$childElement =  new \Mmi\Navigation\NavigationConfigElement($child->uri);
 			self::_setNavigationElementFromRecord($child, $childElement);
 			$element->addChild($childElement);
+			//usunięcie wykorzystanego obiektu
 			unset($objectArray[$key]);
 			self::_buildChildren($child, $childElement, $objectArray);
 		}
@@ -93,38 +96,27 @@ class Navigation {
 	 * @param \Mmi\Navigation\NavigationConfigElement $element
 	 * @return \Mmi\Navigation\NavigationConfigElement
 	 */
-	protected static function _setNavigationElementFromRecord(CmsNavigationRecord $record, \Mmi\Navigation\NavigationConfigElement $element) {
-		$https = null;
-		if ($record->https === 0) {
-			$https = false;
-		} elseif ($record->https === 1) {
-			$https = true;
-		}
-
+	protected function _setNavigationElementFromRecord(CmsCategoryRecord $record, \Mmi\Navigation\NavigationConfigElement $element) {
 		$params = [];
-		parse_str($record->params, $params);
+		parse_str($record->mvcParams, $params);
+		$params['uri'] = $record->customUri ? $record->customUri : $record->uri;
 
 		$element
-			->setAbsolute($record->absolute ? true : false)
-			->setAction($record->action ? : null)
-			->setBlank($record->blank ? true : false)
-			->setController($record->controller ? : null)
-			->setDateEnd($record->dateEnd ? : null)
-			->setDateStart($record->dateStart ? : null)
-			->setDescription($record->description ? : null)
-			->setDisabled($record->active ? false : true)
-			->setHttps($https)
-			->setIndependent($record->independent ? : null)
-			->setKeywords($record->keywords ? : null)
-			->setLabel($record->label ? : null)
-			->setLang($record->lang ? : null)
-			->setModule($record->module ? : null)
-			->setNofollow($record->nofollow ? : null)
+			->setModule(isset($params['module']) ? $params['module'] : 'cms')
+			->setController(isset($params['controller']) ? $params['controller'] : 'category')
+			->setAction(isset($params['action']) ? $params['action'] : 'dispatch')
 			->setParams($params)
-			->setTitle($record->title ? : null)
-			->setUri($record->uri ? : null)
-			->setVisible($record->visible ? true : false)
-		;
+			->setBlank($record->blank ? true : false)
+			->setDescription($record->description)
+			->setDisabled($record->active ? false : true)
+			->setHttps($record->https)
+			->setUri($record->redirectUri ? : null)
+			->setLabel($record->name)
+			->setLang($record->lang)
+			->setFollow($record->follow ? true : false)
+			->setTitle($record->title)
+			->setDateStart($record->dateStart)
+			->setDateEnd($record->dateEnd);
 		return $element;
 	}
 

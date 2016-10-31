@@ -70,11 +70,4 @@ class UserController extends \Mmi\Mvc\Controller {
 		$this->getResponse()->redirectToUrl('/');
 	}
 
-	/**
-	 * Widget logowania
-	 */
-	public function loginWidgetAction() {
-		return $this->loginAction();
-	}
-
 }

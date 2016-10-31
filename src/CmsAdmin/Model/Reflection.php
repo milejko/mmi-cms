@@ -18,41 +18,35 @@ use Mmi\App\FrontController;
 class Reflection {
 
 	/**
-	 * Pobranie akcji
-	 * @return array
-	 */
-	public static function getActions() {
-		$structure = [];
-		foreach (FrontController::getInstance()->getStructure('module') as $moduleName => $module) {
-			foreach ($module as $controllerName => $controller) {
-				foreach ($controller as $actionName => $action) {
-					$structure[] = [
-						'path' => trim($moduleName . '_' . $controllerName . '_' . $actionName, '_ '),
-						'module' => $moduleName,
-						'controller' => $controllerName,
-						'action' => $actionName
-					];
-				}
-			}
-		}
-		return $structure;
-	}
-
-	/**
 	 * Pobranie modułów, kontrolerów, akcji
 	 * @return array
 	 */
-	public static function getOptionsWildcard() {
+	public static function getOptionsWildcard($minDepth = 1, $filter = '//') {
 		$structure = [];
+		//iteracja po modułach
 		foreach (FrontController::getInstance()->getStructure('module') as $moduleName => $module) {
-			$structure[$moduleName] = $moduleName;
+			if ($minDepth <= 1) {
+				$structure['module=' . $moduleName] = $moduleName;
+			}
+			//iteracja po kontrolerach
 			foreach ($module as $controllerName => $controller) {
-				$structure[$moduleName . ':' . $controllerName] = $moduleName . ' - ' . $controllerName;
+				if ($minDepth <= 2) {
+					$structure['module=' . $moduleName . '&controller=' . $controllerName] = $moduleName . ' / ' . $controllerName;
+				}
+				//iteracja po akcjach
 				foreach ($controller as $actionName => $action) {
-					$structure[$moduleName . ':' . $controllerName . ':' . $actionName] = $moduleName . ' - ' . $controllerName . ' - ' . $actionName;
+					$structure['module=' . $moduleName . '&controller=' . $controllerName . '&action=' . $actionName] = $moduleName . ' / ' . $controllerName . ' / ' . $actionName;
 				}
 			}
 		}
+		//filtracja (odrzucanie wpisów które nie pasują)
+		foreach ($structure as $k => $v) {
+			if (!preg_match($filter, $k)) {
+				unset($structure[$k]);
+			}
+		}
+		//sortowanie alfabetyczne
+		ksort($structure);
 		return $structure;
 	}
 

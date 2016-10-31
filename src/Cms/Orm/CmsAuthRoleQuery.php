@@ -34,8 +34,8 @@ namespace Cms\Orm;
  * @method QueryHelper\CmsAuthRoleQueryField andField($fieldName, $tableName = null)
  * @method QueryHelper\CmsAuthRoleQueryField where($fieldName, $tableName = null)
  * @method QueryHelper\CmsAuthRoleQueryField orField($fieldName, $tableName = null)
- * @method QueryHelper\CmsAuthRoleQueryJoin join($tableName, $targetTableName = null)
- * @method QueryHelper\CmsAuthRoleQueryJoin joinLeft($tableName, $targetTableName = null)
+ * @method QueryHelper\CmsAuthRoleQueryJoin join($tableName, $targetTableName = null, $alias = null)
+ * @method QueryHelper\CmsAuthRoleQueryJoin joinLeft($tableName, $targetTableName = null, $alias = null)
  * @method CmsAuthRoleRecord[] find()
  * @method CmsAuthRoleRecord findFirst()
  * @method CmsAuthRoleRecord findPk($value)
@@ -60,7 +60,7 @@ class CmsAuthRoleQuery extends \Mmi\Orm\Query {
 	 * @param integer $authId
 	 * @return CmsAuthRoleQuery
 	 */
-	public static function joinedRolebyAuthId($authId) {
+	public static function joinedRoleByAuthId($authId) {
 		return self::byAuthId($authId)
 				->join('cms_role')->on('cms_role_id');
 	}

@@ -16,7 +16,7 @@ namespace CmsAdmin\Form;
 class Cron extends \Mmi\Form\Form {
 
 	public function init() {
-		
+
 		//nazwa zadania
 		$this->addElementText('name')
 			->setLabel('nazwa zadania')
@@ -65,20 +65,21 @@ class Cron extends \Mmi\Form\Form {
 			->addValidatorNotEmpty();
 
 		//obiekt
-		$value = null;
-		if ($this->_record) {
-			$value = $this->_record->module . '_' . $this->_record->controller . '_' . $this->_record->action;
-		}
+		$value = $this->getRecord() ? ('module=' . $this->getRecord()->module .
+			'&controller=' . $this->getRecord()->controller .
+			'&action=' . $this->getRecord()->action) : null;
 
 		$options = [null => '---'];
-		foreach (\CmsAdmin\Model\Reflection::getActions() as $action) {
-			if ($action['controller'] == 'cron') {
-				$options[$action['path']] = $action['module'] . ': ' . $action['controller'] . ' - ' . $action['action'];
+		foreach (\CmsAdmin\Model\Reflection::getOptionsWildcard(3) as $paramString => $label) {
+			$mvcParams = [];
+			parse_str($paramString, $mvcParams);
+			if ($mvcParams['controller'] == 'cron') {
+				$options[$paramString] = $label;
 			}
 		}
 
 		//system object
-		$this->addElementSelect('object')
+		$this->addElementSelect('mvcParams')
 			->setLabel('Obiekt CMS')
 			->setDescription('Istniejące obiekty CMS')
 			->setRequired()
@@ -97,6 +98,20 @@ class Cron extends \Mmi\Form\Form {
 		//zapis
 		$this->addElementSubmit('submit')
 			->setLabel('zapisz zadanie');
+	}
+
+	/**
+	 * Parsowanie parametrów przed zapisem
+	 * @return boolean
+	 */
+	public function beforeSave() {
+		$mvcParams = [];
+		//parsowanie mvcParams
+		parse_str($this->getElement('mvcParams')->getValue(), $mvcParams);
+		//zapis do obiektu
+		$this->getRecord()->module = isset($mvcParams['module']) ? $mvcParams['module'] : null;
+		$this->getRecord()->controller = isset($mvcParams['controller']) ? $mvcParams['controller'] : null;
+		$this->getRecord()->action = isset($mvcParams['action']) ? $mvcParams['action'] : null;
 	}
 
 }

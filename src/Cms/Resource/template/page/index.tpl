@@ -1,1 +1,0 @@
-{renderDirectly($content)}

@@ -11,6 +11,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCronQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsCronQuery like($value)
  * @method \Cms\Orm\CmsCronQuery ilike($value)
+ * @method \Cms\Orm\CmsCronQuery between($from, $to)
  * @method \Cms\Orm\CmsCronQuery equalsColumnId()
  * @method \Cms\Orm\CmsCronQuery notEqualsColumnId()
  * @method \Cms\Orm\CmsCronQuery greaterThanColumnId()

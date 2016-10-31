@@ -18,8 +18,8 @@ class AuthGrid extends \CmsAdmin\Grid\Grid {
 	public function init() {
 
 		//domyślne zapytanie
-		$this->setQuery(new \Cms\Orm\CmsAuthQuery);
-
+		$this->setQuery((new \Cms\Orm\CmsAuthQuery)->orderAscUsername());
+		
 		//nazwa
 		$this->addColumnText('username')
 			->setLabel('nazwa użytkownika');
@@ -31,6 +31,11 @@ class AuthGrid extends \CmsAdmin\Grid\Grid {
 		//imię
 		$this->addColumnText('name')
 			->setLabel('pełna nazwa użytkownika');
+		
+		//przypisane role użytkownika
+		$this->addColumnCustom('roles')
+			->setLabel('role')
+			->setTemplateCode('{$record->getRolesAsString()}');
 
 		//ostatnie logowanie
 		$this->addColumnText('lastLog')

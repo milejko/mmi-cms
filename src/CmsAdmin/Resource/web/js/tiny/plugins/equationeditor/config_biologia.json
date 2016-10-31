@@ -1,0 +1,21 @@
+{
+  "buttonBar": [    
+    {
+      "klass": "EquationEditor.Buttons.CommandButtonView",
+      "latex": "/",
+      "buttonText": "x/y"
+    }
+  ],  
+  
+  "buttonGroups": {
+    "basic": [
+      
+    ],
+    "intermediate": [
+      
+    ],
+    "advanced": [
+      
+    ]
+  }
+}

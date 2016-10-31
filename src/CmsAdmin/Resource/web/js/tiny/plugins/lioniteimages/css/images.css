@@ -1,0 +1,327 @@
+/** Reset **/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+}
+em {
+	font-style:normal;
+}
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+body {
+	line-height: 1;
+	color: black;
+	background: white;
+}
+ol, ul {
+	list-style: none;
+}
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+caption, th, td {
+	text-align: left;
+	font-weight: normal;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: "";
+}
+blockquote, q {
+	quotes: "" "";
+}
+/** Reset end **/
+
+html,body {
+	font-family:Verdana,Arial;
+	font-size:10pt;
+}
+a {
+	color:#3daccc;
+	cursor:pointer;
+}
+
+
+#lionite-gallery-manager {
+	background:#fff;
+	z-index:50;
+	font-family: "Oxygen",sans-serif;
+	padding:0 10px;
+}
+#lionite-gallery-manager h2 {
+	color:#1497cc;
+	margin-bottom:20px;
+	font-size:16pt;
+}
+#lionite-gallery-manager a {
+	cursor: pointer;
+}
+#lionite-gallery-manager hr {
+	height: 0;
+	border-bottom:0;
+	margin:30px -30px;
+	border-top:1px solid #333;
+}
+#lionite-gallery-manager input[type='text'] {
+	padding:8px;
+	border:1px solid #ccc;
+	font-family:inherit;
+	font-size:12pt;
+	box-shadow:inset 0 2px 2px #f2f2f2;
+	vertical-align: middle;
+	width:400px;
+}
+#lionite-gallery-manager .icon-link-1 {
+	color:#181818;
+	font-size:14pt;
+	vertical-align: middle;
+}
+#lionite-gallery-manager .label {
+	font-weight:bold;
+	display:block;
+	margin-bottom:12px;
+	font-size:11pt;
+}
+#lionite-gallery-manager .urlinsert {
+	vertical-align: middle;
+}
+/** Image Gallery **/
+#lionite-gallery {
+	margin:0 -10px 10px;
+	max-height:310px;
+	overflow:auto;
+	list-style:none;
+	border: none !important;
+	background: none !important;
+}
+
+#lionite-gallery li {
+	float:left;
+	height:100px;
+	width:100px;
+	padding:5px;
+	margin:0 10px 20px;
+	position:relative;
+	border: 1px solid #fff;
+}
+#lionite-gallery li:hover{
+	border: 1px solid #e0e0e0;
+}
+#lionite-gallery li a{
+	font-size: 16px;
+	text-decoration: none;
+	z-index: 5;
+}
+#lionite-gallery li a.insert{
+    top: 5px;
+	position: absolute;
+}
+#lionite-gallery li a.delete{
+    top: 30px;
+	position: absolute;
+}
+#lionite-gallery li a.edit{
+	bottom: 10px;
+    position: absolute;
+    top: 50%;
+}
+
+
+
+
+
+
+
+
+
+#lionite-gallery-manager .button,#lionite-gallery-manager button,.open-lionite-image-manager {
+	background-color: #1497cc;
+	text-align: center;
+	font: normal 11pt/22pt "Roboto Condensed",sans-serif;
+	color:#fff;
+	text-transform: uppercase;
+	padding:3px 10px;
+	display:inline-block;
+	text-decoration: none;
+	border-radius:4px;
+	border:0;
+	cursor: pointer;
+}
+#lionite-gallery-manager .button:hover,#lionite-gallery-manager button:hover,.open-lionite-image-manager:hover {
+	background-color: #23A6D9;
+    text-decoration: none;
+}
+.ie7 #lionite-gallery-manager .button {
+	width:80px;
+}
+#lionite-gallery-manager .lionite-close-link {
+	background:#CCCCCC;
+	padding:5px 20px;
+}
+
+#lionite-gallery-manager .progress {
+	background: transparent;
+    display: block;
+    height:2px;
+    overflow: hidden;
+}
+#lionite-gallery-manager .progress .progress-bar {
+	background-color: #d4360e;
+    height: 2px;
+	width:0;
+}
+#lionite-gallery-manager .lionite-cancel {
+
+	text-align: center;
+	padding:15px 15px 0;
+}
+#lionite-gallery-manager .dropzone {
+	border:2px dashed #c1c1c1;
+	color:#727272;
+	padding:28px;
+	text-align: center;
+	margin:10px 0 40px 0;
+	border-radius:5px;
+}
+
+.fileinput-button {
+	position: relative;
+	overflow: hidden;
+}
+.fileinput-button input {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	opacity: 0;
+	-ms-filter: 'alpha(opacity=0)';
+	font-size: 200px;
+	direction: ltr;
+	cursor: pointer;
+}
+
+#lionite-gallery-manager .dropzone strong {
+	text-transform: uppercase;
+	display:inline-block;
+	vertical-align: middle;
+}
+#lionite-gallery-manager .dropzone small {
+	display: inline-block;
+	margin:0 10px;
+	color:#b2b2b2;
+	font-size:12pt;
+	vertical-align: middle;
+}
+#lionite-gallery-manager .dropzone .camera {
+	margin-bottom:5px;
+}
+#lionite-gallery-manager .dropzone .fileinput-button {
+	vertical-align: middle;
+}
+
+/* ico */
+.ico{
+	width: 48px;
+	height: 48px;
+	background: no-repeat;
+}
+.i_play{
+	background: url('data:image/png;base64,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');
+}
+.i_stop{
+	background: url('data:image/png;base64,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');
+}
+
+/* menu */
+#lionite-gallery-manager {
+	clear: both;
+	margin-top: 10px;
+}
+#menu {
+    background: #fafafa;
+    display: block;
+    float: left;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+#menu ul {
+    margin: 0; padding: 0;
+    float: left;
+}
+#menu ul li {
+    display: inline;
+}
+#menu ul li a {
+    float: left; text-decoration: none;
+    color: black; 
+    padding: 10.5px 11px;
+} 
+#menu ul li a:hover, #menu ul li.active a{
+    color: white;
+    background-color: #1497cc;
+}
+div.thumbbox{
+	display: block;
+    height: 70%;
+    width: 100%;
+}
+div.thumbbox.image{
+	width: 100%;
+	background-repeat: no-repeat !important;
+	background-position: center center !important;
+}
+div.thumbbox.video video{
+	float: right;
+    height: 100%;
+    width: 83%;
+}
+#lionite-gallery a.b_audio{
+	color: black;
+    font-size: 52px;
+    top: 20% !important;
+	left: 31%;
+}
+#lionite-gallery a.b_video{
+	left: 36%;
+    top: 40%;
+}
+#lionite-gallery a.b_video.play{
+	color: white;
+	display: block !important;
+    left: 2px !important;
+    position: fixed !important;
+    top: 0;
+    z-index: 999999;
+}
+div.thumbbox.videoplay {
+	margin: 0;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;	
+	background: #000;
+	z-index: 99999;
+}
+div.thumbbox.videoplay video{
+	height: 100%;
+	width: 100%;
+}

@@ -28,6 +28,13 @@ class File {
 	public static function appendFiles($object, $id = null, array $files = [], array $allowedTypes = []) {
 		//pola formularza
 		foreach ($files as $fileSet) {
+			//pojedynczy upload
+			if ($fileSet instanceof \Mmi\Http\RequestFile) {
+				if (null === self::appendFile($fileSet, $object, $id, $allowedTypes)) {
+					return false;
+				}
+				continue;
+			}
 			//pliki w polu formularza
 			foreach ($fileSet as $file) {
 				/* @var $file \Mmi\Http\RequestFile */

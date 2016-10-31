@@ -13,16 +13,16 @@ namespace CmsAdmin\App\NavPart;
 class NavPartContact extends \Mmi\Navigation\NavigationConfig {
 
 	public static function getMenu() {
-		return self::newElement()
+		return (new \Mmi\Navigation\NavigationConfigElement)
 				->setLabel('Kontakt')
 				->setModule('cmsAdmin')
 				->setController('contact')
-				->addChild(self::newElement()
+				->addChild((new \Mmi\Navigation\NavigationConfigElement)
 					->setLabel('Tematy')
 					->setModule('cmsAdmin')
 					->setController('contact')
 					->setAction('subject')
-					->addChild(self::newElement()
+					->addChild((new \Mmi\Navigation\NavigationConfigElement)
 						->setLabel('Dodaj')
 						->setModule('cmsAdmin')
 						->setController('contact')

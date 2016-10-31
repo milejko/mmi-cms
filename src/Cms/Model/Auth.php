@@ -11,7 +11,6 @@
 namespace Cms\Model;
 
 use Cms\Orm\CmsAuthQuery;
-use Cms\Orm\CmsAuthRoleQuery;
 use Cms\Orm\CmsAuthRecord;
 
 /**
@@ -38,7 +37,6 @@ class Auth implements \Mmi\Security\AuthInterface {
 		}
 
 		//poprawna autoryzacja
-		$record->setOption('roles', CmsAuthRoleQuery::joinedRolebyAuthId($record->id)->findPairs('cms_role_id', 'name'));
 		return self::_authSuccess($record);
 	}
 
@@ -52,7 +50,6 @@ class Auth implements \Mmi\Security\AuthInterface {
 		if (null === $record = self::_findUserByIdentity($id)) {
 			return;
 		}
-		$record->setOption('roles', CmsAuthRoleQuery::joinedRolebyAuthId($record->id)->findPairs('cms_role_id', 'name'));
 		return self::_authSuccess($record);
 	}
 
@@ -143,7 +140,7 @@ class Auth implements \Mmi\Security\AuthInterface {
 		$authRecord->username = $record->username;
 		$authRecord->email = $record->email;
 		$authRecord->lang = $record->lang;
-		$authRecord->roles = $record->getOption('roles') ? $record->getOption('roles') : ['guest'];
+		$authRecord->roles = count($record->getRoles()) ? $record->getRoles() : ['guest'];
 		return $authRecord;
 	}
 

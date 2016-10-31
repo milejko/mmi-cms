@@ -66,6 +66,18 @@ class OperationColumn extends ColumnAbstract {
 		return $this->setOption('deleteParams', $params);
 	}
 	
+	/**
+	 * Ustawia parametry linku usuwającego
+	 * ['action' => 'delete', 'id' => '%id%']
+	 * %pole% zastępowany jest przez $record->pole
+	 * 
+	 * @param array $params
+	 * @return OperationColumn
+	 */
+	public function setDeleteTagParams(array $params = ['action' => 'delete', 'id' => '%id%']) {
+		return $this->setOption('deleteTagParams', $params);
+	}
+	
 	public function addCustomButton($iconName, array $params = []) {
 		$customButtons = is_array($this->getOption('customButtons')) ? $this->getOption('customButtons') : [];
 		$customButtons[] = ['iconName' => $iconName, 'params' => $params];
@@ -78,12 +90,15 @@ class OperationColumn extends ColumnAbstract {
 	 * @return string
 	 */
 	public function renderCell(\Mmi\Orm\RecordRo $record) {
+	    	    
 		$view = FrontController::getInstance()->getView();
 		$html = '';
 		//pobieranie parametrów linku edycji
 		$editParams = $this->getOption('editParams');
 		//pobieranie parametrów linku usuwania
 		$deleteParams = $this->getOption('deleteParams');
+		//pobieranie parametrów linku usuwania
+		$deleteTagParams = $this->getOption('deleteTagParams');
 		//przyciski dodatkowe
 		$customButtons = $this->getOption('customButtons');
 		//przyciski dodatkowe
@@ -102,6 +117,16 @@ class OperationColumn extends ColumnAbstract {
 		if (!empty($deleteParams)) {
 			$html .= '<a href="' . $view->url($this->_parseParams($deleteParams, $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
 		}
+		//link kasujący tag
+		if (!empty($deleteTagParams)) {
+		    if ($record->getJoined('cms_tag_relation')->id) {
+			$html .= '<a href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Tag jest przypisany do zasobu. Jeżeli zostanie usunięty nie ma możliwości przywrócenia relacji. Czy na pewno usunąć" class="confirm red"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
+		    }
+		    if (!$record->getJoined('cms_tag_relation')->id) {
+			$html .= '<a href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
+		    }
+		}
+		
 		return $html;
 	}
 	
@@ -111,7 +136,7 @@ class OperationColumn extends ColumnAbstract {
 	 * @param \Mmi\Orm\RecordRo $record
 	 * @return array
 	 */
-	protected function _parseParams(array $params, \Mmi\Orm\RecordRo $record) {
+	protected function _parseParams(array $params, \Mmi\Orm\RecordRo $record) {	    
 		//inicjalizacja parametrów
 		$parsedParams = [];
 		$matches = [];

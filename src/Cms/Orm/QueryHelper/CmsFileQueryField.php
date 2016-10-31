@@ -11,6 +11,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsFileQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsFileQuery like($value)
  * @method \Cms\Orm\CmsFileQuery ilike($value)
+ * @method \Cms\Orm\CmsFileQuery between($from, $to)
  * @method \Cms\Orm\CmsFileQuery equalsColumnId()
  * @method \Cms\Orm\CmsFileQuery notEqualsColumnId()
  * @method \Cms\Orm\CmsFileQuery greaterThanColumnId()

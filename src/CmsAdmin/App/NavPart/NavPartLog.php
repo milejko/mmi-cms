@@ -13,7 +13,7 @@ namespace CmsAdmin\App\NavPart;
 class NavPartLog extends \Mmi\Navigation\NavigationConfig {
 
 	public static function getMenu() {
-		return self::newElement()
+		return (new \Mmi\Navigation\NavigationConfigElement)
 				->setLabel('Log systemowy')
 				->setModule('cmsAdmin')
 				->setController('log');

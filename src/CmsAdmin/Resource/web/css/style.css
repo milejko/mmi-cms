@@ -156,7 +156,11 @@ nav#main-menu {
 
 nav#main-menu ul.menu {
 	margin-bottom: 1.5em;
-	z-index: 601;
+	z-index: 91;
+}
+
+ul.menu.depth-2 {
+	z-index: 91;
 }
 
 table tr th input {
@@ -168,7 +172,7 @@ table.grid.striped tbody th {
 }
 
 div.grid {
-	max-width: 1680px;
+	max-width: none;
 }
 
 div.grid nav.local {
@@ -267,6 +271,16 @@ div.field div.description {
 	font-style: italic;
 }
 
+form div.field.label {
+	border-bottom: 1px solid #ccc;
+}
+
+form div.field.label label {
+	padding: 5px;
+	background: #eee;
+	font-weight: bold;
+}
+
 ul.list {
 	list-style-type: none;
 	margin: 0; 
@@ -274,27 +288,33 @@ ul.list {
 }
 
 ul.list li {
-	background: #eee;
-	border: 1px dotted #ccc;
+	background: #fff;
+	border: 2px dashed #ccc;
+	border-radius: 5px;
 	margin: 10px 0;
-}
-
-ul.list li div {
 	padding: 10px;
-	width: 400px;
-	display: inline-block;
+	overflow: hidden;
+	clear: both;
 }
 
-ul.list li div.width-600 {
-	width: 600px;
+ul.list li div.preview {
+	float: left;
+	width: calc(100% - 60px);
+}
+
+ul.list li div.operation {
+	float: right;
+}
+
+ul.list li div.operation a {
+	margin-bottom: 5px;
 }
 
 .content-box-content {
-	border: 1px solid #e5e5e5;
 	background: #fff;
 	clear: both;
-	padding: 20px;
-	margin: 0 0 40px 0;
+	padding: 15px;
+	margin: 0 0 20px 0;
 }
 
 .mce-btn button:focus, .mce-btn button:hover {
@@ -514,4 +534,40 @@ button.mce-close {
 
 .mce-window-head button {
 	left: auto;
+}
+
+/* deleteTag */
+.confirm.red{
+    color: red;
+}
+
+ul.chosen-choices {
+	display: inline-block;
+	*display: inline;
+	vertical-align: middle;
+	width: auto;
+	zoom: 1;
+	margin: 0 0 10px 0!important;
+	border: 1px solid #ccc!important;
+	font-size: 1em;
+	padding: 5px 0;
+	text-indent: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	background: #fff!important;
+	-moz-box-shadow: inset 0 0 6px #ccc;
+	-webkit-box-shadow: inset 0 1px 6px #ccc;
+	box-shadow: inset 0 1px 6px #ccc;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.chosen-container.chosen-with-drop .chosen-drop {
+	margin-top: -10px;
+}
+
+ul.tabs {
+	margin: 0 0 -1px 0;
 }

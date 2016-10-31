@@ -11,6 +11,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsTagQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsTagQuery like($value)
  * @method \Cms\Orm\CmsTagQuery ilike($value)
+ * @method \Cms\Orm\CmsTagQuery between($from, $to)
  * @method \Cms\Orm\CmsTagQuery equalsColumnId()
  * @method \Cms\Orm\CmsTagQuery notEqualsColumnId()
  * @method \Cms\Orm\CmsTagQuery greaterThanColumnId()

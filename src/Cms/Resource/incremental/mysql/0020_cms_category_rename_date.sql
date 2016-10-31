@@ -1,0 +1,2 @@
+ALTER TABLE `cms_category` CHANGE COLUMN `publishUp` `dateStart` DATETIME DEFAULT NULL,
+ CHANGE COLUMN `publishDown` `dateEnd` DATETIME DEFAULT NULL;

@@ -1,0 +1,73 @@
+<!doctype html>
+<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title></title>
+		<link rel="stylesheet" href="/resource/cmsAdmin/js/jquery-ui/jquery-ui.theme.min.css">
+		<link rel="stylesheet" type="text/css" href="css/images.css">
+		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="js/jquery.fileupload.js"></script>
+		<script type="text/javascript" src="js/jquery.fileupload-process.js"></script>
+		<script type="text/javascript" src="js/jquery.fileupload-validate.js"></script>
+		<script type="text/javascript" src="js/jquery.iframe-transport.js"></script>
+		<script type="text/javascript">
+			var config = { 
+				dataTyp : "audio",
+				dataAccept : /(\.|\/)(mp3)$/i,
+				maxFileSize : 500000099,
+				maxChunkSize: 10000000 // 10 MB
+			};
+		</script>
+		<script type="text/javascript" src="js/lioniteimages.js"></script>
+	</head>
+	<body>
+		<div id="menu">
+			<ul>
+				<li><a href="image.htm">Obrazek</a></li>
+				<li class="active"><a href="audio.htm">Audio</a></li>
+				<li><a href="video.htm">Video</a></li>
+			</ul>
+		</div>
+		
+		<div id="lionite-gallery-manager">
+			
+			<!-- The global progress bar -->
+			<div id="progress" class="progress">
+				<div class="progress-bar progress-bar-success"></div>
+			</div>
+			
+			<!-- The global error -->
+			<div id="error">
+			</div>
+
+			<!-- The container for the uploaded files -->
+			<div id="files" class="files"></div>
+
+			<div class="dropzone">			
+				<span class="fileinput-button button">
+
+					<span>wgraj</span>
+					<!-- The file input field used as target for the file upload widget -->
+					<input id="lionite-file-upload" type="file" name="file" multiple accept="audio/*">
+				</span>
+			</div>
+			
+			<span class="label">Wybierz z listy lub wgraj nowy.</span>
+			<ul id="lionite-gallery" class="ui-state-default">
+
+			</ul>
+			
+		</div>
+		
+		<div id="dialog-confirm" title="Empty the recycle bin?">
+			<p></p>
+		</div>
+
+	</body>
+</html>

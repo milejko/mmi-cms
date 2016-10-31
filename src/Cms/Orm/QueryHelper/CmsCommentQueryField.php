@@ -11,6 +11,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCommentQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsCommentQuery like($value)
  * @method \Cms\Orm\CmsCommentQuery ilike($value)
+ * @method \Cms\Orm\CmsCommentQuery between($from, $to)
  * @method \Cms\Orm\CmsCommentQuery equalsColumnId()
  * @method \Cms\Orm\CmsCommentQuery notEqualsColumnId()
  * @method \Cms\Orm\CmsCommentQuery greaterThanColumnId()

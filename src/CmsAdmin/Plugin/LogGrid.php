@@ -39,9 +39,13 @@ class LogGrid extends \CmsAdmin\Grid\Grid {
 			->setLabel('dane')
 			->setFilterMethodLike();
 
-		//ip
-		$this->addColumnText('ip')
-			->setLabel('adres IP');
+		//zasób
+		$this->addColumnText('object')
+			->setLabel('zasób');
+		
+		//id
+		$this->addColumnText('objectId')
+			->setLabel('id zasobu');
 
 		//sukces
 		$this->addColumnCheckbox('success')

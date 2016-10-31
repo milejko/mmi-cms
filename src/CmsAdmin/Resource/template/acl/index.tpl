@@ -37,7 +37,8 @@
 						<th>{#operacje#}</th>
 					</tr>
 					{$i=1}
-					{foreach $rules as $ruleId => $rule}
+					
+					{foreach $rules as $rule}
 						<tr id="rule-row-{$rule->id}">
 							<td>
 								{$i}{$i++}
@@ -45,7 +46,7 @@
 							<td>
 								<select class="rule-select" id="rule-resource-{$rule->id}">
 									{foreach $options as $key => $option}
-										<option value="{$key}" {if php_strtolower($key) == $ruleId}selected=""{/if}>{$option}</option>
+										<option value="{php_strtolower($key)}" {if php_strtolower($key) == $rule->getMvcParams()}selected=""{/if}>{$option}</option>
 									{/foreach}
 								</select>
 							</td>
