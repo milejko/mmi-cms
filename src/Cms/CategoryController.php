@@ -73,8 +73,8 @@ class CategoryController extends \Mmi\Mvc\Controller {
 			//404
 			throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
 		}
-		//kategoria dozwolona - rola redaktora
-		if (\App\Registry::$acl->isAllowed(\App\Registry::$auth->getRoles(), 'cmsAdmin:category:index')) {
+		//kategoria dozwolona - flaga podglądu + rola redaktora
+		if ($this->preview == 1 && \App\Registry::$acl->isAllowed(\App\Registry::$auth->getRoles(), 'cmsAdmin:category:index')) {
 			return $category;
 		}
 		//kategoria manualnie wyłączona

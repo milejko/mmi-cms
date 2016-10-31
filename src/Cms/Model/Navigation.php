@@ -115,7 +115,8 @@ class Navigation {
 			->setLang($record->lang)
 			->setFollow($record->follow ? true : false)
 			->setTitle($record->title)
-		;
+			->setDateStart($record->dateStart)
+			->setDateEnd($record->dateEnd);
 		return $element;
 	}
 
