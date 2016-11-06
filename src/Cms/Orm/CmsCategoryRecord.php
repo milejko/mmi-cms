@@ -56,6 +56,10 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @return boolean
 	 */
 	public function save() {
+		//zmodyfikowany szablon
+		if ($this->isModified('cmsCategoryTypeId')) {
+			//@TODO: usunięcie wartości atrybutów, których nie ma w nowej relacji
+		}
 		//usunięcie uri
 		$this->uri = '';
 		//ustawiamy uri na podstawie rodzica
