@@ -177,7 +177,7 @@ abstract class AttributeForm extends Form {
 		$field = (new $attribute->fieldClass('cmsAttribute-' . $attribute->id))
 			->setLabel($attribute->name)
 			->setDescription($attribute->description)
-			->setValue($attribute->isRestricted() ? $this->_arrayValueByAttributeId($attribute->id) : $this->_scalarValueByAttributeId($attribute->id));
+			->setValue($attribute->isRestricted() ? $this->_arrayValueByAttribute($attribute) : $this->_scalarValueByAttribute($attribute));
 		$options = [];
 		//parsowanie opcji
 		parse_str($attribute->fieldOptions, $options);
@@ -186,7 +186,7 @@ abstract class AttributeForm extends Form {
 		//checkbox zaznaczony
 		if ($field instanceof \Mmi\Form\Element\Checkbox) {
 			$field->setValue(1)
-				->setChecked($this->_scalarValueByAttributeId($attribute->id));
+				->setChecked($this->_scalarValueByAttribute($attribute));
 		}
 		//multiopcje
 		if ($attribute->isRestricted()) {
@@ -239,37 +239,43 @@ abstract class AttributeForm extends Form {
 
 	/**
 	 * Pobiera pojedynczą wartość z relacji
-	 * @param integer $attributeId
+	 * @param \Cms\Orm\CmsAttributeRecord $attribute
 	 * @return mixed
 	 */
-	private function _scalarValueByAttributeId($attributeId) {
+	private function _scalarValueByAttribute(\Cms\Orm\CmsAttributeRecord $attribute) {
 		//iteracja po wartościach
 		foreach ($this->_cmsAttributeValues as $valueRecord) {
 			//znaleziony atrybut
-			if ($valueRecord->cmsAttributeId == $attributeId) {
+			if ($valueRecord->cmsAttributeId == $attribute->id) {
 				//zwrot wartości
 				return $valueRecord->value;
 			}
 		}
+		return $attribute->getJoined('cms_attribute_value')->value;
 	}
 
 	/**
 	 * Pobiera wszystkie wartości z relacji
-	 * @param integer $attributeId
+	 * @param \Cms\Orm\CmsAttributeRecord $attribute
 	 * @return array
 	 */
-	private function _arrayValueByAttributeId($attributeId) {
+	private function _arrayValueByAttribute(\Cms\Orm\CmsAttributeRecord $attribute) {
 		//tablica wartości
 		$values = [];
 		//iteracja po wartościach
 		foreach ($this->_cmsAttributeValues as $valueRecord) {
 			//znaleziony atrybut
-			if ($valueRecord->cmsAttributeId == $attributeId) {
+			if ($valueRecord->cmsAttributeId == $attribute->id) {
 				//dodanie wartości
 				$values[] = $valueRecord->value;
 			}
 		}
-		//zwrot wartości
+		//brak wartości - ustawienie domyślnej jeśli istnieje
+		if (empty($values) && $attribute->getJoined('cms_attribute_value')->value) {
+			//zwrot domyślnej wartości
+			return [$attribute->getJoined('cms_attribute_value')->value];
+		}
+		//zwrot znalezionych wartości
 		return $values;
 	}
 
