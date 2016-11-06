@@ -16,7 +16,7 @@ class Login extends \Mmi\Form\Form {
 
 		$this->addElementText('username')
 			->setLabel('nazwa użytkownika')
-			->setDescription('Wpisz swój unikalny identyfikator')
+			->setDescription('wpisz swój unikalny identyfikator')
 			->addFilterStringTrim();
 
 		$this->addElementPassword('password')
@@ -24,7 +24,7 @@ class Login extends \Mmi\Form\Form {
 			->addValidatorStringLength(4, 128);
 
 		$this->addElementSubmit('login')
-			->setLabel('Zaloguj się');
+			->setLabel('zaloguj się');
 	}
 
 	/**

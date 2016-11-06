@@ -72,7 +72,7 @@ class Auth extends \Mmi\Form\Form {
 			->addValidatorStringLength(4, 128);
 
 		$this->addElementSubmit('submit')
-			->setLabel('Zapisz');
+			->setLabel('zapisz użytkownika');
 	}
 
 	/**

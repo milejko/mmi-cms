@@ -33,7 +33,7 @@ class AttributeValue extends \Mmi\Form\Form {
 
 		//zapis
 		$this->addElementSubmit('submit')
-			->setLabel('dodaj');
+			->setLabel('dodaj wartość');
 	}
 
 	/**

@@ -40,7 +40,7 @@ class CategoryType extends \Cms\Form\Form {
 
 		//zapis
 		$this->addElementSubmit('submit')
-			->setLabel('zapisz stronę');
+			->setLabel('zapisz szablon');
 	}
 
 	/**

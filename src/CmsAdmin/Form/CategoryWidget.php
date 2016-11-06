@@ -54,7 +54,7 @@ class CategoryWidget extends \Cms\Form\Form {
 
 		//zapis
 		$this->addElementSubmit('submit')
-			->setLabel('zapisz');
+			->setLabel('zapisz widget');
 	}
 
 	/**
