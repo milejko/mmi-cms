@@ -415,5 +415,13 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
                 
                 $this->_other.= 'pnelist_number_styles: "domyślne", pnelist_bullet_styles: "thicked,dotted",';
                 $this->_other.= 'body_class: "article-content",';
+                                
+                $this->_other.= "style_formats: [
+                    {title: 'Odnośnik', items: [
+                        {title : 'link-collapse', selector : 'a', classes : 'link-collapse'},
+                        {title : 'link-collapse.open', selector : 'a', classes : 'link-collapse.open'},
+                        {title : 'link-download', selector : 'a', classes : 'link-download'}
+                    ]}
+                ], style_formats_merge: true,";
 	}
 }
