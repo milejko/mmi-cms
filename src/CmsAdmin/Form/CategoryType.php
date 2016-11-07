@@ -47,38 +47,4 @@ class CategoryType extends \Cms\Form\Form {
 		return parent::beforeSave();
 	}
 
-	/**
-	 * Po zapisie
-	 * @return boolean
-	 */
-	/*public function afterSave() {
-		//model relacji
-		$relationModel = new \Cms\Model\AttributeRelationModel('cmsCategoryType', $this->getRecord()->id);
-		//nowe id atrybutów
-		$newAttributeIds = $this->getElement('attributeIds')->getValue();
-		//bieżące id atrybutów
-		$currentAttributeIds = $relationModel->getAttributeIds();
-		//atrybuty do dodania
-		foreach (array_diff($newAttributeIds, $currentAttributeIds) as $attributeId) {
-			//dodawanie relacji
-			$relationModel->createAttributeRelation($attributeId);
-		}
-		//atrybuty do usunięcia
-		foreach (array_diff($currentAttributeIds, $newAttributeIds) as $attributeId) {
-			//usuwanie wartości
-			$this->_deleteValueRelationsByAttributeId($attributeId);
-			//usuwanie relacji
-			$relationModel->deleteAttributeRelation($attributeId);
-		}
-		return parent::afterSave();
-	}*/
-
-	/**
-	 * Usuwanie relacji ze wszystkich kategorii dla danego atrybutu
-	 * @param integer $attributeId
-	 */
-	protected function _deleteValueRelationsByAttributeId($attributeId) {
-		
-	}
-
 }
