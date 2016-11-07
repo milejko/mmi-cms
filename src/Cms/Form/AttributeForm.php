@@ -201,8 +201,8 @@ abstract class AttributeForm extends Form {
 		if ($attribute->required) {
 			$field->setRequired();
 		}
-		//czy pole jest wgrywarką plików
-		if ($attribute->isUploader()) {
+		//czy pole wymaga podania obiektu
+		if (method_exists($field, 'setObject')) {
 			//obiektem dla uploadera jest obiekt główny + klucz atrybutu, ignorowanie pola
 			$field->setObject($this->_saveToObject . ucfirst($attribute->key));
 			$field->setValue($this->_saveToObject . ucfirst($attribute->key));

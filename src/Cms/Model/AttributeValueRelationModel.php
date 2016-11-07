@@ -181,15 +181,17 @@ class AttributeValueRelationModel {
 		foreach ($this->getAttributeValues() as $record) {
 			//pobieranie klucza atrybutu (w celu zgrupowania
 			$key = $record->getJoined('cms_attribute')->key;
+			if ($record->getJoined('cms_attribute')->isMultiple()) {
+				if (!$grouppedByAttributeKey->$key) {
+					$grouppedByAttributeKey->$key = new \Mmi\Orm\RecordCollection;
+				}
+				$grouppedByAttributeKey->$key->append($record);
+				continue;
+			}
 			//atrybut to uploader
 			if ($record->getJoined('cms_attribute')->isUploader()) {
 				//dołączanie plików
-				$grouppedByAttributeKey->$key = (new \Cms\Orm\CmsFileQuery)
-					->whereObject()->equals($record->value)
-					->andFieldObjectId()->equals($this->_objectId)
-					->orderAscOrder()
-					->orderAscId() //sortowanie po ID, jeśli ordery są NULL
-					->find();
+				$grouppedByAttributeKey->$key = \Cms\Orm\CmsFileQuery::byObject($record->value, $this->_objectId)->find();
 				continue;
 			}
 			//atrybut zwykły
