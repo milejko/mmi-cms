@@ -44,7 +44,7 @@ class TagRelation extends \Mmi\Form\Form {
 			->addValidatorNumberBetween(0, 100000000);
 
 		$this->addElementSubmit('submit')
-			->setLabel('zapisz');
+			->setLabel('zapisz relację');
 	}
 
 	/**

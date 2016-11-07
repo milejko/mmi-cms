@@ -24,13 +24,19 @@ class CategoryType extends \Cms\Form\Form {
 			->addValidatorNotEmpty()
 			->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryTypeQuery, 'name', $this->getRecord()->id)
 			->setLabel('nazwa');
-		
+
 		//klasa modułu wyświetlania
 		$this->addElementSelect('mvcParams')
 			->setMultioptions([null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard(3))
 			->setRequired()
 			->addValidatorNotEmpty()
 			->setLabel('moduł wyświetlania');
+
+		//atrybuty
+		$this->addElementMultiCheckbox('attributeIds')
+			->setLabel('atrybuty')
+			->setMultioptions((new \Cms\Orm\CmsAttributeQuery)->orderAscName()->findPairs('id', 'name'))
+			->setValue((new \Cms\Model\AttributeRelationModel('cmsCategoryType', $this->getRecord()->id))->getAttributeIds());
 
 		//zapis
 		$this->addElementSubmit('submit')
@@ -51,7 +57,7 @@ class CategoryType extends \Cms\Form\Form {
 	 * Po zapisie
 	 * @return boolean
 	 */
-	/*public function afterSave() {
+	public function afterSave() {
 		//model relacji
 		$relationModel = new \Cms\Model\AttributeRelationModel('cmsCategoryType', $this->getRecord()->id);
 		//nowe id atrybutów
@@ -71,14 +77,19 @@ class CategoryType extends \Cms\Form\Form {
 			$relationModel->deleteAttributeRelation($attributeId);
 		}
 		return parent::afterSave();
-	}*/
+	}
 
 	/**
 	 * Usuwanie relacji ze wszystkich kategorii dla danego atrybutu
 	 * @param integer $attributeId
 	 */
 	protected function _deleteValueRelationsByAttributeId($attributeId) {
-		
+		foreach ((new \Cms\Orm\CmsCategoryQuery)->whereCmsCategoryTypeId()
+			->equals($this->getRecord()->id)
+			->findPairs('id', 'id') as $categoryId) {
+			(new \Cms\Model\AttributeValueRelationModel('category', $categoryId))
+				->deleteAttributeValueRelationsByAttributeId($attributeId);
+		}
 	}
 
 }

@@ -139,9 +139,11 @@ class AttributeRelationModel {
 	public function getAttributes() {
 		return (new CmsAttributeQuery)
 				->join('cms_attribute_relation')->on('id', 'cms_attribute_id')
+				->joinLeft('cms_attribute_value', 'cms_attribute_relation')->on('cms_attribute_value_id')
 				->where('object', 'cms_attribute_relation')->equals($this->_object)
 				->where('objectId', 'cms_attribute_relation')->equals($this->_objectId)
 				->orderAsc('order', 'cms_attribute_relation')
+				->orderAsc('id', 'cms_attribute_relation')
 				->find();
 	}
 
