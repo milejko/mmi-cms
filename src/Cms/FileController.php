@@ -56,11 +56,11 @@ class FileController extends \Mmi\Mvc\Controller {
 		$files = [];
 		$thumb = new \Cms\Mvc\ViewHelper\Thumb();
 		foreach (\Cms\Orm\CmsFileQuery::byObjectAndClass($this->object, $this->objectId, $this->class)->find() as $file) {
-			$thumb->thumb($file, 'scalecrop', '100x60');
 			$files[] = [
 				'id' => $file->id,
 				'title' => $file->original, 
-				'full' => '/?module=file&controller=server&action=stream&fileId='.$file->id.'&t='.strtotime($file->dateModify), 
+				'stream' => '/?module=file&controller=server&action=stream&fileId='.$file->id.'&t='.strtotime($file->dateModify), 
+                                'full' => $thumb->thumb($file, 'default'),
 				'thumb' => $file->getUrl('scaley', '60', false),
 				'class' => $file->class,
 				'mime' => $file->mimeType,
