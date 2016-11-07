@@ -41,7 +41,7 @@ class CategoryTypeAttributeRelationForm extends \Cms\Form\Form {
 		//rekord wartości domyślnej		
 		$defaultValueRecord = (new \Cms\Orm\CmsAttributeValueQuery)
 			->findPk($this->getRecord()->cmsAttributeValueId);
-
+		
 		//wartość domyślna
 		$this->addElementText('defaultValue')
 			->setLabel('wartość domyślna')

@@ -47,7 +47,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	public $follow;
 	public $blank;
 	public $active;
-	
 	public $dateStart;
 	public $dateEnd;
 
@@ -56,10 +55,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @return boolean
 	 */
 	public function save() {
-		//zmodyfikowany szablon
-		if ($this->isModified('cmsCategoryTypeId')) {
-			//@TODO: usunięcie wartości atrybutów, których nie ma w nowej relacji
-		}
 		//usunięcie uri
 		$this->uri = '';
 		//ustawiamy uri na podstawie rodzica
@@ -98,6 +93,20 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @return boolean
 	 */
 	protected function _update() {
+		//zmodyfikowany szablon
+		if ($this->isModified('cmsCategoryTypeId')) {
+			//iteracja po różnicy międy obecnymi atrybutami a nowymi
+			foreach (array_diff(
+				//obecne id atrybutów
+				(new \Cms\Model\AttributeRelationModel('cmsCategoryType', $this->getInitialStateValue('cmsCategoryTypeId')))->getAttributeIds(),
+				//nowe id atrybutów
+				(new \Cms\Model\AttributeRelationModel('cmsCategoryType', $this->cmsCategoryTypeId))->getAttributeIds())
+			as $deletedAttributeId) {
+				//usuwanie wartości usuniętego atrybutu
+				(new \Cms\Model\AttributeValueRelationModel('category', $this->id))
+					->deleteAttributeValueRelationsByAttributeId($deletedAttributeId);
+			}
+		}
 		//zmodyfikowany parent
 		$parentModified = $this->isModified('parentId');
 		//zmodyfikowany order
