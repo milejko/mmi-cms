@@ -35,8 +35,8 @@ class CategoryController extends Mvc\Controller {
 		//konfiguracja kategorii
 		$form = (new \CmsAdmin\Form\Category($cat));
 		//zapis
-		if ($form->isSaved()) {
-			//$this->getMessenger()->addMessage('Zmiany w stronie zostały zapisane', true);
+		if ($form->isMine() && !$form->isSaved()) {
+			$this->getMessenger()->addMessage('Zmiany nie zostały zapisane, formularz zawiera błędy', false);
 		}
 		//zmiana kategorii
 		if ($cmsCategoryTypeId != $form->getRecord()->cmsCategoryTypeId) {
