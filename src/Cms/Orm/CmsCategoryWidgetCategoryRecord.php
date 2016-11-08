@@ -48,21 +48,20 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 
 	/**
 	 * Zwraca konfigurację
-	 * @return stdClass
+	 * @return \Mmi\DataObject
 	 */
 	public function getConfig() {
 		//próba dekodowania konfiguracji json
 		try {
-			$config = \json_decode($this->configJson);
+			$configArr = \json_decode($this->configJson, true);
 		} catch (\Exception $e) {
 			
 		}
 		//tworznie pustego configa
-		if (!isset($config)) {
-			$config = new \stdClass();
+		if (!isset($configArr)) {
+			$configArr = [];
 		}
-		//domyślnie pusty recordId
-		$config->recordId = isset($config->recordId) ? $config->recordId : null;
+		$config = (new \Mmi\DataObject())->setParams($configArr);
 		return $config;
 	}
 
