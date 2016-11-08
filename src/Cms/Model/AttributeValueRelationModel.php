@@ -15,7 +15,7 @@ use Cms\Orm\CmsAttributeValueQuery,
 	Cms\Orm\CmsAttributeValueRelationRecord;
 
 /**
- * Model kategorii
+ * Model relacji wartości atrybutu
  */
 class AttributeValueRelationModel {
 
@@ -43,7 +43,7 @@ class AttributeValueRelationModel {
 	}
 
 	/**
-	 * Przypina id atrybutu do obiektu z id
+	 * Przypina id wartości atrybutu do obiektu z id
 	 * @param integer $attributeValueId id kategorii
 	 */
 	public function createAttributeValueRelation($attributeValueId) {
@@ -97,7 +97,7 @@ class AttributeValueRelationModel {
 	}
 
 	/**
-	 * Usuwa kategorię z obiektu i id
+	 * Usuwa wartość atrybutu z obiektu i id
 	 * @param integer $attributeValueId id kategorii
 	 */
 	public function deleteAttributeValueRelation($attributeValueId) {
@@ -120,7 +120,7 @@ class AttributeValueRelationModel {
 	}
 
 	/**
-	 * Usunięcie relacji z obiektu i id dla podanego id atrybutu
+	 * Usunięcie wszystkich relacji z obiektu i id dla podanego id atrybutu
 	 */
 	public function deleteAttributeValueRelationsByAttributeId($attributeId) {
 		//czyszczenie relacji z całego atrybutu
