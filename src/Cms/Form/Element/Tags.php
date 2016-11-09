@@ -88,12 +88,11 @@ use \Cms\Model\TagRelationModel;
 class Tags extends \Mmi\Form\Element\Select {
 
 	/**
-	 * pole multiselect
+	 * Konstruktor
 	 */
 	public function __construct($name) {
 		parent::__construct($name);
 		$this->setMultiple()
-			->setIgnore()
 			->setValue([])
 			->setMultioptions((new \Cms\Orm\CmsTagQuery)->orderAscId()->findPairs('tag', 'tag'));
 	}

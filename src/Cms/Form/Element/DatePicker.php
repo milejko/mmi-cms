@@ -83,54 +83,54 @@ namespace Cms\Form\Element;
  */
 class DatePicker extends \Mmi\Form\Element\ElementAbstract {
 
-	/**
-	 * Przekazanie widoku + pliki
-	 */
-	public function __construct($name) {
-		parent::__construct($name);
-		$this->view = \Mmi\App\FrontController::getInstance()->getView();
-		$this->view->headLink()->appendStylesheet($this->view->baseUrl . '/resource/cmsAdmin/css/datetimepicker.css');
-		$this->view->headScript()->prependFile($this->view->baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js');
-		$this->view->headScript()->appendFile($this->view->baseUrl . '/resource/cmsAdmin/js/jquery/datetimepicker.js');
+    /**
+     * Przekazanie widoku + pliki
+     */
+    public function __construct($name) {
+        parent::__construct($name);
+        $this->view = \Mmi\App\FrontController::getInstance()->getView();
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl . '/resource/cmsAdmin/css/datetimepicker.css');
+        $this->view->headScript()->prependFile($this->view->baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js');
+        $this->view->headScript()->appendFile($this->view->baseUrl . '/resource/cmsAdmin/js/jquery/datetimepicker.js');
 
-		$this->dateEvent = '';
-	}
+        $this->dateEvent = '';
+    }
 
-	/**
-	 * Ustawia datę startową
-	 * @param string $date - sformatowany string czasu
-	 * @return \Mmi\Form\Element\DatePicker
-	 */
-	public function setDateStart($date) {
-		return $this->setOption('dateStart', $date);
-	}
+    /**
+     * Ustawia datę startową
+     * @param string $date - sformatowany string czasu
+     * @return \Mmi\Form\Element\DatePicker
+     */
+    public function setDateStart($date) {
+        return $this->setOption('dateStart', $date);
+    }
 
-	/**
-	 * Ustawia minimalną datę
-	 * @param string $date - sformatowany string czasu
-	 * @return \Mmi\Form\Element\DatePicker
-	 */
-	public function setDateMin($date) {
-		return $this->setOption('dateMin', $date);
-	}
+    /**
+     * Ustawia minimalną datę
+     * @param string $date - sformatowany string czasu
+     * @return \Mmi\Form\Element\DatePicker
+     */
+    public function setDateMin($date) {
+        return $this->setOption('dateMin', $date);
+    }
 
-	/**
-	 * Ustawia maksymanlną datę
-	 * @param string $date - sformatowany string czasu
-	 * @return \Mmi\Form\Element\DatePicker
-	 */
-	public function setDateMax($date) {
-		return $this->setOption('dateMax', $date);
-	}
+    /**
+     * Ustawia maksymanlną datę
+     * @param string $date - sformatowany string czasu
+     * @return \Mmi\Form\Element\DatePicker
+     */
+    public function setDateMax($date) {
+        return $this->setOption('dateMax', $date);
+    }
 
-	/**
-	 * Ustawia pobieranie min zakresu daty z pola
-	 * @param string $poleEvent - id pola min
-	 * @return \Mmi\Form\Element\DatePicker
-	 */
-	public function setLimitMin($poleEvent) {
-		$this->dateEvent = ',onChangeDateTime:logic_min, onShow:logic_min';
-		$this->view->headScript()->appendScript("
+    /**
+     * Ustawia pobieranie min zakresu daty z pola
+     * @param string $poleEvent - id pola min
+     * @return \Mmi\Form\Element\DatePicker
+     */
+    public function setLimitMin($poleEvent) {
+        $this->dateEvent = ',onChangeDateTime:logic_min, onShow:logic_min';
+        $this->view->headScript()->appendScript("
 			var logic_min = function( curr ){
 				var min = jQuery('#" . $poleEvent . "').datetimepicker('getValue');
 				var time = false;
@@ -140,21 +140,27 @@ class DatePicker extends \Mmi\Form\Element\ElementAbstract {
 				}
 
 				this.setOptions({
-					minDate:jQuery('#" . $poleEvent . "').val()?jQuery('#" . $poleEvent . "').val():false,
+					minDate:jQuery('#" . $poleEvent . "').find('input').val()?jQuery('#" . $poleEvent . "').find('input').val():false,
 					minDateTime:time
-				});
+				});                                
 			};
+                        
+                        setTimeout(function(){
+                                $('#" . $this->getOption('id') . "').datetimepicker('setOptions', {
+                                    minDate: jQuery('#" . $poleEvent . "').find('input').val()?jQuery('#" . $poleEvent . "').find('input').val():false
+                                });
+                        }, 800);
 		");
-	}
+    }
 
-	/**
-	 * Ustawia pobieranie max zakresu daty z pola
-	 * @param string $poleEvent - id pola max
-	 * @return \Mmi\Form\Element\DatePicker
-	 */
-	public function setLimitMax($poleEvent) {
-		$this->dateEvent = ',onChangeDateTime:logic_max, onShow:logic_max';
-		$this->view->headScript()->appendScript("
+    /**
+     * Ustawia pobieranie max zakresu daty z pola
+     * @param string $poleEvent - id pola max
+     * @return \Mmi\Form\Element\DatePicker
+     */
+    public function setLimitMax($poleEvent) {
+        $this->dateEvent = ',onChangeDateTime:logic_max, onShow:logic_max';
+        $this->view->headScript()->appendScript("
 			var logic_max = function( curr ){
 				var max = jQuery('#" . $poleEvent . "').datetimepicker('getValue');
 				var time = false;
@@ -164,59 +170,65 @@ class DatePicker extends \Mmi\Form\Element\ElementAbstract {
 				}
 
 				this.setOptions({
-					maxDate:jQuery('#" . $poleEvent . "').val()?jQuery('#" . $poleEvent . "').val():false,
+					maxDate:jQuery('#" . $poleEvent . "').find('input').val()?jQuery('#" . $poleEvent . "').find('input').val():false,
 					maxDateTime:time
-				});
+				});                                
 			};
+                        
+                        setTimeout(function(){
+                                $('#" . $this->getOption('id') . "').datetimepicker('setOptions', {
+                                    maxDate: jQuery('#" . $poleEvent . "').find('input').val()?jQuery('#" . $poleEvent . "').find('input').val():false
+                                });
+                        }, 800);
 		");
-	}
+    }
 
-	/**
-	 * Ustawia datę końcową
-	 * @param string $date - sformatowany string czasu
-	 * @return \Mmi\Form\Element\DatePicker
-	 */
-	public function setDateEnd($date) {
-		return $this->setOption('dateEnd', $date);
-	}
+    /**
+     * Ustawia datę końcową
+     * @param string $date - sformatowany string czasu
+     * @return \Mmi\Form\Element\DatePicker
+     */
+    public function setDateEnd($date) {
+        return $this->setOption('dateEnd', $date);
+    }
 
-	/**
-	 * Ustawia format daty
-	 * @param string $format
-	 * @return \Mmi\Form\Element\DatePicker
-	 */
-	public function setFormat($format) {
-		return $this->setOption('format', $format);
-	}
+    /**
+     * Ustawia format daty
+     * @param string $format
+     * @return \Mmi\Form\Element\DatePicker
+     */
+    public function setFormat($format) {
+        return $this->setOption('format', $format);
+    }
 
-	/**
-	 * Buduje pole
-	 * @return string
-	 */
-	public function fetchField() {
-		$format = isset($this->_options['format']) ? $this->_options['format'] : 'Y-m-d';
+    /**
+     * Buduje pole
+     * @return string
+     */
+    public function fetchField() {
+        $format = isset($this->_options['format']) ? $this->_options['format'] : 'Y-m-d';
 
-		$dateStart = isset($this->_options['dateStart']) ? $this->_options['dateStart'] : 'false';
-		$dateEnd = isset($this->_options['dateEnd']) ? $this->_options['dateEnd'] : 'false';
-		$dateMin = isset($this->_options['dateMin']) ? "'" . $this->_options['dateMin'] . "'" : 'false';
-		$dateMax = isset($this->_options['dateMax']) ? "'" . $this->_options['dateMax'] . "'" : 'false';
-		$datepicker = isset($this->_options['datepicker']) ? $this->_options['datepicker'] : 'true';
-		
-		$id = $this->getOption('id');
+        $dateStart = isset($this->_options['dateStart']) ? $this->_options['dateStart'] : 'false';
+        $dateEnd = isset($this->_options['dateEnd']) ? $this->_options['dateEnd'] : 'false';
+        $dateMin = isset($this->_options['dateMin']) ? "'" . $this->_options['dateMin'] . "'" : 'false';
+        $dateMax = isset($this->_options['dateMax']) ? "'" . $this->_options['dateMax'] . "'" : 'false';
+        $datepicker = isset($this->_options['datepicker']) ? $this->_options['datepicker'] : 'true';
 
-		$this->view->headScript()->appendScript("$(document).ready(function () {
+        $id = $this->getOption('id');
+
+        $this->view->headScript()->appendScript("$(document).ready(function () {
 				$('#$id').datetimepicker({timepicker: false, minDate: $dateMin, maxDate: $dateMax, dateStart: '$dateStart', dateEnd: '$dateEnd', format:'$format', validateOnBlur: true, closeOnDateSelect: true $this->dateEvent});
 				$.datetimepicker.setLocale('pl');					
 			});
 		");
 
-		unset($this->_options['dateStart']);
-		unset($this->_options['dateEnd']);
-		unset($this->_options['format']);
-		$html = '<input id="' . $id . '" class="datePickerField dp-applied" ';
-		$html .= 'type="text" ' . $this->_getHtmlOptions() . '/>';
+        unset($this->_options['dateStart']);
+        unset($this->_options['dateEnd']);
+        unset($this->_options['format']);
+        $html = '<input id="' . $id . '" class="datePickerField dp-applied" ';
+        $html .= 'type="text" ' . $this->_getHtmlOptions() . '/>';
 
-		return $html;
-	}
+        return $html;
+    }
 
 }

@@ -26,7 +26,7 @@ class CmsAttributeRecord extends \Mmi\Orm\Record {
 	 * @return boolean
 	 */
 	public function isRestricted() {
-		return $this->fieldClass == '\Mmi\Form\Element\Select' || $this->fieldClass == '\Mmi\Form\Element\MultiCheckbox';
+		return $this->fieldClass == '\Mmi\Form\Element\Select' || $this->fieldClass == '\Mmi\Form\Element\MultiCheckbox' || $this->fieldClass == '\Mmi\Form\Element\Radio';
 	}
 
 	/**
@@ -34,7 +34,7 @@ class CmsAttributeRecord extends \Mmi\Orm\Record {
 	 * @return boolean
 	 */
 	public function isMultiple() {
-		return $this->fieldClass == '\Mmi\Form\Element\MultiCheckbox' || $this->fieldClass == '\Mmi\Form\Element\Radio';
+		return $this->fieldClass == '\Mmi\Form\Element\MultiCheckbox' || $this->fieldClass == '\Cms\Form\Element\Tags';
 	}
 
 	/**

@@ -381,5 +381,47 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 			$this->setContextMenu('link image media inserttable | cell row column deletetable');
 		}
 	}
-
+        
+        /**
+	 * Konfiguracja edytora do wprowadzania artykułów
+	 */
+	protected function _modeArticle() {
+		$view = \Mmi\App\FrontController::getInstance()->getView();
+                $view->headScript()->appendFile($view->baseUrl . '/resource/common/js/tiny/plugins/pnelist/plugin.min.js');
+                $view->headScript()->appendFile($view->baseUrl . '/resource/common/js/tiny/plugins/equationeditor/plugin.min.js');
+		$view->headScript()->appendFile($view->baseUrl . '/resource/common/js/tiny/plugins/equationeditor/mathquill.min.js');
+		
+		$this->setPlugins([
+			'equationeditor,lioniteimages,pnelist,anchor,autolink,autoresize,charmap,code,contextmenu',
+			'fullscreen,image,link,lists,media,nonbreaking,noneditable,paste,print,preview',
+			'searchreplace,tabfocus,table,textcolor,visualblocks,visualchars,wordcount'
+		]);
+		if ($this->getToolbars() === null) {
+			$this->setToolbars([
+				'undo redo | cut copy paste pastetext | searchreplace | bold italic underline | subscript superscript | alignleft aligncenter alignright alignjustify | forecolor backcolor | table',
+				'styleselect | bullist numlist outdent indent blockquote | link unlink anchor | image media lioniteimages | charmap equationeditor nonbreaking | fullscreen preview visualchars code'
+			]);
+		}
+		if ($this->getContextMenu() === null) {
+			$this->setContextMenu('link image media inserttable | cell row column deletetable');
+		}
+		if ($this->getImageCaption() === null) {
+			$this->setImageCaption(true);
+		}
+                $this->setCss([
+                        $view->baseUrl . "/resource/common/js/tiny/plugins/equationeditor/mathquill.css",
+                        $view->baseUrl . "/resource/css/main.css"
+                ]);
+                
+                $this->_other.= 'pnelist_number_styles: "domyślne", pnelist_bullet_styles: "thicked,dotted",';
+                $this->_other.= 'body_class: "article-content",';
+                                
+                $this->_other.= "style_formats: [
+                    {title: 'Odnośnik', items: [
+                        {title : 'link-collapse', selector : 'a', classes : 'link-collapse'},
+                        {title : 'link-collapse.open', selector : 'a', classes : 'link-collapse.open'},
+                        {title : 'link-download', selector : 'a', classes : 'link-download'}
+                    ]}
+                ], style_formats_merge: true,";
+	}
 }

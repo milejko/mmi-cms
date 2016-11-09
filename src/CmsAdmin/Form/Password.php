@@ -35,7 +35,7 @@ class Password extends \Mmi\Form\Form {
 			->addValidatorStringLength(4, 128);
 
 		$this->addElementSubmit('change')
-			->setLabel('Zmień hasło');
+			->setLabel('zmień hasło');
 	}
 	
 	/**

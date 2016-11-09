@@ -3,14 +3,20 @@
 <h1>{$category->name}</h1>
 {$category->text}
 
+{*listing atrybutów*}
 <h2>Atrybuty:</h2>
-{foreach $attributes as $av}
-	{$av->getJoined('cms_attribute')->name}: {$av->value}<br>
-{/foreach}
-
-<h2>Tagi:</h2>
-{foreach $tags as $tag}
-	{$tag}
+{foreach $attributes as $attribute}
+	{if $attribute instanceof \Mmi\Orm\RecordCollection}
+		{foreach $attribute as $value}
+			{if $value instanceof Cms\Orm\CmsFileRecord}
+			<img src="{thumb($value, 'scalecrop', '160x100')}" alt="" />
+			{else}
+				{$value}
+			{/if}
+		{/foreach}
+	{else}
+		{$attribute->value}
+	{/if}
 {/foreach}
 
 {foreach $widgetModel->getWidgetRelations() as $widgetRelation}

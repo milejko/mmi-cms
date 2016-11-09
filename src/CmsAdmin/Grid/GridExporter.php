@@ -35,12 +35,32 @@ class GridExporter {
 	 */
 	public function passCsv() {
 		$csv = fopen('php://output', 'w');
+		//nagłówek CSV
+		fputcsv($csv, $this->_getHeader());
 		//iteracja po danych
 		foreach ($this->_getData() as $data) {
 			//zapis linii CSV
 			fputcsv($csv, $data);
 		}
 		fclose($csv);
+	}
+
+	/**
+	 * Wybiera etykiety kolumn CSV
+	 * @return array
+	 */
+	protected function _getHeader() {
+		$header = [];
+		foreach ($this->_grid->getColumns() as $column) {
+			if ($column instanceof Column\IndexColumn || $column instanceof Column\OperationColumn) {
+				continue;
+			}
+			if ($column instanceof Column\CustomColumn && !$column->getExporting()) {
+				continue;
+			}
+			$header[] = $column->getLabel();
+		}
+		return $header;
 	}
 
 	/**
