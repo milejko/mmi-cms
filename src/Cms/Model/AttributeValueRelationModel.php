@@ -197,7 +197,7 @@ class AttributeValueRelationModel {
 			//atrybut zwykły
 			$grouppedByAttributeKey->$key = $record;
 		}
-		//
+		//zwrot zgrupowanych wartości atrybutów
 		return $grouppedByAttributeKey;
 	}
 

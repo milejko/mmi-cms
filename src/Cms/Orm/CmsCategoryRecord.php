@@ -2,6 +2,9 @@
 
 namespace Cms\Orm;
 
+use \Cms\Model\AttributeValueRelationModel,
+	\Cms\Model\AttributeRelationModel;
+
 /**
  * Rekord kategorii CMSowych
  */
@@ -51,6 +54,12 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	public $dateEnd;
 
 	/**
+	 * Wartości atrybutów
+	 * @var \Mmi\DataObject
+	 */
+	private $_attributeValues;
+
+	/**
 	 * Zapis rekordu
 	 * @return boolean
 	 */
@@ -98,12 +107,12 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 			//iteracja po różnicy międy obecnymi atrybutami a nowymi
 			foreach (array_diff(
 				//obecne id atrybutów
-				(new \Cms\Model\AttributeRelationModel('cmsCategoryType', $this->getInitialStateValue('cmsCategoryTypeId')))->getAttributeIds(),
+				(new AttributeRelationModel('cmsCategoryType', $this->getInitialStateValue('cmsCategoryTypeId')))->getAttributeIds(),
 				//nowe id atrybutów
-				(new \Cms\Model\AttributeRelationModel('cmsCategoryType', $this->cmsCategoryTypeId))->getAttributeIds())
+				(new AttributeRelationModel('cmsCategoryType', $this->cmsCategoryTypeId))->getAttributeIds())
 			as $deletedAttributeId) {
 				//usuwanie wartości usuniętego atrybutu
-				(new \Cms\Model\AttributeValueRelationModel('category', $this->id))
+				(new AttributeValueRelationModel('category', $this->id))
 					->deleteAttributeValueRelationsByAttributeId($deletedAttributeId);
 			}
 		}
@@ -154,6 +163,20 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	public function getUrl($https = null) {
 		//pobranie linku z widoku
 		return \Mmi\App\FrontController::getInstance()->getView()->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->customUri ? $this->customUri : $this->uri], true, $https);
+	}
+
+	/**
+	 * Pobiera rekordy wartości atrybutów w formie obiektu danych
+	 * @see \Mmi\DataObiect
+	 * @return \Mmi\DataObject
+	 */
+	public function getAttributeValues() {
+		//atrybuty już pobrane
+		if (null !== $this->_attributeValues) {
+			return $this->_attributeValues;
+		}
+		//pobieranie atrybutów
+		return $this->_attributeValues = (new \Cms\Model\AttributeValueRelationModel('category', $this->id))->getGrouppedAttributeValues();
 	}
 
 	/**

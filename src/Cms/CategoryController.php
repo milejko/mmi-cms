@@ -36,26 +36,20 @@ class CategoryController extends \Mmi\Mvc\Controller {
 	 * Akcja artykułu
 	 */
 	public function articleAction() {
-		//pobranie kategorii z modelu
-		$category = $this->view->widgetModel->getCategoryRecord();
-		//przekazanie atrybutów
-		$this->view->attributes = (new Model\AttributeValueRelationModel('category', $category->id))->getGrouppedAttributeValues();
+		
 	}
-	
+
 	/**
 	 * Akcja prostego widgetu z atrybutami
 	 */
 	public function widgetAction() {
 		$widgetModel = $this->view->widgetModel;
 		/* @var $widgetModel \Cms\Model\CategoryWidgetModel */
-		//brak widgeta
-		if (null === $widgetRelation = $widgetModel->findWidgetRelationById($this->widgetId)) {
+		//wyszukiwanie widgeta
+		if (null === $this->view->widgetRelation = $widgetModel->findWidgetRelationById($this->widgetId)) {
+			//brak - pusty zwrot
 			return '';
 		}
-		//atrybuty do widoku
-		$this->view->attributes = (new Model\AttributeValueRelationModel('categoryWidgetRelation', $widgetRelation->id))->getGrouppedAttributeValues();
-		//relacja do widoku
-		$this->view->widgetRelation = $widgetRelation;
 	}
 
 	/**

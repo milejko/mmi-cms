@@ -59,20 +59,6 @@ class CategoryModel {
 	}
 	
 	/**
-	 * Zwraca drzewo kategorii - bracia + dzieci
-	 * @param integer $category record kategorii
-	 * @return array
-	 */
-	public function getCategoryTreeParent($category = null) {
-		//brak zdefiniowanej kategorii
-		if ($category->id === null) {
-			return $this->_categoryTree;
-		}
-		//wyszukiwanie kategorii
-		return array_merge($this->_searchChildren($this->_categoryTree, $category->id), $this->_searchChildren($this->_categoryTree, $category->parentId));
-	}
-
-	/**
 	 * Pobiera listę kategorii w postaci płaskiej tabeli z odwzorowaniem drzewa
 	 * @param integer $parentCategoryId identyfikator kategorii (opcjonalny)
 	 * @param string $categoryTypeKey filtrowanie po typie kategorii

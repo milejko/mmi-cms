@@ -21,6 +21,12 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 	public $order;
 
 	/**
+	 * Wartości atrybutów
+	 * @var \Mmi\DataObject
+	 */
+	private $_attributeValues;
+
+	/**
 	 * Zwraca rekord kategorii
 	 * @return CmsCategoryRecord
 	 */
@@ -44,6 +50,20 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 		}
 		//zwrot znalezionego widgeta
 		return (new CmsCategoryWidgetQuery)->findPk($this->cmsCategoryWidgetId);
+	}
+
+	/**
+	 * Pobiera rekordy wartości atrybutów w formie obiektu danych
+	 * @see \Mmi\DataObiect
+	 * @return \Mmi\DataObject
+	 */
+	public function getAttributeValues() {
+		//atrybuty już pobrane
+		if (null !== $this->_attributeValues) {
+			return $this->_attributeValues;
+		}
+		//pobieranie atrybutów
+		return $this->_attributeValues = (new \Cms\Model\AttributeValueRelationModel('categoryWidgetRelation', $this->id))->getGrouppedAttributeValues();
 	}
 
 	/**

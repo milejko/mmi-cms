@@ -172,6 +172,17 @@ class CmsCategoryQuery extends \Mmi\Orm\Query {
 				->orFieldLang()->equals(null)
 				->orderDescLang();
 	}
+	
+	/**
+	 * Zapytanie wyszukujące kategorie po kluczu typu (szablonu)
+	 * @param string $typeKey
+	 * @return CmsCategoryQuery
+	 */
+	public function searchByTypeKey($typeKey) {
+		return (new CmsCategoryQuery)
+			->join('cms_category_type')->on('cms_category_type_id')
+			->where('key', 'cms_category_type')->equals($typeKey);
+	}
 
 	/**
 	 * Zapytanie wyszukujące kategorie po uri
