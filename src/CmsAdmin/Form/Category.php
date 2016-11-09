@@ -47,6 +47,7 @@ class Category extends \Cms\Form\AttributeForm {
                 ->setLabel('zakończenie publikacji')
                 ->addFilterEmptyToNull()
                 ->setDateStart(date('Y-m-d H:i:s'))
+				->setDateMin(date('Y-m-d H:i:s'))
                 ->setLimitMin('cmsadmin-form-category-dateStart');
 
         //aktywna

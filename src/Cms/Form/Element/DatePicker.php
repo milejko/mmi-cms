@@ -133,23 +133,25 @@ class DatePicker extends \Mmi\Form\Element\ElementAbstract {
         $this->view->headScript()->appendScript("
 			var logic_min = function( curr ){
 				var min = jQuery('#" . $poleEvent . "').datetimepicker('getValue');
-				var time = false;
+				var datmin = jQuery('#" . $poleEvent . "').find('input').attr('datemin');
+				var time = new Date();
 
 				if( $.datepicker.formatDate('yy-mm-dd', curr) === $.datepicker.formatDate('yy-mm-dd', min) ){
 					time = min;
 				}
-
+				
 				this.setOptions({
-					minDate:jQuery('#" . $poleEvent . "').find('input').val()?jQuery('#" . $poleEvent . "').find('input').val():false,
-					minDateTime:time
+					minDate: jQuery('#" . $poleEvent . "').find('input').val()?jQuery('#" . $poleEvent . "').find('input').val():datmin,
+					minDateTime: time
 				});                                
 			};
                         
-                        setTimeout(function(){
-                                $('#" . $this->getOption('id') . "').datetimepicker('setOptions', {
-                                    minDate: jQuery('#" . $poleEvent . "').find('input').val()?jQuery('#" . $poleEvent . "').find('input').val():false
-                                });
-                        }, 800);
+			setTimeout(function(){
+					var datmin = jQuery('#" . $poleEvent . "').find('input').attr('datemin');
+					$('#" . $this->getOption('id') . "').datetimepicker('setOptions', {
+						minDate: jQuery('#" . $poleEvent . "').find('input').val()?jQuery('#" . $poleEvent . "').find('input').val():datmin,
+					});
+			}, 800);
 		");
     }
 
@@ -175,11 +177,11 @@ class DatePicker extends \Mmi\Form\Element\ElementAbstract {
 				});                                
 			};
                         
-                        setTimeout(function(){
-                                $('#" . $this->getOption('id') . "').datetimepicker('setOptions', {
-                                    maxDate: jQuery('#" . $poleEvent . "').find('input').val()?jQuery('#" . $poleEvent . "').find('input').val():false
-                                });
-                        }, 800);
+			setTimeout(function(){						
+					$('#" . $this->getOption('id') . "').datetimepicker('setOptions', {
+						maxDate: jQuery('#" . $poleEvent . "').find('input').val()?jQuery('#" . $poleEvent . "').find('input').val():false
+					});
+			}, 800);
 		");
     }
 
