@@ -94,7 +94,7 @@ namespace Cms\Form\Element;
  * @method self addFilterZeroToNull() filtr zero do null'a
  */
 class TinyMce extends \Mmi\Form\Element\Textarea {
-	
+
 	/**
 	 * Ustawia tryb zaawansowany
 	 * @return \Cms\Form\Element\TinyMce
@@ -118,7 +118,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	public function setModeSimple() {
 		return $this->setOption('mode', 'simple');
 	}
-	
+
 	/**
 	 * Ustawia tryb własny
 	 * @param string $mode własna konfiguracja
@@ -155,13 +155,14 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	public function setCustomConfig($custom) {
 		return $this->setOption('customConfig', $custom);
 	}
-	
+
 	//Pola do konfiguracji edytora, żeby można było customizować
 	/**
 	 * Specyficzne ustawienia dla danego trybu
 	 * @var string
 	 */
 	protected $_other;
+
 	/**
 	 * Wspóle ustawienia dla wszystkich trybów
 	 * @var string
@@ -175,7 +176,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	public function fetchField() {
 		$view = \Mmi\App\FrontController::getInstance()->getView();
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/tiny/tinymce.min.js');
-		
+
 		//bazowa wspólna konfiguracja
 		$this->_baseConfig();
 		//tryb edytora
@@ -185,7 +186,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 		if (method_exists($this, $modeConfigurator)) {
 			$this->$modeConfigurator();
 		}
-		
+
 		$class = $this->getOption('id');
 		$this->setOption('class', trim($this->getOption('class') . ' ' . $class));
 		$object = '';
@@ -223,15 +224,15 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 				" . ($this->getCustomConfig() ? trim($this->getCustomConfig(), ",") . "," : "") . "
 				" . $this->_other . "
 				" . $this->_common . "
-                hash: '$hash',
-                object: '$object',
-                objectId: '$objectId',
-                time: '$t',
-                baseUrl: request.baseUrl,
+				hash: '$hash',
+				object: '$object',
+				objectId: '$objectId',
+				time: '$t',
+				baseUrl: request.baseUrl,
 				image_list: request.baseUrl + '/?module=cms&controller=file&action=list&object=$object&objectId=$objectId&t=$t&hash=$hash'
 			});
 		");
-		
+
 		//unsety zbędnych opcji
 		$this->unsetMode()->unsetCustomConfig()->unsetCss()->unsetTheme()->unsetSkin()
 			->unsetPlugins()->unsetContextMenu()->unsetResize()->unsetMenubar()
@@ -240,7 +241,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 
 		return parent::fetchField();
 	}
-	
+
 	/**
 	 * Renderuje opcję konfiguracji TinyMce na podstawie opcji pola formularza
 	 * @param string $tinyKey klucz konfiguracji edytora TinyMce
@@ -271,7 +272,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 		}
 		return trim($tinyKey, ",") . ",";
 	}
-	
+
 	/**
 	 * Renderuje wielowartościową opcję konfiguracji TinyMce na podstawie opcji pola formularza
 	 * @param string $tinyKeyPrefix prefiks klucza konfiguracji edytora TinyMce
@@ -291,7 +292,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 		}
 		return trim($confN, ",\r\n") . ",";
 	}
-	
+
 	/**
 	 * Bazowa konfiguracja dla wszystkich edytorów
 	 */
@@ -326,7 +327,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 			$this->setFontSizeFormats('4px 6px 8px 9pc 10px 11px 12px 13px 14px 16px 18px 20px 22px 24px 26px 28px 36px 48px 50px 72px 100px');
 		}
 		$this->_common = "
-			autoresize_min_height: " . ($this->getHeight()? $this->getHeight() : 300) . ",
+			autoresize_min_height: " . ($this->getHeight() ? $this->getHeight() : 300) . ",
 			document_base_url: request.baseUrl,
 			convert_urls: false,
 			entity_encoding: 'raw',
@@ -336,7 +337,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 			plugin_preview_width: 1100,
 		";
 	}
-	
+
 	/**
 	 * Konfiguracja dla trybu Simple
 	 */
@@ -354,7 +355,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 			$this->setMenubar(false);
 		}
 	}
-	
+
 	/**
 	 * Konfiguracja dla trybu Advanced
 	 */
@@ -369,7 +370,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 			$this->setContextMenu('link image media inserttable | cell row column deletetable');
 		}
 	}
-	
+
 	/**
 	 * Konfiguracja dla trybu Default
 	 */
@@ -381,16 +382,16 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 			$this->setContextMenu('link image media inserttable | cell row column deletetable');
 		}
 	}
-        
-        /**
+
+	/**
 	 * Konfiguracja edytora do wprowadzania artykułów
 	 */
 	protected function _modeArticle() {
 		$view = \Mmi\App\FrontController::getInstance()->getView();
-                $view->headScript()->appendFile($view->baseUrl . '/resource/common/js/tiny/plugins/pnelist/plugin.min.js');
-                $view->headScript()->appendFile($view->baseUrl . '/resource/common/js/tiny/plugins/equationeditor/plugin.min.js');
+		$view->headScript()->appendFile($view->baseUrl . '/resource/common/js/tiny/plugins/pnelist/plugin.min.js');
+		$view->headScript()->appendFile($view->baseUrl . '/resource/common/js/tiny/plugins/equationeditor/plugin.min.js');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/common/js/tiny/plugins/equationeditor/mathquill.min.js');
-		
+
 		$this->setPlugins([
 			'equationeditor,lioniteimages,pnelist,anchor,autolink,autoresize,charmap,code,contextmenu',
 			'fullscreen,image,link,lists,media,nonbreaking,noneditable,paste,print,preview',
@@ -408,20 +409,21 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 		if ($this->getImageCaption() === null) {
 			$this->setImageCaption(true);
 		}
-                $this->setCss([
-                        $view->baseUrl . "/resource/common/js/tiny/plugins/equationeditor/mathquill.css",
-                        $view->baseUrl . "/resource/css/main.css"
-                ]);
-                
-                $this->_other.= 'pnelist_number_styles: "domyślne", pnelist_bullet_styles: "thicked,dotted",';
-                $this->_other.= 'body_class: "article-content",';
-                                
-                $this->_other.= "style_formats: [
-                    {title: 'Odnośnik', items: [
-                        {title : 'link-collapse', selector : 'a', classes : 'link-collapse'},
-                        {title : 'link-collapse.open', selector : 'a', classes : 'link-collapse.open'},
-                        {title : 'link-download', selector : 'a', classes : 'link-download'}
-                    ]}
-                ], style_formats_merge: true,";
+		$this->setCss([
+			$view->baseUrl . "/resource/common/js/tiny/plugins/equationeditor/mathquill.css",
+			$view->baseUrl . "/resource/css/main.css"
+		]);
+
+		$this->_other.= 'pnelist_number_styles: "domyślne", pnelist_bullet_styles: "thicked,dotted",';
+		$this->_other.= 'body_class: "article-content",';
+
+		$this->_other.= "style_formats: [
+			{title: 'Odnośnik', items: [
+				{title : 'link-collapse', selector : 'a', classes : 'link-collapse'},
+				{title : 'link-collapse.open', selector : 'a', classes : 'link-collapse.open'},
+				{title : 'link-download', selector : 'a', classes : 'link-download'}
+			]}
+		], style_formats_merge: true,";
 	}
+
 }

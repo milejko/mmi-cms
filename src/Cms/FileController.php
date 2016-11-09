@@ -14,7 +14,7 @@ namespace Cms;
  * Kontroler plików
  */
 class FileController extends \Mmi\Mvc\Controller {
-	
+
 	/**
 	 * Funkcja dla użytkownika ładowana na końcu konstruktora
 	 */
@@ -40,7 +40,7 @@ class FileController extends \Mmi\Mvc\Controller {
 		}
 		return json_encode($files);
 	}
-	
+
 	/**
 	 * Lista obrazów (na potrzeby tinymce)
 	 * @return view layout
@@ -58,15 +58,15 @@ class FileController extends \Mmi\Mvc\Controller {
 		foreach (\Cms\Orm\CmsFileQuery::byObjectAndClass($this->object, $this->objectId, $this->class)->find() as $file) {
 			$files[] = [
 				'id' => $file->id,
-				'title' => $file->original, 
-				'stream' => '/?module=file&controller=server&action=stream&fileId='.$file->id.'&t='.strtotime($file->dateModify), 
-                                'full' => $thumb->thumb($file, 'default'),
+				'title' => $file->original,
+				'stream' => '/?module=file&controller=server&action=stream&fileId=' . $file->id . '&t=' . strtotime($file->dateModify),
+				'full' => $thumb->thumb($file, 'default'),
 				'thumb' => $file->getUrl('scaley', '60', false),
 				'class' => $file->class,
 				'mime' => $file->mimeType,
 			];
 		}
-		
+
 		//przekazanie danych
 		$this->view->files = $files;
 	}

@@ -105,7 +105,7 @@ class Tags extends \Mmi\Form\Element\Select {
 	public function setObject($object) {
 		return $this->setOption('object', $object);
 	}
-	
+
 	/**
 	 * Ustawia możliwość dodania nowego taga z pola
 	 * @return \Cms\Form\Element\Tags
@@ -154,12 +154,12 @@ class Tags extends \Mmi\Form\Element\Select {
 		$view->headLink()->appendStylesheet($view->baseUrl . '/resource/cmsAdmin/css/chosen.min.css');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/chosen.jquery.min.js');
 		$view->headScript()->appendScript("
-                    $(document).ready(function ($) {
-                        $('#" . $id . "').chosen({			    
-			    disable_search_threshold:10,
-			    placeholder_text_multiple:'Wpisz lub wybierz tagi',
-			    no_results_text:'Tag nieodnaleziony'
-                        });
+			$(document).ready(function ($) {
+				$('#" . $id . "').chosen({			    
+				disable_search_threshold:10,
+				placeholder_text_multiple:'Wpisz lub wybierz tagi',
+				no_results_text:'Tag nieodnaleziony'
+			});
 			
 			var customTagPrefix = '';
 
@@ -195,7 +195,6 @@ class Tags extends \Mmi\Form\Element\Select {
 						else
 						{
 							if ( $addTags ){
-								console.log('aaa');
 								var option = $('<option>');
 								option.text(this.value).val(customTagPrefix + this.value);
 								option.attr('selected','selected');
@@ -212,7 +211,7 @@ class Tags extends \Mmi\Form\Element\Select {
 
 				}
 			});
-                    });
+			});
 		");
 
 		$values = is_array($this->getValue()) ? $this->getValue() : [$this->getValue()];

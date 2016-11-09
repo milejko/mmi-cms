@@ -75,14 +75,14 @@ class StatFlot {
 		}
 		$html = trim($html, ', ') . '], ';
 		$html .= '{
-               series: {
-                   ' . $type . ': { show: true },
-                   points: { show: ' . $points . ' }
-               },';
+				series: {
+				   ' . $type . ': { show: true },
+				   points: { show: ' . $points . ' }
+				},';
 		$html .= 'legend: { margin: [0, 0], backgroundOpacity: 0 },';
 		$html .= 'grid: { hoverable: true, clickable: true },
-               yaxis: { min: ' . $min . ', max: ' . $max . ' },
-			   xaxis: {';
+			yaxis: { min: ' . $min . ', max: ' . $max . ' },
+			xaxis: {';
 		$html .= 'ticks: [';
 		$i = 0;
 		if (isset($ticks)) {

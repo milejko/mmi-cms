@@ -149,7 +149,7 @@ abstract class Form extends \Mmi\Form\Form {
 	public function addElementUploader($name) {
 		return $this->addElement(new Element\Uploader($name));
 	}
-        
+
 	/**
 	 * Tagi
 	 * @param string $name nazwa
