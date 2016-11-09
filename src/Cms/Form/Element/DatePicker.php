@@ -143,7 +143,7 @@ class DatePicker extends \Mmi\Form\Element\ElementAbstract {
 				this.setOptions({
 					minDate: jQuery('#" . $poleEvent . "').find('input').val()?jQuery('#" . $poleEvent . "').find('input').val():datmin,
 					minDateTime: time
-				});                                
+				});
 			};
                         
 			setTimeout(function(){
