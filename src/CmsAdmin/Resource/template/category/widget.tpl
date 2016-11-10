@@ -2,7 +2,7 @@
 	{* wartość złożona *}
 	{if $attributeValue instanceof \Mmi\Orm\RecordCollection}
 		{* iteracja po wartościach *}
-		{foreach $av as $value}
+		{foreach $attributeValue as $value}
 			{* plik *}
 			{if $value instanceof Cms\Orm\CmsFileRecord}
 				<img src="{thumb($value, 'scalecrop', '100x100')}" alt="{$file->title}" />
