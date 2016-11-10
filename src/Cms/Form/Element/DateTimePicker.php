@@ -41,7 +41,20 @@ class DateTimePicker extends \Cms\Form\Element\DatePicker {
 					},
 					closeOnDateSelect: false $this->dateEvent
 					});
-				$.datetimepicker.setLocale('pl');					
+				$.datetimepicker.setLocale('pl');
+				
+				$('#$id').find('input').on('keypress keyup keydown', function (e) {
+					if(e.keyCode == 8 || e.keyCode == 46 || e.keyCode == 32){
+						$('#$id').datetimepicker('reset');
+						$('#$id').datetimepicker('hide');
+						$('#$id').find('input').val('');
+					}
+				});
+				$('#$id').find('i.reset').on('click', function (e) {
+						$('#$id').datetimepicker('reset');
+						$('#$id').datetimepicker('hide');
+						$('#$id').find('input').val('');
+				});
 			});
 		");
 
@@ -51,8 +64,8 @@ class DateTimePicker extends \Cms\Form\Element\DatePicker {
 		unset($this->_options['datepicker']);
 		unset($this->_options['id']);
 
-		$html = '<div class = "input-group" id = "' . $id . '">';
-		$html .= '<input class="datePickerField dp-applied" type="text" ' . $this->_getHtmlOptions() . '/>';
+		$html = '<div class = "input-group" id = "' . $id . '" style="display: inline-block;position: relative;">';
+		$html .= '<input class="datePickerField dp-applied" type="text" ' . $this->_getHtmlOptions() . '/><i class="reset icon-remove-circle" style="cursor: pointer;padding: 7px;position: absolute;right: 0;top: 0;"></i>';
 		$html .= '</div>';
 
 		return $html;
