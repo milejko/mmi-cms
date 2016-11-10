@@ -10,7 +10,6 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 	public $id;
 	public $cmsCategoryWidgetId;
 	public $cmsCategoryId;
-	public $recordId;
 	public $configJson;
 	public $active = 1;
 

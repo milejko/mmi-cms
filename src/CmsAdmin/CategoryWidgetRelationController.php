@@ -60,10 +60,6 @@ class CategoryWidgetRelationController extends Mvc\Controller {
 		}
 		//rekord do formularza to rekord wiązania
 		$record = $widgetRelationRecord;
-		//jeśli widget ma swój rekord, to ten idzie do formularza
-		if ($widgetRecord->recordClass) {
-			$record = new $widgetRecord->recordClass($widgetRelationRecord->getConfig()->recordId);
-		}
 		//domyślna klasa formularza
 		$widgetRecord->formClass = $widgetRecord->formClass ? : '\CmsAdmin\Form\CategoryAttributeWidgetForm';
 		//instancja formularza
@@ -77,8 +73,6 @@ class CategoryWidgetRelationController extends Mvc\Controller {
 		$form->setFromArray($formValues);
 		//form zapisany
 		if ($form->isSaved()) {
-			//zapis powiązanego id do konfiguracji
-			$record->setOption('recordId', $record->id);
 			//zapis konfiguracji
 			$widgetRelationRecord->configJson = \json_encode($record->getOptions());
 			$widgetRelationRecord->save();
