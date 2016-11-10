@@ -5,7 +5,7 @@
 		{foreach $attributeValue as $value}
 			{* plik *}
 			{if $value instanceof Cms\Orm\CmsFileRecord}
-				<img src="{thumb($value, 'scalecrop', '100x100')}" alt="{$file->title}" />
+				<img src="{thumb($value, 'scalecrop', '100x100')}" alt="{$value->title}" />
 			{* rekord *}
 			{elseif $value instanceof Mmi\Orm\RecordRo}
 				{$value|dump}
