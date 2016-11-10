@@ -8,7 +8,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title></title>
-		<link rel="stylesheet" href="/resource/cmsAdmin/js/jquery-ui/jquery-ui.theme.min.css">
+		<link rel="stylesheet" href="/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.css">
 		<link rel="stylesheet" type="text/css" href="css/images.css">
 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
@@ -67,6 +67,25 @@
 		
 		<div id="dialog-confirm" title="Empty the recycle bin?">
 			<p></p>
+		</div>
+		
+		
+		<div id="dialog-edit" title="">
+			<fieldset>
+				<label>Tytuł</label>
+				<input name="title" value="" class="text ui-widget-content ui-corner-all" maxlength="255" type="text">
+				<label>Autor</label>
+				<input name="author" value="" class="text ui-widget-content ui-corner-all" maxlength="255" type="text">
+				<label>Zaślepka</label>
+				<select name="source">
+					<option value="">brak</option>
+				</select>
+				<img id="img-edit"/>
+			</fieldset>
+			<div class="dialog-error">
+				<p></p>
+				<span class="ui-icon ui-icon-alert"></span>
+			</div>
 		</div>
 
 	</body>
