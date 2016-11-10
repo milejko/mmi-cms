@@ -64,6 +64,8 @@ class CategoryWidgetRelationController extends Mvc\Controller {
 		if ($widgetRecord->recordClass) {
 			$record = new $widgetRecord->recordClass($widgetRelationRecord->getConfig()->recordId);
 		}
+		//domyślna klasa formularza
+		$widgetRecord->formClass = $widgetRecord->formClass ? : '\CmsAdmin\Form\CategoryAttributeWidgetForm';
 		//instancja formularza
 		$form = new $widgetRecord->formClass($record, ['widgetId' => $widgetRecord->id]);
 		//wartości z zapisanej konfiguracji
@@ -92,7 +94,7 @@ class CategoryWidgetRelationController extends Mvc\Controller {
 	public function previewAction() {
 		//wyłączenie layout
 		$this->view->setLayoutDisabled();
-		$this->view->widgetModel = new \Cms\Model\CategoryWidgetModel($this->categoryId);
+		$this->view->category = new \Cms\Orm\CmsCategoryRecord($this->categoryId);
 	}
 
 	/**

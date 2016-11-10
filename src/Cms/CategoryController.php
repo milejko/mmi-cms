@@ -26,8 +26,8 @@ class CategoryController extends \Mmi\Mvc\Controller {
 			//przekierowanie na customUri
 			$this->getResponse()->redirect('cms', 'category', 'dispatch', ['uri' => $category->customUri]);
 		}
-		//model widgetu do widoku
-		$this->view->widgetModel = new Model\CategoryWidgetModel($category->id);
+		//rekord kategorii do widoku
+		$this->view->category = $category;
 		//forward do akcji docelowej
 		return \Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category));
 	}
@@ -43,10 +43,13 @@ class CategoryController extends \Mmi\Mvc\Controller {
 	 * Akcja prostego widgetu z atrybutami
 	 */
 	public function widgetAction() {
-		$widgetModel = $this->view->widgetModel;
-		/* @var $widgetModel \Cms\Model\CategoryWidgetModel */
+		//brak kategorii
+		if (!$this->view->category) {
+			//pobranie kategorii
+			$this->view->category = new Orm\CmsCategoryRecord($this->id);
+		}
 		//wyszukiwanie widgeta
-		if (null === $this->view->widgetRelation = $widgetModel->findWidgetRelationById($this->widgetId)) {
+		if (null === $this->view->widgetRelation = $this->view->category->getWidgetModel()->findWidgetRelationById($this->widgetId)) {
 			//brak - pusty zwrot
 			return '';
 		}

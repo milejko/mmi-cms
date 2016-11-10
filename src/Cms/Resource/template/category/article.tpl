@@ -1,4 +1,3 @@
-{$category = $widgetModel->getCategoryRecord()}
 {$attributes = $category->getAttributeValues()}
 
 <h1>{$category->name}</h1>
@@ -16,11 +15,11 @@
 			{/if}
 		{/foreach}
 	{else}
-		{$attribute->value}
+		{$attribute}
 	{/if}
 {/foreach}
 
-{foreach $widgetModel->getWidgetRelations() as $widgetRelation}
+{foreach $category->getWidgetModel()->getWidgetRelations() as $widgetRelation}
 {if !$widgetRelation->active}{continue}{/if}
 {$widgetRequest = $widgetRelation->getWidgetRecord()->getMvcParamsAsRequest()}
 {$widgetName = $widgetRelation->getWidgetRecord()->name}

@@ -58,6 +58,12 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @var \Mmi\DataObject
 	 */
 	private $_attributeValues;
+	
+	/**
+	 * Model widgetów kategorii
+	 * @var type \Cms\Model\CategoryWidgetModel
+	 */
+	private $_widgetModel;
 
 	/**
 	 * Zapis rekordu
@@ -177,6 +183,19 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		}
 		//pobieranie atrybutów
 		return $this->_attributeValues = (new \Cms\Model\AttributeValueRelationModel('category', $this->id))->getGrouppedAttributeValues();
+	}
+	
+	/**
+	 * Pobiera model widgetów
+	 * @return \Cms\Model\CategoryWidgetModel
+	 */
+	public function getWidgetModel() {
+		//model widgetów już pobrany
+		if (null !== $this->_widgetModel) {
+			return $this->_widgetModel;
+		}
+		//tworzenie modelu widgetów
+		return $this->_widgetModel = new \Cms\Model\CategoryWidgetModel($this->id);
 	}
 
 	/**

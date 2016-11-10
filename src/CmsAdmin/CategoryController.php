@@ -43,6 +43,8 @@ class CategoryController extends Mvc\Controller {
 			//redirect po zmianie (zmienią się atrybuty)
 			$this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $form->getRecord()->id]);
 		}
+		//kategoria do widoku
+		$this->view->category = $cat;
 		//form do widoku
 		$this->view->categoryForm = $form;
 	}
@@ -51,8 +53,7 @@ class CategoryController extends Mvc\Controller {
 	 * Akcja podglądu widgeta
 	 */
 	public function widgetAction() {
-		return (new \Cms\CategoryController($this->getRequest()))
-			->widgetAction();
+		return (new \Cms\CategoryController($this->getRequest()))->widgetAction();
 	}
 
 	/**

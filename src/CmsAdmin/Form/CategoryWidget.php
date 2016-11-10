@@ -39,11 +39,13 @@ class CategoryWidget extends \Cms\Form\Form {
 
 		$this->addElementText('recordClass')
 			->setLabel('klasa rekordu danych')
+			->addFilterEmptyToNull()
 			->addValidatorStringLength(3, 64);
 
 		$this->addElementText('formClass')
 			->setLabel('klasa formularza')
 			->setDescription('dane i konfiguracja')
+			->addFilterEmptyToNull()
 			->addValidatorStringLength(3, 64);
 
 		//atrybuty
