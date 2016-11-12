@@ -58,6 +58,8 @@ class CategoryWidgetRelationController extends Mvc\Controller {
 				->findMax('order');
 			$widgetRelationRecord->order = $maxOrder !== null ? $maxOrder + 1 : 0;
 		}
+		//rekord widgeta do widoku
+		$this->view->widgetRecord = $widgetRecord;
 		//rekord do formularza to rekord wiązania
 		$record = $widgetRelationRecord;
 		//domyślna klasa formularza
