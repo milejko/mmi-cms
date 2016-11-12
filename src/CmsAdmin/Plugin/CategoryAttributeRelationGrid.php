@@ -13,7 +13,7 @@ namespace CmsAdmin\Plugin;
 /**
  * Grid atrybutów w szablonie artykułu
  */
-class CategoryTypeAttributeRelationGrid extends \CmsAdmin\Grid\Grid {
+class CategoryAttributeRelationGrid extends \CmsAdmin\Grid\Grid {
 
 	public function init() {
 
@@ -22,7 +22,7 @@ class CategoryTypeAttributeRelationGrid extends \CmsAdmin\Grid\Grid {
 			(new \Cms\Orm\CmsAttributeRelationQuery)
 				->join('cms_attribute')->on('cms_attribute_id')
 				->joinLeft('cms_attribute_value')->on('cms_attribute_value_id')
-				->whereObject()->equals('cmsCategoryType')
+				->whereObject()->equals($this->getOption('object'))
 				->andFieldObjectId()->equals($this->getOption('objectId'))
 				->orderAscOrder()
 		);
@@ -41,8 +41,8 @@ class CategoryTypeAttributeRelationGrid extends \CmsAdmin\Grid\Grid {
 
 		//operacje
 		$this->addColumnOperation()
-			->setDeleteParams(['module' => 'cmsAdmin', 'controller' => 'categoryType', 'action' => 'deleteAttributeRelation', 'relationId' => '%id%'])
-			->setEditParams(['module' => 'cmsAdmin', 'controller' => 'categoryType', 'action' => 'edit', 'relationId' => '%id%']);
+			->setDeleteParams(['action' => 'deleteAttributeRelation', 'relationId' => '%id%'])
+			->setEditParams(['action' => 'edit', 'relationId' => '%id%']);
 	}
 
 }

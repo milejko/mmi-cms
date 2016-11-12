@@ -63,4 +63,26 @@ class AttributeController extends Mvc\Controller {
 		$this->getResponse()->redirect('cmsAdmin', 'attribute', 'index');
 	}
 
+	/**
+	 * Usuwanie relacji szablon atrybut
+	 */
+	public function deleteAttributeRelationAction() {
+		//wyszukiwanie rekordu relacji
+		$record = (new \Cms\Orm\CmsAttributeRelationQuery)
+			->whereObjectId()->equals($this->id)
+			->findPk($this->relationId);
+		//jeśli znaleziono rekord
+		if ($record && $record->delete()) {
+			//wyszukiwanie stron w zmienionym szablonie
+			foreach ((new \Cms\Orm\CmsCategoryQuery)->whereCmsCategoryTypeId()
+				->equals($this->id)
+				->findPairs('id', 'id') as $categoryId) {
+				//usuwanie wartości usuniętych atrybutów
+				(new \Cms\Model\AttributeValueRelationModel('category', $categoryId))
+					->deleteAttributeValueRelationsByAttributeId($record->cmsAttributeId);
+			}
+			$this->getMessenger()->addMessage('Poprawnie relację atrybutu', true);
+		}
+	}
+
 }

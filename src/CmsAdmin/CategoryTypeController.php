@@ -37,13 +37,13 @@ class CategoryTypeController extends Mvc\Controller {
 			return;
 		}
 		//grid atrybutów
-		$this->view->relationGrid = new \CmsAdmin\Plugin\CategoryTypeAttributeRelationGrid(['objectId' => $this->id]);
+		$this->view->relationGrid = new \CmsAdmin\Plugin\CategoryAttributeRelationGrid(['object' => 'cmsCategoryType', 'objectId' => $this->id]);
 		//rekord nowej, lub edytowanej relacji
 		$relationRecord = new \Cms\Orm\CmsAttributeRelationRecord($this->relationId);
 		$relationRecord->object = 'cmsCategoryType';
 		$relationRecord->objectId = $this->id;
 		//formularz edycji
-		$relationForm = new Form\CategoryTypeAttributeRelationForm($relationRecord);
+		$relationForm = new Form\CategoryAttributeRelationForm($relationRecord);
 		if ($relationForm->isSaved()) {
 			$this->getMessenger()->addMessage('Wiązanie atrybutu zapisane poprawnie', true);
 			$this->getResponse()->redirect('cmsAdmin', 'categoryType', 'edit', ['id' => $this->id]);
@@ -66,22 +66,8 @@ class CategoryTypeController extends Mvc\Controller {
 	 * Usuwanie relacji szablon atrybut
 	 */
 	public function deleteAttributeRelationAction() {
-		//wyszukiwanie rekordu relacji
-		$record = (new \Cms\Orm\CmsAttributeRelationQuery)
-			->whereObjectId()->equals($this->id)
-			->findPk($this->relationId);
-		//jeśli znaleziono rekord
-		if ($record && $record->delete()) {
-			//wyszukiwanie stron w zmienionym szablonie
-			foreach ((new \Cms\Orm\CmsCategoryQuery)->whereCmsCategoryTypeId()
-				->equals($this->id)
-				->findPairs('id', 'id') as $categoryId) {
-				//usuwanie wartości usuniętych atrybutów
-				(new \Cms\Model\AttributeValueRelationModel('category', $categoryId))
-					->deleteAttributeValueRelationsByAttributeId($record->cmsAttributeId);
-			}
-			$this->getMessenger()->addMessage('Poprawnie relację atrybutu z szablonem', true);
-		}
+		//usuwanie relacji
+		(new AttributeController($this->getRequest()))->deleteAttributeRelationAction();
 		$this->getResponse()->redirect('cmsAdmin', 'categoryType', 'edit', ['id' => $this->id]);
 	}
 

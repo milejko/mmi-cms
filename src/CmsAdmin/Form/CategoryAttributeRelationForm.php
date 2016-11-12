@@ -13,7 +13,7 @@ namespace CmsAdmin\Form;
 /**
  * Formularz wiązania szablon <-> atrybut
  */
-class CategoryTypeAttributeRelationForm extends \Cms\Form\Form {
+class CategoryAttributeRelationForm extends \Cms\Form\Form {
 
 	public function init() {
 
@@ -26,7 +26,7 @@ class CategoryTypeAttributeRelationForm extends \Cms\Form\Form {
 				->findPairs('id', 'name'))
 			//unikalność atrybutu dla wybranego szablonu
 			->addValidatorRecordUnique((new \Cms\Orm\CmsAttributeRelationQuery)
-				->whereObject()->equals('cmsCategoryType')
+				->whereObject()->equals($this->getRecord()->object)
 				->andFieldObjectId()->equals($this->getRecord()->objectId)
 				, 'cmsAttributeId', $this->getRecord()->id)
 			->setLabel('atrybut');
@@ -58,7 +58,7 @@ class CategoryTypeAttributeRelationForm extends \Cms\Form\Form {
 
 		//zapis
 		$this->addElementSubmit('submit')
-			->setLabel('dodaj wiązanie');
+			->setLabel('zapisz wiązanie');
 	}
 
 	/**
