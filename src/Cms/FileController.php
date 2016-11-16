@@ -59,7 +59,6 @@ class FileController extends \Mmi\Mvc\Controller {
 			$files[] = [
 				'id' => $file->id,
 				'title' => $file->original,
-				'stream' => '/?module=file&controller=server&action=stream&fileId=' . $file->id . '&t=' . strtotime($file->dateModify),
 				'full' => $thumb->thumb($file, 'default'),
 				'thumb' => $file->getUrl('scaley', '60', false),
 				'poster' => $file->source,
