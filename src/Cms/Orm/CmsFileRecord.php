@@ -122,10 +122,10 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 	 * Pobiera adres pliku
 	 * @param string $scaleType scale, scalex, scaley, scalecrop
 	 * @param string $scale 320, 320x240
-	 * @param boolean $absolute link absolutny
+	 * @param boolean $https null - bez zmian, true - tak, false - nie
 	 * @return string adres publiczny pliku
 	 */
-	public function getUrl($scaleType = 'default', $scale = 0, $absolute = false) {
+	public function getUrl($scaleType = 'default', $scale = 0, $https = null) {
 		//brak pliku
 		if ($this->id === null || strlen($this->name) < 4) {
 			return;
@@ -133,7 +133,7 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 		//plik źródłowy
 		$inputFile = $this->getRealPath();
 		//generowanie linku bazowego
-		$url = \Mmi\App\FrontController::getInstance()->getView()->url([], true, $absolute);
+		$url = \Mmi\App\FrontController::getInstance()->getView()->url([], true, $https);
 		//brzydki if, jak aplikacja odpalana jest z podkatalogu
 		if ($url === '/') {
 			$baseUrl = '/data';
