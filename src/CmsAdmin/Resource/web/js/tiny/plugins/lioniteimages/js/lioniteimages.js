@@ -133,6 +133,7 @@
 					}
 				} else if (el.is('.edit')) {
 					var getvideo = el.parent().find('video');
+					$("div#dialog-edit #img-edit").attr('src', 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
 					
 					//okienko edycji - pobieramy dane rekordu z bazy
 					$.post(o.baseUrl + '/cmsAdmin/upload/details', {cmsFileId: el.attr('data-id')}, 'json')
@@ -161,7 +162,7 @@
 									$(edit + ' .dialog-error').hide().find('p').text('');
 
 									$("div#dialog-edit select[name='source']").change(function() {
-										$("div#dialog-edit #img-edit").attr('src','');
+										$("div#dialog-edit #img-edit").attr('src','data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
 										if( $(this).val() != "" ){
 											$("div#dialog-edit #img-edit").attr('src', $(this).val());
 										}
