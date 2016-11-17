@@ -32,8 +32,10 @@ class AttributeController extends Mvc\Controller {
 			$this->getMessenger()->addMessage('Atrybut zapisany poprawnie', true);
 			$this->getResponse()->redirect('cmsAdmin', 'attribute', 'index');
 		}
+		//pobranie typu atrybutu
+		$attributeType = new \Cms\Orm\CmsAttributeTypeRecord($form->getRecord()->cmsAttributeTypeId);
 		//ograniczona lista
-		if ($form->getRecord()->isRestricted()) {
+		if ($attributeType->restricted) {
 			//grid wartości atrybutu
 			$this->view->valueGrid = new Plugin\AttributeValueGrid(['id' => $form->getRecord()->id]);
 			$valueRecord = new \Cms\Orm\CmsAttributeValueRecord;

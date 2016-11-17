@@ -33,9 +33,11 @@ class AttributeGrid extends \CmsAdmin\Grid\Grid {
 			->setLabel('opis');
 
 		//klasa pola
-		$this->addColumnSelect('fieldClass')
+		$this->addColumnSelect('cmsAttributeTypeId')
 			->setLabel('klasa pola')
-			->setMultioptions((new \Cms\Orm\CmsAttributeRecord)->getFieldClasses());
+			->setMultioptions((new \Cms\Orm\CmsAttributeTypeQuery)
+				->orderAscName()
+				->findPairs('id', 'name'));
 
 		//waga
 		$this->addColumnText('indexWeight')

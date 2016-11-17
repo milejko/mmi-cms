@@ -179,7 +179,7 @@ abstract class AttributeForm extends Form {
 		$field = (new $fieldClass('cmsAttribute' . $attribute->id))
 			->setLabel($attribute->name)
 			->setDescription($attribute->description)
-			->setValue($attribute->isRestricted() ? $this->_arrayValueByAttribute($attribute) : $this->_scalarValueByAttribute($attribute));
+			->setValue($attribute->getJoined('cms_attribute_type')->restricted ? $this->_arrayValueByAttribute($attribute) : $this->_scalarValueByAttribute($attribute));
 		$options = [];
 		//parsowanie opcji
 		parse_str($attribute->fieldOptions, $options);
@@ -191,13 +191,13 @@ abstract class AttributeForm extends Form {
 				->setChecked($this->_scalarValueByAttribute($attribute));
 		}
 		//multiopcje
-		if ($attribute->isRestricted()) {
+		if ($attribute->getJoined('cms_attribute_type')->restricted) {
 			//wyszukiwanie opcji pola
 			$options = (new \Cms\Orm\CmsAttributeValueQuery)->whereCmsAttributeId()->equals($attribute->id)
 				->orderAscLabel()
 				->orderAscValue()
 				->findPairs('value', 'label');
-			$field->setMultioptions($attribute->isMultiple() ? $options : [null => '---'] + $options);
+			$field->setMultioptions($attribute->getJoined('cms_attribute_type')->multiple ? $options : [null => '---'] + $options);
 		}
 		//pole wymagane
 		if ($attribute->required) {

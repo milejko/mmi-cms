@@ -165,6 +165,7 @@ class AttributeValueRelationModel {
 		return (new CmsAttributeValueQuery)
 				->join('cms_attribute')->on('cms_attribute_id')
 				->join('cms_attribute_value_relation')->on('id', 'cms_attribute_value_id')
+				->join('cms_attribute_type', 'cms_attribute')->on('cms_attribute_type_id')
 				->where('object', 'cms_attribute_value_relation')->equals($this->_object)
 				->where('objectId', 'cms_attribute_value_relation')->equals($this->_objectId)
 				->find();
@@ -181,7 +182,7 @@ class AttributeValueRelationModel {
 		foreach ($this->getAttributeValues() as $record) {
 			//pobieranie klucza atrybutu (w celu zgrupowania
 			$key = $record->getJoined('cms_attribute')->key;
-			if ($record->getJoined('cms_attribute')->isMultiple()) {
+			if ($record->getJoined('cms_attribute_type')->multiple) {
 				if (!$grouppedByAttributeKey->$key) {
 					$grouppedByAttributeKey->$key = new \Mmi\Orm\RecordCollection;
 				}
@@ -189,7 +190,7 @@ class AttributeValueRelationModel {
 				continue;
 			}
 			//atrybut to uploader
-			if ($record->getJoined('cms_attribute')->isUploader()) {
+			if ($record->getJoined('cms_attribute_type')->uploader) {
 				//dołączanie plików
 				$grouppedByAttributeKey->$key = \Cms\Orm\CmsFileQuery::byObject($record->value, $this->_objectId)->find();
 				continue;

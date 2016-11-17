@@ -39,11 +39,13 @@ class Attribute extends \Mmi\Form\Form {
 			->addFilterStringTrim();
 
 		//pole formularza
-		$this->addElementSelect('cmsAttributeType')
+		$this->addElementSelect('cmsAttributeTypeId')
 			->setLabel('pole formularza')
 			->setRequired()
 			->addValidatorNotEmpty()
-			->setMultioptions([]);
+			->setMultioptions((new \Cms\Orm\CmsAttributeTypeQuery)
+				->orderAscName()
+				->findPairs('id', 'name'));
 
 		//opcje pola formularz
 		$this->addElementTextarea('fieldOptions')
