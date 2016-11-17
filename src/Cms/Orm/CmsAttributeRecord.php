@@ -61,25 +61,4 @@ class CmsAttributeRecord extends \Mmi\Orm\Record {
 		return ($this->materialized == 2);
 	}
 	
-	/**
-	 * Pobiera dostępne klasy pól
-	 * @return array
-	 */
-	public function getFieldClasses() {
-		return [
-			'\Cms\Form\Element\DatePicker' => 'data',
-			'\Cms\Form\Element\DateTimePicker' => 'data i czas',
-			'\Cms\Form\Element\TinyMce' => 'edytor WYSIWYG',
-			'\Mmi\Form\Element\MultiCheckbox' => 'hasło (input password)',
-			'\Cms\Form\Element\Tags' => 'tagi',
-			'\Mmi\Form\Element\Text' => 'tekst jednolinijkowy (input text)',
-			'\Mmi\Form\Element\Textarea' => 'tekst wielolinijkowy (textarea)',
-			'\Mmi\Form\Element\File' => 'wgrywarka jednego pliku (input file)',
-			'\Cms\Form\Element\Plupload' => 'wgrywarka wielu plików',
-			'\Mmi\Form\Element\Checkbox' => 'wybór tak/nie (checkbox)',
-			'\Mmi\Form\Element\Select' => 'wybór pojedynczy (select)',
-			'\Mmi\Form\Element\MultiCheckbox' => 'wybór wielokrotny (multi checkbox)',
-		];
-	}
-
 }

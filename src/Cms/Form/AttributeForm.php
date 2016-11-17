@@ -173,8 +173,10 @@ abstract class AttributeForm extends Form {
 	 * @return \Mmi\Form\Element\ElementAbstract
 	 */
 	private function _createFieldByAttribute(\Cms\Orm\CmsAttributeRecord $attribute) {
-		//konfiguracja pola
-		$field = (new $attribute->fieldClass('cmsAttribute' . $attribute->id))
+		//ustalenie klasy pola
+		$fieldClass = $attribute->getJoined('cms_attribute_type')->fieldClass;
+		//tworzenie i konfiguracja pola
+		$field = (new $fieldClass('cmsAttribute' . $attribute->id))
 			->setLabel($attribute->name)
 			->setDescription($attribute->description)
 			->setValue($attribute->isRestricted() ? $this->_arrayValueByAttribute($attribute) : $this->_scalarValueByAttribute($attribute));
