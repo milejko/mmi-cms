@@ -61,9 +61,15 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	
 	/**
 	 * Model widgetów kategorii
-	 * @var type \Cms\Model\CategoryWidgetModel
+	 * @var \Cms\Model\CategoryWidgetModel
 	 */
 	private $_widgetModel;
+	
+	/**
+	 * Rekord rodzica
+	 * @var \Cms\Orm\CmsCategoryRecord
+	 */
+	private $_parentRecord;
 
 	/**
 	 * Zapis rekordu
@@ -196,6 +202,19 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		}
 		//tworzenie modelu widgetów
 		return $this->_widgetModel = new \Cms\Model\CategoryWidgetModel($this->id);
+	}
+	
+	/**
+	 * Pobiera rekord rodzica
+	 * @return \Cms\Orm\CmsCategoryRecord
+	 */
+	public function getParentRecord() {
+		//rekord już pobrany
+		if (null !== $this->_parentRecord) {
+			return $this->_parentRecord;
+		}
+		//wyszukanie rekordu
+		return $this->_parentRecord = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->parentId);
 	}
 
 	/**
