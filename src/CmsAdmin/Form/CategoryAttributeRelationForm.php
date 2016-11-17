@@ -51,8 +51,8 @@ class CategoryAttributeRelationForm extends \Cms\Form\Form {
 
 		//kolejność
 		$this->addElementText('order')
+			->setRequired()
 			->setLabel('kolejność')
-			->addValidatorInteger()
 			->addValidatorNumberBetween(0, 10000000)
 			->setValue(0);
 

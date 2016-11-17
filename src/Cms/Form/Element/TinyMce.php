@@ -400,7 +400,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 		if ($this->getToolbars() === null) {
 			$this->setToolbars([
 				'undo redo | cut copy paste pastetext | searchreplace | bold italic underline | subscript superscript | alignleft aligncenter alignright alignjustify | forecolor backcolor | table',
-				'styleselect | bullist numlist outdent indent blockquote | link unlink anchor | image media lioniteimages | charmap equationeditor nonbreaking | fullscreen preview visualchars code'
+				'styleselect | bullist numlist outdent indent blockquote | link unlink anchor | media lioniteimages | charmap equationeditor nonbreaking | fullscreen preview visualchars code'
 			]);
 		}
 		if ($this->getContextMenu() === null) {
