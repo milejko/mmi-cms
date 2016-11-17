@@ -8,11 +8,11 @@ namespace Cms\Orm;
 class CmsAttributeRecord extends \Mmi\Orm\Record {
 
 	public $id;
+	public $cmsAttributeTypeId;
 	public $lang;
 	public $name;
 	public $key;
 	public $description;
-	public $fieldClass;
 	public $fieldOptions;
 	public $filterClasses;
 	public $validatorClasses;
