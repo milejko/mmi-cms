@@ -11,11 +11,19 @@ use \Cms\Model\AttributeValueRelationModel,
 class CmsCategoryRecord extends \Mmi\Orm\Record {
 
 	public $id;
+
+	/**
+	 * Identyfikator szablonu
+	 * @var integer
+	 */
 	public $cmsCategoryTypeId;
 	public $lang;
+
+	/**
+	 * Nazwa pola
+	 * @var string
+	 */
 	public $name;
-	public $lead;
-	public $text;
 
 	/**
 	 * Breadcrumbs
@@ -44,27 +52,62 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	public $order;
 	public $dateAdd;
 	public $dateModify;
+	
+	/**
+	 * Tytuł SEO
+	 * @var string
+	 */
 	public $title;
+	
+	/**
+	 * Opis SEO
+	 * @var string
+	 */
 	public $description;
+	
+	/**
+	 * null - bez zmiany, true - https, false - http
+	 * @var string
+	 */
 	public $https;
+	
+	/**
+	 * Bez flagi nofollow
+	 * @var boolean
+	 */
 	public $follow;
+	
+	/**
+	 * Nowe okno
+	 * @var boolean
+	 */
 	public $blank;
-	public $active;
+
+	/**
+	 * Data dodania
+	 * @var string
+	 */
 	public $dateStart;
+	
+	/**
+	 * Data modyfikacji
+	 * @var string
+	 */
 	public $dateEnd;
+	public $active;
 
 	/**
 	 * Wartości atrybutów
 	 * @var \Mmi\DataObject
 	 */
 	private $_attributeValues;
-	
+
 	/**
 	 * Model widgetów kategorii
 	 * @var \Cms\Model\CategoryWidgetModel
 	 */
 	private $_widgetModel;
-	
+
 	/**
 	 * Rekord rodzica
 	 * @var \Cms\Orm\CmsCategoryRecord
@@ -190,7 +233,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		//pobieranie atrybutów
 		return $this->_attributeValues = (new \Cms\Model\AttributeValueRelationModel('category', $this->id))->getGrouppedAttributeValues();
 	}
-	
+
 	/**
 	 * Pobiera model widgetów
 	 * @return \Cms\Model\CategoryWidgetModel
@@ -203,7 +246,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		//tworzenie modelu widgetów
 		return $this->_widgetModel = new \Cms\Model\CategoryWidgetModel($this->id);
 	}
-	
+
 	/**
 	 * Pobiera rekord rodzica
 	 * @return \Cms\Orm\CmsCategoryRecord
