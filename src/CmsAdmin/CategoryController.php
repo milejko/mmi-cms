@@ -35,14 +35,16 @@ class CategoryController extends Mvc\Controller {
 		//konfiguracja kategorii
 		$form = (new \CmsAdmin\Form\Category($cat));
 		//zapis
-		if ($form->isSaved()) {
-			//$this->getMessenger()->addMessage('Zmiany w stronie zostały zapisane', true);
+		if ($form->isMine() && !$form->isSaved()) {
+			$this->getMessenger()->addMessage('Zmiany nie zostały zapisane, formularz zawiera błędy', false);
 		}
 		//zmiana kategorii
 		if ($cmsCategoryTypeId != $form->getRecord()->cmsCategoryTypeId) {
 			//redirect po zmianie (zmienią się atrybuty)
 			$this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $form->getRecord()->id]);
 		}
+		//kategoria do widoku
+		$this->view->category = $cat;
 		//form do widoku
 		$this->view->categoryForm = $form;
 	}
@@ -51,8 +53,7 @@ class CategoryController extends Mvc\Controller {
 	 * Akcja podglądu widgeta
 	 */
 	public function widgetAction() {
-		return (new \Cms\CategoryController($this->getRequest()))
-			->widgetAction();
+		return (new \Cms\CategoryController($this->getRequest()))->widgetAction();
 	}
 
 	/**

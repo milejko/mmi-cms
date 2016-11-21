@@ -122,7 +122,7 @@ abstract class Form extends \Mmi\Form\Form {
 	public function addElementTinyMce($name) {
 		return $this->addElement(new Element\TinyMce($name));
 	}
-	
+
 	/**
 	 * Tree
 	 * @param string $name nazwa
@@ -149,7 +149,7 @@ abstract class Form extends \Mmi\Form\Form {
 	public function addElementUploader($name) {
 		return $this->addElement(new Element\Uploader($name));
 	}
-        
+
 	/**
 	 * Tagi
 	 * @param string $name nazwa

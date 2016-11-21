@@ -10,7 +10,6 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 	public $id;
 	public $cmsCategoryWidgetId;
 	public $cmsCategoryId;
-	public $recordId;
 	public $configJson;
 	public $active = 1;
 
@@ -19,6 +18,12 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 	 * @var integer
 	 */
 	public $order;
+
+	/**
+	 * Wartości atrybutów
+	 * @var \Mmi\DataObject
+	 */
+	private $_attributeValues;
 
 	/**
 	 * Zwraca rekord kategorii
@@ -47,22 +52,35 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 	}
 
 	/**
+	 * Pobiera rekordy wartości atrybutów w formie obiektu danych
+	 * @see \Mmi\DataObiect
+	 * @return \Mmi\DataObject
+	 */
+	public function getAttributeValues() {
+		//atrybuty już pobrane
+		if (null !== $this->_attributeValues) {
+			return $this->_attributeValues;
+		}
+		//pobieranie atrybutów
+		return $this->_attributeValues = (new \Cms\Model\AttributeValueRelationModel('categoryWidgetRelation', $this->id))->getGrouppedAttributeValues();
+	}
+
+	/**
 	 * Zwraca konfigurację
-	 * @return stdClass
+	 * @return \Mmi\DataObject
 	 */
 	public function getConfig() {
 		//próba dekodowania konfiguracji json
 		try {
-			$config = \json_decode($this->configJson);
+			$configArr = \json_decode($this->configJson, true);
 		} catch (\Exception $e) {
 			
 		}
 		//tworznie pustego configa
-		if (!isset($config)) {
-			$config = new \stdClass();
+		if (!isset($configArr)) {
+			$configArr = [];
 		}
-		//domyślnie pusty recordId
-		$config->recordId = isset($config->recordId) ? $config->recordId : null;
+		$config = (new \Mmi\DataObject())->setParams($configArr);
 		return $config;
 	}
 

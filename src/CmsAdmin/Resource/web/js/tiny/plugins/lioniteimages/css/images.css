@@ -325,3 +325,23 @@ div.thumbbox.videoplay video{
 	height: 100%;
 	width: 100%;
 }
+
+#dialog-edit{
+	display: none;
+}
+#dialog-edit input[type="text"]{
+	margin: 10px 0;
+    padding: 5px;
+    width: 97%;
+}
+#dialog-edit #img-edit{
+	display: block;
+    margin: 10px auto;
+	max-width: 100%;
+}
+.dialogEdit{
+	display: none;
+	z-index: 999;
+	width: 100%;
+	height: 100%;
+}

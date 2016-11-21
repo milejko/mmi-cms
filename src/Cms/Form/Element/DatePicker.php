@@ -133,17 +133,25 @@ class DatePicker extends \Mmi\Form\Element\ElementAbstract {
 		$this->view->headScript()->appendScript("
 			var logic_min = function( curr ){
 				var min = jQuery('#" . $poleEvent . "').datetimepicker('getValue');
-				var time = false;
+				var datmin = jQuery('#" . $poleEvent . "').find('input').attr('datemin');
+				var time = new Date();
 
 				if( $.datepicker.formatDate('yy-mm-dd', curr) === $.datepicker.formatDate('yy-mm-dd', min) ){
 					time = min;
 				}
-
+				
 				this.setOptions({
-					minDate:jQuery('#" . $poleEvent . "').val()?jQuery('#" . $poleEvent . "').val():false,
-					minDateTime:time
+					minDate: jQuery('#" . $poleEvent . "').find('input').val()?jQuery('#" . $poleEvent . "').find('input').val():datmin,
+					minDateTime: time
 				});
 			};
+                        
+			setTimeout(function(){
+					var datmin = jQuery('#" . $poleEvent . "').find('input').attr('datemin');
+					$('#" . $this->getOption('id') . "').datetimepicker('setOptions', {
+						minDate: jQuery('#" . $poleEvent . "').find('input').val()?jQuery('#" . $poleEvent . "').find('input').val():datmin,
+					});
+			}, 800);
 		");
 	}
 
@@ -164,10 +172,16 @@ class DatePicker extends \Mmi\Form\Element\ElementAbstract {
 				}
 
 				this.setOptions({
-					maxDate:jQuery('#" . $poleEvent . "').val()?jQuery('#" . $poleEvent . "').val():false,
+					maxDate:jQuery('#" . $poleEvent . "').find('input').val()?jQuery('#" . $poleEvent . "').find('input').val():false,
 					maxDateTime:time
 				});
 			};
+                        
+			setTimeout(function(){						
+					$('#" . $this->getOption('id') . "').datetimepicker('setOptions', {
+						maxDate: jQuery('#" . $poleEvent . "').find('input').val()?jQuery('#" . $poleEvent . "').find('input').val():false
+					});
+			}, 800);
 		");
 	}
 
@@ -201,7 +215,7 @@ class DatePicker extends \Mmi\Form\Element\ElementAbstract {
 		$dateMin = isset($this->_options['dateMin']) ? "'" . $this->_options['dateMin'] . "'" : 'false';
 		$dateMax = isset($this->_options['dateMax']) ? "'" . $this->_options['dateMax'] . "'" : 'false';
 		$datepicker = isset($this->_options['datepicker']) ? $this->_options['datepicker'] : 'true';
-		
+
 		$id = $this->getOption('id');
 
 		$this->view->headScript()->appendScript("$(document).ready(function () {

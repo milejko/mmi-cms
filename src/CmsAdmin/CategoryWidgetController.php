@@ -33,6 +33,19 @@ class CategoryWidgetController extends Mvc\Controller {
 			$this->getResponse()->redirect('cmsAdmin', 'categoryWidget');
 		}
 		$this->view->widgetForm = $form;
+		//grid atrybutów
+		$this->view->relationGrid = new \CmsAdmin\Plugin\CategoryAttributeRelationGrid(['object' => 'cmsCategoryWidget', 'objectId' => $this->id]);
+		//rekord nowej, lub edytowanej relacji
+		$relationRecord = new \Cms\Orm\CmsAttributeRelationRecord($this->relationId);
+		$relationRecord->object = 'cmsCategoryWidget';
+		$relationRecord->objectId = $this->id;
+		//formularz edycji
+		$relationForm = new Form\CategoryAttributeRelationForm($relationRecord);
+		if ($relationForm->isSaved()) {
+			$this->getMessenger()->addMessage('Wiązanie atrybutu zapisane poprawnie', true);
+			$this->getResponse()->redirect('cmsAdmin', 'categoryWidget', 'edit', ['id' => $this->id]);
+		}
+		$this->view->relationForm = $relationForm;
 	}
 
 	/**
@@ -44,6 +57,15 @@ class CategoryWidgetController extends Mvc\Controller {
 			$this->getMessenger()->addMessage('Usunięto konfigurację widgeta');
 		}
 		$this->getResponse()->redirect('cmsAdmin', 'categoryWidget');
+	}
+
+	/**
+	 * Usuwanie relacji widget atrybut
+	 */
+	public function deleteAttributeRelationAction() {
+		//usuwanie relacji
+		(new AttributeController($this->getRequest()))->deleteAttributeRelationAction();
+		$this->getResponse()->redirect('cmsAdmin', 'categoryWidget', 'edit', ['id' => $this->id]);
 	}
 
 }

@@ -14,7 +14,7 @@ namespace Cms;
  * Kontroler plików
  */
 class FileController extends \Mmi\Mvc\Controller {
-	
+
 	/**
 	 * Funkcja dla użytkownika ładowana na końcu konstruktora
 	 */
@@ -36,11 +36,11 @@ class FileController extends \Mmi\Mvc\Controller {
 		}
 		$files = [];
 		foreach (\Cms\Orm\CmsFileQuery::imagesByObject($this->object, $this->objectId)->find() as $file) {
-			$files[] = ['title' => $file->original, 'value' => $file->getUrl('scalex', '1200', true)];
+			$files[] = ['title' => $file->original, 'value' => $file->getUrl('scalex', '1200')];
 		}
 		return json_encode($files);
 	}
-	
+
 	/**
 	 * Lista obrazów (na potrzeby tinymce)
 	 * @return view layout
@@ -56,17 +56,17 @@ class FileController extends \Mmi\Mvc\Controller {
 		$files = [];
 		$thumb = new \Cms\Mvc\ViewHelper\Thumb();
 		foreach (\Cms\Orm\CmsFileQuery::byObjectAndClass($this->object, $this->objectId, $this->class)->find() as $file) {
-			$thumb->thumb($file, 'scalecrop', '100x60');
 			$files[] = [
 				'id' => $file->id,
-				'title' => $file->original, 
-				'full' => '/?module=file&controller=server&action=stream&fileId='.$file->id.'&t='.strtotime($file->dateModify), 
+				'title' => $file->original,
+				'full' => $thumb->thumb($file, 'default'),
 				'thumb' => $file->getUrl('scaley', '60', false),
+				'poster' => $file->source,
 				'class' => $file->class,
 				'mime' => $file->mimeType,
 			];
 		}
-		
+
 		//przekazanie danych
 		$this->view->files = $files;
 	}

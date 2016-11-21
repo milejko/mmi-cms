@@ -26,8 +26,8 @@ class CategoryController extends \Mmi\Mvc\Controller {
 			//przekierowanie na customUri
 			$this->getResponse()->redirect('cms', 'category', 'dispatch', ['uri' => $category->customUri]);
 		}
-		//model widgetu do widoku
-		$this->view->widgetModel = new Model\CategoryWidgetModel($category->id);
+		//rekord kategorii do widoku
+		$this->view->category = $category;
 		//forward do akcji docelowej
 		return \Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category));
 	}
@@ -36,28 +36,23 @@ class CategoryController extends \Mmi\Mvc\Controller {
 	 * Akcja artykułu
 	 */
 	public function articleAction() {
-		//pobranie kategorii z modelu
-		$category = $this->view->widgetModel->getCategoryRecord();
-		//przekazanie atrybutów
-		$this->view->attributes = (new Model\AttributeValueRelationModel('category', $category->id))->getGrouppedAttributeValues();
-		//przekazanie tagów
-		$this->view->tags = (new Model\TagRelationModel('cmscategory', $category->id))->getTagRelations();
+		
 	}
-	
+
 	/**
 	 * Akcja prostego widgetu z atrybutami
 	 */
 	public function widgetAction() {
-		$widgetModel = $this->view->widgetModel;
-		/* @var $widgetModel \Cms\Model\CategoryWidgetModel */
-		//brak widgeta
-		if (null === $widgetRelation = $widgetModel->findWidgetRelationById($this->widgetId)) {
+		//brak kategorii
+		if (!$this->view->category) {
+			//pobranie kategorii
+			$this->view->category = new Orm\CmsCategoryRecord($this->id);
+		}
+		//wyszukiwanie widgeta
+		if (null === $this->view->widgetRelation = $this->view->category->getWidgetModel()->findWidgetRelationById($this->widgetId)) {
+			//brak - pusty zwrot
 			return '';
 		}
-		//atrybuty do widoku
-		$this->view->attributes = (new Model\AttributeValueRelationModel('categoryWidgetRelation', $widgetRelation->id))->getGrouppedAttributeValues();
-		//relacja do widoku
-		$this->view->widgetRelation = $widgetRelation;
 	}
 
 	/**

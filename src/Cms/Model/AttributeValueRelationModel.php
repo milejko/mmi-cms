@@ -15,7 +15,7 @@ use Cms\Orm\CmsAttributeValueQuery,
 	Cms\Orm\CmsAttributeValueRelationRecord;
 
 /**
- * Model kategorii
+ * Model relacji wartości atrybutu
  */
 class AttributeValueRelationModel {
 
@@ -43,7 +43,7 @@ class AttributeValueRelationModel {
 	}
 
 	/**
-	 * Przypina id atrybutu do obiektu z id
+	 * Przypina id wartości atrybutu do obiektu z id
 	 * @param integer $attributeValueId id kategorii
 	 */
 	public function createAttributeValueRelation($attributeValueId) {
@@ -97,7 +97,7 @@ class AttributeValueRelationModel {
 	}
 
 	/**
-	 * Usuwa kategorię z obiektu i id
+	 * Usuwa wartość atrybutu z obiektu i id
 	 * @param integer $attributeValueId id kategorii
 	 */
 	public function deleteAttributeValueRelation($attributeValueId) {
@@ -120,7 +120,7 @@ class AttributeValueRelationModel {
 	}
 
 	/**
-	 * Usunięcie relacji z obiektu i id dla podanego id atrybutu
+	 * Usunięcie wszystkich relacji z obiektu i id dla podanego id atrybutu
 	 */
 	public function deleteAttributeValueRelationsByAttributeId($attributeId) {
 		//czyszczenie relacji z całego atrybutu
@@ -165,6 +165,7 @@ class AttributeValueRelationModel {
 		return (new CmsAttributeValueQuery)
 				->join('cms_attribute')->on('cms_attribute_id')
 				->join('cms_attribute_value_relation')->on('id', 'cms_attribute_value_id')
+				->join('cms_attribute_type', 'cms_attribute')->on('cms_attribute_type_id')
 				->where('object', 'cms_attribute_value_relation')->equals($this->_object)
 				->where('objectId', 'cms_attribute_value_relation')->equals($this->_objectId)
 				->find();
@@ -181,21 +182,23 @@ class AttributeValueRelationModel {
 		foreach ($this->getAttributeValues() as $record) {
 			//pobieranie klucza atrybutu (w celu zgrupowania
 			$key = $record->getJoined('cms_attribute')->key;
+			if ($record->getJoined('cms_attribute_type')->multiple) {
+				if (!$grouppedByAttributeKey->$key) {
+					$grouppedByAttributeKey->$key = new \Mmi\Orm\RecordCollection;
+				}
+				$grouppedByAttributeKey->$key->append($record);
+				continue;
+			}
 			//atrybut to uploader
-			if ($record->getJoined('cms_attribute')->isUploader()) {
+			if ($record->getJoined('cms_attribute_type')->uploader) {
 				//dołączanie plików
-				$grouppedByAttributeKey->$key = (new \Cms\Orm\CmsFileQuery)
-					->whereObject()->equals($record->value)
-					->andFieldObjectId()->equals($this->_objectId)
-					->orderAscOrder()
-					->orderAscId() //sortowanie po ID, jeśli ordery są NULL
-					->find();
+				$grouppedByAttributeKey->$key = \Cms\Orm\CmsFileQuery::byObject($record->value, $this->_objectId)->find();
 				continue;
 			}
 			//atrybut zwykły
-			$grouppedByAttributeKey->$key = $record;
+			$grouppedByAttributeKey->$key = $record->value;
 		}
-		//
+		//zwrot zgrupowanych wartości atrybutów
 		return $grouppedByAttributeKey;
 	}
 

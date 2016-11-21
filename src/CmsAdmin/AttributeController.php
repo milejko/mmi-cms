@@ -32,8 +32,10 @@ class AttributeController extends Mvc\Controller {
 			$this->getMessenger()->addMessage('Atrybut zapisany poprawnie', true);
 			$this->getResponse()->redirect('cmsAdmin', 'attribute', 'index');
 		}
+		//pobranie typu atrybutu
+		$attributeType = new \Cms\Orm\CmsAttributeTypeRecord($form->getRecord()->cmsAttributeTypeId);
 		//ograniczona lista
-		if ($form->getRecord()->isRestricted()) {
+		if ($attributeType->restricted) {
 			//grid wartości atrybutu
 			$this->view->valueGrid = new Plugin\AttributeValueGrid(['id' => $form->getRecord()->id]);
 			$valueRecord = new \Cms\Orm\CmsAttributeValueRecord;
@@ -61,6 +63,28 @@ class AttributeController extends Mvc\Controller {
 			$this->getMessenger()->addMessage('Atrybut usunięty', true);
 		}
 		$this->getResponse()->redirect('cmsAdmin', 'attribute', 'index');
+	}
+
+	/**
+	 * Usuwanie relacji szablon atrybut
+	 */
+	public function deleteAttributeRelationAction() {
+		//wyszukiwanie rekordu relacji
+		$record = (new \Cms\Orm\CmsAttributeRelationQuery)
+			->whereObjectId()->equals($this->id)
+			->findPk($this->relationId);
+		//jeśli znaleziono rekord
+		if ($record && $record->delete()) {
+			//wyszukiwanie stron w zmienionym szablonie
+			foreach ((new \Cms\Orm\CmsCategoryQuery)->whereCmsCategoryTypeId()
+				->equals($this->id)
+				->findPairs('id', 'id') as $categoryId) {
+				//usuwanie wartości usuniętych atrybutów
+				(new \Cms\Model\AttributeValueRelationModel('category', $categoryId))
+					->deleteAttributeValueRelationsByAttributeId($record->cmsAttributeId);
+			}
+			$this->getMessenger()->addMessage('Poprawnie relację atrybutu', true);
+		}
 	}
 
 }

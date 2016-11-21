@@ -28,14 +28,14 @@
 
 	<body id="{$bodyId}">
 		{'common/partial/topMenu'}
-        {'common/partial/navigation'}
-        {'common/partial/banner'}
+		{'common/partial/navigation'}
+		{'common/partial/banner'}
 
-        {messenger()}
+		{messenger()}
 
-        {content()}
+		{content()}
 
-        {'common/partial/footer'}
+		{'common/partial/footer'}
 	</body>
 
 </html>

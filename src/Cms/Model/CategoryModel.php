@@ -57,7 +57,7 @@ class CategoryModel {
 		//wyszukiwanie kategorii
 		return $this->_searchChildren($this->_categoryTree, $parentCategoryId);
 	}
-
+	
 	/**
 	 * Pobiera listę kategorii w postaci płaskiej tabeli z odwzorowaniem drzewa
 	 * @param integer $parentCategoryId identyfikator kategorii (opcjonalny)

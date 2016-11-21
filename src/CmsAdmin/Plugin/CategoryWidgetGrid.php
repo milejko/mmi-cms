@@ -37,10 +37,6 @@ class CategoryWidgetGrid extends \CmsAdmin\Grid\Grid {
 			->setMultioptions($widgets)
 			->setLabel('modułu podglądu');
 
-		//rekord
-		$this->addColumnText('recordClass')
-			->setLabel('klasa rekordu');
-
 		//klasa forma
 		$this->addColumnText('formClass')
 			->setLabel('klasa formularza konfiguracji');

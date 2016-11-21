@@ -32,6 +32,7 @@
 					$('#lionite-gallery').html(response);
 				}
 			});
+
 			this.events();
 		},
 		events: function () {
@@ -52,7 +53,7 @@
 					}
 
 					if (el.attr('data-typ') == 'video') {
-						var box = '<video src="' + el.attr('href') + '" controls></video>';
+						var box = '<video poster="' + el.attr('data-poster') + '" src="' + el.attr('href') + '" controls></video>';
 					}
 
 					self.insert(box);
@@ -130,6 +131,84 @@
 						getvideo.prop("controls", false);
 						box.removeClass('videoplay');
 					}
+				} else if (el.is('.edit')) {
+					var getvideo = el.parent().find('video');
+					$("div#dialog-edit #img-edit").attr('src', 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
+					
+					//okienko edycji - pobieramy dane rekordu z bazy
+					$.post(o.baseUrl + '/cmsAdmin/upload/details', {cmsFileId: el.attr('data-id')}, 'json')
+							.done(function (data) {
+								if (data.result === 'OK' && data.record) {
+									//przygotowujemy zawartość okienka edycji i pokazujemy go
+									var edit = 'div#dialog-edit';
+
+									$.getJSON(parentEditor.settings.baseUrl + '/?module=cms&controller=file&action=list&class=image&object=' + parentEditor.settings.object + '&objectId=' + parentEditor.settings.objectId + '&t=' + parentEditor.settings.time + '&hash=' + parentEditor.settings.hash, function (resp) {
+										select = $("div#dialog-edit select[name='source']");
+										select.find('option:not(:first)').remove();
+										$.each(resp, function (k, v) {
+											state = "";		
+											if( v.value === data.record.source ){
+												state = "selected";
+												if( v.value != "" ){
+													$("div#dialog-edit #img-edit").attr('src', v.value);
+												}
+											}											
+											select.append($("<option>", {value: v.value, html: v.title}).prop('selected', state));
+										});
+									});
+
+									$(edit + ' input[name="title"]').val(data.record.title);
+									$(edit + ' input[name="author"]').val(data.record.author);
+									$(edit + ' .dialog-error').hide().find('p').text('');
+
+									$("div#dialog-edit select[name='source']").change(function() {
+										$("div#dialog-edit #img-edit").attr('src','data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
+										if( $(this).val() != "" ){
+											$("div#dialog-edit #img-edit").attr('src', $(this).val());
+										}
+									});
+
+									var editDialog = $(edit).dialog({
+										height: 400,
+										width: 350,
+										modal: true,
+										resizable: false,
+										closeText: 'Zamknij',
+										title: 'Edycja pliku',
+										dialogClass: 'dialogEdit',
+										buttons: {
+											'Zapisz': function () {
+												//trigger odświeżający dane
+												//tinymce.triggerSave();
+												$.post(o.baseUrl + '/cmsAdmin/upload/describe',
+														{cmsFileId: el.attr('data-id'),
+															form: $(edit + ' input,' + edit + ' select,' + edit + ' textarea').serializeArray()
+														}, 'json')
+														.done(function (data) {
+															if (data.result === 'OK') {
+																editDialog.dialog('close');
+																el.parent().find('a.insert').attr('data-poster', $("div#dialog-edit select[name='source']").val());
+															} else {
+																$(edit + ' .dialog-error p').text('Nie udało się zapisać zmian! Spróbuj ponownie!').parent().show();
+															}
+														})
+														.fail(function () {
+															$(edit + ' .dialog-error p').text('Nie udało się zapisać zmian! Spróbuj ponownie!').parent().show();
+														});
+											},
+											'Anuluj': function () {
+												$(this).dialog('close');
+											}
+										}
+									});
+								} else {
+									alert('Pobranie opisu pliku nie powiodło się! Spróbuj ponownie');
+								}
+							})
+							.fail(function () {
+								alert('Pobranie opisu pliku nie powiodło się! Spróbuj ponownie');
+							});
+
 				}
 
 			});
@@ -247,7 +326,7 @@
 				$('#progress .progress-bar').css(
 						'width',
 						progress + '%'
-				);
+						);
 			});
 			$(el).on('fileuploadfail', function (e, data) {
 				$.each(data.files, function (index, file) {

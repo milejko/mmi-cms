@@ -17,7 +17,6 @@ class Category extends \Cms\Form\AttributeForm {
 
 	public function init() {
 
-		//Konfiguracja
 		//szablony/typy (jeśli istnieją)
 		if ([] !== $types = (new \Cms\Orm\CmsCategoryTypeQuery)->orderAscName()->findPairs('id', 'name')) {
 			$this->addElementSelect('cmsCategoryTypeId')
@@ -32,9 +31,10 @@ class Category extends \Cms\Form\AttributeForm {
 			->setRequired()
 			->addFilterStringTrim()
 			->addValidatorStringLength(2, 128);
-		
+
 		//okres publikacji
 		$this->addElementDateTimePicker('dateStart')
+			->setReadOnly()
 			->setLabel('początek publikacji')
 			->addFilterEmptyToNull()
 			->setDateStart(date('Y-m-d H:i:s'))
@@ -42,6 +42,7 @@ class Category extends \Cms\Form\AttributeForm {
 			->setLimitMax('cmsadmin-form-category-dateEnd');
 
 		$this->addElementDateTimePicker('dateEnd')
+			->setReadOnly()
 			->setLabel('zakończenie publikacji')
 			->addFilterEmptyToNull()
 			->setDateStart(date('Y-m-d H:i:s'))

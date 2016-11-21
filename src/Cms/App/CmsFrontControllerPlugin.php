@@ -24,7 +24,7 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 		if ($request->__get('lang') && !in_array($request->__get('lang'), \App\Registry::$config->languages)) {
 			throw new \Mmi\Mvc\MvcNotFoundException('Language not found');
 		}
-		
+
 		//ustawianie widoku
 		$this->_viewSetup($request);
 
@@ -48,7 +48,7 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 				\Mmi\Session\Session::regenerateId();
 			}
 		}
-		
+
 		//autoryzacja do widoku
 		if ($auth->hasIdentity()) {
 			\Mmi\App\FrontController::getInstance()->getView()->auth = $auth;
@@ -63,27 +63,6 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 		\Mmi\Mvc\ActionHelper::getInstance()->setAcl($acl);
 		\Mmi\App\FrontController::getInstance()->getView()->acl = $acl;
 
-		//zablokowane na ACL
-		if (!$acl->isAllowed($auth->getRoles(), $actionLabel = strtolower($request->getModuleName() . ':' . $request->getControllerName() . ':' . $request->getActionName()))) {
-			$moduleStructure = \Mmi\App\FrontController::getInstance()->getStructure('module');
-			//brak w strukturze
-			if (!isset($moduleStructure[$request->getModuleName()][$request->getControllerName()][$request->getActionName()])) {
-				throw new \Mmi\Mvc\MvcNotFoundException('Component not found: ' . $actionLabel);
-			}
-			//brak autoryzacji i kontroler admina - przekierowanie na logowanie
-			if (!$auth->hasIdentity() && strpos($request->getModuleName(), 'Admin')) {
-				//logowanie admina
-				$this->_setAdminLoginRequest($request);
-			} elseif (!$auth->hasIdentity()) {
-				//logowanie użytkownika
-				$this->_setUserLoginRequest($request);
-			} else {
-				\App\Registry::$auth->clearIdentity();
-				//zalogowany na nieuprawnioną rolę
-				throw new \Mmi\Mvc\MvcNotFoundException('Unauthorized access');
-			}
-		}
-		
 		//ustawienie nawigatora
 		if (null === ($navigation = \App\Registry::$cache->load('Mmi-Navigation-' . $request->__get('lang')))) {
 			(new \Cms\Model\Navigation)->decorateConfiguration(\App\Registry::$config->navigation);
@@ -92,11 +71,33 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 			\App\Registry::$cache->save($navigation, 'Mmi-Navigation-' . $request->__get('lang'), 0);
 		}
 		$navigation->setup($request);
-		
+
 		//przypinanie nawigatora do helpera widoku nawigacji
 		\Mmi\Mvc\ViewHelper\Navigation::setAcl($acl);
 		\Mmi\Mvc\ViewHelper\Navigation::setAuth($auth);
 		\Mmi\Mvc\ViewHelper\Navigation::setNavigation($navigation);
+
+		//zablokowane na ACL
+		if ($acl->isAllowed($auth->getRoles(), $actionLabel = strtolower($request->getModuleName() . ':' . $request->getControllerName() . ':' . $request->getActionName()))) {
+			return;
+		}
+		$moduleStructure = \Mmi\App\FrontController::getInstance()->getStructure('module');
+		//brak w strukturze
+		if (!isset($moduleStructure[$request->getModuleName()][$request->getControllerName()][$request->getActionName()])) {
+			throw new \Mmi\Mvc\MvcNotFoundException('Component not found: ' . $actionLabel);
+		}
+		//brak autoryzacji i kontroler admina - przekierowanie na logowanie
+		if (!$auth->hasIdentity() && strpos($request->getModuleName(), 'Admin')) {
+			//logowanie admina
+			$this->_setAdminLoginRequest($request);
+		} elseif (!$auth->hasIdentity()) {
+			//logowanie użytkownika
+			$this->_setUserLoginRequest($request);
+		} else {
+			\App\Registry::$auth->clearIdentity();
+			//zalogowany na nieuprawnioną rolę
+			throw new \Mmi\Mvc\MvcNotFoundException('Unauthorized access');
+		}
 	}
 
 	/**

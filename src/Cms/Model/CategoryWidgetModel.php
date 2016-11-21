@@ -30,12 +30,6 @@ class CategoryWidgetModel {
 	private $_categoryId;
 
 	/**
-	 * Rekord kategorii
-	 * @var \Cms\Orm\CmsCategoryRecord;
-	 */
-	private $_categoryRecord;
-
-	/**
 	 * Identyfikator relacji
 	 * @param integer $categoryId
 	 */
@@ -45,7 +39,6 @@ class CategoryWidgetModel {
 		//wyszukiwanie relacji
 		if (null === $this->_widgetCollection = (new CmsCategoryWidgetCategoryQuery)
 			->join('cms_category_widget')->on('cms_category_widget_id')
-			->join('cms_category')->on('cms_category_id')
 			->whereCmsCategoryId()->equals($this->_categoryId)
 			//@TODO: add visible
 			->orderAscOrder()
@@ -53,13 +46,6 @@ class CategoryWidgetModel {
 			//nie znaleziono relacji
 			throw new \Cms\Exception\CategoryWidgetException('Category not found');
 		}
-		//przypisanie rekordu kategorii
-		foreach ($this->_widgetCollection as $widgetRelationRecord) {
-			//zwrot pierwszej z brzegu - wszystkie są takie same
-			return $this->_categoryRecord = $widgetRelationRecord->getJoined('cms_category');
-		}
-		//brak wyszukanie rekordu kategorii
-		$this->_categoryRecord = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->_categoryId);
 	}
 
 	/**
@@ -75,14 +61,6 @@ class CategoryWidgetModel {
 				return $widgetRelationRecord;
 			}
 		}
-	}
-
-	/**
-	 * Pobiera rekord kategorii
-	 * @return \Cms\Orm\CategoryRecord
-	 */
-	public function getCategoryRecord() {
-		return $this->_categoryRecord;
 	}
 
 	/**

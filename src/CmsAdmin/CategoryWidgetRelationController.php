@@ -58,16 +58,16 @@ class CategoryWidgetRelationController extends Mvc\Controller {
 				->findMax('order');
 			$widgetRelationRecord->order = $maxOrder !== null ? $maxOrder + 1 : 0;
 		}
+		//rekord widgeta do widoku
+		$this->view->widgetRecord = $widgetRecord;
 		//rekord do formularza to rekord wiązania
 		$record = $widgetRelationRecord;
-		//jeśli widget ma swój rekord, to ten idzie do formularza
-		if ($widgetRecord->recordClass) {
-			$record = new $widgetRecord->recordClass($widgetRelationRecord->getConfig()->recordId);
-		}
+		//domyślna klasa formularza
+		$widgetRecord->formClass = $widgetRecord->formClass ? : '\CmsAdmin\Form\CategoryAttributeWidgetForm';
 		//instancja formularza
 		$form = new $widgetRecord->formClass($record, ['widgetId' => $widgetRecord->id]);
 		//wartości z zapisanej konfiguracji
-		$formValues = (array) $widgetRelationRecord->getConfig();
+		$formValues = $widgetRelationRecord->getConfig()->toArray();
 		//nadpisanie wartościami z POSTA, jeśli zosały przesłane
 		if (!$this->getPost()->isEmpty() && is_array($this->getPost()->__get($form->getBaseName()))) {
 			$formValues = array_merge($formValues, $this->getPost()->__get($form->getBaseName()));
@@ -75,8 +75,6 @@ class CategoryWidgetRelationController extends Mvc\Controller {
 		$form->setFromArray($formValues);
 		//form zapisany
 		if ($form->isSaved()) {
-			//zapis powiązanego id do konfiguracji
-			$record->setOption('recordId', $record->id);
 			//zapis konfiguracji
 			$widgetRelationRecord->configJson = \json_encode($record->getOptions());
 			$widgetRelationRecord->save();
@@ -92,7 +90,7 @@ class CategoryWidgetRelationController extends Mvc\Controller {
 	public function previewAction() {
 		//wyłączenie layout
 		$this->view->setLayoutDisabled();
-		$this->view->widgetModel = new \Cms\Model\CategoryWidgetModel($this->categoryId);
+		$this->view->category = new \Cms\Orm\CmsCategoryRecord($this->categoryId);
 	}
 
 	/**

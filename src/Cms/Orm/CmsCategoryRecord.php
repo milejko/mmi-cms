@@ -2,17 +2,28 @@
 
 namespace Cms\Orm;
 
+use \Cms\Model\AttributeValueRelationModel,
+	\Cms\Model\AttributeRelationModel;
+
 /**
  * Rekord kategorii CMSowych
  */
 class CmsCategoryRecord extends \Mmi\Orm\Record {
 
 	public $id;
+
+	/**
+	 * Identyfikator szablonu
+	 * @var integer
+	 */
 	public $cmsCategoryTypeId;
 	public $lang;
+
+	/**
+	 * Nazwa pola
+	 * @var string
+	 */
 	public $name;
-	public $lead;
-	public $text;
 
 	/**
 	 * Breadcrumbs
@@ -41,15 +52,67 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	public $order;
 	public $dateAdd;
 	public $dateModify;
-	public $title;
-	public $description;
-	public $https;
-	public $follow;
-	public $blank;
-	public $active;
 	
+	/**
+	 * Tytuł SEO
+	 * @var string
+	 */
+	public $title;
+	
+	/**
+	 * Opis SEO
+	 * @var string
+	 */
+	public $description;
+	
+	/**
+	 * null - bez zmiany, true - https, false - http
+	 * @var string
+	 */
+	public $https;
+	
+	/**
+	 * Bez flagi nofollow
+	 * @var boolean
+	 */
+	public $follow;
+	
+	/**
+	 * Nowe okno
+	 * @var boolean
+	 */
+	public $blank;
+
+	/**
+	 * Data dodania
+	 * @var string
+	 */
 	public $dateStart;
+	
+	/**
+	 * Data modyfikacji
+	 * @var string
+	 */
 	public $dateEnd;
+	public $active;
+
+	/**
+	 * Wartości atrybutów
+	 * @var \Mmi\DataObject
+	 */
+	private $_attributeValues;
+
+	/**
+	 * Model widgetów kategorii
+	 * @var \Cms\Model\CategoryWidgetModel
+	 */
+	private $_widgetModel;
+
+	/**
+	 * Rekord rodzica
+	 * @var \Cms\Orm\CmsCategoryRecord
+	 */
+	private $_parentRecord;
 
 	/**
 	 * Zapis rekordu
@@ -94,6 +157,20 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @return boolean
 	 */
 	protected function _update() {
+		//zmodyfikowany szablon
+		if ($this->isModified('cmsCategoryTypeId')) {
+			//iteracja po różnicy międy obecnymi atrybutami a nowymi
+			foreach (array_diff(
+				//obecne id atrybutów
+				(new AttributeRelationModel('cmsCategoryType', $this->getInitialStateValue('cmsCategoryTypeId')))->getAttributeIds(),
+				//nowe id atrybutów
+				(new AttributeRelationModel('cmsCategoryType', $this->cmsCategoryTypeId))->getAttributeIds())
+			as $deletedAttributeId) {
+				//usuwanie wartości usuniętego atrybutu
+				(new AttributeValueRelationModel('category', $this->id))
+					->deleteAttributeValueRelationsByAttributeId($deletedAttributeId);
+			}
+		}
 		//zmodyfikowany parent
 		$parentModified = $this->isModified('parentId');
 		//zmodyfikowany order
@@ -141,6 +218,46 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	public function getUrl($https = null) {
 		//pobranie linku z widoku
 		return \Mmi\App\FrontController::getInstance()->getView()->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->customUri ? $this->customUri : $this->uri], true, $https);
+	}
+
+	/**
+	 * Pobiera rekordy wartości atrybutów w formie obiektu danych
+	 * @see \Mmi\DataObiect
+	 * @return \Mmi\DataObject
+	 */
+	public function getAttributeValues() {
+		//atrybuty już pobrane
+		if (null !== $this->_attributeValues) {
+			return $this->_attributeValues;
+		}
+		//pobieranie atrybutów
+		return $this->_attributeValues = (new \Cms\Model\AttributeValueRelationModel('category', $this->id))->getGrouppedAttributeValues();
+	}
+
+	/**
+	 * Pobiera model widgetów
+	 * @return \Cms\Model\CategoryWidgetModel
+	 */
+	public function getWidgetModel() {
+		//model widgetów już pobrany
+		if (null !== $this->_widgetModel) {
+			return $this->_widgetModel;
+		}
+		//tworzenie modelu widgetów
+		return $this->_widgetModel = new \Cms\Model\CategoryWidgetModel($this->id);
+	}
+
+	/**
+	 * Pobiera rekord rodzica
+	 * @return \Cms\Orm\CmsCategoryRecord
+	 */
+	public function getParentRecord() {
+		//rekord już pobrany
+		if (null !== $this->_parentRecord) {
+			return $this->_parentRecord;
+		}
+		//wyszukanie rekordu
+		return $this->_parentRecord = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->parentId);
 	}
 
 	/**

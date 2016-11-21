@@ -43,18 +43,6 @@ namespace Cms\Orm;
  * @method CmsCategoryQuery orderAscTitle()
  * @method CmsCategoryQuery orderDescTitle()
  * @method CmsCategoryQuery groupByTitle()
- * @method QueryHelper\CmsCategoryQueryField whereLead()
- * @method QueryHelper\CmsCategoryQueryField andFieldLead()
- * @method QueryHelper\CmsCategoryQueryField orFieldLead()
- * @method CmsCategoryQuery orderAscLead()
- * @method CmsCategoryQuery orderDescLead()
- * @method CmsCategoryQuery groupByLead()
- * @method QueryHelper\CmsCategoryQueryField whereText()
- * @method QueryHelper\CmsCategoryQueryField andFieldText()
- * @method QueryHelper\CmsCategoryQueryField orFieldText()
- * @method CmsCategoryQuery orderAscText()
- * @method CmsCategoryQuery orderDescText()
- * @method CmsCategoryQuery groupByText()
  * @method QueryHelper\CmsCategoryQueryField whereDescription()
  * @method QueryHelper\CmsCategoryQueryField andFieldDescription()
  * @method QueryHelper\CmsCategoryQueryField orFieldDescription()
@@ -171,6 +159,17 @@ class CmsCategoryQuery extends \Mmi\Orm\Query {
 				->whereLang()->equals(\Mmi\App\FrontController::getInstance()->getRequest()->lang)
 				->orFieldLang()->equals(null)
 				->orderDescLang();
+	}
+	
+	/**
+	 * Zapytanie wyszukujące kategorie po kluczu typu (szablonu)
+	 * @param string $typeKey
+	 * @return CmsCategoryQuery
+	 */
+	public function searchByTypeKey($typeKey) {
+		return (new CmsCategoryQuery)
+			->join('cms_category_type')->on('cms_category_type_id')
+			->where('key', 'cms_category_type')->equals($typeKey);
 	}
 
 	/**

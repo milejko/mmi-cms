@@ -27,7 +27,7 @@ class Tag extends \Mmi\Form\Form {
 		
 		//zapis
 		$this->addElementSubmit('submit')
-			->setLabel('zapisz');
+			->setLabel('zapisz tag');
 	}
 
 }

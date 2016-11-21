@@ -173,11 +173,13 @@ abstract class AttributeForm extends Form {
 	 * @return \Mmi\Form\Element\ElementAbstract
 	 */
 	private function _createFieldByAttribute(\Cms\Orm\CmsAttributeRecord $attribute) {
-		//konfiguracja pola
-		$field = (new $attribute->fieldClass('cmsAttribute-' . $attribute->id))
+		//ustalenie klasy pola
+		$fieldClass = $attribute->getJoined('cms_attribute_type')->fieldClass;
+		//tworzenie i konfiguracja pola
+		$field = (new $fieldClass('cmsAttribute' . $attribute->id))
 			->setLabel($attribute->name)
 			->setDescription($attribute->description)
-			->setValue($attribute->isRestricted() ? $this->_arrayValueByAttributeId($attribute->id) : $this->_scalarValueByAttributeId($attribute->id));
+			->setValue($attribute->getJoined('cms_attribute_type')->restricted ? $this->_arrayValueByAttribute($attribute) : $this->_scalarValueByAttribute($attribute));
 		$options = [];
 		//parsowanie opcji
 		parse_str($attribute->fieldOptions, $options);
@@ -186,23 +188,23 @@ abstract class AttributeForm extends Form {
 		//checkbox zaznaczony
 		if ($field instanceof \Mmi\Form\Element\Checkbox) {
 			$field->setValue(1)
-				->setChecked($this->_scalarValueByAttributeId($attribute->id));
+				->setChecked($this->_scalarValueByAttribute($attribute));
 		}
 		//multiopcje
-		if ($attribute->isRestricted()) {
+		if ($attribute->getJoined('cms_attribute_type')->restricted) {
 			//wyszukiwanie opcji pola
 			$options = (new \Cms\Orm\CmsAttributeValueQuery)->whereCmsAttributeId()->equals($attribute->id)
 				->orderAscLabel()
 				->orderAscValue()
 				->findPairs('value', 'label');
-			$field->setMultioptions($attribute->isMultiple() ? $options : [null => '---'] + $options);
+			$field->setMultioptions($attribute->getJoined('cms_attribute_type')->multiple ? $options : [null => '---'] + $options);
 		}
 		//pole wymagane
 		if ($attribute->required) {
 			$field->setRequired();
 		}
-		//czy pole jest wgrywarką plików
-		if ($attribute->isUploader()) {
+		//czy pole wymaga podania obiektu
+		if (method_exists($field, 'setObject')) {
 			//obiektem dla uploadera jest obiekt główny + klucz atrybutu, ignorowanie pola
 			$field->setObject($this->_saveToObject . ucfirst($attribute->key));
 			$field->setValue($this->_saveToObject . ucfirst($attribute->key));
@@ -239,37 +241,43 @@ abstract class AttributeForm extends Form {
 
 	/**
 	 * Pobiera pojedynczą wartość z relacji
-	 * @param integer $attributeId
+	 * @param \Cms\Orm\CmsAttributeRecord $attribute
 	 * @return mixed
 	 */
-	private function _scalarValueByAttributeId($attributeId) {
+	private function _scalarValueByAttribute(\Cms\Orm\CmsAttributeRecord $attribute) {
 		//iteracja po wartościach
 		foreach ($this->_cmsAttributeValues as $valueRecord) {
 			//znaleziony atrybut
-			if ($valueRecord->cmsAttributeId == $attributeId) {
+			if ($valueRecord->cmsAttributeId == $attribute->id) {
 				//zwrot wartości
 				return $valueRecord->value;
 			}
 		}
+		return $attribute->getJoined('cms_attribute_value')->value;
 	}
 
 	/**
 	 * Pobiera wszystkie wartości z relacji
-	 * @param integer $attributeId
+	 * @param \Cms\Orm\CmsAttributeRecord $attribute
 	 * @return array
 	 */
-	private function _arrayValueByAttributeId($attributeId) {
+	private function _arrayValueByAttribute(\Cms\Orm\CmsAttributeRecord $attribute) {
 		//tablica wartości
 		$values = [];
 		//iteracja po wartościach
 		foreach ($this->_cmsAttributeValues as $valueRecord) {
 			//znaleziony atrybut
-			if ($valueRecord->cmsAttributeId == $attributeId) {
+			if ($valueRecord->cmsAttributeId == $attribute->id) {
 				//dodanie wartości
 				$values[] = $valueRecord->value;
 			}
 		}
-		//zwrot wartości
+		//brak wartości - ustawienie domyślnej jeśli istnieje
+		if (empty($values) && $attribute->getJoined('cms_attribute_value')->value) {
+			//zwrot domyślnej wartości
+			return [$attribute->getJoined('cms_attribute_value')->value];
+		}
+		//zwrot znalezionych wartości
 		return $values;
 	}
 

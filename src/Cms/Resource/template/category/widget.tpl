@@ -1,4 +1,4 @@
-{foreach $attributes as $av}
+{foreach $widgetRelation->getAttributeValues() as $av}
 	{* obrazy / pliki *}
 	{if $av instanceof \Mmi\Orm\RecordCollection}
 		{foreach $av as $file}
