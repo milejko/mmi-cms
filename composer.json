@@ -19,7 +19,7 @@
 	],
 	"require": {
 		"php": ">=5.6.0",
-		"mmi/mmi": "~3.2.0",
+		"mmi/mmi": "~3.3.0",
 		"phpmailer/phpmailer": "~5.2"
 	},
 	"require-dev": {
