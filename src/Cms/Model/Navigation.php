@@ -102,9 +102,9 @@ class Navigation {
 		$params['uri'] = $record->customUri ? $record->customUri : $record->uri;
 
 		$element
-			->setModule(isset($params['module']) ? $params['module'] : 'cms')
-			->setController(isset($params['controller']) ? $params['controller'] : 'category')
-			->setAction(isset($params['action']) ? $params['action'] : 'dispatch')
+			->setModule('cms')
+			->setController('category')
+			->setAction('dispatch')
 			->setParams($params)
 			->setBlank($record->blank ? true : false)
 			->setDescription($record->description)
