@@ -25,6 +25,9 @@ class CmsRouterConfig extends \Mmi\Mvc\RouterConfig {
 		//moduł + kontroler + akcja np. /cmsAdmin/text/display
 		$this->setRoute('cms-admin-module-controller-action', '/^cmsAdmin\/([a-zA-Z\-]+)\/([a-zA-Z]+)$/', ['module' => 'cmsAdmin', 'controller' => '$1', 'action' => '$2']);
 
+		//routa do strony głównej (opartej o category)
+		$this->setRoute('cms-category-home', '', ['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => '/']);
+
 		//routa do stron cms i kategorii
 		$this->setRoute('cms-category-dispatch', '/^([a-zA-Z0-9\/\-]+)$/', ['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => '$1']);
 	}

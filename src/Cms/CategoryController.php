@@ -68,6 +68,11 @@ class CategoryController extends \Mmi\Mvc\Controller {
 			//404
 			throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
 		}
+		//kategoria to przekierowanie
+		if ($category->redirectUri) {
+			//przekierowanie na uri
+			$this->getResponse()->redirectToUrl($category->redirectUri);
+		}
 		//kategoria dozwolona - flaga podglądu + rola redaktora
 		if ($this->preview == 1 && \App\Registry::$acl->isAllowed(\App\Registry::$auth->getRoles(), 'cmsAdmin:category:index')) {
 			return $category;
@@ -103,7 +108,15 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		$request->setModuleName('cms')
 			->setControllerName('category')
 			->setActionName('article');
-		//pobranie typu i parametrów mvc
+		//przekierowanie MVC
+		if ($category->mvcParams) {
+			//tablica z tpl
+			$mvcParams = [];
+			//parsowanie parametrów mvc
+			parse_str($category->mvcParams, $mvcParams);
+			return $request->setParams($mvcParams);
+		}
+		//pobranie typu (szablonu) i jego parametrów mvc
 		if (!$category->getJoined('cms_category_type')->mvcParams) {
 			return $request;
 		}
