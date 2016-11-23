@@ -37,7 +37,7 @@ class Password extends \Mmi\Form\Form {
 		$this->addElementSubmit('change')
 			->setLabel('zmień hasło');
 	}
-	
+
 	/**
 	 * Zmiana hasła
 	 * @return boolean
