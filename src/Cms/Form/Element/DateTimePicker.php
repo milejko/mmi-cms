@@ -39,6 +39,7 @@ namespace Cms\Form\Element;
  * @method self setTimepicker($timepicker) ustawia włączone wybieranie godziny
  * @method self setDateMinField(\Cms\Form\Element\DateTimePicker $field) ustawia pole limitujące datę od dołu
  * @method self setDateMaxField(\Cms\Form\Element\DateTimePicker $field) ustawia pole limitujące datę od góry
+ * @method self setStep($step) ustawia krok w godzinach
  * 
  * Gettery
  * @method string getDateMin() pobiera datę minimalną
@@ -47,6 +48,7 @@ namespace Cms\Form\Element;
  * @method boolean getTimepicker() pobiera możliwość wybrania godziny
  * @method \Cms\Form\Element\DateTimePicker getDateMinField() pobiera pole limitujące datę od dołu
  * @method \Cms\Form\Element\DateTimePicker getDateMaxField() pobiera pole limitujące datę od góry
+ * @method string getStep() pobiera krok w godzinach
  * 
  * Walidatory
  * @method self addValidatorAlnum($message = null) walidator alfanumeryczny
@@ -125,6 +127,7 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract {
 		$this->view->headScript()->prependFile($this->view->baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js');
 		$this->view->headScript()->appendFile($this->view->baseUrl . '/resource/cmsAdmin/js/jquery/datetimepicker.js');
 		$this->addFilterEmptyToNull()
+			->setStep(15)
 			->setDatepicker(true)
 			->setTimepicker(true)
 			->setFormat('Y-m-d H:i');
@@ -141,12 +144,15 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract {
 		$timepicker = $this->getTimepicker() ? 'true' : 'false';
 		$minFieldId = $this->getDateMinField() ? $this->getDateMinField()->getId() : null;
 		$maxFieldId = $this->getDateMaxField() ? $this->getDateMaxField()->getId() : null;
+		if ($this->getTimepicker()) {
+			$this->setFormat('H:i');
+		}
 		//filtracja daty do zadanego formatu
 		$this->setValue($this->_formatDate($this->getValue()));
 		//dodanie skryptu inicjującego pickera
 		$this->view->headScript()->appendScript("$(document).ready(function () {
 				$('#" . $this->getId() . "').datetimepicker({
-					allowBlank: true, scrollInput: false, scrollMonth:false, step: 15, minDate: $dateMin, maxDate: $dateMax,
+					allowBlank: true, scrollInput: false, scrollMonth:false, step: 15, minDate: $dateMin, maxDate: $dateMax
 					datepicker: $datepicker, timepicker: $timepicker, format: '" . $this->getFormat() . "', validateOnBlur: true, 
 					onShow: function(currentTime, input) {
 						if ('" . $minFieldId . "' != '' && jQuery('#" . $minFieldId . "').val()) {
@@ -167,7 +173,6 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract {
 							maxDate = new Date(input.attr('data-max-date')),
 							minDate = new Date(input.attr('data-min-date'));
 						if (input.attr('data-min-date') != '' && inputDate < minDate) {
-						
 							input.val('');
 						}
 						if (input.attr('data-max-date') != '' && inputDate > maxDate) {
