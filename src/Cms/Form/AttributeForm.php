@@ -197,7 +197,7 @@ abstract class AttributeForm extends Form {
 				->orderAscLabel()
 				->orderAscValue()
 				->findPairs('value', 'label');
-			$field->setMultioptions($attribute->getJoined('cms_attribute_type')->multiple ? $options : [null => '---'] + $options);
+			$field->setMultioptions(($attribute->getJoined('cms_attribute_type')->multiple || $attribute->required) ? $options : [null => '---'] + $options);
 		}
 		//pole wymagane
 		if ($attribute->required) {
