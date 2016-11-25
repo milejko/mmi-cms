@@ -1,0 +1,1 @@
+ALTER TABLE `cms_attribute_value` CHANGE `label` `label` VARCHAR(128) CHARACTER SET utf8 COLLATE utf8_polish_ci NULL DEFAULT NULL;
