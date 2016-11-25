@@ -152,8 +152,8 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract {
 		//dodanie skryptu inicjującego pickera
 		$this->view->headScript()->appendScript("$(document).ready(function () {
 				$('#" . $this->getId() . "').datetimepicker({
-					allowBlank: true, scrollInput: false, scrollMonth:false, step: 15, minDate: $dateMin, maxDate: $dateMax
-					datepicker: $datepicker, timepicker: $timepicker, format: '" . $this->getFormat() . "', validateOnBlur: true, 
+					allowBlank: true, scrollInput: false, scrollMonth:false, step: 15, minDate: $dateMin, maxDate: $dateMax,
+					datepicker: $datepicker, timepicker: $timepicker, format: '" . $this->getFormat() . "', validateOnBlur: true,
 					onShow: function(currentTime, input) {
 						if ('" . $minFieldId . "' != '' && jQuery('#" . $minFieldId . "').val()) {
 							this.setOptions({
