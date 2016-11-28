@@ -144,7 +144,8 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract {
 		$timepicker = $this->getTimepicker() ? 'true' : 'false';
 		$minFieldId = $this->getDateMinField() ? $this->getDateMinField()->getId() : null;
 		$maxFieldId = $this->getDateMaxField() ? $this->getDateMaxField()->getId() : null;
-		if ($this->getTimepicker()) {
+		//brak datepickera - format czasu
+		if (!$this->getDatepicker()) {
 			$this->setFormat('H:i');
 		}
 		//filtracja daty do zadanego formatu
