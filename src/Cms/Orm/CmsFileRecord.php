@@ -27,9 +27,12 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 	 * @var string
 	 */
 	public $original;
-	public $title;
-	public $author;
-	public $source;
+
+	/**
+	 * Json z danymi opisowymi
+	 * @var string
+	 */
+	public $data;
 
 	/**
 	 * Rozmiar w bajtach
@@ -217,19 +220,44 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 		$this->size = $file->size;
 		return true;
 	}
+	
+	/**
+	 * Wczytanie rekordu
+	 * @param array $row
+	 * @return \Cms\Orm\CmsFileRecord
+	 */
+	public function setFromArray(array $row = []) {
+		parent::setFromArray($row);
+		try {
+			$data = $this->data ? json_decode($this->data, true) : [];
+		} catch (\Exception $e) {
+			$data = [];
+		}
+		$this->data = (new \Mmi\DataObject)->setParams($data);
+		return $this;
+	}
 
 	/**
 	 * Zapis danych do obiektu
 	 * @return bool
 	 */
 	public function save() {
-		$res = parent::save();
+		//iteracja po polach
+		foreach (($data = ($this->data instanceof \Mmi\DataObject) ? $this->data->toArray() : []) as $field => $value) {
+			//usuwanie pustych pól
+			if ($value === null) {
+				unset($data[$field]);
+			}
+		}
+		//zapis json'a
+		$this->data = empty($data) ? null : json_encode($data);
+		$result = parent::save();
 		//jeśli udało się zapisać rekord
-		if ($res) {
+		if ($result) {
 			//usunięcie obecnego pliku z dysku
 			$this->_unlinkCurrent();
 		}
-		return $res;
+		return $result;
 	}
 
 	/**
