@@ -35,20 +35,20 @@ namespace Cms\Form\Element;
  * @method self setForm(\Mmi\Form\Form $form) ustawia formularz
  * @method self setDateMin($dateMin) ustawia datę minimalną
  * @method self setDateMax($dateMax) ustawia datę maksymalną
- * @method self setFormat($format) ustawia format daty np. Y-m-d H:i
  * @method self setDatepicker($datepicker) ustawia włączone wybieranie daty
  * @method self setTimepicker($timepicker) ustawia włączone wybieranie godziny
  * @method self setDateMinField(\Cms\Form\Element\DateTimePicker $field) ustawia pole limitujące datę od dołu
  * @method self setDateMaxField(\Cms\Form\Element\DateTimePicker $field) ustawia pole limitujące datę od góry
+ * @method self setStep($step) ustawia krok w godzinach
  * 
  * Gettery
- * @method string getFormat() pobiera format
  * @method string getDateMin() pobiera datę minimalną
  * @method string getDateMax() pobiera datę maksymalną
  * @method boolean getDatepicker() pobiera możliwość wybrania daty
  * @method boolean getTimepicker() pobiera możliwość wybrania godziny
  * @method \Cms\Form\Element\DateTimePicker getDateMinField() pobiera pole limitujące datę od dołu
  * @method \Cms\Form\Element\DateTimePicker getDateMaxField() pobiera pole limitujące datę od góry
+ * @method string getStep() pobiera krok w godzinach
  * 
  * Walidatory
  * @method self addValidatorAlnum($message = null) walidator alfanumeryczny
@@ -100,6 +100,24 @@ namespace Cms\Form\Element;
 class DateTimePicker extends \Mmi\Form\Element\ElementAbstract {
 
 	/**
+	 * Ustawia format np. Y-m-d H:i
+	 * @param string $format
+	 * @return \Cms\Form\Element\DateTimePicker
+	 */
+	public function setFormat($format) {
+		return $this->setOption('data-format', $format);
+	}
+	
+	/**
+	 * Pobiera format
+	 * @return string
+	 */
+	public function getFormat() {
+		return $this->getOption('data-format');
+	}
+	
+
+	/**
 	 * Przekazanie widoku + pliki
 	 */
 	public function __construct($name) {
@@ -109,6 +127,7 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract {
 		$this->view->headScript()->prependFile($this->view->baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js');
 		$this->view->headScript()->appendFile($this->view->baseUrl . '/resource/cmsAdmin/js/jquery/datetimepicker.js');
 		$this->addFilterEmptyToNull()
+			->setStep(15)
 			->setDatepicker(true)
 			->setTimepicker(true)
 			->setFormat('Y-m-d H:i');
@@ -125,11 +144,17 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract {
 		$timepicker = $this->getTimepicker() ? 'true' : 'false';
 		$minFieldId = $this->getDateMinField() ? $this->getDateMinField()->getId() : null;
 		$maxFieldId = $this->getDateMaxField() ? $this->getDateMaxField()->getId() : null;
-
+		//brak datepickera - format czasu
+		if (!$this->getDatepicker()) {
+			$this->setFormat('H:i');
+		}
+		//filtracja daty do zadanego formatu
+		$this->setValue($this->_formatDate($this->getValue()));
+		//dodanie skryptu inicjującego pickera
 		$this->view->headScript()->appendScript("$(document).ready(function () {
 				$('#" . $this->getId() . "').datetimepicker({
-					allowBlank: true, step: 15, minDate: $dateMin, maxDate: $dateMax,
-					datepicker: $datepicker, timepicker: $timepicker, format: '" . $this->getFormat() . "', validateOnBlur: true, 
+					allowBlank: true, scrollInput: false, scrollMonth:false, step: 15, minDate: $dateMin, maxDate: $dateMax,
+					datepicker: $datepicker, timepicker: $timepicker, format: '" . $this->getFormat() . "', validateOnBlur: true,
 					onShow: function(currentTime, input) {
 						if ('" . $minFieldId . "' != '' && jQuery('#" . $minFieldId . "').val()) {
 							this.setOptions({
@@ -145,10 +170,13 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract {
 						}
 					},
 					onClose: function(currentTime, input) {
-						if (input.attr('data-min-date') != '' && input.val() < input.attr('data-min-date')) {
+						var inputDate = new Date(input.val()),
+							maxDate = new Date(input.attr('data-max-date')),
+							minDate = new Date(input.attr('data-min-date'));
+						if (input.attr('data-min-date') != '' && inputDate < minDate) {
 							input.val('');
 						}
-						if (input.attr('data-max-date') != '' && input.val() > input.attr('data-max-date')) {
+						if (input.attr('data-max-date') != '' && inputDate > maxDate) {
 							input.val('');
 						}
 					}
@@ -157,13 +185,26 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract {
 			});
 		");
 
-		unset($this->_options['dateMin']);
-		unset($this->_options['dateMax']);
-		unset($this->_options['format']);
-		unset($this->_options['datepicker']);
-		unset($this->_options['timepicker']);
+		//czyszczenie niepotrzebnych opcji
+		$this->unsetOption('dateMin')
+			->unsetOption('dateMax')
+			->unsetOption('datepicker')
+			->unsetOption('timepicker');
 
-		return '<input class="datePickerField" data-min-date="' . trim($dateMin, "'") . '" data-max-date="' . trim($dateMax, "'") . '" type="datetime" ' . $this->_getHtmlOptions() . '/>';
+		return '<input class="datePickerField" autocomplete="off" data-min-date="' . $this->_formatDate($dateMin) . '" data-max-date="' . $this->_formatDate($dateMax) . '" type="datetime" ' . $this->_getHtmlOptions() . '/>';
+	}
+	
+	/**
+	 * Formatowanie daty
+	 * @return string
+	 */
+	protected function _formatDate($date) {
+		$clearDate = trim($date, '\'" ');
+		//brak daty, pusty zwrot
+		if (!$clearDate || $clearDate == 'false') {
+			return;
+		}
+		return date($this->getFormat(), strtotime($clearDate));
 	}
 
 }
