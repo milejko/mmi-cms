@@ -259,6 +259,14 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		//wyszukanie rekordu
 		return $this->_parentRecord = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->parentId);
 	}
+	
+	/**
+	 * Pobiera rodzeństwo elementu (wraz z nim samym)
+	 * @return \Cms\Orm\CmsCategoryRecord[]
+	 */
+	public function getSiblings() {
+		return $this->_getChildren($this->parentId);
+	}
 
 	/**
 	 * Przebudowuje dzieci (wywołuje save)
@@ -281,12 +289,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	/**
 	 * Zwraca dzieci danego rodzica
 	 * @param integer $parentId id rodzica
-	 * @return \Mmi\Orm\RecordCollection
+	 * @return \Cms\Orm\CmsCategoryRecord[]
 	 */
 	protected function _getChildren($parentId) {
 		//zapytanie wyszukujące dzieci (z sortowaniem)
 		return (new CmsCategoryQuery)
 				->whereParentId()->equals($parentId)
+				->join('cms_category_type')->on('cms_category_type_id')
 				->orderAscOrder()
 				->orderAscId()
 				->find()

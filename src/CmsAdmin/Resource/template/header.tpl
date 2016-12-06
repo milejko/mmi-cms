@@ -14,8 +14,4 @@
 		{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/default.js')}
 		{headScript()}
 	</head>
-	
-	
-	
-	
 	<body>
