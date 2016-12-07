@@ -171,6 +171,18 @@ class CmsCategoryQuery extends \Mmi\Orm\Query {
 			->join('cms_category_type')->on('cms_category_type_id')
 			->where('key', 'cms_category_type')->equals($typeKey);
 	}
+	
+	/**
+	 * Zapytanie wyszukujące kategorie po tagu 
+	 * @param array $tags
+	 * @return CmsCategoryQuery
+	 */
+	public function searchByTagKey($tags) {
+		return (new CmsCategoryQuery)
+			->join('cms_tag_relation')->on('id', 'objectId')
+			->join('cms_tag','cms_tag_relation')->on('cms_tag_id', 'id')
+			->where('tag', 'cms_tag')->equals($tags);
+	}
 
 	/**
 	 * Zapytanie wyszukujące kategorie po uri
