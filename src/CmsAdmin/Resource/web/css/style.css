@@ -537,8 +537,8 @@ button.mce-close {
 }
 
 /* deleteTag */
-.confirm.red{
-    color: red;
+.confirm.red, .red{
+    color: red !important;
 }
 
 ul.chosen-choices {

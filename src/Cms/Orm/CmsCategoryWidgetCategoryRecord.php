@@ -85,11 +85,12 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 	}
 
 	/**
-	 * Aktywacja/deaktywacja
+	 * Aktywacja 1/roboczy 2/deaktywacja 0
+	 * @param int $state
 	 */
-	public function toggle() {
-		//aktywacja/deaktywacja
-		$this->active = $this->active ? false : true;
+	public function toggle($state = 0) {
+		//aktywacja/roboczy/deaktywacja
+		$this->active = (int) $state < 3 ? $state : 0;
 		$this->save();
 	}
 
