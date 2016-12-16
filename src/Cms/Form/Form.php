@@ -158,6 +158,14 @@ abstract class Form extends \Mmi\Form\Form {
 	public function addElementTags($name) {
 		return $this->addElement(new Element\Tags($name));
 	}
+	
+	/**
+	 * Html
+	 * @param string $html html
+	 */
+	public function addElementHtml($html) {
+		return $this->addElement(new Element\Html($html));
+	}
 
 	/**
 	 * Zwraca nazwę obiektu do przypięcia plików
