@@ -61,7 +61,7 @@ class FileController extends \Mmi\Mvc\Controller {
 				'title' => $file->original,
 				'full' => $thumb->thumb($file, 'default'),
 				'thumb' => $file->getUrl('scaley', '60', false),
-				'poster' => $file->source,
+				'poster' => !empty($file->source) ? $file->source : '',
 				'class' => $file->class,
 				'mime' => $file->mimeType,
 			];
