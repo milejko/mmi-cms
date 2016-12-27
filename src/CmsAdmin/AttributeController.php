@@ -38,7 +38,7 @@ class AttributeController extends Mvc\Controller {
 		if ($attributeType->restricted) {
 			//grid wartości atrybutu
 			$this->view->valueGrid = new Plugin\AttributeValueGrid(['id' => $form->getRecord()->id]);
-			$valueRecord = new \Cms\Orm\CmsAttributeValueRecord;
+			$valueRecord = new \Cms\Orm\CmsAttributeValueRecord($this->valueId);
 			$valueRecord->cmsAttributeId = $form->getRecord()->id;
 			//form wartości atrybutu
 			$valueForm = new Form\AttributeValue($valueRecord);

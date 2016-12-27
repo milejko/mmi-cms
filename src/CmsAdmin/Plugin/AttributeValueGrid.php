@@ -38,7 +38,7 @@ class AttributeValueGrid extends \CmsAdmin\Grid\Grid {
 		
 		//operacje
 		$this->addColumnOperation()
-			->setEditParams([])
+			->setEditParams(['module' => 'cmsAdmin', 'controller' => 'attribute', 'action' => 'edit', 'id' => '%cmsAttributeId%', 'valueId' => '%id%'])
 			->setDeleteParams(['module' => 'cmsAdmin', 'controller' => 'attributeValue', 'action' => 'delete', 'id' => '%id%']);
 	}
 
