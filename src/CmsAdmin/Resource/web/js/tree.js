@@ -199,7 +199,7 @@ CATEGORYCONF.loadUrl = function (data) {
 	$('audio, video').each(function () {
 		stopPlaying(this);
 	});
-	$('iframe').contents().find('audio, video').each(function () {
+	$('iframe#preview-frame').contents().find('audio, video').each(function () {
 		stopPlaying(this);
 	});
 	window.location.assign(request.baseUrl + '/cmsAdmin/category/edit?id=' + data.selected[0] + window.location.hash);
