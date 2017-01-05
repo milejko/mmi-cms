@@ -89,8 +89,8 @@ CMS.category = function () {
 			$('#widget-list-container').html(data);
 			initSortableWidgets();
 			initWidgetButtons();
-			if (MathJax !== undefined) {
-				MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+			if (window.MathJax !== undefined) {
+				window.MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 			}
 		});
 	};
