@@ -39,6 +39,19 @@ class CategoryAttributeRelationGrid extends \CmsAdmin\Grid\Grid {
 		$this->addColumnText('cms_attribute_value.value')
 			->setLabel('wartość domyślna');
 
+		//wymagany
+		$this->addColumnCheckbox('required')
+			->setLabel('wymagany');
+
+		//unikalny
+		$this->addColumnCheckbox('unique')
+			->setLabel('unikalny');
+
+		//zmaterializowany
+		$this->addColumnSelect('materialized')
+			->setMultioptions([0 => 'nie', 1 => 'tak', 2 => 'tak, odziedziczony'])
+			->setLabel('zmaterializowany');
+
 		//operacje
 		$this->addColumnOperation()
 			->setDeleteParams(['action' => 'deleteAttributeRelation', 'relationId' => '%id%'])

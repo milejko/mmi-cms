@@ -40,21 +40,8 @@ class AttributeGrid extends \CmsAdmin\Grid\Grid {
 				->findPairs('id', 'name'));
 
 		//waga
-		$this->addColumnText('indexWeight')
-			->setLabel('waga w indeksie');
-
-		//wymagany
-		$this->addColumnCheckbox('required')
-			->setLabel('wymagany');
-
-		//unikalny
-		$this->addColumnCheckbox('unique')
-			->setLabel('unikalny');
-
-		//zmaterializowany
-		$this->addColumnSelect('materialized')
-			->setMultioptions([0 => 'nie', 1 => 'tak', 2 => 'tak, odziedziczony'])
-			->setLabel('zmaterializowany');
+		//$this->addColumnText('indexWeight')
+		//	->setLabel('waga w indeksie');
 
 		//operacje
 		$this->addColumnOperation();

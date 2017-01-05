@@ -50,20 +50,13 @@ class CategoryAttributeRelationForm extends \Cms\Form\Form {
 			->setValue($defaultValueRecord ? $defaultValueRecord->value : null);
 		
 				//filtry
-		$this->addElementTextarea('filterClasses')
+		$this->addElementText('filterClasses')
 			->setLabel('filtry');
 
 		//walidatory
-		$this->addElementTextarea('validatorClasses')
+		$this->addElementText('validatorClasses')
 			->setLabel('walidatory');
 
-		//waga w indeksie
-		/* $this->addElementText('indexWeight')
-		  ->setLabel('waga w indeksie')
-		  ->setDescription('0-1000, im wyższa waga, tym wyższa pozycja w wyszukiwarce, 0 oznacza brak w wynikach')
-		  ->setValue(0)
-		  ->addValidatorNumberBetween(0, 1000); */
-		
 		//wymagany
 		$this->addElementCheckbox('required')
 			->setLabel('wymagany');
