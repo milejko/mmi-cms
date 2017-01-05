@@ -69,7 +69,7 @@ abstract class AttributeForm extends Form {
 		//iteracja po atrybutach
 		foreach ($this->_cmsAttributes as $attribute) {
 			//zmaterializowany, odziedziczony
-			if ($attribute->isMaterializedInherited()) {
+			if ($attribute->getJoined('cms_attribute_relation')->isMaterializedInherited()) {
 				continue;
 			}
 			//dodawanie skonfigurowanego pola
@@ -88,7 +88,7 @@ abstract class AttributeForm extends Form {
 			//wyszukiwanie atrybutu
 			$attribute = $this->_findAttributeById($attributeId);
 			//jeśli atrybut jest zmaterializowany
-			if (null !== $attribute && $attribute->isMaterialized()) {
+			if (null !== $attribute && $attribute->getJoined('cms_attribute_relation')->isMaterialized()) {
 				//ustawienie w wartości rekordzie
 				$this->getRecord()->{$attribute->key} = $element->getValue();
 			}
@@ -114,7 +114,7 @@ abstract class AttributeForm extends Form {
 		//iteracja po atrybutach
 		foreach ($this->_cmsAttributes as $attribute) {
 			//nie jest zmaterializowany, odziedziczony
-			if (!$attribute->isMaterializedInherited()) {
+			if (!$attribute->getJoined('cms_attribute_relation')->isMaterializedInherited()) {
 				continue;
 			}
 			//brak obiektu do dziedziczenia
@@ -197,10 +197,10 @@ abstract class AttributeForm extends Form {
 				->orderAscLabel()
 				->orderAscValue()
 				->findPairs('value', 'label');
-			$field->setMultioptions(($attribute->getJoined('cms_attribute_type')->multiple || $attribute->required) ? $options : [null => '---'] + $options);
+			$field->setMultioptions(($attribute->getJoined('cms_attribute_type')->multiple || $attribute->getJoined('cms_attribute_relation')->required) ? $options : [null => '---'] + $options);
 		}
 		//pole wymagane
-		if ($attribute->required) {
+		if ($attribute->getJoined('cms_attribute_relation')->required) {
 			$field->setRequired();
 		}
 		//czy pole wymaga podania obiektu
@@ -210,25 +210,25 @@ abstract class AttributeForm extends Form {
 			$field->setValue($this->_saveToObject . ucfirst($attribute->key));
 		}
 		//walidatory
-		if ($attribute->validatorClasses) {
+		if ($attribute->getJoined('cms_attribute_relation')->validatorClasses) {
 			//iteracja po walidatorach
-			foreach (explode(',', $attribute->validatorClasses) as $validatorConfig) {
+			foreach (explode(',', $attribute->getJoined('cms_attribute_relation')->validatorClasses) as $validatorConfig) {
 				$validator = $this->_parseClassWithOptions($validatorConfig)->getClass();
 				//dodawanie walidatora
 				$field->addValidator((new $validator)->setOptions($this->_parseClassWithOptions($validatorConfig)->getConfig()));
 			}
 		}
 		//filtry
-		if ($attribute->filterClasses) {
+		if ($attribute->getJoined('cms_attribute_relation')->filterClasses) {
 			//iteracja po filtrach
-			foreach (explode(',', $attribute->filterClasses) as $filterConfig) {
+			foreach (explode(',', $attribute->getJoined('cms_attribute_relation')->filterClasses) as $filterConfig) {
 				$filter = $this->_parseClassWithOptions($filterConfig)->getClass();
 				//dodawanie filtra
 				$field->addFilter((new $filter)->setOptions($this->_parseClassWithOptions($filterConfig)->getConfig()));
 			}
 		}
 		//unikalność
-		if ($attribute->unique) {
+		if ($attribute->getJoined('cms_attribute_relation')->unique) {
 			$field->addValidatorRecordUnique((new \Cms\Orm\CmsAttributeValueQuery)
 					->join('cms_attribute_value_relation')->on('id', 'cms_attribute_value_id')
 					->whereCmsAttributeId()->equals($attribute->id)
@@ -289,7 +289,7 @@ abstract class AttributeForm extends Form {
 		//iteracja po atrybutach
 		foreach ($this->_cmsAttributes as $attribute) {
 			//nie jest atrybutem odziedziczonym - czyli będzie wypisany przy renderingu
-			if (!$attribute->isMaterializedInherited()) {
+			if (!$attribute->getJoined('cms_attribute_relation')->isMaterializedInherited()) {
 				return true;
 			}
 		}
