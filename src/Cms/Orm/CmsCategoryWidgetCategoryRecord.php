@@ -20,10 +20,14 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 	public $order;
 
 	/**
-	 * Wartości atrybutów
-	 * @var \Mmi\DataObject
+	 * Aktualizacja rekordu
+	 * @return boolean 
 	 */
-	private $_attributeValues;
+	protected function _update() {
+		//usunięcie cache
+		\App\Registry::$cache->remove('widget-attributes-' . $this->id);
+		return parent::_update();
+	}
 
 	/**
 	 * Zwraca rekord kategorii
@@ -57,12 +61,13 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 	 * @return \Mmi\DataObject
 	 */
 	public function getAttributeValues() {
-		//atrybuty już pobrane
-		if (null !== $this->_attributeValues) {
-			return $this->_attributeValues;
+		//próba pobrania atrybutów z cache
+		if (null === $attributeValues = \App\Registry::$cache->load($cacheKey = 'widget-attributes-' . $this->id)) {
+			//pobieranie atrybutów
+			\App\Registry::$cache->save($attributeValues = (new \Cms\Model\AttributeValueRelationModel('categoryWidgetRelation', $this->id))->getGrouppedAttributeValues(), $cacheKey);
 		}
-		//pobieranie atrybutów
-		return $this->_attributeValues = (new \Cms\Model\AttributeValueRelationModel('categoryWidgetRelation', $this->id))->getGrouppedAttributeValues();
+		//zwrot atrybutów
+		return $attributeValues;
 	}
 
 	/**

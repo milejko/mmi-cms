@@ -74,7 +74,7 @@ class Category extends \Cms\Form\AttributeForm {
 			->addFilterStringTrim()
 			->addFilterEmptyToNull()
 			->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryQuery, 'customUri', $this->getRecord()->id)
-			->addValidatorStringLength(3, 255);
+			->addValidatorStringLength(1, 255);
 
 		//blank
 		$this->addElementCheckbox('follow')

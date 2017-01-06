@@ -97,12 +97,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	public $active;
 
 	/**
-	 * Wartości atrybutów
-	 * @var \Mmi\DataObject
-	 */
-	private $_attributeValues;
-
-	/**
 	 * Model widgetów kategorii
 	 * @var \Cms\Model\CategoryWidgetModel
 	 */
@@ -157,6 +151,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @return boolean
 	 */
 	protected function _update() {
+		\App\Registry::$cache->remove('category-attributes-' . $this->id);
 		//zmodyfikowany szablon
 		if ($this->isModified('cmsCategoryTypeId')) {
 			//iteracja po różnicy międy obecnymi atrybutami a nowymi
@@ -226,12 +221,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @return \Mmi\DataObject
 	 */
 	public function getAttributeValues() {
-		//atrybuty już pobrane
-		if (null !== $this->_attributeValues) {
-			return $this->_attributeValues;
+		//próba pobrania atrybutów z cache
+		if (null === $attributeValues = \App\Registry::$cache->load($cacheKey = 'category-attributes-' . $this->id)) {
+			//pobieranie atrybutów
+			\App\Registry::$cache->save($attributeValues = (new \Cms\Model\AttributeValueRelationModel('category', $this->id))->getGrouppedAttributeValues(), $cacheKey);
 		}
-		//pobieranie atrybutów
-		return $this->_attributeValues = (new \Cms\Model\AttributeValueRelationModel('category', $this->id))->getGrouppedAttributeValues();
+		//zwrot atrybutów
+		return $attributeValues;
 	}
 
 	/**

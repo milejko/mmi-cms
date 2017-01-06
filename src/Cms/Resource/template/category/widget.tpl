@@ -1,15 +1,21 @@
-{foreach $widgetRelation->getAttributeValues() as $av}
-	{* obrazy / pliki *}
-	{if $av instanceof \Mmi\Orm\RecordCollection}
-		{foreach $av as $file}
-			{if $file->class == 'image'}
-				<img src="{thumb($file, 'scalecrop', '100x100')}" alt="{$file->title}" />
+{foreach $widgetRelation->getAttributeValues() as $attributeValue}
+	{* wartość złożona *}
+	{if $attributeValue instanceof \Mmi\Orm\RecordCollection}
+		{* iteracja po wartościach *}
+		{foreach $attributeValue as $value}
+			{* plik *}
+			{if $value instanceof \Cms\Orm\CmsFileRecord}
+				<img src="{thumb($value, 'scalecrop', '100x100')}" alt="{$value->name}" />
+			{* rekord *}
+			{elseif $value instanceof \Mmi\Orm\RecordRo}
+				{$value|dump}
+			{* skalar *}
 			{else}
-				<a href="{$file->getUrl()}">{$file->title}</a>
+				{$value}
 			{/if}
 		{/foreach}
 		<br />
 		{continue}
 	{/if}
-	{$av->getJoined('cms_attribute')->name}: {$av->value}<br>
+	{$attributeValue}<br>
 {/foreach}
