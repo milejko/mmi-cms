@@ -135,8 +135,9 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		if (null === $this->order) {
 			$this->order = $this->_maxChildOrder() + 1;
 		}
-		//usuwanie cache po zapisie
+		//usuwanie cache przy zapisie
 		\App\Registry::$cache->remove('Mmi-Navigation-' . $this->lang);
+		\App\Registry::$cache->remove('category-' . md5($this->uri));
 		//zapis
 		return parent::save();
 	}
