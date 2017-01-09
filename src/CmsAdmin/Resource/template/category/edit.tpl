@@ -73,6 +73,7 @@
 				<div class="tab-content clearfix" id="tab-advanced">
 					{$categoryForm->getElement('redirectUri')}
 					{$categoryForm->getElement('mvcParams')}
+					{$categoryForm->getElement('configJson')}
 					{$categoryForm->getElement('https')}
 					{$categoryForm->getElement('blank')}
 					{$categoryForm->getElement('submit4')}

@@ -52,31 +52,37 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	public $order;
 	public $dateAdd;
 	public $dateModify;
-	
+
+	/**
+	 * JSON konfiguracyjny
+	 * @var string
+	 */
+	public $configJson;
+
 	/**
 	 * Tytuł SEO
 	 * @var string
 	 */
 	public $title;
-	
+
 	/**
 	 * Opis SEO
 	 * @var string
 	 */
 	public $description;
-	
+
 	/**
 	 * null - bez zmiany, true - https, false - http
 	 * @var string
 	 */
 	public $https;
-	
+
 	/**
 	 * Bez flagi nofollow
 	 * @var boolean
 	 */
 	public $follow;
-	
+
 	/**
 	 * Nowe okno
 	 * @var boolean
@@ -88,7 +94,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @var string
 	 */
 	public $dateStart;
-	
+
 	/**
 	 * Data modyfikacji
 	 * @var string
@@ -255,13 +261,32 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		//wyszukanie rekordu
 		return $this->_parentRecord = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->parentId);
 	}
-	
+
 	/**
 	 * Pobiera rodzeństwo elementu (wraz z nim samym)
 	 * @return \Cms\Orm\CmsCategoryRecord[]
 	 */
 	public function getSiblings() {
 		return $this->_getChildren($this->parentId);
+	}
+
+	/**
+	 * Zwraca konfigurację
+	 * @return \Mmi\DataObject
+	 */
+	public function getConfig() {
+		//próba dekodowania konfiguracji json
+		try {
+			$configArr = \json_decode($this->configJson, true);
+		} catch (\Exception $e) {
+			\Mmi\App\FrontController::getInstance()->getLogger()->addWarning('Unable to decode category configJson #' . $this->id);
+		}
+		//tworznie pustego configa
+		if (!isset($configArr)) {
+			$configArr = [];
+		}
+		$config = (new \Mmi\DataObject())->setParams($configArr);
+		return $config;
 	}
 
 	/**
