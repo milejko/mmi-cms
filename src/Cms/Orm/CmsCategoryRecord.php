@@ -304,7 +304,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 */
 	protected function _getChildren($parentId) {
 		//próba pobrania dzieci z cache
-		if (null === $children = \App\Registry::$cache->load($cacheKey = 'category-children-' . $this->id)) {
+		if (null === $children = \App\Registry::$cache->load($cacheKey = 'category-children-' . $parentId)) {
 			//pobieranie dzieci
 			\App\Registry::$cache->save($children = (new CmsCategoryQuery)
 				->whereParentId()->equals($parentId)
