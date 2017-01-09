@@ -103,18 +103,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	public $active;
 
 	/**
-	 * Model widgetów kategorii
-	 * @var \Cms\Model\CategoryWidgetModel
-	 */
-	private $_widgetModel;
-
-	/**
-	 * Rekord rodzica
-	 * @var \Cms\Orm\CmsCategoryRecord
-	 */
-	private $_parentRecord;
-
-	/**
 	 * Zapis rekordu
 	 * @return boolean
 	 */
@@ -136,8 +124,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 			$this->order = $this->_maxChildOrder() + 1;
 		}
 		//usuwanie cache przy zapisie
-		\App\Registry::$cache->remove('Mmi-Navigation-' . $this->lang);
-		\App\Registry::$cache->remove('category-' . md5($this->uri));
+		$this->_clearCache();
 		//zapis
 		return parent::save();
 	}
@@ -208,7 +195,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 			throw new \Cms\Exception\ChildrenExistException();
 		}
 		//usuwanie cache
-		\App\Registry::$cache->remove('Mmi-Navigation-' . $this->lang);
+		$this->_clearCache();
 		//usuwanie kategorii
 		return parent::delete();
 	}
@@ -242,12 +229,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @return \Cms\Model\CategoryWidgetModel
 	 */
 	public function getWidgetModel() {
-		//model widgetów już pobrany
-		if (null !== $this->_widgetModel) {
-			return $this->_widgetModel;
+		//próba pobrania modelu widgetu z cache
+		if (null === $widgetModel = \App\Registry::$cache->load($cacheKey = 'category-widget-model-' . $this->id)) {
+			//pobieranie modelu widgetu
+			\App\Registry::$cache->save($widgetModel = new \Cms\Model\CategoryWidgetModel($this->id), $cacheKey);
 		}
-		//tworzenie modelu widgetów
-		return $this->_widgetModel = new \Cms\Model\CategoryWidgetModel($this->id);
+		//zwrot atrybutów
+		return $widgetModel;
 	}
 
 	/**
@@ -255,12 +243,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @return \Cms\Orm\CmsCategoryRecord
 	 */
 	public function getParentRecord() {
-		//rekord już pobrany
-		if (null !== $this->_parentRecord) {
-			return $this->_parentRecord;
+		//próba pobrania rodzica z cache
+		if (null === $parent = \App\Registry::$cache->load($cacheKey = 'category-parent-' . $this->id)) {
+			//pobieranie rodzica
+			\App\Registry::$cache->save($parent = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->parentId), $cacheKey);
 		}
-		//wyszukanie rekordu
-		return $this->_parentRecord = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->parentId);
+		//zwrot rodzica
+		return $parent;
 	}
 
 	/**
@@ -314,14 +303,19 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @return \Cms\Orm\CmsCategoryRecord[]
 	 */
 	protected function _getChildren($parentId) {
-		//zapytanie wyszukujące dzieci (z sortowaniem)
-		return (new CmsCategoryQuery)
+		//próba pobrania dzieci z cache
+		if (null === $children = \App\Registry::$cache->load($cacheKey = 'category-children-' . $this->id)) {
+			//pobieranie dzieci
+			\App\Registry::$cache->save($children = (new CmsCategoryQuery)
 				->whereParentId()->equals($parentId)
 				->join('cms_category_type')->on('cms_category_type_id')
 				->orderAscOrder()
 				->orderAscId()
 				->find()
-				->toObjectArray();
+				->toObjectArray(), $cacheKey);
+		}
+		//zwrot dzieci
+		return $children;
 	}
 
 	/**
@@ -361,6 +355,19 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 			//zapis dziecka
 			$categoryRecord->save();
 		}
+	}
+
+	/**
+	 * Usuwa cache
+	 */
+	private function _clearCache() {
+		//usuwanie cache
+		\App\Registry::$cache->remove('Mmi-Navigation-' . $this->lang);
+		\App\Registry::$cache->remove('category-attributes-' . $this->id);
+		\App\Registry::$cache->remove('category-' . md5($this->uri));
+		\App\Registry::$cache->remove('category-widget-model-' . $this->id);
+		\App\Registry::$cache->remove('category-parent-' . $this->id);
+		\App\Registry::$cache->remove('category-children-' . $this->parentId);
 	}
 
 }

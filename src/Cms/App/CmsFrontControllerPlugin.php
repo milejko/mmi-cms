@@ -71,6 +71,7 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 			\App\Registry::$cache->save($navigation, 'Mmi-Navigation-' . $request->__get('lang'), 0);
 		}
 		$navigation->setup($request);
+		\App\Registry::$navigation = $navigation;
 
 		//przypinanie nawigatora do helpera widoku nawigacji
 		\Mmi\Mvc\ViewHelper\Navigation::setAcl($acl);
