@@ -119,7 +119,7 @@ class CategoryWidgetRelationController extends Mvc\Controller {
 			return '';
 		}
 		//zmiana widoczności relacji
-		$widgetRelation->toggle();
+		$widgetRelation->toggle($this->getRequest()->__get('state'));
 		return '';
 	}
 

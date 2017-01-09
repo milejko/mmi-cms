@@ -257,7 +257,12 @@ class Tags extends \Mmi\Form\Element\Select {
 	 * @return array
 	 */
 	public function getMultioptions() {
-		return array_merge($this->getValue(), parent::getMultioptions());
+		$array = [];
+		foreach (parent::getMultioptions() as $k => $t) {
+			$array[$k] = $k;
+		}
+
+		return array_merge($this->getValue(), $array);
 	}
 
 }

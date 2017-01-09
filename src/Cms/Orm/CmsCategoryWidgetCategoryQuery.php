@@ -62,5 +62,24 @@ namespace Cms\Orm;
 class CmsCategoryWidgetCategoryQuery extends \Mmi\Orm\Query {
 
 	protected $_tableName = 'cms_category_widget_category';
+	
+	/**
+	 * Zapytanie filtrujące state na podstawie użytkowników z daną rolą
+	 * @return CmsAuthQuery
+	 */
+	public function testActive() {	
+		//jezeli nie administrator - to tylko aktywne
+		if( !\App\Registry::$auth->hasRole('admin') ){
+			return $this->whereActive()->equals(1);
+		}
+		
+		//jezeli modul administraotra widzi wszystkie
+		if (\Mmi\App\FrontController::getInstance()->getRequest()->module === 'cmsAdmin') {
+			return $this->whereActive()->equals([0,1,2]);
+		}
+		
+		//jezeli front, widzi tylko aktywne/robocze
+		return $this->whereActive()->equals([1,2]);
+	}
 
 }

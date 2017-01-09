@@ -52,31 +52,37 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	public $order;
 	public $dateAdd;
 	public $dateModify;
-	
+
+	/**
+	 * JSON konfiguracyjny
+	 * @var string
+	 */
+	public $configJson;
+
 	/**
 	 * Tytuł SEO
 	 * @var string
 	 */
 	public $title;
-	
+
 	/**
 	 * Opis SEO
 	 * @var string
 	 */
 	public $description;
-	
+
 	/**
 	 * null - bez zmiany, true - https, false - http
 	 * @var string
 	 */
 	public $https;
-	
+
 	/**
 	 * Bez flagi nofollow
 	 * @var boolean
 	 */
 	public $follow;
-	
+
 	/**
 	 * Nowe okno
 	 * @var boolean
@@ -88,19 +94,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @var string
 	 */
 	public $dateStart;
-	
+
 	/**
 	 * Data modyfikacji
 	 * @var string
 	 */
 	public $dateEnd;
 	public $active;
-
-	/**
-	 * Wartości atrybutów
-	 * @var \Mmi\DataObject
-	 */
-	private $_attributeValues;
 
 	/**
 	 * Model widgetów kategorii
@@ -157,6 +157,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @return boolean
 	 */
 	protected function _update() {
+		\App\Registry::$cache->remove('category-attributes-' . $this->id);
 		//zmodyfikowany szablon
 		if ($this->isModified('cmsCategoryTypeId')) {
 			//iteracja po różnicy międy obecnymi atrybutami a nowymi
@@ -226,12 +227,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @return \Mmi\DataObject
 	 */
 	public function getAttributeValues() {
-		//atrybuty już pobrane
-		if (null !== $this->_attributeValues) {
-			return $this->_attributeValues;
+		//próba pobrania atrybutów z cache
+		if (null === $attributeValues = \App\Registry::$cache->load($cacheKey = 'category-attributes-' . $this->id)) {
+			//pobieranie atrybutów
+			\App\Registry::$cache->save($attributeValues = (new \Cms\Model\AttributeValueRelationModel('category', $this->id))->getGrouppedAttributeValues(), $cacheKey);
 		}
-		//pobieranie atrybutów
-		return $this->_attributeValues = (new \Cms\Model\AttributeValueRelationModel('category', $this->id))->getGrouppedAttributeValues();
+		//zwrot atrybutów
+		return $attributeValues;
 	}
 
 	/**
@@ -261,6 +263,33 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	}
 
 	/**
+	 * Pobiera rodzeństwo elementu (wraz z nim samym)
+	 * @return \Cms\Orm\CmsCategoryRecord[]
+	 */
+	public function getSiblings() {
+		return $this->_getChildren($this->parentId);
+	}
+
+	/**
+	 * Zwraca konfigurację
+	 * @return \Mmi\DataObject
+	 */
+	public function getConfig() {
+		//próba dekodowania konfiguracji json
+		try {
+			$configArr = \json_decode($this->configJson, true);
+		} catch (\Exception $e) {
+			\Mmi\App\FrontController::getInstance()->getLogger()->addWarning('Unable to decode category configJson #' . $this->id);
+		}
+		//tworznie pustego configa
+		if (!isset($configArr)) {
+			$configArr = [];
+		}
+		$config = (new \Mmi\DataObject())->setParams($configArr);
+		return $config;
+	}
+
+	/**
 	 * Przebudowuje dzieci (wywołuje save)
 	 * @param integer $parentId rodzic
 	 */
@@ -281,12 +310,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	/**
 	 * Zwraca dzieci danego rodzica
 	 * @param integer $parentId id rodzica
-	 * @return \Mmi\Orm\RecordCollection
+	 * @return \Cms\Orm\CmsCategoryRecord[]
 	 */
 	protected function _getChildren($parentId) {
 		//zapytanie wyszukujące dzieci (z sortowaniem)
 		return (new CmsCategoryQuery)
 				->whereParentId()->equals($parentId)
+				->join('cms_category_type')->on('cms_category_type_id')
 				->orderAscOrder()
 				->orderAscId()
 				->find()

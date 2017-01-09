@@ -48,6 +48,28 @@ class CategoryAttributeRelationForm extends \Cms\Form\Form {
 			->addFilterEmptyToNull()
 			//string odpowiadający wartości domyślnej
 			->setValue($defaultValueRecord ? $defaultValueRecord->value : null);
+		
+				//filtry
+		$this->addElementText('filterClasses')
+			->setLabel('filtry');
+
+		//walidatory
+		$this->addElementText('validatorClasses')
+			->setLabel('walidatory');
+
+		//wymagany
+		$this->addElementCheckbox('required')
+			->setLabel('wymagany');
+
+		//unikalny
+		$this->addElementCheckbox('unique')
+			->setLabel('unikalny');
+
+		//zmaterializowany
+		$this->addElementSelect('materialized')
+			->setMultioptions([0 => 'nie', 1 => 'tak', 2 => 'tak, odziedziczony'])
+			->setLabel('zmaterializowany')
+			->setDescription('opcja administracyjna, zmiana może uszkodzić formularze zawierające ten atrybut');
 
 		//kolejność
 		$this->addElementText('order')

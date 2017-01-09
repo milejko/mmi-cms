@@ -74,7 +74,7 @@ class Category extends \Cms\Form\AttributeForm {
 			->addFilterStringTrim()
 			->addFilterEmptyToNull()
 			->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryQuery, 'customUri', $this->getRecord()->id)
-			->addValidatorStringLength(3, 255);
+			->addValidatorStringLength(1, 255);
 
 		//blank
 		$this->addElementCheckbox('follow')
@@ -107,6 +107,12 @@ class Category extends \Cms\Form\AttributeForm {
 			->setDescription('np. module=blog&controller=index&action=index')
 			->addFilterStringTrim()
 			->addValidatorRegex('@module\=[a-zA-Z0-9\&\=]+@', 'niepoprawny adres modułu cms');
+		
+		//config JSON
+		$this->addElementText('configJson')
+			->setLabel('dodatkowe flagi')
+			->setDescription('format JSON')
+			->addFilterStringTrim();
 
 		//https
 		$this->addElementSelect('https')

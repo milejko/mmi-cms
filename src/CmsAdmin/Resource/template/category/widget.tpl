@@ -4,10 +4,10 @@
 		{* iteracja po wartościach *}
 		{foreach $attributeValue as $value}
 			{* plik *}
-			{if $value instanceof Cms\Orm\CmsFileRecord}
-				<img src="{thumb($value, 'scalecrop', '100x100')}" alt="{$value->title}" />
+			{if $value instanceof \Cms\Orm\CmsFileRecord}
+				<img src="{thumb($value, 'scalecrop', '100x100')}" alt="{$value->name}" />
 			{* rekord *}
-			{elseif $value instanceof Mmi\Orm\RecordRo}
+			{elseif $value instanceof \Mmi\Orm\RecordRo}
 				{$value|dump}
 			{* skalar *}
 			{else}

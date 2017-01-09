@@ -46,12 +46,25 @@ CMS.category = function () {
 			return false;
 		});
 		$('#widget-list').on('click', '.toggle-widget', function () {
-			$.get($(this).attr('href'));
-			if ($(this).children('i').attr('class') === 'icon-eye-close') {
+			var state = parseInt($(this).data('state'));
+			state++;
+			
+			if(state > 2){
+				state = 0;
+			}
+			
+			$.get($(this).attr('href'),{'state' : state});
+			if (state === 1) {
 				$(this).children('i').attr('class', 'icon-eye-open');
+				$(this).attr('title', 'aktywny');
+			} else if (state === 2) {
+				$(this).children('i').attr('class', 'icon-eye-open red');
+				$(this).attr('title', 'roboczy');
 			} else {
 				$(this).children('i').attr('class', 'icon-eye-close');
+				$(this).attr('title', 'ukryty');
 			}
+			$(this).data('state', state);
 			return false;
 		});
 	};
@@ -76,8 +89,8 @@ CMS.category = function () {
 			$('#widget-list-container').html(data);
 			initSortableWidgets();
 			initWidgetButtons();
-			if (MathJax !== undefined) {
-				MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+			if (window.MathJax !== undefined) {
+				window.MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 			}
 		});
 	};

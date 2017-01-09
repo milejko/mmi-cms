@@ -40,7 +40,8 @@ class CategoryWidgetModel {
 		if (null === $this->_widgetCollection = (new CmsCategoryWidgetCategoryQuery)
 			->join('cms_category_widget')->on('cms_category_widget_id')
 			->whereCmsCategoryId()->equals($this->_categoryId)
-			//@TODO: add visible
+			//test na status aktywny/roboczy/wylaczony								
+			->testActive()				
 			->orderAscOrder()
 			->find()) {
 			//nie znaleziono relacji

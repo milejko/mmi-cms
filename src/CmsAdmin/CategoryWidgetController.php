@@ -33,6 +33,10 @@ class CategoryWidgetController extends Mvc\Controller {
 			$this->getResponse()->redirect('cmsAdmin', 'categoryWidget');
 		}
 		$this->view->widgetForm = $form;
+		//brak identyfikatora
+		if (!$this->id) {
+			return;
+		}
 		//grid atrybutów
 		$this->view->relationGrid = new \CmsAdmin\Plugin\CategoryAttributeRelationGrid(['object' => 'cmsCategoryWidget', 'objectId' => $this->id]);
 		//rekord nowej, lub edytowanej relacji

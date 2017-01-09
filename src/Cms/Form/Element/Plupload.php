@@ -33,6 +33,9 @@ namespace Cms\Form\Element;
  * @method self setRequired($required = true) ustawia wymagalność
  * @method self setLabelPostfix($labelPostfix) ustawia postfix labelki
  * @method self setForm(\Mmi\Form\Form $form) ustawia formularz
+ * @method self setImprint($imprint) ustawia tablicę z polami metryczki
+ * 
+ * @method array getImprint() pobiera pola metryczki
  * 
  * Walidatory
  * @method self addValidatorAlnum($message = null) walidator alfanumeryczny
@@ -189,49 +192,6 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	}
 	
 	/**
-	 * Ustawia label dla pola title
-	 * @param string $label
-	 * @return \Cms\Form\Element\Plupload
-	 */
-	public function setTitleLabel($label) {
-		return $this->setOption('titleLabel', $label);
-	}
-	
-	/**
-	 * Ustawia label dla pola author
-	 * @param string $label
-	 * @return \Cms\Form\Element\Plupload
-	 */
-	public function setAuthorLabel($label) {
-		return $this->setOption('authorLabel', $label);
-	}
-	
-	/**
-	 * Ustawia label dla pola source
-	 * @param string $label
-	 * @return \Cms\Form\Element\Plupload
-	 */
-	public function setSourceLabel($label) {
-		return $this->setOption('sourceLabel', $label);
-	}
-	
-	/**
-	 * Ustawia, że pole do edycji source to textarea zamiast text
-	 * @return \Cms\Form\Element\Plupload
-	 */
-	public function setSourceAsTextarea() {
-		return $this->setOption('sourceAsTextarea', true);
-	}
-	
-	/**
-	 * Ustawia, że pole do edycji source to tinyMce zamiast text
-	 * @return \Cms\Form\Element\Plupload
-	 */
-	public function setSourceAsTinyMce() {
-		return $this->setOption('sourceAsTinyMce', true);
-	}
-	
-	/**
 	 * Ustawia akcję wykonywaną po przesłaniu całego pliku i zapisaniu rekordu
 	 * @param string $module
 	 * @param string $controller
@@ -264,6 +224,63 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		return $this->setOption('afterEdit', ['module' => $module, 'controller' => $controller, 'action' => $action]);
 	}
 	
+	/**
+	 * Dodaje pole do metryczki
+	 * @param string $type typ pola: text, checkbox, textarea, tinymce
+	 * @param string $name nazwa pola
+	 * @param string $label labelka pola
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function addImprintElement($type, $name, $label = null) {
+		$imprint = $this->getOption('imprint');
+		//brak pól - pusta lista
+		if (null === $imprint) {
+			$imprint = [];
+		}
+		$imprint[] = ['type' => $type, 'name' => $name, 'label' => ($label ? : $name)];
+		return $this->setOption('imprint', $imprint);
+	}
+	
+	/**
+	 * Dodaje pole tekstowe do metryczki
+	 * @param string $name nazwa pola
+	 * @param string $label labelka pola
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function addImprintElementText($name, $label) {
+		return $this->addAllowedType('text', $name, $label);
+	}
+	
+	/**
+	 * Dodaje pole textarea do metryczki
+	 * @param string $name nazwa pola
+	 * @param string $label labelka pola
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function addImprintElementTextarea($name, $label) {
+		return $this->addAllowedType('textarea', $name, $label);
+	}
+
+	/**
+	 * Dodaje pole edytora wysiwyg do metryczki
+	 * @param string $name nazwa pola
+	 * @param string $label labelka pola
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function addImprintElementTinymce($name, $label) {
+		return $this->addAllowedType('tinymce', $name, $label);
+	}
+	
+	/**
+	 * Dodaje pole checkbox do metryczki
+	 * @param string $name nazwa pola
+	 * @param string $label labelka pola
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function addImprintElementCheckbox($name, $label) {
+		return $this->addAllowedType('checkbox', $name, $label);
+	}
+
 	/**
 	 * Buduje pole
 	 * @return string
@@ -332,21 +349,10 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$html .= '</div>';
 		$html .= '<div id="' . $id . '-edit" class="plupload-edit-container" title="">';
 		$html .= '<fieldset>';
-		$html .= '<label>' . ($this->getOption('titleLabel') ? $this->getOption('titleLabel') : 'Tytuł') . ':</label>';
-		$html .= '<input type="text" name="title" value="" class="text ui-widget-content ui-corner-all" maxlength="255">';
-		$html .= '<label>' . ($this->getOption('authorLabel') ? $this->getOption('authorLabel') : 'Autor') . ':</label>';
-		$html .= '<input type="text" name="author" value="" class="text ui-widget-content ui-corner-all" maxlength="255">';
-		$html .= '<label>' . ($this->getOption('sourceLabel') ? $this->getOption('sourceLabel') : 'Źródło') . ':</label>';
-		if ($this->getOption('sourceAsTinyMce')) {
-			$html .= '<textarea name="source" class="plupload-edit-tinymce text ui-widget-content ui-corner-all"></textarea>';
-		} elseif ($this->getOption('sourceAsTextarea')) {
-			$html .= '<textarea name="source" class="text ui-widget-content ui-corner-all"></textarea>';
-		} else {
-			$html .= '<input type="text" name="source" value="" class="text ui-widget-content ui-corner-all">';
-		}
+		$html .= $this->_renderImprintElements();
 		$html .= '<div id="' . $id . '-edit-buttons" class="plupload-edit-buttons">';
-		$html .= '<input type="checkbox" name="active" id="' . $id . '-edit-active" value="1"><label for="' . $id . '-edit-active">Aktywny</label>';
-		$html .= '<input type="checkbox" name="sticky" id="' . $id . '-edit-sticky" value="1"><label for="' . $id . '-edit-sticky">Wyróżniony</label>';
+		$html .= '<input type="checkbox" name="active" id="' . $id . '-edit-active" value="1"><label for="' . $id . '-edit-active">aktywny</label>';
+		$html .= '<input type="checkbox" name="sticky" id="' . $id . '-edit-sticky" value="1"><label for="' . $id . '-edit-sticky">wyróżniony</label>';
 		$html .= '</div>';
 		$html .= '</fieldset>';
 		$html .= '<div class="dialog-error"><p></p><span class="ui-icon ui-icon-alert"></span></div>';
@@ -357,6 +363,58 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 			$html .= '</div>';
 		}
 		return $html;
+	}
+
+	/**
+	 * Rendering elementów metryczki
+	 * @return string
+	 */
+	protected function _renderImprintElements() {
+		//pusta metryczka
+		if (!is_array($this->getImprint())) {
+			return;
+		}
+		$html = '';
+		//iteracja po elementach
+		foreach ($this->getImprint() as $element) {
+			$html .= $this->_renderImprintElement($element);
+		}
+		return $html;
+	}
+	
+	/**
+	 * Rendering elementu formularza
+	 * @param array
+	 * @return string
+	 */
+	protected function _renderImprintElement($element) {
+		//walidacja
+		if (!isset($element['type']) || !isset($element['name']) || !isset($element['label'])) {
+			return;
+		}
+		//identyfikator pola
+		$fieldId = $this->getId() . '-' . (new \Mmi\Filter\Url)->filter($element['name']);
+		//element label
+		$label = '<label for="' . $fieldId . '">' . $element['label'] . (($element['type'] != 'checkbox') ? ':' : '') . '</label>';
+		//input text
+		if ($element['type'] == 'text') {
+			return $label . 
+				'<input id="' . $fieldId . '" type="' . $element['type'] . '" name="' . $element['name'] . '" class="imprint ' . $element['type'] . '">';
+		}
+		//input checkbox
+		if ($element['type'] == 'checkbox') {
+			return '<input id="' . $fieldId . '" type="' . $element['type'] . '" name="' . $element['name'] . '" value="1" class="imprint ' . $element['type'] . '">' . $label;
+		}
+		//textarea
+		if ($element['type'] == 'textarea') {
+			return $label .	
+				'<textarea id="' . $fieldId . '" name="' . $element['name'] . '" class="imprint ' . $element['type'] . '"></textarea>';
+		}
+		//tinymce
+		if ($element['type'] == 'tinymce') {
+			return $label .	
+				'<textarea id="' . $fieldId . '" name="' . $element['name'] . '" class="plupload-edit-tinymce imprint ' . $element['type'] . '"></textarea>';
+		}
 	}
 
 }

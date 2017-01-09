@@ -229,9 +229,14 @@ PLUPLOADCONF.settings.ready = function (event, args) {
 				if (data.result === 'OK' && data.record) {
 					//przygotowujemy zawartość okienka edycji i pokazujemy go
 					var edit = 'div#' + args.up.getOption('form_element_id') + '-edit';
-					$(edit + ' input[name="title"]').val(data.record.title);
-					$(edit + ' input[name="author"]').val(data.record.author);
-					$(edit + ' [name="source"]').val(data.record.source);
+					$(edit + ' > fieldset > .imprint').each(function () {
+						var fieldName = $(this).attr('name');
+						if ($(this).attr('type') == 'checkbox') {
+							$(this).prop('checked', (parseInt(data.data[fieldName])) > 0 ? 'checked' : '');
+						} else {
+							$(this).val(data.data[fieldName]);
+						}
+					});
 					$(edit + ' input[name="active"]').prop('checked', (parseInt(data.record.active) > 0) ? 'checked' : '');
 					$(edit + ' input[name="sticky"]').prop('checked', (parseInt(data.record.sticky) > 0) ? 'checked' : '');
 					$(edit + ' .dialog-error').hide().find('p').text('');

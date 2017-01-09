@@ -124,7 +124,7 @@ class UploadController extends Mvc\Controller {
 		}
 		//szukamy rekordu pliku
 		if (null !== $record = (new \Cms\Orm\CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
-			return json_encode(['result' => 'OK', 'record' => $record]);
+			return json_encode(['result' => 'OK', 'record' => $record, 'data' => $record->data->toArray()]);
 		}
 		return $this->_jsonError(185);
 	}
@@ -143,12 +143,23 @@ class UploadController extends Mvc\Controller {
 		if (null === $record = (new \Cms\Orm\CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
 			return $this->_jsonError(186);
 		}
-		$form = ['active' => 0, 'sticky' => 0];
+		$form = ['active' => 0, 'sticky' => null];
 		foreach ($this->getPost()->form as $field) {
 			$form[$field['name']] = $field['value'];
+			if ($field['name'] == 'active' || $field['name'] == 'sticky') {
+				continue;
+			}
+			$record->data->{$field['name']} = $field['value'];
 		}
-		$record->setFromArray($form);
-		if ($form['sticky']) {
+		//czyszczenie nieprzesłanych checkboxów
+		foreach ($record->data as $name => $value) {
+			if (!isset($form[$name])) {
+				$record->data->{$name} = null;
+			}
+		}
+		$record->active = isset($form['active']) ? $form['active'] : $record->active;
+		$record->sticky = isset($form['sticky']) ? $form['sticky'] : $record->sticky;
+		if ($record->sticky) {
 			$result = $record->setSticky();
 		} else {
 			$result = $record->save();
