@@ -99,10 +99,16 @@ class Mail {
 			->whereActive()->equals(0)
 			->andFieldDateSendAfter()->lessOrEquals(date('Y-m-d H:i:s'))
 			->orderAscDateSendAfter()
+			->limit(500)
 			->find();
 		//brak maili do wysyłki
 		if (count($emails) == 0) {
 			return $result;
+		}
+		//tymczasowy stan (w wysyłce)
+		foreach ($emails as $email) {
+			$email->active = 2;
+			$email->save();
 		}
 		//wysyłka pojedynczego maila
 		foreach ($emails as $email) {
