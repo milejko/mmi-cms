@@ -112,6 +112,7 @@ class Category extends \Cms\Form\AttributeForm {
 		$this->addElementText('configJson')
 			->setLabel('dodatkowe flagi')
 			->setDescription('format JSON')
+			->addValidatorJson()
 			->addFilterStringTrim();
 
 		//https
