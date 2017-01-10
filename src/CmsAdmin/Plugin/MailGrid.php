@@ -22,7 +22,12 @@ class MailGrid extends \CmsAdmin\Grid\Grid {
 				->orderDescId());
 
 		//wysłany
-		$this->addColumnCheckbox('active')
+		$this->addColumnSelect('active')
+			->setMultioptions([
+				0 => 'do wysyłki',
+				1 => 'wysłany',
+				2 => 'w trakcie wysyłki',
+			])
 			->setLabel('wysłany');
 
 		//data dodania
