@@ -226,18 +226,19 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	
 	/**
 	 * Dodaje pole do metryczki
-	 * @param string $type typ pola: text, checkbox, textarea, tinymce
+	 * @param string $type typ pola: text, checkbox, textarea, tinymce, select
 	 * @param string $name nazwa pola
 	 * @param string $label labelka pola
+	 * @param string $options opcje pola
 	 * @return \Cms\Form\Element\Plupload
 	 */
-	public function addImprintElement($type, $name, $label = null) {
+	public function addImprintElement($type, $name, $label = null, $options = []) {
 		$imprint = $this->getOption('imprint');
 		//brak pól - pusta lista
 		if (null === $imprint) {
 			$imprint = [];
 		}
-		$imprint[] = ['type' => $type, 'name' => $name, 'label' => ($label ? : $name)];
+		$imprint[] = ['type' => $type, 'name' => $name, 'label' => ($label ? : $name), 'options' => $options];
 		return $this->setOption('imprint', $imprint);
 	}
 	
@@ -279,6 +280,17 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	 */
 	public function addImprintElementCheckbox($name, $label) {
 		return $this->addAllowedType('checkbox', $name, $label);
+	}
+	
+	/**
+	 * Dodaje pole listy do metryczki
+	 * @param string $name nazwa pola
+	 * @param string $label labelka pola
+	 * @param array $option opcje
+	 * @return \Cms\Form\Element\Plupload
+	 */
+	public function addImprintElementSelect($name, $label, $option) {
+		return $this->addAllowedType('select', $name, $label, $option);
 	}
 
 	/**
@@ -414,6 +426,17 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		if ($element['type'] == 'tinymce') {
 			return $label .	
 				'<textarea id="' . $fieldId . '" name="' . $element['name'] . '" class="plupload-edit-tinymce imprint ' . $element['type'] . '"></textarea>';
+		}
+		//lista
+		if ($element['type'] == 'select') {
+			
+			$option = [];
+			foreach($element['options'] as $value){
+				array_push($option, '<option value="'. $value .'">'. $value .'</option>"');
+			}
+			
+			return $label .	
+				'<select id="' . $fieldId . '" name="' . $element['name'] . '" class="plupload-edit-tinymce imprint ' . $element['type'] . '">'.implode($option).'</select>';
 		}
 	}
 

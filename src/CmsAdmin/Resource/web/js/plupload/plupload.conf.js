@@ -253,7 +253,7 @@ PLUPLOADCONF.settings.ready = function (event, args) {
 							'Zapisz': function () {
 								//trigger odświeżający dane
 								tinymce.triggerSave();
-								$.post(request.baseUrl + '/cmsAdmin/upload/describe', {cmsFileId: file.cmsFileId, form: $(edit + ' input,' + edit + ' textarea').serializeArray(), afterEdit: args.up.getOption('after_edit')}, 'json')
+								$.post(request.baseUrl + '/cmsAdmin/upload/describe', {cmsFileId: file.cmsFileId, form: $(edit + ' input,' + edit + ' textarea,' + edit + ' select').serializeArray(), afterEdit: args.up.getOption('after_edit')}, 'json')
 								.done(function (data) {
 									if (data.result === 'OK') {
 										editDialog.dialog('close');
