@@ -431,8 +431,8 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		if ($element['type'] == 'select') {
 			
 			$option = [];
-			foreach($element['options'] as $value){
-				array_push($option, '<option value="'. $value .'">'. $value .'</option>"');
+			foreach($element['options'] as $key => $value){
+				array_push($option, '<option value="'. $key .'">'. $value .'</option>"');
 			}
 			
 			return $label .	
