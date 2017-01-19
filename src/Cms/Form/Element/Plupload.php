@@ -85,7 +85,7 @@ namespace Cms\Form\Element;
  * @method self addFilterZeroToNull() filtr zero do null'a
  */
 class Plupload extends \Mmi\Form\Element\ElementAbstract {
-	
+
 	/**
 	 * Ustawia objekt cms_
 	 * @param string $object
@@ -94,7 +94,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	public function setObject($object) {
 		return $this->setOption('object', $object);
 	}
-	
+
 	/**
 	 * Ustawia rozmiar chunka
 	 * @param string $size
@@ -103,7 +103,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	public function setChunkSize($size) {
 		return $this->setOption('chunkSize', $size);
 	}
-	
+
 	/**
 	 * Ustawia maksymalny rozmiar pliku
 	 * @param string $size
@@ -112,7 +112,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	public function setMaxFileSize($size) {
 		return $this->setOption('maxFileSize', $size);
 	}
-	
+
 	/**
 	 * Ustawia maksymalną ilość plików możliwą do wgrania
 	 * @param integer $count
@@ -121,7 +121,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	public function setMaxFileCount($count) {
 		return $this->setOption('maxFileCount', intval($count));
 	}
-	
+
 	/**
 	 * Ustawia, czy pokazać konsolę z komunikatami
 	 * @param boolean $show
@@ -130,7 +130,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	public function setShowConsole($show = true) {
 		return $this->setOption('showConsole', boolval($show));
 	}
-	
+
 	/**
 	 * Dodaje dozwolony typ pliku
 	 * @param string $mime typ pliku mime, np. image/jpeg
@@ -150,7 +150,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$types[] = ['title' => $title, 'extensions' => $extensions, 'mime' => $mime];
 		return $this->setOption('mimeTypes', $types);
 	}
-	
+
 	/**
 	 * Dodaje dozwolony typ pliku JPG
 	 * @return \Cms\Form\Element\Plupload
@@ -158,7 +158,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	public function addAllowedJpg() {
 		return $this->addAllowedType('image/jpeg', 'jpg,jpeg,jpe');
 	}
-	
+
 	/**
 	 * Dodaje dozwolony typ pliku PNG
 	 * @return \Cms\Form\Element\Plupload
@@ -166,7 +166,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	public function addAllowedPng() {
 		return $this->addAllowedType('image/png', 'png');
 	}
-	
+
 	/**
 	 * Dodaje dozwolony typ pliku GIF
 	 * @return \Cms\Form\Element\Plupload
@@ -174,7 +174,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	public function addAllowedGif() {
 		return $this->addAllowedType('image/gif', 'gif');
 	}
-	
+
 	/**
 	 * Ustawia, że z aktualnej listy plików wyświetla tylko obrazki
 	 * @return \Cms\Form\Element\Plupload
@@ -182,7 +182,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	public function setTypeImages() {
 		return $this->setOption('fileTypes', 'images');
 	}
-	
+
 	/**
 	 * Ustawia, że z aktualnej listy plików wyświetla wszystkie poza obrazkami
 	 * @return \Cms\Form\Element\Plupload
@@ -190,7 +190,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	public function setTypeNotImages() {
 		return $this->setOption('fileTypes', 'notImages');
 	}
-	
+
 	/**
 	 * Ustawia akcję wykonywaną po przesłaniu całego pliku i zapisaniu rekordu
 	 * @param string $module
@@ -201,7 +201,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	public function setAfterUploadAction($module, $controller, $action) {
 		return $this->setOption('afterUpload', ['module' => $module, 'controller' => $controller, 'action' => $action]);
 	}
-	
+
 	/**
 	 * Ustawia akcję wykonywaną po usunięciu pliku
 	 * @param string $module
@@ -212,7 +212,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	public function setAfterDeleteAction($module, $controller, $action) {
 		return $this->setOption('afterDelete', ['module' => $module, 'controller' => $controller, 'action' => $action]);
 	}
-	
+
 	/**
 	 * Ustawia akcję wykonywaną po edycji opisu pliku
 	 * @param string $module
@@ -223,7 +223,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	public function setAfterEditAction($module, $controller, $action) {
 		return $this->setOption('afterEdit', ['module' => $module, 'controller' => $controller, 'action' => $action]);
 	}
-	
+
 	/**
 	 * Dodaje pole do metryczki
 	 * @param string $type typ pola: text, checkbox, textarea, tinymce, select
@@ -238,10 +238,10 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		if (null === $imprint) {
 			$imprint = [];
 		}
-		$imprint[] = ['type' => $type, 'name' => $name, 'label' => ($label ? : $name), 'options' => $options];
+		$imprint[] = ['type' => $type, 'name' => $name, 'label' => ($label ?: $name), 'options' => $options];
 		return $this->setOption('imprint', $imprint);
 	}
-	
+
 	/**
 	 * Dodaje pole tekstowe do metryczki
 	 * @param string $name nazwa pola
@@ -251,7 +251,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	public function addImprintElementText($name, $label) {
 		return $this->addAllowedType('text', $name, $label);
 	}
-	
+
 	/**
 	 * Dodaje pole textarea do metryczki
 	 * @param string $name nazwa pola
@@ -271,7 +271,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	public function addImprintElementTinymce($name, $label) {
 		return $this->addAllowedType('tinymce', $name, $label);
 	}
-	
+
 	/**
 	 * Dodaje pole checkbox do metryczki
 	 * @param string $name nazwa pola
@@ -281,7 +281,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 	public function addImprintElementCheckbox($name, $label) {
 		return $this->addAllowedType('checkbox', $name, $label);
 	}
-	
+
 	/**
 	 * Dodaje pole listy do metryczki
 	 * @param string $name nazwa pola
@@ -311,7 +311,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/plupload/i18n/pl.js');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/plupload/jquery.ui.plupload/jquery.ui.plupload.min.js');
 		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/plupload/plupload.conf.js');
-		
+
 		$id = $this->getOption('id');
 		$object = 'library';
 		$objectId = null;
@@ -330,7 +330,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		if (!$this->_form->hasRecord()) {
 			$objectId = null;
 		}
-		
+
 		//dołączanie skryptu
 		$view->headScript()->appendScript("
 			$(document).ready(function () {
@@ -393,7 +393,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		}
 		return $html;
 	}
-	
+
 	/**
 	 * Rendering elementu formularza
 	 * @param array
@@ -410,8 +410,8 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		$label = '<label for="' . $fieldId . '">' . $element['label'] . (($element['type'] != 'checkbox') ? ':' : '') . '</label>';
 		//input text
 		if ($element['type'] == 'text') {
-			return $label . 
-				'<input id="' . $fieldId . '" type="' . $element['type'] . '" name="' . $element['name'] . '" class="imprint ' . $element['type'] . '">';
+			return $label .
+					'<input id="' . $fieldId . '" type="' . $element['type'] . '" name="' . $element['name'] . '" class="imprint ' . $element['type'] . '">';
 		}
 		//input checkbox
 		if ($element['type'] == 'checkbox') {
@@ -419,24 +419,51 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 		}
 		//textarea
 		if ($element['type'] == 'textarea') {
-			return $label .	
-				'<textarea id="' . $fieldId . '" name="' . $element['name'] . '" class="imprint ' . $element['type'] . '"></textarea>';
+			return $label .
+					'<textarea id="' . $fieldId . '" name="' . $element['name'] . '" class="imprint ' . $element['type'] . '"></textarea>';
 		}
 		//tinymce
 		if ($element['type'] == 'tinymce') {
-			return $label .	
-				'<textarea id="' . $fieldId . '" name="' . $element['name'] . '" class="plupload-edit-tinymce imprint ' . $element['type'] . '"></textarea>';
+			return $label .
+					'<textarea id="' . $fieldId . '" name="' . $element['name'] . '" class="plupload-edit-tinymce imprint ' . $element['type'] . '"></textarea>';
 		}
 		//lista
 		if ($element['type'] == 'select') {
-			
+
 			$option = [];
-			foreach($element['options'] as $key => $value){
-				array_push($option, '<option value="'. $key .'">'. $value .'</option>"');
+			foreach ($element['options'] as $key => $value) {
+				if (is_array($value)) {
+					$data = '';
+					foreach ($value['data'] as $data_key => $data_val) {
+						$data .= $data_key . '="' . $data_val . '"';
+					}
+					array_push($option, '<option value="' . $key . '" ' . $data . '>' . $value['value'] . '</option>"');
+				} else {
+					array_push($option, '<option value="' . $key . '">' . $value . '</option>"');
+				}
 			}
 			
-			return $label .	
-				'<select id="' . $fieldId . '" name="' . $element['name'] . '" class="plupload-edit-tinymce imprint ' . $element['type'] . '">'.implode($option).'</select>';
+			//dodaje podglad obrazka
+			$image = '';
+			if( isset($element['preview']) ){
+				$image = "
+				<div class='col_3' id='image_$fieldId'></div>
+				<script type='text/javascript'>
+				// <![CDATA[
+					$(document).ready(function () {
+						'use strict';
+						$('#$fieldId').change(function() {
+							$('#image_$fieldId').html( '<img src=\"' + $(this).find(':selected').attr('data-image-url') +'\"/>' );
+						});
+					});
+				// ]]>
+				</script>
+				<div class='col_12'></div>
+				";
+			}
+
+			return $label .
+					'<select id="' . $fieldId . '" name="' . $element['name'] . '" class="' .($image!=''?'col_9':''). ' plupload-edit-tinymce imprint ' . $element['type'] . '">' . implode($option) . '</select>' . $image;
 		}
 	}
 

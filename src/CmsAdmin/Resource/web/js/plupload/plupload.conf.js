@@ -234,8 +234,8 @@ PLUPLOADCONF.settings.ready = function (event, args) {
 						if ($(this).attr('type') == 'checkbox') {
 							$(this).prop('checked', (parseInt(data.data[fieldName])) > 0 ? 'checked' : '');
 						} else {
-							$(this).val(data.data[fieldName]);
-						}
+							$(this).val(data.data[fieldName]).change();
+						}						
 					});
 					$(edit + ' input[name="active"]').prop('checked', (parseInt(data.record.active) > 0) ? 'checked' : '');
 					$(edit + ' input[name="sticky"]').prop('checked', (parseInt(data.record.sticky) > 0) ? 'checked' : '');
