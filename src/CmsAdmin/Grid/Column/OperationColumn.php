@@ -77,7 +77,13 @@ class OperationColumn extends ColumnAbstract {
 	public function setDeleteTagParams(array $params = ['action' => 'delete', 'id' => '%id%']) {
 		return $this->setOption('deleteTagParams', $params);
 	}
-	
+
+	/**
+	 * Dodaje dowolny button
+	 * @param string $iconName
+	 * @param array $params parametry
+	 * @return OperationColumn
+	 */
 	public function addCustomButton($iconName, array $params = []) {
 		$customButtons = is_array($this->getOption('customButtons')) ? $this->getOption('customButtons') : [];
 		$customButtons[] = ['iconName' => $iconName, 'params' => $params];
@@ -105,17 +111,21 @@ class OperationColumn extends ColumnAbstract {
 		if (!empty($customButtons)) {
 			//iteracja po przyciskach
 			foreach ($customButtons as $button) {
+				//brak uprawnień w ACL
+				if (!$this->_checkAcl($params = $this->_parseParams($button['params'], $record))) {
+					continue;
+				}
 				//html przycisku
-				$html .= '<a href="' . $view->url($this->_parseParams($button['params'], $record)) . '"><i class="icon-' . $button['iconName'] . '"></i></a>&nbsp;&nbsp;';
+				$html .= '<a href="' . $view->url($params) . '"><i class="icon-' . $button['iconName'] . '"></i></a>&nbsp;&nbsp;';
 			}
 		}
-		//link edycyjny
-		if (!empty($editParams)) {
-			$html .= '<a href="' . $view->url($this->_parseParams($editParams, $record)) . '"><i class="icon-pencil"></i></a>&nbsp;&nbsp;';
+		//link edycyjny ze sprawdzeniem ACL
+		if (!empty($editParams) && $this->_checkAcl($params = $this->_parseParams($editParams, $record))) {
+			$html .= '<a href="' . $view->url($params) . '"><i class="icon-pencil"></i></a>&nbsp;&nbsp;';
 		}
-		//link kasujący
-		if (!empty($deleteParams)) {
-			$html .= '<a href="' . $view->url($this->_parseParams($deleteParams, $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
+		//link kasujący ze sprawdzeniem ACL
+		if (!empty($deleteParams) && $this->_checkAcl($params = $this->_parseParams($deleteParams, $record))) {
+			$html .= '<a href="' . $view->url($params) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
 		}
 		//link kasujący tag
 		if (!empty($deleteTagParams)) {
@@ -125,8 +135,7 @@ class OperationColumn extends ColumnAbstract {
 		    if (!$record->getJoined('cms_tag_relation')->id) {
 			$html .= '<a href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
 		    }
-		}
-		
+		}		
 		return $html;
 	}
 	
@@ -151,6 +160,18 @@ class OperationColumn extends ColumnAbstract {
 			$parsedParams[$key] = $param;
 		}
 		return $parsedParams;
+	}
+	
+	/**
+	 * Sprawdzenie ACL
+	 * @param array $params
+	 * @return boolean
+	 */
+	protected function _checkAcl(array $params) {
+		//łączenie parametrów z requestem Front Controllera
+		$urlParams = array_merge(FrontController::getInstance()->getRequest()->toArray(), $params);
+		//sprawdzenie acl
+		return \App\Registry::$acl->isAllowed(\App\Registry::$auth->getRoles(), strtolower($urlParams['module'] . ':' . $urlParams['controller'] . ':' . $urlParams['action']));
 	}
 
 }
