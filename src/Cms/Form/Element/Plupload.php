@@ -458,7 +458,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 					});
 				// ]]>
 				</script>
-				<div class='col_12'></div>
+				<div class='col_12'></div><br clear='both'/>
 				";
 			}
 
