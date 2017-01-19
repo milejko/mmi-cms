@@ -10,6 +10,9 @@
 
 namespace Cms\Mvc\ViewHelper;
 
+/**
+ * Helper miniatur
+ */
 class Thumb extends \Mmi\Mvc\ViewHelper\HelperAbstract {
 
 	/**

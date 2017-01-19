@@ -9,7 +9,9 @@
  */
 
 namespace CmsAdmin\Grid\Column;
-use Mmi\App\FrontController;
+
+use Mmi\App\FrontController,
+	Cms\Mvc\ViewHelper\AclAllowed;
 
 /**
  * Klasa Columnu indeksującego
@@ -41,7 +43,7 @@ class OperationColumn extends ColumnAbstract {
 		//ustawia nazwę na _operation_
 		parent::__construct('_operation_');
 	}
-	
+
 	/**
 	 * Ustawia parametry linku edycyjnego
 	 * ['action' => 'edit', 'id' => '%id%']
@@ -53,7 +55,7 @@ class OperationColumn extends ColumnAbstract {
 	public function setEditParams(array $params = ['action' => 'edit', 'id' => '%id%']) {
 		return $this->setOption('editParams', $params);
 	}
-	
+
 	/**
 	 * Ustawia parametry linku usuwającego
 	 * ['action' => 'delete', 'id' => '%id%']
@@ -65,7 +67,7 @@ class OperationColumn extends ColumnAbstract {
 	public function setDeleteParams(array $params = ['action' => 'delete', 'id' => '%id%']) {
 		return $this->setOption('deleteParams', $params);
 	}
-	
+
 	/**
 	 * Ustawia parametry linku usuwającego
 	 * ['action' => 'delete', 'id' => '%id%']
@@ -96,7 +98,7 @@ class OperationColumn extends ColumnAbstract {
 	 * @return string
 	 */
 	public function renderCell(\Mmi\Orm\RecordRo $record) {
-	    	    
+
 		$view = FrontController::getInstance()->getView();
 		$html = '';
 		//pobieranie parametrów linku edycji
@@ -112,7 +114,7 @@ class OperationColumn extends ColumnAbstract {
 			//iteracja po przyciskach
 			foreach ($customButtons as $button) {
 				//brak uprawnień w ACL
-				if (!$this->_checkAcl($params = $this->_parseParams($button['params'], $record))) {
+				if (!(new AclAllowed)->aclAllowed($params = $this->_parseParams($button['params'], $record))) {
 					continue;
 				}
 				//html przycisku
@@ -120,32 +122,32 @@ class OperationColumn extends ColumnAbstract {
 			}
 		}
 		//link edycyjny ze sprawdzeniem ACL
-		if (!empty($editParams) && $this->_checkAcl($params = $this->_parseParams($editParams, $record))) {
+		if (!empty($editParams) && (new AclAllowed)->aclAllowed($params = $this->_parseParams($editParams, $record))) {
 			$html .= '<a href="' . $view->url($params) . '"><i class="icon-pencil"></i></a>&nbsp;&nbsp;';
 		}
 		//link kasujący ze sprawdzeniem ACL
-		if (!empty($deleteParams) && $this->_checkAcl($params = $this->_parseParams($deleteParams, $record))) {
+		if (!empty($deleteParams) && (new AclAllowed)->aclAllowed($params = $this->_parseParams($deleteParams, $record))) {
 			$html .= '<a href="' . $view->url($params) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
 		}
 		//link kasujący tag
 		if (!empty($deleteTagParams)) {
-		    if ($record->getJoined('cms_tag_relation')->id) {
-			$html .= '<a href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Tag jest przypisany do zasobu. Jeżeli zostanie usunięty nie ma możliwości przywrócenia relacji. Czy na pewno usunąć" class="confirm red"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
-		    }
-		    if (!$record->getJoined('cms_tag_relation')->id) {
-			$html .= '<a href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
-		    }
-		}		
+			if ($record->getJoined('cms_tag_relation')->id) {
+				$html .= '<a href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Tag jest przypisany do zasobu. Jeżeli zostanie usunięty nie ma możliwości przywrócenia relacji. Czy na pewno usunąć" class="confirm red"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
+			}
+			if (!$record->getJoined('cms_tag_relation')->id) {
+				$html .= '<a href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
+			}
+		}
 		return $html;
 	}
-	
+
 	/**
 	 * Zwraca tablicę sparsowanych parametrów do linku
 	 * @param array $params
 	 * @param \Mmi\Orm\RecordRo $record
 	 * @return array
 	 */
-	protected function _parseParams(array $params, \Mmi\Orm\RecordRo $record) {	    
+	protected function _parseParams(array $params, \Mmi\Orm\RecordRo $record) {
 		//inicjalizacja parametrów
 		$parsedParams = [];
 		$matches = [];
@@ -160,18 +162,6 @@ class OperationColumn extends ColumnAbstract {
 			$parsedParams[$key] = $param;
 		}
 		return $parsedParams;
-	}
-	
-	/**
-	 * Sprawdzenie ACL
-	 * @param array $params
-	 * @return boolean
-	 */
-	protected function _checkAcl(array $params) {
-		//łączenie parametrów z requestem Front Controllera
-		$urlParams = array_merge(FrontController::getInstance()->getRequest()->toArray(), $params);
-		//sprawdzenie acl
-		return \App\Registry::$acl->isAllowed(\App\Registry::$auth->getRoles(), strtolower($urlParams['module'] . ':' . $urlParams['controller'] . ':' . $urlParams['action']));
 	}
 
 }

@@ -37,9 +37,11 @@
 					<li>
 						<a href="#tab-advanced">Zaawansowane</a>
 					</li>
-					<li>
-						<a href="#tab-widget">Widgety</a>
-					</li>
+					{if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
+						<li>
+							<a href="#tab-widget">Widgety</a>
+						</li>
+					{/if}
 					<li>
 						<a class="reload-preview" href="#tab-preview">Podgląd</a>
 					</li>
@@ -80,12 +82,14 @@
 			</div>
 			{$categoryForm->end()}
 			{$categoryId = $categoryForm->getRecord()->id}
+			{if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
 			<div class="tab-content clearfix" id="tab-widget">
-				<a href="{@module=cmsAdmin&controller=categoryWidgetRelation&action=add&id={$categoryId}@}" class="button new-window" target="_blank"><i class="icon-plus"></i> dodaj widget</a>
+				{if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'add'])}<a href="{@module=cmsAdmin&controller=categoryWidgetRelation&action=add&id={$categoryId}@}" class="button new-window" target="_blank"><i class="icon-plus"></i> dodaj widget</a>{/if}
 				<div id="widget-list-container" data-category-id="{$categoryId}">
 					{widget('cmsAdmin', 'categoryWidgetRelation', 'preview', ['categoryId' => $categoryId])}
 				</div>
 			</div>
+			{/if}
 			<div class="tab-content clearfix" id="tab-preview">
 					<iframe onload="this.style.height = 0; this.style.height = this.contentWindow.document.body.scrollHeight + 'px';" id="preview-frame" src="{if $categoryForm->getRecord()->customUri}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->customUri}@}{else}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->uri}&preview=1@}{/if}"></iframe>
 			</div>
