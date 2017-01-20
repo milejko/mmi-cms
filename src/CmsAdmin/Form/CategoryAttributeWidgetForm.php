@@ -24,17 +24,4 @@ class CategoryAttributeWidgetForm extends \Cms\Form\AttributeForm {
 			->setLabel('zapisz');
 	}
 	
-	/**
-	 * Metoda użytkownika wykonywana na koniec konstruktora
-	 * odrzuca transakcję jeśli zwróci false
-	 */
-	public function afterSave() {
-		parent::afterSave();
-		//wyczyszczenie cache listy produktów
-		if ($this->getRecord()->cmsCategoryId) {
-			\App\Registry::$cache->remove('category-widget-model-' . $this->getRecord()->cmsCategoryId);
-		}
-		return true;
-	}
-
 }

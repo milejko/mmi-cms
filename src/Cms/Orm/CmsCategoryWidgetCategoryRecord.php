@@ -18,15 +18,16 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 	 * @var integer
 	 */
 	public $order;
-
+	
 	/**
-	 * Aktualizacja rekordu
-	 * @return boolean 
+	 * Zapis rekordu
+	 * @return boolean
 	 */
-	protected function _update() {
-		//usunięcie cache
+	public function save() {
+		//usuwanie cache 
+		\App\Registry::$cache->remove('category-widget-model-' . $this->cmsCategoryId);
 		\App\Registry::$cache->remove('widget-attributes-' . $this->id);
-		return parent::_update();
+		return parent::save();
 	}
 
 	/**
