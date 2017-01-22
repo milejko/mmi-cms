@@ -50,10 +50,13 @@ class OperationColumn extends ColumnAbstract {
 	 * %pole% zastępowany jest przez $record->pole
 	 * 
 	 * @param array $params
+	 * @param string $hashTarget część url po #
 	 * @return OperationColumn
 	 */
-	public function setEditParams(array $params = ['action' => 'edit', 'id' => '%id%']) {
-		return $this->setOption('editParams', $params);
+	public function setEditParams(array $params = ['action' => 'edit', 'id' => '%id%'], $hashTarget = '') {
+		return $this
+				->setOption('editHashTarget', $hashTarget)
+				->setOption('editParams', $params);
 	}
 
 	/**
@@ -62,10 +65,13 @@ class OperationColumn extends ColumnAbstract {
 	 * %pole% zastępowany jest przez $record->pole
 	 * 
 	 * @param array $params
+	 * @param string $hashTarget część url po #
 	 * @return OperationColumn
 	 */
-	public function setDeleteParams(array $params = ['action' => 'delete', 'id' => '%id%']) {
-		return $this->setOption('deleteParams', $params);
+	public function setDeleteParams(array $params = ['action' => 'delete', 'id' => '%id%'], $hashTarget = '') {
+		return $this
+				->setOption('deleteHashTarget', $hashTarget)
+				->setOption('deleteParams', $params);
 	}
 
 	/**
@@ -84,11 +90,12 @@ class OperationColumn extends ColumnAbstract {
 	 * Dodaje dowolny button
 	 * @param string $iconName
 	 * @param array $params parametry
+	 * @param string $hashTarget
 	 * @return OperationColumn
 	 */
-	public function addCustomButton($iconName, array $params = []) {
+	public function addCustomButton($iconName, array $params = [], $hashTarget = '') {
 		$customButtons = is_array($this->getOption('customButtons')) ? $this->getOption('customButtons') : [];
-		$customButtons[] = ['iconName' => $iconName, 'params' => $params];
+		$customButtons[] = ['iconName' => $iconName, 'params' => $params, 'hashTarget' => $hashTarget];
 		return $this->setOption('customButtons', $customButtons);
 	}
 
@@ -118,16 +125,16 @@ class OperationColumn extends ColumnAbstract {
 					continue;
 				}
 				//html przycisku
-				$html .= '<a href="' . $view->url($params) . '"><i class="icon-' . $button['iconName'] . '"></i></a>&nbsp;&nbsp;';
+				$html .= '<a href="' . $view->url($params) . rtrim('#' . $button['hashTarget'], '#') . '"><i class="icon-' . $button['iconName'] . '"></i></a>&nbsp;&nbsp;';
 			}
 		}
 		//link edycyjny ze sprawdzeniem ACL
 		if (!empty($editParams) && (new AclAllowed)->aclAllowed($params = $this->_parseParams($editParams, $record))) {
-			$html .= '<a href="' . $view->url($params) . '"><i class="icon-pencil"></i></a>&nbsp;&nbsp;';
+			$html .= '<a href="' . $view->url($params) . rtrim('#' . $this->getOption('editHashTarget'), '#') . '"><i class="icon-pencil"></i></a>&nbsp;&nbsp;';
 		}
 		//link kasujący ze sprawdzeniem ACL
 		if (!empty($deleteParams) && (new AclAllowed)->aclAllowed($params = $this->_parseParams($deleteParams, $record))) {
-			$html .= '<a href="' . $view->url($params) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
+			$html .= '<a href="' . $view->url($params) . rtrim('#' . $this->getOption('deleteHashTarget'), '#') . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
 		}
 		//link kasujący tag
 		if (!empty($deleteTagParams)) {
