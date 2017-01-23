@@ -21,7 +21,7 @@ namespace CmsAdmin\Grid\Column;
  * @method self setFilterMethodEquals() ustawia metodę filtracji na równość
  * @method self setFilterMethodLike() ustawia metodę filtracji na podobny
  * @method self setFilterMethodSearch() ustawia metodę filtracji na wyszukaj
- * @method self setFilterMethodBetween() ustawia metodę filtracji na pomiędzy
+ * @method self setFilterMethodNull() ustawia metodę filtracji na równe/różne null
  */
 class CheckboxColumn extends SelectColumn {
 	
@@ -48,7 +48,16 @@ class CheckboxColumn extends SelectColumn {
 		//zwrot siebie
 		return $this;
 	}
-
+	
+	/**
+	 * Ustawia wyłączenie z edycji
+	 * @param boolean $disabled
+	 * @return \CmsAdmin\Grid\Column\CheckboxColumn
+	 */
+	public function setDisabled($disabled = true) {
+		return $this->setOption('disabled', (bool) $disabled);
+	}
+	
 	/**
 	 * Renderuje pole tekstowe
 	 * @param \Mmi\Orm\RecordRo $record
@@ -64,8 +73,9 @@ class CheckboxColumn extends SelectColumn {
 			//ustawia wartość na odpowiadającą zaznaczeniu
 			->setValue($this->_getCheckedValue())
 			->setId($this->getFormColumnName() . '-' . $record->id)
+			->setDisabled($this->getOption('disabled') ? true : false)
 			//ustawia zaznaczenie
-			->setChecked($this->_getCheckedValue() == $this->getValueFromRecord($record));
+			->setChecked($this->_getCheckedValue() <= $this->getValueFromRecord($record));
 	}
 	
 	/**

@@ -1,9 +1,3 @@
-CREATE TABLE `DB_CHANGELOG` (
-  `filename` varchar(64) COLLATE utf8_polish_ci NOT NULL,
-  `md5` varchar(32) COLLATE utf8_polish_ci NOT NULL,
-  PRIMARY KEY (`filename`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
-
 CREATE TABLE `cms_role` (
   `id` integer NOT NULL AUTO_INCREMENT,
   `name` varchar(32) COLLATE utf8_polish_ci NOT NULL,

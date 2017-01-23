@@ -26,7 +26,9 @@ class AuthController extends Mvc\Controller {
 	 * Edycja użytkownika
 	 */
 	public function editAction() {
-		$this->view->ldap = \App\Registry::$config->ldap->active;
+		if (\App\Registry::$config->ldap) {
+			$this->view->ldap = \App\Registry::$config->ldap->active;
+		}
 		
 		$form = new \CmsAdmin\Form\Auth(new \Cms\Orm\CmsAuthRecord($this->id));
 		if ($form->isSaved()) {

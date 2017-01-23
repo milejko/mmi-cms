@@ -187,6 +187,20 @@ class GridState extends \Mmi\OptionObject {
 				$query->andField($filter->getField(), $filter->getTableName())->like($filter->getValue() . '%');
 				continue;
 			}
+			//większość
+			if ($filter->getMethod() == 'null') {
+				if ($filter->getValue()) {
+					$query->andField($filter->getField(), $filter->getTableName())->notEquals(null);
+					continue;
+				}
+				$query->andField($filter->getField(), $filter->getTableName())->equals(null);
+				continue;
+			}
+			//mniejszość
+			if ($filter->getMethod() == 'less') {
+				$query->andField($filter->getField(), $filter->getTableName())->lessOrEquals($filter->getValue());
+				continue;
+			}
 			//domyślnie - wyszukanie
 			$query->andField($filter->getField(), $filter->getTableName())->like('%' . $filter->getValue() . '%');
 		}
