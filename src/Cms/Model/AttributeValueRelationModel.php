@@ -76,12 +76,26 @@ class AttributeValueRelationModel {
 	 * @param mixed $attributeValue
 	 */
 	public function createAttributeValueRelationByValue($attributeId, $attributeValue) {
-		//wyszukiwanie rekordu
-		if (null === ($valueRecord = (new \Cms\Orm\CmsAttributeValueQuery)
+		//na wybrany rekord wartości
+		$valueRecord = null;
+		//wyszukiwanie kolekcji wstępnie pasujących rekordów wartości
+		foreach ((new \Cms\Orm\CmsAttributeValueQuery)
 			->whereCmsAttributeId()->equals($attributeId)
-			->andFieldValue()->equals($attributeValue)
-			->findFirst())
-		) {
+			->andFieldValue()->like($attributeValue)
+			->find() as $val) {
+			if ($attributeValue === "") {
+				if ($val->value === "") {
+					$valueRecord = $val;
+					break;
+				}
+				continue;
+			}
+			if (mb_strpos($val->value, $attributeValue, 0) === 0) {
+				$valueRecord = $val;
+				break;
+			}
+		}
+		if (null === $valueRecord) {
 			//tworzenie rekordu
 			$valueRecord = new \Cms\Orm\CmsAttributeValueRecord;
 			$valueRecord->cmsAttributeId = $attributeId;

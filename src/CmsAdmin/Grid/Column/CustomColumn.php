@@ -24,8 +24,7 @@ use Mmi\App\FrontController;
  * @method self setFilterMethodEquals() ustawia metodę filtracji na równość
  * @method self setFilterMethodLike() ustawia metodę filtracji na podobny
  * @method self setFilterMethodSearch() ustawia metodę filtracji na wyszukaj
- * @method self setFilterMethodBetween() ustawia metodę filtracji na pomiędzy
-
+ * @method self setFilterMethodNull() ustawia metodę filtracji na równe/różne null
  */
 class CustomColumn extends ColumnAbstract {
 	

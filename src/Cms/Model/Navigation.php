@@ -100,7 +100,8 @@ class Navigation {
 		$params = [];
 		parse_str($record->mvcParams, $params);
 		$params['uri'] = $record->customUri ? $record->customUri : $record->uri;
-
+		$config = $record->getConfig();
+		$config->typeId = $record->cmsCategoryTypeId;
 		$element
 			->setModule('cms')
 			->setController('category')
@@ -115,7 +116,7 @@ class Navigation {
 			->setLang($record->lang)
 			->setFollow($record->follow ? true : false)
 			->setTitle($record->title)
-			->setConfig($record->getConfig())
+			->setConfig($config)
 			->setDateStart($record->dateStart)
 			->setDateEnd($record->dateEnd);
 		return $element;
