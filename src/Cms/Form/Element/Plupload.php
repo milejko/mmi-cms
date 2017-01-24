@@ -452,8 +452,13 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 				// <![CDATA[
 					$(document).ready(function () {
 						'use strict';
-						$('#$fieldId').change(function() {
-							$('#image_$fieldId').html( '<img src=\"' + $(this).find(':selected').attr('data-image-url') +'\"/>' );
+						$('#$fieldId').change(function() {							
+							var src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+							if( $(this).find(':selected').attr('data-image-url') != undefined ){
+								src = $(this).find(':selected').attr('data-image-url')
+							}
+
+							$('#image_$fieldId').html( '<img src=\"' + src +'\"/>' );
 						});
 					});
 				// ]]>
