@@ -257,7 +257,12 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @return \Cms\Orm\CmsCategoryRecord[]
 	 */
 	public function getSiblings() {
-		return $this->_getChildren($this->parentId);
+		//próba pobrania dzieci z cache
+		if (null === $siblings = \App\Registry::$cache->load($cacheKey = 'category-siblings-' . $this->parentId)) {
+			//pobieranie dzieci
+			\App\Registry::$cache->save($siblings = $this->_getChildren($this->parentId), $cacheKey);
+		}
+		return $siblings;
 	}
 
 	/**
@@ -303,19 +308,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @return \Cms\Orm\CmsCategoryRecord[]
 	 */
 	protected function _getChildren($parentId) {
-		//próba pobrania dzieci z cache
-		if (null === $children = \App\Registry::$cache->load($cacheKey = 'category-children-' . $parentId)) {
-			//pobieranie dzieci
-			\App\Registry::$cache->save($children = (new CmsCategoryQuery)
+		return (new CmsCategoryQuery)
 				->whereParentId()->equals($parentId)
-				->join('cms_category_type')->on('cms_category_type_id')
+				->joinLeft('cms_category_type')->on('cms_category_type_id')
 				->orderAscOrder()
 				->orderAscId()
 				->find()
-				->toObjectArray(), $cacheKey);
-		}
-		//zwrot dzieci
-		return $children;
+				->toObjectArray();
 	}
 
 	/**
