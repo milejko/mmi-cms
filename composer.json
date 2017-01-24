@@ -19,7 +19,7 @@
 	],
 	"require": {
 		"php": ">=5.6.0",
-		"mmi/mmi": "~3.4.0",
+		"mmi/mmi": "*",
 		"phpmailer/phpmailer": "~5.2"
 	},
 	"require-dev": {
@@ -35,7 +35,7 @@
 	"minimum-stability": "dev",
 	"extra": {
 		"branch-alias": {
-			"dev-master": "2.0-dev"
+			"dev-master": "3.0-dev"
 		}
 	}
 }
