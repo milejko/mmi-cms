@@ -11,7 +11,8 @@
 namespace CmsAdmin\Form;
 
 /**
- * Formularz widgetu tekstowego
+ * Formularz widgetu z podpiętymi atrybutami
+ * @method \Cms\Orm\CmsCategoryWidgetCategoryRecord getRecord()
  */
 class CategoryAttributeWidgetForm extends \Cms\Form\AttributeForm {
 
@@ -22,5 +23,5 @@ class CategoryAttributeWidgetForm extends \Cms\Form\AttributeForm {
 		$this->addElementSubmit('submit')
 			->setLabel('zapisz');
 	}
-
+	
 }

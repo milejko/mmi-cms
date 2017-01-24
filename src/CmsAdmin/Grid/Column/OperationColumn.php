@@ -9,7 +9,9 @@
  */
 
 namespace CmsAdmin\Grid\Column;
-use Mmi\App\FrontController;
+
+use Mmi\App\FrontController,
+	Cms\Mvc\ViewHelper\AclAllowed;
 
 /**
  * Klasa Columnu indeksującego
@@ -20,12 +22,6 @@ use Mmi\App\FrontController;
  * @method string getName() pobiera nazwę pola
  * @method self setLabel($label) ustawia labelkę
  * @method string getLabel() pobiera labelkę
- * 
- * @method self setFilterMethodEquals() ustawia metodę filtracji na równość
- * @method self setFilterMethodLike() ustawia metodę filtracji na podobny
- * @method self setFilterMethodSearch() ustawia metodę filtracji na wyszukaj
- * @method self setFilterMethodBetween() ustawia metodę filtracji na pomiędzy
-
  */
 class OperationColumn extends ColumnAbstract {
 
@@ -41,31 +37,37 @@ class OperationColumn extends ColumnAbstract {
 		//ustawia nazwę na _operation_
 		parent::__construct('_operation_');
 	}
-	
+
 	/**
 	 * Ustawia parametry linku edycyjnego
 	 * ['action' => 'edit', 'id' => '%id%']
 	 * %pole% zastępowany jest przez $record->pole
 	 * 
 	 * @param array $params
+	 * @param string $hashTarget część url po #
 	 * @return OperationColumn
 	 */
-	public function setEditParams(array $params = ['action' => 'edit', 'id' => '%id%']) {
-		return $this->setOption('editParams', $params);
+	public function setEditParams(array $params = ['action' => 'edit', 'id' => '%id%'], $hashTarget = '') {
+		return $this
+				->setOption('editHashTarget', $hashTarget)
+				->setOption('editParams', $params);
 	}
-	
+
 	/**
 	 * Ustawia parametry linku usuwającego
 	 * ['action' => 'delete', 'id' => '%id%']
 	 * %pole% zastępowany jest przez $record->pole
 	 * 
 	 * @param array $params
+	 * @param string $hashTarget część url po #
 	 * @return OperationColumn
 	 */
-	public function setDeleteParams(array $params = ['action' => 'delete', 'id' => '%id%']) {
-		return $this->setOption('deleteParams', $params);
+	public function setDeleteParams(array $params = ['action' => 'delete', 'id' => '%id%'], $hashTarget = '') {
+		return $this
+				->setOption('deleteHashTarget', $hashTarget)
+				->setOption('deleteParams', $params);
 	}
-	
+
 	/**
 	 * Ustawia parametry linku usuwającego
 	 * ['action' => 'delete', 'id' => '%id%']
@@ -77,10 +79,17 @@ class OperationColumn extends ColumnAbstract {
 	public function setDeleteTagParams(array $params = ['action' => 'delete', 'id' => '%id%']) {
 		return $this->setOption('deleteTagParams', $params);
 	}
-	
-	public function addCustomButton($iconName, array $params = []) {
+
+	/**
+	 * Dodaje dowolny button
+	 * @param string $iconName
+	 * @param array $params parametry
+	 * @param string $hashTarget
+	 * @return OperationColumn
+	 */
+	public function addCustomButton($iconName, array $params = [], $hashTarget = '') {
 		$customButtons = is_array($this->getOption('customButtons')) ? $this->getOption('customButtons') : [];
-		$customButtons[] = ['iconName' => $iconName, 'params' => $params];
+		$customButtons[] = ['iconName' => $iconName, 'params' => $params, 'hashTarget' => $hashTarget];
 		return $this->setOption('customButtons', $customButtons);
 	}
 
@@ -90,7 +99,7 @@ class OperationColumn extends ColumnAbstract {
 	 * @return string
 	 */
 	public function renderCell(\Mmi\Orm\RecordRo $record) {
-	    	    
+
 		$view = FrontController::getInstance()->getView();
 		$html = '';
 		//pobieranie parametrów linku edycji
@@ -105,38 +114,41 @@ class OperationColumn extends ColumnAbstract {
 		if (!empty($customButtons)) {
 			//iteracja po przyciskach
 			foreach ($customButtons as $button) {
+				//brak uprawnień w ACL
+				if (!(new AclAllowed)->aclAllowed($params = $this->_parseParams($button['params'], $record))) {
+					continue;
+				}
 				//html przycisku
-				$html .= '<a href="' . $view->url($this->_parseParams($button['params'], $record)) . '"><i class="icon-' . $button['iconName'] . '"></i></a>&nbsp;&nbsp;';
+				$html .= '<a href="' . $view->url($params) . rtrim('#' . $button['hashTarget'], '#') . '"><i class="icon-' . $button['iconName'] . '"></i></a>&nbsp;&nbsp;';
 			}
 		}
-		//link edycyjny
-		if (!empty($editParams)) {
-			$html .= '<a href="' . $view->url($this->_parseParams($editParams, $record)) . '"><i class="icon-pencil"></i></a>&nbsp;&nbsp;';
+		//link edycyjny ze sprawdzeniem ACL
+		if (!empty($editParams) && (new AclAllowed)->aclAllowed($params = $this->_parseParams($editParams, $record))) {
+			$html .= '<a href="' . $view->url($params) . rtrim('#' . $this->getOption('editHashTarget'), '#') . '"><i class="icon-pencil"></i></a>&nbsp;&nbsp;';
 		}
-		//link kasujący
-		if (!empty($deleteParams)) {
-			$html .= '<a href="' . $view->url($this->_parseParams($deleteParams, $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
+		//link kasujący ze sprawdzeniem ACL
+		if (!empty($deleteParams) && (new AclAllowed)->aclAllowed($params = $this->_parseParams($deleteParams, $record))) {
+			$html .= '<a href="' . $view->url($params) . rtrim('#' . $this->getOption('deleteHashTarget'), '#') . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
 		}
 		//link kasujący tag
 		if (!empty($deleteTagParams)) {
-		    if ($record->getJoined('cms_tag_relation')->id) {
-			$html .= '<a href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Tag jest przypisany do zasobu. Jeżeli zostanie usunięty nie ma możliwości przywrócenia relacji. Czy na pewno usunąć" class="confirm red"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
-		    }
-		    if (!$record->getJoined('cms_tag_relation')->id) {
-			$html .= '<a href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
-		    }
+			if ($record->getJoined('cms_tag_relation')->id) {
+				$html .= '<a href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Tag jest przypisany do zasobu. Jeżeli zostanie usunięty nie ma możliwości przywrócenia relacji. Czy na pewno usunąć" class="confirm red"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
+			}
+			if (!$record->getJoined('cms_tag_relation')->id) {
+				$html .= '<a href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
+			}
 		}
-		
 		return $html;
 	}
-	
+
 	/**
 	 * Zwraca tablicę sparsowanych parametrów do linku
 	 * @param array $params
 	 * @param \Mmi\Orm\RecordRo $record
 	 * @return array
 	 */
-	protected function _parseParams(array $params, \Mmi\Orm\RecordRo $record) {	    
+	protected function _parseParams(array $params, \Mmi\Orm\RecordRo $record) {
 		//inicjalizacja parametrów
 		$parsedParams = [];
 		$matches = [];

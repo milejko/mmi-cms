@@ -10,6 +10,9 @@
 
 namespace Cms\Mvc\ViewHelper;
 
+/**
+ * Helper tekstów statycznych
+ */
 class Text extends \Mmi\Mvc\ViewHelper\HelperAbstract {
 
 	/**
