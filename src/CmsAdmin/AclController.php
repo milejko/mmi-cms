@@ -20,6 +20,9 @@ class AclController extends Mvc\Controller {
 	 */
 	public function indexAction() {
 		$this->view->roles = (new \Cms\Orm\CmsRoleQuery)->find();
+		if (!$this->roleId && count($this->view->roles)) {
+			$this->getResponse()->redirect('cmsAdmin', 'acl', 'index', ['roleId' => $this->view->roles[0]->id]);
+		}
 		if ($this->roleId) {
 			$this->view->rules = (new \Cms\Orm\CmsAclQuery)->whereCmsRoleId()->equals($this->roleId)->find();
 			$this->view->options = [null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard();

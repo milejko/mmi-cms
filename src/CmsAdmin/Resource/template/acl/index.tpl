@@ -1,34 +1,20 @@
 {headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/acl.js')}
-<div class="content-box column-left">
-	<div class="content-box-header">
-		<h3>{#Role użytkowników#}</h3>
-		<div class="clear"></div>
-	</div>
-	<div class="content-box-content clearfix">
-		<ul id="roles-list">
-			{foreach $roles as $role}
-				<li>
-					{if $request->roleId && $request->roleId == $role->id}
-						{$roleName=$role->name}
-						{$role->name}
-					{else}
-						<a href="{@module=cmsAdmin&controller=acl&action=index&roleId={$role->id}@}">{$role->name}</a>
-					{/if}
-				</li>
-			{/foreach}
-		</ul>
-		{$roleForm}
-	</div>
-</div>
 
-{if $request->roleId}
-	<div class="content-box column-right">
-		<div class="content-box-header">
-			<h3>{#Uprawnienia roli#} {$roleName}</h3>
-			<div class="clear"></div>
-		</div>
-		<div class="content-box-content clearfix">
-			<div id="rules">
+<div class="content-box-header">
+	<h3>{#Uprawnienia roli#} {$roleName}</h3>
+	<div class="clear"></div>
+</div>
+<div class="content-box-content clearfix">
+	<ul class="tabs" id="roles-list">
+		{foreach name="roles" $roles as $role}
+			<li {if $request->roleId && $request->roleId == $role->id}class="current"{/if}>
+				<a href="{@module=cmsAdmin&controller=acl&action=index&roleId={$role->id}@}">{$role->name}</a>
+			</li>
+		{/foreach}
+	</ul>
+	<div class="tab-content">
+		<div id="rules">
+			{if $request->roleId}
 				<table class="grid striped">
 					<tr>
 						<th>{#Lp#}.</th>
@@ -37,7 +23,7 @@
 						<th>{#operacje#}</th>
 					</tr>
 					{$i=1}
-					
+
 					{foreach $rules as $rule}
 						<tr id="rule-row-{$rule->id}">
 							<td>
@@ -65,8 +51,19 @@
 				<br /> <br />
 				<h5>{#Nowa reguła#}:</h5>
 				{$aclForm}
-			</div>
+			{/if}
 		</div>
 	</div>
-{/if}
+</div>
+
+<div class="content-box column-left">
+	<div class="content-box-header">
+		<h3>{#Role użytkowników#}</h3>
+		<div class="clear"></div>
+	</div>
+	<div class="content-box-content clearfix">
+		{$roleForm}
+	</div>
+</div>
+
 <div class="clear"></div>

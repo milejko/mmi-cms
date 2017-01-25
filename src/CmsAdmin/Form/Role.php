@@ -15,10 +15,11 @@ class Role extends \Mmi\Form\Form {
 	public function init() {
 
 		$this->addElementText('name')
+			->setLabel('nazwa roli')
 			->addValidatorStringLength(3, 64);
 
 		$this->addElementSubmit('submit')
-			->setLabel('utwórz rolę');
+			->setLabel('utwórz nową rolę');
 	}
 
 }
