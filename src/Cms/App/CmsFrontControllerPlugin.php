@@ -55,20 +55,20 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 		}
 
 		//ustawienie acl
-		if (null === ($acl = \App\Registry::$cache->load('Mmi-Acl'))) {
+		if (null === ($acl = \App\Registry::$cache->load('mmi-cms-acl'))) {
 			$acl = \Cms\Model\Acl::setupAcl();
-			\App\Registry::$cache->save($acl, 'Mmi-Acl', 0);
+			\App\Registry::$cache->save($acl, 'mmi-cms-acl', 0);
 		}
 		\App\Registry::$acl = $acl;
 		\Mmi\Mvc\ActionHelper::getInstance()->setAcl($acl);
 		\Mmi\App\FrontController::getInstance()->getView()->acl = $acl;
 
 		//ustawienie nawigatora
-		if (null === ($navigation = \App\Registry::$cache->load('Mmi-Navigation-' . $request->__get('lang')))) {
+		if (null === ($navigation = \App\Registry::$cache->load('mmi-cms-navigation-' . $request->__get('lang')))) {
 			(new \Cms\Model\Navigation)->decorateConfiguration(\App\Registry::$config->navigation);
 			$navigation = new \Mmi\Navigation\Navigation(\App\Registry::$config->navigation);
 			//zapis do cache
-			\App\Registry::$cache->save($navigation, 'Mmi-Navigation-' . $request->__get('lang'), 0);
+			\App\Registry::$cache->save($navigation, 'mmi-cms-navigation-' . $request->__get('lang'), 0);
 		}
 		$navigation->setup($request);
 		\App\Registry::$navigation = $navigation;

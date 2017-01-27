@@ -361,7 +361,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 */
 	private function _clearCache() {
 		//usuwanie cache
-		\App\Registry::$cache->remove('Mmi-Navigation-' . $this->lang);
+		\App\Registry::$cache->remove('mmi-cms-navigation-' . $this->lang);
 		\App\Registry::$cache->remove('category-attributes-' . $this->id);
 		\App\Registry::$cache->remove('category-' . md5($this->uri));
 		\App\Registry::$cache->remove('category-widget-model-' . $this->id);
