@@ -20,7 +20,6 @@ class CategoryController extends Mvc\Controller {
 	 */
 	public function indexAction() {
 		$this->view->grid = new Plugin\CategoryGrid();
-		var_dump((new Model\CategoryAclModel)->getAcl()->isAllowed(['admin', 'guest'], 682));
 	}
 
 	/**
