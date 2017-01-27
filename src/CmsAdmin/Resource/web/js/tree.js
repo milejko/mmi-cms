@@ -225,7 +225,7 @@ CATEGORYCONF.loadUrl = function (nodeId) {
 	};
 	//przy ładowaniu zewnętrznej ramki wyrzuca cors
 	//stop playerów tylko na wewnętrznych stronach
-	if ($('input#cmsadmin-form-category-redirectUri').val().length === 0) {
+	if ($('input#cmsadmin-form-category-redirectUri').size() && $('input#cmsadmin-form-category-redirectUri').first().val().length === 0) {
 		$('audio, video').each(function () {
 			stopPlaying(this);
 		});

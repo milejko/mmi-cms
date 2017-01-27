@@ -98,7 +98,7 @@ CMS.category = function () {
 	
 	resizeIframe = function () {
 		//resize ramki tylko dla stron cms-owych
-		if ($('input#cmsadmin-form-category-redirectUri').val().length === 0) {
+		if ($('input#cmsadmin-form-category-redirectUri').size() && $('input#cmsadmin-form-category-redirectUri').first().val().length === 0) {
 			$('iframe#preview-frame').on('load', function () {
 				$(this).height($(this).contents().find('body').height());
 			});
