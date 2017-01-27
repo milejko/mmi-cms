@@ -16,9 +16,6 @@ namespace CmsAdmin\Form;
 class CategoryAclForm extends \Cms\Form\Form {
 
 	public function init() {
-
-
-
 		//drzewo kategorii (dozwolone)
 		$this->addElementTree('allow')
 			->setLabel('dozwolone kategorie')
@@ -55,6 +52,10 @@ class CategoryAclForm extends \Cms\Form\Form {
 			->delete();
 		//zapis uprawnień "dozwól"
 		foreach (explode(';', $this->getElement('allow')->getValue()) as $categoryId) {
+			//brak kategorii
+			if (!$categoryId) {
+				continue;
+			}
 			$aclRecord = new \Cms\Orm\CmsCategoryAclRecord;
 			$aclRecord->access = 'allow';
 			$aclRecord->cmsCategoryId = $categoryId;
@@ -63,12 +64,18 @@ class CategoryAclForm extends \Cms\Form\Form {
 		}
 		//zapis uprawnień "zabroń"
 		foreach (explode(';', $this->getElement('deny')->getValue()) as $categoryId) {
+			//brak kategorii
+			if (!$categoryId) {
+				continue;
+			}
 			$aclRecord = new \Cms\Orm\CmsCategoryAclRecord;
 			$aclRecord->access = 'deny';
 			$aclRecord->cmsCategoryId = $categoryId;
 			$aclRecord->cmsRoleId = $this->getOption('roleId');
 			$aclRecord->save();
 		}
+		//usunięcie cache
+		\App\Registry::$cache->remove('mmi-cms-category-acl');
 		return true;
 	}
 
