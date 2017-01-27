@@ -30,6 +30,12 @@ class CategoryController extends Mvc\Controller {
 		if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
 			return;
 		}
+		//sprawdzenie uprawnień do edycji węzła kategorii
+		if (!(new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed(\App\Registry::$auth->getRoles(), $cat->id)) {
+			$this->getMessenger()->addMessage('Nie posiadasz uprawnień do edycji wybranej strony', false);
+			//redirect po zmianie (zmienią się atrybuty)
+			$this->getResponse()->redirect('cmsAdmin', 'category', 'index');
+		}
 		//zapis początkowej kategorii
 		$cmsCategoryTypeId = $cat->cmsCategoryTypeId;
 		//konfiguracja kategorii
