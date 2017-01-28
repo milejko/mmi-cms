@@ -13,11 +13,12 @@ namespace CmsAdmin\Grid;
 /**
  * Abstrakcyjna klasa grida
  * 
- * @method Column\CheckboxColumn addColumnCheckbox($field) dodaje Column checkbox
- * @method Column\CustomColumn addColumnCustom($field) dodaje Column dowolny
- * @method Column\IndexColumn addColumnIndex() dodaje Column indeksujący
- * @method Column\SelectColumn addColumnSelect($field) dodaje Column select
- * @method Column\TextColumn addColumnText($field) dodaje Column tekstowy
+ * @method Column\CheckboxColumn addColumnCheckbox($field) dodaje kolumnę checkbox
+ * @method Column\CustomColumn addColumnCustom($field) dodaje kolumnę dowolną
+ * @method Column\IndexColumn addColumnIndex() dodaje kolumnę indeksującą
+ * @method Column\SelectColumn addColumnSelect($field) dodaje kolumnę select
+ * @method Column\TextColumn addColumnText($field) dodaje kolumnę z danymi tekstowymi
+ * @method Column\TextColumn addColumnJson($field) dodaje kolumnę z danymi JSON
  * @method Column\OperationColumn addColumnOperation() dodaje Column operacji na rekordzie
  */
 abstract class Grid extends \Mmi\OptionObject {
