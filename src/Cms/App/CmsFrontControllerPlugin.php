@@ -88,17 +88,13 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 			throw new \Mmi\Mvc\MvcNotFoundException('Component not found: ' . $actionLabel);
 		}
 		//brak autoryzacji i kontroler admina - przekierowanie na logowanie
-		if (!$auth->hasIdentity() && strpos($request->getModuleName(), 'Admin')) {
+		if (!$auth->hasIdentity()) {
 			//logowanie admina
-			$this->_setAdminLoginRequest($request);
-		} elseif (!$auth->hasIdentity()) {
-			//logowanie użytkownika
-			$this->_setUserLoginRequest($request);
-		} else {
-			\App\Registry::$auth->clearIdentity();
-			//zalogowany na nieuprawnioną rolę
-			throw new \Mmi\Mvc\MvcNotFoundException('Unauthorized access');
+			return $this->_setLoginRequest($request, strpos($request->getModuleName(), 'Admin'));
 		}
+		\App\Registry::$auth->clearIdentity();
+		//zalogowany na nieuprawnioną rolę
+		throw new \Mmi\Mvc\MvcNotFoundException('Unauthorized access');
 	}
 
 	/**
@@ -123,20 +119,17 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 	 * Ustawia request na logowanie admina
 	 * @param \Mmi\Http\Request $request
 	 */
-	protected function _setAdminLoginRequest(\Mmi\Http\Request $request) {
-		$request->setModuleName('cmsAdmin')
-			->setControllerName('index')
-			->setActionName('login');
-	}
-
-	/**
-	 * Ustawia request na logowanie admina
-	 * @param \Mmi\Http\Request $request
-	 */
-	protected function _setUserLoginRequest(\Mmi\Http\Request $request) {
-		$request->setModuleName('cms')
-			->setControllerName('user')
-			->setActionName('login');
+	protected function _setLoginRequest(\Mmi\Http\Request $request, $preferAdmin) {
+		//logowanie bez preferencji admina, tylko gdy uprawniony
+		if (false === $preferAdmin && \App\Registry::$acl->isRoleAllowed('guest', 'cms:user:login')) {
+			return $request->setModuleName('cms')
+					->setControllerName('user')
+					->setActionName('login');
+		}
+		//logowanie admina
+		return $request->setModuleName('cmsAdmin')
+				->setControllerName('index')
+				->setActionName('login');
 	}
 
 }
