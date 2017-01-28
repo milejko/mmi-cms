@@ -18,6 +18,7 @@ namespace CmsAdmin\Grid;
  * @method Column\IndexColumn addColumnIndex() dodaje kolumnę indeksującą
  * @method Column\SelectColumn addColumnSelect($field) dodaje kolumnę select
  * @method Column\TextColumn addColumnText($field) dodaje kolumnę z danymi tekstowymi
+ * @method Column\TextColumn addColumnTextarea($field) dodaje kolumnę z danymi tekstowymi długimi
  * @method Column\TextColumn addColumnJson($field) dodaje kolumnę z danymi JSON
  * @method Column\OperationColumn addColumnOperation() dodaje Column operacji na rekordzie
  */
