@@ -4,7 +4,7 @@
 		<li>
 			<a href="{@module=cmsAdmin&controller=index&action=index@}"><span>{$domain|replace:'www.':''}</span></a>
 		</li>
-		{if aclAllowed(['module' => 'cms', 'controller' => 'admin', 'action' => 'password'])}
+		{if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'index', 'action' => 'logout'])}
 			<li>
 				<a href="{@module=cmsAdmin&controller=index&action=logout@}">{#Wyloguj#}<span>{if $auth} {$auth->getUsername()}</span> ({foreach name=role $auth->getRoles() as $role}{$role}{if !$_roleLast}, {/if}{/foreach}){/if}</a>
 			</li>
