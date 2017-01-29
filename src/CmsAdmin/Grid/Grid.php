@@ -79,11 +79,26 @@ abstract class Grid extends \Mmi\OptionObject {
 	}
 
 	/**
-	 * Pobranie Columnów formularza
+	 * Pobranie kolumny
 	 * @return \CmsAdmin\Grid\Column\ColumnAbstract[]
 	 */
 	public final function getColumns() {
 		return $this->_columns;
+	}
+	
+	/**
+	 * Pobiera kolumnę po nazwie
+	 * @param string $name
+	 * @return \CmsAdmin\Grid\Column\ColumnAbstract
+	 */
+	public final function getColumn($name) {
+		//iteracja po kolumnach
+		foreach ($this->getColumns() as $column) {
+			//nazwa zgodna
+			if ($column->getName() == $name) {
+				return $column;
+			}
+		}
 	}
 
 	/**
