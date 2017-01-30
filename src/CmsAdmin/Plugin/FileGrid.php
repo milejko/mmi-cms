@@ -85,7 +85,8 @@ class FileGrid extends \CmsAdmin\Grid\Grid {
 
 		//checkbox aktywności
 		$this->addColumnCheckbox('active')
-			->setLabel('widoczny');
+			->setLabel('widoczny')
+			->setDisabled();
 
 		$this->addColumnCustom('download')
 			->setLabel('pobierz')

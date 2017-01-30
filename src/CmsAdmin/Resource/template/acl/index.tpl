@@ -1,13 +1,13 @@
 {headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/acl.js')}
 
 <div class="content-box-header">
-	<h3>{#Uprawnienia roli#} {$roleName}</h3>
+	<h3>{#Uprawnienia ról#}</h3>
 	<div class="clear"></div>
 </div>
 <div class="content-box-content clearfix">
 	<ul class="tabs" id="roles-list">
 		{foreach name="roles" $roles as $role}
-			<li {if $request->roleId && $request->roleId == $role->id}class="current"{/if}>
+			<li {if $request->roleId && $request->roleId == $role->id}class="current"{$chosenRole = $role}{/if}>
 				<a href="{@module=cmsAdmin&controller=acl&action=index&roleId={$role->id}@}">{$role->name}</a>
 			</li>
 		{/foreach}
@@ -48,6 +48,9 @@
 						</tr>
 					{/foreach}
 				</table>
+				{if $chosenRole && $chosenRole->name != 'admin' && $chosenRole->name != 'guest'}
+				<br /><a class="button confirm" title="Usunąć rolę" href="{@module=cmsAdmin&controller=acl&action=deleteRole&id={$request->roleId}@}"><i class="icon-trash"></i> usuń rolę</a>
+				{/if}
 				<br /> <br />
 				<h5>{#Nowa reguła#}:</h5>
 				{$aclForm}
@@ -58,7 +61,7 @@
 
 <div class="content-box column-left">
 	<div class="content-box-header">
-		<h3>{#Role użytkowników#}</h3>
+		<h3>{#Nowa rola#}</h3>
 		<div class="clear"></div>
 	</div>
 	<div class="content-box-content clearfix">

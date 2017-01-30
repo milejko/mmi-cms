@@ -46,7 +46,8 @@ class ContactGrid extends \CmsAdmin\Grid\Grid {
 
 		//aktywny
 		$this->addColumnCheckbox('active')
-			->setLabel('czeka');
+			->setLabel('czeka')
+			->setDisabled();
 
 		//operacje
 		$this->addColumnOperation()

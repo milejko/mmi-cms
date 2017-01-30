@@ -49,7 +49,8 @@ class LogGrid extends \CmsAdmin\Grid\Grid {
 
 		//sukces
 		$this->addColumnCheckbox('success')
-			->setLabel('sukces');
+			->setLabel('sukces')
+			->setDisabled();
 	}
 
 }
