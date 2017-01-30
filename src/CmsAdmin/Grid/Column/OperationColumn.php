@@ -141,7 +141,7 @@ class OperationColumn extends ColumnAbstract {
 		}
 		return $html;
 	}
-
+	
 	/**
 	 * Zwraca tablicę sparsowanych parametrów do linku
 	 * @param array $params

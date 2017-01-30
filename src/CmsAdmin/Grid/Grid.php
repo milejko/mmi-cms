@@ -13,11 +13,13 @@ namespace CmsAdmin\Grid;
 /**
  * Abstrakcyjna klasa grida
  * 
- * @method Column\CheckboxColumn addColumnCheckbox($field) dodaje Column checkbox
- * @method Column\CustomColumn addColumnCustom($field) dodaje Column dowolny
- * @method Column\IndexColumn addColumnIndex() dodaje Column indeksujący
- * @method Column\SelectColumn addColumnSelect($field) dodaje Column select
- * @method Column\TextColumn addColumnText($field) dodaje Column tekstowy
+ * @method Column\CheckboxColumn addColumnCheckbox($field) dodaje kolumnę checkbox
+ * @method Column\CustomColumn addColumnCustom($field) dodaje kolumnę dowolną
+ * @method Column\IndexColumn addColumnIndex() dodaje kolumnę indeksującą
+ * @method Column\SelectColumn addColumnSelect($field) dodaje kolumnę select
+ * @method Column\TextColumn addColumnText($field) dodaje kolumnę z danymi tekstowymi
+ * @method Column\TextColumn addColumnTextarea($field) dodaje kolumnę z danymi tekstowymi długimi
+ * @method Column\TextColumn addColumnJson($field) dodaje kolumnę z danymi JSON
  * @method Column\OperationColumn addColumnOperation() dodaje Column operacji na rekordzie
  */
 abstract class Grid extends \Mmi\OptionObject {
@@ -77,11 +79,26 @@ abstract class Grid extends \Mmi\OptionObject {
 	}
 
 	/**
-	 * Pobranie Columnów formularza
+	 * Pobranie kolumny
 	 * @return \CmsAdmin\Grid\Column\ColumnAbstract[]
 	 */
 	public final function getColumns() {
 		return $this->_columns;
+	}
+	
+	/**
+	 * Pobiera kolumnę po nazwie
+	 * @param string $name
+	 * @return \CmsAdmin\Grid\Column\ColumnAbstract
+	 */
+	public final function getColumn($name) {
+		//iteracja po kolumnach
+		foreach ($this->getColumns() as $column) {
+			//nazwa zgodna
+			if ($column->getName() == $name) {
+				return $column;
+			}
+		}
 	}
 
 	/**

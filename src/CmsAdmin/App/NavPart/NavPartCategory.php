@@ -58,8 +58,12 @@ class NavPartCategory extends \Mmi\Navigation\NavigationConfig {
 						->setLabel('Dodaj')
 						->setModule('cmsAdmin')
 						->setController('categoryWidget')
-						->setAction('edit'))
-		);
+						->setAction('edit')))
+				->addChild((new \Mmi\Navigation\NavigationConfigElement)
+					->setLabel('Uprawnienia')
+					->setModule('cmsAdmin')
+					->setController('categoryAcl')
+				);
 	}
 
 }

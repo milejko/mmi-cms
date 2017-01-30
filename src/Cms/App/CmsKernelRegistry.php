@@ -38,5 +38,5 @@ abstract class CmsKernelRegistry extends \Mmi\App\KernelRegistry {
 	 * @var \Mmi\Translate
 	 */
 	public static $translate;
-	
+
 }

@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Grid\Column;
 
+use Cms\Mvc\ViewHelper\AclAllowed;
+
 /**
  * Klasa Columnu checkbox
  * 
@@ -24,7 +26,7 @@ namespace CmsAdmin\Grid\Column;
  * @method self setFilterMethodNull() ustawia metodę filtracji na równe/różne null
  */
 class CheckboxColumn extends SelectColumn {
-	
+
 	/**
 	 * Domyślne opcje dla checkboxa
 	 */
@@ -35,7 +37,7 @@ class CheckboxColumn extends SelectColumn {
 		]);
 		parent::__construct($name);
 	}
-	
+
 	/**
 	 * Ustawia grid
 	 * @param \CmsAdmin\Grid\Grid $grid
@@ -43,8 +45,6 @@ class CheckboxColumn extends SelectColumn {
 	 */
 	public function setGrid(\CmsAdmin\Grid\Grid $grid) {
 		parent::setGrid($grid);
-		//obsługa zapisu rekordu
-		(new CheckboxRequestHandler($this))->handleRequest();
 		//zwrot siebie
 		return $this;
 	}
@@ -57,7 +57,7 @@ class CheckboxColumn extends SelectColumn {
 	public function setDisabled($disabled = true) {
 		return $this->setOption('disabled', (bool) $disabled);
 	}
-	
+
 	/**
 	 * Renderuje pole tekstowe
 	 * @param \Mmi\Orm\RecordRo $record
@@ -68,16 +68,22 @@ class CheckboxColumn extends SelectColumn {
 		if (!$this->_fieldInRecord()) {
 			return '?';
 		}
+		//wyłączanie edycji jeśli acl w operacjach (edycji) zabrania
+		if ($this->getGrid()->getColumn('_operation_') && !(new AclAllowed)->aclAllowed($this->getGrid()->getColumn('_operation_')->getOption('editParams'))) {
+			$this->setDisabled();
+		}
+		//obsługa zapisu rekordu
+		(new CheckboxRequestHandler($this))->handleRequest();
 		//nowy Column select
 		return (new \Mmi\Form\Element\Checkbox($this->getFormColumnName()))
-			//ustawia wartość na odpowiadającą zaznaczeniu
-			->setValue($this->_getCheckedValue())
-			->setId($this->getFormColumnName() . '-' . $record->id)
-			->setDisabled($this->getOption('disabled') ? true : false)
-			//ustawia zaznaczenie
-			->setChecked($this->_getCheckedValue() <= $this->getValueFromRecord($record));
+				//ustawia wartość na odpowiadającą zaznaczeniu
+				->setValue($this->_getCheckedValue())
+				->setId($this->getFormColumnName() . '-' . $record->id)
+				->setDisabled($this->getOption('disabled') ? true : false)
+				//ustawia zaznaczenie
+				->setChecked($this->_getCheckedValue() <= $this->getValueFromRecord($record));
 	}
-	
+
 	/**
 	 * Określa wartość dla zaznaczonego checkboxa (najwyższa)
 	 * @return integer

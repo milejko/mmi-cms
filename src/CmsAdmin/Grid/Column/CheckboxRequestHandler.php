@@ -10,7 +10,8 @@
 
 namespace CmsAdmin\Grid\Column;
 
-use Mmi\App\FrontController;
+use Mmi\App\FrontController,
+	Cms\Mvc\ViewHelper\AclAllowed;
 
 /**
  * Obsługa requestu
@@ -41,6 +42,10 @@ class CheckboxRequestHandler {
 		if ($post->isEmpty()) {
 			return;
 		}
+		//niedozwolone na ACL (w edycji na polu operacje)
+		if ($this->_checkbox->getGrid()->getColumn('_operation_') && !(new AclAllowed)->aclAllowed($this->_checkbox->getGrid()->getColumn('_operation_')->getOption('editParams'))) {
+			return;
+		}
 		if ($this->_changeRecord($post)) {
 			exit;
 		}
@@ -64,12 +69,19 @@ class CheckboxRequestHandler {
 		$record = $this->_checkbox->getGrid()
 			->getQuery()
 			->findPk($post->id);
+		//pole leży w tabeli dołączonej
+		if (false !== strpos($fieldName = $this->_checkbox->getName(), '.')) {
+			$recordField = explode('.', $this->_checkbox->getName());
+			//nadpisanie wartości
+			$record = $record->getJoined($recordField[0]);
+			$fieldName = $recordField[1];
+		}
 		//brak property z checkboxa
-		if (!property_exists($record, $this->_checkbox->getName())) {
+		if (!property_exists($record, $fieldName)) {
 			return;
 		}
 		//ustawianie property
-		$record->{$this->_checkbox->getName()} = ($post->checked == 'true') ? $post->value : 0;
+		$record->$fieldName = ($post->checked == 'true') ? $post->value : 0;
 		return $record->save();
 	}
 

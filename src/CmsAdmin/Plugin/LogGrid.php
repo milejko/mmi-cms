@@ -33,9 +33,9 @@ class LogGrid extends \CmsAdmin\Grid\Grid {
 		$this->addColumnText('url')
 			->setLabel('URL')
 			->setFilterMethodLike();
-
+		
 		//dane
-		$this->addColumnText('data')
+		$this->addColumnJson('data')
 			->setLabel('dane')
 			->setFilterMethodLike();
 

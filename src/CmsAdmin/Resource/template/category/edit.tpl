@@ -91,7 +91,7 @@
 			</div>
 			{/if}
 			<div class="tab-content clearfix" id="tab-preview">
-					<iframe onload="this.style.height = 0; this.style.height = this.contentWindow.document.body.scrollHeight + 'px';" id="preview-frame" src="{if $categoryForm->getRecord()->customUri}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->customUri}@}{else}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->uri}&preview=1@}{/if}"></iframe>
+				<iframe id="preview-frame" src="{if $categoryForm->getRecord()->customUri}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->customUri}@}{else}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->uri}&preview=1@}{/if}"></iframe>
 			</div>
 		{/if}
 	</div>

@@ -67,17 +67,27 @@ class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract {
 		if (!isset($node['children']) || !is_array($node['children']) || count($node['children']) == 0) {
 			return $html;
 		}
+		$acl = (new \CmsAdmin\Model\CategoryAclModel)->getAcl();
 		$html .= '<ul>';
 		//iteracja po dzieciakach i budowa węzłów drzewa
 		foreach ($node['children'] as $child) {
+			$icon = '';
+			if (!$child['record']->active) {
+				$icon = $this->view->baseUrl . '/resource/cmsAdmin/images/folder-inactive.png';
+			}
 			$selected = 'false';
 			$disabled = 'false';
+			//sprawdzenie uprawnień do węzła
+			if (!$acl->isAllowed(\App\Registry::$auth->getRoles(), $child['record']->id)) {
+				$disabled = 'true';
+				$icon = $this->view->baseUrl . '/resource/cmsAdmin/images/folder-disabled.png';
+			}
 			$type = 'default';
 			if (!isset($child['children']) || !count($child['children'])) {
 				$type = 'leaf';
 			}
 			$html .= '<li id="' . $child['record']->id . '" class="' . (($type !== 'leaf')? 'jstree-closed' : '') . '"';
-			$html .= ' data-jstree=\'{"type":"' . $type . '"' . ((!$child['record']->active)? ', "icon":"jstree-inactive"' : '');
+			$html .= ' data-jstree=\'{"type":"' . $type . '"' . (($icon)? ', "icon":"' . $icon . '"' : '');
 			$html .= ', "disabled":' . $disabled . ', "selected":' . $selected . '}\'>' . $child['record']->name;
 			$html = self::_generateTree($child, $html);
 			$html .= '</li>';

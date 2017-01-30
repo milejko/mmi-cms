@@ -64,6 +64,9 @@ $(document).ready(function () {
 		},
 		'contextmenu': {
 			'items': function (node) {
+				if (node.state.disabled) {
+					return;
+				}
 				CATEGORYCONF.contextMenu = true;
 				var tmp = $.jstree.defaults.contextmenu.items();
 				delete tmp.ccp;
@@ -85,7 +88,7 @@ $(document).ready(function () {
 						"action": function (data) {
 							var inst = $.jstree.reference(data.reference);
 							var node = inst.get_node(data.reference);
-							CATEGORYCONF.editForm(node);
+							CATEGORYCONF.loadUrl(node.id);
 						}
 					};
 				}
@@ -172,6 +175,17 @@ $(document).ready(function () {
 		if (!data || !data.selected || !data.selected.length || !(0 in data.selected)) {
 			return;
 		}
+		//jeśli nie jest to zaznaczenie, wychodzimy
+		if (data.action !== "select_node") {
+			return;
+		}
+		//jeśli aktualny url nie pochodzi z drzewka, wychodzimy
+		if (window.location.search.indexOf("from=tree") === -1 && window.location.search.indexOf("id=") !== -1 && !CATEGORYCONF.reload) {
+			if (parseFloat(request.id) === parseFloat(data.selected[0])) {
+				CATEGORYCONF.reload = true;
+			}
+			return;
+		}
 		setTimeout(function() {
 			if (!CATEGORYCONF.reload && parseFloat(request.id) === parseFloat(data.selected[0])) {
 				return;
@@ -181,14 +195,27 @@ $(document).ready(function () {
 				return;
 			}
 			if (CATEGORYCONF.reload || parseFloat(request.id) !== parseFloat(data.selected[0])) {
-				CATEGORYCONF.loadUrl(data);
+				CATEGORYCONF.loadUrl(data.selected[0]);
 			}
 		}, 150);
+	})
+	.on('state_ready.jstree', function (e, data) {
+		//jeśli aktualny url nie pochodzi z drzewka
+		if (window.location.search.indexOf("from=tree") === -1) {
+			resExp = window.location.search.match(/id=(\d+)/);
+			if (resExp !== null && parseFloat(resExp[1])) {
+				$('#jstree').jstree('deselect_all');
+				var selRes = $('#jstree').jstree('select_node', resExp[1]);
+				if (selRes === false) {
+					CATEGORYCONF.reload = true;
+				}
+			}
+		}
 	});
 });
 
 //przeładowanie strony
-CATEGORYCONF.loadUrl = function (data) {
+CATEGORYCONF.loadUrl = function (nodeId) {
 	//przerwanie odtwarzania audio i wideo
 	var stopPlaying = function (elem) {
 		if (!isNaN(elem.duration)) {
@@ -196,18 +223,21 @@ CATEGORYCONF.loadUrl = function (data) {
 			elem.currentTime = elem.duration;
 		}
 	};
-	$('audio, video').each(function () {
-		stopPlaying(this);
-	});
 	//przy ładowaniu zewnętrznej ramki wyrzuca cors
-	//$('iframe#preview-frame').contents().find('audio, video').each(function () {
-		//stopPlaying(this);
-	//});
-	window.location.assign(request.baseUrl + '/cmsAdmin/category/edit?id=' + data.selected[0] + window.location.hash);
-};
-
-CATEGORYCONF.editForm = function (node) {
-	window.location.assign(request.baseUrl + '/cmsAdmin/category/edit?id=' + node.id + window.location.hash);
+	//stop playerów tylko na wewnętrznych stronach
+	if ($('input#cmsadmin-form-category-redirectUri').size() && $('input#cmsadmin-form-category-redirectUri').first().val().length === 0) {
+		$('audio, video').each(function () {
+			stopPlaying(this);
+		});
+		$('iframe#preview-frame').contents().find('audio, video').each(function () {
+			stopPlaying(this);
+		});
+	}
+	if (parseFloat(request.id) === parseFloat(nodeId) && window.location.search.indexOf("from=tree") !== -1) {
+		window.location.reload();
+	} else {
+		window.location.assign(request.baseUrl + '/cmsAdmin/category/edit?id=' + nodeId + '&from=tree' + window.location.hash);
+	}
 };
 
 CATEGORYCONF.showMessage = function (data) {

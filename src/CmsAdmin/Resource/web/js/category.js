@@ -1,4 +1,4 @@
-var CMS = CMS ? CMS : {};
+var CMS = CMS || {};
 var openedWindow = {closed: true};
 
 CMS.category = function () {
@@ -9,7 +9,8 @@ CMS.category = function () {
 			initWidgetButtons,
 			initPreviewReload,
 			initCategoryChange,
-			reloadWidgets;
+			reloadWidgets,
+			resizeIframe;
 
 	initSortableWidgets = function () {
 		$('#widget-list').sortable({
@@ -94,6 +95,15 @@ CMS.category = function () {
 			}
 		});
 	};
+	
+	resizeIframe = function () {
+		//resize ramki tylko dla stron cms-owych
+		if ($('input#cmsadmin-form-category-redirectUri').size() && $('input#cmsadmin-form-category-redirectUri').first().val().length === 0) {
+			$('iframe#preview-frame').on('load', function () {
+				$(this).height($(this).contents().find('body').height());
+			});
+		}
+	};
 
 	that.reloadWidgets = reloadWidgets;
 
@@ -102,6 +112,7 @@ CMS.category = function () {
 	initWidgetButtons();
 	initPreviewReload();
 	initCategoryChange();
+	resizeIframe();
 	return that;
 };
 
