@@ -26,5 +26,28 @@ class CmsRoleRecord extends \Mmi\Orm\Record {
 		//zapis reguły acl
 		return $rule->save();
 	}
+	
+	/**
+	 * Usuwanie roli
+	 * @return boolean
+	 */
+	public function delete() {
+		//zablokowane kasowanie admina i guesta
+		if ($this->name == 'admin' || $this->name == 'guest') {
+			return false;
+		}
+		\Mmi\Orm\DbConnector::getAdapter()->beginTransaction();
+		//usuwanie uprawnień ról
+		(new CmsAclQuery)->whereCmsRoleId()->equals($this->id)
+			->find()->delete();
+		try {
+			$result = parent::delete();
+		} catch (Mmi\Db\DbException $e) {
+			\Mmi\Orm\DbConnector::getAdapter()->rollBack();
+			return false;
+		}
+		\Mmi\Orm\DbConnector::getAdapter()->commit();
+		return $result;
+	}
 
 }

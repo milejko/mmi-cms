@@ -40,17 +40,17 @@ class AclController extends Mvc\Controller {
 		$this->view->roleForm = $roleForm;
 		$this->view->aclForm = $aclForm;
 	}
-	
+
 	/**
 	 * Akcja usuwania roli
 	 */
 	public function deleteRoleAction() {
 		//wyszukiwanie i usuwanie roli
-		if ((null !== $role = (new \Cms\Orm\CmsRoleQuery)->findPk($this->id)) && $role->delete()) {
-			$this->getMessenger()->addMessage('Poprawnie usunięto rolę');
+		if ((null !== $role = (new \Cms\Orm\CmsRoleQuery)->findPk($this->id))) {
+			$this->getMessenger()->addMessage(($deleteResult = (bool)$role->delete()) ? 'Poprawnie usunięto rolę' : 'Rola przypisana do użytkownika - usunięcie niemożliwe', $deleteResult);
 		}
 		//redirect
-		$this->getResponse()->redirect('cmsAdmin', 'acl', 'index');
+		$this->getResponse()->redirect('cmsAdmin', 'acl', 'index', ['roleId' => $this->id]);
 	}
 
 	/**
@@ -78,7 +78,7 @@ class AclController extends Mvc\Controller {
 		$msg = $this->view->getTranslate()->_('Zmiana właściwości nie powiodła się.');
 		$this->getResponse()->setTypePlain();
 		$params = explode('-', $this->id);
-		
+
 		//błędne dane wejściowe
 		if (!($this->getPost()->selected) || count($params) != 3) {
 			return $msg;
