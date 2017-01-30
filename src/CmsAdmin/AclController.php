@@ -40,6 +40,18 @@ class AclController extends Mvc\Controller {
 		$this->view->roleForm = $roleForm;
 		$this->view->aclForm = $aclForm;
 	}
+	
+	/**
+	 * Akcja usuwania roli
+	 */
+	public function deleteRoleAction() {
+		//wyszukiwanie i usuwanie roli
+		if ((null !== $role = (new \Cms\Orm\CmsRoleQuery)->findPk($this->id)) && $role->delete()) {
+			$this->getMessenger()->addMessage('Poprawnie usunięto rolę');
+		}
+		//redirect
+		$this->getResponse()->redirect('cmsAdmin', 'acl', 'index');
+	}
 
 	/**
 	 * Kasowanie uprawnienia (do AJAXA)

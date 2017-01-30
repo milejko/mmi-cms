@@ -1,7 +1,7 @@
 {headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/acl.js')}
 
 <div class="content-box-header">
-	<h3>{#Uprawnienia roli#} {$roleName}</h3>
+	<h3>{#Uprawnienia ról#}</h3>
 	<div class="clear"></div>
 </div>
 <div class="content-box-content clearfix">
@@ -9,6 +9,7 @@
 		{foreach name="roles" $roles as $role}
 			<li {if $request->roleId && $request->roleId == $role->id}class="current"{/if}>
 				<a href="{@module=cmsAdmin&controller=acl&action=index&roleId={$role->id}@}">{$role->name}</a>
+				<a href="{@module=cmsAdmin&controller=acl&action=deleteRole&id={$role->id}@}"><i class="icon-trash"></i></a>
 			</li>
 		{/foreach}
 	</ul>
