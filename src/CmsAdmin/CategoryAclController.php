@@ -28,6 +28,7 @@ class CategoryAclController extends Mvc\Controller {
 		$form = new Form\CategoryAclForm(null, ['roleId' => $this->roleId]);
 		//po zapisie
 		if ($form->isSaved()) {
+			$this->getMessenger()->addMessage('Poprawnie zapisano uprawnienia', true);
 			//przekierowanie na zapisaną stronę
 			$this->getResponse()->redirect('cmsAdmin', 'categoryAcl', 'index', ['roleId' => $this->roleId]);
 		}
