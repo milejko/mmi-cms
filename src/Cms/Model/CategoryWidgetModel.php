@@ -38,6 +38,7 @@ class CategoryWidgetModel {
 		$this->_categoryId = $categoryId;
 		//wyszukiwanie relacji
 		if (null === $this->_widgetCollection = (new CmsCategoryWidgetCategoryQuery)
+			->join('cms_category')->on('cms_category_id')
 			->join('cms_category_widget')->on('cms_category_widget_id')
 			->whereCmsCategoryId()->equals($this->_categoryId)
 			//test na status aktywny/roboczy/wylaczony								

@@ -48,8 +48,8 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 		if ($this->getJoined('cms_category')) {
 			return $this->getJoined('cms_category');
 		}
-		//zwrot znalezionegj kategorii
-		return (new CmsCategoryQuery)->findPk($this->cmsCategoryId);
+		//brak dołączonej kategorii
+		throw new \Cms\Exception\CategoryWidgetException('Category not joined');
 	}
 
 	/**
@@ -61,8 +61,8 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 		if ($this->getJoined('cms_category_widget')) {
 			return $this->getJoined('cms_category_widget');
 		}
-		//zwrot znalezionego widgeta
-		return (new CmsCategoryWidgetQuery)->findPk($this->cmsCategoryWidgetId);
+		//brak widgeta
+		throw new \Cms\Exception\CategoryWidgetException('Widget not joined');
 	}
 
 	/**
