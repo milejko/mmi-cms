@@ -227,6 +227,25 @@ PLUPLOADCONF.settings.ready = function (event, args) {
 			$.post(request.baseUrl + '/cmsAdmin/upload/details', {cmsFileId: file.cmsFileId}, 'json')
 			.done(function (data) {
 				if (data.result === 'OK' && data.record) {
+					
+					//refresh background select
+					if(args.up.getOption('preview')){
+						$.post(request.baseUrl + '/?module=commonAdmin&controller=widget&action=multimediaBackgroundJson', {idrecord: args.up.getOption('form_object_id')}, 'json')
+						.done(function (dane) {					
+							var selBackground = $('#commonadmin-form-multimediaeditform-uploadMultimedia-background');
+							selBackground.empty();
+							$('<option>').val('').text('---').appendTo(selBackground);
+							$.each(dane.background, function(key, val) {
+								if(val.data){
+									$('<option>', {
+										'data-image-url': val.data.data_image_url
+									}).val(key).text(val.value).appendTo(selBackground);
+								}
+							});
+							selBackground.val(data.data['background']).change();
+						});
+					}
+					
 					//przygotowujemy zawartość okienka edycji i pokazujemy go
 					var edit = 'div#' + args.up.getOption('form_element_id') + '-edit';
 					$(edit + ' > fieldset > .imprint').each(function () {

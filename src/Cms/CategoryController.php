@@ -36,6 +36,30 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		//forward do akcji docelowej
 		return \Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category));
 	}
+	
+	/**
+	 * Akcja pdf kategorii
+	 */
+	public function pdfAction() {
+		$this->view->setLayoutDisabled(true);
+		//próba pobrania kategorii z cache
+		if (null === $category = \App\Registry::$cache->load($cacheKey = 'category-' . md5($this->uri))) {
+			//pobranie kategorii
+			$category = $this->_getPublishedCategoryByUri($this->uri);
+			//zapis cache
+			\App\Registry::$cache->save($category, $cacheKey);
+		}
+		//kategoria posiada customUri, a wejście jest na natywny uri
+		if ($category->customUri && $this->uri == $category->uri) {
+			//przekierowanie na customUri
+			$this->getResponse()->redirect('cms', 'category', 'dispatch', ['uri' => $category->customUri]);
+		}
+		//rekord kategorii do widoku
+		$this->view->category = $category;
+		//forward do akcji docelowej
+		\Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category));		
+		return $this;
+	}
 
 	/**
 	 * Akcja artykułu

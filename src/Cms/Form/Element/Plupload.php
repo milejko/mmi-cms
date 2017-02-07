@@ -331,27 +331,6 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 			$objectId = null;
 		}
 
-		//dołączanie skryptu
-		$view->headScript()->appendScript("
-			$(document).ready(function () {
-				'use strict';
-				var conf = $.extend(true, {}, PLUPLOADCONF.settings);
-				conf.form_element_id = '$id';
-				conf.form_object = '$object';
-				conf.form_object_id = '$objectId';
-				" . ($this->getOption('showConsole') ? "conf.log_element = '" . $id . "-console';" : "") . "
-				" . ($this->getOption('chunkSize') ? "conf.chunk_size = '" . $this->getOption('chunkSize') . "';" : "") . "
-				" . ($this->getOption('maxFileSize') ? "conf.max_file_size = '" . $this->getOption('maxFileSize') . "';" : "") . "
-				" . ($this->getOption('maxFileCount') ? "conf.max_file_cnt = " . $this->getOption('maxFileCount') . ";" : "") . "
-				" . ($this->getOption('mimeTypes') ? "conf.filters.mime_types = " . json_encode($this->getOption('mimeTypes')) . ";" : "") . "
-				" . ($this->getOption('fileTypes') ? "conf.file_types = '" . $this->getOption('fileTypes') . "';" : "") . "
-				" . ($this->getOption('afterUpload') ? "conf.after_upload = " . json_encode($this->getOption('afterUpload')) . ";" : "") . "
-				" . ($this->getOption('afterDelete') ? "conf.after_delete = " . json_encode($this->getOption('afterDelete')) . ";" : "") . "
-				" . ($this->getOption('afterEdit') ? "conf.after_edit = " . json_encode($this->getOption('afterEdit')) . ";" : "") . "
-				$('#$id').plupload(conf);
-			});
-		");
-
 		$html = '<div id="' . $id . '">';
 		$html .= '<p>Twoja przeglądarka nie posiada wsparcia dla HTML5.</p>';
 		$html .= '<p>Proszę zaktualizować oprogramowanie.</p>';
@@ -374,6 +353,29 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 			$html .= '<pre class="plupload-log-console" id="' . $id . '-console"></pre>';
 			$html .= '</div>';
 		}
+		
+		//dołączanie skryptu
+		$view->headScript()->appendScript("
+			$(document).ready(function () {
+				'use strict';
+				var conf = $.extend(true, {}, PLUPLOADCONF.settings);
+				conf.form_element_id = '$id';
+				conf.form_object = '$object';
+				conf.form_object_id = '$objectId';
+				" . ($this->getOption('showConsole') ? "conf.log_element = '" . $id . "-console';" : "") . "
+				" . ($this->getOption('chunkSize') ? "conf.chunk_size = '" . $this->getOption('chunkSize') . "';" : "") . "
+				" . ($this->getOption('maxFileSize') ? "conf.max_file_size = '" . $this->getOption('maxFileSize') . "';" : "") . "
+				" . ($this->getOption('maxFileCount') ? "conf.max_file_cnt = " . $this->getOption('maxFileCount') . ";" : "") . "
+				" . ($this->getOption('mimeTypes') ? "conf.filters.mime_types = " . json_encode($this->getOption('mimeTypes')) . ";" : "") . "
+				" . ($this->getOption('fileTypes') ? "conf.file_types = '" . $this->getOption('fileTypes') . "';" : "") . "
+				" . ($this->getOption('afterUpload') ? "conf.after_upload = " . json_encode($this->getOption('afterUpload')) . ";" : "") . "
+				" . ($this->getOption('afterDelete') ? "conf.after_delete = " . json_encode($this->getOption('afterDelete')) . ";" : "") . "
+				conf.preview = " . ($this->getOption('preview') ? $this->getOption('preview') : 0) . ";
+				" . ($this->getOption('afterEdit') ? "conf.after_edit = " . json_encode($this->getOption('afterEdit')) . ";" : "") . "
+				$('#$id').plupload(conf);
+			});
+		");
+		
 		return $html;
 	}
 
@@ -435,7 +437,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 				if (is_array($value)) {
 					$data = '';
 					foreach ($value['data'] as $data_key => $data_val) {
-						$data .= $data_key . '="' . $data_val . '"';
+						$data .= str_replace('_','-',$data_key) . '="' . $data_val . '"';
 					}
 					array_push($option, '<option value="' . $key . '" ' . $data . '>' . $value['value'] . '</option>"');
 				} else {
@@ -446,6 +448,9 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract {
 			//dodaje podglad obrazka
 			$image = '';
 			if( isset($element['preview']) ){
+				
+				$this->setOption('preview', true);
+				
 				$image = "
 				<div class='col_3' id='image_$fieldId'></div>
 				<script type='text/javascript'>

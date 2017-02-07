@@ -147,12 +147,12 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 		}
 		$fileName = '/' . $this->name[0] . '/' . $this->name[1] . '/' . $this->name[2] . '/' . $this->name[3] . '/' . $scaleType . '/' . $scale . '/' . $this->name;
 		//istnieje plik - wiadomość z bufora
-		if (FrontController::getInstance()->getCache()->load($cacheKey = 'cms-file-' . md5($fileName)) === true) {
+		if (FrontController::getInstance()->getLocalCache()->load($cacheKey = 'cms-file-' . md5($fileName)) === true) {
 			return $baseUrl . $fileName;
 		}
 		//istnieje plik - zwrot ścieżki publicznej
 		if (file_exists(BASE_PATH . '/web/data' . $fileName)) {
-			FrontController::getInstance()->getCache()->save(true, $cacheKey);
+			FrontController::getInstance()->getLocalCache()->save(true, $cacheKey);
 			return $baseUrl . $fileName;
 		}
 		//brak pliku źródłowego
