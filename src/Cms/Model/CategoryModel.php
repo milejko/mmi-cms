@@ -91,13 +91,13 @@ class CategoryModel {
 		//iteracja po kategoriach
 		foreach ($this->_flatCategories as $category) {
 			//znaleziono w uri (lub w customUri), ale kategoria jest przekierowaniem
-			if (($category->uri == $uri || $category->customUri == $uri) && ($category->redirectUri || $category->mvcParams)) {
+			if (($category->uri == $uri || $category->customUri == $uri) && $category->redirectUri) {
 				$redirectCategory = $redirectCategory ? $redirectCategory : $category;
 				continue;
 			}
 			//znaleziono w uri (lub w customUri) i nie jest przekierowaniem
-			if (($category->uri == $uri || $category->customUri == $uri) && !$category->redirectUri && !$category->mvcParams) {
-				//zwrot treści (priorytet)
+			if (($category->uri == $uri || $category->customUri == $uri) && !$category->redirectUri) {
+				//zwrot treści, lub mvc (priorytet)
 				return $category;
 			}
 		}
