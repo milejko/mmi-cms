@@ -57,7 +57,10 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		//rekord kategorii do widoku
 		$this->view->category = $category;
 		//forward do akcji docelowej
-		\Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category));		
+		
+		$req = $this->_prepareForwardRequest($category);
+		$req->action = 'pdf';		
+		\Mmi\Mvc\ActionHelper::getInstance()->forward($req);		
 		return $this;
 	}
 
