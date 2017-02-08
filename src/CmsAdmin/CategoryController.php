@@ -31,7 +31,11 @@ class CategoryController extends Mvc\Controller {
 			return;
 		}
 		//znaleziono kategorię o tym samym uri
-		if (null !== (new \Cms\Orm\CmsCategoryQuery)->whereId()->notEquals($cat->id)->andQuery((new \Cms\Orm\CmsCategoryQuery)->searchByUri($cat->uri))->findFirst()) {
+		if (null !== (new \Cms\Orm\CmsCategoryQuery)
+			->whereId()->notEquals($cat->id)
+			->andFieldRedirectUri()->equals(null)
+			->andQuery((new \Cms\Orm\CmsCategoryQuery)->searchByUri($cat->uri))
+			->findFirst() && !$cat->redirectUri) {
 			$this->view->duplicateAlert = true;
 		}
 		//sprawdzenie uprawnień do edycji węzła kategorii
