@@ -285,7 +285,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		$config = (new \Mmi\DataObject())->setParams($configArr);
 		return $config;
 	}
-
+	
 	/**
 	 * Przebudowuje dzieci (wywołuje save)
 	 * @param integer $parentId rodzic
@@ -361,7 +361,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	/**
 	 * Usuwa cache
 	 */
-	private function _clearCache() {
+	protected function _clearCache() {
 		//usuwanie cache
 		\App\Registry::$cache->remove('mmi-cms-navigation-' . $this->lang);
 		\App\Registry::$cache->remove('category-attributes-' . $this->id);

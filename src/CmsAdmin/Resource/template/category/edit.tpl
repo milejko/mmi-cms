@@ -50,6 +50,7 @@
 				<div class="tab-content clearfix" id="tab-config">
 					{$categoryForm->getElement('cmsCategoryTypeId')}
 					{$categoryForm->getElement('cmsCategoryTypeChanged')}
+					{if $duplicateAlert}<span class="red">Nazwa jest zduplikowana, treść może nie wyświetlać się poprawnie</span>{/if}
 					{$categoryForm->getElement('name')}
 					{$categoryForm->getElement('dateStart')}
 					{$categoryForm->getElement('dateEnd')}
