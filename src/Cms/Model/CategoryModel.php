@@ -87,13 +87,22 @@ class CategoryModel {
 	 * @return \Cms\Orm\CmsCategoryRecord
 	 */
 	public function getCategoryByUri($uri) {
+		$redirectCategory = null;
 		//iteracja po kategoriach
 		foreach ($this->_flatCategories as $category) {
-			//znaleziono w uri (lub w customUri)
-			if ($category->uri == $uri || $category->customUri == $uri) {
+			//znaleziono w uri (lub w customUri), ale kategoria jest przekierowaniem
+			if (($category->uri == $uri || $category->customUri == $uri) && ($category->redirectUri || $category->mvcParams)) {
+				$redirectCategory = $redirectCategory ? $redirectCategory : $category;
+				continue;
+			}
+			//znaleziono w uri (lub w customUri) i nie jest przekierowaniem
+			if (($category->uri == $uri || $category->customUri == $uri) && !$category->redirectUri && !$category->mvcParams) {
+				//zwrot treści (priorytet)
 				return $category;
 			}
 		}
+		//zwrot przekierowania
+		return $redirectCategory;
 	}
 
 	/**

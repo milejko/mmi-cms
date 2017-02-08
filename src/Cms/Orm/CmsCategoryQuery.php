@@ -178,14 +178,4 @@ class CmsCategoryQuery extends \Mmi\Orm\Query {
 			->where('key', 'cms_category_type')->equals($typeKey);
 	}
 
-	/**
-	 * Zapytanie wyszukujące kategorie po uri
-	 * @param string $uri
-	 * @return CmsCategoryQuery
-	 */
-	public function searchByUri($uri) {
-		return (new CmsCategoryQuery)
-				->whereUri()->equals($uri);
-	}
-
 }

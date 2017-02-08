@@ -73,6 +73,7 @@ class Category extends \Cms\Form\AttributeForm {
 			->setDescription('domyślnie: ' . substr($view->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->getRecord()->uri], true), strlen($view->baseUrl) + 1))
 			->addFilterStringTrim()
 			->addFilterEmptyToNull()
+			->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryQuery, 'uri')
 			->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryQuery, 'customUri', $this->getRecord()->id)
 			->addValidatorStringLength(1, 255);
 
@@ -98,8 +99,7 @@ class Category extends \Cms\Form\AttributeForm {
 		$this->addElementText('redirectUri')
 			->setLabel('przekierowanie na adres')
 			->setDescription('np. http://www.google.pl')
-			->addFilterStringTrim()
-			->addValidatorRegex('@(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?$@iS', 'Niepoprawny adres url');
+			->addFilterStringTrim();
 
 		//przekierowanie na moduł
 		$this->addElementText('mvcParams')
