@@ -93,8 +93,7 @@ class Tags extends \Mmi\Form\Element\Select {
 	public function __construct($name) {
 		parent::__construct($name);
 		$this->setMultiple()
-			->setValue([])
-			->setMultioptions((new \Cms\Orm\CmsTagQuery)->orderAscId()->findPairs('tag', 'tag'));
+			->setValue([]);
 	}
 
 	/**
@@ -258,7 +257,7 @@ class Tags extends \Mmi\Form\Element\Select {
 	 */
 	public function getMultioptions() {
 		$array = [];
-		foreach (parent::getMultioptions() as $k => $t) {
+		foreach ((new \Cms\Orm\CmsTagQuery)->orderAscId()->findPairs('tag', 'tag') as $k => $t) {
 			$array[$k] = $k;
 		}
 
