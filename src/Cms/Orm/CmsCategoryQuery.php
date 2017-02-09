@@ -166,7 +166,7 @@ class CmsCategoryQuery extends \Mmi\Orm\Query {
 				->orFieldLang()->equals(null)
 				->orderDescLang();
 	}
-	
+
 	/**
 	 * Zapytanie wyszukujące kategorie po kluczu typu (szablonu)
 	 * @param string $typeKey
@@ -174,18 +174,18 @@ class CmsCategoryQuery extends \Mmi\Orm\Query {
 	 */
 	public function searchByTypeKey($typeKey) {
 		return (new CmsCategoryQuery)
-			->join('cms_category_type')->on('cms_category_type_id')
-			->where('key', 'cms_category_type')->equals($typeKey);
+				->join('cms_category_type')->on('cms_category_type_id')
+				->where('key', 'cms_category_type')->equals($typeKey);
 	}
 
 	/**
-	 * Zapytanie wyszukujące kategorie po uri
+	 * Zapytanie wyszukujące po uri
 	 * @param string $uri
 	 * @return CmsCategoryQuery
 	 */
 	public function searchByUri($uri) {
-		return (new CmsCategoryQuery)
-				->whereUri()->equals($uri);
+		return (new CmsCategoryQuery)->whereUri()->equals($uri)
+				->orFieldCustomUri()->equals($uri);
 	}
 
 }

@@ -66,7 +66,7 @@ class CategoryController extends \Mmi\Mvc\Controller {
 	 * @return \Cms\Orm\CmsCategoryRecord
 	 * @throws \Mmi\Mvc\MvcNotFoundException
 	 */
-	private function _getPublishedCategoryByUri($uri) {
+	protected function _getPublishedCategoryByUri($uri) {
 		//wyszukanie kategorii
 		if ((null === $category = (new Model\CategoryModel)
 			->getCategoryByUri($uri))) {
@@ -107,7 +107,7 @@ class CategoryController extends \Mmi\Mvc\Controller {
 	 * @return \Mmi\Http\Request
 	 * @throws \Mmi\App\KernelException
 	 */
-	private function _prepareForwardRequest(\Cms\Orm\CmsCategoryRecord $category) {
+	protected function _prepareForwardRequest(\Cms\Orm\CmsCategoryRecord $category) {
 		//tworzenie nowego requestu na podstawie obecnego
 		$request = clone $this->getRequest();
 		$request->setModuleName('cms')

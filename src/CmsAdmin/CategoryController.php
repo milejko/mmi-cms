@@ -30,6 +30,14 @@ class CategoryController extends Mvc\Controller {
 		if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
 			return;
 		}
+		//znaleziono kategorię o tym samym uri
+		if (null !== (new \Cms\Orm\CmsCategoryQuery)
+			->whereId()->notEquals($cat->id)
+			->andFieldRedirectUri()->equals(null)
+			->andQuery((new \Cms\Orm\CmsCategoryQuery)->searchByUri($cat->uri))
+			->findFirst() && !$cat->redirectUri) {
+			$this->view->duplicateAlert = true;
+		}
 		//sprawdzenie uprawnień do edycji węzła kategorii
 		if (!(new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed(\App\Registry::$auth->getRoles(), $cat->id)) {
 			$this->getMessenger()->addMessage('Nie posiadasz uprawnień do edycji wybranej strony', false);

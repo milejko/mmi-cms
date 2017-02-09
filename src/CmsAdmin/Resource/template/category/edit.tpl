@@ -50,6 +50,7 @@
 				<div class="tab-content clearfix" id="tab-config">
 					{$categoryForm->getElement('cmsCategoryTypeId')}
 					{$categoryForm->getElement('cmsCategoryTypeChanged')}
+					{if $duplicateAlert}<span class="red">Nazwa jest zduplikowana, treść może nie wyświetlać się poprawnie</span>{/if}
 					{$categoryForm->getElement('name')}
 					{$categoryForm->getElement('dateStart')}
 					{$categoryForm->getElement('dateEnd')}
@@ -91,7 +92,7 @@
 			</div>
 			{/if}
 			<div class="tab-content clearfix" id="tab-preview">
-				<iframe id="preview-frame" src="{if $categoryForm->getRecord()->customUri}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->customUri}@}{else}{@module=cms&controller=category&action=dispatch&uri={$categoryForm->getRecord()->uri}&preview=1@}{/if}"></iframe>
+				<iframe id="preview-frame" src="{$categoryForm->getRecord()->getUrl()}?preview=1"></iframe>
 			</div>
 		{/if}
 	</div>
