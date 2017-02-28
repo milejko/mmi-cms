@@ -27,4 +27,10 @@ abstract class CmsKernelConfig extends \Mmi\App\KernelConfig {
 	 */
 	public $navigation;
 
+	/**
+	 * Adres serwera CDN
+	 * @var string
+	 */
+	public $cdn;
+
 }

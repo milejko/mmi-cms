@@ -138,41 +138,50 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 		//plik źródłowy
 		$inputFile = $this->getRealPath();
 		//generowanie linku bazowego
-		$url = \Mmi\App\FrontController::getInstance()->getView()->url([], true, $https);
+		$url = \App\Registry::$config->cdn ? \App\Registry::$config->cdn : \Mmi\App\FrontController::getInstance()->getView()->url([], true, $https);
 		//brzydki if, jak aplikacja odpalana jest z podkatalogu
-		if ($url === '/') {
-			$baseUrl = '/data';
-		} else {
-			$baseUrl = $url . '/data';
-		}
+		$baseUrl = $url === '/' ? '/data' : ($url . '/data');
 		$fileName = '/' . $this->name[0] . '/' . $this->name[1] . '/' . $this->name[2] . '/' . $this->name[3] . '/' . $scaleType . '/' . $scale . '/' . $this->name;
+		$publicUrl =  $baseUrl . $fileName . '?crc=' . crc32($this->dateModify);
 		//istnieje plik - wiadomość z bufora
-		if (FrontController::getInstance()->getLocalCache()->load($cacheKey = 'cms-file-' . md5($fileName)) === true) {
-			return $baseUrl . $fileName;
-		}
-		//istnieje plik - zwrot ścieżki publicznej
-		if (file_exists(BASE_PATH . '/web/data' . $fileName)) {
-			FrontController::getInstance()->getLocalCache()->save(true, $cacheKey);
-			return $baseUrl . $fileName;
+		if (true === FrontController::getInstance()->getLocalCache()->load($cacheKey = 'cms-file-' . md5($fileName))) {
+			return $publicUrl;
 		}
 		//brak pliku źródłowego
 		if (!file_exists($inputFile)) {
+			FrontController::getInstance()->getLogger()->addWarning('CMS file not found: ' . $this->id . ' - ' . $this->original);
 			return;
 		}
+		//istnieje plik - zwrot ścieżki publicznej
+		if (file_exists($thumbPath = BASE_PATH . '/web/data' . $fileName) && filemtime($thumbPath) > filemtime($inputFile)) {
+			FrontController::getInstance()->getLocalCache()->save(true, $cacheKey);
+			return $publicUrl;
+		}
 		//klasa obrazu - uruchomienie skalera
-		if ($this->class == 'image' && !$this->_scaler($inputFile, BASE_PATH . '/web/data/' . $fileName, $scaleType, $scale)) {
+		if ($this->class == 'image' && !$this->_scaler($inputFile, $thumbPath, $scaleType, $scale)) {
+			FrontController::getInstance()->getLogger()->addWarning('Unable to resize CMS file: ' . $this->id . ' - ' . $this->original);
 			return;
 		}
 		//tworzenie katalogów
-		if (!file_exists(dirname(BASE_PATH . '/web/data/' . $fileName)) && !@mkdir(dirname(BASE_PATH . '/web/data/' . $fileName), 0777, true)) {
-			return true;
+		if (!file_exists(dirname($thumbPath))) {
+			try {
+				 mkdir(dirname($thumbPath), 0777, true);
+			} catch (\Mmi\App\KernelException $e) {
+				FrontController::getInstance()->getLogger()->addWarning('Unable to create diectories: ' . $e->getMessage());
+				return;
+			}
 		}
 		//klasa inna niż obraz - kopiowanie zasobu publicznie
-		if ($this->class != 'image' && !copy($inputFile, BASE_PATH . '/web/data/' . $fileName)) {
-			return;
+		if ($this->class != 'image') {
+			try {
+				copy($inputFile, $thumbPath);
+			} catch (\Exception $e) {
+				FrontController::getInstance()->getLogger()->addWarning('Unable to copy CMS file to web: ' . $this->id . ' - ' . $this->original);
+				return;
+			}
 		}
 		//zwrot ścieżki publicznej
-		return $baseUrl . $fileName;
+		return $publicUrl;
 	}
 
 	/**
@@ -355,8 +364,13 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 			return false;
 		}
 		//plik istnieje
-		if (!file_exists(dirname($outputFile)) && !@mkdir(dirname($outputFile), 0777, true)) {
-			return true;
+		if (!file_exists(dirname($outputFile))) {
+			try {
+				mkdir(dirname($outputFile), 0777, true);
+			} catch(\Mmi\App\KernelException $e) {
+				FrontController::getInstance()->getLogger()->addWarning('Unable to create directories: ' . $e->getMessage());
+				return true;				
+			}
 		}
 		//określanie typu wyjścia
 		switch (\Mmi\FileSystem::mimeType($inputFile)) {
