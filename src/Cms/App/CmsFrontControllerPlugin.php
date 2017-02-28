@@ -106,6 +106,7 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract {
 		$view = \Mmi\App\FrontController::getInstance()->getView();
 		$base = $view->baseUrl;
 		$view->domain = \App\Registry::$config->host;
+		$view->cdn = \App\Registry::$config->cdn;
 		$view->languages = \App\Registry::$config->languages;
 		$jsRequest = $request->toArray();
 		$jsRequest['baseUrl'] = $base;

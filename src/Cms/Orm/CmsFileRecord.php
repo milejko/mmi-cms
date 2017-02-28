@@ -138,17 +138,14 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 		//plik źródłowy
 		$inputFile = $this->getRealPath();
 		//generowanie linku bazowego
-		$url = \Mmi\App\FrontController::getInstance()->getView()->url([], true, $https);
+		$url = \App\Registry::$config->cdn ? \App\Registry::$config->cdn : \Mmi\App\FrontController::getInstance()->getView()->url([], true, $https);
 		//brzydki if, jak aplikacja odpalana jest z podkatalogu
-		if ($url === '/') {
-			$baseUrl = '/data';
-		} else {
-			$baseUrl = $url . '/data';
-		}
+		$baseUrl = $url === '/' ? '/data' : ($url . '/data');
 		$fileName = '/' . $this->name[0] . '/' . $this->name[1] . '/' . $this->name[2] . '/' . $this->name[3] . '/' . $scaleType . '/' . $scale . '/' . $this->name;
+		$publicUrl =  $baseUrl . $fileName . '?crc=' . crc32($this->dateModify);
 		//istnieje plik - wiadomość z bufora
 		if (true === FrontController::getInstance()->getLocalCache()->load($cacheKey = 'cms-file-' . md5($fileName))) {
-			return $baseUrl . $fileName;
+			return $publicUrl;
 		}
 		//brak pliku źródłowego
 		if (!file_exists($inputFile)) {
@@ -158,7 +155,7 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 		//istnieje plik - zwrot ścieżki publicznej
 		if (file_exists($thumbPath = BASE_PATH . '/web/data' . $fileName) && filemtime($thumbPath) > filemtime($inputFile)) {
 			FrontController::getInstance()->getLocalCache()->save(true, $cacheKey);
-			return $baseUrl . $fileName;
+			return $publicUrl;
 		}
 		//klasa obrazu - uruchomienie skalera
 		if ($this->class == 'image' && !$this->_scaler($inputFile, $thumbPath, $scaleType, $scale)) {
@@ -184,7 +181,7 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 			}
 		}
 		//zwrot ścieżki publicznej
-		return $baseUrl . $fileName;
+		return $publicUrl;
 	}
 
 	/**
