@@ -382,7 +382,7 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 			return true;
 		}
 		//PNG (nieprzeźroczysty)
-		if ($mimeType == 'image/png' && !\Mmi\Image\Image::hasTransparentArea($imgRes)) {
+		if ($mimeType == 'image/png') {
 			imagealphablending($imgRes, false);
 			imagesavealpha($imgRes, true);
 			imagepng($imgRes, $outputFile, 9);
