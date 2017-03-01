@@ -32,5 +32,11 @@ abstract class CmsKernelConfig extends \Mmi\App\KernelConfig {
 	 * @var string
 	 */
 	public $cdn;
+	
+	/**
+	 * Jakość miniatur jpg 1-100
+	 * @var integer
+	 */
+	public $thumbQuality = 90;
 
 }
