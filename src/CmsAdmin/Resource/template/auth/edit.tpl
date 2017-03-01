@@ -1,7 +1,7 @@
 {if $ldap}
-	{headLink()->appendStyleSheet($baseUrl . '/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.css')}
-	{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.js')}
-	{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/auth.js')}
+	{headLink()->appendStyleSheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.css')}
+	{headScript()->appendFile('/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.js')}
+	{headScript()->appendFile('/resource/cmsAdmin/js/auth.js')}
 {/if}
 <div class="content-box">
 	<div class="content-box-header">

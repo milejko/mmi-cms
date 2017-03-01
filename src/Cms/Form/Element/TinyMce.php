@@ -175,7 +175,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	 */
 	public function fetchField() {
 		$view = \Mmi\App\FrontController::getInstance()->getView();
-		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/tiny/tinymce.min.js');
+		$view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/tinymce.min.js');
 
 		//bazowa wspólna konfiguracja
 		$this->_baseConfig();

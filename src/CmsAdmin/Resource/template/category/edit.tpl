@@ -1,6 +1,6 @@
-{headLink()->appendStyleSheet($baseUrl . '/resource/cmsAdmin/css/category.css')}
-{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.js')}
-{headScript()->appendFile($baseUrl . '/resource/cmsAdmin/js/category.js')}
+{headLink()->appendStyleSheet('/resource/cmsAdmin/css/category.css')}
+{headScript()->appendFile('/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.js')}
+{headScript()->appendFile('/resource/cmsAdmin/js/category.js')}
 <div class="content-box">
 	<div class="content-box-header">
 		<h3>{#Zarządzanie treścią#}</h3>
