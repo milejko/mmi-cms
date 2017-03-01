@@ -142,7 +142,7 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 		//brzydki if, jak aplikacja odpalana jest z podkatalogu
 		$baseUrl = $url === '/' ? '/data' : ($url . '/data');
 		$fileName = '/' . $this->name[0] . '/' . $this->name[1] . '/' . $this->name[2] . '/' . $this->name[3] . '/' . $scaleType . '/' . $scale . '/' . $this->name;
-		$publicUrl =  $baseUrl . $fileName . '?crc=' . crc32($this->dateModify);
+		$publicUrl = $baseUrl . $fileName . '?crc=' . crc32($this->dateModify);
 		//istnieje plik - wiadomość z bufora
 		if (true === FrontController::getInstance()->getLocalCache()->load($cacheKey = 'cms-file-' . md5($fileName))) {
 			return $publicUrl;
@@ -165,7 +165,7 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 		//tworzenie katalogów
 		if (!file_exists(dirname($thumbPath))) {
 			try {
-				 mkdir(dirname($thumbPath), 0777, true);
+				mkdir(dirname($thumbPath), 0777, true);
 			} catch (\Mmi\App\KernelException $e) {
 				FrontController::getInstance()->getLogger()->addWarning('Unable to create diectories: ' . $e->getMessage());
 				return;
@@ -231,7 +231,7 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 		$this->size = $file->size;
 		return true;
 	}
-	
+
 	/**
 	 * Wczytanie rekordu
 	 * @param array $row
@@ -367,30 +367,30 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 		if (!file_exists(dirname($outputFile))) {
 			try {
 				mkdir(dirname($outputFile), 0777, true);
-			} catch(\Mmi\App\KernelException $e) {
+			} catch (\Mmi\App\KernelException $e) {
 				FrontController::getInstance()->getLogger()->addWarning('Unable to create directories: ' . $e->getMessage());
-				return true;				
+				return true;
 			}
 		}
 		//określanie typu wyjścia
-		switch (\Mmi\FileSystem::mimeType($inputFile)) {
-			//GIF
-			case 'image/gif':
-				imagealphablending($imgRes, false);
-				imagesavealpha($imgRes, true);
-				imagegif($imgRes, $outputFile);
-				return true;
-			//PNG
-			case 'image/png':
-				imagealphablending($imgRes, false);
-				imagesavealpha($imgRes, true);
-				imagepng($imgRes, $outputFile, 9);
-				return true;
-			//domyślnie jpeg
-			default:
-				imagejpeg($imgRes, $outputFile, intval(\App\Registry::$config->thumbQuality));
-				return true;
+		$mimeType = \Mmi\FileSystem::mimeType($inputFile);
+		//GIF
+		if ($mimeType == 'image/gif') {
+			imagealphablending($imgRes, false);
+			imagesavealpha($imgRes, true);
+			imagegif($imgRes, $outputFile);
+			return true;
 		}
+		//PNG (nieprzeźroczysty)
+		if ($mimeType == 'image/png' && !\Mmi\Image\Image::hasTransparentArea($imgRes)) {
+			imagealphablending($imgRes, false);
+			imagesavealpha($imgRes, true);
+			imagepng($imgRes, $outputFile, 9);
+			return true;
+		}
+		//domyślnie JPEG
+		imagejpeg($imgRes, $outputFile, intval(\App\Registry::$config->thumbQuality));
+		return true;
 	}
 
 	/**
