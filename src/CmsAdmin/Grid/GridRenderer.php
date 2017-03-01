@@ -85,7 +85,7 @@ class GridRenderer {
 	public function render() {
 		$view = FrontController::getInstance()->getView();
 		//dołączenie js
-		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/grid.js');
+		$view->headScript()->appendFile('/resource/cmsAdmin/js/grid.js');
 		//render nagłówka ciała i stopki
 		return '<table id="' . $this->_grid->getClass() . '" class="grid striped">' .
 			$this->renderHeader() .

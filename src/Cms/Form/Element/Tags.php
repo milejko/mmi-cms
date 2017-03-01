@@ -150,8 +150,8 @@ class Tags extends \Mmi\Form\Element\Select {
 		//pobranie czy mozna dodac tag
 		$addTags = $this->getOption('addTags') ? 'true' : 'false';
 		$view = \Mmi\App\FrontController::getInstance()->getView();
-		$view->headLink()->appendStylesheet($view->baseUrl . '/resource/cmsAdmin/css/chosen.min.css');
-		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/chosen.jquery.min.js');
+		$view->headLink()->appendStylesheet('/resource/cmsAdmin/css/chosen.min.css');
+		$view->headScript()->appendFile('/resource/cmsAdmin/js/chosen.jquery.min.js');
 		$view->headScript()->appendScript("
 			$(document).ready(function ($) {
 				$('#" . $id . "').chosen({			    

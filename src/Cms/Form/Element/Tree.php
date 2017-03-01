@@ -133,10 +133,10 @@ class Tree extends \Mmi\Form\Element\ElementAbstract {
 	public function fetchField() {
 		//powolanie widoku, CSS i JavaScriptow
 		$view = \Mmi\App\FrontController::getInstance()->getView();
-		$view->headLink()->appendStylesheet($view->baseUrl . '/resource/cmsAdmin/css/tree.css');
-		$view->headLink()->appendStylesheet($view->baseUrl . '/resource/cmsAdmin/js/jstree/themes/default/style.min.css');
-		$view->headScript()->prependFile($view->baseUrl . '/resource/cmsAdmin/js/jquery/jquery.js');
-		$view->headScript()->appendFile($view->baseUrl . '/resource/cmsAdmin/js/jstree/jstree.min.js');
+		$view->headLink()->appendStylesheet('/resource/cmsAdmin/css/tree.css');
+		$view->headLink()->appendStylesheet('/resource/cmsAdmin/js/jstree/themes/default/style.min.css');
+		$view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
+		$view->headScript()->appendFile('/resource/cmsAdmin/js/jstree/jstree.min.js');
 
 		//glowny kontener drzewa
 		$html = '<div class="tree_container">';
