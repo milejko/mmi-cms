@@ -137,12 +137,9 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 		}
 		//plik źródłowy
 		$inputFile = $this->getRealPath();
-		//generowanie linku bazowego
-		$url = \App\Registry::$config->cdn ? \App\Registry::$config->cdn : \Mmi\App\FrontController::getInstance()->getView()->url([], true, $https);
-		//brzydki if, jak aplikacja odpalana jest z podkatalogu
-		$baseUrl = $url === '/' ? '/data' : ($url . '/data');
-		$fileName = '/' . $this->name[0] . '/' . $this->name[1] . '/' . $this->name[2] . '/' . $this->name[3] . '/' . $scaleType . '/' . $scale . '/' . $this->name;
-		$publicUrl = $baseUrl . $fileName . '?crc=' . crc32($this->dateModify);
+		$fileName = '/' . $this->name[0] . '/' . $this->name[1] . '/' . $this->name[2] . '/' . $this->name[3] . '/' . $scaleType . '/' . $scale . '/' . crc32($this->dateModify) .$this->name;
+		//obliczanie publicznego linku
+		$publicUrl = rtrim(\Mmi\App\FrontController::getInstance()->getView()->cdn ? \Mmi\App\FrontController::getInstance()->getView()->cdn : \Mmi\App\FrontController::getInstance()->getView()->url([], true, $https), '/') . '/data' . $fileName . '?crc=' . crc32($this->dateModify);
 		//istnieje plik - wiadomość z bufora
 		if (true === FrontController::getInstance()->getLocalCache()->load($cacheKey = 'cms-file-' . md5($fileName))) {
 			return $publicUrl;
