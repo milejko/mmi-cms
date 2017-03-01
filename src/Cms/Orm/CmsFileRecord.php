@@ -384,11 +384,11 @@ class CmsFileRecord extends \Mmi\Orm\Record {
 			case 'image/png':
 				imagealphablending($imgRes, false);
 				imagesavealpha($imgRes, true);
-				imagepng($imgRes, $outputFile);
+				imagepng($imgRes, $outputFile, 9);
 				return true;
 			//domyślnie jpeg
 			default:
-				imagejpeg($imgRes, $outputFile, 92);
+				imagejpeg($imgRes, $outputFile, intval(\App\Registry::$config->thumbQuality));
 				return true;
 		}
 	}
