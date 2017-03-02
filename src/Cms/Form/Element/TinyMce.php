@@ -170,6 +170,16 @@ class TinyMce extends \Mmi\Form\Element\Textarea {
 	protected $_common;
 
 	/**
+	 * Powołanie pola
+	 * @param type $name
+	 */
+	public function __construct($name) {
+		//wyłączenie CDN
+		\Mmi\App\FrontController::getInstance()->getView()->setCdn(null);
+		parent::__construct($name);
+	}
+	
+	/**
 	 * Buduje pole
 	 * @return string
 	 */
