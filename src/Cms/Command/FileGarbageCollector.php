@@ -78,7 +78,7 @@ class FileGarbageCollector extends \Mmi\Command\CommandAbstract {
 	protected function _checkForFile($directory, $file) {
 		//szukamy tylko plików o długości 33 znaków+
 		if (strlen($file) < 33) {
-			echo $file;
+			echo $file . "\n";
 			return;
 		}
 		//brak pliku w plikach CMS
