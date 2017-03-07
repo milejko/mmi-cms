@@ -123,10 +123,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		if (null === $this->order) {
 			$this->order = $this->_maxChildOrder() + 1;
 		}
-		//usuwanie cache przy zapisie
-		$this->_clearCache();
 		//zapis
-		return parent::save();
+		return parent::save() && $this->_clearCache();
 	}
 
 	/**
@@ -196,10 +194,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		if (!empty($children)) {
 			throw new \Cms\Exception\ChildrenExistException();
 		}
-		//usuwanie cache
-		$this->_clearCache();
 		//usuwanie kategorii
-		return parent::delete();
+		return parent::delete() && $this->_clearCache();
 	}
 
 	/**
@@ -369,6 +365,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		\App\Registry::$cache->remove('category-widget-model-' . $this->id);
 		\App\Registry::$cache->remove('category-parent-' . $this->id);
 		\App\Registry::$cache->remove('category-children-' . $this->parentId);
+		return true;
 	}
 
 }

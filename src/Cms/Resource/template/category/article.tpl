@@ -23,6 +23,6 @@
 {$widgetRequest = $widgetRelation->getWidgetRecord()->getMvcParamsAsRequest()}
 {$widgetName = $widgetRelation->getWidgetRecord()->name}
 <div class="cms-widget widget-{$widgetRelation->getWidgetRecord()->id} widget-{$widgetName|url}">
-	{widget($widgetRequest->module, $widgetRequest->controller, $widgetRequest->action, $widgetRequest->toArray() + ['widgetId' => $widgetRelation->id])}
+	{categoryWidget($widgetRelation)}
 </div>
 {/foreach}
