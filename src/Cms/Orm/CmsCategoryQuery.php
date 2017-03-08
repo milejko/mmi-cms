@@ -188,4 +188,28 @@ class CmsCategoryQuery extends \Mmi\Orm\Query {
 				->orFieldCustomUri()->equals($uri);
 	}
 
+	/**
+	 * Wyszukuje kategorię po uri z uwzględnieniem priorytetu
+	 * @param string $uri
+	 * @return \Cms\Orm\CmsCategoryRecord
+	 */
+	public function getCategoryByUri($uri) {
+		$redirectCategory = null;
+		//iteracja po kategoriach
+		foreach ($this->searchByUri($uri)
+			->joinLeft('cms_category_type')->on('cms_category_type_id')
+			->find() as $category) {
+			//kategoria jest przekierowaniem
+			if ($category->redirectUri) {
+				//używane jest pierwsze znalezione przekierowanie
+				$redirectCategory = $redirectCategory ? $redirectCategory : $category;
+				continue;
+			}
+			//zwrot treści, lub mvc (priorytet)
+			return $category;
+		}
+		//zwrot przekierowania
+		return $redirectCategory;
+	}
+
 }

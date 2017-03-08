@@ -216,7 +216,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		//próba pobrania atrybutów z cache
 		if (null === $attributeValues = \App\Registry::$cache->load($cacheKey = 'category-attributes-' . $this->id)) {
 			//pobieranie atrybutów
-			\App\Registry::$cache->save($attributeValues = (new \Cms\Model\AttributeValueRelationModel('category', $this->id))->getGrouppedAttributeValues(), $cacheKey);
+			\App\Registry::$cache->save($attributeValues = (new \Cms\Model\AttributeValueRelationModel('category', $this->id))->getGrouppedAttributeValues(), $cacheKey, 0);
 		}
 		//zwrot atrybutów
 		return $attributeValues;
@@ -362,6 +362,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		\App\Registry::$cache->remove('mmi-cms-navigation-' . $this->lang);
 		\App\Registry::$cache->remove('category-attributes-' . $this->id);
 		\App\Registry::$cache->remove('category-' . md5($this->uri));
+		\App\Registry::$cache->remove('category-' . md5($this->customUri));
 		\App\Registry::$cache->remove('category-widget-model-' . $this->id);
 		\App\Registry::$cache->remove('category-parent-' . $this->id);
 		\App\Registry::$cache->remove('category-children-' . $this->parentId);
