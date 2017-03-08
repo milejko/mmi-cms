@@ -42,6 +42,12 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryWidgetQuery lessThanColumnMvcPreviewParams()
  * @method \Cms\Orm\CmsCategoryWidgetQuery greaterOrEqualsColumnMvcPreviewParams()
  * @method \Cms\Orm\CmsCategoryWidgetQuery lessOrEqualsColumnMvcPreviewParams()
+ * @method \Cms\Orm\CmsCategoryWidgetQuery equalsColumnCacheLifetime()
+ * @method \Cms\Orm\CmsCategoryWidgetQuery notEqualsColumnCacheLifetime()
+ * @method \Cms\Orm\CmsCategoryWidgetQuery greaterThanColumnCacheLifetime()
+ * @method \Cms\Orm\CmsCategoryWidgetQuery lessThanColumnCacheLifetime()
+ * @method \Cms\Orm\CmsCategoryWidgetQuery greaterOrEqualsColumnCacheLifetime()
+ * @method \Cms\Orm\CmsCategoryWidgetQuery lessOrEqualsColumnCacheLifetime()
  */
 class CmsCategoryWidgetQueryField extends \Mmi\Orm\QueryHelper\QueryField {
 

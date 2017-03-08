@@ -40,6 +40,11 @@ class CategoryWidgetGrid extends \CmsAdmin\Grid\Grid {
 		//klasa forma
 		$this->addColumnText('formClass')
 			->setLabel('klasa formularza konfiguracji');
+		
+		//długość bufora
+		$this->addColumnSelect('cacheLifetime')
+			->setLabel('odświeżanie')
+			->setMultioptions(\Cms\Orm\CmsCategoryWidgetRecord::CACHE_LIFETIMES);
 
 		//operacje
 		$this->addColumnOperation();

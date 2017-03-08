@@ -24,14 +24,18 @@ class CategoryWidget extends \Mmi\Mvc\ViewHelper\HelperAbstract {
 		$widgetRecord = $widgetRelation->getWidgetRecord();
 		//próba odczytu z bufora
 		if (null === $widgetData = \App\Registry::$cache->load($cacheKey = 'widget-html-' . $widgetRelation->id)) {
+			//pobranie konfiguracji widgetu
 			$widgetRequest = $widgetRecord->getMvcParamsAsRequest();
-			$isLayoutDisabled = $this->view->isLayoutDisabled();
-			$this->view->setLayoutDisabled();
+			//ustawienie identyfikatora relacji widgetu
+			$widgetRequest->widgetId = $widgetRelation->id;
 			//render widgetu
-			$widgetData = \Mmi\Mvc\ActionHelper::getInstance()->action($widgetRequest->toArray() + ['widgetId' => $widgetRelation->id]);
-			$this->view->setLayoutDisabled($isLayoutDisabled);
-			//zapis do bufora
-			\App\Registry::$cache->save($widgetData, $cacheKey, 0);
+			$widgetData = \Mmi\Mvc\ActionHelper::getInstance()->action($widgetRequest->toArray());
+			//bufor wyłączony parametrem
+			if (!$widgetRecord->cacheLifetime) {
+				return $widgetData;
+			}
+			//zapis do bufora (czas określony parametrem)
+			\App\Registry::$cache->save($widgetData, $cacheKey, $widgetRecord->cacheLifetime);
 		}
 		return $widgetData;
 	}

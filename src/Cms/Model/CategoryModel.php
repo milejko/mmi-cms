@@ -112,6 +112,7 @@ class CategoryModel {
 	 * @return array
 	 */
 	private function _searchChildren(array $categories, $parentCategoryId = null) {
+		//iteracja po kategoriach
 		foreach ($categories as $id => $category) {
 			if ($id == $parentCategoryId) {
 				return $category['children'];
