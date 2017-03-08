@@ -20,6 +20,7 @@
 
 {foreach $category->getWidgetModel()->getWidgetRelations() as $widgetRelation}
 {if !$widgetRelation->active}{continue}{/if}
+{if $widgetRelation->active == 2 && !$request->preview}{continue}{/if}
 {$widgetRequest = $widgetRelation->getWidgetRecord()->getMvcParamsAsRequest()}
 {$widgetName = $widgetRelation->getWidgetRecord()->name}
 <div class="cms-widget widget-{$widgetRelation->getWidgetRecord()->id} widget-{$widgetName|url}">

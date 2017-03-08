@@ -41,8 +41,6 @@ class CategoryWidgetModel {
 			->join('cms_category')->on('cms_category_id')
 			->join('cms_category_widget')->on('cms_category_widget_id')
 			->whereCmsCategoryId()->equals($this->_categoryId)
-			//test na status aktywny/roboczy/wylaczony								
-			->testActive()				
 			->orderAscOrder()
 			->find()) {
 			//nie znaleziono relacji
