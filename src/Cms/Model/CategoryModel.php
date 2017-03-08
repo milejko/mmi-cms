@@ -82,30 +82,6 @@ class CategoryModel {
 	}
 
 	/**
-	 * Wyszukuje kategorię po uri
-	 * @param string $uri
-	 * @return \Cms\Orm\CmsCategoryRecord
-	 */
-	public function getCategoryByUri($uri) {
-		$redirectCategory = null;
-		//iteracja po kategoriach
-		foreach ($this->_flatCategories as $category) {
-			//znaleziono w uri (lub w customUri), ale kategoria jest przekierowaniem
-			if (($category->uri == $uri || $category->customUri == $uri) && $category->redirectUri) {
-				$redirectCategory = $redirectCategory ? $redirectCategory : $category;
-				continue;
-			}
-			//znaleziono w uri (lub w customUri) i nie jest przekierowaniem
-			if (($category->uri == $uri || $category->customUri == $uri) && !$category->redirectUri) {
-				//zwrot treści, lub mvc (priorytet)
-				return $category;
-			}
-		}
-		//zwrot przekierowania
-		return $redirectCategory;
-	}
-
-	/**
 	 * Wyszukiwanie dzieci
 	 * @param array $categories
 	 * @param integer $parentCategoryId

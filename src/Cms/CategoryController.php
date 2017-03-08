@@ -24,7 +24,7 @@ class CategoryController extends \Mmi\Mvc\Controller {
 			//pobranie kategorii
 			$category = $this->_getPublishedCategoryByUri($this->uri);
 			//zapis cache
-			\App\Registry::$cache->save($category, $cacheKey);
+			\App\Registry::$cache->save($category, $cacheKey, 0);
 		}
 		//kategoria posiada customUri, a wejście jest na natywny uri
 		if ($category->customUri && $this->uri == $category->uri) {
@@ -68,7 +68,7 @@ class CategoryController extends \Mmi\Mvc\Controller {
 	 */
 	protected function _getPublishedCategoryByUri($uri) {
 		//wyszukanie kategorii
-		if ((null === $category = (new Model\CategoryModel)
+		if ((null === $category = (new Orm\CmsCategoryQuery)
 			->getCategoryByUri($uri))) {
 			//404
 			throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
