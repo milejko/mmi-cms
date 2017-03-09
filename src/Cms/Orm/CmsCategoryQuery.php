@@ -179,8 +179,7 @@ class CmsCategoryQuery extends \Mmi\Orm\Query {
 	 * @return CmsCategoryQuery
 	 */
 	public function searchByTypeKey($typeKey) {
-		return (new CmsCategoryQuery)
-				->join('cms_category_type')->on('cms_category_type_id')
+		return $this->withType()
 				->where('key', 'cms_category_type')->equals($typeKey);
 	}
 
@@ -193,6 +192,15 @@ class CmsCategoryQuery extends \Mmi\Orm\Query {
 		return (new CmsCategoryQuery)->whereUri()->equals($uri)
 				->orFieldCustomUri()->equals($uri);
 	}
+	
+	/**
+	 * Zapytanie zezłączonym typem
+	 * @return CmsCategoryQuery
+	 */
+	public function withType() {
+		return (new CmsCategoryQuery)
+				->join('cms_category_type')->on('cms_category_type_id');
+	}
 
 	/**
 	 * Wyszukuje kategorię po uri z uwzględnieniem priorytetu
@@ -202,8 +210,9 @@ class CmsCategoryQuery extends \Mmi\Orm\Query {
 	public function getCategoryByUri($uri) {
 		$redirectCategory = null;
 		//iteracja po kategoriach
-		foreach ($this->searchByUri($uri)
-			->joinLeft('cms_category_type')->on('cms_category_type_id')
+		foreach ($this->withType()
+			->searchByUri($uri)
+			->withType()
 			->find() as $category) {
 			//kategoria jest przekierowaniem
 			if ($category->redirectUri) {

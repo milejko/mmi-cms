@@ -270,7 +270,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		if (null === $parent = \App\Registry::$cache->load($cacheKey = 'category-' . $this->id)) {
 			//pobieranie rodzica
 			\App\Registry::$cache->save($parent = (new \Cms\Orm\CmsCategoryQuery)
-				->joinLeft('cms_category_type')->on('cms_category_type_id')
+				->withType()
 				->findPk($this->parentId), $cacheKey, 0);
 		}
 		//zwrot rodzica
