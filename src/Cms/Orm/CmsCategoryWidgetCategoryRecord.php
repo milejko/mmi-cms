@@ -114,6 +114,7 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 	protected function _clearCache() {
 		//usuwanie cache
 		\App\Registry::$cache->remove('category-widget-model-' . $this->cmsCategoryId);
+		\App\Registry::$cache->remove('category-html-' . $this->cmsCategoryId);
 		\App\Registry::$cache->remove('category-widget-attributes-' . $this->id);
 		\App\Registry::$cache->remove('category-widget-html-' . $this->id);
 		return true;
