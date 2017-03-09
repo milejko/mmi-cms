@@ -89,17 +89,22 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		$category = null;
 		//próba mapowania uri na ID kategorii z cache
 		if (null === $categoryId = \App\Registry::$cache->load($cacheKey = 'category-id-' . md5($uri))) {
+			//w buforze jest informacja o braku strony
+			if ($categoryId == -1) {
+				//404
+				throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
+			}
 			//próba pobrania kategorii
 			if (null === $category = (new Orm\CmsCategoryQuery)->getCategoryByUri($uri)) {
+				//zapis informacji o braku kategorii w cache 
+				\App\Registry::$cache->save(-1, $cacheKey, 0);
 				//404
 				throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
 			}
 			//id kategorii
 			$categoryId = $category->id;
-			//zapis id kategorii w cache 
-			\App\Registry::$cache->save($categoryId, $cacheKey, 0);
-			//zapis kategorii w cache
-			\App\Registry::$cache->save($category, 'category-' . $category->id, 0);
+			//zapis id kategorii i kategorii w cache 
+			\App\Registry::$cache->save($categoryId, $cacheKey, 0) && \App\Registry::$cache->save($category, 'category-' . $category->id, 0);
 		}
 		//kategoria pobrana w powyższym bloku
 		if ($category) {
