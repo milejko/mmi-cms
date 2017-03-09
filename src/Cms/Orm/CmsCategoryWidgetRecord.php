@@ -65,11 +65,16 @@ class CmsCategoryWidgetRecord extends \Mmi\Orm\Record {
 	 * @return boolean
 	 */
 	protected function _cleanCache() {
+		//iteracja po relacjach widgetów
 		foreach ((new CmsCategoryWidgetCategoryQuery)
+			->join('cms_category')->on('cms_category_id')
 			->whereCmsCategoryWidgetId()
 			->equals($this->id)
-			->findPairs('id', 'id') as $id) {
-			\App\Registry::$cache->remove('widget-html-' . $id);
+			->findPairs('cms_category_widget_category.id', 'cms_category.id') as $id => $categoryId) {
+			//usuwanie bufora
+			\App\Registry::$cache->remove('category-widget-html-' . $id);
+			\App\Registry::$cache->remove('category-widget-model-' . $categoryId);
+			\App\Registry::$cache->remove('category-html-' . $categoryId);
 		}
 		return true;
 	}

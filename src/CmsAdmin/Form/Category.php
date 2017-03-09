@@ -42,6 +42,13 @@ class Category extends \Cms\Form\AttributeForm {
 			->setLabel('zakończenie publikacji')
 			->setDateMin(date('Y-m-d H:i'))
 			->setDateMinField($this->getElement('dateStart'));
+		
+		//ustawienie bufora
+		$this->addElementSelect('cacheLifetime')
+			->setLabel('odświeżanie')
+			->setMultioptions(\Cms\Orm\CmsCategoryRecord::CACHE_LIFETIMES)
+			->setValue(\Cms\Orm\CmsCategoryRecord::DEFAULT_CACHE_LIFETIME)
+			->addFilterEmptyToNull();
 
 		//aktywna
 		$this->addElementCheckbox('active')

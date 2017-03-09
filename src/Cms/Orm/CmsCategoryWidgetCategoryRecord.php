@@ -70,7 +70,7 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 	 */
 	public function getAttributeValues() {
 		//próba pobrania atrybutów z cache
-		if (null === $attributeValues = \App\Registry::$cache->load($cacheKey = 'widget-attributes-' . $this->id)) {
+		if (null === $attributeValues = \App\Registry::$cache->load($cacheKey = 'category-widget-attributes-' . $this->id)) {
 			//pobieranie atrybutów
 			\App\Registry::$cache->save($attributeValues = (new \Cms\Model\AttributeValueRelationModel('categoryWidgetRelation', $this->id))->getGrouppedAttributeValues(), $cacheKey);
 		}
@@ -114,8 +114,8 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 	protected function _clearCache() {
 		//usuwanie cache
 		\App\Registry::$cache->remove('category-widget-model-' . $this->cmsCategoryId);
-		\App\Registry::$cache->remove('widget-attributes-' . $this->id);
-		\App\Registry::$cache->remove('widget-html-' . $this->id);
+		\App\Registry::$cache->remove('category-widget-attributes-' . $this->id);
+		\App\Registry::$cache->remove('category-widget-html-' . $this->id);
 		return true;
 	}
 

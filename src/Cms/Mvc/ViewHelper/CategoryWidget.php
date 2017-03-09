@@ -23,7 +23,7 @@ class CategoryWidget extends \Mmi\Mvc\ViewHelper\HelperAbstract {
 	public function categoryWidget(\Cms\Orm\CmsCategoryWidgetCategoryRecord $widgetRelation) {
 		$widgetRecord = $widgetRelation->getWidgetRecord();
 		//próba odczytu z bufora
-		if (null === $widgetData = \App\Registry::$cache->load($cacheKey = 'widget-html-' . $widgetRelation->id)) {
+		if (null === $widgetData = \App\Registry::$cache->load($cacheKey = 'category-widget-html-' . $widgetRelation->id)) {
 			//pobranie konfiguracji widgetu
 			$widgetRequest = $widgetRecord->getMvcParamsAsRequest();
 			//ustawienie identyfikatora relacji widgetu

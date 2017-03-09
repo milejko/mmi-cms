@@ -10,6 +10,25 @@ use \Cms\Model\AttributeValueRelationModel,
  */
 class CmsCategoryRecord extends \Mmi\Orm\Record {
 
+	//domyślna długość bufora
+	const DEFAULT_CACHE_LIFETIME = 2592000;
+	
+	//interwały buforów
+	const CACHE_LIFETIMES = [
+		2592000 => 'po zmianie',
+		0 => 'zawsze',
+		60 => 'co minutę',
+		300 => 'co 5 minut',
+		600 => 'co 10 minut',
+		3600 => 'co godzinę',
+		28800 => 'co 8 godzin',
+		86400 => 'raz na dobę',
+	];
+
+	/**
+	 * Identyfikator
+	 * @var integer
+	 */
 	public $id;
 
 	/**
@@ -100,6 +119,12 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 * @var string
 	 */
 	public $dateEnd;
+
+	/**
+	 * Czas życia bufora
+	 * @var integer
+	 */
+	public $cacheLifetime;
 	public $active;
 
 	/**
@@ -242,9 +267,11 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	 */
 	public function getParentRecord() {
 		//próba pobrania rodzica z cache
-		if (null === $parent = \App\Registry::$cache->load($cacheKey = 'category-parent-' . $this->id)) {
+		if (null === $parent = \App\Registry::$cache->load($cacheKey = 'category-' . $this->id)) {
 			//pobieranie rodzica
-			\App\Registry::$cache->save($parent = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->parentId), $cacheKey);
+			\App\Registry::$cache->save($parent = (new \Cms\Orm\CmsCategoryQuery)
+				->joinLeft('cms_category_type')->on('cms_category_type_id')
+				->findPk($this->parentId), $cacheKey, 0);
 		}
 		//zwrot rodzica
 		return $parent;
@@ -281,7 +308,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		$config = (new \Mmi\DataObject())->setParams($configArr);
 		return $config;
 	}
-	
+
 	/**
 	 * Przebudowuje dzieci (wywołuje save)
 	 * @param integer $parentId rodzic
@@ -360,12 +387,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	protected function _clearCache() {
 		//usuwanie cache
 		\App\Registry::$cache->remove('mmi-cms-navigation-' . $this->lang);
+		\App\Registry::$cache->remove('category-' . $this->id);
+		\App\Registry::$cache->remove('category-html' . $this->id);
+		\App\Registry::$cache->remove('category-id-' . md5($this->uri));
+		\App\Registry::$cache->remove('category-id-' . md5($this->customUri));
 		\App\Registry::$cache->remove('category-attributes-' . $this->id);
-		\App\Registry::$cache->remove('category-' . md5($this->uri));
-		\App\Registry::$cache->remove('category-' . md5($this->customUri));
 		\App\Registry::$cache->remove('category-widget-model-' . $this->id);
 		\App\Registry::$cache->remove('category-parent-' . $this->id);
-		\App\Registry::$cache->remove('category-children-' . $this->parentId);
 		return true;
 	}
 

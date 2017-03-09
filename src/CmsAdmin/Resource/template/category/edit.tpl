@@ -54,6 +54,7 @@
 					{$categoryForm->getElement('name')}
 					{$categoryForm->getElement('dateStart')}
 					{$categoryForm->getElement('dateEnd')}
+					{$categoryForm->getElement('cacheLifetime')}
 					{$categoryForm->getElement('active')}
 					{$categoryForm->getElement('submit1')}
 				</div>

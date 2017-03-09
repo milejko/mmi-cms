@@ -102,6 +102,7 @@ class Navigation {
 		$params['uri'] = $record->customUri ? $record->customUri : $record->uri;
 		$config = $record->getConfig();
 		$config->typeId = $record->cmsCategoryTypeId;
+		$config->categoryId = $record->id;
 		$element
 			->setModule('cms')
 			->setController('category')
