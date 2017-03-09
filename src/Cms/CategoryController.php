@@ -25,6 +25,8 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		$this->view->category = $category;
 		//wczytanie zbuforowanej strony (dla niezalogowanych)
 		if (!\App\Registry::$auth->hasIdentity() && (null !== $html = \App\Registry::$cache->load($cacheKey = 'category-html-' . $category->id))) {
+			//wysyłanie nagłówka o buforowaniu strony
+			$this->getResponse()->setHeader('X-Cache', 'HIT');
 			//zwrot html
 			return $html;
 		}
