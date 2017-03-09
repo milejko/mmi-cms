@@ -388,7 +388,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		//usuwanie cache
 		\App\Registry::$cache->remove('mmi-cms-navigation-' . $this->lang);
 		\App\Registry::$cache->remove('category-' . $this->id);
-		\App\Registry::$cache->remove('category-html' . $this->id);
+		\App\Registry::$cache->remove('category-html-' . $this->id);
 		\App\Registry::$cache->remove('category-id-' . md5($this->uri));
 		\App\Registry::$cache->remove('category-id-' . md5($this->customUri));
 		\App\Registry::$cache->remove('category-attributes-' . $this->id);
