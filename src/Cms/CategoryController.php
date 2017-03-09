@@ -89,7 +89,7 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		$category = null;
 		//próba mapowania uri na ID kategorii z cache
 		if (null === $categoryId = \App\Registry::$cache->load($cacheKey = 'category-id-' . md5($uri))) {
-			//próba pobrania kategorii
+			//próba pobrania kategorii po URI
 			if (null === $category = (new Orm\CmsCategoryQuery)->getCategoryByUri($uri)) {
 				//zapis informacji o braku kategorii w cache 
 				\App\Registry::$cache->save('-1', $cacheKey, 0);
@@ -99,12 +99,16 @@ class CategoryController extends \Mmi\Mvc\Controller {
 			//id kategorii
 			$categoryId = $category->id;
 			//zapis id kategorii i kategorii w cache 
-			\App\Registry::$cache->save($categoryId, $cacheKey, 0) && \App\Registry::$cache->save($category, 'category-' . $category->id, 0);
+			\App\Registry::$cache->save($categoryId, $cacheKey, 0) && \App\Registry::$cache->save($category, 'category-' . $categoryId, 0);
 		}
 		//w buforze jest informacja o braku strony
 		if ($categoryId == -1) {
 			//404
 			throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
+		}
+		//kategoria
+		if ($category) {
+			return $this->_checkCategory($category);
 		}
 		//pobranie kategorii z bufora
 		if (null === $category = \App\Registry::$cache->load($cacheKey = 'category-' . $categoryId)) {

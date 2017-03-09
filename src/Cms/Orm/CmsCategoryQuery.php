@@ -167,7 +167,7 @@ class CmsCategoryQuery extends \Mmi\Orm\Query {
 		if (!\Mmi\App\FrontController::getInstance()->getRequest()->lang) {
 			return (new self);
 		}
-		return (new CmsCategoryQuery)
+		return $this
 				->whereLang()->equals(\Mmi\App\FrontController::getInstance()->getRequest()->lang)
 				->orFieldLang()->equals(null)
 				->orderDescLang();
@@ -189,7 +189,7 @@ class CmsCategoryQuery extends \Mmi\Orm\Query {
 	 * @return CmsCategoryQuery
 	 */
 	public function searchByUri($uri) {
-		return (new CmsCategoryQuery)->whereUri()->equals($uri)
+		return $this->whereUri()->equals($uri)
 				->orFieldCustomUri()->equals($uri);
 	}
 	
@@ -198,8 +198,8 @@ class CmsCategoryQuery extends \Mmi\Orm\Query {
 	 * @return CmsCategoryQuery
 	 */
 	public function withType() {
-		return (new CmsCategoryQuery)
-				->join('cms_category_type')->on('cms_category_type_id');
+		return $this
+				->joinLeft('cms_category_type')->on('cms_category_type_id');
 	}
 
 	/**
@@ -210,9 +210,9 @@ class CmsCategoryQuery extends \Mmi\Orm\Query {
 	public function getCategoryByUri($uri) {
 		$redirectCategory = null;
 		//iteracja po kategoriach
-		foreach ($this->withType()
-			->searchByUri($uri)
+		foreach ($this
 			->withType()
+			->searchByUri($uri)
 			->find() as $category) {
 			//kategoria jest przekierowaniem
 			if ($category->redirectUri) {
