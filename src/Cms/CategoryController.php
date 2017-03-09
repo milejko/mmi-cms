@@ -19,22 +19,40 @@ class CategoryController extends \Mmi\Mvc\Controller {
 	 * Akcja dispatchera kategorii
 	 */
 	public function dispatchAction() {
-		//próba pobrania kategorii z cache
-		if (null === $category = \App\Registry::$cache->load($cacheKey = 'category-' . md5($this->uri))) {
-			//pobranie kategorii
-			$category = $this->_getPublishedCategoryByUri($this->uri);
-			//zapis cache
-			\App\Registry::$cache->save($category, $cacheKey, 0);
-		}
-		//kategoria posiada customUri, a wejście jest na natywny uri
-		if ($category->customUri && $this->uri == $category->uri) {
-			//przekierowanie na customUri
-			$this->getResponse()->redirect('cms', 'category', 'dispatch', ['uri' => $category->customUri]);
-		}
+		//pobranie kategorii
+		$category = $this->_getPublishedCategoryByUri($this->uri);
 		//rekord kategorii do widoku
 		$this->view->category = $category;
-		//forward do akcji docelowej
-		return \Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category));
+		//wczytanie zbuforowanej strony (dla niezalogowanych)
+		if (!\App\Registry::$auth->hasIdentity() && (null !== $html = \App\Registry::$cache->load($cacheKey = 'category-html-' . $category->id))) {
+			//wysyłanie nagłówka o buforowaniu strony
+			$this->getResponse()->setHeader('X-Cache', 'HIT');
+			//zwrot html
+			return $html;
+		}
+		//przekazanie rekordu kategorii do widoku
+		$this->view->category = $category;
+		//renderowanie docelowej akcji
+		$html = \Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category));
+		//jeśli zalogowany, lub bufor wyłączony
+		if (\App\Registry::$auth->hasIdentity() || (0 == $cacheLifetime = $category->cacheLifetime)) {
+			//zwrot html
+			return $html;
+		}
+		//iteracja po widgetach
+		foreach ($category->getWidgetModel()->getWidgetRelations() as $widgetRelation) {
+			//bufor wyłączony przez widget
+			if (0 == $widgetCacheLifetime = $widgetRelation->getWidgetRecord()->cacheLifetime) {
+				//zwrot html
+				return $html;
+			}
+			//wpływ widgeta na czas buforowania kategorii
+			$cacheLifetime = ($cacheLifetime > $widgetCacheLifetime) ? $widgetCacheLifetime : $cacheLifetime;
+		}
+		//zapis html kategorii do cache
+		\App\Registry::$cache->save($html, $cacheKey, $cacheLifetime);
+		//zwrot html
+		return $html;
 	}
 
 	/**
@@ -67,12 +85,46 @@ class CategoryController extends \Mmi\Mvc\Controller {
 	 * @throws \Mmi\Mvc\MvcNotFoundException
 	 */
 	protected function _getPublishedCategoryByUri($uri) {
-		//wyszukanie kategorii
-		if ((null === $category = (new Orm\CmsCategoryQuery)
-			->getCategoryByUri($uri))) {
-			//404
-			throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
+		//inicjalizacja zmiennej
+		$category = null;
+		//próba mapowania uri na ID kategorii z cache
+		if (null === $categoryId = \App\Registry::$cache->load($cacheKey = 'category-id-' . md5($uri))) {
+			//próba pobrania kategorii
+			if (null === $category = (new Orm\CmsCategoryQuery)->getCategoryByUri($uri)) {
+				//404
+				throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
+			}
+			//id kategorii
+			$categoryId = $category->id;
+			//zapis id kategorii w cache 
+			\App\Registry::$cache->save($categoryId, $cacheKey, 0);
+			//zapis kategorii w cache
+			\App\Registry::$cache->save($category, 'category-' . $category->id, 0);
 		}
+		//kategoria pobrana w powyższym bloku
+		if ($category) {
+			//sprawdzanie kategorii
+			return $this->_checkCategory($category);
+		}
+		//pobranie kategorii po ID
+		if (null === $category = \App\Registry::$cache->load($cacheKey = 'category-' . $categoryId)) {
+			//pobranie kategorii po ID
+			$category = (new Orm\CmsCategoryQuery)->findPk($categoryId);
+			//zapis kategorii w cache
+			\App\Registry::$cache->save($category, $cacheKey, 0);
+		}
+		//sprawdzanie kategorii
+		return $this->_checkCategory($category);
+	}
+	
+	/**
+	 * Sprawdza aktywność kategorii do wyświetlenia
+	 * przekierowuje na 404 i na inne strony (zgodnie z redirectUri)
+	 * @param \Cms\Orm\CmsCategoryRecord $category
+	 * @throws \Mmi\Mvc\MvcNotFoundException
+	 * @return \Cms\Orm\CmsCategoryRecord $category
+	 */
+	protected function _checkCategory(\Cms\Orm\CmsCategoryRecord $category) {
 		//kategoria to przekierowanie
 		if ($category->redirectUri) {
 			//przekierowanie na uri
@@ -85,17 +137,22 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		//kategoria manualnie wyłączona
 		if (!$category->active) {
 			//404
-			throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
+			throw new \Mmi\Mvc\MvcNotFoundException('Category not active: ' . $uri);
 		}
 		//nie osiągnięto czasu publikacji
 		if (null !== $category->dateStart && $category->dateStart > date('Y-m-d H:i:s')) {
 			//404
-			throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
+			throw new \Mmi\Mvc\MvcNotFoundException('Category not yet published: ' . $uri);
 		}
 		//przekroczono czas publikacji
 		if (null !== $category->dateEnd && $category->dateEnd < date('Y-m-d H:i:s')) {
 			//404
-			throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
+			throw new \Mmi\Mvc\MvcNotFoundException('Category expired: ' . $uri);
+		}
+		//kategoria posiada customUri, a wejście jest na natywny uri
+		if ($category->customUri && $this->uri == $category->uri) {
+			//przekierowanie na customUri
+			$this->getResponse()->redirect('cms', 'category', 'dispatch', ['uri' => $category->customUri]);
 		}
 		//opublikowana kategoria
 		return $category;
