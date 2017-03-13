@@ -1,0 +1,1 @@
+UPDATE `mmi_changelog` SET `md5` = '8ba0078da198986120a39eb09fc08ba5' WHERE `filename` = '0026_default_value_attribute_relation.sql';
