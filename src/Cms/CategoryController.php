@@ -23,19 +23,21 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		$category = $this->_getPublishedCategoryByUri($this->uri);
 		//rekord kategorii do widoku
 		$this->view->category = $category;
-		//wczytanie zbuforowanej strony (dla niezalogowanych)
-		if (!\App\Registry::$auth->hasIdentity() && (null !== $html = \App\Registry::$cache->load($cacheKey = 'category-html-' . $category->id))) {
+		//wczytanie zbuforowanej strony (dla niezalogowanych i z pustym requestem)
+		if (!\App\Registry::$auth->hasIdentity() && $this->_hasEmptyRequest() && (null !== $html = \App\Registry::$cache->load($cacheKey = 'category-html-' . $category->id))) {
 			//wysyłanie nagłówka o buforowaniu strony
 			$this->getResponse()->setHeader('X-Cache', 'HIT');
 			//zwrot html
 			return $html;
 		}
+		//wysyłanie nagłówka o braku buforowaniu strony
+		$this->getResponse()->setHeader('X-Cache', 'MISS');
 		//przekazanie rekordu kategorii do widoku
 		$this->view->category = $category;
 		//renderowanie docelowej akcji
 		$html = \Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category));
 		//jeśli zalogowany, lub bufor wyłączony
-		if (\App\Registry::$auth->hasIdentity() || (0 == $cacheLifetime = $category->cacheLifetime)) {
+		if (\App\Registry::$auth->hasIdentity() || !$this->_hasEmptyRequest() || (0 == $cacheLifetime = $category->cacheLifetime)) {
 			//zwrot html
 			return $html;
 		}
@@ -189,6 +191,22 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		//parsowanie parametrów mvc
 		parse_str($category->getJoined('cms_category_type')->mvcParams, $mvcParams);
 		return $request->setParams($mvcParams);
+	}
+	
+	/**
+	 * Ma niepusty request użytkownika
+	 * @return boolean
+	 */
+	protected function _hasEmptyRequest() {
+		//request to arraya
+		$requestArray = $this->getRequest()->toArray();
+		//usuwanie zmiennych występujących w każdym requescie dla dispatchera
+		unset($requestArray['module']);
+		unset($requestArray['controller']);
+		unset($requestArray['action']);
+		unset($requestArray['uri']);
+		//zwrot pustości tablicy
+		return empty($requestArray);
 	}
 
 }
