@@ -21,10 +21,8 @@ class CategoryController extends \Mmi\Mvc\Controller {
 	public function dispatchAction() {
 		//pobranie kategorii
 		$category = $this->_getPublishedCategoryByUri($this->uri);
-		//rekord kategorii do widoku
-		$this->view->category = $category;
 		//wczytanie zbuforowanej strony (dla niezalogowanych i z pustym requestem)
-		if (!\App\Registry::$auth->hasIdentity() && $this->_hasEmptyRequest() && (null !== $html = \App\Registry::$cache->load($cacheKey = 'category-html-' . $category->id))) {
+		if (!\App\Registry::$auth->hasIdentity() && (null !== $html = \App\Registry::$cache->load($cacheKey = 'category-html-' . $category->id))) {
 			//wysyłanie nagłówka o buforowaniu strony
 			$this->getResponse()->setHeader('X-Cache', 'HIT');
 			//zwrot html
@@ -36,20 +34,9 @@ class CategoryController extends \Mmi\Mvc\Controller {
 		$this->view->category = $category;
 		//renderowanie docelowej akcji
 		$html = \Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category));
-		//jeśli zalogowany, lub bufor wyłączony
-		if (\App\Registry::$auth->hasIdentity() || !$this->_hasEmptyRequest() || (0 == $cacheLifetime = $category->cacheLifetime)) {
-			//zwrot html
+		//brak bufora - zwrot html
+		if (0 == $cacheLifetime = $this->_getCategoryCacheLifetime($category)) {
 			return $html;
-		}
-		//iteracja po widgetach
-		foreach ($category->getWidgetModel()->getWidgetRelations() as $widgetRelation) {
-			//bufor wyłączony przez widget
-			if (0 == $widgetCacheLifetime = $widgetRelation->getWidgetRecord()->cacheLifetime) {
-				//zwrot html
-				return $html;
-			}
-			//wpływ widgeta na czas buforowania kategorii
-			$cacheLifetime = ($cacheLifetime > $widgetCacheLifetime) ? $widgetCacheLifetime : $cacheLifetime;
 		}
 		//zapis html kategorii do cache
 		\App\Registry::$cache->save($html, $cacheKey, $cacheLifetime);
@@ -194,19 +181,33 @@ class CategoryController extends \Mmi\Mvc\Controller {
 	}
 	
 	/**
-	 * Ma niepusty request użytkownika
-	 * @return boolean
+	 * Zwraca czas buforowania kategorii
+	 * @return integer
 	 */
-	protected function _hasEmptyRequest() {
-		//request to arraya
-		$requestArray = $this->getRequest()->toArray();
-		//usuwanie zmiennych występujących w każdym requescie dla dispatchera
-		unset($requestArray['module']);
-		unset($requestArray['controller']);
-		unset($requestArray['action']);
-		unset($requestArray['uri']);
-		//zwrot pustości tablicy
-		return empty($requestArray);
+	protected function _getCategoryCacheLifetime(\Cms\Orm\CmsCategoryRecord $category) {
+		//czas buforowania (na podstawie typu kategorii i pojedynczej kategorii
+		$cacheLifetime = (null !== $category->cacheLifetime) 
+			? $category->cacheLifetime 
+			: ((null !== $category->getJoined('cms_category_type')->cacheLifetime) 
+				? $category->getJoined('cms_category_type')->cacheLifetime 
+				: Orm\CmsCategoryRecord::DEFAULT_CACHE_LIFETIME);
+		//jeśli zalogowany, lub bufor wyłączony (na poziomie typu kategorii, lub pojedynczej kategorii)
+		if (\App\Registry::$auth->hasIdentity() || (0 == $cacheLifetime)) {
+			//brak bufora
+			return 0;
+		}
+		//iteracja po widgetach
+		foreach ($category->getWidgetModel()->getWidgetRelations() as $widgetRelation) {
+			//bufor wyłączony przez widget
+			if (0 == $widgetCacheLifetime = $widgetRelation->getWidgetRecord()->cacheLifetime) {
+				//brak bufora
+				return 0;
+			}
+			//wpływ widgeta na czas buforowania kategorii
+			$cacheLifetime = ($cacheLifetime > $widgetCacheLifetime) ? $widgetCacheLifetime : $cacheLifetime;
+		}
+		//zwrot długości bufora
+		return $cacheLifetime;
 	}
 
 }
