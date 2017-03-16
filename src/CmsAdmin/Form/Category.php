@@ -46,8 +46,7 @@ class Category extends \Cms\Form\AttributeForm {
 		//ustawienie bufora
 		$this->addElementSelect('cacheLifetime')
 			->setLabel('odświeżanie')
-			->setMultioptions(\Cms\Orm\CmsCategoryRecord::CACHE_LIFETIMES)
-			->setValue(\Cms\Orm\CmsCategoryRecord::DEFAULT_CACHE_LIFETIME)
+			->setMultioptions([null => 'domyślne dla szablonu'] + \Cms\Orm\CmsCategoryRecord::CACHE_LIFETIMES)
 			->addFilterEmptyToNull();
 
 		//aktywna

@@ -31,6 +31,13 @@ class CategoryType extends \Cms\Form\Form {
 			->setRequired()
 			->addValidatorNotEmpty()
 			->setLabel('moduł wyświetlania');
+		
+		//ustawienie bufora
+		$this->addElementSelect('cacheLifetime')
+			->setLabel('odświeżanie')
+			->setMultioptions(\Cms\Orm\CmsCategoryRecord::CACHE_LIFETIMES)
+			->setValue(\Cms\Orm\CmsCategoryRecord::DEFAULT_CACHE_LIFETIME)
+			->addFilterEmptyToNull();
 
 		//zapis
 		$this->addElementSubmit('submit')
