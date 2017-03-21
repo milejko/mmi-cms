@@ -139,7 +139,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 			$this->order = $this->_maxChildOrder() + 1;
 		}
 		//zapis
-		return $this->_clearCache() && parent::save() && $this->_clearCache();
+		return $this->clearCache() && parent::save() && $this->clearCache();
 	}
 
 	/**
@@ -210,7 +210,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 			throw new \Cms\Exception\ChildrenExistException();
 		}
 		//usuwanie kategorii
-		return parent::delete() && $this->_clearCache();
+		return parent::delete() && $this->clearCache();
 	}
 
 	/**
@@ -374,7 +374,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 	/**
 	 * Usuwa cache
 	 */
-	protected function _clearCache() {
+	public function clearCache() {
 		//usuwanie cache
 		\App\Registry::$cache->remove('mmi-cms-navigation-' . $this->lang);
 		\App\Registry::$cache->remove('category-' . $this->id);

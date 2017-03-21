@@ -25,7 +25,7 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 	 */
 	public function save() {
 		//zapis z usunięciem cache
-		return parent::save() && $this->_clearCache();
+		return parent::save() && $this->clearCache();
 	}
 
 	/**
@@ -34,7 +34,7 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 	 */
 	public function delete() {
 		//usunięcie z czyszczeniem bufora
-		return parent::delete() && $this->_clearCache();
+		return parent::delete() && $this->clearCache();
 	}
 
 	/**
@@ -111,7 +111,7 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record {
 	/**
 	 * Usuwanie bufora
 	 */
-	protected function _clearCache() {
+	protected function clearCache() {
 		//usuwanie cache
 		\App\Registry::$cache->remove('category-widget-model-' . $this->cmsCategoryId);
 		\App\Registry::$cache->remove('category-html-' . $this->cmsCategoryId);

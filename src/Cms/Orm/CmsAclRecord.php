@@ -36,7 +36,7 @@ class CmsAclRecord extends \Mmi\Orm\Record {
 	 * @return boolean
 	 */
 	public function save() {
-		return parent::save() && $this->_clearCache();
+		return parent::save() && $this->clearCache();
 	}
 
 	/**
@@ -44,14 +44,14 @@ class CmsAclRecord extends \Mmi\Orm\Record {
 	 * @return boolean
 	 */
 	public function delete() {
-		return parent::delete() && $this->_clearCache();
+		return parent::delete() && $this->clearCache();
 	}
 
 	/**
 	 * Usunięcie cache
 	 * @return boolean
 	 */
-	protected function _clearCache() {
+	public function clearCache() {
 		\App\Registry::$cache->remove('mmi-cms-navigation-');
 		\App\Registry::$cache->remove('mmi-cms-navigation-' . \Mmi\App\FrontController::getInstance()->getRequest()->lang);
 		\App\Registry::$cache->remove('mmi-cms-acl');
