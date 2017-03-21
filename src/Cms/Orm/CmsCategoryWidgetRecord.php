@@ -57,14 +57,14 @@ class CmsCategoryWidgetRecord extends \Mmi\Orm\Record {
 	 */
 	protected function _update() {
 		//zapis z usunięciem bufora
-		return parent::_update() && $this->_cleanCache();
+		return parent::_update() && $this->clearCache();
 	}
 
 	/**
 	 * Usuwanie zbuforowanych renderów widgetów
 	 * @return boolean
 	 */
-	protected function _cleanCache() {
+	public function clearCache() {
 		//iteracja po relacjach widgetów
 		foreach ((new CmsCategoryWidgetCategoryQuery)
 			->join('cms_category')->on('cms_category_id')
