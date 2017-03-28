@@ -12,6 +12,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 
 	//domyślna długość bufora
 	const DEFAULT_CACHE_LIFETIME = 2592000;
+	
 	//interwały buforów
 	const CACHE_LIFETIMES = [2592000 => 'po zmianie', 0 => 'zawsze', 60 => 'co minutę', 300 => 'co 5 minut', 600 => 'co 10 minut', 3600 => 'co godzinę', 28800 => 'co 8 godzin', 86400 => 'raz na dobę'];
 
@@ -179,6 +180,10 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 		$parentModified = $this->isModified('parentId');
 		//zmodyfikowany order
 		$orderModified = $this->isModified('order');
+		//zmodyfikowana nazwa
+		$nameModified = $this->isModified('name');
+		//zmodyfikowana aktywność
+		$activeModified = $this->isModified('active');
 		//data modyfikacji
 		$this->dateModify = date('Y-m-d H:i:s');
 		//aktualizacja rekordu
@@ -191,7 +196,9 @@ class CmsCategoryRecord extends \Mmi\Orm\Record {
 			$this->_sortChildren();
 		}
 		//przebudowa dzieci
-		$this->_rebuildChildren($this->id);
+		if ($nameModified || $activeModified) {
+			$this->_rebuildChildren($this->id);
+		}
 		return true;
 	}
 
