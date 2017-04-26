@@ -13,24 +13,25 @@ namespace Cms\App;
 /**
  * Klasa konfiguracji aplikacji CMS
  */
-abstract class CmsKernelConfig extends \Mmi\App\KernelConfig {
+abstract class CmsKernelConfig extends \Mmi\App\KernelConfig
+{
 
-	/**
-	 * Konfiguracja autoryzacji CMS (LDAP)
-	 * @var \Cms\App\LdapConfig
-	 */
-	public $ldap;
+    /**
+     * Konfiguracja autoryzacji CMS (LDAP)
+     * @var \Cms\App\LdapConfig
+     */
+    public $ldap;
 
-	/**
-	 * Konfiguracja nawigatora
-	 * @var \Mmi\Navigation\NavigationConfig
-	 */
-	public $navigation;
+    /**
+     * Konfiguracja nawigatora
+     * @var \Mmi\Navigation\NavigationConfig
+     */
+    public $navigation;
 
-	/**
-	 * Jakość miniatur jpg 1-100
-	 * @var integer
-	 */
-	public $thumbQuality = 90;
+    /**
+     * Jakość miniatur jpg 1-100
+     * @var integer
+     */
+    public $thumbQuality = 90;
 
 }

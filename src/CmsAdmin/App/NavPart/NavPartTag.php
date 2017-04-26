@@ -10,23 +10,25 @@
 
 namespace CmsAdmin\App\NavPart;
 
-class NavPartTag extends \Mmi\Navigation\NavigationConfig {
+class NavPartTag extends \Mmi\Navigation\NavigationConfig
+{
 
-	public static function getMenu() {
-		return (new \Mmi\Navigation\NavigationConfigElement)
-				->setLabel('Tagi')
-				->setModule('cmsAdmin')
-				->setController('tag')
-				->addChild((new \Mmi\Navigation\NavigationConfigElement)
-					->setLabel('Dodaj')
-					->setModule('cmsAdmin')
-					->setController('tag')
-					->setAction('edit'))
-				->addChild((new \Mmi\Navigation\NavigationConfigElement)
-					->setLabel('Relacje')
-					->setModule('cmsAdmin')
-					->setController('tagRelation'))
-		;
-	}
+    public static function getMenu()
+    {
+        return (new \Mmi\Navigation\NavigationConfigElement)
+                ->setLabel('Tagi')
+                ->setModule('cmsAdmin')
+                ->setController('tag')
+                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                    ->setLabel('Dodaj')
+                    ->setModule('cmsAdmin')
+                    ->setController('tag')
+                    ->setAction('edit'))
+                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                    ->setLabel('Relacje')
+                    ->setModule('cmsAdmin')
+                    ->setController('tagRelation'))
+        ;
+    }
 
 }

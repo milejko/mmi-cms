@@ -1,6 +1,5 @@
 #!/usr/bin/env php
 <?php
-
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
  * 
@@ -17,11 +16,13 @@ require_once 'CommandAbstract.php';
 /**
  * Usuwa pliki bez powiązań w strukturze
  */
-class CronExecute extends \Mmi\Command\CommandAbstract {
+class CronExecute extends \Mmi\Command\CommandAbstract
+{
 
-	public function run() {
-		\Cms\Model\Cron::run();
-	}
+    public function run()
+    {
+        \Cms\Model\Cron::run();
+    }
 
 }
 

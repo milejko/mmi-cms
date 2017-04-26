@@ -79,6 +79,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsAttributeRelationQuery greaterOrEqualsColumnOrder()
  * @method \Cms\Orm\CmsAttributeRelationQuery lessOrEqualsColumnOrder()
  */
-class CmsAttributeRelationQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsAttributeRelationQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

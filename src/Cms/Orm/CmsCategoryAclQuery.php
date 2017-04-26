@@ -47,8 +47,9 @@ namespace Cms\Orm;
  * @method CmsCategoryAclRecord findPk($value)
  */
 //</editor-fold>
-class CmsCategoryAclQuery extends \Mmi\Orm\Query {
+class CmsCategoryAclQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_category_acl';
+    protected $_tableName = 'cms_category_acl';
 
 }

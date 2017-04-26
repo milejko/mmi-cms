@@ -59,8 +59,9 @@ namespace Cms\Orm;
  * @method CmsAttributeTypeRecord findPk($value)
  */
 //</editor-fold>
-class CmsAttributeTypeQuery extends \Mmi\Orm\Query {
+class CmsAttributeTypeQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_attribute_type';
+    protected $_tableName = 'cms_attribute_type';
 
 }

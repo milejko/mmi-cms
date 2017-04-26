@@ -13,15 +13,17 @@ namespace Cms\Mvc\ViewHelper;
 /**
  * Helper tekstów statycznych
  */
-class Text extends \Mmi\Mvc\ViewHelper\HelperAbstract {
+class Text extends \Mmi\Mvc\ViewHelper\HelperAbstract
+{
 
-	/**
-	 * Generuje tekst statyczny
-	 * @param string $key klucz
-	 * @return string
-	 */
-	public function text($key) {
-		return nl2br(\Cms\Model\Text::textByKeyLang($key, \Mmi\App\FrontController::getInstance()->getView()->request->lang));
-	}
+    /**
+     * Generuje tekst statyczny
+     * @param string $key klucz
+     * @return string
+     */
+    public function text($key)
+    {
+        return nl2br(\Cms\Model\Text::textByKeyLang($key, \Mmi\App\FrontController::getInstance()->getView()->request->lang));
+    }
 
 }

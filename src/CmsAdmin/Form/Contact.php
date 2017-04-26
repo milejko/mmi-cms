@@ -14,63 +14,67 @@ namespace CmsAdmin\Form;
  * Formularz odpowiedzi na kontakt
  * @method \Cms\Orm\CmsContactRecord getRecord()
  */
-class Contact extends \Mmi\Form\Form {
+class Contact extends \Mmi\Form\Form
+{
 
-	public function init() {
+    public function init()
+    {
 
-		//identyfikator tematu
-		if (!$this->getOption('subjectId')) {
-			$this->addElementSelect('cmsContactOptionId')
-				->setDisabled()
-				->setIgnore()
-				->setValue($this->getOption('subjectId'))
-				->setMultioptions(\Cms\Model\Contact::getMultioptions())
-				->setLabel('temat zapytania');
-		}
+        //identyfikator tematu
+        if (!$this->getOption('subjectId')) {
+            $this->addElementSelect('cmsContactOptionId')
+                ->setDisabled()
+                ->setIgnore()
+                ->setValue($this->getOption('subjectId'))
+                ->setMultioptions(\Cms\Model\Contact::getMultioptions())
+                ->setLabel('temat zapytania');
+        }
 
-		//mail
-		$this->addElementText('email')
-			->setDisabled()
-			->setLabel('email')
-			->setValue(\App\Registry::$auth->getEmail())
-			->addValidatorEmailAddress();
+        //mail
+        $this->addElementText('email')
+            ->setDisabled()
+            ->setLabel('email')
+            ->setValue(\App\Registry::$auth->getEmail())
+            ->addValidatorEmailAddress();
 
-		//tresc zapytania
-		$this->addElementTextarea('text')
-			->setDisabled()
-			->setLabel('treść zapytania');
+        //tresc zapytania
+        $this->addElementTextarea('text')
+            ->setDisabled()
+            ->setLabel('treść zapytania');
 
-		//odpowiedz na zgloszenie
-		$this->addElementTextarea('reply')
-			->setRequired()
-			->addValidatorNotEmpty()
-			->setLabel('odpowiedź');
+        //odpowiedz na zgloszenie
+        $this->addElementTextarea('reply')
+            ->setRequired()
+            ->addValidatorNotEmpty()
+            ->setLabel('odpowiedź');
 
-		$this->addElementSubmit('submit')
-			->setLabel('odpowiedz');
-	}
+        $this->addElementSubmit('submit')
+            ->setLabel('odpowiedz');
+    }
 
-	/**
-	 * Ustawienie opcji przed zapisem
-	 * @return boolean
-	 */
-	public function beforeSave() {
-		$this->getRecord()->active = 0;
-		$this->getRecord()->cmsAuthIdReply = \App\Registry::$auth->getId();
-		return true;
-	}
+    /**
+     * Ustawienie opcji przed zapisem
+     * @return boolean
+     */
+    public function beforeSave()
+    {
+        $this->getRecord()->active = 0;
+        $this->getRecord()->cmsAuthIdReply = \App\Registry::$auth->getId();
+        return true;
+    }
 
-	/**
-	 * Po zapisie wysyłka maila
-	 * @return boolean
-	 */
-	public function afterSave() {
-		\Cms\Model\Mail::pushEmail('contact_reply', $this->getRecord()->email, [
-				'id' => $this->getRecord()->id,
-				'text' => $this->getRecord()->text,
-				'replyText' => $this->getElement('reply')->getValue()
-		]);
-		return true;
-	}
+    /**
+     * Po zapisie wysyłka maila
+     * @return boolean
+     */
+    public function afterSave()
+    {
+        \Cms\Model\Mail::pushEmail('contact_reply', $this->getRecord()->email, [
+            'id' => $this->getRecord()->id,
+            'text' => $this->getRecord()->text,
+            'replyText' => $this->getElement('reply')->getValue()
+        ]);
+        return true;
+    }
 
 }

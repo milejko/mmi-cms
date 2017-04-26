@@ -23,22 +23,24 @@ namespace CmsAdmin\Grid\Column;
  * @method self setFilterMethodSearch() ustawia metodę filtracji na wyszukaj
  * @method self setFilterMethodNull() ustawia metodę filtracji na równe/różne null
  */
-class TextareaColumn extends ColumnAbstract {
+class TextareaColumn extends ColumnAbstract
+{
 
-	/**
-	 * Renderuje pole tekstowe, długie
-	 * @param \Mmi\Orm\RecordRo $record
-	 * @return string
-	 */
-	public function renderCell(\Mmi\Orm\RecordRo $record) {
-		$value = (new \Mmi\Filter\Escape)->filter($this->getValueFromRecord($record));
-		//obcinanie tekstu
-		if ('' == $truncated = (new \Mmi\Filter\Truncate)->setLength(200)->filter($value)) {
-			return;
-		}		 
-		return ($value == $truncated) ? ('<pre>' . $value . '</pre>'): '<pre title="' . $value . '">' .
-			$truncated .
-			'</pre>';
-	}
+    /**
+     * Renderuje pole tekstowe, długie
+     * @param \Mmi\Orm\RecordRo $record
+     * @return string
+     */
+    public function renderCell(\Mmi\Orm\RecordRo $record)
+    {
+        $value = (new \Mmi\Filter\Escape)->filter($this->getValueFromRecord($record));
+        //obcinanie tekstu
+        if ('' == $truncated = (new \Mmi\Filter\Truncate)->setLength(200)->filter($value)) {
+            return;
+        }
+        return ($value == $truncated) ? ('<pre>' . $value . '</pre>') : '<pre title="' . $value . '">' .
+            $truncated .
+            '</pre>';
+    }
 
 }

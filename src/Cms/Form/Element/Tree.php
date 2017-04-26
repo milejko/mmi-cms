@@ -97,132 +97,140 @@ namespace Cms\Form\Element;
  * @method self addFilterUrlencode() filtr urlencode
  * @method self addFilterZeroToNull() filtr zero do null'a
  */
-class Tree extends \Mmi\Form\Element\ElementAbstract {
+class Tree extends \Mmi\Form\Element\ElementAbstract
+{
 
-	/**
-	 * Funkcja użytkownika, jest wykonywana na końcu konstruktora
-	 */
-	public function init() {
-		$this->addFilterEmptyToNull();
-		return parent::init();
-	}
+    /**
+     * Funkcja użytkownika, jest wykonywana na końcu konstruktora
+     */
+    public function init()
+    {
+        $this->addFilterEmptyToNull();
+        return parent::init();
+    }
 
-	/**
-	 * Ustawia strukturę drzewka
-	 * @param array $structure
-	 * @return \Cms\Form\Element\Tree
-	 */
-	public function setStructure(array $structure) {
-		$this->setOption('structure', $structure);
-		return $this;
-	}
+    /**
+     * Ustawia strukturę drzewka
+     * @param array $structure
+     * @return \Cms\Form\Element\Tree
+     */
+    public function setStructure(array $structure)
+    {
+        $this->setOption('structure', $structure);
+        return $this;
+    }
 
-	/**
-	 * Ustawia wielokrotny wybór na drzewku
-	 * @return \Cms\Form\Element\Tree
-	 */
-	public function setMultiple($multiple = true) {
-		$this->setOption('multiple', $multiple);
-		return $this;
-	}
+    /**
+     * Ustawia wielokrotny wybór na drzewku
+     * @return \Cms\Form\Element\Tree
+     */
+    public function setMultiple($multiple = true)
+    {
+        $this->setOption('multiple', $multiple);
+        return $this;
+    }
 
-	/**
-	 * Buduje pole
-	 * @return string
-	 */
-	public function fetchField() {
-		//powolanie widoku, CSS i JavaScriptow
-		$view = \Mmi\App\FrontController::getInstance()->getView();
-		$view->headLink()->appendStylesheet('/resource/cmsAdmin/css/tree.css');
-		$view->headLink()->appendStylesheet('/resource/cmsAdmin/js/jstree/themes/default/style.min.css');
-		$view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
-		$view->headScript()->appendFile('/resource/cmsAdmin/js/jstree/jstree.min.js');
+    /**
+     * Buduje pole
+     * @return string
+     */
+    public function fetchField()
+    {
+        //powolanie widoku, CSS i JavaScriptow
+        $view = \Mmi\App\FrontController::getInstance()->getView();
+        $view->headLink()->appendStylesheet('/resource/cmsAdmin/css/tree.css');
+        $view->headLink()->appendStylesheet('/resource/cmsAdmin/js/jstree/themes/default/style.min.css');
+        $view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
+        $view->headScript()->appendFile('/resource/cmsAdmin/js/jstree/jstree.min.js');
 
-		//glowny kontener drzewa
-		$html = '<div class="tree_container">';
-		$html .= $this->_getHtmlTree();
-		$this->unsetOption('structure');
-		$html .= '<input type="hidden" ' . $this->_getHtmlOptions() . '/></div>';
+        //glowny kontener drzewa
+        $html = '<div class="tree_container">';
+        $html .= $this->_getHtmlTree();
+        $this->unsetOption('structure');
+        $html .= '<input type="hidden" ' . $this->_getHtmlOptions() . '/></div>';
 
-		return $html;
-	}
+        return $html;
+    }
 
-	/**
-	 * Zwraca drzewko danych w postaci html
-	 * @return string
-	 */
-	private function _getHtmlTree() {
-		//pobranie struktury
-		$structure = $this->getOption('structure');
-		//bez struktury zwraca pusty string
-		if (!is_array($structure) || empty($structure)) {
-			return '';
-		}
-		//bez dzieci rowniez zwraca pusty string
-		if (!isset($structure['children'])) {
-			return '';
-		}
-		//skladam identyfikator galezi
-		$treeId = $this->getOption('id') . '_tree';
-		//zidentyfikowana gałąź drzewa
-		$html = '<div class="tree_structure" id="' . $treeId . '">';
-		$html .= $this->_generateTree($structure, '');
-		$html .= '</div>';
-		$html .= '<input type="button" id="' . $treeId . '_clear" class="tree_clear" value="wyczyść wybór" />';
+    /**
+     * Zwraca drzewko danych w postaci html
+     * @return string
+     */
+    private function _getHtmlTree()
+    {
+        //pobranie struktury
+        $structure = $this->getOption('structure');
+        //bez struktury zwraca pusty string
+        if (!is_array($structure) || empty($structure)) {
+            return '';
+        }
+        //bez dzieci rowniez zwraca pusty string
+        if (!isset($structure['children'])) {
+            return '';
+        }
+        //skladam identyfikator galezi
+        $treeId = $this->getOption('id') . '_tree';
+        //zidentyfikowana gałąź drzewa
+        $html = '<div class="tree_structure" id="' . $treeId . '">';
+        $html .= $this->_generateTree($structure, '');
+        $html .= '</div>';
+        $html .= '<input type="button" id="' . $treeId . '_clear" class="tree_clear" value="wyczyść wybór" />';
 
-		$this->_generateJs($treeId);
+        $this->_generateJs($treeId);
 
-		return $html;
-	}
+        return $html;
+    }
 
-	/**
-	 * Generuje fragmenty drzewka
-	 * @param array $node
-	 * @param string $html
-	 * @return string
-	 */
-	private function _generateTree($node, $html) {
-		//jezeli nie ma wezłów z dzieciakami to zwracam pusty html
-		if (!isset($node['children']) || !is_array($node['children']) || count($node['children']) == 0) {
-			return $html;
-		}
-		//zaznaczone wartości
-		$values = explode(';', $this->getValue());
-		$html .= '<ul>';
-		//iteracja po dzieciakach i budowa lisci drzewa
-		foreach ($node['children'] as $child) {
-			if (isset($child['record'])) {
-				$children = isset($child['children']) ? $child['children'] : [];
-				$child = $child['record']->toArray();
-				$child['children'] = $children;
-			}
-			$select = 'false';
-			if (in_array($child['id'], $values)) {
-				$select = 'true';
-			}
-			$disabled = 'false';
-			if (isset($child['allow']) && !$child['allow']) {
-				$disabled = 'true';
-			}
-			$html .= '<li id="' . $child['id'] . '"';
-			$html .= ' data-jstree=\'{"type":"default", "disabled":' . $disabled . ', "selected":' . $select . '}\'>' . $child['name'];
-			$html = self::_generateTree($child, $html);
-			$html .= '</li>';
-		}
-		$html .= '</ul>';
-		return $html;
-	}
+    /**
+     * Generuje fragmenty drzewka
+     * @param array $node
+     * @param string $html
+     * @return string
+     */
+    private function _generateTree($node, $html)
+    {
+        //jezeli nie ma wezłów z dzieciakami to zwracam pusty html
+        if (!isset($node['children']) || !is_array($node['children']) || count($node['children']) == 0) {
+            return $html;
+        }
+        //zaznaczone wartości
+        $values = explode(';', $this->getValue());
+        $html .= '<ul>';
+        //iteracja po dzieciakach i budowa lisci drzewa
+        foreach ($node['children'] as $child) {
+            if (isset($child['record'])) {
+                $children = isset($child['children']) ? $child['children'] : [];
+                $child = $child['record']->toArray();
+                $child['children'] = $children;
+            }
+            $select = 'false';
+            if (in_array($child['id'], $values)) {
+                $select = 'true';
+            }
+            $disabled = 'false';
+            if (isset($child['allow']) && !$child['allow']) {
+                $disabled = 'true';
+            }
+            $html .= '<li id="' . $child['id'] . '"';
+            $html .= ' data-jstree=\'{"type":"default", "disabled":' . $disabled . ', "selected":' . $select . '}\'>' . $child['name'];
+            $html = self::_generateTree($child, $html);
+            $html .= '</li>';
+        }
+        $html .= '</ul>';
+        return $html;
+    }
 
-	/**
-	 * Generuje JS do odpalenia drzewka
-	 * @param string $treeId
-	 * @return void
-	 */
-	private function _generateJs($treeId) {
-		$id = $this->getOption('id');
-		$treeClearId = $treeId . '_clear';
-		$view = \Mmi\App\FrontController::getInstance()->getView();
-		$view->headScript()->appendScript("$(document).ready(function () {
+    /**
+     * Generuje JS do odpalenia drzewka
+     * @param string $treeId
+     * @return void
+     */
+    private function _generateJs($treeId)
+    {
+        $id = $this->getOption('id');
+        $treeClearId = $treeId . '_clear';
+        $view = \Mmi\App\FrontController::getInstance()->getView();
+        $view->headScript()->appendScript("$(document).ready(function () {
 				$('#$treeId').jstree({
 					'core': {
 						'themes': {
@@ -252,6 +260,6 @@ class Tree extends \Mmi\Form\Element\ElementAbstract {
 				});
 			});
 		");
-	}
+    }
 
 }

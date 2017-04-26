@@ -21,6 +21,7 @@ namespace CmsAdmin\Grid;
  * @method GridStateFilter setValue($value) ustawia wartość filtrowaną
  * @method mixed getValue()
  */
-class GridStateFilter extends \Mmi\OptionObject {
-
+class GridStateFilter extends \Mmi\OptionObject
+{
+    
 }

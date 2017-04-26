@@ -13,16 +13,18 @@ namespace Cms\Form\Element;
 /**
  * Element DatePicker (DateTimePicker z wyłączoną godziną)
  */
-class DatePicker extends DateTimePicker {
+class DatePicker extends DateTimePicker
+{
 
-	/**
-	 * Konstruktor
-	 */
-	public function __construct($name) {
-		parent::__construct($name);
-		//wyłączanie datepickera
-		$this->setTimepicker(false)
-			->setFormat('Y-m-d');
-	}
+    /**
+     * Konstruktor
+     */
+    public function __construct($name)
+    {
+        parent::__construct($name);
+        //wyłączanie datepickera
+        $this->setTimepicker(false)
+            ->setFormat('Y-m-d');
+    }
 
 }

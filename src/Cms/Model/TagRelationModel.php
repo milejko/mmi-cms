@@ -11,133 +11,140 @@
 namespace Cms\Model;
 
 use Cms\Orm\CmsTagQuery,
-	Cms\Orm\CmsTagRecord,
-	Cms\Orm\CmsTagRelationQuery,
-	Cms\Orm\CmsTagRelationRecord;
+    Cms\Orm\CmsTagRecord,
+    Cms\Orm\CmsTagRelationQuery,
+    Cms\Orm\CmsTagRelationRecord;
 
 /**
  * Model relacji tagów
  */
-class TagRelationModel {
+class TagRelationModel
+{
 
-	/**
-	 * Obiekt
-	 * @var string
-	 */
-	private $_object;
+    /**
+     * Obiekt
+     * @var string
+     */
+    private $_object;
 
-	/**
-	 * Id obiektu
-	 * @var integer
-	 */
-	private $_objectId;
+    /**
+     * Id obiektu
+     * @var integer
+     */
+    private $_objectId;
 
-	/**
-	 * Konstruktor
-	 * @param string $object obiekt
-	 * @param integer $objectId nieobowiązkowe id
-	 */
-	public function __construct($object, $objectId = null) {
-		//przypisania
-		$this->_object = $object;
-		$this->_objectId = $objectId;
-	}
+    /**
+     * Konstruktor
+     * @param string $object obiekt
+     * @param integer $objectId nieobowiązkowe id
+     */
+    public function __construct($object, $objectId = null)
+    {
+        //przypisania
+        $this->_object = $object;
+        $this->_objectId = $objectId;
+    }
 
-	/**
-	 * Taguje tagiem po nazwie
-	 * @param string $tag tag
-	 */
-	public function createTagRelation($tag) {
-		//filtrowanie tagu
-		$filteredTag = (new \Mmi\Filter\Input)->filter($tag);
+    /**
+     * Taguje tagiem po nazwie
+     * @param string $tag tag
+     */
+    public function createTagRelation($tag)
+    {
+        //filtrowanie tagu
+        $filteredTag = (new \Mmi\Filter\Input)->filter($tag);
 
-		//kreacja tagu jeśli brak
-		if (null === $tagRecord = (new CmsTagQuery)
-			->whereTag()->equals($filteredTag)
-			->findFirst()) {
-			$tagRecord = new CmsTagRecord;
-			$tagRecord->tag = $filteredTag;
-			$tagRecord->save();
-		}
-		//znaleziona relacja - nic do zrobienia
-		if (null !== (new CmsTagRelationQuery)
-				->whereCmsTagId()->equals($tagRecord->id)
-				->andFieldObject()->equals($this->_object)
-				->andFieldObjectId()->equals($this->_objectId)
-				->findFirst()) {
-			return;
-		}
-		//tworzenie relacji
-		$newRelationRecord = new CmsTagRelationRecord;
-		$newRelationRecord->cmsTagId = $tagRecord->id;
-		$newRelationRecord->object = $this->_object;
-		$newRelationRecord->objectId = $this->_objectId;
+        //kreacja tagu jeśli brak
+        if (null === $tagRecord = (new CmsTagQuery)
+            ->whereTag()->equals($filteredTag)
+            ->findFirst()) {
+            $tagRecord = new CmsTagRecord;
+            $tagRecord->tag = $filteredTag;
+            $tagRecord->save();
+        }
+        //znaleziona relacja - nic do zrobienia
+        if (null !== (new CmsTagRelationQuery)
+                ->whereCmsTagId()->equals($tagRecord->id)
+                ->andFieldObject()->equals($this->_object)
+                ->andFieldObjectId()->equals($this->_objectId)
+                ->findFirst()) {
+            return;
+        }
+        //tworzenie relacji
+        $newRelationRecord = new CmsTagRelationRecord;
+        $newRelationRecord->cmsTagId = $tagRecord->id;
+        $newRelationRecord->object = $this->_object;
+        $newRelationRecord->objectId = $this->_objectId;
 
-		//zapis
-		$newRelationRecord->save();
-	}
+        //zapis
+        $newRelationRecord->save();
+    }
 
-	/**
-	 * Czyści tworzy relacje tagów
-	 * @param array $tags tagi
-	 */
-	public function createTagRelations(array $tags) {
-		//usuwanie relacji
-		$this->deleteTagRelations();
-		//iteracja po tagach
-		foreach ($tags as $tag) {
-			//tworzenie pojedynczego tagu
-			$this->createTagRelation($tag);
-		}
-	}
+    /**
+     * Czyści tworzy relacje tagów
+     * @param array $tags tagi
+     */
+    public function createTagRelations(array $tags)
+    {
+        //usuwanie relacji
+        $this->deleteTagRelations();
+        //iteracja po tagach
+        foreach ($tags as $tag) {
+            //tworzenie pojedynczego tagu
+            $this->createTagRelation($tag);
+        }
+    }
 
-	/**
-	 * Usuwa tag
-	 * @param string $tag tag
-	 */
-	public function deleteTagRelation($tag) {
-		//brak tagu - nic do zrobienia
-		if (null === $tagRecord = (new CmsTagQuery)
-			->whereTag()->equals($tag)
-			->findFirst()) {
-			return false;
-		}
-		//wyszukiwanie relacji
-		if (null === $relationRecord = (new CmsTagRelationQuery)
-			->whereCmsTagId()->equals($tagRecord->id)
-			->andFieldObject()->equals($this->_object)
-			->andFieldObjectId()->equals($this->_objectId)
-			->findFirst()) {
-			//brak relacji - nic do zrobienia
-			return false;
-		}
-		//usunięcie relacji
-		return $relationRecord->delete();
-	}
+    /**
+     * Usuwa tag
+     * @param string $tag tag
+     */
+    public function deleteTagRelation($tag)
+    {
+        //brak tagu - nic do zrobienia
+        if (null === $tagRecord = (new CmsTagQuery)
+            ->whereTag()->equals($tag)
+            ->findFirst()) {
+            return false;
+        }
+        //wyszukiwanie relacji
+        if (null === $relationRecord = (new CmsTagRelationQuery)
+            ->whereCmsTagId()->equals($tagRecord->id)
+            ->andFieldObject()->equals($this->_object)
+            ->andFieldObjectId()->equals($this->_objectId)
+            ->findFirst()) {
+            //brak relacji - nic do zrobienia
+            return false;
+        }
+        //usunięcie relacji
+        return $relationRecord->delete();
+    }
 
-	/**
-	 * Usuwa relację tagów
-	 */
-	public function deleteTagRelations() {
-		//czyszczenie relacji
-		(new CmsTagRelationQuery)
-			->whereObject()->equals($this->_object)
-			->andFieldObjectId()->equals($this->_objectId)
-			->find()
-			->delete();
-	}
+    /**
+     * Usuwa relację tagów
+     */
+    public function deleteTagRelations()
+    {
+        //czyszczenie relacji
+        (new CmsTagRelationQuery)
+            ->whereObject()->equals($this->_object)
+            ->andFieldObjectId()->equals($this->_objectId)
+            ->find()
+            ->delete();
+    }
 
-	/**
-	 * Pobiera relacje tagów dla obiektu z id
-	 * @return array
-	 */
-	public function getTagRelations() {
-		//pobranie relacji
-		return (new CmsTagRelationQuery)
-				->join('cms_tag')->on('cms_tag_id')
-				->whereObject()->equals($this->_object)
-				->andFieldObjectId()->equals($this->_objectId)
-				->findPairs('cms_tag.id', 'cms_tag.tag');
-	}
+    /**
+     * Pobiera relacje tagów dla obiektu z id
+     * @return array
+     */
+    public function getTagRelations()
+    {
+        //pobranie relacji
+        return (new CmsTagRelationQuery)
+                ->join('cms_tag')->on('cms_tag_id')
+                ->whereObject()->equals($this->_object)
+                ->andFieldObjectId()->equals($this->_objectId)
+                ->findPairs('cms_tag.id', 'cms_tag.tag');
+    }
 
 }

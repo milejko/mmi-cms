@@ -47,8 +47,9 @@ namespace Cms\Orm;
  * @method CmsTagRelationRecord findPk($value)
  */
 //</editor-fold>
-class CmsTagRelationQuery extends \Mmi\Orm\Query {
+class CmsTagRelationQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_tag_relation';
+    protected $_tableName = 'cms_tag_relation';
 
 }

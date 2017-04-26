@@ -89,27 +89,29 @@ namespace Cms\Orm;
  * @method CmsCommentRecord findPk($value)
  */
 //</editor-fold>
-class CmsCommentQuery extends \Mmi\Orm\Query {
+class CmsCommentQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_comment';
+    protected $_tableName = 'cms_comment';
 
-	/**
-	 * Zapytanie o komentarze po obiekcie, id obiektu z sortowaniem
-	 * @param string $object
-	 * @param integer $objectId
-	 * @param boolean $descending
-	 * @return CmsCommentQuery
-	 */
-	public static function byObject($object, $objectId, $descending = false) {
-		$q = (new self)
-				->whereObject()->equals($object)
-				->andFieldObjectId()->equals($objectId);
-		if ($descending) {
-			$q->orderDesc('dateAdd');
-		} else {
-			$q->orderAsc('dateAdd');
-		}
-		return $q;
-	}
+    /**
+     * Zapytanie o komentarze po obiekcie, id obiektu z sortowaniem
+     * @param string $object
+     * @param integer $objectId
+     * @param boolean $descending
+     * @return CmsCommentQuery
+     */
+    public static function byObject($object, $objectId, $descending = false)
+    {
+        $q = (new self)
+                ->whereObject()->equals($object)
+                ->andFieldObjectId()->equals($objectId);
+        if ($descending) {
+            $q->orderDesc('dateAdd');
+        } else {
+            $q->orderAsc('dateAdd');
+        }
+        return $q;
+    }
 
 }

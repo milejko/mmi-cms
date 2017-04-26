@@ -13,36 +13,38 @@ namespace CmsAdmin\Plugin;
 /**
  * Grid komentarzy
  */
-class CommentGrid extends \CmsAdmin\Grid\Grid {
+class CommentGrid extends \CmsAdmin\Grid\Grid
+{
 
-	public function init() {
+    public function init()
+    {
 
-		//zapytanie
-		$this->setQuery((new \Cms\Orm\CmsCommentQuery));
+        //zapytanie
+        $this->setQuery((new \Cms\Orm\CmsCommentQuery));
 
-		//data dodania
-		$this->addColumnText('dateAdd')
-			->setLabel('data dodania');
+        //data dodania
+        $this->addColumnText('dateAdd')
+            ->setLabel('data dodania');
 
-		//komentarz
-		$this->addColumnText('text')
-			->setLabel('komentarz');
+        //komentarz
+        $this->addColumnText('text')
+            ->setLabel('komentarz');
 
-		//podpis
-		$this->addColumnText('signature')
-			->setLabel('podpis');
+        //podpis
+        $this->addColumnText('signature')
+            ->setLabel('podpis');
 
-		//zasób
-		$this->addColumnText('object')
-			->setLabel('zasób');
+        //zasób
+        $this->addColumnText('object')
+            ->setLabel('zasób');
 
-		//id zasobu
-		$this->addColumnText('objectId')
-			->setLabel('id zasobu');
+        //id zasobu
+        $this->addColumnText('objectId')
+            ->setLabel('id zasobu');
 
-		//operacje bez edycji
-		$this->addColumnOperation()
-			->setEditParams([]);
-	}
+        //operacje bez edycji
+        $this->addColumnOperation()
+            ->setEditParams([]);
+    }
 
 }

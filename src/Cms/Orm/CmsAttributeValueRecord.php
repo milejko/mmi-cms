@@ -2,11 +2,12 @@
 
 namespace Cms\Orm;
 
-class CmsAttributeValueRecord extends \Mmi\Orm\Record {
+class CmsAttributeValueRecord extends \Mmi\Orm\Record
+{
 
-	public $id;
-	public $cmsAttributeId;
-	public $value;
-	public $label;
+    public $id;
+    public $cmsAttributeId;
+    public $value;
+    public $label;
 
 }

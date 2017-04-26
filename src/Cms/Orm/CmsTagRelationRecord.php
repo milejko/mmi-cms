@@ -2,11 +2,12 @@
 
 namespace Cms\Orm;
 
-class CmsTagRelationRecord extends \Mmi\Orm\Record {
+class CmsTagRelationRecord extends \Mmi\Orm\Record
+{
 
-	public $id;
-	public $cmsTagId;
-	public $object;
-	public $objectId;
+    public $id;
+    public $cmsTagId;
+    public $object;
+    public $objectId;
 
 }

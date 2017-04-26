@@ -10,20 +10,22 @@
 
 namespace CmsAdmin\Form;
 
-class Text extends \Mmi\Form\Form {
+class Text extends \Mmi\Form\Form
+{
 
-	public function init() {
+    public function init()
+    {
 
-		$this->addElementText('key')
-			->setLabel('klucz')
-			->setRequired()
-			->addValidatorNotEmpty();
+        $this->addElementText('key')
+            ->setLabel('klucz')
+            ->setRequired()
+            ->addValidatorNotEmpty();
 
-		$this->addElementTextarea('content')
-			->setLabel('zawartość');
+        $this->addElementTextarea('content')
+            ->setLabel('zawartość');
 
-		$this->addElementSubmit('submit')
-			->setLabel('zapisz tekst');
-	}
+        $this->addElementSubmit('submit')
+            ->setLabel('zapisz tekst');
+    }
 
 }

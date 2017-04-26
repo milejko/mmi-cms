@@ -9,6 +9,7 @@
  */
 
 namespace CmsAdmin\Grid\Column;
+
 use Mmi\App\FrontController;
 
 /**
@@ -26,34 +27,38 @@ use Mmi\App\FrontController;
  * @method self setFilterMethodSearch() ustawia metodę filtracji na wyszukaj
  * @method self setFilterMethodNull() ustawia metodę filtracji na równe/różne null
  */
-class CustomColumn extends ColumnAbstract {
-	
-	/**
-	 * Ustawia, czy kolumna eksportowalna
-	 * @param boolean $exporting
-	 * @return CustomColumn
-	 */
-	public function setExporting($exporting = true) {
-		return $this->setOption('exporting', $exporting);
-	}
-	
-	/**
-	 * Zwraca, czy kolumna eksportowalna
-	 * @return boolean
-	 */
-	public function getExporting() {
-		return boolval($this->getOption('exporting'));
-	}
-	
-	/**
-	 * Renderuje customowe Columny
-	 * @param \Mmi\Orm\RecordRo $record
-	 * @return string
-	 */
-	public function renderCell(\Mmi\Orm\RecordRo $record) {
-		$view = FrontController::getInstance()->getView();
-		$view->record = $record;
-		return $view->renderDirectly($this->getTemplateCode());
-	}
+class CustomColumn extends ColumnAbstract
+{
+
+    /**
+     * Ustawia, czy kolumna eksportowalna
+     * @param boolean $exporting
+     * @return CustomColumn
+     */
+    public function setExporting($exporting = true)
+    {
+        return $this->setOption('exporting', $exporting);
+    }
+
+    /**
+     * Zwraca, czy kolumna eksportowalna
+     * @return boolean
+     */
+    public function getExporting()
+    {
+        return boolval($this->getOption('exporting'));
+    }
+
+    /**
+     * Renderuje customowe Columny
+     * @param \Mmi\Orm\RecordRo $record
+     * @return string
+     */
+    public function renderCell(\Mmi\Orm\RecordRo $record)
+    {
+        $view = FrontController::getInstance()->getView();
+        $view->record = $record;
+        return $view->renderDirectly($this->getTemplateCode());
+    }
 
 }

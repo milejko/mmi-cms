@@ -49,6 +49,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsAclQuery greaterOrEqualsColumnAccess()
  * @method \Cms\Orm\CmsAclQuery lessOrEqualsColumnAccess()
  */
-class CmsAclQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsAclQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

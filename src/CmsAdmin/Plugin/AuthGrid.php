@@ -13,52 +13,54 @@ namespace CmsAdmin\Plugin;
 /**
  * Grid użytkowników
  */
-class AuthGrid extends \CmsAdmin\Grid\Grid {
+class AuthGrid extends \CmsAdmin\Grid\Grid
+{
 
-	public function init() {
+    public function init()
+    {
 
-		//domyślne zapytanie
-		$this->setQuery((new \Cms\Orm\CmsAuthQuery)->orderAscUsername());
-		
-		//nazwa
-		$this->addColumnText('username')
-			->setLabel('nazwa użytkownika');
+        //domyślne zapytanie
+        $this->setQuery((new \Cms\Orm\CmsAuthQuery)->orderAscUsername());
 
-		//email
-		$this->addColumnText('email')
-			->setLabel('e-mail');
+        //nazwa
+        $this->addColumnText('username')
+            ->setLabel('nazwa użytkownika');
 
-		//imię
-		$this->addColumnText('name')
-			->setLabel('pełna nazwa użytkownika');
-		
-		//przypisane role użytkownika
-		$this->addColumnCustom('roles')
-			->setLabel('role')
-			->setTemplateCode('{$record->getRolesAsString()}');
+        //email
+        $this->addColumnText('email')
+            ->setLabel('e-mail');
 
-		//ostatnie logowanie
-		$this->addColumnText('lastLog')
-			->setLabel('ostatnio zalogowany');
+        //imię
+        $this->addColumnText('name')
+            ->setLabel('pełna nazwa użytkownika');
 
-		//ostatnie IP
-		$this->addColumnText('lastIp')
-			->setLabel('ostatni IP');
+        //przypisane role użytkownika
+        $this->addColumnCustom('roles')
+            ->setLabel('role')
+            ->setTemplateCode('{$record->getRolesAsString()}');
 
-		//błędne logowanie
-		$this->addColumnText('lastFailLog')
-			->setLabel('błędne logowanie');
+        //ostatnie logowanie
+        $this->addColumnText('lastLog')
+            ->setLabel('ostatnio zalogowany');
 
-		//ostatnie ip błędnego logowania
-		$this->addColumnText('lastFailIp')
-			->setLabel('IP błędnego logowania');
+        //ostatnie IP
+        $this->addColumnText('lastIp')
+            ->setLabel('ostatni IP');
 
-		//aktywny
-		$this->addColumnCheckbox('active')
-			->setLabel('aktywny');
-		
-		//operacje
-		$this->addColumnOperation();
-	}
+        //błędne logowanie
+        $this->addColumnText('lastFailLog')
+            ->setLabel('błędne logowanie');
+
+        //ostatnie ip błędnego logowania
+        $this->addColumnText('lastFailIp')
+            ->setLabel('IP błędnego logowania');
+
+        //aktywny
+        $this->addColumnCheckbox('active')
+            ->setLabel('aktywny');
+
+        //operacje
+        $this->addColumnOperation();
+    }
 
 }

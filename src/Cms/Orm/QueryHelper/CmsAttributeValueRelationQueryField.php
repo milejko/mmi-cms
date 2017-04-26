@@ -37,6 +37,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsAttributeValueRelationQuery greaterOrEqualsColumnObjectId()
  * @method \Cms\Orm\CmsAttributeValueRelationQuery lessOrEqualsColumnObjectId()
  */
-class CmsAttributeValueRelationQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsAttributeValueRelationQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

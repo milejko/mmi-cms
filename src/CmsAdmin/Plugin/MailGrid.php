@@ -13,46 +13,48 @@ namespace CmsAdmin\Plugin;
 /**
  * Grid maila
  */
-class MailGrid extends \CmsAdmin\Grid\Grid {
+class MailGrid extends \CmsAdmin\Grid\Grid
+{
 
-	public function init() {
+    public function init()
+    {
 
-		//zapytanie
-		$this->setQuery((new \Cms\Orm\CmsMailQuery)
-				->orderDescId());
+        //zapytanie
+        $this->setQuery((new \Cms\Orm\CmsMailQuery)
+                ->orderDescId());
 
-		//wysłany
-		$this->addColumnSelect('active')
-			->setMultioptions([
-				0 => 'do wysyłki',
-				1 => 'wysłany',
-				2 => 'w trakcie wysyłki',
-			])
-			->setLabel('wysłany');
+        //wysłany
+        $this->addColumnSelect('active')
+            ->setMultioptions([
+                0 => 'do wysyłki',
+                1 => 'wysłany',
+                2 => 'w trakcie wysyłki',
+            ])
+            ->setLabel('wysłany');
 
-		//data dodania
-		$this->addColumnText('dateAdd')
-			->setLabel('data dodania');
+        //data dodania
+        $this->addColumnText('dateAdd')
+            ->setLabel('data dodania');
 
-		//data wysyłki
-		$this->addColumnText('dateSent')
-			->setLabel('data wysłania');
+        //data wysyłki
+        $this->addColumnText('dateSent')
+            ->setLabel('data wysłania');
 
-		//do
-		$this->addColumnText('to')
-			->setLabel('do');
+        //do
+        $this->addColumnText('to')
+            ->setLabel('do');
 
-		//temat
-		$this->addColumnText('subject')
-			->setLabel('temat');
+        //temat
+        $this->addColumnText('subject')
+            ->setLabel('temat');
 
-		//nazwa od
-		$this->addColumnText('fromName')
-			->setLabel('od');
+        //nazwa od
+        $this->addColumnText('fromName')
+            ->setLabel('od');
 
-		//operacje
-		$this->addColumnOperation()
-			->setEditParams(['module' => 'cmsAdmin', 'controller' => 'mail', 'action' => 'preview', 'id' => '%id%']);
-	}
+        //operacje
+        $this->addColumnOperation()
+            ->setEditParams(['module' => 'cmsAdmin', 'controller' => 'mail', 'action' => 'preview', 'id' => '%id%']);
+    }
 
 }

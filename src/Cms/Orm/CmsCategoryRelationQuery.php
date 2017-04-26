@@ -47,8 +47,9 @@ namespace Cms\Orm;
  * @method CmsCategoryRelationRecord findPk($value)
  */
 //</editor-fold>
-class CmsCategoryRelationQuery extends \Mmi\Orm\Query {
+class CmsCategoryRelationQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_category_relation';
+    protected $_tableName = 'cms_category_relation';
 
 }

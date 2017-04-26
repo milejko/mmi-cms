@@ -61,6 +61,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsAttributeQuery greaterOrEqualsColumnIndexWeight()
  * @method \Cms\Orm\CmsAttributeQuery lessOrEqualsColumnIndexWeight()
  */
-class CmsAttributeQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsAttributeQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

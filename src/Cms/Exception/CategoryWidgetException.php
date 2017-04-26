@@ -13,6 +13,7 @@ namespace Cms\Exception;
 /**
  * Klasa wyjątku widgetów kategorii
  */
-class CategoryWidgetException extends \Mmi\App\KernelException {
-	
+class CategoryWidgetException extends \Mmi\App\KernelException
+{
+    
 }

@@ -27,62 +27,66 @@ namespace Cms\Validator;
  * @method \Mmi\Orm\Record getRecord() pobiera rekord
  * @method string getMessage() pobiera wiadomość 
  */
-class NotEmptyCmsFiles extends \Mmi\Validator\ValidatorAbstract {
+class NotEmptyCmsFiles extends \Mmi\Validator\ValidatorAbstract
+{
 
-	/**
-	 * Komunikat błędnego kodu zabezpieczającego
-	 */
-	const INVALID = 'Proszę przesłać pliki';
+    /**
+     * Komunikat błędnego kodu zabezpieczającego
+     */
+    const INVALID = 'Proszę przesłać pliki';
 
-	/**
-	 * Ustawia opcje
-	 * @param array $options
-	 * @return self
-	 */
-	public function setOptions(array $options = [], $reset = false) {
-		return $this->setObject(current($options))
-				->setObjectId(next($options))
-				->setMessage(next($options));
-	}
+    /**
+     * Ustawia opcje
+     * @param array $options
+     * @return self
+     */
+    public function setOptions(array $options = [], $reset = false)
+    {
+        return $this->setObject(current($options))
+                ->setObjectId(next($options))
+                ->setMessage(next($options));
+    }
 
-	/**
-	 * Waliduje czy w cms_file znajdują się jakieś pliki dla danego rekordu
-	 * @param string $value
-	 * @return boolean
-	 */
-	public function isValid($value) {
-		$this->_setFromRecord();
-		$query = (new \Cms\Orm\CmsFileQuery)
-			->byObject($this->getObject(), $this->getObjectId());
-		if ($this->getClass()) {
-			$query->andFieldClass()->equals($this->getClass());
-		}
-		if ($this->getActive() !== null) {
-			$query->andFieldActive()->equals($this->getActive());
-		}
-		if (!$query->count()) {
-			$this->_error(self::INVALID);
-			return false;
-		}
-		return true;
-	}
-	
-	/**
-	 * Ustawia object i objectId na podstawie przekazanego obiektu rekordu
-	 * @return \Cms\Validator\NotEmptyCmsFiles
-	 */
-	protected function _setFromRecord() {
-		//jeśli przekazano rekord z formularza
-		if ($this->getRecord()) {
-			//w zależności od stanu zapisu, ustawiamy object i objectId
-			if ($this->getRecord()->getPk()) {
-				$this->setObjectId($this->getRecord()->getPk());
-			} else {
-				$this->setObjectId(\Mmi\Session\Session::getNumericId());
-				$this->setObject('tmp-' . $this->getObject());
-			}
-		}
-		return $this;
-	}
+    /**
+     * Waliduje czy w cms_file znajdują się jakieś pliki dla danego rekordu
+     * @param string $value
+     * @return boolean
+     */
+    public function isValid($value)
+    {
+        $this->_setFromRecord();
+        $query = (new \Cms\Orm\CmsFileQuery)
+            ->byObject($this->getObject(), $this->getObjectId());
+        if ($this->getClass()) {
+            $query->andFieldClass()->equals($this->getClass());
+        }
+        if ($this->getActive() !== null) {
+            $query->andFieldActive()->equals($this->getActive());
+        }
+        if (!$query->count()) {
+            $this->_error(self::INVALID);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Ustawia object i objectId na podstawie przekazanego obiektu rekordu
+     * @return \Cms\Validator\NotEmptyCmsFiles
+     */
+    protected function _setFromRecord()
+    {
+        //jeśli przekazano rekord z formularza
+        if ($this->getRecord()) {
+            //w zależności od stanu zapisu, ustawiamy object i objectId
+            if ($this->getRecord()->getPk()) {
+                $this->setObjectId($this->getRecord()->getPk());
+            } else {
+                $this->setObjectId(\Mmi\Session\Session::getNumericId());
+                $this->setObject('tmp-' . $this->getObject());
+            }
+        }
+        return $this;
+    }
 
 }

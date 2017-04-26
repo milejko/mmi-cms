@@ -113,18 +113,20 @@ namespace Cms\Orm;
  * @method CmsCronRecord findPk($value)
  */
 //</editor-fold>
-class CmsCronQuery extends \Mmi\Orm\Query {
+class CmsCronQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_cron';
+    protected $_tableName = 'cms_cron';
 
-	/**
-	 * Zapytanie o aktywne cron'y
-	 * @return CmsCronQuery
-	 */
-	public static function active() {
-		return (new self)
-				->whereActive()->equals(1)
-				->orderAscId();
-	}
+    /**
+     * Zapytanie o aktywne cron'y
+     * @return CmsCronQuery
+     */
+    public static function active()
+    {
+        return (new self)
+                ->whereActive()->equals(1)
+                ->orderAscId();
+    }
 
 }

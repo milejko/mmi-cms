@@ -47,8 +47,9 @@ namespace Cms\Orm;
  * @method CmsAttributeValueRelationRecord findPk($value)
  */
 //</editor-fold>
-class CmsAttributeValueRelationQuery extends \Mmi\Orm\Query {
+class CmsAttributeValueRelationQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_attribute_value_relation';
+    protected $_tableName = 'cms_attribute_value_relation';
 
 }

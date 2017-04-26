@@ -47,8 +47,9 @@ namespace Cms\Orm;
  * @method CmsStatRecord findPk($value)
  */
 //</editor-fold>
-class CmsStatQuery extends \Mmi\Orm\Query {
+class CmsStatQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_stat';
+    protected $_tableName = 'cms_stat';
 
 }

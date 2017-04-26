@@ -1,5 +1,5 @@
 {if ($loginForm)}
-	{$loginForm}
+    {$loginForm}
 {else}
-	<a href="{url(['controller' =>'login', 'action' => 'logout'], 'pl', true)}">logout</a>
+    <a href="{url(['controller' =>'login', 'action' => 'logout'], 'pl', true)}">logout</a>
 {/if}

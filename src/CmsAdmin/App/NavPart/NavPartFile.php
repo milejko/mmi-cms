@@ -10,13 +10,15 @@
 
 namespace CmsAdmin\App\NavPart;
 
-class NavPartFile extends \Mmi\Navigation\NavigationConfig {
+class NavPartFile extends \Mmi\Navigation\NavigationConfig
+{
 
-	public static function getMenu() {
-		return (new \Mmi\Navigation\NavigationConfigElement)
-				->setLabel('Pliki')
-				->setModule('cmsAdmin')
-				->setController('file');
-	}
+    public static function getMenu()
+    {
+        return (new \Mmi\Navigation\NavigationConfigElement)
+                ->setLabel('Pliki')
+                ->setModule('cmsAdmin')
+                ->setController('file');
+    }
 
 }

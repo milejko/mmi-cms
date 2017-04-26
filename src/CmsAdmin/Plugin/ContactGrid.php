@@ -13,46 +13,48 @@ namespace CmsAdmin\Plugin;
 /**
  * Grid kontaktu
  */
-class ContactGrid extends \CmsAdmin\Grid\Grid {
+class ContactGrid extends \CmsAdmin\Grid\Grid
+{
 
-	public function init() {
+    public function init()
+    {
 
-		//zapytanie
-		$this->setQuery(new \Cms\Orm\CmsContactQuery);
+        //zapytanie
+        $this->setQuery(new \Cms\Orm\CmsContactQuery);
 
-		//id
-		$this->addColumnCustom('id')
-			->setTemplateCode('#{$record->id}');
+        //id
+        $this->addColumnCustom('id')
+            ->setTemplateCode('#{$record->id}');
 
-		//data dodania
-		$this->addColumnText('dateAdd')
-			->setLabel('data dodania');
+        //data dodania
+        $this->addColumnText('dateAdd')
+            ->setLabel('data dodania');
 
-		//tekst
-		$this->addColumnText('text')
-			->setLabel('zapytanie');
+        //tekst
+        $this->addColumnText('text')
+            ->setLabel('zapytanie');
 
-		//email
-		$this->addColumnText('email')
-			->setLabel('e-mail');
+        //email
+        $this->addColumnText('email')
+            ->setLabel('e-mail');
 
-		//strona wejściowa
-		$this->addColumnText('uri')
-			->setLabel('strona wejściowa');
+        //strona wejściowa
+        $this->addColumnText('uri')
+            ->setLabel('strona wejściowa');
 
-		//ip
-		$this->addColumnText('ip')
-			->setLabel('ip');
+        //ip
+        $this->addColumnText('ip')
+            ->setLabel('ip');
 
-		//aktywny
-		$this->addColumnCheckbox('active')
-			->setLabel('czeka')
-			->setDisabled();
+        //aktywny
+        $this->addColumnCheckbox('active')
+            ->setLabel('czeka')
+            ->setDisabled();
 
-		//operacje
-		$this->addColumnOperation()
-			->setEditParams(['module' => 'cmsAdmin', 'controller' => 'contact', 'action' => 'edit', 'id' => '%id%'])
-			->setDeleteParams([]);
-	}
+        //operacje
+        $this->addColumnOperation()
+            ->setEditParams(['module' => 'cmsAdmin', 'controller' => 'contact', 'action' => 'edit', 'id' => '%id%'])
+            ->setDeleteParams([]);
+    }
 
 }

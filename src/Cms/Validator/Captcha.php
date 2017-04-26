@@ -17,37 +17,40 @@ namespace Cms\Validator;
  * @method self setName($name) ustawia nazwę
  * @method string getName() pobiera nazwę
  */
-class Captcha extends \Mmi\Validator\ValidatorAbstract {
+class Captcha extends \Mmi\Validator\ValidatorAbstract
+{
 
-	/**
-	 * Komunikat błędnego kodu zabezpieczającego
-	 */
-	const INVALID = 'Przepisany kod jest niepoprawny';
+    /**
+     * Komunikat błędnego kodu zabezpieczającego
+     */
+    const INVALID = 'Przepisany kod jest niepoprawny';
 
-	/**
-	 * Ustawia opcje
-	 * @param array $options
-	 * @return self
-	 */
-	public function setOptions(array $options = [], $reset = false) {
-		return $this->setName(current($options));
-	}
+    /**
+     * Ustawia opcje
+     * @param array $options
+     * @return self
+     */
+    public function setOptions(array $options = [], $reset = false)
+    {
+        return $this->setName(current($options));
+    }
 
-	/**
-	 * Waliduje poprawność captcha
-	 * @param string $value
-	 * @return boolean
-	 */
-	public function isValid($value) {
-		//brak wartości
-		if (!$value) {
-			return $this->_error(self::INVALID);
-		}
-		//wartości niezgodne
-		if ((new \Mmi\Session\SessionSpace('captcha'))->{$this->getOption('name')} != strtoupper($value)) {
-			return $this->_error(self::INVALID);
-		}
-		return true;
-	}
+    /**
+     * Waliduje poprawność captcha
+     * @param string $value
+     * @return boolean
+     */
+    public function isValid($value)
+    {
+        //brak wartości
+        if (!$value) {
+            return $this->_error(self::INVALID);
+        }
+        //wartości niezgodne
+        if ((new \Mmi\Session\SessionSpace('captcha'))->{$this->getOption('name')} != strtoupper($value)) {
+            return $this->_error(self::INVALID);
+        }
+        return true;
+    }
 
 }

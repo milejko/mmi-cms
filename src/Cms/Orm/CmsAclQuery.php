@@ -59,8 +59,9 @@ namespace Cms\Orm;
  * @method CmsAclRecord findPk($value)
  */
 //</editor-fold>
-class CmsAclQuery extends \Mmi\Orm\Query {
+class CmsAclQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_acl';
+    protected $_tableName = 'cms_acl';
 
 }

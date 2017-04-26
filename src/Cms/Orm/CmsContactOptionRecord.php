@@ -5,10 +5,11 @@ namespace Cms\Orm;
 /**
  * Rekord opcji kontaktu
  */
-class CmsContactOptionRecord extends \Mmi\Orm\Record {
+class CmsContactOptionRecord extends \Mmi\Orm\Record
+{
 
-	public $id;
-	public $sendTo;
-	public $name;
+    public $id;
+    public $sendTo;
+    public $name;
 
 }

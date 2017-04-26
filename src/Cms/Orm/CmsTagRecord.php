@@ -5,9 +5,10 @@ namespace Cms\Orm;
 /**
  * Rekord tagu
  */
-class CmsTagRecord extends \Mmi\Orm\Record {
+class CmsTagRecord extends \Mmi\Orm\Record
+{
 
-	public $id;
-	public $tag;
+    public $id;
+    public $tag;
 
 }

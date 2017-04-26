@@ -16,36 +16,38 @@ use Cms\Orm\CmsAuthRoleRecord;
 /**
  * Model ról
  */
-class Role {
+class Role
+{
 
-	/**
-	 * Nadaje (i opcjonalnie usuwa) uprawnienia
-	 * @param integer $cmsAuthId id użytkownika cms
-	 * @param array $roles tablica z id ról
-	 * @param boolean $revoke czy odwołać pozostałe uprawnienia (domyślnie włączone)
-	 */
-	public static function grant($cmsAuthId, array $roles, $revoke = true) {
-		//usuwa wszystkie role
-		if ($revoke) {
-			CmsAuthRoleQuery::byAuthId($cmsAuthId)
-				->find()
-				->delete();
-		}
-		//iteracja po rolach
-		foreach ($roles as $roleId) {
-			//rola istnieje
-			if (null !== (new CmsAuthRoleQuery)
-					->whereCmsRoleId()->equals($roleId)
-					->andFieldCmsAuthId()->equals($cmsAuthId)
-					->findFirst()) {
-				continue;
-			}
-			//zapis rekordu
-			$record = new CmsAuthRoleRecord;
-			$record->cmsAuthId = $cmsAuthId;
-			$record->cmsRoleId = $roleId;
-			$record->save();
-		}
-	}
+    /**
+     * Nadaje (i opcjonalnie usuwa) uprawnienia
+     * @param integer $cmsAuthId id użytkownika cms
+     * @param array $roles tablica z id ról
+     * @param boolean $revoke czy odwołać pozostałe uprawnienia (domyślnie włączone)
+     */
+    public static function grant($cmsAuthId, array $roles, $revoke = true)
+    {
+        //usuwa wszystkie role
+        if ($revoke) {
+            CmsAuthRoleQuery::byAuthId($cmsAuthId)
+                ->find()
+                ->delete();
+        }
+        //iteracja po rolach
+        foreach ($roles as $roleId) {
+            //rola istnieje
+            if (null !== (new CmsAuthRoleQuery)
+                    ->whereCmsRoleId()->equals($roleId)
+                    ->andFieldCmsAuthId()->equals($cmsAuthId)
+                    ->findFirst()) {
+                continue;
+            }
+            //zapis rekordu
+            $record = new CmsAuthRoleRecord;
+            $record->cmsAuthId = $cmsAuthId;
+            $record->cmsRoleId = $roleId;
+            $record->save();
+        }
+    }
 
 }

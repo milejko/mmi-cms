@@ -13,6 +13,7 @@ namespace CmsAdmin\Grid;
 /**
  * Wyjątek grida
  */
-class GridException extends \Mmi\App\KernelException {
-	
+class GridException extends \Mmi\App\KernelException
+{
+    
 }

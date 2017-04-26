@@ -13,67 +13,69 @@ namespace CmsAdmin\Form\Mail;
 /**
  * Klasa formularza szablonów maili
  */
-class Definition extends \Mmi\Form\Form {
+class Definition extends \Mmi\Form\Form
+{
 
-	public function init() {
+    public function init()
+    {
 
-		//nazwa
-		$this->addElementText('name')
-			->setLabel('unikalna nazwa')
-			->setRequired()
-			->addValidatorStringLength(6, 25)
-			->addValidatorRecordUnique((new \Cms\Orm\CmsMailDefinitionQuery), 'name', $this->getRecord()->id);
+        //nazwa
+        $this->addElementText('name')
+            ->setLabel('unikalna nazwa')
+            ->setRequired()
+            ->addValidatorStringLength(6, 25)
+            ->addValidatorRecordUnique((new \Cms\Orm\CmsMailDefinitionQuery), 'name', $this->getRecord()->id);
 
-		//wybór połączenia
-		$this->addElementSelect('cmsMailServerId')
-			->setLabel('połącznie')
-			->setRequired()
-			->addValidatorNotEmpty()
-			->setMultioptions(\Cms\Model\Mail::getMultioptions());
+        //wybór połączenia
+        $this->addElementSelect('cmsMailServerId')
+            ->setLabel('połącznie')
+            ->setRequired()
+            ->addValidatorNotEmpty()
+            ->setMultioptions(\Cms\Model\Mail::getMultioptions());
 
-		//temat
-		$this->addElementText('subject')
-			->setLabel('Tytuł')
-			->setRequired()
-			->addValidatorStringLength(2, 240);
+        //temat
+        $this->addElementText('subject')
+            ->setLabel('Tytuł')
+            ->setRequired()
+            ->addValidatorStringLength(2, 240);
 
-		//treść
-		$this->addElementTextarea('message')
-			->setLabel('treść')
-			->setRequired()
-			->addValidatorNotEmpty();
+        //treść
+        $this->addElementTextarea('message')
+            ->setLabel('treść')
+            ->setRequired()
+            ->addValidatorNotEmpty();
 
-		//treść html
-		$this->addElementCheckbox('html')
-			->setLabel('treść HTML')
-			->setRequired()
-			->addValidatorNotEmpty();
+        //treść html
+        $this->addElementCheckbox('html')
+            ->setLabel('treść HTML')
+            ->setRequired()
+            ->addValidatorNotEmpty();
 
-		//od
-		$this->addElementText('fromName')
-			->setLabel('wyświetlana nazwa (od kogo)')
-			->setDescription('np. Pomoc serwisu xyz.pl')
-			->setRequired()
-			->addValidatorStringLength(2, 240);
+        //od
+        $this->addElementText('fromName')
+            ->setLabel('wyświetlana nazwa (od kogo)')
+            ->setDescription('np. Pomoc serwisu xyz.pl')
+            ->setRequired()
+            ->addValidatorStringLength(2, 240);
 
-		//odpowiedz na
-		$this->addElementText('replyTo')
-			->setLabel('odpowiedz na')
-			->setDescription('jeśli inny niż z którego wysłano wiadomość')
-			->setRequired(false)
-			->addValidatorStringLength(2, 240);
+        //odpowiedz na
+        $this->addElementText('replyTo')
+            ->setLabel('odpowiedz na')
+            ->setDescription('jeśli inny niż z którego wysłano wiadomość')
+            ->setRequired(false)
+            ->addValidatorStringLength(2, 240);
 
-		//aktywny
-		$this->addElementCheckbox('active')
-			->setLabel('aktywny')
-			->setChecked()
-			->setRequired()
-			->addValidatorNotEmpty();
+        //aktywny
+        $this->addElementCheckbox('active')
+            ->setLabel('aktywny')
+            ->setChecked()
+            ->setRequired()
+            ->addValidatorNotEmpty();
 
-		//submit
-		$this->addElementSubmit('submit')
-			->setLabel('zapisz mail')
-			->setIgnore();
-	}
+        //submit
+        $this->addElementSubmit('submit')
+            ->setLabel('zapisz mail')
+            ->setIgnore();
+    }
 
 }

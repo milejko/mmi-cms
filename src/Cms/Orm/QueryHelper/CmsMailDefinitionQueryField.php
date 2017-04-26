@@ -85,6 +85,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsMailDefinitionQuery greaterOrEqualsColumnActive()
  * @method \Cms\Orm\CmsMailDefinitionQuery lessOrEqualsColumnActive()
  */
-class CmsMailDefinitionQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsMailDefinitionQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

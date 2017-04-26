@@ -89,8 +89,9 @@ namespace Cms\Orm;
  * @method CmsLogRecord findPk($value)
  */
 //</editor-fold>
-class CmsLogQuery extends \Mmi\Orm\Query {
+class CmsLogQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_log';
+    protected $_tableName = 'cms_log';
 
 }

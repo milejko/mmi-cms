@@ -13,47 +13,49 @@ namespace CmsAdmin\Form;
 /**
  * Formularz atrybutów
  */
-class Attribute extends \Mmi\Form\Form {
+class Attribute extends \Mmi\Form\Form
+{
 
-	public function init() {
+    public function init()
+    {
 
-		//nazwa
-		$this->addElementText('name')
-			->setLabel('nazwa')
-			->setRequired()
-			->addFilterStringTrim()
-			->addValidatorStringLength(2, 128);
+        //nazwa
+        $this->addElementText('name')
+            ->setLabel('nazwa')
+            ->setRequired()
+            ->addFilterStringTrim()
+            ->addValidatorStringLength(2, 128);
 
-		//klucz pola
-		$this->addElementText('key')
-			->setLabel('klucz')
-			->addFilterAscii()
-			->setRequired()
-			->addValidatorAlnum('klucz może zawierać wyłącznie litery i cyfry')
-			->addValidatorStringLength(2, 64)
-			->addValidatorRecordUnique(new \Cms\Orm\CmsAttributeQuery, 'key', $this->getRecord()->id);
-		
-		//opis
-		$this->addElementText('description')
-			->setLabel('opis')
-			->addFilterStringTrim();
+        //klucz pola
+        $this->addElementText('key')
+            ->setLabel('klucz')
+            ->addFilterAscii()
+            ->setRequired()
+            ->addValidatorAlnum('klucz może zawierać wyłącznie litery i cyfry')
+            ->addValidatorStringLength(2, 64)
+            ->addValidatorRecordUnique(new \Cms\Orm\CmsAttributeQuery, 'key', $this->getRecord()->id);
 
-		//pole formularza
-		$this->addElementSelect('cmsAttributeTypeId')
-			->setLabel('pole formularza')
-			->setRequired()
-			->addValidatorNotEmpty()
-			->setMultioptions((new \Cms\Orm\CmsAttributeTypeQuery)
-				->orderAscName()
-				->findPairs('id', 'name'));
+        //opis
+        $this->addElementText('description')
+            ->setLabel('opis')
+            ->addFilterStringTrim();
 
-		//opcje pola formularz
-		$this->addElementTextarea('fieldOptions')
-			->setLabel('opcje pola');
+        //pole formularza
+        $this->addElementSelect('cmsAttributeTypeId')
+            ->setLabel('pole formularza')
+            ->setRequired()
+            ->addValidatorNotEmpty()
+            ->setMultioptions((new \Cms\Orm\CmsAttributeTypeQuery)
+                ->orderAscName()
+                ->findPairs('id', 'name'));
 
-		//zapis
-		$this->addElementSubmit('submit')
-			->setLabel('zapisz atrybut');
-	}
+        //opcje pola formularz
+        $this->addElementTextarea('fieldOptions')
+            ->setLabel('opcje pola');
+
+        //zapis
+        $this->addElementSubmit('submit')
+            ->setLabel('zapisz atrybut');
+    }
 
 }

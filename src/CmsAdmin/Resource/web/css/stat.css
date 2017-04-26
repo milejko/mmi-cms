@@ -1,53 +1,53 @@
 .chart {
-	height: 150px;
-	width: 100%;
+    height: 150px;
+    width: 100%;
 }
 
 h1.charts {
-	padding: 0px;
-	margin-bottom: 10px;
+    padding: 0px;
+    margin-bottom: 10px;
 }
 
 h2.charts {
-	padding: 0px;
-	margin-bottom: 10px;
-	font-size: 16px;
+    padding: 0px;
+    margin-bottom: 10px;
+    font-size: 16px;
 }
 
 h4 {
-	padding: 10px 0px 0px 0px!important;
-	margin: 0px!important;
+    padding: 10px 0px 0px 0px!important;
+    margin: 0px!important;
 }
 
 #monthlyChart {
-	width: 60%;
-	float: left;
+    width: 60%;
+    float: left;
 }
 
 #yearlyChart {
-	width: 40%;
-	float: left;
+    width: 40%;
+    float: left;
 }
 
 #avgHourlyChart {
-	width: 50%;
-	float: left;
+    width: 50%;
+    float: left;
 }
 
 #avgHourlyAllChart {
-	width: 50%;
-	float: left;
+    width: 50%;
+    float: left;
 }
 
 form div {
-	float: left;
-	margin: 0px 10px 0px 0px;
+    float: left;
+    margin: 0px 10px 0px 0px;
 }
 
 div.legend table {
-	width: auto;
+    width: auto;
 }
 
 div.legend table td {
-	padding: 0 2px;
+    padding: 0 2px;
 }

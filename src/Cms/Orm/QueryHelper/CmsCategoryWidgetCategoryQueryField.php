@@ -49,6 +49,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery greaterOrEqualsColumnActive()
  * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery lessOrEqualsColumnActive()
  */
-class CmsCategoryWidgetCategoryQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsCategoryWidgetCategoryQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

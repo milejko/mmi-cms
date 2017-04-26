@@ -13,38 +13,39 @@ namespace CmsAdmin\Plugin;
 /**
  * Grid atrybutów
  */
-class AttributeGrid extends \CmsAdmin\Grid\Grid {
+class AttributeGrid extends \CmsAdmin\Grid\Grid
+{
 
-	public function init() {
+    public function init()
+    {
 
-		//zapytanie
-		$this->setQuery(new \Cms\Orm\CmsAttributeQuery);
+        //zapytanie
+        $this->setQuery(new \Cms\Orm\CmsAttributeQuery);
 
-		//nazwa atrybutu
-		$this->addColumnText('name')
-			->setLabel('nazwa');
+        //nazwa atrybutu
+        $this->addColumnText('name')
+            ->setLabel('nazwa');
 
-		//klucz atrybutu
-		$this->addColumnText('key')
-			->setLabel('klucz');
+        //klucz atrybutu
+        $this->addColumnText('key')
+            ->setLabel('klucz');
 
-		//opis
-		$this->addColumnText('description')
-			->setLabel('opis');
+        //opis
+        $this->addColumnText('description')
+            ->setLabel('opis');
 
-		//klasa pola
-		$this->addColumnSelect('cmsAttributeTypeId')
-			->setLabel('klasa pola')
-			->setMultioptions((new \Cms\Orm\CmsAttributeTypeQuery)
-				->orderAscName()
-				->findPairs('id', 'name'));
+        //klasa pola
+        $this->addColumnSelect('cmsAttributeTypeId')
+            ->setLabel('klasa pola')
+            ->setMultioptions((new \Cms\Orm\CmsAttributeTypeQuery)
+                ->orderAscName()
+                ->findPairs('id', 'name'));
 
-		//waga
-		//$this->addColumnText('indexWeight')
-		//	->setLabel('waga w indeksie');
-
-		//operacje
-		$this->addColumnOperation();
-	}
+        //waga
+        //$this->addColumnText('indexWeight')
+        //	->setLabel('waga w indeksie');
+        //operacje
+        $this->addColumnOperation();
+    }
 
 }

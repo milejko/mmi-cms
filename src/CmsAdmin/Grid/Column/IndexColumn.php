@@ -25,47 +25,52 @@ namespace CmsAdmin\Grid\Column;
  * @method self setFilterMethodSearch() ustawia metodę filtracji na wyszukaj
  * @method self setFilterMethodNull() ustawia metodę filtracji na równe/różne null
  */
-class IndexColumn extends ColumnAbstract {
-	
-	/**
-	 * Konstruktor ustawia domyślny label
-	 * pole nie ma nazwy
-	 */
-	public function __construct() {
-		 $this->setLabel('#');
-		 parent::__construct('_index_');
-	}
-	
-	/**
-	 * Renderuje filtrację pola
-	 * @return string
-	 */
-	public function renderFilter() {
-		return '';
-	}
-	
-	/**
-	 * Renderuje labelkę
-	 * @return string
-	 */
-	public function renderLabel() {
-		return $this->getLabel();
-	}
+class IndexColumn extends ColumnAbstract
+{
 
-	/**
-	 * Renderuje pole tekstowe
-	 * @param \Mmi\Orm\RecordRo $record
-	 * @return string
-	 */
-	public function renderCell(\Mmi\Orm\RecordRo $record) {
-		//inicjalizacja
-		if ($this->getIndex() === null) {
-			//ustawia wartość domyślną uwzględniając paginator
-			$this->setIndex(($this->_grid->getState()->getPage() -1) * $this->_grid->getState()->getRowsPerPage());
-		}
-		//podwyższa indeks
-		$this->setIndex($this->getIndex() + 1);
-		return $this->getIndex();
-	}
+    /**
+     * Konstruktor ustawia domyślny label
+     * pole nie ma nazwy
+     */
+    public function __construct()
+    {
+        $this->setLabel('#');
+        parent::__construct('_index_');
+    }
+
+    /**
+     * Renderuje filtrację pola
+     * @return string
+     */
+    public function renderFilter()
+    {
+        return '';
+    }
+
+    /**
+     * Renderuje labelkę
+     * @return string
+     */
+    public function renderLabel()
+    {
+        return $this->getLabel();
+    }
+
+    /**
+     * Renderuje pole tekstowe
+     * @param \Mmi\Orm\RecordRo $record
+     * @return string
+     */
+    public function renderCell(\Mmi\Orm\RecordRo $record)
+    {
+        //inicjalizacja
+        if ($this->getIndex() === null) {
+            //ustawia wartość domyślną uwzględniając paginator
+            $this->setIndex(($this->_grid->getState()->getPage() - 1) * $this->_grid->getState()->getRowsPerPage());
+        }
+        //podwyższa indeks
+        $this->setIndex($this->getIndex() + 1);
+        return $this->getIndex();
+    }
 
 }

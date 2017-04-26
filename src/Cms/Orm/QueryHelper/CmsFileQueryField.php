@@ -103,6 +103,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsFileQuery greaterOrEqualsColumnActive()
  * @method \Cms\Orm\CmsFileQuery lessOrEqualsColumnActive()
  */
-class CmsFileQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsFileQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

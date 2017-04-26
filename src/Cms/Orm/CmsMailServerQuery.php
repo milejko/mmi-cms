@@ -83,8 +83,9 @@ namespace Cms\Orm;
  * @method CmsMailServerRecord findPk($value)
  */
 //</editor-fold>
-class CmsMailServerQuery extends \Mmi\Orm\Query {
+class CmsMailServerQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_mail_server';
+    protected $_tableName = 'cms_mail_server';
 
 }

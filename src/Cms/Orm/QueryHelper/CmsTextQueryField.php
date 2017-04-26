@@ -43,6 +43,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsTextQuery greaterOrEqualsColumnDateModify()
  * @method \Cms\Orm\CmsTextQuery lessOrEqualsColumnDateModify()
  */
-class CmsTextQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsTextQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

@@ -10,18 +10,20 @@
 
 namespace CmsAdmin\App\NavPart;
 
-class NavPartText extends \Mmi\Navigation\NavigationConfig {
+class NavPartText extends \Mmi\Navigation\NavigationConfig
+{
 
-	public static function getMenu() {
-		return (new \Mmi\Navigation\NavigationConfigElement)
-				->setLabel('Teksty stałe')
-				->setModule('cmsAdmin')
-				->setController('text')
-				->addChild((new \Mmi\Navigation\NavigationConfigElement)
-					->setLabel('Dodaj')
-					->setModule('cmsAdmin')
-					->setController('text')
-					->setAction('edit'));
-	}
+    public static function getMenu()
+    {
+        return (new \Mmi\Navigation\NavigationConfigElement)
+                ->setLabel('Teksty stałe')
+                ->setModule('cmsAdmin')
+                ->setController('text')
+                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                    ->setLabel('Dodaj')
+                    ->setModule('cmsAdmin')
+                    ->setController('text')
+                    ->setAction('edit'));
+    }
 
 }

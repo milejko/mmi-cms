@@ -35,8 +35,9 @@ namespace Cms\Orm;
  * @method CmsRoleRecord findPk($value)
  */
 //</editor-fold>
-class CmsRoleQuery extends \Mmi\Orm\Query {
+class CmsRoleQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_role';
+    protected $_tableName = 'cms_role';
 
 }

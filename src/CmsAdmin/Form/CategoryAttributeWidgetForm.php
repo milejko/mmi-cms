@@ -14,14 +14,16 @@ namespace CmsAdmin\Form;
  * Formularz widgetu z podpiętymi atrybutami
  * @method \Cms\Orm\CmsCategoryWidgetCategoryRecord getRecord()
  */
-class CategoryAttributeWidgetForm extends \Cms\Form\AttributeForm {
+class CategoryAttributeWidgetForm extends \Cms\Form\AttributeForm
+{
 
-	public function init() {
+    public function init()
+    {
 
-		$this->initAttributes('cmsCategoryWidget', $this->getOption('widgetId'), 'categoryWidgetRelation');
+        $this->initAttributes('cmsCategoryWidget', $this->getOption('widgetId'), 'categoryWidgetRelation');
 
-		$this->addElementSubmit('submit')
-			->setLabel('zapisz');
-	}
-	
+        $this->addElementSubmit('submit')
+            ->setLabel('zapisz');
+    }
+
 }

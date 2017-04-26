@@ -15,220 +15,240 @@ use Cms\Form\Element;
 /**
  * Formularz CMS
  */
-abstract class Form extends \Mmi\Form\Form {
+abstract class Form extends \Mmi\Form\Form
+{
 
-	/**
-	 * Nazwa obiektu do przypięcia plików
-	 * @var string
-	 */
-	protected $_fileObjectName;
+    /**
+     * Nazwa obiektu do przypięcia plików
+     * @var string
+     */
+    protected $_fileObjectName;
 
-	/**
-	 * Konstruktor
-	 * @param \Mmi\Orm\Record $record obiekt recordu
-	 * @param array $options opcje
-	 * @param string $className nazwa klasy
-	 */
-	public function __construct(\Mmi\Orm\Record $record = null, array $options = []) {
-		//kalkulacja nazwy plików dla active record
-		if ($record) {
-			$this->_fileObjectName = $this->_classToFileObject(get_class($record));
-		}
-		parent::__construct($record, $options);
-	}
+    /**
+     * Konstruktor
+     * @param \Mmi\Orm\Record $record obiekt recordu
+     * @param array $options opcje
+     * @param string $className nazwa klasy
+     */
+    public function __construct(\Mmi\Orm\Record $record = null, array $options = [])
+    {
+        //kalkulacja nazwy plików dla active record
+        if ($record) {
+            $this->_fileObjectName = $this->_classToFileObject(get_class($record));
+        }
+        parent::__construct($record, $options);
+    }
 
-	/**
-	 * Wywołuje walidację i zapis rekordu powiązanego z formularzem.
-	 * @return bool
-	 */
-	public function save() {
-		if ($this->hasRecord() && parent::save()) {
-			$this->_appendFiles($this->_record->getPk(), $this->getFiles());
-			$this->afterUpload();
-		}
-		if (!$this->hasRecord()) {
-			parent::save();
-		}
-		return $this->isSaved();
-	}
+    /**
+     * Wywołuje walidację i zapis rekordu powiązanego z formularzem.
+     * @return bool
+     */
+    public function save()
+    {
+        if ($this->hasRecord() && parent::save()) {
+            $this->_appendFiles($this->_record->getPk(), $this->getFiles());
+            $this->afterUpload();
+        }
+        if (!$this->hasRecord()) {
+            parent::save();
+        }
+        return $this->isSaved();
+    }
 
-	/**
-	 * Wywołuje metodę po uploadzie
-	 */
-	public function afterUpload() {
-		if (!$this->getRecord()->getPk()) {
-			return;
-		}
-		//przenoszenie z uploadera plików ze zmienionym object
-		foreach ($this->getElements() as $element) {
-			if (!$element instanceof \Cms\Form\Element\Plupload || !$element->getObject()) {
-				continue;
-			}
-			\Cms\Model\File::move('tmp-' . $element->getObject(), \Mmi\Session\Session::getNumericId(), $element->getObject(), $this->getRecord()->getPk());
-		}
-	}
+    /**
+     * Wywołuje metodę po uploadzie
+     */
+    public function afterUpload()
+    {
+        if (!$this->getRecord()->getPk()) {
+            return;
+        }
+        //przenoszenie z uploadera plików ze zmienionym object
+        foreach ($this->getElements() as $element) {
+            if (!$element instanceof \Cms\Form\Element\Plupload || !$element->getObject()) {
+                continue;
+            }
+            \Cms\Model\File::move('tmp-' . $element->getObject(), \Mmi\Session\Session::getNumericId(), $element->getObject(), $this->getRecord()->getPk());
+        }
+    }
 
-	/**
-	 * Zabezpieczenie spamowe
-	 * @param string $name nazwa
-	 * @return \Cms\Form\Element\Antirobot
-	 */
-	public function addElementAntirobot($name) {
-		return $this->addElement(new Element\Antirobot($name));
-	}
+    /**
+     * Zabezpieczenie spamowe
+     * @param string $name nazwa
+     * @return \Cms\Form\Element\Antirobot
+     */
+    public function addElementAntirobot($name)
+    {
+        return $this->addElement(new Element\Antirobot($name));
+    }
 
-	/**
-	 * Captcha
-	 * @param string $name nazwa
-	 * @param string $message wiadomość o błędzie captcha
-	 * @return \Cms\Form\Element\Captcha
-	 */
-	public function addElementCaptcha($name, $message = null) {
-		return $this->addElement(new Element\Captcha($name, $message));
-	}
+    /**
+     * Captcha
+     * @param string $name nazwa
+     * @param string $message wiadomość o błędzie captcha
+     * @return \Cms\Form\Element\Captcha
+     */
+    public function addElementCaptcha($name, $message = null)
+    {
+        return $this->addElement(new Element\Captcha($name, $message));
+    }
 
-	/**
-	 * Wybór koloru
-	 * @param string $name nazwa
-	 * @return \Cms\Form\Element\ColorPicker
-	 */
-	public function addElementColorPicker($name) {
-		return $this->addElement(new Element\ColorPicker($name));
-	}
+    /**
+     * Wybór koloru
+     * @param string $name nazwa
+     * @return \Cms\Form\Element\ColorPicker
+     */
+    public function addElementColorPicker($name)
+    {
+        return $this->addElement(new Element\ColorPicker($name));
+    }
 
-	/**
-	 * Date picker
-	 * @param string $name nazwa
-	 * @return \Cms\Form\Element\DatePicker
-	 */
-	public function addElementDatePicker($name) {
-		return $this->addElement(new Element\DatePicker($name));
-	}
+    /**
+     * Date picker
+     * @param string $name nazwa
+     * @return \Cms\Form\Element\DatePicker
+     */
+    public function addElementDatePicker($name)
+    {
+        return $this->addElement(new Element\DatePicker($name));
+    }
 
-	/**
-	 * Date-time picker
-	 * @param string $name nazwa
-	 * @return \Cms\Form\Element\DateTimePicker
-	 */
-	public function addElementDateTimePicker($name) {
-		return $this->addElement(new Element\DateTimePicker($name));
-	}
+    /**
+     * Date-time picker
+     * @param string $name nazwa
+     * @return \Cms\Form\Element\DateTimePicker
+     */
+    public function addElementDateTimePicker($name)
+    {
+        return $this->addElement(new Element\DateTimePicker($name));
+    }
 
-	/**
-	 * TinyMce
-	 * @param string $name nazwa
-	 * @return \Cms\Form\Element\TinyMce
-	 */
-	public function addElementTinyMce($name) {
-		return $this->addElement(new Element\TinyMce($name));
-	}
+    /**
+     * TinyMce
+     * @param string $name nazwa
+     * @return \Cms\Form\Element\TinyMce
+     */
+    public function addElementTinyMce($name)
+    {
+        return $this->addElement(new Element\TinyMce($name));
+    }
 
-	/**
-	 * Tree
-	 * @param string $name nazwa
-	 * @return \Cms\Form\Element\Tree
-	 */
-	public function addElementTree($name) {
-		return $this->addElement(new Element\Tree($name));
-	}
+    /**
+     * Tree
+     * @param string $name nazwa
+     * @return \Cms\Form\Element\Tree
+     */
+    public function addElementTree($name)
+    {
+        return $this->addElement(new Element\Tree($name));
+    }
 
-	/**
-	 * Plupload
-	 * @param string $name nazwa
-	 * @return \Cms\Form\Element\Plupload
-	 */
-	public function addElementPlupload($name) {
-		return $this->addElement(new Element\Plupload($name));
-	}
+    /**
+     * Plupload
+     * @param string $name nazwa
+     * @return \Cms\Form\Element\Plupload
+     */
+    public function addElementPlupload($name)
+    {
+        return $this->addElement(new Element\Plupload($name));
+    }
 
-	/**
-	 * Uploader
-	 * @param string $name nazwa
-	 * @return \Cms\Form\Element\Uploader
-	 */
-	public function addElementUploader($name) {
-		return $this->addElement(new Element\Uploader($name));
-	}
+    /**
+     * Uploader
+     * @param string $name nazwa
+     * @return \Cms\Form\Element\Uploader
+     */
+    public function addElementUploader($name)
+    {
+        return $this->addElement(new Element\Uploader($name));
+    }
 
-	/**
-	 * Tagi
-	 * @param string $name nazwa
-	 * @return \Cms\Form\Element\MultiSelect
-	 */
-	public function addElementTags($name) {
-		return $this->addElement(new Element\Tags($name));
-	}
-	
-	/**
-	 * Html
-	 * @param string $html html
-	 */
-	public function addElementHtml($html) {
-		return $this->addElement(new Element\Html($html));
-	}
+    /**
+     * Tagi
+     * @param string $name nazwa
+     * @return \Cms\Form\Element\MultiSelect
+     */
+    public function addElementTags($name)
+    {
+        return $this->addElement(new Element\Tags($name));
+    }
 
-	/**
-	 * Zwraca nazwę obiektu do przypięcia plików
-	 * @return string
-	 */
-	public function getFileObjectName() {
-		return $this->_fileObjectName;
-	}
+    /**
+     * Html
+     * @param string $html html
+     */
+    public function addElementHtml($html)
+    {
+        return $this->addElement(new Element\Html($html));
+    }
 
-	/**
-	 * Ustawia nazwę obiektu do przypięcia plików
-	 * @param string $name nazwa
-	 */
-	public function setFileObjectName($name) {
-		$this->_fileObjectName = $name;
-	}
+    /**
+     * Zwraca nazwę obiektu do przypięcia plików
+     * @return string
+     */
+    public function getFileObjectName()
+    {
+        return $this->_fileObjectName;
+    }
 
-	/**
-	 * Dołaczenie plików do obiektu
-	 * @param mixed $id
-	 * @param array $files tabela plików
-	 */
-	protected function _appendFiles($id, $files) {
-		try {
-			foreach ($files as $fileSet) {
-				\Cms\Model\File::appendFiles($this->_fileObjectName, $id, $fileSet);
-			}
-			//przenoszenie z uploadera
-			\Cms\Model\File::move('tmp-' . $this->_fileObjectName, \Mmi\Session\Session::getNumericId(), $this->_fileObjectName, $id);
-		} catch (\Exception $e) {
-			\Mmi\App\FrontController::getInstance()->getLogger()->addWarning($e->getMessage());
-		}
-	}
+    /**
+     * Ustawia nazwę obiektu do przypięcia plików
+     * @param string $name nazwa
+     */
+    public function setFileObjectName($name)
+    {
+        $this->_fileObjectName = $name;
+    }
 
-	/**
-	 * Import plików z pól formularza
-	 * Zwraca tabelę danych plików
-	 * @return array
-	 */
-	public function getFiles() {
-		$files = [];
-		//import z elementów File
-		foreach ($this->getElements() as $element) {
-			if (!($element instanceof \Mmi\Form\Element\File)) {
-				continue;
-			}
-			/* @var $element \Mmi\Form\Element\File */
-			if (!$element->isUploaded()) {
-				continue;
-			}
-			$files[$element->getName()] = $element->getFiles();
-		}
-		return $files;
-	}
+    /**
+     * Dołaczenie plików do obiektu
+     * @param mixed $id
+     * @param array $files tabela plików
+     */
+    protected function _appendFiles($id, $files)
+    {
+        try {
+            foreach ($files as $fileSet) {
+                \Cms\Model\File::appendFiles($this->_fileObjectName, $id, $fileSet);
+            }
+            //przenoszenie z uploadera
+            \Cms\Model\File::move('tmp-' . $this->_fileObjectName, \Mmi\Session\Session::getNumericId(), $this->_fileObjectName, $id);
+        } catch (\Exception $e) {
+            \Mmi\App\FrontController::getInstance()->getLogger()->addWarning($e->getMessage());
+        }
+    }
 
-	/**
-	 * Zwraca nazwę plików powiązanych z danym formularzem (na podstawie klasy rekordu / modelu)
-	 * @param string $name
-	 * @return string
-	 */
-	protected function _classToFileObject($name) {
-		$parts = \explode('\\', strtolower($name));
-		return substr(end($parts), 0, -6);
-	}
+    /**
+     * Import plików z pól formularza
+     * Zwraca tabelę danych plików
+     * @return array
+     */
+    public function getFiles()
+    {
+        $files = [];
+        //import z elementów File
+        foreach ($this->getElements() as $element) {
+            if (!($element instanceof \Mmi\Form\Element\File)) {
+                continue;
+            }
+            /* @var $element \Mmi\Form\Element\File */
+            if (!$element->isUploaded()) {
+                continue;
+            }
+            $files[$element->getName()] = $element->getFiles();
+        }
+        return $files;
+    }
+
+    /**
+     * Zwraca nazwę plików powiązanych z danym formularzem (na podstawie klasy rekordu / modelu)
+     * @param string $name
+     * @return string
+     */
+    protected function _classToFileObject($name)
+    {
+        $parts = \explode('\\', strtolower($name));
+        return substr(end($parts), 0, -6);
+    }
 
 }

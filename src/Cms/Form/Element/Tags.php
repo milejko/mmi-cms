@@ -85,74 +85,81 @@ use \Cms\Model\TagRelationModel;
  * @method self addFilterUrlencode() filtr urlencode
  * @method self addFilterZeroToNull() filtr zero do null'a
  */
-class Tags extends \Mmi\Form\Element\Select {
+class Tags extends \Mmi\Form\Element\Select
+{
 
-	/**
-	 * Konstruktor
-	 */
-	public function __construct($name) {
-		parent::__construct($name);
-		$this->setMultiple()
-			->setValue([]);
-	}
+    /**
+     * Konstruktor
+     */
+    public function __construct($name)
+    {
+        parent::__construct($name);
+        $this->setMultiple()
+            ->setValue([]);
+    }
 
-	/**
-	 * Ustawia objekt cms
-	 * @param string $object
-	 * @return \Cms\Form\Element\Tags
-	 */
-	public function setObject($object) {
-		return $this->setOption('object', $object);
-	}
+    /**
+     * Ustawia objekt cms
+     * @param string $object
+     * @return \Cms\Form\Element\Tags
+     */
+    public function setObject($object)
+    {
+        return $this->setOption('object', $object);
+    }
 
-	/**
-	 * Ustawia możliwość dodania nowego taga z pola
-	 * @return \Cms\Form\Element\Tags
-	 */
-	public function setAddTags() {
-		return $this->setOption('addTags', true);
-	}
+    /**
+     * Ustawia możliwość dodania nowego taga z pola
+     * @return \Cms\Form\Element\Tags
+     */
+    public function setAddTags()
+    {
+        return $this->setOption('addTags', true);
+    }
 
-	/**
-	 * Ustawianie tagów na podstawie formularza
-	 * @return \Cms\Form\Element\Tags
-	 */
-	public function setAutoTagValue() {
-		//brak rekordu
-		if (!$this->_form->hasRecord()) {
-			return $this;
-		}
-		//ustawianie wartości
-		$this->setValue((new TagRelationModel($this->getOption('object') ? $this->getOption('object') : $this->_form->getFileObjectName(), $this->_form->getRecord()->getPk()))
-				->getTagRelations());
-		//zwrot obiektu
-		return $this;
-	}
+    /**
+     * Ustawianie tagów na podstawie formularza
+     * @return \Cms\Form\Element\Tags
+     */
+    public function setAutoTagValue()
+    {
+        //brak rekordu
+        if (!$this->_form->hasRecord()) {
+            return $this;
+        }
+        //ustawianie wartości
+        $this->setValue((new TagRelationModel($this->getOption('object') ? $this->getOption('object') : $this->_form->getFileObjectName(), $this->_form->getRecord()->getPk()))
+                ->getTagRelations());
+        //zwrot obiektu
+        return $this;
+    }
 
-	/**
-	 * Zapis tagów po zapisie formularza
-	 */
-	public function onFormSaved() {
-		//zapis tagów
-		(new TagRelationModel($this->getOption('object') ? $this->getOption('object') : $this->_form->getFileObjectName(), $this->_form->getRecord()->getPk()))
-			->createTagRelations($this->getValue());
-	}
+    /**
+     * Zapis tagów po zapisie formularza
+     */
+    public function onFormSaved()
+    {
+        //zapis tagów
+        (new TagRelationModel($this->getOption('object') ? $this->getOption('object') : $this->_form->getFileObjectName(), $this->_form->getRecord()->getPk()))
+            ->createTagRelations($this->getValue());
+    }
 
-	/**
-	 * Buduje pole
-	 * @return string
-	 */
-	public function fetchField() {
-		$id = $this->getOption('id');
-		$inputId = \str_replace('-', '_', $id);
-		//ustawianie wartości
-		$this->setAutoTagValue();
-		//pobranie czy mozna dodac tag
-		$addTags = $this->getOption('addTags') ? 'true' : 'false';
-		$view = \Mmi\App\FrontController::getInstance()->getView();
-		$view->headLink()->appendStylesheet('/resource/cmsAdmin/css/chosen.min.css');
-		$view->headScript()->appendFile('/resource/cmsAdmin/js/chosen.jquery.min.js');
-		$view->headScript()->appendScript("
+    /**
+     * Buduje pole
+     * @return string
+     */
+    public function fetchField()
+    {
+        $id = $this->getOption('id');
+        $inputId = \str_replace('-', '_', $id);
+        //ustawianie wartości
+        $this->setAutoTagValue();
+        //pobranie czy mozna dodac tag
+        $addTags = $this->getOption('addTags') ? 'true' : 'false';
+        $view = \Mmi\App\FrontController::getInstance()->getView();
+        $view->headLink()->appendStylesheet('/resource/cmsAdmin/css/chosen.min.css');
+        $view->headScript()->appendFile('/resource/cmsAdmin/js/chosen.jquery.min.js');
+        $view->headScript()->appendScript("
 			$(document).ready(function ($) {
 				$('#" . $id . "').chosen({			    
 				disable_search_threshold:10,
@@ -213,55 +220,57 @@ class Tags extends \Mmi\Form\Element\Select {
 			});
 		");
 
-		$values = is_array($this->getValue()) ? $this->getValue() : [$this->getValue()];
+        $values = is_array($this->getValue()) ? $this->getValue() : [$this->getValue()];
 
-		if ($this->issetOption('multiple')) {
-			$this->setName($this->getName() . '[]');
-		}
+        if ($this->issetOption('multiple')) {
+            $this->setName($this->getName() . '[]');
+        }
 
-		//nagłówek selecta
-		$html = '<select ' . $this->_getHtmlOptions() . '>';
-		//generowanie opcji
-		foreach ($this->getMultioptions() as $key => $caption) {
-			$disabled = '';
-			//disabled
-			if (strpos($key, ':disabled') !== false && !is_array($caption)) {
-				$key = '';
-				$disabled = ' disabled="disabled"';
-			}
-			//dodawanie pojedynczej opcji
-			$html .= '<option value="' . $key . '"' . $this->_calculateSelected($key, $values) . $disabled . '>' . $caption . '</option>';
-		}
-		$html .= '</select>';
-		return $html;
-	}
+        //nagłówek selecta
+        $html = '<select ' . $this->_getHtmlOptions() . '>';
+        //generowanie opcji
+        foreach ($this->getMultioptions() as $key => $caption) {
+            $disabled = '';
+            //disabled
+            if (strpos($key, ':disabled') !== false && !is_array($caption)) {
+                $key = '';
+                $disabled = ' disabled="disabled"';
+            }
+            //dodawanie pojedynczej opcji
+            $html .= '<option value="' . $key . '"' . $this->_calculateSelected($key, $values) . $disabled . '>' . $caption . '</option>';
+        }
+        $html .= '</select>';
+        return $html;
+    }
 
-	/**
-	 * przerobienie tablicy + klucz
-	 * @return array
-	 */
-	public function getValue() {
-		$arr = [];
-		if (!is_array($this->_options['value'])) {
-			return [];
-		}
-		foreach ($this->_options['value'] as $key) {
-			$arr[$key] = $key;
-		}
-		return $arr;
-	}
+    /**
+     * przerobienie tablicy + klucz
+     * @return array
+     */
+    public function getValue()
+    {
+        $arr = [];
+        if (!is_array($this->_options['value'])) {
+            return [];
+        }
+        foreach ($this->_options['value'] as $key) {
+            $arr[$key] = $key;
+        }
+        return $arr;
+    }
 
-	/**
-	 * łączenie wartości
-	 * @return array
-	 */
-	public function getMultioptions() {
-		$array = [];
-		foreach ((new \Cms\Orm\CmsTagQuery)->orderAscId()->findPairs('tag', 'tag') as $k => $t) {
-			$array[$k] = $k;
-		}
+    /**
+     * łączenie wartości
+     * @return array
+     */
+    public function getMultioptions()
+    {
+        $array = [];
+        foreach ((new \Cms\Orm\CmsTagQuery)->orderAscId()->findPairs('tag', 'tag') as $k => $t) {
+            $array[$k] = $k;
+        }
 
-		return array_merge($this->getValue(), $array);
-	}
+        return array_merge($this->getValue(), $array);
+    }
 
 }

@@ -37,6 +37,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryTypeQuery greaterOrEqualsColumnMvcParams()
  * @method \Cms\Orm\CmsCategoryTypeQuery lessOrEqualsColumnMvcParams()
  */
-class CmsCategoryTypeQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsCategoryTypeQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

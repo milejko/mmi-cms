@@ -47,8 +47,9 @@ namespace Cms\Orm;
  * @method CmsCategoryTypeRecord findPk($value)
  */
 //</editor-fold>
-class CmsCategoryTypeQuery extends \Mmi\Orm\Query {
+class CmsCategoryTypeQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_category_type';
+    protected $_tableName = 'cms_category_type';
 
 }

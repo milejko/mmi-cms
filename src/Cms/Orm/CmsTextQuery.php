@@ -53,43 +53,47 @@ namespace Cms\Orm;
  * @method CmsTextRecord findPk($value)
  */
 //</editor-fold>
-class CmsTextQuery extends \Mmi\Orm\Query {
+class CmsTextQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_text';
+    protected $_tableName = 'cms_text';
 
-	/**
-	 * Zapytanie po langu z requesta
-	 * @return CmsTextQuery
-	 */
-	public static function lang() {
-		if (!\Mmi\App\FrontController::getInstance()->getRequest()->lang) {
-			return new self;
-		}
-		return (new self)
-				->whereLang()->equals(\Mmi\App\FrontController::getInstance()->getRequest()->lang)
-				->orFieldLang()->equals(null)
-				->orderDescLang();
-	}
+    /**
+     * Zapytanie po langu z requesta
+     * @return CmsTextQuery
+     */
+    public static function lang()
+    {
+        if (!\Mmi\App\FrontController::getInstance()->getRequest()->lang) {
+            return new self;
+        }
+        return (new self)
+                ->whereLang()->equals(\Mmi\App\FrontController::getInstance()->getRequest()->lang)
+                ->orFieldLang()->equals(null)
+                ->orderDescLang();
+    }
 
-	/**
-	 * 
-	 * @param string $lang
-	 * @return CmsTextQuery
-	 */
-	public static function byLang($lang) {
-		return (new self)
-				->whereLang()->equals($lang);
-	}
+    /**
+     * 
+     * @param string $lang
+     * @return CmsTextQuery
+     */
+    public static function byLang($lang)
+    {
+        return (new self)
+                ->whereLang()->equals($lang);
+    }
 
-	/**
-	 * 
-	 * @param string $key
-	 * @param string $lang
-	 * @return CmsTextQuery
-	 */
-	public static function byKeyLang($key, $lang) {
-		return self::byLang($lang)
-				->andFieldKey()->equals($key);
-	}
+    /**
+     * 
+     * @param string $key
+     * @param string $lang
+     * @return CmsTextQuery
+     */
+    public static function byKeyLang($key, $lang)
+    {
+        return self::byLang($lang)
+                ->andFieldKey()->equals($key);
+    }
 
 }
