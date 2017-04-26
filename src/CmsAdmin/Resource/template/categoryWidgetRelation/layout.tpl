@@ -1,6 +1,6 @@
 {'cmsAdmin/header'}
 <div class="grid">
-	{messenger()}
-	{content()}
+    {messenger()}
+    {content()}
 </div>
 {'cmsAdmin/footer'}

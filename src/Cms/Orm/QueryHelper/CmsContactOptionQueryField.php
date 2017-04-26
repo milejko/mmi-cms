@@ -31,6 +31,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsContactOptionQuery greaterOrEqualsColumnName()
  * @method \Cms\Orm\CmsContactOptionQuery lessOrEqualsColumnName()
  */
-class CmsContactOptionQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsContactOptionQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

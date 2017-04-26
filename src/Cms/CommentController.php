@@ -13,31 +13,33 @@ namespace Cms;
 /**
  * Kontroler komentarzy
  */
-class CommentController extends \Mmi\Mvc\Controller {
+class CommentController extends \Mmi\Mvc\Controller
+{
 
-	public function indexAction() {
-		if (!$this->object) {
-			return;
-		}
-		if (!$this->objectId) {
-			return;
-		}
-		$this->view->comments = \Cms\Orm\CmsCommentQuery::byObject($this->object, $this->objectId, $this->descending)
-			->limit(100)
-			->find();
+    public function indexAction()
+    {
+        if (!$this->object) {
+            return;
+        }
+        if (!$this->objectId) {
+            return;
+        }
+        $this->view->comments = \Cms\Orm\CmsCommentQuery::byObject($this->object, $this->objectId, $this->descending)
+            ->limit(100)
+            ->find();
 
-		if (!($this->allowGuests || \App\Registry::$auth->hasIdentity())) {
-			return;
-		}
-		$form = new \Cms\Form\Comment(new \Cms\Orm\CmsCommentRecord(), [
-			'object' => $this->object,
-			'objectId' => $this->objectId
-		]);
-		if ($form->isSaved()) {
-			$this->getMessenger()->addMessage('Dodano komentarz', true);
-			$this->getResponse()->redirectToUrl($this->getRequest()->getReferer());
-		}
-		$this->view->commentForm = $form;
-	}
+        if (!($this->allowGuests || \App\Registry::$auth->hasIdentity())) {
+            return;
+        }
+        $form = new \Cms\Form\Comment(new \Cms\Orm\CmsCommentRecord(), [
+            'object' => $this->object,
+            'objectId' => $this->objectId
+        ]);
+        if ($form->isSaved()) {
+            $this->getMessenger()->addMessage('Dodano komentarz', true);
+            $this->getResponse()->redirectToUrl($this->getRequest()->getReferer());
+        }
+        $this->view->commentForm = $form;
+    }
 
 }

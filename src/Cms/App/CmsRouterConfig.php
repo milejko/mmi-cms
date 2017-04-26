@@ -13,23 +13,25 @@ namespace Cms\App;
 /**
  * Klasa konfiguracji routera
  */
-class CmsRouterConfig extends \Mmi\Mvc\RouterConfig {
+class CmsRouterConfig extends \Mmi\Mvc\RouterConfig
+{
 
-	public function __construct() {
-		//moduł - cmsAdmin
-		$this->setRoute('cms-admin-module', 'cmsAdmin', ['module' => 'cmsAdmin'], ['controller' => 'index', 'action' => 'index']);
+    public function __construct()
+    {
+        //moduł - cmsAdmin
+        $this->setRoute('cms-admin-module', 'cmsAdmin', ['module' => 'cmsAdmin'], ['controller' => 'index', 'action' => 'index']);
 
-		//moduł + kontroler + akcja index np. /cmsAdmin/text
-		$this->setRoute('cms-admin-module-controller', '/^cmsAdmin\/([a-zA-Z\-]+)$/', ['module' => 'cmsAdmin', 'controller' => '$1'], ['action' => 'index']);
+        //moduł + kontroler + akcja index np. /cmsAdmin/text
+        $this->setRoute('cms-admin-module-controller', '/^cmsAdmin\/([a-zA-Z\-]+)$/', ['module' => 'cmsAdmin', 'controller' => '$1'], ['action' => 'index']);
 
-		//moduł + kontroler + akcja np. /cmsAdmin/text/display
-		$this->setRoute('cms-admin-module-controller-action', '/^cmsAdmin\/([a-zA-Z\-]+)\/([a-zA-Z]+)$/', ['module' => 'cmsAdmin', 'controller' => '$1', 'action' => '$2']);
+        //moduł + kontroler + akcja np. /cmsAdmin/text/display
+        $this->setRoute('cms-admin-module-controller-action', '/^cmsAdmin\/([a-zA-Z\-]+)\/([a-zA-Z]+)$/', ['module' => 'cmsAdmin', 'controller' => '$1', 'action' => '$2']);
 
-		//routa do strony głównej (opartej o category)
-		$this->setRoute('cms-category-home', '', ['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => '/']);
+        //routa do strony głównej (opartej o category)
+        $this->setRoute('cms-category-home', '', ['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => '/']);
 
-		//routa do stron cms i kategorii
-		$this->setRoute('cms-category-dispatch', '/^([a-zA-Z0-9\/\-]+)$/', ['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => '$1']);
-	}
+        //routa do stron cms i kategorii
+        $this->setRoute('cms-category-dispatch', '/^([a-zA-Z0-9\/\-]+)$/', ['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => '$1']);
+    }
 
 }

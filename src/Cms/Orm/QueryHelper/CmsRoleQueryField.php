@@ -25,6 +25,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsRoleQuery greaterOrEqualsColumnName()
  * @method \Cms\Orm\CmsRoleQuery lessOrEqualsColumnName()
  */
-class CmsRoleQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsRoleQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

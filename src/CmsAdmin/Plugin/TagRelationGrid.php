@@ -13,29 +13,31 @@ namespace CmsAdmin\Plugin;
 /**
  * Grid tagów
  */
-class TagRelationGrid extends \CmsAdmin\Grid\Grid {
+class TagRelationGrid extends \CmsAdmin\Grid\Grid
+{
 
-	public function init() {
+    public function init()
+    {
 
-		//zapytanie
-		$this->setQuery((new \Cms\Orm\CmsTagRelationQuery)
-				->join('cms_tag')->on('cms_tag_id')
-		);
-		
-		//nazwa taga
-		$this->addColumnText('cms_tag.tag')
-			->setLabel('tag');
-		
-		//obiekt
-		$this->addColumnText('object')
-			->setLabel('zasób');
-		
-		//id obiektu
-		$this->addColumnText('objectId')
-			->setLabel('ID zasobu');
+        //zapytanie
+        $this->setQuery((new \Cms\Orm\CmsTagRelationQuery)
+                ->join('cms_tag')->on('cms_tag_id')
+        );
 
-		//operacje
-		$this->addColumnOperation();
-	}
+        //nazwa taga
+        $this->addColumnText('cms_tag.tag')
+            ->setLabel('tag');
+
+        //obiekt
+        $this->addColumnText('object')
+            ->setLabel('zasób');
+
+        //id obiektu
+        $this->addColumnText('objectId')
+            ->setLabel('ID zasobu');
+
+        //operacje
+        $this->addColumnOperation();
+    }
 
 }

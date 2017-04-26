@@ -91,6 +91,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsMailQuery greaterOrEqualsColumnActive()
  * @method \Cms\Orm\CmsMailQuery lessOrEqualsColumnActive()
  */
-class CmsMailQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsMailQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

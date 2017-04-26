@@ -79,6 +79,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsLogQuery greaterOrEqualsColumnDateTime()
  * @method \Cms\Orm\CmsLogQuery lessOrEqualsColumnDateTime()
  */
-class CmsLogQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsLogQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

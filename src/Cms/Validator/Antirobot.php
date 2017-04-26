@@ -15,31 +15,34 @@ namespace Cms\Validator;
  * 
  * @see \Cms\Form\Element\Antirobot
  */
-class Antirobot extends \Mmi\Validator\ValidatorAbstract {
+class Antirobot extends \Mmi\Validator\ValidatorAbstract
+{
 
-	/**
-	 * Komunikat błędnego kodu zabezpieczającego
-	 */
-	const INVALID = 'Kod zabezpieczenia niepoprawny';
+    /**
+     * Komunikat błędnego kodu zabezpieczającego
+     */
+    const INVALID = 'Kod zabezpieczenia niepoprawny';
 
-	/**
-	 * Waliduje poprawność captcha
-	 * @param string $value
-	 * @return boolean
-	 */
-	public function isValid($value) {
-		if (('js-' . self::generateCrc() . '-js') == $value) {
-			return true;
-		}
-		return $this->_error(self::INVALID);
-	}
+    /**
+     * Waliduje poprawność captcha
+     * @param string $value
+     * @return boolean
+     */
+    public function isValid($value)
+    {
+        if (('js-' . self::generateCrc() . '-js') == $value) {
+            return true;
+        }
+        return $this->_error(self::INVALID);
+    }
 
-	/**
-	 * Generowanie unikalnego CRC na dany dzień
-	 * @return integer
-	 */
-	public static function generateCrc() {
-		return crc32(date('Y-m-d') . 'antirobot-crc');
-	}
+    /**
+     * Generowanie unikalnego CRC na dany dzień
+     * @return integer
+     */
+    public static function generateCrc()
+    {
+        return crc32(date('Y-m-d') . 'antirobot-crc');
+    }
 
 }

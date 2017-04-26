@@ -37,6 +37,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsAttributeValueQuery greaterOrEqualsColumnLabel()
  * @method \Cms\Orm\CmsAttributeValueQuery lessOrEqualsColumnLabel()
  */
-class CmsAttributeValueQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsAttributeValueQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

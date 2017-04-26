@@ -79,6 +79,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCommentQuery greaterOrEqualsColumnObjectId()
  * @method \Cms\Orm\CmsCommentQuery lessOrEqualsColumnObjectId()
  */
-class CmsCommentQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsCommentQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

@@ -43,6 +43,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsStatLabelQuery greaterOrEqualsColumnDescription()
  * @method \Cms\Orm\CmsStatLabelQuery lessOrEqualsColumnDescription()
  */
-class CmsStatLabelQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsStatLabelQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

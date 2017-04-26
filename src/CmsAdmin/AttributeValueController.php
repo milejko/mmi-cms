@@ -13,19 +13,21 @@ namespace CmsAdmin;
 /**
  * Kontroler wartości atrybutów
  */
-class AttributeValueController extends Mvc\Controller {
+class AttributeValueController extends Mvc\Controller
+{
 
-	/**
-	 * Usuwanie wartości atrybutu
-	 */
-	public function deleteAction() {
-		$value = (new \Cms\Orm\CmsAttributeValueQuery)->findPk($this->id);
-		//usuwanie wartości
-		if ($value && $value->delete()) {
-			$this->getMessenger()->addMessage('Wartości usunięta', true);
-		}
-		//przekierowanie na atrybut
-		$this->getResponse()->redirect('cmsAdmin', 'attribute', 'edit', ['id' => $value->cmsAttributeId]);
-	}
+    /**
+     * Usuwanie wartości atrybutu
+     */
+    public function deleteAction()
+    {
+        $value = (new \Cms\Orm\CmsAttributeValueQuery)->findPk($this->id);
+        //usuwanie wartości
+        if ($value && $value->delete()) {
+            $this->getMessenger()->addMessage('Wartości usunięta', true);
+        }
+        //przekierowanie na atrybut
+        $this->getResponse()->redirect('cmsAdmin', 'attribute', 'edit', ['id' => $value->cmsAttributeId]);
+    }
 
 }

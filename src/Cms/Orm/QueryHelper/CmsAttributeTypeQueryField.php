@@ -49,6 +49,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsAttributeTypeQuery greaterOrEqualsColumnUploader()
  * @method \Cms\Orm\CmsAttributeTypeQuery lessOrEqualsColumnUploader()
  */
-class CmsAttributeTypeQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsAttributeTypeQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

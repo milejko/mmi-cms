@@ -41,28 +41,31 @@ namespace Cms\Orm;
  * @method CmsAuthRoleRecord findPk($value)
  */
 //</editor-fold>
-class CmsAuthRoleQuery extends \Mmi\Orm\Query {
+class CmsAuthRoleQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_auth_role';
+    protected $_tableName = 'cms_auth_role';
 
-	/**
-	 * Zapytanie po authId
-	 * @param integer $authId
-	 * @return CmsAuthRoleQuery
-	 */
-	public static function byAuthId($authId) {
-		return (new self)
-				->whereCmsAuthId()->equals($authId);
-	}
+    /**
+     * Zapytanie po authId
+     * @param integer $authId
+     * @return CmsAuthRoleQuery
+     */
+    public static function byAuthId($authId)
+    {
+        return (new self)
+                ->whereCmsAuthId()->equals($authId);
+    }
 
-	/**
-	 * Zapytanie po authId z połączoną rolą
-	 * @param integer $authId
-	 * @return CmsAuthRoleQuery
-	 */
-	public static function joinedRoleByAuthId($authId) {
-		return self::byAuthId($authId)
-				->join('cms_role')->on('cms_role_id');
-	}
+    /**
+     * Zapytanie po authId z połączoną rolą
+     * @param integer $authId
+     * @return CmsAuthRoleQuery
+     */
+    public static function joinedRoleByAuthId($authId)
+    {
+        return self::byAuthId($authId)
+                ->join('cms_role')->on('cms_role_id');
+    }
 
 }

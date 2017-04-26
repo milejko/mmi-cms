@@ -145,6 +145,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryQuery greaterOrEqualsColumnDateEnd()
  * @method \Cms\Orm\CmsCategoryQuery lessOrEqualsColumnDateEnd()
  */
-class CmsCategoryQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsCategoryQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

@@ -13,41 +13,43 @@ namespace CmsAdmin\Plugin;
 /**
  * Grid widgetów
  */
-class CategoryWidgetGrid extends \CmsAdmin\Grid\Grid {
+class CategoryWidgetGrid extends \CmsAdmin\Grid\Grid
+{
 
-	public function init() {
+    public function init()
+    {
 
-		//query
-		$this->setQuery((new \Cms\Orm\CmsCategoryWidgetQuery)
-				->orderAscId());
+        //query
+        $this->setQuery((new \Cms\Orm\CmsCategoryWidgetQuery)
+                ->orderAscId());
 
-		//nazwa
-		$this->addColumnText('name')
-			->setLabel('nazwa');
-		
-		$widgets = [null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard(3, '/widget/');
+        //nazwa
+        $this->addColumnText('name')
+            ->setLabel('nazwa');
 
-		//klasa modułu wyświetlania
-		$this->addColumnSelect('mvcParams')
-			->setMultioptions($widgets)
-			->setLabel('moduł wyświetlania');
+        $widgets = [null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard(3, '/widget/');
 
-		//klasa modułu wyświetlania
-		$this->addColumnSelect('mvcPreviewParams')
-			->setMultioptions($widgets)
-			->setLabel('modułu podglądu');
+        //klasa modułu wyświetlania
+        $this->addColumnSelect('mvcParams')
+            ->setMultioptions($widgets)
+            ->setLabel('moduł wyświetlania');
 
-		//klasa forma
-		$this->addColumnText('formClass')
-			->setLabel('klasa formularza konfiguracji');
-		
-		//długość bufora
-		$this->addColumnSelect('cacheLifetime')
-			->setLabel('odświeżanie')
-			->setMultioptions(\Cms\Orm\CmsCategoryWidgetRecord::CACHE_LIFETIMES);
+        //klasa modułu wyświetlania
+        $this->addColumnSelect('mvcPreviewParams')
+            ->setMultioptions($widgets)
+            ->setLabel('modułu podglądu');
 
-		//operacje
-		$this->addColumnOperation();
-	}
+        //klasa forma
+        $this->addColumnText('formClass')
+            ->setLabel('klasa formularza konfiguracji');
+
+        //długość bufora
+        $this->addColumnSelect('cacheLifetime')
+            ->setLabel('odświeżanie')
+            ->setMultioptions(\Cms\Orm\CmsCategoryWidgetRecord::CACHE_LIFETIMES);
+
+        //operacje
+        $this->addColumnOperation();
+    }
 
 }

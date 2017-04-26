@@ -71,8 +71,9 @@ namespace Cms\Orm;
  * @method CmsAttributeRecord findPk($value)
  */
 //</editor-fold>
-class CmsAttributeQuery extends \Mmi\Orm\Query {
+class CmsAttributeQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_attribute';
+    protected $_tableName = 'cms_attribute';
 
 }

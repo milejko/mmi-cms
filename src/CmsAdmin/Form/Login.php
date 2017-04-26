@@ -10,37 +10,40 @@
 
 namespace CmsAdmin\Form;
 
-class Login extends \Mmi\Form\Form {
+class Login extends \Mmi\Form\Form
+{
 
-	public function init() {
+    public function init()
+    {
 
-		$this->addElementText('username')
-			->setLabel('nazwa użytkownika')
-			->setDescription('wpisz swój unikalny identyfikator')
-			->addFilterStringTrim();
+        $this->addElementText('username')
+            ->setLabel('nazwa użytkownika')
+            ->setDescription('wpisz swój unikalny identyfikator')
+            ->addFilterStringTrim();
 
-		$this->addElementPassword('password')
-			->setLabel('hasło')
-			->addValidatorStringLength(4, 128);
+        $this->addElementPassword('password')
+            ->setLabel('hasło')
+            ->addValidatorStringLength(4, 128);
 
-		$this->addElementSubmit('login')
-			->setLabel('zaloguj się');
-	}
+        $this->addElementSubmit('login')
+            ->setLabel('zaloguj się');
+    }
 
-	/**
-	 * Logowanie
-	 * @return boolean
-	 */
-	public function beforeSave() {
-		//brak loginu lub hasła
-		if (!$this->getElement('username')->getValue() || !$this->getElement('password')->getValue()) {
-			return false;
-		}
-		//autoryzacja
-		$auth = \App\Registry::$auth;
-		\App\Registry::$auth->setIdentity($this->getElement('username')->getValue());
-		\App\Registry::$auth->setCredential($this->getElement('password')->getValue());
-		return \App\Registry::$auth->authenticate();
-	}
+    /**
+     * Logowanie
+     * @return boolean
+     */
+    public function beforeSave()
+    {
+        //brak loginu lub hasła
+        if (!$this->getElement('username')->getValue() || !$this->getElement('password')->getValue()) {
+            return false;
+        }
+        //autoryzacja
+        $auth = \App\Registry::$auth;
+        \App\Registry::$auth->setIdentity($this->getElement('username')->getValue());
+        \App\Registry::$auth->setCredential($this->getElement('password')->getValue());
+        return \App\Registry::$auth->authenticate();
+    }
 
 }

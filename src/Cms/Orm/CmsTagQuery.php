@@ -35,18 +35,20 @@ namespace Cms\Orm;
  * @method CmsTagRecord findPk($value)
  */
 //</editor-fold>
-class CmsTagQuery extends \Mmi\Orm\Query {
+class CmsTagQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_tag';
+    protected $_tableName = 'cms_tag';
 
-	/**
-	 * Po nazwie
-	 * @param string $tagName
-	 * @return CmsTagQuery
-	 */
-	public static function byName($tagName) {
-		return (new self)
-				->whereTag()->equals($tagName);
-	}
+    /**
+     * Po nazwie
+     * @param string $tagName
+     * @return CmsTagQuery
+     */
+    public static function byName($tagName)
+    {
+        return (new self)
+                ->whereTag()->equals($tagName);
+    }
 
 }

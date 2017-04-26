@@ -13,23 +13,25 @@ namespace CmsAdmin\Plugin;
 /**
  * Grid typów artykułu
  */
-class CategoryTypeGrid extends \CmsAdmin\Grid\Grid {
+class CategoryTypeGrid extends \CmsAdmin\Grid\Grid
+{
 
-	public function init() {
+    public function init()
+    {
 
-		//domyślne zapytanie
-		$this->setQuery(new \Cms\Orm\CmsCategoryTypeQuery);
-		
-		//nazwa typu
-		$this->addColumnText('name')
-			->setLabel('nazwa');
+        //domyślne zapytanie
+        $this->setQuery(new \Cms\Orm\CmsCategoryTypeQuery);
 
-		//klucz
-		$this->addColumnText('key')
-			->setLabel('klucz');
-		
-		//operacje
-		$this->addColumnOperation();
-	}
+        //nazwa typu
+        $this->addColumnText('name')
+            ->setLabel('nazwa');
+
+        //klucz
+        $this->addColumnText('key')
+            ->setLabel('klucz');
+
+        //operacje
+        $this->addColumnOperation();
+    }
 
 }

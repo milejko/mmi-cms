@@ -71,8 +71,9 @@ namespace Cms\Orm;
  * @method CmsStatDateRecord findPk($value)
  */
 //</editor-fold>
-class CmsStatDateQuery extends \Mmi\Orm\Query {
+class CmsStatDateQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_stat_date';
+    protected $_tableName = 'cms_stat_date';
 
 }

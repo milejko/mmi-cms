@@ -49,6 +49,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryWidgetQuery greaterOrEqualsColumnCacheLifetime()
  * @method \Cms\Orm\CmsCategoryWidgetQuery lessOrEqualsColumnCacheLifetime()
  */
-class CmsCategoryWidgetQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsCategoryWidgetQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

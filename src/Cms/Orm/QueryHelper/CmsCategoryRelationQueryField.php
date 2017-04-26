@@ -37,6 +37,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryRelationQuery greaterOrEqualsColumnObjectId()
  * @method \Cms\Orm\CmsCategoryRelationQuery lessOrEqualsColumnObjectId()
  */
-class CmsCategoryRelationQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsCategoryRelationQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

@@ -91,6 +91,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsContactQuery greaterOrEqualsColumnActive()
  * @method \Cms\Orm\CmsContactQuery lessOrEqualsColumnActive()
  */
-class CmsContactQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsContactQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

@@ -59,8 +59,9 @@ namespace Cms\Orm;
  * @method CmsCategoryWidgetCategoryRecord findPk($value)
  */
 //</editor-fold>
-class CmsCategoryWidgetCategoryQuery extends \Mmi\Orm\Query {
+class CmsCategoryWidgetCategoryQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_category_widget_category';
+    protected $_tableName = 'cms_category_widget_category';
 
 }

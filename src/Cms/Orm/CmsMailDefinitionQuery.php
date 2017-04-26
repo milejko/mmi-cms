@@ -95,32 +95,35 @@ namespace Cms\Orm;
  * @method CmsMailDefinitionRecord findPk($value)
  */
 //</editor-fold>
-class CmsMailDefinitionQuery extends \Mmi\Orm\Query {
+class CmsMailDefinitionQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_mail_definition';
+    protected $_tableName = 'cms_mail_definition';
 
-	/**
-	 * Definicje zgodne z językiem
-	 * @return CmsMailDefinitionQuery
-	 */
-	public static function lang() {
-		if (!\Mmi\App\FrontController::getInstance()->getRequest()->lang) {
-			return (new self);
-		}
-		return (new self)
-				->whereLang()->equals(\Mmi\App\FrontController::getInstance()->getRequest()->lang)
-				->orFieldLang()->equals(null)
-				->orderDescLang();
-	}
+    /**
+     * Definicje zgodne z językiem
+     * @return CmsMailDefinitionQuery
+     */
+    public static function lang()
+    {
+        if (!\Mmi\App\FrontController::getInstance()->getRequest()->lang) {
+            return (new self);
+        }
+        return (new self)
+                ->whereLang()->equals(\Mmi\App\FrontController::getInstance()->getRequest()->lang)
+                ->orFieldLang()->equals(null)
+                ->orderDescLang();
+    }
 
-	/**
-	 * Definicję językowe po nazwie
-	 * @param string $name
-	 * @return CmsMailDefinitionQuery
-	 */
-	public static function langByName($name) {
-		return self::lang()
-				->whereName()->equals($name);
-	}
+    /**
+     * Definicję językowe po nazwie
+     * @param string $name
+     * @return CmsMailDefinitionQuery
+     */
+    public static function langByName($name)
+    {
+        return self::lang()
+                ->whereName()->equals($name);
+    }
 
 }

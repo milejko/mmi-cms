@@ -14,36 +14,40 @@ namespace Cms\Form\Element;
  * Element ElementHtml
  *  
  */
+class Html extends \Mmi\Form\Element\ElementAbstract
+{
 
-class Html extends \Mmi\Form\Element\ElementAbstract {
+    public $element = '';
 
-	public $element = '';
-	
-	/**
-	 * Konstruktor zmienia kolejność renderowania
-	 * @param string $html
-	 */
-	public function __construct($html) {
-		parent::__construct(uniqid());
-		$this->setLabelPostfix('');
-		$this->setIgnore(true);
-		$this->setHtml($html);
-		$this->setRenderingOrder(['fetchField']);
-	}
-	
-	/**
-	 * Ustawia element html
-	 * @param string $format
-	 */
-	public function setHtml($html) {
-		$this->element = $html;
-	}
-	
-	/**
-	 * Buduje pole
-	 * @return string
-	 */
-	public function fetchField() {				
-		return $this->element;
-	}
+    /**
+     * Konstruktor zmienia kolejność renderowania
+     * @param string $html
+     */
+    public function __construct($html)
+    {
+        parent::__construct(uniqid());
+        $this->setLabelPostfix('');
+        $this->setIgnore(true);
+        $this->setHtml($html);
+        $this->setRenderingOrder(['fetchField']);
+    }
+
+    /**
+     * Ustawia element html
+     * @param string $format
+     */
+    public function setHtml($html)
+    {
+        $this->element = $html;
+    }
+
+    /**
+     * Buduje pole
+     * @return string
+     */
+    public function fetchField()
+    {
+        return $this->element;
+    }
+
 }

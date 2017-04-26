@@ -101,8 +101,9 @@ namespace Cms\Orm;
  * @method CmsMailRecord findPk($value)
  */
 //</editor-fold>
-class CmsMailQuery extends \Mmi\Orm\Query {
+class CmsMailQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_mail';
+    protected $_tableName = 'cms_mail';
 
 }

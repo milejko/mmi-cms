@@ -13,33 +13,35 @@ namespace CmsAdmin\Plugin;
 /**
  * Grid wartości atrybutów
  */
-class AttributeValueGrid extends \CmsAdmin\Grid\Grid {
+class AttributeValueGrid extends \CmsAdmin\Grid\Grid
+{
 
-	public function init() {
+    public function init()
+    {
 
-		//zapytanie
-		$this->setQuery(new \Cms\Orm\CmsAttributeValueQuery);
-		$attributeQuery = new \Cms\Orm\CmsAttributeQuery;
+        //zapytanie
+        $this->setQuery(new \Cms\Orm\CmsAttributeValueQuery);
+        $attributeQuery = new \Cms\Orm\CmsAttributeQuery;
 
-		//zapytanie filtrowane ID atrybutu
-		if ($this->getOption('id')) {
-			$this->getQuery()
-				->whereCmsAttributeId()->equals($this->getOption('id'));
-			$attributeQuery->whereId()->equals($this->getOption('id'));
-		}
-		
-		//wartość
-		$this->addColumnText('value')
-			->setLabel('wartość');
-		
-		//etykieta
-		$this->addColumnText('label')
-			->setLabel('etykieta');
-		
-		//operacje
-		$this->addColumnOperation()
-			->setEditParams(['module' => 'cmsAdmin', 'controller' => 'attribute', 'action' => 'edit', 'id' => '%cmsAttributeId%', 'valueId' => '%id%'])
-			->setDeleteParams(['module' => 'cmsAdmin', 'controller' => 'attributeValue', 'action' => 'delete', 'id' => '%id%']);
-	}
+        //zapytanie filtrowane ID atrybutu
+        if ($this->getOption('id')) {
+            $this->getQuery()
+                ->whereCmsAttributeId()->equals($this->getOption('id'));
+            $attributeQuery->whereId()->equals($this->getOption('id'));
+        }
+
+        //wartość
+        $this->addColumnText('value')
+            ->setLabel('wartość');
+
+        //etykieta
+        $this->addColumnText('label')
+            ->setLabel('etykieta');
+
+        //operacje
+        $this->addColumnOperation()
+            ->setEditParams(['module' => 'cmsAdmin', 'controller' => 'attribute', 'action' => 'edit', 'id' => '%cmsAttributeId%', 'valueId' => '%id%'])
+            ->setDeleteParams(['module' => 'cmsAdmin', 'controller' => 'attributeValue', 'action' => 'delete', 'id' => '%id%']);
+    }
 
 }

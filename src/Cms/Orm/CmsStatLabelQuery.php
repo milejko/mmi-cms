@@ -53,18 +53,20 @@ namespace Cms\Orm;
  * @method CmsStatLabelRecord findPk($value)
  */
 //</editor-fold>
-class CmsStatLabelQuery extends \Mmi\Orm\Query {
+class CmsStatLabelQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_stat_label';
+    protected $_tableName = 'cms_stat_label';
 
-	/**
-	 * Po obiekcie
-	 * @param string $object
-	 * @return CmsStatLabelQuery
-	 */
-	public static function byObject($object) {
-		return (new self)
-				->whereObject()->equals($object);
-	}
+    /**
+     * Po obiekcie
+     * @param string $object
+     * @return CmsStatLabelQuery
+     */
+    public static function byObject($object)
+    {
+        return (new self)
+                ->whereObject()->equals($object);
+    }
 
 }

@@ -1,41 +1,41 @@
 {
-	"name": "mmi/mmi-cms",
-	"description": "The CMS written with MMi Framework",
-	"keywords": ["cms", "mmi", "framework"],
-	"license": "MIT",
-	"authors": [
-		{
-			"name": "Mariusz Miłejko",
-			"email": "mariusz@milejko.pl"
-		},
-		{
-			"name": "Bartłomiej Wołos",
-			"email": "funfel@onet.pl"
-		},
-		{
-			"name": "Maciej Pawłowski",
-			"email": "mac@macu.eu"
-		}
-	],
-	"require": {
-		"php": ">=5.6.0",
-		"mmi/mmi": "*",
-		"phpmailer/phpmailer": "~5.2"
-	},
-	"require-dev": {
-		"php-console/php-console": "~3.1"
-	},
-	"autoload": {
-		"psr-4": {
-			"Cms\\": "src/Cms",
-			"CmsAdmin\\": "src/CmsAdmin",
-			"": "src/"
-		}
-	},
-	"minimum-stability": "dev",
-	"extra": {
-		"branch-alias": {
-			"dev-master": "3.0-dev"
-		}
-	}
+    "name": "mmi/mmi-cms",
+    "description": "The CMS written with MMi Framework",
+    "keywords": ["cms", "mmi", "framework"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mariusz Miłejko",
+            "email": "mariusz@milejko.pl"
+        },
+        {
+            "name": "Bartłomiej Wołos",
+            "email": "funfel@onet.pl"
+        },
+        {
+            "name": "Maciej Pawłowski",
+            "email": "mac@macu.eu"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.0",
+        "mmi/mmi": "*",
+        "phpmailer/phpmailer": "~5.2"
+    },
+    "require-dev": {
+        "php-console/php-console": "~3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cms\\": "src/Cms",
+            "CmsAdmin\\": "src/CmsAdmin",
+            "": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.0-dev"
+        }
+    }
 }

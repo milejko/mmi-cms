@@ -11,78 +11,82 @@
 namespace CmsAdmin\Grid\Column;
 
 use Mmi\App\FrontController,
-	Cms\Mvc\ViewHelper\AclAllowed;
+    Cms\Mvc\ViewHelper\AclAllowed;
 
 /**
  * Obsługa requestu
  */
-class CheckboxRequestHandler {
+class CheckboxRequestHandler
+{
 
-	/**
-	 * Obiekt checkboxa
-	 * @var CheckboxColumn
-	 */
-	protected $_checkbox;
+    /**
+     * Obiekt checkboxa
+     * @var CheckboxColumn
+     */
+    protected $_checkbox;
 
-	/**
-	 * Konstruktor przypina obiekt checkboxa
-	 * @param CheckboxColumn $checkbox
-	 */
-	public function __construct(CheckboxColumn $checkbox) {
-		$this->_checkbox = $checkbox;
-	}
+    /**
+     * Konstruktor przypina obiekt checkboxa
+     * @param CheckboxColumn $checkbox
+     */
+    public function __construct(CheckboxColumn $checkbox)
+    {
+        $this->_checkbox = $checkbox;
+    }
 
-	/**
-	 * Obsługa requestu jeśli się pojawił
-	 */
-	public function handleRequest() {
-		//obsługa danych z POST
-		$post = FrontController::getInstance()->getRequest()->getPost();
-		//brak posta
-		if ($post->isEmpty()) {
-			return;
-		}
-		//niedozwolone na ACL (w edycji na polu operacje)
-		if ($this->_checkbox->getGrid()->getColumn('_operation_') && !(new AclAllowed)->aclAllowed($this->_checkbox->getGrid()->getColumn('_operation_')->getOption('editParams'))) {
-			return;
-		}
-		if ($this->_changeRecord($post)) {
-			exit;
-		}
-	}
+    /**
+     * Obsługa requestu jeśli się pojawił
+     */
+    public function handleRequest()
+    {
+        //obsługa danych z POST
+        $post = FrontController::getInstance()->getRequest()->getPost();
+        //brak posta
+        if ($post->isEmpty()) {
+            return;
+        }
+        //niedozwolone na ACL (w edycji na polu operacje)
+        if ($this->_checkbox->getGrid()->getColumn('_operation_') && !(new AclAllowed)->aclAllowed($this->_checkbox->getGrid()->getColumn('_operation_')->getOption('editParams'))) {
+            return;
+        }
+        if ($this->_changeRecord($post)) {
+            exit;
+        }
+    }
 
-	/**
-	 * Zwraca obiekt sortowania na podstawie post
-	 * @param \Mmi\Http\RequestPost $post
-	 * @return boolean
-	 */
-	protected function _changeRecord(\Mmi\Http\RequestPost $post) {
-		//brak danych dla tego checkboxa
-		if ($post->name != $this->_checkbox->getFormColumnName()) {
-			return;
-		}
-		//brak id
-		if (!$post->id || !$post->value) {
-			return;
-		}
-		//wybór rekordu
-		$record = $this->_checkbox->getGrid()
-			->getQuery()
-			->findPk($post->id);
-		//pole leży w tabeli dołączonej
-		if (false !== strpos($fieldName = $this->_checkbox->getName(), '.')) {
-			$recordField = explode('.', $this->_checkbox->getName());
-			//nadpisanie wartości
-			$record = $record->getJoined($recordField[0]);
-			$fieldName = $recordField[1];
-		}
-		//brak property z checkboxa
-		if (!property_exists($record, $fieldName)) {
-			return;
-		}
-		//ustawianie property
-		$record->$fieldName = ($post->checked == 'true') ? $post->value : 0;
-		return $record->save();
-	}
+    /**
+     * Zwraca obiekt sortowania na podstawie post
+     * @param \Mmi\Http\RequestPost $post
+     * @return boolean
+     */
+    protected function _changeRecord(\Mmi\Http\RequestPost $post)
+    {
+        //brak danych dla tego checkboxa
+        if ($post->name != $this->_checkbox->getFormColumnName()) {
+            return;
+        }
+        //brak id
+        if (!$post->id || !$post->value) {
+            return;
+        }
+        //wybór rekordu
+        $record = $this->_checkbox->getGrid()
+            ->getQuery()
+            ->findPk($post->id);
+        //pole leży w tabeli dołączonej
+        if (false !== strpos($fieldName = $this->_checkbox->getName(), '.')) {
+            $recordField = explode('.', $this->_checkbox->getName());
+            //nadpisanie wartości
+            $record = $record->getJoined($recordField[0]);
+            $fieldName = $recordField[1];
+        }
+        //brak property z checkboxa
+        if (!property_exists($record, $fieldName)) {
+            return;
+        }
+        //ustawianie property
+        $record->$fieldName = ($post->checked == 'true') ? $post->value : 0;
+        return $record->save();
+    }
 
 }

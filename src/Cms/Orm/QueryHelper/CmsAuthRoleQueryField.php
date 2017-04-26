@@ -31,6 +31,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsAuthRoleQuery greaterOrEqualsColumnCmsRoleId()
  * @method \Cms\Orm\CmsAuthRoleQuery lessOrEqualsColumnCmsRoleId()
  */
-class CmsAuthRoleQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsAuthRoleQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

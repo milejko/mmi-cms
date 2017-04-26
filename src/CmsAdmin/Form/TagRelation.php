@@ -13,58 +13,61 @@ namespace CmsAdmin\Form;
 /**
  * Klasa formularza relacji tagów
  */
-class TagRelation extends \Mmi\Form\Form {
+class TagRelation extends \Mmi\Form\Form
+{
 
-	public function init() {
-		
-		//tag
-		$this->addElementText('tag')
-			->setLabel('tag')
-			->setRequired()
-			->addFilterStringTrim()
-			->addValidatorStringLength(2, 64);
-		
-		//ustawienie wartości tagu
-		if ($this->getRecord()->cmsTagId && (null !== $tagRecord = (new \Cms\Orm\CmsTagQuery)->findPk($this->getRecord()->cmsTagId))) {
-			$this->getElement('tag')->setValue($tagRecord->tag);
-		}
+    public function init()
+    {
 
-		//obiekt
-		$this->addElementText('object')
-			->setLabel('zasób')
-			->setRequired()
-			->addFilterStringTrim()
-			->addValidatorStringLength(2, 64);
+        //tag
+        $this->addElementText('tag')
+            ->setLabel('tag')
+            ->setRequired()
+            ->addFilterStringTrim()
+            ->addValidatorStringLength(2, 64);
 
-		//id obiektu
-		$this->addElementText('objectId')
-			->setLabel('ID zasobu')
-			->addFilterEmptyToNull()
-			->addValidatorInteger()
-			->addValidatorNumberBetween(0, 100000000);
+        //ustawienie wartości tagu
+        if ($this->getRecord()->cmsTagId && (null !== $tagRecord = (new \Cms\Orm\CmsTagQuery)->findPk($this->getRecord()->cmsTagId))) {
+            $this->getElement('tag')->setValue($tagRecord->tag);
+        }
 
-		$this->addElementSubmit('submit')
-			->setLabel('zapisz relację');
-	}
+        //obiekt
+        $this->addElementText('object')
+            ->setLabel('zasób')
+            ->setRequired()
+            ->addFilterStringTrim()
+            ->addValidatorStringLength(2, 64);
 
-	/**
-	 * Przed zapisem odnalezienie identyfikatora wprowadzonego tagu
-	 * @return boolean
-	 */
-	public function beforeSave() {
-		$tag = $this->getElement('tag')->getValue();
-		//wyszukanie tagu
-		if (null === $tagRecord = (new \Cms\Orm\CmsTagQuery)
-			->whereTag()->equals($tag)
-			->findFirst()) {
-			//utworzenie tagu
-			$tagRecord = new \Cms\Orm\CmsTagRecord;
-			$tagRecord->tag = $tag;
-			$tagRecord->save();
-		}
-		//przypisanie id tagu
-		$this->getRecord()->cmsTagId = $tagRecord->id;
-		return true;
-	}
+        //id obiektu
+        $this->addElementText('objectId')
+            ->setLabel('ID zasobu')
+            ->addFilterEmptyToNull()
+            ->addValidatorInteger()
+            ->addValidatorNumberBetween(0, 100000000);
+
+        $this->addElementSubmit('submit')
+            ->setLabel('zapisz relację');
+    }
+
+    /**
+     * Przed zapisem odnalezienie identyfikatora wprowadzonego tagu
+     * @return boolean
+     */
+    public function beforeSave()
+    {
+        $tag = $this->getElement('tag')->getValue();
+        //wyszukanie tagu
+        if (null === $tagRecord = (new \Cms\Orm\CmsTagQuery)
+            ->whereTag()->equals($tag)
+            ->findFirst()) {
+            //utworzenie tagu
+            $tagRecord = new \Cms\Orm\CmsTagRecord;
+            $tagRecord->tag = $tag;
+            $tagRecord->save();
+        }
+        //przypisanie id tagu
+        $this->getRecord()->cmsTagId = $tagRecord->id;
+        return true;
+    }
 
 }

@@ -13,49 +13,51 @@ namespace CmsAdmin\Plugin;
 /**
  * Grid atrybutów w szablonie artykułu
  */
-class CategoryAttributeRelationGrid extends \CmsAdmin\Grid\Grid {
+class CategoryAttributeRelationGrid extends \CmsAdmin\Grid\Grid
+{
 
-	public function init() {
+    public function init()
+    {
 
-		//domyślne zapytanie
-		$this->setQuery(
-			(new \Cms\Orm\CmsAttributeRelationQuery)
-				->join('cms_attribute')->on('cms_attribute_id')
-				->joinLeft('cms_attribute_value')->on('cms_attribute_value_id')
-				->whereObject()->equals($this->getOption('object'))
-				->andFieldObjectId()->equals($this->getOption('objectId'))
-				->orderAscOrder()
-		);
+        //domyślne zapytanie
+        $this->setQuery(
+            (new \Cms\Orm\CmsAttributeRelationQuery)
+                ->join('cms_attribute')->on('cms_attribute_id')
+                ->joinLeft('cms_attribute_value')->on('cms_attribute_value_id')
+                ->whereObject()->equals($this->getOption('object'))
+                ->andFieldObjectId()->equals($this->getOption('objectId'))
+                ->orderAscOrder()
+        );
 
-		//nazwa typu
-		$this->addColumnText('cms_attribute.name')
-			->setLabel('nazwa');
+        //nazwa typu
+        $this->addColumnText('cms_attribute.name')
+            ->setLabel('nazwa');
 
-		//kolejność
-		$this->addColumnText('order')
-			->setLabel('kolejność');
+        //kolejność
+        $this->addColumnText('order')
+            ->setLabel('kolejność');
 
-		//wartość domyślna
-		$this->addColumnText('cms_attribute_value.value')
-			->setLabel('wartość domyślna');
+        //wartość domyślna
+        $this->addColumnText('cms_attribute_value.value')
+            ->setLabel('wartość domyślna');
 
-		//wymagany
-		$this->addColumnCheckbox('required')
-			->setLabel('wymagany');
+        //wymagany
+        $this->addColumnCheckbox('required')
+            ->setLabel('wymagany');
 
-		//unikalny
-		$this->addColumnCheckbox('unique')
-			->setLabel('unikalny');
+        //unikalny
+        $this->addColumnCheckbox('unique')
+            ->setLabel('unikalny');
 
-		//zmaterializowany
-		$this->addColumnSelect('materialized')
-			->setMultioptions([0 => 'nie', 1 => 'tak', 2 => 'tak, odziedziczony'])
-			->setLabel('zmaterializowany');
+        //zmaterializowany
+        $this->addColumnSelect('materialized')
+            ->setMultioptions([0 => 'nie', 1 => 'tak', 2 => 'tak, odziedziczony'])
+            ->setLabel('zmaterializowany');
 
-		//operacje
-		$this->addColumnOperation()
-			->setDeleteParams(['action' => 'deleteAttributeRelation', 'relationId' => '%id%'])
-			->setEditParams(['action' => 'edit', 'relationId' => '%id%']);
-	}
+        //operacje
+        $this->addColumnOperation()
+            ->setDeleteParams(['action' => 'deleteAttributeRelation', 'relationId' => '%id%'])
+            ->setEditParams(['action' => 'edit', 'relationId' => '%id%']);
+    }
 
 }

@@ -73,6 +73,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsMailServerQuery greaterOrEqualsColumnSsl()
  * @method \Cms\Orm\CmsMailServerQuery lessOrEqualsColumnSsl()
  */
-class CmsMailServerQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsMailServerQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

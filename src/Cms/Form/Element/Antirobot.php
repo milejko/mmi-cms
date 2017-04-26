@@ -13,25 +13,28 @@ namespace Cms\Form\Element;
 /**
  * Element utrudniający wysłanie formularza robotom, poprzez dodanie wartości przepisywanej JS'em
  */
-class Antirobot extends \Mmi\Form\Element\Hidden {
-	
-	/**
-	 * Ignorowanie tego pola, pole obowiązkowe, automatyczna walidacja
-	 */
-	public function __construct($name) {
-		parent::__construct($name);
-		$this->setIgnore()
-			->setRequired()
-			->addValidator(new \Cms\Validator\Antirobot);
-	}
+class Antirobot extends \Mmi\Form\Element\Hidden
+{
 
-	/**
-	 * Buduje pole
-	 * @return string
-	 */
-	public function fetchField() {
-		$this->setValue(\Cms\Validator\Antirobot::generateCrc());
-		return parent::fetchField();
-	}
+    /**
+     * Ignorowanie tego pola, pole obowiązkowe, automatyczna walidacja
+     */
+    public function __construct($name)
+    {
+        parent::__construct($name);
+        $this->setIgnore()
+            ->setRequired()
+            ->addValidator(new \Cms\Validator\Antirobot);
+    }
+
+    /**
+     * Buduje pole
+     * @return string
+     */
+    public function fetchField()
+    {
+        $this->setValue(\Cms\Validator\Antirobot::generateCrc());
+        return parent::fetchField();
+    }
 
 }

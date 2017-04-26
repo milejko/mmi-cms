@@ -2,11 +2,12 @@
 
 namespace Cms\Orm;
 
-class CmsCategoryAclRecord extends \Mmi\Orm\Record {
+class CmsCategoryAclRecord extends \Mmi\Orm\Record
+{
 
-	public $id;
-	public $cmsRoleId;
-	public $cmsCategoryId;
-	public $access;
+    public $id;
+    public $cmsRoleId;
+    public $cmsCategoryId;
+    public $access;
 
 }

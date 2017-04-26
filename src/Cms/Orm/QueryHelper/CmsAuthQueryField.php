@@ -91,6 +91,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsAuthQuery greaterOrEqualsColumnActive()
  * @method \Cms\Orm\CmsAuthQuery lessOrEqualsColumnActive()
  */
-class CmsAuthQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsAuthQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

@@ -13,24 +13,27 @@ namespace CmsAdmin;
 /**
  * Kontroler komentarzy
  */
-class CommentController extends Mvc\Controller {
+class CommentController extends Mvc\Controller
+{
 
-	/**
-	 * Lista komentarzy
-	 */
-	public function indexAction() {
-		$this->view->grid = new \CmsAdmin\Plugin\CommentGrid;
-	}
+    /**
+     * Lista komentarzy
+     */
+    public function indexAction()
+    {
+        $this->view->grid = new \CmsAdmin\Plugin\CommentGrid;
+    }
 
-	/**
-	 * Usuwanie komentarza
-	 */
-	public function deleteAction() {
-		$comment = (new \Cms\Orm\CmsCommentQuery)->findPk($this->id);
-		if ($comment && $comment->delete()) {
-			$this->getMessenger()->addMessage('Poprawnie usunięto artykuł', true);
-		}
-		$this->getResponse()->redirect('cmsAdmin', 'comment');
-	}
+    /**
+     * Usuwanie komentarza
+     */
+    public function deleteAction()
+    {
+        $comment = (new \Cms\Orm\CmsCommentQuery)->findPk($this->id);
+        if ($comment && $comment->delete()) {
+            $this->getMessenger()->addMessage('Poprawnie usunięto artykuł', true);
+        }
+        $this->getResponse()->redirect('cmsAdmin', 'comment');
+    }
 
 }

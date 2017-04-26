@@ -13,14 +13,16 @@ namespace CmsAdmin;
 /**
  * Kontroler logów
  */
-class LogController extends Mvc\Controller {
+class LogController extends Mvc\Controller
+{
 
-	/**
-	 * Lista logów
-	 */
-	public function indexAction() {
-		$grid = new \CmsAdmin\Plugin\LogGrid;
-		$this->view->grid = $grid;
-	}
+    /**
+     * Lista logów
+     */
+    public function indexAction()
+    {
+        $grid = new \CmsAdmin\Plugin\LogGrid;
+        $this->view->grid = $grid;
+    }
 
 }

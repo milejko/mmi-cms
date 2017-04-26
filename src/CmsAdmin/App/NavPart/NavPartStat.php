@@ -10,23 +10,25 @@
 
 namespace CmsAdmin\App\NavPart;
 
-class NavPartStat extends \Mmi\Navigation\NavigationConfig {
+class NavPartStat extends \Mmi\Navigation\NavigationConfig
+{
 
-	public static function getMenu() {
-		return (new \Mmi\Navigation\NavigationConfigElement)
-				->setLabel('Statystyki')
-				->setModule('cmsAdmin')
-				->setController('stat')
-				->addChild((new \Mmi\Navigation\NavigationConfigElement)
-					->setLabel('Nazwy')
-					->setModule('cmsAdmin')
-					->setController('stat')
-					->setAction('label')
-					->addChild((new \Mmi\Navigation\NavigationConfigElement)
-						->setLabel('Dodaj')
-						->setModule('cmsAdmin')
-						->setController('stat')
-						->setAction('edit')));
-	}
+    public static function getMenu()
+    {
+        return (new \Mmi\Navigation\NavigationConfigElement)
+                ->setLabel('Statystyki')
+                ->setModule('cmsAdmin')
+                ->setController('stat')
+                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                    ->setLabel('Nazwy')
+                    ->setModule('cmsAdmin')
+                    ->setController('stat')
+                    ->setAction('label')
+                    ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                        ->setLabel('Dodaj')
+                        ->setModule('cmsAdmin')
+                        ->setController('stat')
+                        ->setAction('edit')));
+    }
 
 }

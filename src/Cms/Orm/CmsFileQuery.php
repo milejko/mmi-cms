@@ -113,86 +113,92 @@ namespace Cms\Orm;
  * @method CmsFileRecord findPk($value)
  */
 //</editor-fold>
-class CmsFileQuery extends \Mmi\Orm\Query {
+class CmsFileQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_file';
+    protected $_tableName = 'cms_file';
 
-	/**
-	 * Po obiekcie i id
-	 * @param string $object
-	 * @param string $objectId
-	 * @return CmsFileQuery
-	 */
-	public static function byObject($object = null, $objectId = null) {
-		//zapytanie o pliki po obiektach i id
-		return (new self)
-				->whereObject()->equals($object)
-				->andFieldObjectId()->equals($objectId)
-				//posortowane po kolejności
-				->orderAscOrder()
-				//sortowanie po ID, jeśli ordery są NULL
-				->orderAscId();
-	}
-	
-	/**
-	 * Po obiekcie i id
-	 * @param string $object
-	 * @param string $objectId
-	 * @param string $class
-	 * @return CmsFileQuery
-	 */
-	public static function byObjectAndClass($object = null, $objectId = null, $class = 'image') {
-		//zapytanie o pliki po obiektach i id
-		return (new self)
-				->whereObject()->equals($object)
-				->andFieldObjectId()->equals($objectId)
-				->whereClass()->equals($class)
-				//posortowane po kolejności
-				->orderAscOrder()
-				//sortowanie po ID, jeśli ordery są NULL
-				->orderAscId();
-	}
+    /**
+     * Po obiekcie i id
+     * @param string $object
+     * @param string $objectId
+     * @return CmsFileQuery
+     */
+    public static function byObject($object = null, $objectId = null)
+    {
+        //zapytanie o pliki po obiektach i id
+        return (new self)
+                ->whereObject()->equals($object)
+                ->andFieldObjectId()->equals($objectId)
+                //posortowane po kolejności
+                ->orderAscOrder()
+                //sortowanie po ID, jeśli ordery są NULL
+                ->orderAscId();
+    }
 
-	/**
-	 * Zapytanie o obrazy po obiektach i id
-	 * @param string $object
-	 * @param string $objectId
-	 * @return CmsFileQuery
-	 */
-	public static function imagesByObject($object = null, $objectId = null) {
-		//zapytanie po obiekcie
-		return self::byObject($object, $objectId)
-				->whereClass()->equals('image');
-	}
+    /**
+     * Po obiekcie i id
+     * @param string $object
+     * @param string $objectId
+     * @param string $class
+     * @return CmsFileQuery
+     */
+    public static function byObjectAndClass($object = null, $objectId = null, $class = 'image')
+    {
+        //zapytanie o pliki po obiektach i id
+        return (new self)
+                ->whereObject()->equals($object)
+                ->andFieldObjectId()->equals($objectId)
+                ->whereClass()->equals($class)
+                //posortowane po kolejności
+                ->orderAscOrder()
+                //sortowanie po ID, jeśli ordery są NULL
+                ->orderAscId();
+    }
 
-	/**
-	 * Przyklejone po obiekcie i id
-	 * @param string $object
-	 * @param string $objectId
-	 * @param string $class klasa
-	 * @return CmsFileQuery
-	 */
-	public static function stickyByObject($object = null, $objectId = null, $class = null) {
-		//zapytanie po obiekcie
-		$q = self::byObject($object, $objectId)
-				->whereSticky()->equals(1);
-		//dodawanie klasy jeśli wyspecyfikowana
-		if (null !== $class) {
-			$q->andFieldClass()->equals($class);
-		}
-		return $q;
-	}
+    /**
+     * Zapytanie o obrazy po obiektach i id
+     * @param string $object
+     * @param string $objectId
+     * @return CmsFileQuery
+     */
+    public static function imagesByObject($object = null, $objectId = null)
+    {
+        //zapytanie po obiekcie
+        return self::byObject($object, $objectId)
+                ->whereClass()->equals('image');
+    }
 
-	/**
-	 * Nie obrazy po obiekcie i id
-	 * @param string $object
-	 * @param string $objectId
-	 * @return CmsFileQuery
-	 */
-	public static function notImagesByObject($object = null, $objectId = null) {
-		//zapytanie po obiekcie i id
-		return self::byObject($object, $objectId)
-				->whereClass()->notEquals('image');
-	}
+    /**
+     * Przyklejone po obiekcie i id
+     * @param string $object
+     * @param string $objectId
+     * @param string $class klasa
+     * @return CmsFileQuery
+     */
+    public static function stickyByObject($object = null, $objectId = null, $class = null)
+    {
+        //zapytanie po obiekcie
+        $q = self::byObject($object, $objectId)
+                ->whereSticky()->equals(1);
+        //dodawanie klasy jeśli wyspecyfikowana
+        if (null !== $class) {
+            $q->andFieldClass()->equals($class);
+        }
+        return $q;
+    }
+
+    /**
+     * Nie obrazy po obiekcie i id
+     * @param string $object
+     * @param string $objectId
+     * @return CmsFileQuery
+     */
+    public static function notImagesByObject($object = null, $objectId = null)
+    {
+        //zapytanie po obiekcie i id
+        return self::byObject($object, $objectId)
+                ->whereClass()->notEquals('image');
+    }
 
 }

@@ -23,19 +23,21 @@ namespace CmsAdmin\Grid\Column;
  * @method self setFilterMethodSearch() ustawia metodę filtracji na wyszukaj
  * @method self setFilterMethodNull() ustawia metodę filtracji na równe/różne null
  */
-class TextColumn extends ColumnAbstract {
+class TextColumn extends ColumnAbstract
+{
 
-	/**
-	 * Renderuje pole tekstowe
-	 * @param \Mmi\Orm\RecordRo $record
-	 * @return string
-	 */
-	public function renderCell(\Mmi\Orm\RecordRo $record) {
-		$value = (new \Mmi\Filter\Escape)->filter($this->getValueFromRecord($record));
-		$truncated = (new \Mmi\Filter\Truncate)->filter($value);
-		return ($value == $truncated) ? $value : '<span title="' . $value . '">' .
-			$truncated .
-			'</span>';
-	}
+    /**
+     * Renderuje pole tekstowe
+     * @param \Mmi\Orm\RecordRo $record
+     * @return string
+     */
+    public function renderCell(\Mmi\Orm\RecordRo $record)
+    {
+        $value = (new \Mmi\Filter\Escape)->filter($this->getValueFromRecord($record));
+        $truncated = (new \Mmi\Filter\Truncate)->filter($value);
+        return ($value == $truncated) ? $value : '<span title="' . $value . '">' .
+            $truncated .
+            '</span>';
+    }
 
 }

@@ -13,32 +13,34 @@ namespace CmsAdmin\Plugin;
 /**
  * Grid tekstów stałych
  */
-class TextGrid extends \CmsAdmin\Grid\Grid {
+class TextGrid extends \CmsAdmin\Grid\Grid
+{
 
-	public function init() {
+    public function init()
+    {
 
-		//zapytanie
-		$this->setQuery(\Cms\Orm\CmsTextQuery::lang()
-				->orderAscKey());
+        //zapytanie
+        $this->setQuery(\Cms\Orm\CmsTextQuery::lang()
+                ->orderAscKey());
 
-		//klucz
-		$this->addColumnText('key')
-			->setLabel('klucz');
-		
-		//język
-		$this->addColumnText('lang')
-			->setLabel('język');
+        //klucz
+        $this->addColumnText('key')
+            ->setLabel('klucz');
 
-		//zawartość
-		$this->addColumnText('content')
-			->setLabel('treść');
+        //język
+        $this->addColumnText('lang')
+            ->setLabel('język');
 
-		//data modyfikacji
-		$this->addColumnText('dateModify')
-			->setLabel('data modyfikacji');
+        //zawartość
+        $this->addColumnText('content')
+            ->setLabel('treść');
 
-		//operacje
-		$this->addColumnOperation();
-	}
+        //data modyfikacji
+        $this->addColumnText('dateModify')
+            ->setLabel('data modyfikacji');
+
+        //operacje
+        $this->addColumnOperation();
+    }
 
 }

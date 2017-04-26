@@ -13,54 +13,59 @@ namespace CmsAdmin;
 /**
  * Kontroler użytkowników
  */
-class AuthController extends Mvc\Controller {
+class AuthController extends Mvc\Controller
+{
 
-	/**
-	 * Lista użytkowników
-	 */
-	public function indexAction() {
-		$this->view->grid = new \CmsAdmin\Plugin\AuthGrid;
-	}
+    /**
+     * Lista użytkowników
+     */
+    public function indexAction()
+    {
+        $this->view->grid = new \CmsAdmin\Plugin\AuthGrid;
+    }
 
-	/**
-	 * Edycja użytkownika
-	 */
-	public function editAction() {
-		if (\App\Registry::$config->ldap) {
-			$this->view->ldap = \App\Registry::$config->ldap->active;
-		}
-		
-		$form = new \CmsAdmin\Form\Auth(new \Cms\Orm\CmsAuthRecord($this->id));
-		if ($form->isSaved()) {
-			$this->getMessenger()->addMessage('Poprawnie zapisano użytkownika', true);
-			$this->getResponse()->redirect('cmsAdmin', 'auth');
-		}
-		$this->view->authForm = $form;
-	}
+    /**
+     * Edycja użytkownika
+     */
+    public function editAction()
+    {
+        if (\App\Registry::$config->ldap) {
+            $this->view->ldap = \App\Registry::$config->ldap->active;
+        }
 
-	/**
-	 * Kasowanie użytkownika
-	 */
-	public function deleteAction() {
-		$auth = (new \Cms\Orm\CmsAuthQuery)->findPk($this->id);
-		if ($auth && $auth->delete()) {
-			$this->getMessenger()->addMessage('Poprawnie skasowano użytkownika', true);
-		}
-		$this->getResponse()->redirect('cmsAdmin', 'auth');
-	}
+        $form = new \CmsAdmin\Form\Auth(new \Cms\Orm\CmsAuthRecord($this->id));
+        if ($form->isSaved()) {
+            $this->getMessenger()->addMessage('Poprawnie zapisano użytkownika', true);
+            $this->getResponse()->redirect('cmsAdmin', 'auth');
+        }
+        $this->view->authForm = $form;
+    }
 
-	/**
-	 * Akcja jsonowa wyszukująca użytkowników w LDAP
-	 */
-	public function autocompleteAction() {
-		//typ odpowiedzi
-		$this->getResponse()->setTypeJson();
-		//za krótki ciąg
-		if (strlen(trim($this->term)) < 3) {
-			return json_encode([]);
-		}
-		//zwraca odpowiedz JSON
-		return json_encode((new \Cms\Model\Auth)->ldapAutocomplete($this->term . '*'));
-	}
-	
+    /**
+     * Kasowanie użytkownika
+     */
+    public function deleteAction()
+    {
+        $auth = (new \Cms\Orm\CmsAuthQuery)->findPk($this->id);
+        if ($auth && $auth->delete()) {
+            $this->getMessenger()->addMessage('Poprawnie skasowano użytkownika', true);
+        }
+        $this->getResponse()->redirect('cmsAdmin', 'auth');
+    }
+
+    /**
+     * Akcja jsonowa wyszukująca użytkowników w LDAP
+     */
+    public function autocompleteAction()
+    {
+        //typ odpowiedzi
+        $this->getResponse()->setTypeJson();
+        //za krótki ciąg
+        if (strlen(trim($this->term)) < 3) {
+            return json_encode([]);
+        }
+        //zwraca odpowiedz JSON
+        return json_encode((new \Cms\Model\Auth)->ldapAutocomplete($this->term . '*'));
+    }
+
 }

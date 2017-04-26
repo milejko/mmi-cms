@@ -13,23 +13,25 @@ namespace CmsAdmin\Plugin;
 /**
  * Grid grup atrybutów
  */
-class AttributeGroupGrid extends \CmsAdmin\Grid\Grid {
+class AttributeGroupGrid extends \CmsAdmin\Grid\Grid
+{
 
-	public function init() {
+    public function init()
+    {
 
-		//zapytanie
-		$this->setQuery(new \Cms\Orm\CmsAttributeGroupQuery);
+        //zapytanie
+        $this->setQuery(new \Cms\Orm\CmsAttributeGroupQuery);
 
-		//nazwa taga
-		$this->addColumnText('name')
-			->setLabel('nazwa');
+        //nazwa taga
+        $this->addColumnText('name')
+            ->setLabel('nazwa');
 
-		//klasa pola
-		$this->addColumnText('description')
-			->setLabel('opis');
+        //klasa pola
+        $this->addColumnText('description')
+            ->setLabel('opis');
 
-		//operacje
-		$this->addColumnOperation();
-	}
+        //operacje
+        $this->addColumnOperation();
+    }
 
 }

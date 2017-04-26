@@ -36,6 +36,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsTagLinkQuery greaterOrEqualsColumnObjectId()
  * @method \Cms\Orm\CmsTagLinkQuery lessOrEqualsColumnObjectId()
  */
-class CmsTagLinkQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsTagLinkQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

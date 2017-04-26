@@ -13,30 +13,31 @@ namespace Cms\App;
 /**
  * Klasa rejestru aplikacji CMS
  */
-abstract class CmsKernelRegistry extends \Mmi\App\KernelRegistry {
+abstract class CmsKernelRegistry extends \Mmi\App\KernelRegistry
+{
 
-	/**
-	 * Obiekt ACL
-	 * @var \Mmi\Security\Acl
-	 */
-	public static $acl;
+    /**
+     * Obiekt ACL
+     * @var \Mmi\Security\Acl
+     */
+    public static $acl;
 
-	/**
-	 * Obiekt autoryzacji
-	 * @var \Mmi\Security\Auth
-	 */
-	public static $auth;
+    /**
+     * Obiekt autoryzacji
+     * @var \Mmi\Security\Auth
+     */
+    public static $auth;
 
-	/**
-	 * Obiekt navigacji
-	 * @var \Mmi\Navigation\Navigation
-	 */
-	public static $navigation;
+    /**
+     * Obiekt navigacji
+     * @var \Mmi\Navigation\Navigation
+     */
+    public static $navigation;
 
-	/**
-	 * Obiekt translacji
-	 * @var \Mmi\Translate
-	 */
-	public static $translate;
+    /**
+     * Obiekt translacji
+     * @var \Mmi\Translate
+     */
+    public static $translate;
 
 }

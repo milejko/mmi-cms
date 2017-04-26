@@ -10,27 +10,29 @@
 
 namespace Cms\Form;
 
-class Comment extends \Mmi\Form\Form {
+class Comment extends \Mmi\Form\Form
+{
 
-	public function init() {
-		$this->_record->object = $this->getOption('object');
-		$this->_record->objectId = $this->getOption('objectId');
+    public function init()
+    {
+        $this->_record->object = $this->getOption('object');
+        $this->_record->objectId = $this->getOption('objectId');
 
-		$this->addElementText('title')
-			->setLabel('tytuł');
+        $this->addElementText('title')
+            ->setLabel('tytuł');
 
-		$this->addElementTextarea('text')
-			->setRequired()
-			->addValidatorNotEmpty()
-			->setLabel('komentarz');
+        $this->addElementTextarea('text')
+            ->setRequired()
+            ->addValidatorNotEmpty()
+            ->setLabel('komentarz');
 
-		if (!\App\Registry::$auth->hasIdentity()) {
-			$this->addElementText('signature')
-				->setLabel('podpis');
-		}
+        if (!\App\Registry::$auth->hasIdentity()) {
+            $this->addElementText('signature')
+                ->setLabel('podpis');
+        }
 
-		$this->addElementSubmit('submit')
-			->setLabel('dodaj komentarz');
-	}
+        $this->addElementSubmit('submit')
+            ->setLabel('dodaj komentarz');
+    }
 
 }

@@ -13,127 +13,129 @@ namespace CmsAdmin\Form;
 /**
  * Formularz edycji szegółów kategorii
  */
-class Category extends \Cms\Form\AttributeForm {
+class Category extends \Cms\Form\AttributeForm
+{
 
-	public function init() {
+    public function init()
+    {
 
-		//szablony/typy (jeśli istnieją)
-		if ([] !== $types = (new \Cms\Orm\CmsCategoryTypeQuery)->orderAscName()->findPairs('id', 'name')) {
-			$this->addElementSelect('cmsCategoryTypeId')
-				->setLabel('szablon strony')
-				->addFilterEmptyToNull()
-				->setMultioptions([null => 'Domyślny'] + $types);
-		}
+        //szablony/typy (jeśli istnieją)
+        if ([] !== $types = (new \Cms\Orm\CmsCategoryTypeQuery)->orderAscName()->findPairs('id', 'name')) {
+            $this->addElementSelect('cmsCategoryTypeId')
+                ->setLabel('szablon strony')
+                ->addFilterEmptyToNull()
+                ->setMultioptions([null => 'Domyślny'] + $types);
+        }
 
-		//nazwa kategorii
-		$this->addElementText('name')
-			->setLabel('nazwa')
-			->setRequired()
-			->addFilterStringTrim()
-			->addValidatorStringLength(2, 128);
+        //nazwa kategorii
+        $this->addElementText('name')
+            ->setLabel('nazwa')
+            ->setRequired()
+            ->addFilterStringTrim()
+            ->addValidatorStringLength(2, 128);
 
-		//początek publikacji
-		$this->addElementDateTimePicker('dateStart')
-			->setLabel('początek publikacji')
-			->setDateMin(date('Y-m-d H:i'));
+        //początek publikacji
+        $this->addElementDateTimePicker('dateStart')
+            ->setLabel('początek publikacji')
+            ->setDateMin(date('Y-m-d H:i'));
 
-		//zakończenie publikacji
-		$this->addElementDateTimePicker('dateEnd')
-			->setLabel('zakończenie publikacji')
-			->setDateMin(date('Y-m-d H:i'))
-			->setDateMinField($this->getElement('dateStart'));
-		
-		//ustawienie bufora
-		$this->addElementSelect('cacheLifetime')
-			->setLabel('odświeżanie')
-			->setMultioptions([null => 'domyślne dla szablonu'] + \Cms\Orm\CmsCategoryRecord::CACHE_LIFETIMES)
-			->addFilterEmptyToNull();
+        //zakończenie publikacji
+        $this->addElementDateTimePicker('dateEnd')
+            ->setLabel('zakończenie publikacji')
+            ->setDateMin(date('Y-m-d H:i'))
+            ->setDateMinField($this->getElement('dateStart'));
 
-		//aktywna
-		$this->addElementCheckbox('active')
-			->setChecked()
-			->setLabel('włączona');
+        //ustawienie bufora
+        $this->addElementSelect('cacheLifetime')
+            ->setLabel('odświeżanie')
+            ->setMultioptions([null => 'domyślne dla szablonu'] + \Cms\Orm\CmsCategoryRecord::CACHE_LIFETIMES)
+            ->addFilterEmptyToNull();
 
-		//zapis
-		$this->addElementSubmit('submit1')
-			->setLabel('zapisz');
+        //aktywna
+        $this->addElementCheckbox('active')
+            ->setChecked()
+            ->setLabel('włączona');
 
-		//SEO
-		//nazwa kategorii
-		$this->addElementText('title')
-			->setLabel('meta tytuł')
-			->setDescription('jeśli brak, użyta zostanie kaskada złożona nazw')
-			->addFilterStringTrim()
-			->addValidatorStringLength(2, 128);
+        //zapis
+        $this->addElementSubmit('submit1')
+            ->setLabel('zapisz');
 
-		//meta description
-		$this->addElementTextarea('description')
-			->setLabel('meta opis');
+        //SEO
+        //nazwa kategorii
+        $this->addElementText('title')
+            ->setLabel('meta tytuł')
+            ->setDescription('jeśli brak, użyta zostanie kaskada złożona nazw')
+            ->addFilterStringTrim()
+            ->addValidatorStringLength(2, 128);
 
-		$view = \Mmi\App\FrontController::getInstance()->getView();
+        //meta description
+        $this->addElementTextarea('description')
+            ->setLabel('meta opis');
 
-		//własny uri
-		$this->addElementText('customUri')
-			->setLabel('własny adres strony')
-			//adres domyślny (bez baseUrl)
-			->setDescription('domyślnie: ' . substr($view->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->getRecord()->uri], true), strlen($view->baseUrl) + 1))
-			->addFilterStringTrim()
-			->addFilterEmptyToNull()
-			->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryQuery, 'uri')
-			->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryQuery, 'customUri', $this->getRecord()->id)
-			->addValidatorStringLength(1, 255);
+        $view = \Mmi\App\FrontController::getInstance()->getView();
 
-		//blank
-		$this->addElementCheckbox('follow')
-			->setChecked()
-			->setLabel('widoczna dla wyszukiwarek');
+        //własny uri
+        $this->addElementText('customUri')
+            ->setLabel('własny adres strony')
+            //adres domyślny (bez baseUrl)
+            ->setDescription('domyślnie: ' . substr($view->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->getRecord()->uri], true), strlen($view->baseUrl) + 1))
+            ->addFilterStringTrim()
+            ->addFilterEmptyToNull()
+            ->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryQuery, 'uri')
+            ->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryQuery, 'customUri', $this->getRecord()->id)
+            ->addValidatorStringLength(1, 255);
 
-		//zapis
-		$this->addElementSubmit('submit2')
-			->setLabel('zapisz');
+        //blank
+        $this->addElementCheckbox('follow')
+            ->setChecked()
+            ->setLabel('widoczna dla wyszukiwarek');
 
-		//Treść
-		//atrybuty
-		$this->initAttributes('cmsCategoryType', $this->getRecord()->cmsCategoryTypeId, 'category');
+        //zapis
+        $this->addElementSubmit('submit2')
+            ->setLabel('zapisz');
 
-		//jeśli wstawione, dodany button z zapisem
-		$this->addElementSubmit('submit3')
-			->setLabel('zapisz');
+        //Treść
+        //atrybuty
+        $this->initAttributes('cmsCategoryType', $this->getRecord()->cmsCategoryTypeId, 'category');
 
-		//Zaawansowane
-		//przekierowanie na link
-		$this->addElementText('redirectUri')
-			->setLabel('przekierowanie na adres')
-			->setDescription('np. http://www.google.pl')
-			->addFilterStringTrim();
+        //jeśli wstawione, dodany button z zapisem
+        $this->addElementSubmit('submit3')
+            ->setLabel('zapisz');
 
-		//przekierowanie na moduł
-		$this->addElementText('mvcParams')
-			->setLabel('przekierowanie na moduł CMS')
-			->setDescription('np. module=blog&controller=index&action=index')
-			->addFilterStringTrim()
-			->addValidatorRegex('@module\=[a-zA-Z0-9\&\=]+@', 'niepoprawny adres modułu cms');
-		
-		//config JSON
-		$this->addElementText('configJson')
-			->setLabel('dodatkowe flagi')
-			->setDescription('format JSON')
-			->addValidatorJson()
-			->addFilterStringTrim();
+        //Zaawansowane
+        //przekierowanie na link
+        $this->addElementText('redirectUri')
+            ->setLabel('przekierowanie na adres')
+            ->setDescription('np. http://www.google.pl')
+            ->addFilterStringTrim();
 
-		//https
-		$this->addElementSelect('https')
-			->setMultioptions([null => 'bez zmian', '0' => 'wymuś brak https', 1 => 'wymuś https'])
-			->addFilterEmptyToNull()
-			->setLabel('https');
+        //przekierowanie na moduł
+        $this->addElementText('mvcParams')
+            ->setLabel('przekierowanie na moduł CMS')
+            ->setDescription('np. module=blog&controller=index&action=index')
+            ->addFilterStringTrim()
+            ->addValidatorRegex('@module\=[a-zA-Z0-9\&\=]+@', 'niepoprawny adres modułu cms');
 
-		//blank
-		$this->addElementCheckbox('blank')
-			->setLabel('otwieranie w nowym oknie');
+        //config JSON
+        $this->addElementText('configJson')
+            ->setLabel('dodatkowe flagi')
+            ->setDescription('format JSON')
+            ->addValidatorJson()
+            ->addFilterStringTrim();
 
-		//zapis
-		$this->addElementSubmit('submit4')
-			->setLabel('zapisz');
-	}
+        //https
+        $this->addElementSelect('https')
+            ->setMultioptions([null => 'bez zmian', '0' => 'wymuś brak https', 1 => 'wymuś https'])
+            ->addFilterEmptyToNull()
+            ->setLabel('https');
+
+        //blank
+        $this->addElementCheckbox('blank')
+            ->setLabel('otwieranie w nowym oknie');
+
+        //zapis
+        $this->addElementSubmit('submit4')
+            ->setLabel('zapisz');
+    }
 
 }

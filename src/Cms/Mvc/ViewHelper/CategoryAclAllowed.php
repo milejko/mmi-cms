@@ -13,16 +13,18 @@ namespace Cms\Mvc\ViewHelper;
 /**
  * Helper ACL kategorii (uprawnień)
  */
-class CategoryAclAllowed extends \Mmi\Mvc\ViewHelper\HelperAbstract {
+class CategoryAclAllowed extends \Mmi\Mvc\ViewHelper\HelperAbstract
+{
 
-	/**
-	 * Zwraca czy dozwolone na ACL
-	 * @param array $categoryId
-	 * @return boolean
-	 */
-	public function categoryAclAllowed($categoryId) {
-		//zwrot z ACL kategorii
-		return (new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed(\App\Registry::$auth->getRoles(), $categoryId);
-	}
+    /**
+     * Zwraca czy dozwolone na ACL
+     * @param array $categoryId
+     * @return boolean
+     */
+    public function categoryAclAllowed($categoryId)
+    {
+        //zwrot z ACL kategorii
+        return (new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed(\App\Registry::$auth->getRoles(), $categoryId);
+    }
 
 }

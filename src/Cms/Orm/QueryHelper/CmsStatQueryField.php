@@ -37,6 +37,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsStatQuery greaterOrEqualsColumnDateTime()
  * @method \Cms\Orm\CmsStatQuery lessOrEqualsColumnDateTime()
  */
-class CmsStatQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsStatQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

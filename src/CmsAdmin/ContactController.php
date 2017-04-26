@@ -13,66 +13,73 @@ namespace CmsAdmin;
 /**
  * Kontroler kontaktów
  */
-class ContactController extends Mvc\Controller {
+class ContactController extends Mvc\Controller
+{
 
-	/**
-	 * Lista zgłoszeń
-	 */
-	public function indexAction() {
-		$this->view->grid = new \CmsAdmin\Plugin\ContactGrid;
-	}
+    /**
+     * Lista zgłoszeń
+     */
+    public function indexAction()
+    {
+        $this->view->grid = new \CmsAdmin\Plugin\ContactGrid;
+    }
 
-	/**
-	 * Lista tematów zgłoszeń
-	 */
-	public function subjectAction() {
-		$this->view->grid = new \CmsAdmin\Plugin\ContactOptionGrid;
-	}
+    /**
+     * Lista tematów zgłoszeń
+     */
+    public function subjectAction()
+    {
+        $this->view->grid = new \CmsAdmin\Plugin\ContactOptionGrid;
+    }
 
-	/**
-	 * Edycja tematu
-	 */
-	public function editSubjectAction() {
-		$form = new \CmsAdmin\Form\Contact\Option(new \Cms\Orm\CmsContactOptionRecord($this->id));
-		if ($form->isSaved()) {
-			$this->getMessenger()->addMessage('Poprawnie zapisano temat kontaktu', true);
-			$this->getResponse()->redirect('cmsAdmin', 'contact', 'subject');
-		}
-		$this->view->optionForm = $form;
-	}
+    /**
+     * Edycja tematu
+     */
+    public function editSubjectAction()
+    {
+        $form = new \CmsAdmin\Form\Contact\Option(new \Cms\Orm\CmsContactOptionRecord($this->id));
+        if ($form->isSaved()) {
+            $this->getMessenger()->addMessage('Poprawnie zapisano temat kontaktu', true);
+            $this->getResponse()->redirect('cmsAdmin', 'contact', 'subject');
+        }
+        $this->view->optionForm = $form;
+    }
 
-	/**
-	 * Usuwanie tematu
-	 */
-	public function deleteSubjectAction() {
-		$option = (new \Cms\Orm\CmsContactOptionQuery)->findPk($this->id);
-		if ($option && $option->delete()) {
-			$this->getMessenger()->addMessage('Poprawnie usunięto temat', true);
-		}
-		$this->getResponse()->redirect('cmsAdmin', 'contact', 'subject');
-	}
+    /**
+     * Usuwanie tematu
+     */
+    public function deleteSubjectAction()
+    {
+        $option = (new \Cms\Orm\CmsContactOptionQuery)->findPk($this->id);
+        if ($option && $option->delete()) {
+            $this->getMessenger()->addMessage('Poprawnie usunięto temat', true);
+        }
+        $this->getResponse()->redirect('cmsAdmin', 'contact', 'subject');
+    }
 
-	/**
-	 * Usuwanie zgłoszenia
-	 */
-	public function deleteAction() {
-		$contact = (new \Cms\Orm\CmsContactQuery)->findPk($this->id);
-		if ($contact && $contact->delete()) {
-			$this->getMessenger()->addMessage('Poprawnie usunięto wiadomość', true);
-		}
-		$this->getResponse()->redirect('cmsAdmin', 'contact');
-	}
+    /**
+     * Usuwanie zgłoszenia
+     */
+    public function deleteAction()
+    {
+        $contact = (new \Cms\Orm\CmsContactQuery)->findPk($this->id);
+        if ($contact && $contact->delete()) {
+            $this->getMessenger()->addMessage('Poprawnie usunięto wiadomość', true);
+        }
+        $this->getResponse()->redirect('cmsAdmin', 'contact');
+    }
 
-	/**
-	 * Edycja/odpowiedź na zgłoszenie
-	 */
-	public function editAction() {
-		$form = new \CmsAdmin\Form\Contact(new \Cms\Orm\CmsContactRecord($this->id));
-		if ($form->isSaved()) {
-			$this->getMessenger()->addMessage('Wysłano odpowiedź na wiadomość', true);
-			$this->getResponse()->redirect('cmsAdmin', 'contact');
-		}
-		$this->view->contactForm = $form;
-	}
+    /**
+     * Edycja/odpowiedź na zgłoszenie
+     */
+    public function editAction()
+    {
+        $form = new \CmsAdmin\Form\Contact(new \Cms\Orm\CmsContactRecord($this->id));
+        if ($form->isSaved()) {
+            $this->getMessenger()->addMessage('Wysłano odpowiedź na wiadomość', true);
+            $this->getResponse()->redirect('cmsAdmin', 'contact');
+        }
+        $this->view->contactForm = $form;
+    }
 
 }

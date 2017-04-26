@@ -1,20 +1,20 @@
 /** Style dla elementu formularza Tree **/
 form div.field.tree div.tree_structure {
-	padding: 0;
-	height: 200px;
-	overflow-y: scroll;
-	margin: 5px 0;
+    padding: 0;
+    height: 200px;
+    overflow-y: scroll;
+    margin: 5px 0;
 }
 
 form div.field.tree div.tree_structure ul {
-	margin: 0;
+    margin: 0;
 }
 
 form div.field.tree div.tree_structure ul li {
-	border: none;
+    border: none;
 }
 
 form div.field.tree div.tree_container input.tree_clear {
-	max-width: 200px;
-	margin: 5px 0;
+    max-width: 200px;
+    margin: 5px 0;
 }

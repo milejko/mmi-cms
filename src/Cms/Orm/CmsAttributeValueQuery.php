@@ -47,18 +47,20 @@ namespace Cms\Orm;
  * @method CmsAttributeValueRecord findPk($value)
  */
 //</editor-fold>
-class CmsAttributeValueQuery extends \Mmi\Orm\Query {
+class CmsAttributeValueQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_attribute_value';
-	
-	/**
-	 * Zapytanie o wartości atrybutu po jego kluczu
-	 * @param string $key klucz atrybutu
-	 * @return \Cms\Orm\CmsAttributeValueQuery
-	 */
-	public function byAttributeKey($key) {
-		return $this->join('cms_attribute')->on('cms_attribute_id')
-				->where('key', 'cms_attribute')->equals($key);
-	}
+    protected $_tableName = 'cms_attribute_value';
+
+    /**
+     * Zapytanie o wartości atrybutu po jego kluczu
+     * @param string $key klucz atrybutu
+     * @return \Cms\Orm\CmsAttributeValueQuery
+     */
+    public function byAttributeKey($key)
+    {
+        return $this->join('cms_attribute')->on('cms_attribute_id')
+                ->where('key', 'cms_attribute')->equals($key);
+    }
 
 }

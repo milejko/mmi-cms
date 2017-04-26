@@ -89,8 +89,9 @@ namespace Cms\Orm;
  * @method CmsAttributeRelationRecord findPk($value)
  */
 //</editor-fold>
-class CmsAttributeRelationQuery extends \Mmi\Orm\Query {
+class CmsAttributeRelationQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_attribute_relation';
+    protected $_tableName = 'cms_attribute_relation';
 
 }

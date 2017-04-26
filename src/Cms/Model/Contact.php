@@ -9,18 +9,21 @@
  */
 
 namespace Cms\Model;
+
 use \Cms\Orm;
 
-class Contact {
+class Contact
+{
 
-	/**
-	 * Zwraca multiopcje tematow kontaktu
-	 * @return array
-	 */
-	public static function getMultioptions() {
-		return (new Orm\CmsContactOptionQuery)
-				->orderAscName()
-				->findPairs('id', 'name');
-	}
+    /**
+     * Zwraca multiopcje tematow kontaktu
+     * @return array
+     */
+    public static function getMultioptions()
+    {
+        return (new Orm\CmsContactOptionQuery)
+                ->orderAscName()
+                ->findPairs('id', 'name');
+    }
 
 }

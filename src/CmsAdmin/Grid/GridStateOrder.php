@@ -19,22 +19,25 @@ namespace CmsAdmin\Grid;
  * @method string getMethod() pobiera typ sortowania
  * @method GridStateOrder unsetMethod() usuwa metodę sortowania
  */
-class GridStateOrder extends \Mmi\OptionObject {
-	
-	/**
-	 * Konstruktor, wartości domyślne
-	 */
-	public function __construct() {
-		$this->setMethod('orderAsc');
-	}
-	
-	/**
-	 * Ustawia metodę porządkującą
-	 * @param string $method nazwa metody
-	 * @return GridStateOrder
-	 */
-	public function setMethod($method) {
-		return $this->setOption('method', $method == 'orderDesc' ? 'orderDesc' : 'orderAsc');
-	}
-	
+class GridStateOrder extends \Mmi\OptionObject
+{
+
+    /**
+     * Konstruktor, wartości domyślne
+     */
+    public function __construct()
+    {
+        $this->setMethod('orderAsc');
+    }
+
+    /**
+     * Ustawia metodę porządkującą
+     * @param string $method nazwa metody
+     * @return GridStateOrder
+     */
+    public function setMethod($method)
+    {
+        return $this->setOption('method', $method == 'orderDesc' ? 'orderDesc' : 'orderAsc');
+    }
+
 }

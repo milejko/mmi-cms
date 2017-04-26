@@ -41,8 +41,9 @@ namespace Cms\Orm;
  * @method CmsContactOptionRecord findPk($value)
  */
 //</editor-fold>
-class CmsContactOptionQuery extends \Mmi\Orm\Query {
+class CmsContactOptionQuery extends \Mmi\Orm\Query
+{
 
-	protected $_tableName = 'cms_contact_option';
+    protected $_tableName = 'cms_contact_option';
 
 }

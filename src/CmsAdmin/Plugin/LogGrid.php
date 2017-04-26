@@ -13,44 +13,46 @@ namespace CmsAdmin\Plugin;
 /**
  * Klasa grid loga CMS
  */
-class LogGrid extends \CmsAdmin\Grid\Grid {
+class LogGrid extends \CmsAdmin\Grid\Grid
+{
 
-	public function init() {
+    public function init()
+    {
 
-		//domyślnie posortowane po dacie i czasie
-		$this->setQuery((new \Cms\Orm\CmsLogQuery)
-				->orderDescDateTime());
+        //domyślnie posortowane po dacie i czasie
+        $this->setQuery((new \Cms\Orm\CmsLogQuery)
+                ->orderDescDateTime());
 
-		//data i czas
-		$this->addColumnText('dateTime')
-			->setLabel('data i czas');
+        //data i czas
+        $this->addColumnText('dateTime')
+            ->setLabel('data i czas');
 
-		//operacja
-		$this->addColumnText('operation')
-			->setLabel('operacja');
+        //operacja
+        $this->addColumnText('operation')
+            ->setLabel('operacja');
 
-		//url
-		$this->addColumnText('url')
-			->setLabel('URL')
-			->setFilterMethodLike();
-		
-		//dane
-		$this->addColumnJson('data')
-			->setLabel('dane')
-			->setFilterMethodLike();
+        //url
+        $this->addColumnText('url')
+            ->setLabel('URL')
+            ->setFilterMethodLike();
 
-		//zasób
-		$this->addColumnText('object')
-			->setLabel('zasób');
-		
-		//id
-		$this->addColumnText('objectId')
-			->setLabel('id zasobu');
+        //dane
+        $this->addColumnJson('data')
+            ->setLabel('dane')
+            ->setFilterMethodLike();
 
-		//sukces
-		$this->addColumnCheckbox('success')
-			->setLabel('sukces')
-			->setDisabled();
-	}
+        //zasób
+        $this->addColumnText('object')
+            ->setLabel('zasób');
+
+        //id
+        $this->addColumnText('objectId')
+            ->setLabel('id zasobu');
+
+        //sukces
+        $this->addColumnCheckbox('success')
+            ->setLabel('sukces')
+            ->setDisabled();
+    }
 
 }

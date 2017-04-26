@@ -61,6 +61,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsStatDateQuery greaterOrEqualsColumnCount()
  * @method \Cms\Orm\CmsStatDateQuery lessOrEqualsColumnCount()
  */
-class CmsStatDateQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsStatDateQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

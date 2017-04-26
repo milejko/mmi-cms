@@ -103,6 +103,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCronQuery greaterOrEqualsColumnDateLastExecute()
  * @method \Cms\Orm\CmsCronQuery lessOrEqualsColumnDateLastExecute()
  */
-class CmsCronQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsCronQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

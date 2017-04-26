@@ -25,6 +25,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsTagQuery greaterOrEqualsColumnTag()
  * @method \Cms\Orm\CmsTagQuery lessOrEqualsColumnTag()
  */
-class CmsTagQueryField extends \Mmi\Orm\QueryHelper\QueryField {
-
+class CmsTagQueryField extends \Mmi\Orm\QueryHelper\QueryField
+{
+    
 }

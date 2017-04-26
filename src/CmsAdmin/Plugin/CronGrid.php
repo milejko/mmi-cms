@@ -13,40 +13,42 @@ namespace CmsAdmin\Plugin;
 /**
  * Grid harmonogramu
  */
-class CronGrid extends \CmsAdmin\Grid\Grid {
+class CronGrid extends \CmsAdmin\Grid\Grid
+{
 
-	public function init() {
+    public function init()
+    {
 
-		//zapytanie
-		$this->setQuery(new \Cms\Orm\CmsCronQuery);
+        //zapytanie
+        $this->setQuery(new \Cms\Orm\CmsCronQuery);
 
-		//nazwa
-		$this->addColumnText('name')
-			->setLabel('nazwa');
+        //nazwa
+        $this->addColumnText('name')
+            ->setLabel('nazwa');
 
-		//opis
-		$this->addColumnText('description')
-			->setLabel('opis');
+        //opis
+        $this->addColumnText('description')
+            ->setLabel('opis');
 
-		//crontab
-		$this->addColumnCustom('crontab')
-			->setLabel('crontab')
-			->setTemplateCode('{$record->minute} {$record->hour} {$record->dayOfMonth} {$record->month} {$record->dayOfWeek}');
+        //crontab
+        $this->addColumnCustom('crontab')
+            ->setLabel('crontab')
+            ->setTemplateCode('{$record->minute} {$record->hour} {$record->dayOfMonth} {$record->month} {$record->dayOfWeek}');
 
-		//data dodania
-		$this->addColumnText('dateAdd')
-			->setLabel('data dodania');
+        //data dodania
+        $this->addColumnText('dateAdd')
+            ->setLabel('data dodania');
 
-		//ostatnie wywołanie
-		$this->addColumnText('dateLastExecute')
-			->setLabel('ostatnie wywołanie');
+        //ostatnie wywołanie
+        $this->addColumnText('dateLastExecute')
+            ->setLabel('ostatnie wywołanie');
 
-		//aktywny
-		$this->addColumnCheckbox('active')
-			->setLabel('włączony');
+        //aktywny
+        $this->addColumnCheckbox('active')
+            ->setLabel('włączony');
 
-		//operacje
-		$this->addColumnOperation();
-	}
+        //operacje
+        $this->addColumnOperation();
+    }
 
 }

@@ -13,6 +13,7 @@ namespace Cms\Exception;
 /**
  * Klasa wyjątku - istnieją dzieci w drzewie
  */
-class ChildrenExistException extends \Mmi\App\KernelException {
-	
+class ChildrenExistException extends \Mmi\App\KernelException
+{
+    
 }
