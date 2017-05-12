@@ -328,7 +328,6 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
         $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/plupload/plupload.conf.css');
         $view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/tinymce.min.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/plupload.full.min.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/i18n/pl.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/jquery.ui.plupload.min.js');
@@ -405,19 +404,27 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
      * Rendering elementów metryczki
      * @return string
      */
-    protected function _renderImprintElements()
-    {
-        //pusta metryczka
-        if (!is_array($this->getImprint())) {
-            return;
-        }
-        $html = '';
-        //iteracja po elementach
-        foreach ($this->getImprint() as $element) {
-            $html .= $this->_renderImprintElement($element);
-        }
-        return $html;
-    }
+    protected function _renderImprintElements() {
+		//pusta metryczka
+		if (!is_array($this->getImprint())) {
+			return;
+		}
+        
+        $view = \Mmi\App\FrontController::getInstance()->getView();
+        $tiny_js = false;
+        
+		$html = '';
+		//iteracja po elementach
+		foreach ($this->getImprint() as $element) {            
+            if (isset($element['type']) && $element['type'] == 'tinymce' && $tiny_js !== true && !isset($element['no_load_js'])) {
+                $view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/tinymce.min.js');
+                $tiny_js = true;
+            }
+            
+			$html .= $this->_renderImprintElement($element);
+		}
+		return $html;
+	}
 
     /**
      * Rendering elementu formularza
