@@ -58,11 +58,16 @@ class UploadController extends Mvc\Controller
                 //domyślne zapytanie o wszystkie pliki
                 $query = \Cms\Orm\CmsFileQuery::byObject($this->getPost()->object, $objectId);
         }
+		
+        $records = $query->find();
+        foreach ($records as $record) {
+            $record->data = $record->data->toArray();
+        }
+
         //zwrot json'a z plikami
         return json_encode([
             'result' => 'OK',
-            'files' => $query->find()
-                ->toArray()
+            'files' => $records->toArray()
         ]);
     }
 
