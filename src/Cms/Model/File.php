@@ -114,6 +114,32 @@ class File
     }
 
     /**
+     * Kopiuje plik z jednego obiektu na inny
+     * @param string $srcObject obiekt źródłowy
+     * @param int $srcId id źródła
+     * @param string $destObject obiekt docelowy
+     * @param int $destId docelowy id
+     * @param int ilość przeniesionych
+     */
+    public static function copy($srcObject, $srcId, $destObject, $destId)
+    {
+        $i = 0;
+        //przenoszenie plików
+        foreach (CmsFileQuery::byObject($srcObject, $srcId)->find() as $file) {
+            //tworzenie kopii
+            $copy = new \Mmi\Http\RequestFile([
+                'name' => $file->original,
+                'tmp_name' => $file->getRealPath(),
+                'size' => $file->size
+            ]);
+            //dołączanie pliku
+            self::appendFile($copy, $destObject, $destId);
+            $i++;
+        }
+        return $i;
+    }
+
+    /**
      * Sortuje po zserializowanej tabeli identyfikatorów
      * @param array $serial tabela identyfikatorów
      */
