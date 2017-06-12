@@ -26,10 +26,6 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
         if ($request->__get('lang') && !in_array($request->__get('lang'), \App\Registry::$config->languages)) {
             throw new \Mmi\Mvc\MvcNotFoundException('Language not found');
         }
-        //ustawianie widoku
-        $this->_viewSetup($request);
-        \Mmi\App\FrontController::getInstance()->getProfiler()->event('Cms\Plugin: View setup done');
-
         //konfiguracja autoryzacji
         $auth = new \Mmi\Security\Auth;
         $auth->setSalt(\App\Registry::$config->salt)
@@ -37,7 +33,6 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
         \App\Registry::$auth = $auth;
         \Mmi\Mvc\ActionHelper::getInstance()->setAuth($auth);
         \Mmi\Mvc\ViewHelper\Navigation::setAuth($auth);
-        \Mmi\App\FrontController::getInstance()->getProfiler()->event('Cms\Plugin: Auth setup done');
 
         //funkcja pamiętaj mnie realizowana poprzez cookie
         $cookie = new \Mmi\Http\Cookie;
@@ -56,7 +51,6 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
         if ($auth->hasIdentity()) {
             \Mmi\App\FrontController::getInstance()->getView()->auth = $auth;
         }
-        \Mmi\App\FrontController::getInstance()->getProfiler()->event('Cms\Plugin: Remember me done');
 
         //ustawienie acl
         if (null === ($acl = \App\Registry::$cache->load('mmi-cms-acl'))) {
@@ -66,7 +60,6 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
         \Mmi\App\FrontController::getInstance()->getView()->acl = \App\Registry::$acl = $acl;
         \Mmi\Mvc\ActionHelper::getInstance()->setAcl($acl);
         \Mmi\Mvc\ViewHelper\Navigation::setAcl($acl);
-        \Mmi\App\FrontController::getInstance()->getProfiler()->event('Cms\Plugin: ACL setup done');
 
         //ustawienie nawigatora
         if (null === ($navigation = \App\Registry::$cache->load('mmi-cms-navigation-' . $request->__get('lang')))) {
@@ -78,11 +71,9 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
         $navigation->setup($request);
         //przypinanie nawigatora do helpera widoku nawigacji
         \Mmi\Mvc\ViewHelper\Navigation::setNavigation(\App\Registry::$navigation = $navigation);
-        \Mmi\App\FrontController::getInstance()->getProfiler()->event('Cms\Plugin: Navigation setup done');
 
         //zablokowane na ACL
         if ($acl->isAllowed($auth->getRoles(), $actionLabel = strtolower($request->getModuleName() . ':' . $request->getControllerName() . ':' . $request->getActionName()))) {
-            \Mmi\App\FrontController::getInstance()->getProfiler()->event('Cms\Plugin: Page privileges check done');
             return;
         }
         $moduleStructure = \Mmi\App\FrontController::getInstance()->getStructure('module');
@@ -101,10 +92,10 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
     }
 
     /**
-     * Ustawienie zmiennych w widoku
+     * Wykonywana po dispatcherze
      * @param \Mmi\Http\Request $request
      */
-    protected function _viewSetup(\Mmi\Http\Request $request)
+    public function postDispatch(\Mmi\Http\Request $request)
     {
         //ustawienie widoku
         $view = \Mmi\App\FrontController::getInstance()->getView();
