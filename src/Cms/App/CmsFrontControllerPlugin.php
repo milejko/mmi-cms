@@ -107,7 +107,7 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
         unset($jsRequest['controller']);
         unset($jsRequest['action']);
         //umieszczenie tablicy w headScript()
-        $view->headScript()->appendScript('var request = ' . json_encode($jsRequest));
+        $view->headScript()->prependScript('var request = ' . json_encode($jsRequest));
     }
 
     /**
