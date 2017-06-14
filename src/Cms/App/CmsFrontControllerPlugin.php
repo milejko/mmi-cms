@@ -26,17 +26,9 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
         if ($request->__get('lang') && !in_array($request->__get('lang'), \App\Registry::$config->languages)) {
             throw new \Mmi\Mvc\MvcNotFoundException('Language not found');
         }
-        //ustawienie widoku
+        //baseUrl do widoku
         $view = \Mmi\App\FrontController::getInstance()->getView();
-        $base = $view->baseUrl;
-        $view->domain = \App\Registry::$config->host;
-        $view->languages = \App\Registry::$config->languages;
-        $jsRequest = $request->toArray();
-        $jsRequest['baseUrl'] = $base;
-        unset($jsRequest['controller']);
-        unset($jsRequest['action']);
-        //umieszczenie tablicy w headScript()
-        $view->headScript()->appendScript('var request = ' . json_encode($jsRequest));
+        $view->headScript()->appendScript('var request = ' . json_encode(['baseUrl' => $view->baseUrl]));
         //konfiguracja autoryzacji
         $auth = new \Mmi\Security\Auth;
         $auth->setSalt(\App\Registry::$config->salt)
@@ -100,6 +92,25 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
         \App\Registry::$auth->clearIdentity();
         //zalogowany na nieuprawnioną rolę
         throw new \Mmi\Mvc\MvcNotFoundException('Unauthorized access');
+    }
+
+    /**
+     * Wykonywana po dispatcherze
+     * @param \Mmi\Http\Request $request
+     */
+    public function postDispatch(\Mmi\Http\Request $request)
+    {
+        //ustawienie widoku
+        $view = \Mmi\App\FrontController::getInstance()->getView();
+        $base = $view->baseUrl;
+        $view->domain = \App\Registry::$config->host;
+        $view->languages = \App\Registry::$config->languages;
+        $jsRequest = $request->toArray();
+        $jsRequest['baseUrl'] = $base;
+        unset($jsRequest['controller']);
+        unset($jsRequest['action']);
+        //umieszczenie tablicy w headScript()
+        $view->headScript()->prependScript('var request = ' . json_encode($jsRequest));
     }
 
     /**
