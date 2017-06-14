@@ -198,7 +198,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea
         $view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/tinymce.min.js');
 
         //bazowa wspólna konfiguracja
-        $this->_baseConfig();
+        $this->_baseConfig($view);
         //tryb edytora
         $mode = $this->getMode() ? $this->getMode() : 'default';
         //metoda konfiguracji edytora
@@ -248,8 +248,8 @@ class TinyMce extends \Mmi\Form\Element\Textarea
 				object: '$object',
 				objectId: '$objectId',
 				time: '$t',
-				baseUrl: request.baseUrl,
-				image_list: request.baseUrl + '/?module=cms&controller=file&action=list&object=$object&objectId=$objectId&t=$t&hash=$hash'
+				baseUrl: " . $view->baseUrl . ",
+				image_list: " . $view->baseUrl . " + '/?module=cms&controller=file&action=list&object=$object&objectId=$objectId&t=$t&hash=$hash'
 			});
 		");
 
@@ -318,7 +318,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea
     /**
      * Bazowa konfiguracja dla wszystkich edytorów
      */
-    protected function _baseConfig()
+    protected function _baseConfig(\Mmi\Mvc\View $view)
     {
         if ($this->getPlugins() === null) {
             $this->setPlugins([
@@ -351,7 +351,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea
         }
         $this->_common = "
 			autoresize_min_height: " . ($this->getHeight() ? $this->getHeight() : 300) . ",
-			document_base_url: request.baseUrl,
+			document_base_url: " . $view->baseUrl . ",
 			convert_urls: false,
 			entity_encoding: 'raw',
 			relative_urls: false,
