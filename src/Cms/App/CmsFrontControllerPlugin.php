@@ -26,9 +26,6 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
         if ($request->__get('lang') && !in_array($request->__get('lang'), \App\Registry::$config->languages)) {
             throw new \Mmi\Mvc\MvcNotFoundException('Language not found');
         }
-        //baseUrl do widoku
-        $view = \Mmi\App\FrontController::getInstance()->getView();
-        $view->headScript()->appendScript('var request = ' . json_encode(['baseUrl' => $view->baseUrl]));
         //konfiguracja autoryzacji
         $auth = new \Mmi\Security\Auth;
         $auth->setSalt(\App\Registry::$config->salt)
