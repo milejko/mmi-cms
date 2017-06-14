@@ -248,8 +248,8 @@ class TinyMce extends \Mmi\Form\Element\Textarea
 				object: '$object',
 				objectId: '$objectId',
 				time: '$t',
-				baseUrl: " . $view->baseUrl . ",
-				image_list: " . $view->baseUrl . " + '/?module=cms&controller=file&action=list&object=$object&objectId=$objectId&t=$t&hash=$hash'
+				baseUrl: '" . $view->baseUrl . "',
+				image_list: '" . $view->baseUrl . "' + '/?module=cms&controller=file&action=list&object=$object&objectId=$objectId&t=$t&hash=$hash'
 			});
 		");
 
@@ -351,7 +351,7 @@ class TinyMce extends \Mmi\Form\Element\Textarea
         }
         $this->_common = "
 			autoresize_min_height: " . ($this->getHeight() ? $this->getHeight() : 300) . ",
-			document_base_url: " . $view->baseUrl . ",
+			document_base_url: '" . $view->baseUrl . "',
 			convert_urls: false,
 			entity_encoding: 'raw',
 			relative_urls: false,
