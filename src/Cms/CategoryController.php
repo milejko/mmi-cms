@@ -24,7 +24,7 @@ class CategoryController extends \Mmi\Mvc\Controller
         //pobranie kategorii
         $category = $this->_getPublishedCategoryByUri($this->uri);
         //wczytanie zbuforowanej strony (dla niezalogowanych i z pustym requestem)
-        if (!\App\Registry::$auth->hasIdentity() && (null !== $html = \App\Registry::$cache->load($cacheKey = 'category-html-' . $category->id))) {
+        if ($this->_bufferingAllowed() && (null !== $html = \App\Registry::$cache->load($cacheKey = 'category-html-' . $category->id))) {
             //wysyłanie nagłówka o buforowaniu strony
             $this->getResponse()->setHeader('X-Cache', 'HIT');
             //zwrot html
@@ -195,8 +195,8 @@ class CategoryController extends \Mmi\Mvc\Controller
     {
         //czas buforowania (na podstawie typu kategorii i pojedynczej kategorii
         $cacheLifetime = (null !== $category->cacheLifetime) ? $category->cacheLifetime : ((null !== $category->getJoined('cms_category_type')->cacheLifetime) ? $category->getJoined('cms_category_type')->cacheLifetime : Orm\CmsCategoryRecord::DEFAULT_CACHE_LIFETIME);
-        //jeśli zalogowany, lub bufor wyłączony (na poziomie typu kategorii, lub pojedynczej kategorii)
-        if (\App\Registry::$auth->hasIdentity() || (0 == $cacheLifetime)) {
+        //jeśli buforowanie niedozwolone, lub bufor wyłączony (na poziomie typu kategorii, lub pojedynczej kategorii)
+        if (!$this->_bufferingAllowed() || (0 == $cacheLifetime)) {
             //brak bufora
             return 0;
         }
@@ -212,6 +212,24 @@ class CategoryController extends \Mmi\Mvc\Controller
         }
         //zwrot długości bufora
         return $cacheLifetime;
+    }
+
+    /**
+     * Czy buforowanie dozwolone
+     * @return boolean
+     */
+    protected function _bufferingAllowed()
+    {
+        //zalogowani nie powinni buforować
+        if (\App\Registry::$auth->hasIdentity()) {
+            return false;
+        }
+        //messenger ma wiadomości
+        if (\Mmi\Message\MessengerHelper::getMessenger()
+                ->hasMessages()) {
+            return false;
+        }
+        return true;
     }
 
 }
