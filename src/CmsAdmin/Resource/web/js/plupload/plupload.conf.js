@@ -256,6 +256,7 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                                     $(this).val(data.data[fieldName]).change();
                                 }
                             });
+                            $(edit + ' input[name="original"]').val(data.record.original);
                             $(edit + ' input[name="active"]').prop('checked', (parseInt(data.record.active) > 0) ? 'checked' : '');
                             $(edit + ' input[name="sticky"]').prop('checked', (parseInt(data.record.sticky) > 0) ? 'checked' : '');
                             $(edit + ' .dialog-error').hide().find('p').text('');
@@ -275,6 +276,10 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                                         $.post(request.baseUrl + '/cmsAdmin/upload/describe', {cmsFileId: file.cmsFileId, form: $(edit + ' input,' + edit + ' textarea,' + edit + ' select').serializeArray(), afterEdit: args.up.getOption('after_edit')}, 'json')
                                                 .done(function (data) {
                                                     if (data.result === 'OK') {
+                                                        //pobranie i odtworzenie aktualnej listy z serwera
+                                                        args.up.setOption('refresh_current', true);
+                                                        PLUPLOADCONF.getCurrent(args.up);
+                                                        args.up.refresh();
                                                         editDialog.dialog('close');
                                                     } else {
                                                         $(edit + ' .dialog-error p').text('Nie udało się zapisać zmian! Spróbuj ponownie!').parent().show();

@@ -172,6 +172,7 @@ class UploadController extends Mvc\Controller
         }
         $record->active = isset($form['active']) ? $form['active'] : $record->active;
         $record->sticky = isset($form['sticky']) ? $form['sticky'] : $record->sticky;
+        $record->original = isset($form['original']) ? $form['original'] : $record->original;
         if ($record->sticky) {
             $result = $record->setSticky();
         } else {
