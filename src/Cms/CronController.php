@@ -50,11 +50,12 @@ class CronController extends \Mmi\Mvc\Controller
      */
     public function cleanAction()
     {
-        $months = 24;
+        $months = 12;
         if ($this->months > 0) {
             $months = intval($this->months);
         }
-        $this->view->result = \Cms\LogModel::clean($months);
+        \Cms\Model\Log::clean($months);
+        return '';
     }
 
 }
