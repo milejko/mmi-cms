@@ -28,9 +28,7 @@ class Log
     {
         $record = new Orm\CmsLogRecord;
         $env = \Mmi\App\FrontController::getInstance()->getEnvironment();
-        if (\App\Registry::$auth && \App\Registry::$auth->getId()) {
-            $record->cmsAuthId = null;
-        }
+        $record->cmsAuthId = (\App\Registry::$auth && \App\Registry::$auth->getId()) ? \App\Registry::$auth->getId() : null;
         $record->url = $env->requestUri;
         $record->ip = $env->remoteAddress;
         $record->browser = $env->httpUserAgent;
