@@ -66,6 +66,11 @@ class Log
      */
     public static function clean($months = 24)
     {
+        (new Orm\CmsLogQuery)
+                ->whereDateTime()->less(date('Y-m-d H:i:s', strtotime('-1 month')))
+                ->andFieldOperation()->equals('Cron done')
+                ->find()
+                ->delete();
         return (new Orm\CmsLogQuery)
                 ->whereDateTime()->less(date('Y-m-d H:i:s', strtotime('-' . $months . ' month')))
                 ->find()
