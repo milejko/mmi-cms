@@ -71,7 +71,7 @@ class Log
                 ->andFieldOperation()->equals('Cron done')
                 ->find()
                 ->delete();
-        return (new Orm\CmsLogQuery)
+        (new Orm\CmsLogQuery)
                 ->whereDateTime()->less(date('Y-m-d H:i:s', strtotime('-' . $months . ' month')))
                 ->find()
                 ->delete();
