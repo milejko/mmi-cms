@@ -296,6 +296,9 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                                             $('div#' + args.up.getOption('form_element_id') + ' div.moxie-shim-html5 input[type=file]').trigger('click');
                                         }, 500);
                                     },
+                                    'Pobierz plik': function () {
+                                        window.open(request.baseUrl + '/cmsAdmin/upload/download?id=' + file.cmsFileId + '&object=' + args.up.getOption('form_object') + '&objectId=' + args.up.getOption('form_object_id'), '_blank');
+                                    },
                                     'Anuluj': function () {
                                         $(this).dialog('close');
                                     }

@@ -58,7 +58,7 @@ class UploadController extends Mvc\Controller
                 //domyślne zapytanie o wszystkie pliki
                 $query = \Cms\Orm\CmsFileQuery::byObject($this->getPost()->object, $objectId);
         }
-		
+
         $records = $query->find();
         foreach ($records as $record) {
             $record->data = $record->data->toArray();
@@ -186,6 +186,19 @@ class UploadController extends Mvc\Controller
             return json_encode(['result' => 'OK']);
         }
         return $this->_jsonError(186);
+    }
+
+    /**
+     * Przekierowanie na plik
+     * @return string
+     */
+    public function downloadAction()
+    {
+        if (null === $file = (new \Cms\Orm\CmsFileQuery)->byObject($this->object, $this->objectId)
+            ->findPk($this->id)) {
+            return '';
+        }
+        $this->getResponse()->redirectToUrl($file->getUrl());
     }
 
     /**
