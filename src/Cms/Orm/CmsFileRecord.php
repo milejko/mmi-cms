@@ -160,11 +160,6 @@ class CmsFileRecord extends \Mmi\Orm\Record
             FrontController::getInstance()->getLocalCache()->save(true, $cacheKey);
             return $publicUrl;
         }
-        //klasa obrazu - uruchomienie skalera
-        if ($this->class == 'image' && !$this->_scaler($inputFile, $thumbPath, $scaleType, $scale)) {
-            FrontController::getInstance()->getLogger()->addWarning('Unable to resize CMS file: ' . $this->id . ' - ' . $this->original);
-            return;
-        }
         //tworzenie katalogów
         if (!file_exists(dirname($thumbPath))) {
             try {
@@ -174,14 +169,17 @@ class CmsFileRecord extends \Mmi\Orm\Record
                 return;
             }
         }
-        //klasa inna niż obraz - kopiowanie zasobu publicznie
-        if ($this->class != 'image') {
-            try {
-                copy($inputFile, $thumbPath);
-            } catch (\Exception $e) {
-                FrontController::getInstance()->getLogger()->addWarning('Unable to copy CMS file to web: ' . $this->id . ' - ' . $this->original);
-                return;
-            }
+        //wybrano skalowanie dla klasy obrazu
+        if ($this->class == 'image' && $scaleType != 'default') {
+            //uruchomienie skalera
+            $this->_scaler($inputFile, $thumbPath, $scaleType, $scale);
+            return $publicUrl;
+        }
+        try {
+            copy($inputFile, $thumbPath);
+        } catch (\Exception $e) {
+            FrontController::getInstance()->getLogger()->addWarning('Unable to copy CMS file to web: ' . $this->id);
+            return;
         }
         //zwrot ścieżki publicznej
         return $publicUrl;
@@ -371,7 +369,8 @@ class CmsFileRecord extends \Mmi\Orm\Record
         }
         //brak obrazu
         if (!isset($imgRes)) {
-            return false;
+            FrontController::getInstance()->getLogger()->addWarning('Unable to resize CMS file: ' . $outputFile);
+            return;
         }
         //plik istnieje
         if (!file_exists(dirname($outputFile))) {
@@ -379,7 +378,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
                 mkdir(dirname($outputFile), 0777, true);
             } catch (\Mmi\App\KernelException $e) {
                 FrontController::getInstance()->getLogger()->addWarning('Unable to create directories: ' . $e->getMessage());
-                return true;
+                return;
             }
         }
         //określanie typu wyjścia
@@ -389,18 +388,17 @@ class CmsFileRecord extends \Mmi\Orm\Record
             imagealphablending($imgRes, false);
             imagesavealpha($imgRes, true);
             imagegif($imgRes, $outputFile);
-            return true;
+            return;
         }
         //PNG (nieprzeźroczysty)
         if ($mimeType == 'image/png') {
             imagealphablending($imgRes, false);
             imagesavealpha($imgRes, true);
             imagepng($imgRes, $outputFile, 9);
-            return true;
+            return;
         }
         //domyślnie JPEG
         imagejpeg($imgRes, $outputFile, intval(\App\Registry::$config->thumbQuality));
-        return true;
     }
 
     /**
