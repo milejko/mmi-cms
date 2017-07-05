@@ -60,9 +60,10 @@ class File
     public static function appendFile(\Mmi\Http\RequestFile $file, $object, $id = null, $allowedTypes = [])
     {
         //pomijanie plików typu bmp (bitmapy windows - nieobsługiwane w PHP)
-        if ($file->type == 'image/x-ms-bmp') {
-            return null;
+        if ($file->type == 'image/x-ms-bmp' || $file->type == 'image/tiff') {
+            $file->type = 'application/octet-stream';
         }
+        
         //plik nie jest dozwolony
         if (!empty($allowedTypes) && !in_array($file->type, $allowedTypes)) {
             return null;
