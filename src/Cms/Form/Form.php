@@ -24,6 +24,8 @@ abstract class Form extends \Mmi\Form\Form
      */
     protected $_fileObjectName;
 
+    CONST EDITING_RECORD_OPTION_KEY = 'editingExistingRecord';
+
     /**
      * Konstruktor
      * @param \Mmi\Orm\Record $record obiekt recordu
@@ -35,6 +37,8 @@ abstract class Form extends \Mmi\Form\Form
         //kalkulacja nazwy plików dla active record
         if ($record) {
             $this->_fileObjectName = $this->_classToFileObject(get_class($record));
+            //informacja o tym, że rekord jest edytowany (dla uploadera)
+            $this->setOption(self::EDITING_RECORD_OPTION_KEY, ($record->getPk() > 0));
         }
         parent::__construct($record, $options);
     }
@@ -46,8 +50,8 @@ abstract class Form extends \Mmi\Form\Form
     public function save()
     {
         if ($this->hasRecord() && parent::save()) {
-            $this->_appendFiles($this->_record->getPk(), $this->getFiles());
             $this->afterUpload();
+            $this->_appendFiles($this->_record->getPk(), $this->getFiles());
         }
         if (!$this->hasRecord()) {
             parent::save();
@@ -63,12 +67,16 @@ abstract class Form extends \Mmi\Form\Form
         if (!$this->getRecord()->getPk()) {
             return;
         }
+        //rekord edytowany - nie łączymy uploaderów z tymczasowym uploadem
+        if ($this->getOption(self::EDITING_RECORD_OPTION_KEY)) {
+            return;
+        }
         //przenoszenie z uploadera plików ze zmienionym object
         foreach ($this->getElements() as $element) {
             if (!$element instanceof \Cms\Form\Element\Plupload || !$element->getObject()) {
                 continue;
             }
-            \Cms\Model\File::move('tmp-' . $element->getObject(), \Mmi\Session\Session::getNumericId(), $element->getObject(), $this->getRecord()->getPk());
+            \Cms\Model\File::move('tmp-' . $element->getObject(), $element->getUploaderId(), $element->getObject(), $this->getRecord()->getPk());
         }
     }
 
@@ -210,6 +218,10 @@ abstract class Form extends \Mmi\Form\Form
         try {
             foreach ($files as $fileSet) {
                 \Cms\Model\File::appendFiles($this->_fileObjectName, $id, $fileSet);
+            }
+            //rekord edytowany - nie łączymy uploaderów z tymczasowym uploadem
+            if ($this->getOption(self::EDITING_RECORD_OPTION_KEY)) {
+                return;
             }
             //przenoszenie z uploadera
             \Cms\Model\File::move('tmp-' . $this->_fileObjectName, \Mmi\Session\Session::getNumericId(), $this->_fileObjectName, $id);

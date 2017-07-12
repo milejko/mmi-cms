@@ -63,7 +63,7 @@ class File
         if ($file->type == 'image/x-ms-bmp' || $file->type == 'image/tiff') {
             $file->type = 'application/octet-stream';
         }
-        
+
         //plik nie jest dozwolony
         if (!empty($allowedTypes) && !in_array($file->type, $allowedTypes)) {
             return null;
@@ -197,6 +197,17 @@ class File
         return CmsFileQuery::byObject($object, $objectId)
                 ->find()
                 ->delete();
+    }
+
+    /**
+     * Usuwanie nieużywanych plików przypiętych do tmp-XXX
+     */
+    public static function deleteOrphans()
+    {
+        (new CmsFileQuery)->whereObject()->like('tmp-%')
+            ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-1 week')))
+            ->find()
+            ->delete();
     }
 
 }

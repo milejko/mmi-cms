@@ -32,7 +32,6 @@ namespace Cms\Form\Element;
  * @method self setRequiredAsterisk($asterisk = '*') ustawia znak gwiazdki
  * @method self setRequired($required = true) ustawia wymagalność
  * @method self setLabelPostfix($labelPostfix) ustawia postfix labelki
- * @method self setForm(\Mmi\Form\Form $form) ustawia formularz
  * @method self setImprint($imprint) ustawia tablicę z polami metryczki
  * 
  * @method array getImprint() pobiera pola metryczki
@@ -86,6 +85,40 @@ namespace Cms\Form\Element;
  */
 class Plupload extends \Mmi\Form\Element\ElementAbstract
 {
+
+    CONST UPLOADER_ID_KEY = 'uploaderId';
+
+    /**
+     * Ustawia form macierzysty
+     * @param \Mmi\Form\Form $form
+     * @return self
+     */
+    public function setForm(\Mmi\Form\Form $form)
+    {
+        //parent
+        parent::setForm($form);
+        //form posiada rekord już edytowany (nie ma potrzeby identyfikować uploadera)
+        if ($form->getOption(\Cms\Form\Form::EDITING_RECORD_OPTION_KEY)) {
+            return $this;
+        }
+        //uploaderId znajduje się w requescie
+        if (\Mmi\App\FrontController::getInstance()->getRequest()->uploaderId) {
+            $this->setOption(self::UPLOADER_ID_KEY, \Mmi\App\FrontController::getInstance()->getRequest()->uploaderId);
+            return $this;
+        }
+        //przekierowanie na url zawierający nowowygenerowany uploaderId
+        \Mmi\App\FrontController::getInstance()->getResponse()->redirectToUrl(\Mmi\App\FrontController::getInstance()->getRouter()->encodeUrl(\Mmi\App\FrontController::getInstance()->getRequest()->toArray() + ['uploaderId' => mt_rand(100000, 999999)]));
+        return $this;
+    }
+
+    /**
+     * Pobranie ID uploadera
+     * @return string
+     */
+    public function getUploaderId()
+    {
+        return $this->getOption(self::UPLOADER_ID_KEY);
+    }
 
     /**
      * Ustawia objekt cms_
@@ -347,7 +380,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
         }
         if (!$objectId) {
             $object = 'tmp-' . $object;
-            $objectId = \Mmi\Session\Session::getNumericId();
+            $objectId = $this->getUploaderId();
         }
         if (!$this->_form->hasRecord()) {
             $objectId = null;
