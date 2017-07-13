@@ -36,8 +36,8 @@ class CategoryController extends \Mmi\Mvc\Controller
         $this->view->category = $category;
         //renderowanie docelowej akcji
         $html = \Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category));
-        //brak bufora - zwrot html
-        if (0 == $cacheLifetime = $this->_getCategoryCacheLifetime($category)) {
+        //buforowanie niedozwolone, lub brak bufora - zwrot html
+        if (!$this->_bufferingAllowed() || 0 == $cacheLifetime = $this->_getCategoryCacheLifetime($category)) {
             return $html;
         }
         //zapis html kategorii do cache
