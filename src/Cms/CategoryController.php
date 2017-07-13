@@ -23,8 +23,10 @@ class CategoryController extends \Mmi\Mvc\Controller
     {
         //pobranie kategorii
         $category = $this->_getPublishedCategoryByUri($this->uri);
+        //klucz bufora
+        $cacheKey = 'category-html-' . $category->id;
         //wczytanie zbuforowanej strony (dla niezalogowanych i z pustym requestem)
-        if ($this->_bufferingAllowed() && (null !== $html = \App\Registry::$cache->load($cacheKey = 'category-html-' . $category->id))) {
+        if ($this->_bufferingAllowed() && (null !== $html = \App\Registry::$cache->load($cacheKey))) {
             //wysyłanie nagłówka o buforowaniu strony
             $this->getResponse()->setHeader('X-Cache', 'HIT');
             //zwrot html
@@ -36,8 +38,8 @@ class CategoryController extends \Mmi\Mvc\Controller
         $this->view->category = $category;
         //renderowanie docelowej akcji
         $html = \Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category));
-        //buforowanie niedozwolone, lub brak bufora
-        if (!$this->_bufferingAllowed() || 0 == $cacheLifetime = $this->_getCategoryCacheLifetime($category)) {
+        //buforowanie niedozwolone
+        if (0 == $cacheLifetime = $this->_getCategoryCacheLifetime($category)) {
             //zwrot html
             return $html;
         }
