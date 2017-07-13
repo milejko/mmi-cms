@@ -25,8 +25,10 @@ class CategoryController extends \Mmi\Mvc\Controller
         $category = $this->_getPublishedCategoryByUri($this->uri);
         //klucz bufora
         $cacheKey = 'category-html-' . $category->id;
+        //buforowanie dozwolone
+        $bufferingAllowed = $this->_bufferingAllowed();
         //wczytanie zbuforowanej strony (dla niezalogowanych i z pustym requestem)
-        if ($this->_bufferingAllowed() && (null !== $html = \App\Registry::$cache->load($cacheKey))) {
+        if ($bufferingAllowed && (null !== $html = \App\Registry::$cache->load($cacheKey))) {
             //wysyłanie nagłówka o buforowaniu strony
             $this->getResponse()->setHeader('X-Cache', 'HIT');
             //zwrot html
@@ -39,7 +41,7 @@ class CategoryController extends \Mmi\Mvc\Controller
         //renderowanie docelowej akcji
         $html = \Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category));
         //buforowanie niedozwolone
-        if (0 == $cacheLifetime = $this->_getCategoryCacheLifetime($category)) {
+        if (!$bufferingAllowed || 0 == $cacheLifetime = $this->_getCategoryCacheLifetime($category)) {
             //zwrot html
             return $html;
         }
@@ -198,8 +200,8 @@ class CategoryController extends \Mmi\Mvc\Controller
     {
         //czas buforowania (na podstawie typu kategorii i pojedynczej kategorii
         $cacheLifetime = (null !== $category->cacheLifetime) ? $category->cacheLifetime : ((null !== $category->getJoined('cms_category_type')->cacheLifetime) ? $category->getJoined('cms_category_type')->cacheLifetime : Orm\CmsCategoryRecord::DEFAULT_CACHE_LIFETIME);
-        //jeśli buforowanie niedozwolone, lub bufor wyłączony (na poziomie typu kategorii, lub pojedynczej kategorii)
-        if (!$this->_bufferingAllowed() || (0 == $cacheLifetime)) {
+        //jeśli bufor wyłączony (na poziomie typu kategorii, lub pojedynczej kategorii)
+        if (0 == $cacheLifetime) {
             //brak bufora
             return 0;
         }
