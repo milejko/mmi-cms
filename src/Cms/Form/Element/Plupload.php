@@ -93,10 +93,15 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
      * @param \Mmi\Form\Form $form
      * @return self
      */
-    public function setForm(\Mmi\Form\Form $form)
+    public function setForm(\Cms\Form\Form $form)
     {
         //parent
         parent::setForm($form);
+        //obiekt niezdefiniowany
+        if (!$this->getObject()) {
+            //ustawianie obiektu
+            $this->setObject($form->getFileObjectName());
+        }
         //form posiada rekord już edytowany (nie ma potrzeby identyfikować uploadera)
         if ($form->getOption(\Cms\Form\Form::EDITING_RECORD_OPTION_KEY)) {
             return $this;
