@@ -93,7 +93,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
      * @param \Mmi\Form\Form $form
      * @return self
      */
-    public function setForm(\Cms\Form\Form $form)
+    public function setForm(\Mmi\Form\Form $form)
     {
         //parent
         parent::setForm($form);
