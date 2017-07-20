@@ -299,7 +299,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
      */
     public function addImprintElementText($name, $label)
     {
-        return $this->addAllowedType('text', $name, $label);
+        return $this->addImprintElement('text', $name, $label);
     }
 
     /**
@@ -310,7 +310,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
      */
     public function addImprintElementTextarea($name, $label)
     {
-        return $this->addAllowedType('textarea', $name, $label);
+        return $this->addImprintElement('textarea', $name, $label);
     }
 
     /**
@@ -321,7 +321,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
      */
     public function addImprintElementTinymce($name, $label)
     {
-        return $this->addAllowedType('tinymce', $name, $label);
+        return $this->addImprintElement('tinymce', $name, $label);
     }
 
     /**
@@ -332,7 +332,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
      */
     public function addImprintElementCheckbox($name, $label)
     {
-        return $this->addAllowedType('checkbox', $name, $label);
+        return $this->addImprintElement('checkbox', $name, $label);
     }
 
     /**
@@ -344,7 +344,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
      */
     public function addImprintElementSelect($name, $label, $option)
     {
-        return $this->addAllowedType('select', $name, $label, $option);
+        return $this->addImprintElement('select', $name, $label, $option);
     }
 
     /**
