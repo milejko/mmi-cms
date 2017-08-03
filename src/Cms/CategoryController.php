@@ -234,6 +234,10 @@ class CategoryController extends \Mmi\Mvc\Controller
                 ->hasMessages()) {
             return false;
         }
+        //walidacja formularzy nie powinna być cache'owana
+        if ($this->_request->getRequestMethod() != 'GET') {
+            return false;
+        }
         return true;
     }
 
