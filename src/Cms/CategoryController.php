@@ -171,8 +171,8 @@ class CategoryController extends \Mmi\Mvc\Controller
         //tworzenie nowego requestu na podstawie obecnego
         $request = clone $this->getRequest();
         $request->setModuleName('cms')
-            ->setControllerName('category')
-            ->setActionName('article');
+                ->setControllerName('category')
+                ->setActionName('article');
         //przekierowanie MVC
         if ($category->mvcParams) {
             //tablica z tpl
@@ -225,16 +225,16 @@ class CategoryController extends \Mmi\Mvc\Controller
      */
     protected function _bufferingAllowed()
     {
-		//jeśli zdefiniowano własny obiekt sprawdzający, czy można buforować
-		if (\App\Registry::$config->category instanceof \Cms\Config\CategoryConfig
-			&& \App\Registry::$config->category->bufferingAllowedClass) {
-			$class = \App\Registry::$config->category->bufferingAllowedClass;
-			$buffering = new $class($this->_request);
-		} else {
-			//domyślny cmsowy obiekt sprawdzający, czy można buforować
-			$buffering = new \Cms\Model\CategoryBuffering($this->_request);
-		}
-		return $buffering->isAllowed();
+        //jeśli zdefiniowano własny obiekt sprawdzający, czy można buforować
+        if (\App\Registry::$config->category instanceof \Cms\Config\CategoryConfig
+            && \App\Registry::$config->category->bufferingAllowedClass) {
+            $class = \App\Registry::$config->category->bufferingAllowedClass;
+            $buffering = new $class($this->_request);
+        } else {
+            //domyślny cmsowy obiekt sprawdzający, czy można buforować
+            $buffering = new \Cms\Model\CategoryBuffering($this->_request);
+        }
+        return $buffering->isAllowed();
     }
 
 }

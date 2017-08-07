@@ -33,11 +33,11 @@ abstract class CmsKernelConfig extends \Mmi\App\KernelConfig
      * @var integer
      */
     public $thumbQuality = 90;
-	
-	/**
-	 * Konfiguracja obsługi kategorii
-	 * @var \Cms\Config\CategoryConfig
-	 */
-	public $category;
+
+    /**
+     * Konfiguracja obsługi kategorii
+     * @var \Cms\Config\CategoryConfig
+     */
+    public $category;
 
 }
