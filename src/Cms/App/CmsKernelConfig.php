@@ -18,7 +18,7 @@ abstract class CmsKernelConfig extends \Mmi\App\KernelConfig
 
     /**
      * Konfiguracja autoryzacji CMS (LDAP)
-     * @var \Cms\App\LdapConfig
+     * @var \Mmi\Ldap\LdapConfig
      */
     public $ldap;
 
@@ -33,5 +33,11 @@ abstract class CmsKernelConfig extends \Mmi\App\KernelConfig
      * @var integer
      */
     public $thumbQuality = 90;
+
+    /**
+     * Konfiguracja obsługi kategorii
+     * @var \Cms\Config\CategoryConfig
+     */
+    public $category;
 
 }
