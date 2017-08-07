@@ -225,20 +225,16 @@ class CategoryController extends \Mmi\Mvc\Controller
      */
     protected function _bufferingAllowed()
     {
-        //zalogowani nie powinni buforować
-        if (\App\Registry::$auth->hasIdentity()) {
-            return false;
-        }
-        //messenger ma wiadomości
-        if (\Mmi\Message\MessengerHelper::getMessenger()
-                ->hasMessages()) {
-            return false;
-        }
-        //walidacja formularzy nie powinna być cache'owana
-        if ($this->_request->getRequestMethod() != 'GET') {
-            return false;
-        }
-        return true;
+		//jeśli zdefiniowano własny obiekt sprawdzający, czy można buforować
+		if (\App\Registry::$config->category instanceof \Cms\Config\CategoryConfig
+			&& \App\Registry::$config->category->bufferingAllowedClass) {
+			$class = \App\Registry::$config->category->bufferingAllowedClass;
+			$buffering = new $class($this->_request);
+		} else {
+			//domyślny cmsowy obiekt sprawdzający, czy można buforować
+			$buffering = new \Cms\Model\CategoryBuffering($this->_request);
+		}
+		return $buffering->isAllowed();
     }
 
 }
