@@ -31,7 +31,7 @@ class CategoryWidget extends \Mmi\Mvc\ViewHelper\HelperAbstract
             //ustawienie identyfikatora relacji widgetu
             $widgetRequest->widgetId = $widgetRelation->id;
             //render widgetu
-            $widgetData = \Mmi\Mvc\ActionHelper::getInstance()->action($widgetRequest->toArray());
+            $widgetData = \Mmi\Mvc\ActionHelper::getInstance()->action($widgetRequest);
             //bufor wyłączony parametrem
             if (!$widgetRecord->cacheLifetime) {
                 return $widgetData;
