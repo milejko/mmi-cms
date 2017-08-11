@@ -245,8 +245,7 @@ class UploadController extends Mvc\Controller
      */
     protected function _operationAfter($action, $record)
     {
-        $params = array_merge($record->toArray(), $action);
-        return \Mmi\Mvc\ActionHelper::getInstance()->action($params);
+        return \Mmi\Mvc\ActionHelper::getInstance()->action(new \Mmi\Http\Request(array_merge($record->toArray(), $action)));
     }
 
 }

@@ -31,7 +31,7 @@ class Cron
             $output = '';
             try {
                 $start = microtime(true);
-                $output = \Mmi\Mvc\ActionHelper::getInstance()->action(['module' => $cron->module, 'controller' => $cron->controller, 'action' => $cron->action]);
+                $output = \Mmi\Mvc\ActionHelper::getInstance()->action(new \Mmi\Http\Request(['module' => $cron->module, 'controller' => $cron->controller, 'action' => $cron->action]));
                 $logData['time'] = round(microtime(true) - $start, 4) . 's';
                 if ($output) {
                     $logData['message'] = $cron->name . ': ' . $output;
