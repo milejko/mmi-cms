@@ -143,7 +143,7 @@ class ApiController extends \Mmi\Mvc\Controller
      */
     protected function _internalError(\Exception $e)
     {
-        $this->getLogger()->addWarning($e->getMessage());
+        $this->getLogger()->warning($e->getMessage());
         $this->getResponse()->setCodeError();
         return '<html><body><h1>Soap service failed</h1></body></html>';
     }
