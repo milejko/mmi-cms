@@ -11,40 +11,10 @@
 namespace Cms;
 
 /**
- * Kontroler serwujący API JSON-RPC i SOAP
+ * Kontroler serwujący API SOAP
  */
 class ApiController extends \Mmi\Mvc\Controller
 {
-
-    /**
-     * Akcja serwera JSON-RPC
-     */
-    public function jsonServerAction()
-    {
-        try {
-            //ustawienie nagłówków
-            $this->getResponse()
-                //możliwość odczytu przez AJAX z innej domeny
-                ->setHeader('Access-Control-Allow-Origin', '*')
-                ->setHeader('Access-Control-Allow-Headers', 'Content-Type')
-                //typ application/json
-                ->setTypeJson();
-            $apiModel = $this->_getModelName($this->obj);
-            //serwer z autoryzacją HTTP
-            if (\Mmi\App\FrontController::getInstance()->getEnvironment()->authUser) {
-                $apiModel .= 'Private';
-                $auth = new \Mmi\Security\Auth;
-                $auth->setModelName($apiModel);
-                //autoryzacja basic
-                $auth->httpAuth('Private API', 'Access denied!');
-            }
-            //obsługa żądania
-            return \Mmi\JsonRpc\JsonServer::handle($apiModel);
-        } catch (\Exception $e) {
-            //wyrzucenie internal server error
-            return $this->_internalError($e);
-        }
-    }
 
     /**
      * Akcja serwera SOAP
