@@ -152,7 +152,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
         }
         //brak pliku źródłowego
         if (!file_exists($inputFile)) {
-            FrontController::getInstance()->getLogger()->addWarning('CMS file not found: ' . $this->id . ' - ' . $this->original);
+            FrontController::getInstance()->getLogger()->warning('CMS file not found: ' . $this->id . ' - ' . $this->original);
             return;
         }
         //istnieje plik - zwrot ścieżki publicznej
@@ -165,7 +165,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
             try {
                 mkdir(dirname($thumbPath), 0777, true);
             } catch (\Mmi\App\KernelException $e) {
-                FrontController::getInstance()->getLogger()->addWarning('Unable to create diectories: ' . $e->getMessage());
+                FrontController::getInstance()->getLogger()->warning('Unable to create diectories: ' . $e->getMessage());
                 return;
             }
         }
@@ -178,7 +178,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
         try {
             copy($inputFile, $thumbPath);
         } catch (\Exception $e) {
-            FrontController::getInstance()->getLogger()->addWarning('Unable to copy CMS file to web: ' . $this->id);
+            FrontController::getInstance()->getLogger()->warning('Unable to copy CMS file to web: ' . $this->id);
             return;
         }
         //zwrot ścieżki publicznej
@@ -369,7 +369,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
         }
         //brak obrazu
         if (!isset($imgRes)) {
-            FrontController::getInstance()->getLogger()->addWarning('Unable to resize CMS file: ' . $outputFile);
+            FrontController::getInstance()->getLogger()->warning('Unable to resize CMS file: ' . $outputFile);
             return;
         }
         //plik istnieje
@@ -377,7 +377,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
             try {
                 mkdir(dirname($outputFile), 0777, true);
             } catch (\Mmi\App\KernelException $e) {
-                FrontController::getInstance()->getLogger()->addWarning('Unable to create directories: ' . $e->getMessage());
+                FrontController::getInstance()->getLogger()->warning('Unable to create directories: ' . $e->getMessage());
                 return;
             }
         }

@@ -181,7 +181,7 @@ class Mail
                 $result['success'] ++;
             } catch (\Exception $e) {
                 //bład wysyłki
-                \Mmi\App\FrontController::getInstance()->getLogger()->addWarning($e->getMessage());
+                \Mmi\App\FrontController::getInstance()->getLogger()->warning($e->getMessage());
                 //jak nie da sie wysłac to usuwamy
                 $email->delete();
                 //podwyzszenie licznika nieudanych

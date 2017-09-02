@@ -94,7 +94,7 @@ class Auth implements \Mmi\Security\AuthInterface
             $ldapResults = $ldapClient->findUser($query, 10, ['sAMAccountname']);
         } catch (\Mmi\Ldap\LdapException $e) {
             //błąd usługi
-            \Mmi\App\FrontController::getInstance()->getLogger()->addCritical($e);
+            \Mmi\App\FrontController::getInstance()->getLogger()->critical($e);
             return [];
         }
         //budowa tablicy z użytkownikami

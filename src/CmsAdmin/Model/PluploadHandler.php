@@ -286,7 +286,8 @@ class PluploadHandler
             ->setHeader("Last-Modified", gmdate("D, d M Y H:i:s") . " GMT", true)
             ->setHeader("Cache-Control", "no-store, no-cache, must-revalidate", true)
             ->setHeader("Cache-Control", "post-check=0, pre-check=0", false)
-            ->setHeader("Pragma", "no-cache", true);
+            ->setHeader("Pragma", "no-cache", true)
+            ->sendHeaders();
     }
 
     /**
