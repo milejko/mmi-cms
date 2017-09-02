@@ -33,7 +33,6 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
         \App\Registry::$auth = $auth;
         \Mmi\Mvc\ActionHelper::getInstance()->setAuth($auth);
         \Mmi\Mvc\ViewHelper\Navigation::setAuth($auth);
-
         //funkcja pamiętaj mnie realizowana poprzez cookie
         $cookie = new \Mmi\Http\Cookie;
         $remember = \App\Registry::$config->session->authRemember ? \App\Registry::$config->session->authRemember : 0;
@@ -47,17 +46,26 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
                 \Mmi\Session\Session::regenerateId();
             }
         }
+        //ustawienie widoku
+        $view = \Mmi\App\FrontController::getInstance()->getView();
+        $base = $view->baseUrl;
+        $jsRequest = $request->toArray();
+        $jsRequest['baseUrl'] = $base;
+        unset($jsRequest['controller']);
+        unset($jsRequest['action']);
+        //umieszczenie tablicy w headScript()
+        $view->headScript()->prependScript('var request = ' . json_encode($jsRequest));
+
         //autoryzacja do widoku
         if ($auth->hasIdentity()) {
-            \Mmi\App\FrontController::getInstance()->getView()->auth = $auth;
+            $view->auth = $auth;
         }
-
         //ustawienie acl
         if (null === ($acl = \App\Registry::$cache->load('mmi-cms-acl'))) {
             $acl = \Cms\Model\Acl::setupAcl();
             \App\Registry::$cache->save($acl, 'mmi-cms-acl', 0);
         }
-        \Mmi\App\FrontController::getInstance()->getView()->acl = \App\Registry::$acl = $acl;
+        $view->acl = \App\Registry::$acl = $acl;
         \Mmi\Mvc\ActionHelper::getInstance()->setAcl($acl);
         \Mmi\Mvc\ViewHelper\Navigation::setAcl($acl);
 
@@ -89,25 +97,6 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
         \App\Registry::$auth->clearIdentity();
         //zalogowany na nieuprawnioną rolę
         throw new \Mmi\Mvc\MvcNotFoundException('Unauthorized access');
-    }
-
-    /**
-     * Wykonywana po dispatcherze
-     * @param \Mmi\Http\Request $request
-     */
-    public function postDispatch(\Mmi\Http\Request $request)
-    {
-        //ustawienie widoku
-        $view = \Mmi\App\FrontController::getInstance()->getView();
-        $base = $view->baseUrl;
-        $view->domain = \App\Registry::$config->host;
-        $view->languages = \App\Registry::$config->languages;
-        $jsRequest = $request->toArray();
-        $jsRequest['baseUrl'] = $base;
-        unset($jsRequest['controller']);
-        unset($jsRequest['action']);
-        //umieszczenie tablicy w headScript()
-        $view->headScript()->prependScript('var request = ' . json_encode($jsRequest));
     }
 
     /**
