@@ -93,13 +93,13 @@ class GridExporter
                     }
                     continue;
                 }
-                //jeśli kolumna typu słownikowego z multiopcjami
-                if ($column instanceof Column\SelectColumn) {
+                //kolumna to select ale nie checkbox
+                if ($column instanceof Column\SelectColumn && !($column instanceof Column\CheckboxColumn)) {
                     $recordTable[] = html_entity_decode($column->renderCell($record));
-                } else {
-                    //domyślnie przepisujemy wartość z rekordu
-                    $recordTable[] = $value;
+                    continue;
                 }
+                //domyślnie przepisujemy wartość z rekordu
+                $recordTable[] = $value;
             }
             $exportTable[] = $recordTable;
         }
