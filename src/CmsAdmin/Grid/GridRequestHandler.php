@@ -66,7 +66,8 @@ class GridRequestHandler
         //ustawia typ danych
         FrontController::getInstance()->getResponse()
             ->setHeader('Content-disposition', 'attachment; filename=' . $this->_grid->getClass() . '.csv')
-            ->setType('text/csv');
+            ->setTypePlain()
+            ->sendHeaders();
         //przesyła CSV do klienta
         (new GridExporter($this->_grid))->passCsv();
         exit;
