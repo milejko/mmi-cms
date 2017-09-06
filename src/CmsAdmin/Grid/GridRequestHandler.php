@@ -194,8 +194,7 @@ class GridRequestHandler
         //ustawianie odpowiedzi
         FrontController::getInstance()->getResponse()
             ->setTypePlain()
-            ->setContent($renderer->renderHeader() . $renderer->renderBody() . $renderer->renderFooter())
-            ->send();
+            ->setContent($renderer->renderHeader() . $renderer->renderBody() . $renderer->renderFooter());
         exit;
     }
 
