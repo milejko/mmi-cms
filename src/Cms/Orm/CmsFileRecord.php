@@ -160,14 +160,11 @@ class CmsFileRecord extends \Mmi\Orm\Record
             FrontController::getInstance()->getLocalCache()->save(true, $cacheKey);
             return $publicUrl;
         }
-        //tworzenie katalogów
-        if (!file_exists(dirname($thumbPath))) {
-            try {
-                mkdir(dirname($thumbPath), 0777, true);
-            } catch (\Mmi\App\KernelException $e) {
-                FrontController::getInstance()->getLogger()->warning('Unable to create diectories: ' . $e->getMessage());
-                return;
-            }
+        //próba tworzenia katalogów
+        try {
+            mkdir(dirname($thumbPath), 0777, true);
+        } catch (\Mmi\App\KernelException $e) {
+            //nic
         }
         //wybrano skalowanie dla klasy obrazu
         if ($this->class == 'image' && $scaleType != 'default') {
