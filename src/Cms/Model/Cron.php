@@ -34,7 +34,7 @@ class Cron
                 $output = \Mmi\Mvc\ActionHelper::getInstance()->action(new \Mmi\Http\Request(['module' => $cron->module, 'controller' => $cron->controller, 'action' => $cron->action]));
                 $logData['time'] = round(microtime(true) - $start, 4) . 's';
                 if ($output) {
-                    $logData['message'] = $cron->name . ': ' . $output;
+                    $logData['message'] = gethostname() . '@' . $cron->name . ': ' . $output;
                 }
             } catch (Exception $e) {
                 $logData['message'] = $e->__toString();
