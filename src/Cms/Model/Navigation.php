@@ -115,17 +115,21 @@ class Navigation
             ->setAction('dispatch')
             ->setParams($params)
             ->setBlank($record->blank ? true : false)
-            ->setDescription($record->description)
             ->setDisabled($record->active ? false : true)
             ->setHttps($record->https)
             ->setUri($record->redirectUri ? : null)
             ->setLabel($record->name)
             ->setLang($record->lang)
             ->setFollow($record->follow ? true : false)
-            ->setTitle($record->title)
             ->setConfig($config)
             ->setDateStart($record->dateStart)
             ->setDateEnd($record->dateEnd);
+		if ($record->title) {
+			$element->setTitle($record->title);
+		}
+		if ($record->description) {
+			$element->setDescription($record->description);
+		}
         return $element;
     }
 
