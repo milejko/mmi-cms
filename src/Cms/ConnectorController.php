@@ -16,35 +16,85 @@ namespace Cms;
 class ConnectorController extends \Mmi\Mvc\Controller
 {
 
+    //maksymalny rozmiar obsługiwanego pliku
+    CONST MAX_FILE_SIZE = '32000000';
+
     public function init()
     {
         $this->getResponse()->setTypeJson();
     }
 
-    public function importAction()
+    public function importFileAction()
     {
-        
+        $session = new \Mmi\Session\SessionSpace(\CmsAdmin\Form\ConnectorImportContentForm::SESSION_SPACE);
+        //(new \Cms\Model\ConnectorModel)->getInstanceHash();
+        return 'download-' . $this->name . $session->url;
     }
 
+    public function exportFileAction()
+    {
+        //błędna wersja CMS
+        if ((new Model\ConnectorModel)->getInstanceHash() != $this->instanceHash) {
+            throw new \Mmi\Mvc\MvcNotFoundException('Version mismatch');
+        }
+        if (null === $file = (new Orm\CmsFileQuery)->whereName()->equals($this->name)
+            ->findFirst()) {
+            throw new \Mmi\Mvc\MvcNotFoundException('File not found');
+        }
+        if ($file->size > self::MAX_FILE_SIZE) {
+            throw new \Mmi\Mvc\MvcForbiddenException('File to large');
+        }
+        return file_get_contents($file->getRealPath());
+    }
+
+    /**
+     * Eksporter zawartości
+     * @return json
+     */
     public function exportContentAction()
     {
-        //@TODO uprawnienia
-        $exporter = new Model\StructureExporter;
-        return json_encode(
-            [
-                'attributeType' => (new \Cms\Orm\CmsAttributeTypeQuery)->find()->toArray(),
-                'attribute' => (new \Cms\Orm\CmsAttributeQuery)->find()->toArray(),
-                'attributeRelation' => (new \Cms\Orm\CmsAttributeRelationQuery)->find()->toArray(),
-                'attributeValue' => (new \Cms\Orm\CmsAttributeValueQuery)->find()->toArray(),
-                'attributeValueRelation' => (new \Cms\Orm\CmsAttributeValueRelationQuery)->find()->toArray(),
-                'categoryType' => (new \Cms\Orm\CmsCategoryTypeQuery)->find()->toArray(),
-                'category' => (new \Cms\Orm\CmsCategoryQuery)->find()->toArray(),
-                'categoryAcl' => (new \Cms\Orm\CmsCategoryAclQuery)->find()->toArray(),
-                'categoryRelation' => (new \Cms\Orm\CmsCategoryRelationQuery)->find()->toArray(),
-                'categoryWidgets' => (new \Cms\Orm\CmsCategoryWidgetQuery)->find()->toArray(),
-                'categoryWidgetCategory' => (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)->find()->toArray(),
-            ]
-        );
+        //autoryzacja
+        $this->_authenticate();
+        //json
+        return json_encode((new Model\ConnectorModel)->getExportData((bool) $this->getPost()->acl, (bool) $this->getPost()->content));
+    }
+
+    /**
+     * Eksporter listy plików
+     * @return json
+     */
+    public function exportFileObjectAction()
+    {
+        //autoryzacja
+        $this->_authenticate();
+        //json
+        return json_encode((new Model\ConnectorModel)->getFileObjects());
+    }
+
+    public function exportFileMetaAction()
+    {
+        //autoryzacja
+        $this->_authenticate();
+        return json_encode((new Model\ConnectorModel)->getFileMeta($this->getPost()->fileObjects));
+    }
+
+    /**
+     * Autoryzacja zapytania
+     * @throws \Mmi\Mvc\MvcNotFoundException
+     * @throws \Mmi\Mvc\MvcForbiddenException
+     */
+    private function _authenticate()
+    {
+        //błędna wersja CMS
+        if ((new Model\ConnectorModel)->getInstanceHash() != $this->getPost()->instanceHash) {
+            throw new \Mmi\Mvc\MvcNotFoundException('Version mismatch');
+        }
+        //błędne credentiale
+        if (false === \App\Registry::$auth->setIdentity($this->getPost()->identity)
+                ->setCredential($this->getPost()->credential)
+                ->authenticate()) {
+            throw new \Mmi\Mvc\MvcForbiddenException('Transaction forbidden');
+        }
     }
 
 }
