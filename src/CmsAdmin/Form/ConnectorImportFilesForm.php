@@ -1,72 +1,62 @@
 <?php
 
+/**
+ * Mmi Framework (https://github.com/milejko/mmi.git)
+ * 
+ * @link       https://github.com/milejko/mmi.git
+ * @copyright  Copyright (c) 2010-2017 Mariusz Miłejko (http://milejko.com)
+ * @license    http://milejko.com/new-bsd.txt New BSD License
+ */
+
 namespace CmsAdmin\Form;
 
+/**
+ * Drugi krok - lista obiektów plików do importu
+ */
 class ConnectorImportFilesForm extends \Mmi\Form\Form
 {
 
-    CONST SESSION_SPACE = 'connector-data';
-
+    /**
+     * Budowanie formularza
+     */
     public function init()
     {
-        $session = new \Mmi\Session\SessionSpace(self::SESSION_SPACE);
-        $query = $session->url . '/?' . http_build_query([
-                'module' => 'cms',
-                'controller' => 'connector',
-                'action' => 'exportFileObject'
-        ]);
-        $context = stream_context_create([
-            'http' => [
-                'method' => 'POST',
-                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-                'content' => http_build_query([
-                    'identity' => $session->identity,
-                    'credential' => $session->credential,
-                    'instanceHash' => (new \Cms\Model\ConnectorModel)->getInstanceHash()
-                ])
-            ]
-        ]);
+        //wczytywanie sesji
+        $session = new \Mmi\Session\SessionSpace(\Cms\Model\ConnectorModel::SESSION_SPACE);
         try {
-            $data = json_decode(file_get_contents($query, false, $context), true);
-        } catch (\Exception $e) {
+            $data = (new \Cms\Model\ConnectorModel)->getData($session->url, 'exportFileObject', [], $session->identity, $session->credential);
+        } catch (\Cms\Exception\ConnectorException $e) {
+            //rollback - puste dane
             $data = [];
         }
+
+        //lista obiektów
         $this->addElementMultiCheckbox('fileObjects')
             ->setLabel('klasy plików')
             ->setMultioptions($data)
             ->setValue($data);
 
+        //submit
         $this->addElementSubmit('submit')
             ->setLabel('importuj');
     }
 
+    /**
+     * Pobranie listy plików (wraz z meta)
+     * @return boolean
+     */
     public function afterSave()
     {
-        $session = new \Mmi\Session\SessionSpace(self::SESSION_SPACE);
-        $query = $session->url . '/?' . http_build_query([
-                'module' => 'cms',
-                'controller' => 'connector',
-                'action' => 'exportFileMeta'
-        ]);
-        $context = stream_context_create([
-            'http' => [
-                'method' => 'POST',
-                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-                'content' => http_build_query([
-                    'fileObjects' => $this->getElement('fileObjects')->getValue(),
-                    'identity' => $session->identity,
-                    'credential' => $session->credential,
-                    'instanceHash' => (new \Cms\Model\ConnectorModel)->getInstanceHash()
-                ])
-            ]
-        ]);
+        //wczytywanie sesji
+        $session = new \Mmi\Session\SessionSpace(\Cms\Model\ConnectorModel::SESSION_SPACE);
         try {
-            $data = json_decode(file_get_contents($query, false, $context), true);
-        } catch (\Exception $e) {
+            //ustawienie danych na elementy pobrane z connectora
+            $this->setOption('data', (new \Cms\Model\ConnectorModel)->getData($session->url, 'exportFileList', ['fileObjects' => $this->getElement('fileObjects')->getValue()], $session->identity, $session->credential));
+        } catch (\Cms\Exception\ConnectorException $e) {
+            //brak plików
             $this->getElement('fileObjects')->addError('Brak plików');
             return false;
         }
-        $this->setOption('data', $data);
         return true;
     }
 

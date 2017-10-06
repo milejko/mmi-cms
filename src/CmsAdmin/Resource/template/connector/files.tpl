@@ -6,9 +6,9 @@
     <div class="content-box-content clearfix">
         {$form}
         {if $files}
-            <ul class="auto-download">
-            {foreach $files as $file}
-                <li data-name="{$file.name}"><span>0</span>% {$file.object}/{$file.objectId}/{$file.original}</li>
+            <ul class="auto-download" data-url="{$downloadUrl}">
+            {foreach $files as $name => $userName}
+                <li data-name="{$name}"><span>0</span>% - {$userName}</li>
             {/foreach}
             </ul>
         {/if}
@@ -18,7 +18,7 @@
     $(document).ready(function () {
         $('ul.auto-download > li').each(function () {
             var obj = $(this);
-            $.get(request.baseUrl + '/?module=cms&controller=connector&action=importFile&name=' + obj.attr('data-name')).always(function () {
+            $.get(request.baseUrl + '/?module=cms&controller=connector&action=importFile&name=' + obj.attr('data-name') + '&url=' + obj.parent('ul').attr('data-url')).always(function () {
                 obj.children('span').html('100');
             });
         });

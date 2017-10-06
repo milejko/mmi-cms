@@ -4,14 +4,14 @@
  * Mmi Framework (https://github.com/milejko/mmi.git)
  * 
  * @link       https://github.com/milejko/mmi.git
- * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
+ * @copyright  Copyright (c) 2010-2017 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
 namespace Cms;
 
 /**
- * Kontroler łączący różne instancje CMS
+ * Kontroler łączący instancje CMS
  */
 class ConnectorController extends \Mmi\Mvc\Controller
 {
@@ -19,37 +19,49 @@ class ConnectorController extends \Mmi\Mvc\Controller
     //maksymalny rozmiar obsługiwanego pliku
     CONST MAX_FILE_SIZE = '32000000';
 
+    /**
+     * Inicjalizacja
+     */
     public function init()
     {
+        //ustawia typ json
         $this->getResponse()->setTypeJson();
     }
 
+    /**
+     * Importuje plik na podstawie nazwy
+     */
     public function importFileAction()
     {
-        $session = new \Mmi\Session\SessionSpace(\CmsAdmin\Form\ConnectorImportContentForm::SESSION_SPACE);
-        //(new \Cms\Model\ConnectorModel)->getInstanceHash();
-        return 'download-' . $this->name . $session->url;
+        //@TODO: import meta + dane osobno
+        echo file_get_contents(base64_decode($this->url) . '/?module=cms&controller=connector&action=exportFile&name=' . $this->name);
+        return '';
     }
 
+    /**
+     * Eksportuje binarium pliku
+     * @return mixed
+     * @throws \Mmi\Mvc\MvcNotFoundException
+     * @throws \Mmi\Mvc\MvcForbiddenException
+     */
     public function exportFileAction()
     {
-        //błędna wersja CMS
-        if ((new Model\ConnectorModel)->getInstanceHash() != $this->instanceHash) {
-            throw new \Mmi\Mvc\MvcNotFoundException('Version mismatch');
-        }
+        //wyszukiwanie pliku
         if (null === $file = (new Orm\CmsFileQuery)->whereName()->equals($this->name)
             ->findFirst()) {
             throw new \Mmi\Mvc\MvcNotFoundException('File not found');
         }
+        //plik zbyt duży do transferu
         if ($file->size > self::MAX_FILE_SIZE) {
             throw new \Mmi\Mvc\MvcForbiddenException('File to large');
         }
-        return file_get_contents($file->getRealPath());
+        //zwrot meta i pluginów
+        return json_encode(['meta' => $file->toArray(), 'data' => base64_encode(file_get_contents($file->getRealPath()))]);
     }
 
     /**
      * Eksporter zawartości
-     * @return json
+     * @return string json
      */
     public function exportContentAction()
     {
@@ -61,7 +73,7 @@ class ConnectorController extends \Mmi\Mvc\Controller
 
     /**
      * Eksporter listy plików
-     * @return json
+     * @return string json
      */
     public function exportFileObjectAction()
     {
@@ -71,11 +83,16 @@ class ConnectorController extends \Mmi\Mvc\Controller
         return json_encode((new Model\ConnectorModel)->getFileObjects());
     }
 
-    public function exportFileMetaAction()
+    /**
+     * Eksporter meta danych plików (z wybranych obiektów)
+     * @return string json
+     */
+    public function exportFileListAction()
     {
         //autoryzacja
         $this->_authenticate();
-        return json_encode((new Model\ConnectorModel)->getFileMeta($this->getPost()->fileObjects));
+        //json z plikami
+        return json_encode((new Model\ConnectorModel)->getFileList($this->getPost()->fileObjects));
     }
 
     /**
@@ -85,14 +102,16 @@ class ConnectorController extends \Mmi\Mvc\Controller
      */
     private function _authenticate()
     {
-        //błędna wersja CMS
+        //sprawdzenie odcisku wersji CMS
         if ((new Model\ConnectorModel)->getInstanceHash() != $this->getPost()->instanceHash) {
+            //not found
             throw new \Mmi\Mvc\MvcNotFoundException('Version mismatch');
         }
-        //błędne credentiale
+        //próba autoryzacji credentialami
         if (false === \App\Registry::$auth->setIdentity($this->getPost()->identity)
                 ->setCredential($this->getPost()->credential)
                 ->authenticate()) {
+            //forbidden
             throw new \Mmi\Mvc\MvcForbiddenException('Transaction forbidden');
         }
     }
