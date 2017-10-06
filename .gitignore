@@ -9,3 +9,4 @@
 node_modules/
 bower_libs/
 src/CmsAdmin/Resource/web/
+src/CmsAdmin/Resource/front/dist/
