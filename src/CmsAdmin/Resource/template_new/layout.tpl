@@ -1,11 +1,11 @@
 {'cmsAdmin/header'}
-{if $auth}
+{if !$auth}
 <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
 <header class="app-header navbar">
-
     <button class="navbar-toggler mobile-sidebar-toggler d-lg-none mr-auto" type="button">☰</button>
-    <a class="navbar-brand" href="#"></a>
+    <a class="navbar-brand nowa-era-logo" href="#"></a>
     <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button">☰</button>
+    <ul class="nav navbar-nav ml-auto"></ul>
 </header>
 <div class="app-body">
     <div class="sidebar">
@@ -22,14 +22,15 @@
     <main class="main">
 
     </main>
-    <footer class="app-footer">
-        <a href="https://github.com/milejko/mmi-cms">{$domain}</a> &copy; {system_date('Y')}.
-        <span class="float-right">Powered by <a href="https://github.com/milejko/mmi-cms">MMi CMS</a>
-        </span>
-    </footer>
 </div>
+<footer class="app-footer">
+    <a href="https://github.com/milejko/mmi-cms">{$domain}</a> &copy; {system_date('Y')}.
+    <span class="float-right">Powered by
+        <a href="https://github.com/milejko/mmi-cms">MMi CMS</a>
+    </span>
+</footer>
 {/if}
-{if !$auth}
+{if $auth}
 <body class="app flex-row align-items-center">
 <div class="container">
     <div class="row justify-content-center">

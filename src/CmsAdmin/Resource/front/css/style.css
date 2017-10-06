@@ -8814,3 +8814,10 @@ hr.transparent {
   top: 0;
   width: 20px;
   height: 20px; }
+
+.nowa-era-logo {
+  background-image: url("../images/logo.png") !important;
+  background-size: 50px auto !important; }
+
+.app-footer {
+  line-height: 49px !important; }

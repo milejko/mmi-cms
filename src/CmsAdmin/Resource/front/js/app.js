@@ -8,7 +8,7 @@
   $.panelIconClosed = 'icon-arrow-down';
 
   //Default colours
-  $.brandPrimary =  '#20a8d8';
+  $.brandPrimary =  '#5bc0de';
   $.brandSuccess =  '#4dbd74';
   $.brandInfo =     '#63c2de';
   $.brandWarning =  '#f8cb00';
@@ -19,7 +19,6 @@
   $.grayLight =     '#818a91';
   $.grayLighter =   '#d1d4d7';
   $.grayLightest =  '#f8f9fa';
-
 'use strict';
 
 /****
