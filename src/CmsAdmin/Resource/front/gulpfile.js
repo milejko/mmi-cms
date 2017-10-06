@@ -60,9 +60,7 @@ gulp.task('serve:new', function () {
         browserSync.init({
             proxy: 'http://localhost/cmsAdmin'
         });
-
-        gulp.watch('scss/**/*.scss', runSequence('sass', 'build:dist', 'new_assets'), browserSync.reload);
-        gulp.watch('js/**/*.js', runSequence('sass', 'build:dist', 'new_assets'), browserSync.reload);
+        gulp.watch('./../template_new/**/*.tpl', ['new_templates'], browserSync.reload);
     })
 });
 
