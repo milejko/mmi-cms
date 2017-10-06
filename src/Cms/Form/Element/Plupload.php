@@ -527,7 +527,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
 								src = $(this).find(':selected').attr('data-image-url')
 							}
 
-							$('#image_$fieldId').html( '<img src=\"' + src +'\"/>' );
+							$('#image_$fieldId').html( images + src +'\"/>' );
 						});
 					});
 				// ]]>

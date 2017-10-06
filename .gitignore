@@ -7,3 +7,4 @@
 /web/
 .idea/
 node_modules/
+bower_libs/

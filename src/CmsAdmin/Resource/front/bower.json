@@ -1,0 +1,22 @@
+{
+  "name": "mmi-cms",
+  "description": "",
+  "main": "",
+  "authors": [
+    "Rafał Piekarski"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/milejko/mmi-cms",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "libs/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "tinymce": "^4.7.0",
+    "jquery": "^3.2.1"
+  }
+}
