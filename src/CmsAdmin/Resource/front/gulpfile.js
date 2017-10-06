@@ -19,63 +19,46 @@ var paths = gulp.paths;
 
 var project_path = {
     base:'./../base/**/*',
-    front: [
-        './css/**/*',
-        './fonts/**/*',
-        './images/**/*',
-        './js/**/*',
-        './node_modules/bootstrap/dist/js/bootstrap.min.js',
-        './node_modules/bootstrap-daterangepicker/daterangepicker.js',
-        './node_modules/chart.js/dist/Chart.min.js',
-        './node_modules/datatables.net/js/jquery.dataTables.js',
-        './node_modules/datatables.net-bs/js/dataTables.bootstrap.js',
-        './node_modules/fullcalendar/dist/fullcalendar.min.js',
-        './node_modules/fullcalendar/dist/gcal.min.js',
-        './node_modules/gaugeJS/dist/gauge.min.js',
-        './node_modules/ion-rangeslider/js/ion.rangeSlider.min.js',
-        './node_modules/jquery/dist/jquery.min.js',
-        './node_modules/jquery/dist/jquery.min.map',
-        './node_modules/jquery-ui-dist/jquery-ui.min.js',
-        './node_modules/jquery-validation/dist/jquery.validate.min.js',
-        './node_modules/jquery.maskedinput/src/jquery.maskedinput.js',
-        './node_modules/ladda/dist/ladda.min.js',
-        './node_modules/ladda/dist/spin.min.js',
-        './node_modules/moment/min/moment.min.js',
-        './node_modules/quill/dist/quill.min.js',
-        './node_modules/quill/dist/quill.min.js.map',
-        './node_modules/pace-progress/pace.min.js',
-        './node_modules/popper.js/dist/umd/popper.min.js',
-        './node_modules/popper.js/dist/umd/popper.min.js.map',
-        './node_modules/select2/dist/js/select2.min.js',
-        './node_modules/toastr/toastr.js',
-        './node_modules/font-awesome/css/font-awesome.min.css',
-        './node_modules/font-awesome/css/font-awesome.css.map',
-        './node_modules/simple-line-icons/css/simple-line-icons.css',
-        './node_modules/font-awesome/fonts/**',
-        './node_modules/simple-line-icons/fonts/**'
-    ],
+    front: './dist/**/*',
     output:'./../web/'
 };
 
-gulp.task('clean', function(){
+gulp.task('clean_assets', function(){
     return gulp.src(project_path.output, {read: false})
         .pipe(clean({force: true}));
 });
 
-gulp.task('old', ['clean'], function(){
+gulp.task('old_assets', ['clean_assets'], function(){
     return gulp.src(project_path.base, {base: './../base/'})
         .pipe(gulp.dest(project_path.output));
 });
 
-gulp.task('new', function(){
-    return gulp.src(project_path.front, {base: './'})
+gulp.task('new_assets', ['clean_assets'], function(){
+    return gulp.src(project_path.front, {base: './dist'})
         .pipe(gulp.dest(project_path.output));
 });
 
-gulp.task('serve:new', ['new' , 'sass'], function() {
-    
+gulp.task('clean_templates', function(){
+    return gulp.src('./../template/', {read: false})
+        .pipe(clean({force: true}));
+});
+
+gulp.task('old_templates', ['clean_assets'], function(){
+    return gulp.src('./../template_old/**/*', {base: './../template_old/'})
+        .pipe(gulp.dest('./../template/'));
+});
+
+gulp.task('new_templates', ['clean_assets'], function(){
+    return gulp.src('./../template_new/**/*', {base: './../template_new/'})
+        .pipe(gulp.dest('./../template/'));
+});
+
+
+
+gulp.task('serve:new', ['new_assets', 'new_templates' , 'sass'], function() {
+
     browserSync.init({
-        proxy: 'http://localhost/cmsAdmin',
+        proxy: 'http://localhost/cmsAdmin'
     });
 
   gulp.watch('scss/**/*.scss', ['sass', 'build:dist', 'new' ], browserSync.reload);
@@ -83,10 +66,10 @@ gulp.task('serve:new', ['new' , 'sass'], function() {
 
 });
 
-gulp.task('serve:old', ['old' , 'sass'], function() {
+gulp.task('serve:old', ['old_assets', 'old_templates' , 'sass'], function() {
 
     browserSync.init({
-        proxy: 'http://localhost/cmsAdmin',
+        proxy: 'http://localhost/cmsAdmin'
     });
 
     gulp.watch('scss/**/*.scss', ['sass', 'build:dist', 'new' ], browserSync.reload);
