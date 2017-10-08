@@ -118,6 +118,7 @@ abstract class Grid extends \Mmi\OptionObject
     /**
      * Pobiera zapytanie
      * @return \Mmi\Orm\Query
+     * @throws GridException
      */
     public final function getQuery()
     {
