@@ -8821,3 +8821,7 @@ hr.transparent {
 
 .app-footer {
   line-height: 49px !important; }
+
+.ne-error-list ul {
+  list-style-type: none;
+  color: red; }
