@@ -32,6 +32,7 @@ class ConnectorModel
             ->beginTransaction();
         //iteracja po danych z tabel
         foreach ($importData as $tableName => $data) {
+            \App\Registry::$db;
             //puste dane
             if (empty($data)) {
                 continue;
@@ -53,16 +54,19 @@ class ConnectorModel
     public function importFileMeta(array $importData)
     {
         //brak id
-        if (!isset($importData['id'])) {
+        if (!isset($importData['name']) || !isset($importData['id'])) {
             return;
         }
-        //plik istnieje
-        if (null !== (new \Cms\Orm\CmsFileQuery)->findPk($importData['id'])) {
+        //sprawdzanie istnienia pliku
+        if (null === $file = (new \Cms\Orm\CmsFileQuery)->whereName()->equals($importData['name'])->findFirst()) {
+            $file = new \Cms\Orm\CmsFileRecord;
+        }
+        //identyfikatory niezgodne
+        if ($file->id && $file->id != $importData['id']) {
             return;
         }
-        //stworzenie nowego rekordu, ustawienie danych i zapis
-        $file = (new \Cms\Orm\CmsFileRecord)
-            ->setFromArray($importData);
+        //ustawienie danych rekordu rekordu
+        $file->setFromArray($importData);
         //poprawny zapis
         if ($file->save()) {
             //zwrot rekordu
@@ -78,6 +82,8 @@ class ConnectorModel
      */
     public function getExportData($acl = true, $content = true)
     {
+        //inicjalizacja
+        $exportData = [];
         //część aclowa
         if ($acl) {
             $exportData['cms_role'] = \App\Registry::$db->select('*', 'cms_role');
@@ -169,7 +175,7 @@ class ConnectorModel
     {
         try {
             //zwrot zdekodowanego json'a
-            return json_decode(file_get_contents($url . '/?' . http_build_query(['module' => 'cms',
+            $response = json_decode(file_get_contents($url . '/?' . http_build_query(['module' => 'cms',
                         'controller' => 'connector',
                         'action' => $action
                     ]), false, stream_context_create(['http' => [
@@ -189,6 +195,11 @@ class ConnectorModel
             //wyjątki
             throw new \Cms\Exception\ConnectorException($e->getMessage());
         }
+        //w odpowiedzi jest status a nie dane
+        if (isset($response['status'])) {
+            throw new \Cms\Exception\ConnectorException('Status returned instead of data');
+        }
+        return $response;
     }
 
 }

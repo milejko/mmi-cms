@@ -30,15 +30,18 @@ class ConnectorImportFilesForm extends \Mmi\Form\Form
             $data = [];
         }
 
-        //lista obiektów
-        $this->addElementMultiCheckbox('fileObjects')
-            ->setLabel('klasy plików')
-            ->setMultioptions($data)
-            ->setValue($data);
+        //obiekty do przesłania
+        if (!empty($data)) {
+            //lista obiektów
+            $this->addElementMultiCheckbox('fileObjects')
+                ->setLabel('klasy plików')
+                ->setMultioptions($data)
+                ->setValue($data);
 
-        //submit
-        $this->addElementSubmit('submit')
-            ->setLabel('importuj');
+            //submit
+            $this->addElementSubmit('submit')
+                ->setLabel('importuj');
+        }
     }
 
     /**
@@ -47,16 +50,29 @@ class ConnectorImportFilesForm extends \Mmi\Form\Form
      */
     public function afterSave()
     {
+        //brak filtra
+        if (!$this->getElement('fileObjects')) {
+            return false;
+        }
         //wczytywanie sesji
         $session = new \Mmi\Session\SessionSpace(\Cms\Model\ConnectorModel::SESSION_SPACE);
         try {
-            //ustawienie danych na elementy pobrane z connectora
-            $this->setOption('data', (new \Cms\Model\ConnectorModel)->getData($session->url, 'exportFileList', ['fileObjects' => $this->getElement('fileObjects')->getValue()], $session->identity, $session->credential));
+            //pobranie plików z connectora
+            $remoteFiles = (new \Cms\Model\ConnectorModel)->getData($session->url, 'exportFileList', ['fileObjects' => $this->getElement('fileObjects')->getValue()], $session->identity, $session->credential);
         } catch (\Cms\Exception\ConnectorException $e) {
             //brak plików
             $this->getElement('fileObjects')->addError('Brak plików');
             return false;
         }
+        $files = [];
+        foreach ($remoteFiles as $name => $userName) {
+            if (null !== (new \Cms\Orm\CmsFileQuery)->whereName()->equals($name)->findFirst()) {
+                continue;
+            }
+            $files[$name] = $userName;
+        }
+        //ustawienie danych na elementy pobrane z connectora
+        $this->setOption('data', $files);
         return true;
     }
 

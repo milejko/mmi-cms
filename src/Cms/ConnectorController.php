@@ -33,6 +33,9 @@ class ConnectorController extends \Mmi\Mvc\Controller
      */
     public function importFileAction()
     {
+        //text/plain
+        $this->getResponse()->setTypePlain();
+        //adres endpointu
         $endpoint = base64_decode($this->url) . '/?module=cms&controller=connector&name=' . $this->name . '&action=';
         try {
             //wczytanie danych
@@ -44,16 +47,18 @@ class ConnectorController extends \Mmi\Mvc\Controller
         //próba importu meta-danych
         if (null === $file = (new Model\ConnectorModel)->importFileMeta($data)) {
             //plik istnieje, lub próba nie udana
-            return '';
+            return 'META ERROR';
         }
         try {
+            //rekursywne tworzenie katalogów
+            mkdir(dirname($file->getRealPath()), 0777, true);
             //próba pobrania i zapisu binarium
             file_put_contents($file->getRealPath(), file_get_contents($endpoint . 'exportFileBinary'));
         } catch (\Exception $e) {
             //zwrot pustego statusu
-            return '';
+            return 'BIN ERROR';
         }
-        return '';
+        return 'OK';
     }
 
     /**

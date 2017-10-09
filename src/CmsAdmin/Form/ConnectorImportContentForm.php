@@ -65,8 +65,8 @@ class ConnectorImportContentForm extends \Mmi\Form\Form
         $session->url = $this->getElement('url')->getValue();
         try {
             //pobranie danych
-            $data = $connector->getData($session->url, 'exportContent', ['acl' => $this->getElement('acl')->getValue(),
-                'content' => $this->getElement('content')->getValue()
+            $data = $connector->getData($session->url, 'exportContent', ['acl' => $this->getElement('acl')->isChecked(),
+                'content' => $this->getElement('content')->isChecked()
                 ], $session->identity, $session->credential);
         } catch (\Cms\Exception\ConnectorException $e) {
             //dane nie mogą być pobrane
