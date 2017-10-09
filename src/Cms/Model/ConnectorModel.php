@@ -21,10 +21,10 @@ class ConnectorModel
 
     /**
      * Importuje dane
-     * @param string $importData
+     * @param array $importData
      * @return boolean
      */
-    public function importData($importData)
+    public function importData(array $importData)
     {
         //@TODO przeniesienie do setDefaultImportParams
         \App\Registry::$db->query('SET FOREIGN_KEY_CHECKS = 0;');
@@ -43,6 +43,31 @@ class ConnectorModel
         }
         //commit transakcji
         return \App\Registry::$db->commit();
+    }
+
+    /**
+     * Importuje meta pliku
+     * @param array $importData
+     * @return \Cms\Orm\CmsFileRecord
+     */
+    public function importFileMeta(array $importData)
+    {
+        //brak id
+        if (!isset($importData['id'])) {
+            return;
+        }
+        //plik istnieje
+        if (null !== (new \Cms\Orm\CmsFileQuery)->findPk($importData['id'])) {
+            return;
+        }
+        //stworzenie nowego rekordu, ustawienie danych i zapis
+        $file = (new \Cms\Orm\CmsFileRecord)
+            ->setFromArray($importData);
+        //poprawny zapis
+        if ($file->save()) {
+            //zwrot rekordu
+            return $file;
+        }
     }
 
     /**

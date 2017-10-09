@@ -33,8 +33,26 @@ class ConnectorController extends \Mmi\Mvc\Controller
      */
     public function importFileAction()
     {
-        //@TODO: import meta + dane osobno
-        echo file_get_contents(base64_decode($this->url) . '/?module=cms&controller=connector&action=exportFile&name=' . $this->name);
+        $endpoint = base64_decode($this->url) . '/?module=cms&controller=connector&name=' . $this->name . '&action=';
+        try {
+            //wczytanie danych
+            $data = json_decode(file_get_contents($endpoint . 'exportFileMeta'), true);
+        } catch (\Exception $e) {
+            //zwrot pustego statusu
+            return '';
+        }
+        //próba importu meta-danych
+        if (null === $file = (new Model\ConnectorModel)->importFileMeta($data)) {
+            //plik istnieje, lub próba nie udana
+            return '';
+        }
+        try {
+            //próba pobrania i zapisu binarium
+            file_put_contents($file->getRealPath(), file_get_contents($endpoint . 'exportFileBinary'));
+        } catch (\Exception $e) {
+            //zwrot pustego statusu
+            return '';
+        }
         return '';
     }
 
@@ -44,8 +62,10 @@ class ConnectorController extends \Mmi\Mvc\Controller
      * @throws \Mmi\Mvc\MvcNotFoundException
      * @throws \Mmi\Mvc\MvcForbiddenException
      */
-    public function exportFileAction()
+    public function exportFileBinaryAction()
     {
+        $this->getResponse()->setType('application/octet-stream')
+            ->send();
         //wyszukiwanie pliku
         if (null === $file = (new Orm\CmsFileQuery)->whereName()->equals($this->name)
             ->findFirst()) {
@@ -55,8 +75,25 @@ class ConnectorController extends \Mmi\Mvc\Controller
         if ($file->size > self::MAX_FILE_SIZE) {
             throw new \Mmi\Mvc\MvcForbiddenException('File to large');
         }
+        readfile($file->getRealPath());
+        exit;
+    }
+
+    /**
+     * Eksportuje meta pliku
+     * @return mixed
+     * @throws \Mmi\Mvc\MvcNotFoundException
+     * @throws \Mmi\Mvc\MvcForbiddenException
+     */
+    public function exportFileMetaAction()
+    {
+        //wyszukiwanie pliku
+        if (null === $file = (new Orm\CmsFileQuery)->whereName()->equals($this->name)
+            ->findFirst()) {
+            throw new \Mmi\Mvc\MvcNotFoundException('File not found');
+        }
         //zwrot meta i pluginów
-        return json_encode(['meta' => $file->toArray(), 'data' => base64_encode(file_get_contents($file->getRealPath()))]);
+        return json_encode($file->toArray());
     }
 
     /**
