@@ -10,7 +10,9 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element;
+use Cms\Form\Element,
+    Mmi\Validator,
+    Mmi\Filter;
 
 /**
  * Formularz edycji szegółów kategorii
@@ -25,7 +27,7 @@ class Category extends \Cms\Form\AttributeForm
         if ([] !== $types = (new \Cms\Orm\CmsCategoryTypeQuery)->orderAscName()->findPairs('id', 'name')) {
             $this->addElement((new Element\Select('cmsCategoryTypeId'))
                 ->setLabel('szablon strony')
-                ->addFilter(new \Mmi\Filter\EmptyToNull([]))
+                ->addFilter(new Filter\EmptyToNull)
                 ->setMultioptions([null => 'Domyślny'] + $types));
         }
 
@@ -33,8 +35,8 @@ class Category extends \Cms\Form\AttributeForm
         $this->addElement((new Element\Text('name'))
             ->setLabel('nazwa')
             ->setRequired()
-            ->addFilter(new \Mmi\Filter\StringTrim([]))
-            ->addValidator(new \Mmi\Validator\StringLength([2, 128])));
+            ->addFilter(new Filter\StringTrim)
+            ->addValidator(new Validator\StringLength([2, 128])));
 
         //początek publikacji
         $this->addElement((new Element\DateTimePicker('dateStart'))
@@ -51,7 +53,7 @@ class Category extends \Cms\Form\AttributeForm
         $this->addElement((new Element\Select('cacheLifetime'))
             ->setLabel('odświeżanie')
             ->setMultioptions([null => 'domyślne dla szablonu'] + \Cms\Orm\CmsCategoryRecord::CACHE_LIFETIMES)
-            ->addFilter(new \Mmi\Filter\EmptyToNull([])));
+            ->addFilter(new Filter\EmptyToNull));
 
         //aktywna
         $this->addElement((new Element\Checkbox('active'))
@@ -67,8 +69,8 @@ class Category extends \Cms\Form\AttributeForm
         $this->addElement((new Element\Text('title'))
             ->setLabel('meta tytuł')
             ->setDescription('jeśli brak, użyta zostanie kaskada złożona nazw')
-            ->addFilter(new \Mmi\Filter\StringTrim([]))
-            ->addValidator(new \Mmi\Validator\StringLength([2, 128])));
+            ->addFilter(new Filter\StringTrim)
+            ->addValidator(new Validator\StringLength([2, 128])));
 
         //meta description
         $this->addElement((new Element\Textarea('description'))
@@ -81,11 +83,11 @@ class Category extends \Cms\Form\AttributeForm
             ->setLabel('własny adres strony')
             //adres domyślny (bez baseUrl)
             ->setDescription('domyślnie: ' . substr($view->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->getRecord()->uri], true), strlen($view->baseUrl) + 1))
-            ->addFilter(new \Mmi\Filter\StringTrim([]))
-            ->addFilter(new \Mmi\Filter\EmptyToNull([]))
-            ->addValidator(new \Mmi\Validator\RecordUnique([new \Cms\Orm\CmsCategoryQuery, 'uri']))
-            ->addValidator(new \Mmi\Validator\RecordUnique([new \Cms\Orm\CmsCategoryQuery, 'customUri', $this->getRecord()->id]))
-            ->addValidator(new \Mmi\Validator\StringLength([1, 255])));
+            ->addFilter(new Filter\StringTrim)
+            ->addFilter(new Filter\EmptyToNull)
+            ->addValidator(new Validator\RecordUnique([new \Cms\Orm\CmsCategoryQuery, 'uri']))
+            ->addValidator(new Validator\RecordUnique([new \Cms\Orm\CmsCategoryQuery, 'customUri', $this->getRecord()->id]))
+            ->addValidator(new Validator\StringLength([1, 255])));
 
         //blank
         $this->addElement((new Element\Checkbox('follow'))
@@ -109,26 +111,26 @@ class Category extends \Cms\Form\AttributeForm
         $this->addElement((new Element\Text('redirectUri'))
             ->setLabel('przekierowanie na adres')
             ->setDescription('np. http://www.google.pl')
-            ->addFilter(new \Mmi\Filter\StringTrim([])));
+            ->addFilter(new Filter\StringTrim));
 
         //przekierowanie na moduł
         $this->addElement((new Element\Text('mvcParams'))
             ->setLabel('przekierowanie na moduł CMS')
             ->setDescription('np. module=blog&controller=index&action=index')
-            ->addFilter(new \Mmi\Filter\StringTrim([]))
-            ->addValidator(new \Mmi\Validator\Regex(['@module\=[a-zA-Z0-9\&\=]+@', 'niepoprawny adres modułu cms'])));
+            ->addFilter(new Filter\StringTrim)
+            ->addValidator(new Validator\Regex(['@module\=[a-zA-Z0-9\&\=]+@', 'niepoprawny adres modułu cms'])));
 
         //config JSON
         $this->addElement((new Element\Text('configJson'))
             ->setLabel('dodatkowe flagi')
             ->setDescription('format JSON')
-            ->addValidator(new \Mmi\Validator\Json([]))
-            ->addFilter(new \Mmi\Filter\StringTrim([])));
+            ->addValidator(new Validator\Json([]))
+            ->addFilter(new Filter\StringTrim));
 
         //https
         $this->addElement((new Element\Select('https'))
             ->setMultioptions([null => 'bez zmian', '0' => 'wymuś brak https', 1 => 'wymuś https'])
-            ->addFilter(new \Mmi\Filter\EmptyToNull([]))
+            ->addFilter(new Filter\EmptyToNull)
             ->setLabel('https'));
 
         //blank

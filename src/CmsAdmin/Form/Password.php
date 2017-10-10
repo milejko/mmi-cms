@@ -25,7 +25,7 @@ class Password extends \Mmi\Form\Form
         $this->addElement((new Element\Password('password'))
             ->setLabel('obecne hasło')
             ->setRequired()
-            ->addValidator(new \Mmi\Validator\NotEmpty([])));
+            ->addValidator(new \Mmi\Validator\NotEmpty));
 
         $this->addElement((new Element\Password('changePassword'))
             ->setLabel('nowe hasło')

@@ -10,7 +10,8 @@
 
 namespace Cms\Form;
 
-use Mmi\Form\Element;
+use Mmi\Form\Element,
+    Mmi\Validator;
 
 class Comment extends \Mmi\Form\Form
 {
@@ -25,7 +26,7 @@ class Comment extends \Mmi\Form\Form
 
         $this->addElement((new Element\Textarea('text'))
             ->setRequired()
-            ->addValidator(new \Mmi\Validator\NotEmpty)
+            ->addValidator(new Validator\NotEmpty)
             ->setLabel('komentarz'));
 
         if (!\App\Registry::$auth->hasIdentity()) {

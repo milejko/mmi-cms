@@ -10,7 +10,8 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element;
+use Cms\Form\Element,
+    Mmi\Validator;
 
 /**
  * Formularz odpowiedzi na kontakt
@@ -37,7 +38,7 @@ class Contact extends \Mmi\Form\Form
             ->setDisabled()
             ->setLabel('email')
             ->setValue(\App\Registry::$auth->getEmail())
-            ->addValidator(new \Mmi\Validator\EmailAddress([])));
+            ->addValidator(new Validator\EmailAddress));
 
         //tresc zapytania
         $this->addElement((new Element\Textarea('text'))
@@ -47,7 +48,7 @@ class Contact extends \Mmi\Form\Form
         //odpowiedz na zgloszenie
         $this->addElement((new Element\Textarea('reply'))
             ->setRequired()
-            ->addValidator(new \Mmi\Validator\NotEmpty([]))
+            ->addValidator(new Validator\NotEmpty)
             ->setLabel('odpowiedź'));
 
         $this->addElement((new Element\Submit('submit'))

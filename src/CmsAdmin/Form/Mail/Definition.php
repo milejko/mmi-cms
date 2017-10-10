@@ -32,7 +32,7 @@ class Definition extends \Cms\Form\Form
         $this->addElement((new Element\Select('cmsMailServerId'))
             ->setLabel('połącznie')
             ->setRequired()
-            ->addValidator(new \Mmi\Validator\NotEmpty([]))
+            ->addValidator(new \Mmi\Validator\NotEmpty)
             ->setMultioptions(\Cms\Model\Mail::getMultioptions()));
 
         //temat
@@ -45,13 +45,13 @@ class Definition extends \Cms\Form\Form
         $this->addElement((new Element\Textarea('message'))
             ->setLabel('treść')
             ->setRequired()
-            ->addValidator(new \Mmi\Validator\NotEmpty([])));
+            ->addValidator(new \Mmi\Validator\NotEmpty));
 
         //treść html
         $this->addElement((new Element\Checkbox('html'))
             ->setLabel('treść HTML')
             ->setRequired()
-            ->addValidator(new \Mmi\Validator\NotEmpty([])));
+            ->addValidator(new \Mmi\Validator\NotEmpty));
 
         //od
         $this->addElement((new Element\Text('fromName'))
@@ -72,7 +72,7 @@ class Definition extends \Cms\Form\Form
             ->setLabel('aktywny')
             ->setChecked()
             ->setRequired()
-            ->addValidator(new \Mmi\Validator\NotEmpty([])));
+            ->addValidator(new \Mmi\Validator\NotEmpty));
 
         //submit
         $this->addElement((new Element\Submit('submit'))

@@ -24,7 +24,7 @@ class Server extends \Cms\Form\Form
         $this->addElement((new Element\Select('ssl'))
             ->setLabel('Rodzaj połączenia')
             ->setRequired()
-            ->addValidator(new \Mmi\Validator\NotEmpty([]))
+            ->addValidator(new \Mmi\Validator\NotEmpty)
             ->setMultioptions(['plain' => 'plain', 'tls' => 'tls', 'ssl' => 'ssl']));
 
         $this->addElement((new Element\Text('port'))

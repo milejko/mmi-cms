@@ -21,7 +21,7 @@ class Text extends \Mmi\Form\Form
         $this->addElement((new Element\Text('key'))
             ->setLabel('klucz')
             ->setRequired()
-            ->addValidator(new \Mmi\Validator\NotEmpty([])));
+            ->addValidator(new \Mmi\Validator\NotEmpty));
 
         $this->addElement((new Element\Textarea('content'))
             ->setLabel('zawartość'));

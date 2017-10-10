@@ -25,7 +25,7 @@ class Tag extends \Mmi\Form\Form
         $this->addElement((new Element\Text('tag'))
             ->setLabel('tag')
             ->setRequired()
-            ->addFilter(new \Mmi\Filter\StringTrim([]))
+            ->addFilter(new \Mmi\Filter\StringTrim)
             ->addValidator(new \Mmi\Validator\StringLength([2, 64]))
             ->addValidator(new \Mmi\Validator\RecordUnique([(new \Cms\Orm\CmsTagQuery), 'tag', $this->getRecord()->id])));
 

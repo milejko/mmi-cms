@@ -10,7 +10,9 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element;
+use Cms\Form\Element,
+    Mmi\Validator,
+    Mmi\Filter;
 
 /**
  * Formularz wartości atrybutu
@@ -25,15 +27,15 @@ class AttributeValue extends \Cms\Form\Form
         $this->addElement((new Element\Text('value'))
             ->setLabel('wartość')
             ->setRequired()
-            ->addFilter(new \Mmi\Filter\StringTrim([]))
-            ->addValidator(new \Mmi\Validator\StringLength([1, 1024])));
+            ->addFilter(new Filter\StringTrim)
+            ->addValidator(new Validator\StringLength([1, 1024])));
 
         //labelka
         $this->addElement((new Element\Text('label'))
             ->setLabel('etykieta')
-            ->addFilter(new \Mmi\Filter\StringTrim([]))
-            ->addFilter(new \Mmi\Filter\EmptyToNull([]))
-            ->addValidator(new \Mmi\Validator\StringLength([1, 64])));
+            ->addFilter(new Filter\StringTrim)
+            ->addFilter(new Filter\EmptyToNull)
+            ->addValidator(new Validator\StringLength([1, 64])));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))

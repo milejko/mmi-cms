@@ -10,7 +10,9 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element;
+use Cms\Form\Element,
+    Mmi\Validator,
+    Mmi\Filter;
 
 /**
  * Formularz atrybutów
@@ -25,28 +27,28 @@ class Attribute extends \Cms\Form\Form
         $this->addElement((new Element\Text('name'))
             ->setLabel('nazwa')
             ->setRequired()
-            ->addFilter(new \Mmi\Filter\StringTrim([]))
-            ->addValidator(new \Mmi\Validator\StringLength([2, 128])));
+            ->addFilter(new Filter\StringTrim)
+            ->addValidator(new Validator\StringLength([2, 128])));
 
         //klucz pola
         $this->addElement((new Element\Text('key'))
             ->setLabel('klucz')
-            ->addFilter(new \Mmi\Filter\Ascii([]))
+            ->addFilter(new Filter\Ascii([]))
             ->setRequired()
-            ->addValidator((new \Mmi\Validator\Alnum)->setMessage('klucz może zawierać wyłącznie litery i cyfry'))
-            ->addValidator(new \Mmi\Validator\StringLength([2, 64]))
-            ->addValidator(new \Mmi\Validator\RecordUnique([new \Cms\Orm\CmsAttributeQuery, 'key', $this->getRecord()->id])));
+            ->addValidator((new Validator\Alnum)->setMessage('klucz może zawierać wyłącznie litery i cyfry'))
+            ->addValidator(new Validator\StringLength([2, 64]))
+            ->addValidator(new Validator\RecordUnique([new \Cms\Orm\CmsAttributeQuery, 'key', $this->getRecord()->id])));
 
         //opis
         $this->addElement((new Element\Text('description'))
             ->setLabel('opis')
-            ->addFilter(new \Mmi\Filter\StringTrim([])));
+            ->addFilter(new Filter\StringTrim));
 
         //pole formularza
         $this->addElement((new Element\Select('cmsAttributeTypeId'))
             ->setLabel('pole formularza')
             ->setRequired()
-            ->addValidator(new \Mmi\Validator\NotEmpty([]))
+            ->addValidator(new Validator\NotEmpty)
             ->setMultioptions((new \Cms\Orm\CmsAttributeTypeQuery)
                 ->orderAscName()
                 ->findPairs('id', 'name')));

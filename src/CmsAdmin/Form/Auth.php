@@ -10,9 +10,10 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element;
-
-use Cms\Orm\CmsAuthQuery;
+use Cms\Form\Element,
+    Cms\Orm\CmsAuthQuery,
+    Mmi\Validator,
+    Mmi\Filter;
 
 /**
  * Formularz dodawania i edycji użytkowników CMS
@@ -28,22 +29,22 @@ class Auth extends \Cms\Form\Form
         $this->addElement((new Element\Text('username'))
             ->setLabel('nazwa użytkownika (login)')
             ->setRequired()
-            ->addFilter(new \Mmi\Filter\StringTrim([]))
-            ->addValidator(new \Mmi\Validator\NotEmpty([]))
-            ->addValidator(new \Mmi\Validator\RecordUnique([new CmsAuthQuery, 'username', $this->getRecord()->id])));
+            ->addFilter(new Filter\StringTrim)
+            ->addValidator(new Validator\NotEmpty)
+            ->addValidator(new Validator\RecordUnique([new CmsAuthQuery, 'username', $this->getRecord()->id])));
 
         //imię i nazwisko użytkownika
         $this->addElement((new Element\Text('name'))
             ->setLabel('pełna nazwa użytkownika (opcjonalna)')
-            ->addFilter(new \Mmi\Filter\StringTrim([])));
+            ->addFilter(new Filter\StringTrim));
 
         //email
         $this->addElement((new Element\Text('email'))
             ->setLabel('adres e-mail')
             ->setRequired()
-            ->addFilter(new \Mmi\Filter\StringTrim([]))
-            ->addValidator(new \Mmi\Validator\EmailAddress([]))
-            ->addValidator(new \Mmi\Validator\RecordUnique([new CmsAuthQuery, 'email', $this->getRecord()->id])));
+            ->addFilter(new Filter\StringTrim)
+            ->addValidator(new Validator\EmailAddress)
+            ->addValidator(new Validator\RecordUnique([new CmsAuthQuery, 'email', $this->getRecord()->id])));
 
         //role
         $this->addElement((new Element\MultiCheckbox('cmsRoles'))
@@ -51,7 +52,7 @@ class Auth extends \Cms\Form\Form
             ->setDescription('Grupa uprawnień')
             ->setMultioptions((new \Cms\Orm\CmsRoleQuery)->findPairs('id', 'name'))
             ->setValue(\Cms\Orm\CmsAuthRoleQuery::byAuthId($this->_record->id)->findPairs('cms_role_id', 'cms_role_id'))
-            ->addValidator(new \Mmi\Validator\NotEmpty(['Wymagane jest wybranie roli'])));
+            ->addValidator(new Validator\NotEmpty(['Wymagane jest wybranie roli'])));
 
         $languages = [];
         foreach (\App\Registry::$config->languages as $language) {
@@ -73,7 +74,7 @@ class Auth extends \Cms\Form\Form
         $this->addElement((new Element\Text('changePassword'))
             ->setLabel('zmiana hasła')
             ->setDescription('Jeśli nie chcesz zmienić hasła lub używać domenowego, nie wypełniaj tego pola')
-            ->addValidator(new \Mmi\Validator\StringLength([4, 128])));
+            ->addValidator(new Validator\StringLength([4, 128])));
 
         $this->addElement((new Element\Submit('submit'))
             ->setLabel('zapisz użytkownika'));

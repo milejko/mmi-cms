@@ -11,7 +11,8 @@
 namespace Cms\Form;
 
 use Cms\Orm\CmsAuthQuery,
-    Mmi\Form\Element;
+    Mmi\Form\Element,
+    Mmi\Validator;
 
 /**
  * Formularz rejestracji
@@ -27,25 +28,25 @@ class Register extends \Mmi\Form\Form
         $this->addElement((new Element\Text('username'))
             ->setLabel('nazwa użytkownika (nick)')
             ->setRequired()
-            ->addValidator(new \Mmi\Validator\Alnum)
-            ->addValidator(new \Mmi\Validator\RecordUnique([new CmsAuthQuery, 'username']))
-            ->addValidator(new \Mmi\Validator\StringLength([4, 25]))
+            ->addValidator(new Validator\Alnum)
+            ->addValidator(new Validator\RecordUnique([new CmsAuthQuery, 'username']))
+            ->addValidator(new Validator\StringLength([4, 25]))
             ->addFilter(new \Mmi\Filter\Lowercase));
 
         //email
         $this->addElement((new Element\Text('email'))
             ->setLabel('e-mail')
             ->setRequired()
-            ->addValidator(new \Mmi\Validator\EmailAddress)
-            ->addValidator(new \Mmi\Validator\RecordUnique([new CmsAuthQuery, 'email']))
-            ->addValidator(new \Mmi\Validator\StringLength([4, 150]))
+            ->addValidator(new Validator\EmailAddress)
+            ->addValidator(new Validator\RecordUnique([new CmsAuthQuery, 'email']))
+            ->addValidator(new Validator\StringLength([4, 150]))
             ->addFilter(new \Mmi\Filter\Lowercase));
 
         //password
         $this->addElement((new Element\Password('password'))
             ->setLabel('hasło')
             ->setRequired()
-            ->addValidator(new \Mmi\Validator\StringLength([4, 64])));
+            ->addValidator(new Validator\StringLength([4, 64])));
 
         //potwierdzenie
         $this->addElement((new Element\Password('confirmPassword'))
@@ -54,7 +55,7 @@ class Register extends \Mmi\Form\Form
         //regulamin
         $this->addElement((new Element\Checkbox('regulations'))
             ->setLabel('Akceptuję regulamin')
-            ->addValidator(new \Mmi\Validator\NotEmpty)
+            ->addValidator(new Validator\NotEmpty)
             ->setRequired());
 
         $this->addElement((new Element\Submit('submit'))
