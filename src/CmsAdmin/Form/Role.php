@@ -10,7 +10,8 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element;
+use Cms\Form\Element,
+    Mmi\Validator;
 
 class Role extends \Mmi\Form\Form
 {
@@ -20,7 +21,7 @@ class Role extends \Mmi\Form\Form
 
         $this->addElement((new Element\Text('name'))
             ->setLabel('nazwa roli')
-            ->addValidatorStringLength(3, 64));
+            ->addValidator(new Validator\StringLength(3, 64)));
 
         $this->addElement((new Element\Submit('submit'))
             ->setLabel('utwórz nową rolę'));

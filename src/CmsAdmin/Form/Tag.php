@@ -10,7 +10,8 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element;
+use Cms\Form\Element,
+    Mmi\Validator;
 
 /**
  * Formularz tagów
@@ -26,8 +27,8 @@ class Tag extends \Mmi\Form\Form
             ->setLabel('tag')
             ->setRequired()
             ->addFilterStringTrim()
-            ->addValidatorStringLength(2, 64)
-            ->addValidatorRecordUnique((new \Cms\Orm\CmsTagQuery), 'tag', $this->getRecord()->id));
+            ->addValidator(new Validator\StringLength(2, 64))
+            ->addValidator(new Validator\RecordUnique((new \Cms\Orm\CmsTagQuery), 'tag', $this->getRecord()->id)));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))

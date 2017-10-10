@@ -11,7 +11,8 @@
 namespace Cms\Form;
 
 use Cms\Orm\CmsAuthQuery,
-    Mmi\Form\Element;
+    Mmi\Form\Element,
+    Mmi\Validator;
 
 /**
  * Formularz rejestracji
@@ -27,25 +28,25 @@ class Register extends \Mmi\Form\Form
         $this->addElement((new Element\Text('username'))
             ->setLabel('nazwa użytkownika (nick)')
             ->setRequired()
-            ->addValidatorAlnum()
-            ->addValidatorRecordUnique(new CmsAuthQuery, 'username')
-            ->addValidatorStringLength(4, 25)
+            ->addValidator(new Validator\Alnum())
+            ->addValidator(new Validator\RecordUnique(new CmsAuthQuery, 'username'))
+            ->addValidator(new Validator\StringLength(4, 25))
             ->addFilterLowercase());
 
         //email
         $this->addElement((new Element\Text('email'))
             ->setLabel('e-mail')
             ->setRequired()
-            ->addValidatorEmailAddress()
-            ->addValidatorRecordUnique(new CmsAuthQuery, 'email')
-            ->addValidatorStringLength(4, 150)
+            ->addValidator(new Validator\EmailAddress())
+            ->addValidator(new Validator\RecordUnique(new CmsAuthQuery, 'email'))
+            ->addValidator(new Validator\StringLength(4, 150))
             ->addFilterLowercase());
 
         //password
         $this->addElement((new Element\Password('password'))
             ->setLabel('hasło')
             ->setRequired()
-            ->addValidatorStringLength(4, 64));
+            ->addValidator(new Validator\StringLength(4, 64)));
 
         //potwierdzenie
         $this->addElement((new Element\Password('confirmPassword'))
@@ -54,7 +55,7 @@ class Register extends \Mmi\Form\Form
         //regulamin
         $this->addElement((new Element\Checkbox('regulations'))
             ->setLabel('Akceptuję regulamin')
-            ->addValidatorNotEmpty()
+            ->addValidator(new Validator\NotEmpty())
             ->setRequired());
 
         $this->addElement((new Element\Submit('submit'))

@@ -10,9 +10,9 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element;
-
-use Cms\Orm\CmsAuthQuery;
+use Cms\Form\Element,
+    Cms\Orm\CmsAuthQuery,
+    Mmi\Validator;
 
 /**
  * Formularz dodawania i edycji użytkowników CMS
@@ -29,8 +29,8 @@ class Auth extends \Cms\Form\Form
             ->setLabel('nazwa użytkownika (login)')
             ->setRequired()
             ->addFilterStringTrim()
-            ->addValidatorNotEmpty()
-            ->addValidatorRecordUnique(new CmsAuthQuery, 'username', $this->getRecord()->id));
+            ->addValidator(new Validator\NotEmpty)
+            ->addValidator(new Validator\RecordUnique(new CmsAuthQuery, 'username', $this->getRecord()->id)));
 
         //imię i nazwisko użytkownika
         $this->addElement((new Element\Text('name'))
@@ -42,8 +42,8 @@ class Auth extends \Cms\Form\Form
             ->setLabel('adres e-mail')
             ->setRequired()
             ->addFilterStringTrim()
-            ->addValidatorEmailAddress()
-            ->addValidatorRecordUnique(new CmsAuthQuery, 'email', $this->getRecord()->id));
+            ->addValidator(new Validator\EmailAddress)
+            ->addValidator(new Validator\RecordUnique(new CmsAuthQuery, 'email', $this->getRecord()->id)));
 
         //role
         $this->addElement((new Element\MultiCheckbox('cmsRoles'))
@@ -51,7 +51,7 @@ class Auth extends \Cms\Form\Form
             ->setDescription('Grupa uprawnień')
             ->setMultioptions((new \Cms\Orm\CmsRoleQuery)->findPairs('id', 'name'))
             ->setValue(\Cms\Orm\CmsAuthRoleQuery::byAuthId($this->_record->id)->findPairs('cms_role_id', 'cms_role_id'))
-            ->addValidatorNotEmpty('Wymagane jest wybranie roli'));
+            ->addValidator(new Validator\NotEmpty('Wymagane jest wybranie roli')));
 
         $languages = [];
         foreach (\App\Registry::$config->languages as $language) {
@@ -73,7 +73,7 @@ class Auth extends \Cms\Form\Form
         $this->addElement((new Element\Text('changePassword'))
             ->setLabel('zmiana hasła')
             ->setDescription('Jeśli nie chcesz zmienić hasła lub używać domenowego, nie wypełniaj tego pola')
-            ->addValidatorStringLength(4, 128));
+            ->addValidator(new Validator\StringLength(4, 128)));
 
         $this->addElement((new Element\Submit('submit'))
             ->setLabel('zapisz użytkownika'));

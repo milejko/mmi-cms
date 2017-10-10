@@ -10,7 +10,8 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element;
+use Cms\Form\Element,
+    Mmi\Validator;
 
 /**
  * Formularz zmiany hasła w CMS
@@ -25,18 +26,18 @@ class Password extends \Mmi\Form\Form
         $this->addElement((new Element\Password('password'))
             ->setLabel('obecne hasło')
             ->setRequired()
-            ->addValidatorNotEmpty());
+            ->addValidator(new Validator\NotEmpty()));
 
         $this->addElement((new Element\Password('changePassword'))
             ->setLabel('nowe hasło')
             ->setDescription('wpisz nowe hasło, co najmniej 4 znaki')
             ->setRequired()
-            ->addValidatorStringLength(4, 128));
+            ->addValidator(new Validator\StringLength(4, 128)));
 
         $this->addElement((new Element\Password('confirmPassword'))
             ->setLabel('powtórz nowe hasło')
             ->setRequired()
-            ->addValidatorStringLength(4, 128));
+            ->addValidator(new Validator\StringLength(4, 128)));
 
         $this->addElement((new Element\Submit('change'))
             ->setLabel('zmień hasło'));

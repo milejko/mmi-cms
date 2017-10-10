@@ -10,7 +10,8 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element;
+use Cms\Form\Element,
+    Mmi\Validator;
 
 /**
  * Klasa formularza relacji tagów
@@ -26,7 +27,7 @@ class TagRelation extends \Mmi\Form\Form
             ->setLabel('tag')
             ->setRequired()
             ->addFilterStringTrim()
-            ->addValidatorStringLength(2, 64));
+            ->addValidator(new Validator\StringLength(2, 64)));
 
         //ustawienie wartości tagu
         if ($this->getRecord()->cmsTagId && (null !== $tagRecord = (new \Cms\Orm\CmsTagQuery)->findPk($this->getRecord()->cmsTagId))) {
@@ -38,14 +39,14 @@ class TagRelation extends \Mmi\Form\Form
             ->setLabel('zasób')
             ->setRequired()
             ->addFilterStringTrim()
-            ->addValidatorStringLength(2, 64));
+            ->addValidator(new Validator\StringLength(2, 64)));
 
         //id obiektu
         $this->addElement((new Element\Text('objectId'))
             ->setLabel('ID zasobu')
             ->addFilterEmptyToNull()
-            ->addValidatorInteger()
-            ->addValidatorNumberBetween(0, 100000000));
+            ->addValidator(new Validator\Integer())
+            ->addValidator(new Validator\NumberBetween(0, 100000000)));
 
         $this->addElement((new Element\Submit('submit'))
             ->setLabel('zapisz relację'));

@@ -24,7 +24,7 @@ class Option extends \Cms\Form\Form
         $this->addElement((new Element\Text('sendTo'))
             ->setLabel('prześlij na email')
             ->setDescription('Wysyła kopię wiadomości od użytkownika bezpośrednio na podane adres\'y e-mail oddzielone ");"')
-            ->addValidatorEmailAddressList());
+            ->addValidator(new \Mmi\Validator\EmailAddressList()));
 
         $this->addElement((new Element\Submit('submit'))
             ->setLabel('dodaj/zmień temat'));
