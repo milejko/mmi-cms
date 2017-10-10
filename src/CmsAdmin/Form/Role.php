@@ -10,18 +10,20 @@
 
 namespace CmsAdmin\Form;
 
+use Cms\Form\Element;
+
 class Role extends \Mmi\Form\Form
 {
 
     public function init()
     {
 
-        $this->addElementText('name')
+        $this->addElement((new Element\Text('name'))
             ->setLabel('nazwa roli')
-            ->addValidatorStringLength(3, 64);
+            ->addValidatorStringLength(3, 64));
 
-        $this->addElementSubmit('submit')
-            ->setLabel('utwórz nową rolę');
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('utwórz nową rolę'));
     }
 
 }

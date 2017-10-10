@@ -10,25 +10,27 @@
 
 namespace CmsAdmin\Form\Stat;
 
-class Object extends \Mmi\Form\Form
+use Cms\Form\Element;
+
+class Object extends \Cms\Form\Form
 {
 
     public function init()
     {
 
-        $this->addElementSelect('object')
+        $this->addElement((new Element\Select('object'))
             ->setLabel('statystyka')
             ->setValue($this->getOption('object'))
-            ->setMultioptions([null => '---'] + (new \Cms\Orm\CmsStatLabelQuery)->orderAsc('label')->findPairs('object', 'label'));
+            ->setMultioptions([null => '---'] + (new \Cms\Orm\CmsStatLabelQuery)->orderAsc('label')->findPairs('object', 'label')));
 
-        $this->addElementSelect('year')
+        $this->addElement((new Element\Select('year'))
             ->setLabel('rok')
             ->setValue($this->getOption('year'))
-            ->setMultioptions([date('Y') - 1 => date('Y') - 1, date('Y') => date('Y')]);
+            ->setMultioptions([date('Y') - 1 => date('Y') - 1, date('Y') => date('Y')]));
 
         $view = \Mmi\App\FrontController::getInstance()->getView();
 
-        $this->addElementSelect('month')
+        $this->addElement((new Element\Select('month'))
             ->setLabel('miesiąc')
             ->setValue($this->getOption('month'))
             ->setMultioptions([1 => $view->getTranslate()->_('styczeń'),
@@ -43,7 +45,7 @@ class Object extends \Mmi\Form\Form
                 10 => $view->getTranslate()->_('październik'),
                 11 => $view->getTranslate()->_('listopad'),
                 12 => $view->getTranslate()->_('grudzień'),
-        ]);
+        ]));
     }
 
 }

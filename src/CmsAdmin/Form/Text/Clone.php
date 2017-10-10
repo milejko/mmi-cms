@@ -29,13 +29,13 @@ class Copy extends \Mmi\Form\Form
         }
 
         //źródło
-        $this->addElementSelect('source')
+        $this->addElement((new Element\Select('source'))
             ->setLabel('Wybierz język źródłowy')
             ->setDescription('Brakujące klucze w bieżącym języku zostaną utworzone, wartości zostaną uzupełnione wartościami z języka źródłowego')
-            ->setMultioptions($langMultioptions);
+            ->setMultioptions($langMultioptions));
 
-        $this->addElementSubmit('submit')
-            ->setLabel('klonuj teksty');
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('klonuj teksty'));
     }
 
     /**

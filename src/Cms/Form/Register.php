@@ -23,41 +23,41 @@ class Register extends \Cms\Form\Form
     {
 
         //nazwa użytkownika
-        $this->addElementText('username')
+        $this->addElement((new Element\Text('username'))
             ->setLabel('nazwa użytkownika (nick)')
             ->setRequired()
             ->addValidatorAlnum()
             ->addValidatorRecordUnique(new CmsAuthQuery, 'username')
             ->addValidatorStringLength(4, 25)
-            ->addFilterLowercase();
+            ->addFilterLowercase());
 
         //email
-        $this->addElementText('email')
+        $this->addElement((new Element\Text('email'))
             ->setLabel('e-mail')
             ->setRequired()
             ->addValidatorEmailAddress()
             ->addValidatorRecordUnique(new CmsAuthQuery, 'email')
             ->addValidatorStringLength(4, 150)
-            ->addFilterLowercase();
+            ->addFilterLowercase());
 
         //password
-        $this->addElementPassword('password')
+        $this->addElement((new Element\Password('password'))
             ->setLabel('hasło')
             ->setRequired()
-            ->addValidatorStringLength(4, 64);
+            ->addValidatorStringLength(4, 64));
 
         //potwierdzenie
-        $this->addElementPassword('confirmPassword')
-            ->setLabel('potwierdź hasło');
+        $this->addElement((new Element\Password('confirmPassword'))
+            ->setLabel('potwierdź hasło'));
 
         //regulamin
-        $this->addElementCheckbox('regulations')
+        $this->addElement((new Element\Checkbox('regulations'))
             ->setLabel('Akceptuję regulamin')
             ->addValidatorNotEmpty()
-            ->setRequired();
+            ->setRequired());
 
-        $this->addElementSubmit('submit')
-            ->setLabel('Zarejestruj');
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('Zarejestruj'));
     }
 
     /**

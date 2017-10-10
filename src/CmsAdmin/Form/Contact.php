@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Form;
 
+use Cms\Form\Element;
+
 /**
  * Formularz odpowiedzi na kontakt
  * @method \Cms\Orm\CmsContactRecord getRecord()
@@ -22,34 +24,34 @@ class Contact extends \Mmi\Form\Form
 
         //identyfikator tematu
         if (!$this->getOption('subjectId')) {
-            $this->addElementSelect('cmsContactOptionId')
+            $this->addElement((new Element\Select('cmsContactOptionId'))
                 ->setDisabled()
                 ->setIgnore()
                 ->setValue($this->getOption('subjectId'))
                 ->setMultioptions(\Cms\Model\Contact::getMultioptions())
-                ->setLabel('temat zapytania');
+                ->setLabel('temat zapytania'));
         }
 
         //mail
-        $this->addElementText('email')
+        $this->addElement((new Element\Text('email'))
             ->setDisabled()
             ->setLabel('email')
             ->setValue(\App\Registry::$auth->getEmail())
-            ->addValidatorEmailAddress();
+            ->addValidatorEmailAddress());
 
         //tresc zapytania
-        $this->addElementTextarea('text')
+        $this->addElement((new Element\Textarea('text'))
             ->setDisabled()
-            ->setLabel('treść zapytania');
+            ->setLabel('treść zapytania'));
 
         //odpowiedz na zgloszenie
-        $this->addElementTextarea('reply')
+        $this->addElement((new Element\Textarea('reply'))
             ->setRequired()
             ->addValidatorNotEmpty()
-            ->setLabel('odpowiedź');
+            ->setLabel('odpowiedź'));
 
-        $this->addElementSubmit('submit')
-            ->setLabel('odpowiedz');
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('odpowiedz'));
     }
 
     /**

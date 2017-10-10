@@ -10,28 +10,30 @@
 
 namespace CmsAdmin\Form\Stat;
 
-class Label extends \Mmi\Form\Form
+use Cms\Form\Element;
+
+class Label extends \Cms\Form\Form
 {
 
     public function init()
     {
 
-        $this->addElementSelect('object')
+        $this->addElement((new Element\Select('object'))
             ->setLabel('klucz')
             ->setRequired()
             ->addValidatorNotEmpty()
-            ->setMultioptions(\Cms\Model\Stat::getUniqueObjects());
+            ->setMultioptions(\Cms\Model\Stat::getUniqueObjects()));
 
-        $this->addElementText('label')
+        $this->addElement((new Element\Text('label'))
             ->setLabel('nazwa statystyki')
             ->setRequired()
-            ->addValidatorNotEmpty();
+            ->addValidatorNotEmpty());
 
-        $this->addElementTextarea('description')
-            ->setLabel('opis');
+        $this->addElement((new Element\Textarea('description'))
+            ->setLabel('opis'));
 
-        $this->addElementSubmit('submit')
-            ->setLabel('zapisz');
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('zapisz'));
     }
 
 }

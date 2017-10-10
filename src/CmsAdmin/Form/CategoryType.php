@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Form;
 
+use Cms\Form\Element;
+
 /**
  * Formularz typu kategorii
  */
@@ -20,30 +22,30 @@ class CategoryType extends \Cms\Form\Form
     {
 
         //nazwa
-        $this->addElementText('name')
+        $this->addElement((new Element\Text('name'))
             ->setRequired()
             ->addFilterStringTrim()
             ->addValidatorNotEmpty()
             ->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryTypeQuery, 'name', $this->getRecord()->id)
-            ->setLabel('nazwa');
+            ->setLabel('nazwa'));
 
         //klasa modułu wyświetlania
-        $this->addElementSelect('mvcParams')
+        $this->addElement((new Element\Select('mvcParams'))
             ->setMultioptions([null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard(3))
             ->setRequired()
             ->addValidatorNotEmpty()
-            ->setLabel('moduł wyświetlania');
+            ->setLabel('moduł wyświetlania'));
 
         //ustawienie bufora
-        $this->addElementSelect('cacheLifetime')
+        $this->addElement((new Element\Select('cacheLifetime'))
             ->setLabel('odświeżanie')
             ->setMultioptions(\Cms\Orm\CmsCategoryRecord::CACHE_LIFETIMES)
             ->setValue(\Cms\Orm\CmsCategoryRecord::DEFAULT_CACHE_LIFETIME)
-            ->addFilterEmptyToNull();
+            ->addFilterEmptyToNull());
 
         //zapis
-        $this->addElementSubmit('submit')
-            ->setLabel('zapisz szablon');
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('zapisz szablon'));
     }
 
     /**

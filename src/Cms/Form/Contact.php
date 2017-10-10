@@ -17,34 +17,34 @@ class Contact extends \Cms\Form\Form
     {
 
         if (!$this->getOption('subjectId')) {
-            $this->addElementSelect('cmsContactOptionId')
+            $this->addElement((new Element\Select('cmsContactOptionId'))
                 ->setLabel('Wybierz temat')
                 ->setMultioptions(\Cms\Model\Contact::getMultioptions())
-                ->addValidatorInteger();
+                ->addValidatorInteger());
         }
 
         $auth = \App\Registry::$auth;
 
-        $this->addElementText('email')
+        $this->addElement((new Element\Text('email'))
             ->setLabel('Twój adres email')
             ->setValue($auth->getEmail())
             ->setRequired()
-            ->addValidatorEmailAddress();
+            ->addValidatorEmailAddress());
 
-        $this->addElementTextarea('text')
+        $this->addElement((new Element\Textarea('text'))
             ->setLabel('Wiadomość')
             ->setRequired()
             ->addValidatorNotEmpty()
-            ->addFilterStripTags();
+            ->addFilterStripTags());
 
         //captcha dla niezalogowanych
         if (!($auth->getId() > 0)) {
-            $this->addElementCaptcha('regCaptcha')
-                ->setLabel('Przepisz kod');
+            $this->addElement((new Element\Captcha('regCaptcha'))
+                ->setLabel('Przepisz kod'));
         }
 
-        $this->addElementSubmit('submit')
-            ->setLabel('Wyślij');
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('Wyślij'));
     }
 
     /**

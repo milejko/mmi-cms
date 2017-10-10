@@ -18,16 +18,16 @@ class Login extends \Mmi\Form\Form
 
     public function init()
     {
-        $this->addElementText('username')
+        $this->addElement((new Element\Text('username'))
             ->setLabel('Nazwa użytkownika')
-            ->addFilterStringTrim();
+            ->addFilterStringTrim());
 
-        $this->addElementPassword('password')
+        $this->addElement((new Element\Password('password'))
             ->setLabel('Hasło')
-            ->addFilterStringTrim();
+            ->addFilterStringTrim());
 
-        $this->addElementSubmit('submit')
-            ->setLabel('Zaloguj się');
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('Zaloguj się'));
     }
 
     /**

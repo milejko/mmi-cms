@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Form;
 
+use Cms\Form\Element;
+
 /**
  * Formularz edycji ACL dla roli
  */
@@ -19,27 +21,27 @@ class CategoryAclForm extends \Cms\Form\Form
     public function init()
     {
         //drzewo kategorii (dozwolone)
-        $this->addElementTree('allow')
-            ->setLabel('dozwolone kategorie')
-            ->setMultiple()
-            ->setValue(implode(';', (new \Cms\Orm\CmsCategoryAclQuery)
-                    ->whereCmsRoleId()->equals($this->getOption('roleId'))
-                    ->andFieldAccess()->equals('allow')
-                    ->findPairs('id', 'cms_category_id')))
-            ->setStructure(['children' => (new \Cms\Model\CategoryModel)->getCategoryTree()]);
+        $this->addElement((new Element\Tree('allow'))
+                ->setLabel('dozwolone kategorie')
+                ->setMultiple()
+                ->setValue(implode(');', (new \Cms\Orm\CmsCategoryAclQuery)
+                        ->whereCmsRoleId()->equals($this->getOption('roleId'))
+                        ->andFieldAccess()->equals('allow')
+                        ->findPairs('id', 'cms_category_id')))
+                ->setStructure(['children' => (new \Cms\Model\CategoryModel)->getCategoryTree()]));
 
         //drzewo kategorii (zabronione)
-        $this->addElementTree('deny')
-            ->setLabel('zabronione kategorie')
-            ->setMultiple()
-            ->setValue(implode(';', (new \Cms\Orm\CmsCategoryAclQuery)
-                    ->whereCmsRoleId()->equals($this->getOption('roleId'))
-                    ->andFieldAccess()->equals('deny')
-                    ->findPairs('id', 'cms_category_id')))
-            ->setStructure(['children' => (new \Cms\Model\CategoryModel)->getCategoryTree()]);
+        $this->addElement((new Element\Tree('deny'))
+                ->setLabel('zabronione kategorie')
+                ->setMultiple()
+                ->setValue(implode(');', (new \Cms\Orm\CmsCategoryAclQuery)
+                        ->whereCmsRoleId()->equals($this->getOption('roleId'))
+                        ->andFieldAccess()->equals('deny')
+                        ->findPairs('id', 'cms_category_id')))
+                ->setStructure(['children' => (new \Cms\Model\CategoryModel)->getCategoryTree()]));
 
-        $this->addElementSubmit()
-            ->setLabel('zapisz');
+        $this->addElement((new Element\Submit('submit'))
+                ->setLabel('zapisz'));
     }
 
     /**

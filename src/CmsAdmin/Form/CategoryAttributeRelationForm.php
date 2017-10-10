@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Form;
 
+use Cms\Form\Element;
+
 /**
  * Formularz wiązania szablon <-> atrybut
  */
@@ -20,7 +22,7 @@ class CategoryAttributeRelationForm extends \Cms\Form\Form
     {
 
         //atrybut
-        $this->addElementSelect('cmsAttributeId')
+        $this->addElement((new Element\Select('cmsAttributeId'))
             ->setRequired()
             ->addValidatorNotEmpty()
             ->setMultioptions([null => '---'] + (new \Cms\Orm\CmsAttributeQuery)
@@ -31,7 +33,7 @@ class CategoryAttributeRelationForm extends \Cms\Form\Form
                 ->whereObject()->equals($this->getRecord()->object)
                 ->andFieldObjectId()->equals($this->getRecord()->objectId)
                 , 'cmsAttributeId', $this->getRecord()->id)
-            ->setLabel('atrybut');
+            ->setLabel('atrybut'));
 
         //zablokowana edycja
         if ($this->getRecord()->id) {
@@ -45,44 +47,44 @@ class CategoryAttributeRelationForm extends \Cms\Form\Form
             ->findPk($this->getRecord()->cmsAttributeValueId);
 
         //wartość domyślna
-        $this->addElementText('defaultValue')
+        $this->addElement((new Element\Text('defaultValue'))
             ->setLabel('wartość domyślna')
             ->addFilterEmptyToNull()
             //string odpowiadający wartości domyślnej
-            ->setValue($defaultValueRecord ? $defaultValueRecord->value : null);
+            ->setValue($defaultValueRecord ? $defaultValueRecord->value : null));
 
         //filtry
-        $this->addElementText('filterClasses')
-            ->setLabel('filtry');
+        $this->addElement((new Element\Text('filterClasses'))
+            ->setLabel('filtry'));
 
         //walidatory
-        $this->addElementText('validatorClasses')
-            ->setLabel('walidatory');
+        $this->addElement((new Element\Text('validatorClasses'))
+            ->setLabel('walidatory'));
 
         //wymagany
-        $this->addElementCheckbox('required')
-            ->setLabel('wymagany');
+        $this->addElement((new Element\Checkbox('required'))
+            ->setLabel('wymagany'));
 
         //unikalny
-        $this->addElementCheckbox('unique')
-            ->setLabel('unikalny');
+        $this->addElement((new Element\Checkbox('unique'))
+            ->setLabel('unikalny'));
 
         //zmaterializowany
-        $this->addElementSelect('materialized')
+        $this->addElement((new Element\Select('materialized'))
             ->setMultioptions([0 => 'nie', 1 => 'tak', 2 => 'tak, odziedziczony'])
             ->setLabel('zmaterializowany')
-            ->setDescription('opcja administracyjna, zmiana może uszkodzić formularze zawierające ten atrybut');
+            ->setDescription('opcja administracyjna, zmiana może uszkodzić formularze zawierające ten atrybut'));
 
         //kolejność
-        $this->addElementText('order')
+        $this->addElement((new Element\Text('order'))
             ->setRequired()
             ->setLabel('kolejność')
             ->addValidatorNumberBetween(0, 10000000)
-            ->setValue(0);
+            ->setValue(0));
 
         //zapis
-        $this->addElementSubmit('submit')
-            ->setLabel('zapisz wiązanie');
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('zapisz wiązanie'));
     }
 
     /**

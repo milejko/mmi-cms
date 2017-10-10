@@ -66,7 +66,7 @@ abstract class AttributeForm extends Form
         //jeśli istnieje labelka i atrybuty
         if ($label) {
             //dodawanie label
-            $this->addElementLabel('attributes-' . $object)->setIgnore()->setLabel($label);
+            $this->addElement((new Element\Label('attributes-' . $object))->setIgnore()->setLabel($label));
         }
         //iteracja po atrybutach
         foreach ($this->_cmsAttributes as $attribute) {

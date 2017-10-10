@@ -10,32 +10,34 @@
 
 namespace CmsAdmin\Form;
 
+use Cms\Form\Element;
+
 /**
  * Formularz wartości atrybutu
  */
-class AttributeValue extends \Mmi\Form\Form
+class AttributeValue extends \Cms\Form\Form
 {
 
     public function init()
     {
 
         //wartość
-        $this->addElementText('value')
+        $this->addElement((new Element\Text('value'))
             ->setLabel('wartość')
             ->setRequired()
             ->addFilterStringTrim()
-            ->addValidatorStringLength(1, 1024);
+            ->addValidatorStringLength(1, 1024));
 
         //labelka
-        $this->addElementText('label')
+        $this->addElement((new Element\Text('label'))
             ->setLabel('etykieta')
             ->addFilterStringTrim()
             ->addFilterEmptyToNull()
-            ->addValidatorStringLength(1, 64);
+            ->addValidatorStringLength(1, 64));
 
         //zapis
-        $this->addElementSubmit('submit')
-            ->setLabel('zapisz wartość');
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('zapisz wartość'));
     }
 
     /**

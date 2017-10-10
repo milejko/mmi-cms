@@ -10,22 +10,24 @@
 
 namespace CmsAdmin\Form\Contact;
 
-class Option extends \Mmi\Form\Form
+use Cms\Form\Element;
+
+class Option extends \Cms\Form\Form
 {
 
     public function init()
     {
 
-        $this->addElementText('name')
-            ->setLabel('nazwa');
+        $this->addElement((new Element\Text('name'))
+            ->setLabel('nazwa'));
 
-        $this->addElementText('sendTo')
+        $this->addElement((new Element\Text('sendTo'))
             ->setLabel('prześlij na email')
-            ->setDescription('Wysyła kopię wiadomości od użytkownika bezpośrednio na podane adres\'y e-mail oddzielone ";"')
-            ->addValidatorEmailAddressList();
+            ->setDescription('Wysyła kopię wiadomości od użytkownika bezpośrednio na podane adres\'y e-mail oddzielone ");"')
+            ->addValidatorEmailAddressList());
 
-        $this->addElementSubmit('submit')
-            ->setLabel('dodaj/zmień temat');
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('dodaj/zmień temat'));
     }
 
 }

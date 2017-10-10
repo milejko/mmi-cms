@@ -10,46 +10,48 @@
 
 namespace CmsAdmin\Form;
 
+use Cms\Form\Element;
+
 use Cms\Orm\CmsAuthQuery;
 
 /**
  * Formularz dodawania i edycji użytkowników CMS
  * @method \Cms\Orm\CmsAuthRecord getRecord()
  */
-class Auth extends \Mmi\Form\Form
+class Auth extends \Cms\Form\Form
 {
 
     public function init()
     {
 
         //nazwa użytkownika
-        $this->addElementText('username')
+        $this->addElement((new Element\Text('username'))
             ->setLabel('nazwa użytkownika (login)')
             ->setRequired()
             ->addFilterStringTrim()
             ->addValidatorNotEmpty()
-            ->addValidatorRecordUnique(new CmsAuthQuery, 'username', $this->getRecord()->id);
+            ->addValidatorRecordUnique(new CmsAuthQuery, 'username', $this->getRecord()->id));
 
         //imię i nazwisko użytkownika
-        $this->addElementText('name')
+        $this->addElement((new Element\Text('name'))
             ->setLabel('pełna nazwa użytkownika (opcjonalna)')
-            ->addFilterStringTrim();
+            ->addFilterStringTrim());
 
         //email
-        $this->addElementText('email')
+        $this->addElement((new Element\Text('email'))
             ->setLabel('adres e-mail')
             ->setRequired()
             ->addFilterStringTrim()
             ->addValidatorEmailAddress()
-            ->addValidatorRecordUnique(new CmsAuthQuery, 'email', $this->getRecord()->id);
+            ->addValidatorRecordUnique(new CmsAuthQuery, 'email', $this->getRecord()->id));
 
         //role
-        $this->addElementMultiCheckbox('cmsRoles')
+        $this->addElement((new Element\MultiCheckbox('cmsRoles'))
             ->setLabel('role')
             ->setDescription('Grupa uprawnień')
             ->setMultioptions((new \Cms\Orm\CmsRoleQuery)->findPairs('id', 'name'))
             ->setValue(\Cms\Orm\CmsAuthRoleQuery::byAuthId($this->_record->id)->findPairs('cms_role_id', 'cms_role_id'))
-            ->addValidatorNotEmpty('Wymagane jest wybranie roli');
+            ->addValidatorNotEmpty('Wymagane jest wybranie roli'));
 
         $languages = [];
         foreach (\App\Registry::$config->languages as $language) {
@@ -57,24 +59,24 @@ class Auth extends \Mmi\Form\Form
         }
 
         if (!empty($languages)) {
-            $this->addElementSelect('lang')
+            $this->addElement((new Element\Select('lang'))
                 ->setLabel('język')
                 ->setMultioptions($languages)
-                ->setDescription('Preferowany przez użytkownika język interfejsu');
+                ->setDescription('Preferowany przez użytkownika język interfejsu'));
         }
 
         //aktywny
-        $this->addElementCheckbox('active')
-            ->setLabel('Aktywny');
+        $this->addElement((new Element\Checkbox('active'))
+            ->setLabel('Aktywny'));
 
         //zmiana hasła
-        $this->addElementText('changePassword')
+        $this->addElement((new Element\Text('changePassword'))
             ->setLabel('zmiana hasła')
             ->setDescription('Jeśli nie chcesz zmienić hasła lub używać domenowego, nie wypełniaj tego pola')
-            ->addValidatorStringLength(4, 128);
+            ->addValidatorStringLength(4, 128));
 
-        $this->addElementSubmit('submit')
-            ->setLabel('zapisz użytkownika');
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('zapisz użytkownika'));
     }
 
     /**
