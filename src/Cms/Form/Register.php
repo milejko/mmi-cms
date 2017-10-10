@@ -10,13 +10,14 @@
 
 namespace Cms\Form;
 
-use Cms\Orm\CmsAuthQuery;
+use Cms\Orm\CmsAuthQuery,
+    Mmi\Form\Element;
 
 /**
  * Formularz rejestracji
  * @method \Cms\Orm\CmsAuthRecord getRecord()
  */
-class Register extends \Cms\Form\Form
+class Register extends \Mmi\Form\Form
 {
 
     public function init()

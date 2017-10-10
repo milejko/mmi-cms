@@ -10,8 +10,9 @@
 
 namespace Cms\Form;
 
-use \Cms\Model\AttributeValueRelationModel,
-    \Cms\Model\AttributeRelationModel;
+use Cms\Model\AttributeValueRelationModel,
+    Cms\Model\AttributeRelationModel,
+    Cms\Form\Element;
 
 /**
  * Formularz CMS z atrybutami

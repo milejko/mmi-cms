@@ -10,8 +10,6 @@
 
 namespace Cms\Form;
 
-use Cms\Form\Element;
-
 /**
  * Formularz CMS
  */

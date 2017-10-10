@@ -10,6 +10,8 @@
 
 namespace Cms\Form;
 
+use Mmi\Form\Element;
+
 /**
  * Formularz logowania do CMS
  */

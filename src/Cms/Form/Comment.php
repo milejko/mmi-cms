@@ -10,6 +10,8 @@
 
 namespace Cms\Form;
 
+use Mmi\Form\Element;
+
 class Comment extends \Mmi\Form\Form
 {
 
