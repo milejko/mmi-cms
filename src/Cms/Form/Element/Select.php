@@ -86,26 +86,8 @@ namespace Cms\Form\Element;
  * @method self addFilterUrlencode() filtr urlencode
  * @method self addFilterZeroToNull() filtr zero do null'a
  */
-class Select extends \Mmi\Form\Element\ElementAbstract
+class Select extends \Mmi\Form\Element\Select
 {
-
-    /**
-     * Ustawia multiselect
-     * @return self
-     */
-    public function setMultiple()
-    {
-        return $this->setOption('multiple', '');
-    }
-
-    /**
-     * Zwraca czy pole jest multiple
-     * @return boolean
-     */
-    public final function getMultiple()
-    {
-        return null !== $this->getOption('multiple');
-    }
 
     /**
      * Buduje pole
@@ -142,26 +124,6 @@ class Select extends \Mmi\Form\Element\ElementAbstract
         }
         $html .= '</select>';
         return $html;
-    }
-
-    /**
-     * Zaznacza element który powinien być zaznaczony
-     * @param string $key klucz
-     * @param string $value wartość
-     * @return string
-     */
-    protected function _calculateSelected($key, $value)
-    {
-        $selected = ' selected';
-        //typ tablicowy
-        if (is_array($value)) {
-            return in_array($key, $value) ? $selected : '';
-        }
-        //typ skalarny
-        if ((string) $value == (string) $key && !is_null($value)) {
-            return $selected;
-        }
-        return '';
     }
 
 }

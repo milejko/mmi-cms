@@ -13,7 +13,7 @@ namespace Cms\Form\Element;
 /**
  * Element textarea
  */
-class Textarea extends \Mmi\Form\Element\ElementAbstract
+class Textarea extends \Mmi\Form\Element\Textarea
 {
 
     /**

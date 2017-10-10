@@ -13,19 +13,8 @@ namespace Cms\Form\Element;
 /**
  * Element submit
  */
-class Submit extends \Mmi\Form\Element\ElementAbstract
+class Submit extends \Mmi\Form\Element\Submit
 {
-
-    /**
-     * Konstruktor, ustawia nazwę pola i opcje
-     * @param string $name nazwa
-     */
-    public function __construct($name)
-    {
-        parent::__construct($name);
-        $this->setIgnore()
-            ->setRenderingOrder(['fetchBegin', 'fetchField', 'fetchErrors', 'fetchEnd']);
-    }
 
     /**
      * Buduje pole

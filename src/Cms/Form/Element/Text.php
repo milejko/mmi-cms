@@ -13,7 +13,7 @@ namespace Cms\Form\Element;
 /**
  * Element pole tekstowe
  */
-class Text extends \Mmi\Form\Element\ElementAbstract
+class Text extends \Mmi\Form\Element\Text
 {
 
     /**

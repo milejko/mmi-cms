@@ -81,7 +81,7 @@ namespace Cms\Form\Element;
  * @method self addFilterUrlencode() filtr urlencode
  * @method self addFilterZeroToNull() filtr zero do null'a
  */
-class Uploader extends \Mmi\Form\Element\File
+class Uploader extends File
 {
 
     /**

@@ -13,18 +13,8 @@ namespace Cms\Form\Element;
 /**
  * Element ukrytego pola formularza
  */
-class Hidden extends \Mmi\Form\Element\ElementAbstract
+class Hidden extends \Mmi\Form\Element\Hidden
 {
-
-    /**
-     * Konstruktor zmienia kolejność renderowania
-     * @param string $name
-     */
-    public function __construct($name)
-    {
-        parent::__construct($name);
-        $this->setRenderingOrder(['fetchBegin', 'fetchField', 'fetchErrors', 'fetchEnd']);
-    }
 
     /**
      * Buduje pole

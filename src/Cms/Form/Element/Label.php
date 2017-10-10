@@ -13,26 +13,7 @@ namespace Cms\Form\Element;
 /**
  * Element label
  */
-class Label extends \Mmi\Form\Element\ElementAbstract
+class Label extends \Mmi\Form\Element\Label
 {
-
-    /**
-     * Konstruktor usuwa labelpostfix
-     * @param string $name
-     */
-    public function __construct($name)
-    {
-        parent::__construct($name);
-        $this->setLabelPostfix('');
-    }
-
-    /**
-     * Buduje pole
-     * @return string
-     */
-    public function fetchField()
-    {
-        return '';
-    }
-
+    
 }

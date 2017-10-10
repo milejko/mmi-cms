@@ -13,7 +13,7 @@ namespace Cms\Form\Element;
 /**
  * Pole hasło
  */
-class Password extends \Mmi\Form\Element\ElementAbstract
+class Password extends \Mmi\Form\Element\Password
 {
 
     /**

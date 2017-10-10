@@ -13,18 +13,8 @@ namespace Cms\Form\Element;
 /**
  * Klasa guzika
  */
-class Button extends \Mmi\Form\Element\ElementAbstract
+class Button extends \Mmi\Form\Element\Button
 {
-
-    /**
-     * Ignorowanie tego pola, inna kolejnośc renderowania
-     */
-    public function __construct($name)
-    {
-        parent::__construct($name);
-        $this->setIgnore();
-        $this->setRenderingOrder(['fetchBegin', 'fetchField', 'fetchErrors', 'fetchEnd']);
-    }
 
     /**
      * Buduje pole
