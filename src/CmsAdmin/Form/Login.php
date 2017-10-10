@@ -21,11 +21,11 @@ class Login extends \Mmi\Form\Form
         $this->addElement((new Element\Text('username'))
             ->setLabel('nazwa użytkownika')
             ->setDescription('wpisz swój unikalny identyfikator')
-            ->addFilterStringTrim());
+            ->addFilter(new \Mmi\Filter\StringTrim([])));
 
         $this->addElement((new Element\Password('password'))
             ->setLabel('hasło')
-            ->addValidatorStringLength(4, 128));
+            ->addValidator(new \Mmi\Validator\StringLength([4, 128])));
 
         $this->addElement((new Element\Submit('login'))
             ->setLabel('zaloguj się'));

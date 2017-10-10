@@ -21,13 +21,13 @@ class Label extends \Cms\Form\Form
         $this->addElement((new Element\Select('object'))
             ->setLabel('klucz')
             ->setRequired()
-            ->addValidatorNotEmpty()
+            ->addValidator(new \Mmi\Validator\NotEmpty([]))
             ->setMultioptions(\Cms\Model\Stat::getUniqueObjects()));
 
         $this->addElement((new Element\Text('label'))
             ->setLabel('nazwa statystyki')
             ->setRequired()
-            ->addValidatorNotEmpty());
+            ->addValidator(new \Mmi\Validator\NotEmpty([])));
 
         $this->addElement((new Element\Textarea('description'))
             ->setLabel('opis'));

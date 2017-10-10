@@ -24,7 +24,7 @@ class ConnectorImportContentForm extends \Cms\Form\Form
     public function init()
     {
         $this->addElement((new Element\Text('url'))
-            ->addValidatorRegex('/^https?:\/\/[a-z0-9\.\/]+$/', 'link nie jest poprawnym adresem HTTPS')
+            ->addValidator(new \Mmi\Validator\Regex(['/^https?:\/\/[a-z0-9\.\/]+$/', 'link nie jest poprawnym adresem HTTPS']))
             ->setDescription('wymagany HTTPS')
             ->setRequired()
             ->setLabel('adres źródłowego CMS'));

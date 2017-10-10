@@ -37,7 +37,7 @@ class Contact extends \Mmi\Form\Form
             ->setDisabled()
             ->setLabel('email')
             ->setValue(\App\Registry::$auth->getEmail())
-            ->addValidatorEmailAddress());
+            ->addValidator(new \Mmi\Validator\EmailAddress([])));
 
         //tresc zapytania
         $this->addElement((new Element\Textarea('text'))
@@ -47,7 +47,7 @@ class Contact extends \Mmi\Form\Form
         //odpowiedz na zgloszenie
         $this->addElement((new Element\Textarea('reply'))
             ->setRequired()
-            ->addValidatorNotEmpty()
+            ->addValidator(new \Mmi\Validator\NotEmpty([]))
             ->setLabel('odpowiedź'));
 
         $this->addElement((new Element\Submit('submit'))

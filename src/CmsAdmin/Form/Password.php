@@ -25,18 +25,18 @@ class Password extends \Mmi\Form\Form
         $this->addElement((new Element\Password('password'))
             ->setLabel('obecne hasło')
             ->setRequired()
-            ->addValidatorNotEmpty());
+            ->addValidator(new \Mmi\Validator\NotEmpty([])));
 
         $this->addElement((new Element\Password('changePassword'))
             ->setLabel('nowe hasło')
             ->setDescription('wpisz nowe hasło, co najmniej 4 znaki')
             ->setRequired()
-            ->addValidatorStringLength(4, 128));
+            ->addValidator(new \Mmi\Validator\StringLength([4, 128])));
 
         $this->addElement((new Element\Password('confirmPassword'))
             ->setLabel('powtórz nowe hasło')
             ->setRequired()
-            ->addValidatorStringLength(4, 128));
+            ->addValidator(new \Mmi\Validator\StringLength([4, 128])));
 
         $this->addElement((new Element\Submit('change'))
             ->setLabel('zmień hasło'));

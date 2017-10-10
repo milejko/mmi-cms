@@ -20,20 +20,20 @@ class CategoryAttributeRelationForm extends \Cms\Form\Form
 
     public function init()
     {
+        $query = (new \Cms\Orm\CmsAttributeRelationQuery)
+                ->whereObject()->equals($this->getRecord()->object)
+                ->andFieldObjectId()->equals($this->getRecord()->objectId);
 
         //atrybut
         $this->addElement((new Element\Select('cmsAttributeId'))
-            ->setRequired()
-            ->addValidatorNotEmpty()
-            ->setMultioptions([null => '---'] + (new \Cms\Orm\CmsAttributeQuery)
-                ->orderAscName()
-                ->findPairs('id', 'name'))
-            //unikalność atrybutu dla wybranego szablonu
-            ->addValidatorRecordUnique((new \Cms\Orm\CmsAttributeRelationQuery)
-                ->whereObject()->equals($this->getRecord()->object)
-                ->andFieldObjectId()->equals($this->getRecord()->objectId)
-                , 'cmsAttributeId', $this->getRecord()->id)
-            ->setLabel('atrybut'));
+                ->setRequired()
+                ->addValidator(new \Mmi\Validator\NotEmpty([]))
+                ->setMultioptions([null => '---'] + (new \Cms\Orm\CmsAttributeQuery)
+                    ->orderAscName()
+                    ->findPairs('id', 'name'))
+                //unikalność atrybutu dla wybranego szablonu
+                ->addValidator(new \Mmi\Validator\RecordUnique([$query, 'cmsAttributeId', $this->getRecord()->id]))
+                ->setLabel('atrybut'));
 
         //zablokowana edycja
         if ($this->getRecord()->id) {
@@ -48,43 +48,43 @@ class CategoryAttributeRelationForm extends \Cms\Form\Form
 
         //wartość domyślna
         $this->addElement((new Element\Text('defaultValue'))
-            ->setLabel('wartość domyślna')
-            ->addFilterEmptyToNull()
-            //string odpowiadający wartości domyślnej
-            ->setValue($defaultValueRecord ? $defaultValueRecord->value : null));
+                ->setLabel('wartość domyślna')
+                ->addFilter(new \Mmi\Filter\EmptyToNull([]))
+                //string odpowiadający wartości domyślnej
+                ->setValue($defaultValueRecord ? $defaultValueRecord->value : null));
 
         //filtry
         $this->addElement((new Element\Text('filterClasses'))
-            ->setLabel('filtry'));
+                ->setLabel('filtry'));
 
         //walidatory
         $this->addElement((new Element\Text('validatorClasses'))
-            ->setLabel('walidatory'));
+                ->setLabel('walidatory'));
 
         //wymagany
         $this->addElement((new Element\Checkbox('required'))
-            ->setLabel('wymagany'));
+                ->setLabel('wymagany'));
 
         //unikalny
         $this->addElement((new Element\Checkbox('unique'))
-            ->setLabel('unikalny'));
+                ->setLabel('unikalny'));
 
         //zmaterializowany
         $this->addElement((new Element\Select('materialized'))
-            ->setMultioptions([0 => 'nie', 1 => 'tak', 2 => 'tak, odziedziczony'])
-            ->setLabel('zmaterializowany')
-            ->setDescription('opcja administracyjna, zmiana może uszkodzić formularze zawierające ten atrybut'));
+                ->setMultioptions([0 => 'nie', 1 => 'tak', 2 => 'tak, odziedziczony'])
+                ->setLabel('zmaterializowany')
+                ->setDescription('opcja administracyjna, zmiana może uszkodzić formularze zawierające ten atrybut'));
 
         //kolejność
         $this->addElement((new Element\Text('order'))
-            ->setRequired()
-            ->setLabel('kolejność')
-            ->addValidatorNumberBetween(0, 10000000)
-            ->setValue(0));
+                ->setRequired()
+                ->setLabel('kolejność')
+                ->addValidator(new \Mmi\Validator\NumberBetween([0, 10000000]))
+                ->setValue(0));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('zapisz wiązanie'));
+                ->setLabel('zapisz wiązanie'));
     }
 
     /**

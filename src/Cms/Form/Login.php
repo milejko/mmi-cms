@@ -22,11 +22,11 @@ class Login extends \Mmi\Form\Form
     {
         $this->addElement((new Element\Text('username'))
             ->setLabel('Nazwa użytkownika')
-            ->addFilterStringTrim());
+            ->addFilter(new \Mmi\Filter\StringTrim));
 
         $this->addElement((new Element\Password('password'))
             ->setLabel('Hasło')
-            ->addFilterStringTrim());
+            ->addFilter(new \Mmi\Filter\StringTrim));
 
         $this->addElement((new Element\Submit('submit'))
             ->setLabel('Zaloguj się'));

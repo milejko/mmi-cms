@@ -20,7 +20,7 @@ class Role extends \Mmi\Form\Form
 
         $this->addElement((new Element\Text('name'))
             ->setLabel('nazwa roli')
-            ->addValidatorStringLength(3, 64));
+            ->addValidator(new \Mmi\Validator\StringLength([3, 64])));
 
         $this->addElement((new Element\Submit('submit'))
             ->setLabel('utwórz nową rolę'));

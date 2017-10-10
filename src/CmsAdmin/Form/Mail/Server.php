@@ -24,13 +24,13 @@ class Server extends \Cms\Form\Form
         $this->addElement((new Element\Select('ssl'))
             ->setLabel('Rodzaj połączenia')
             ->setRequired()
-            ->addValidatorNotEmpty()
+            ->addValidator(new \Mmi\Validator\NotEmpty([]))
             ->setMultioptions(['plain' => 'plain', 'tls' => 'tls', 'ssl' => 'ssl']));
 
         $this->addElement((new Element\Text('port'))
             ->setLabel('Port')
             ->setRequired()
-            ->addValidatorInteger(true)
+            ->addValidator(new \Mmi\Validator\Integer([true]))
             ->setValue(25)
             ->setDescription('Plain: 25, SSL: 465, TLS: 587'));
 

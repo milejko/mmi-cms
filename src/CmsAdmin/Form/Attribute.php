@@ -25,28 +25,28 @@ class Attribute extends \Cms\Form\Form
         $this->addElement((new Element\Text('name'))
             ->setLabel('nazwa')
             ->setRequired()
-            ->addFilterStringTrim()
-            ->addValidatorStringLength(2, 128));
+            ->addFilter(new \Mmi\Filter\StringTrim([]))
+            ->addValidator(new \Mmi\Validator\StringLength([2, 128])));
 
         //klucz pola
         $this->addElement((new Element\Text('key'))
             ->setLabel('klucz')
-            ->addFilterAscii()
+            ->addFilter(new \Mmi\Filter\Ascii([]))
             ->setRequired()
-            ->addValidatorAlnum('klucz może zawierać wyłącznie litery i cyfry')
-            ->addValidatorStringLength(2, 64)
-            ->addValidatorRecordUnique(new \Cms\Orm\CmsAttributeQuery, 'key', $this->getRecord()->id));
+            ->addValidator((new \Mmi\Validator\Alnum)->setMessage('klucz może zawierać wyłącznie litery i cyfry'))
+            ->addValidator(new \Mmi\Validator\StringLength([2, 64]))
+            ->addValidator(new \Mmi\Validator\RecordUnique([new \Cms\Orm\CmsAttributeQuery, 'key', $this->getRecord()->id])));
 
         //opis
         $this->addElement((new Element\Text('description'))
             ->setLabel('opis')
-            ->addFilterStringTrim());
+            ->addFilter(new \Mmi\Filter\StringTrim([])));
 
         //pole formularza
         $this->addElement((new Element\Select('cmsAttributeTypeId'))
             ->setLabel('pole formularza')
             ->setRequired()
-            ->addValidatorNotEmpty()
+            ->addValidator(new \Mmi\Validator\NotEmpty([]))
             ->setMultioptions((new \Cms\Orm\CmsAttributeTypeQuery)
                 ->orderAscName()
                 ->findPairs('id', 'name')));

@@ -21,7 +21,7 @@ class Tree extends \Mmi\Form\Element\ElementAbstract
      */
     public function init()
     {
-        $this->addFilterEmptyToNull();
+        $this->addFilter(new \Mmi\Filter\EmptyToNull);
         return parent::init();
     }
 

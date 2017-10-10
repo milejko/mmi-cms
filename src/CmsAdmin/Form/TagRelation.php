@@ -25,8 +25,8 @@ class TagRelation extends \Mmi\Form\Form
         $this->addElement((new Element\Text('tag'))
             ->setLabel('tag')
             ->setRequired()
-            ->addFilterStringTrim()
-            ->addValidatorStringLength(2, 64));
+            ->addFilter(new \Mmi\Filter\StringTrim([]))
+            ->addValidator(new \Mmi\Validator\StringLength([2, 64])));
 
         //ustawienie wartości tagu
         if ($this->getRecord()->cmsTagId && (null !== $tagRecord = (new \Cms\Orm\CmsTagQuery)->findPk($this->getRecord()->cmsTagId))) {
@@ -37,15 +37,15 @@ class TagRelation extends \Mmi\Form\Form
         $this->addElement((new Element\Text('object'))
             ->setLabel('zasób')
             ->setRequired()
-            ->addFilterStringTrim()
-            ->addValidatorStringLength(2, 64));
+            ->addFilter(new \Mmi\Filter\StringTrim([]))
+            ->addValidator(new \Mmi\Validator\StringLength([2, 64])));
 
         //id obiektu
         $this->addElement((new Element\Text('objectId'))
             ->setLabel('ID zasobu')
-            ->addFilterEmptyToNull()
-            ->addValidatorInteger()
-            ->addValidatorNumberBetween(0, 100000000));
+            ->addFilter(new \Mmi\Filter\EmptyToNull([]))
+            ->addValidator(new \Mmi\Validator\Integer([]))
+            ->addValidator(new \Mmi\Validator\NumberBetween([0, 100000000])));
 
         $this->addElement((new Element\Submit('submit'))
             ->setLabel('zapisz relację'));

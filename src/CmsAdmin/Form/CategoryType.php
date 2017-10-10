@@ -24,16 +24,16 @@ class CategoryType extends \Cms\Form\Form
         //nazwa
         $this->addElement((new Element\Text('name'))
             ->setRequired()
-            ->addFilterStringTrim()
-            ->addValidatorNotEmpty()
-            ->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryTypeQuery, 'name', $this->getRecord()->id)
+            ->addFilter(new \Mmi\Filter\StringTrim([]))
+            ->addValidator(new \Mmi\Validator\NotEmpty([]))
+            ->addValidator(new \Mmi\Validator\RecordUnique([new \Cms\Orm\CmsCategoryTypeQuery, 'name', $this->getRecord()->id]))
             ->setLabel('nazwa'));
 
         //klasa modułu wyświetlania
         $this->addElement((new Element\Select('mvcParams'))
             ->setMultioptions([null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard(3))
             ->setRequired()
-            ->addValidatorNotEmpty()
+            ->addValidator(new \Mmi\Validator\NotEmpty([]))
             ->setLabel('moduł wyświetlania'));
 
         //ustawienie bufora
@@ -41,7 +41,7 @@ class CategoryType extends \Cms\Form\Form
             ->setLabel('odświeżanie')
             ->setMultioptions(\Cms\Orm\CmsCategoryRecord::CACHE_LIFETIMES)
             ->setValue(\Cms\Orm\CmsCategoryRecord::DEFAULT_CACHE_LIFETIME)
-            ->addFilterEmptyToNull());
+            ->addFilter(new \Mmi\Filter\EmptyToNull([])));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))

@@ -45,7 +45,7 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract
         $this->view->headLink()->appendStylesheet('/resource/cmsAdmin/css/datetimepicker.css');
         $this->view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
         $this->view->headScript()->appendFile('/resource/cmsAdmin/js/jquery/datetimepicker.js');
-        $this->addFilterEmptyToNull()
+        $this->addFilter(new \Mmi\Filter\EmptyToNull)
             ->setStep(15)
             ->setDatepicker(true)
             ->setTimepicker(true)

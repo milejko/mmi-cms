@@ -27,25 +27,25 @@ class Register extends \Mmi\Form\Form
         $this->addElement((new Element\Text('username'))
             ->setLabel('nazwa użytkownika (nick)')
             ->setRequired()
-            ->addValidatorAlnum()
-            ->addValidatorRecordUnique(new CmsAuthQuery, 'username')
-            ->addValidatorStringLength(4, 25)
-            ->addFilterLowercase());
+            ->addValidator(new \Mmi\Validator\Alnum)
+            ->addValidator(new \Mmi\Validator\RecordUnique([new CmsAuthQuery, 'username']))
+            ->addValidator(new \Mmi\Validator\StringLength([4, 25]))
+            ->addFilter(new \Mmi\Filter\Lowercase));
 
         //email
         $this->addElement((new Element\Text('email'))
             ->setLabel('e-mail')
             ->setRequired()
-            ->addValidatorEmailAddress()
-            ->addValidatorRecordUnique(new CmsAuthQuery, 'email')
-            ->addValidatorStringLength(4, 150)
-            ->addFilterLowercase());
+            ->addValidator(new \Mmi\Validator\EmailAddress)
+            ->addValidator(new \Mmi\Validator\RecordUnique([new CmsAuthQuery, 'email']))
+            ->addValidator(new \Mmi\Validator\StringLength([4, 150]))
+            ->addFilter(new \Mmi\Filter\Lowercase));
 
         //password
         $this->addElement((new Element\Password('password'))
             ->setLabel('hasło')
             ->setRequired()
-            ->addValidatorStringLength(4, 64));
+            ->addValidator(new \Mmi\Validator\StringLength([4, 64])));
 
         //potwierdzenie
         $this->addElement((new Element\Password('confirmPassword'))
@@ -54,7 +54,7 @@ class Register extends \Mmi\Form\Form
         //regulamin
         $this->addElement((new Element\Checkbox('regulations'))
             ->setLabel('Akceptuję regulamin')
-            ->addValidatorNotEmpty()
+            ->addValidator(new \Mmi\Validator\NotEmpty)
             ->setRequired());
 
         $this->addElement((new Element\Submit('submit'))

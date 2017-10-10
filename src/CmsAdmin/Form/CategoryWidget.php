@@ -28,35 +28,35 @@ class CategoryWidget extends \Cms\Form\Form
         $this->addElement((new Element\Text('name'))
             ->setLabel('nazwa')
             ->setRequired()
-            ->addValidatorStringLength(3, 64));
+            ->addValidator(new \Mmi\Validator\StringLength([3, 64])));
 
         //parametry wyświetlania
         $this->addElement((new Element\Select('mvcParams'))
             ->setLabel('adres modułu wyświetlania')
             ->setMultioptions($widgets)
             ->setRequired()
-            ->addValidatorNotEmpty());
+            ->addValidator(new \Mmi\Validator\NotEmpty([])));
 
         //parametry podglądu
         $this->addElement((new Element\Select('mvcPreviewParams'))
             ->setLabel('adres modułu podglądu')
             ->setMultioptions($widgets)
             ->setRequired()
-            ->addValidatorNotEmpty());
+            ->addValidator(new \Mmi\Validator\NotEmpty([])));
 
         //klasa formularza (brak - domyślna)
         $this->addElement((new Element\Text('formClass'))
             ->setLabel('klasa formularza')
             ->setDescription('dane i konfiguracja')
-            ->addFilterEmptyToNull()
-            ->addValidatorStringLength(3, 64));
+            ->addFilter(new \Mmi\Filter\EmptyToNull([]))
+            ->addValidator(new \Mmi\Validator\StringLength([3, 64])));
 
         //ustawienie bufora
         $this->addElement((new Element\Select('cacheLifetime'))
             ->setLabel('odświeżanie')
             ->setMultioptions(\Cms\Orm\CmsCategoryWidgetRecord::CACHE_LIFETIMES)
             ->setValue(\Cms\Orm\CmsCategoryWidgetRecord::DEFAULT_CACHE_LIFETIME)
-            ->addFilterEmptyToNull());
+            ->addFilter(new \Mmi\Filter\EmptyToNull([])));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))
