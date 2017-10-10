@@ -10,8 +10,7 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element,
-    Mmi\Validator;
+use Cms\Form\Element;
 
 /**
  * Formularz atrybutów
@@ -27,16 +26,16 @@ class Attribute extends \Cms\Form\Form
             ->setLabel('nazwa')
             ->setRequired()
             ->addFilterStringTrim()
-            ->addValidator(new Validator\StringLength(2, 128)));
+            ->addValidatorStringLength(2, 128));
 
         //klucz pola
         $this->addElement((new Element\Text('key'))
             ->setLabel('klucz')
             ->addFilterAscii()
             ->setRequired()
-            ->addValidator(new Validator\Alnum('klucz może zawierać wyłącznie litery i cyfry'))
-            ->addValidator(new Validator\StringLength(2, 64))
-            ->addValidator(new Validator\RecordUnique(new \Cms\Orm\CmsAttributeQuery, 'key', $this->getRecord()->id)));
+            ->addValidatorAlnum('klucz może zawierać wyłącznie litery i cyfry')
+            ->addValidatorStringLength(2, 64)
+            ->addValidatorRecordUnique(new \Cms\Orm\CmsAttributeQuery, 'key', $this->getRecord()->id));
 
         //opis
         $this->addElement((new Element\Text('description'))
@@ -47,7 +46,7 @@ class Attribute extends \Cms\Form\Form
         $this->addElement((new Element\Select('cmsAttributeTypeId'))
             ->setLabel('pole formularza')
             ->setRequired()
-            ->addValidator(new Validator\NotEmpty())
+            ->addValidatorNotEmpty()
             ->setMultioptions((new \Cms\Orm\CmsAttributeTypeQuery)
                 ->orderAscName()
                 ->findPairs('id', 'name')));

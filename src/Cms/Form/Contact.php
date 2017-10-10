@@ -22,7 +22,7 @@ class Contact extends \Mmi\Form\Form
             $this->addElement((new Element\Select('cmsContactOptionId'))
                 ->setLabel('Wybierz temat')
                 ->setMultioptions(\Cms\Model\Contact::getMultioptions())
-                ->addValidator(new \Mmi\Validator\Integer));
+                ->addValidatorInteger());
         }
 
         $auth = \App\Registry::$auth;
@@ -31,12 +31,12 @@ class Contact extends \Mmi\Form\Form
             ->setLabel('Twój adres email')
             ->setValue($auth->getEmail())
             ->setRequired()
-            ->addValidator(new \Mmi\Validator\EmailAddress));
+            ->addValidatorEmailAddress());
 
         $this->addElement((new Element\Textarea('text'))
             ->setLabel('Wiadomość')
             ->setRequired()
-            ->addValidator(new \Mmi\Validator\NotEmpty)
+            ->addValidatorNotEmpty()
             ->addFilterStripTags());
 
         //captcha dla niezalogowanych

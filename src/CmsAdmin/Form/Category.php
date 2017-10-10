@@ -10,8 +10,7 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element,
-    Mmi\Validator;
+use Cms\Form\Element;
 
 /**
  * Formularz edycji szegółów kategorii
@@ -35,7 +34,7 @@ class Category extends \Cms\Form\AttributeForm
             ->setLabel('nazwa')
             ->setRequired()
             ->addFilterStringTrim()
-            ->addValidator(new Validator\StringLength(2, 128)));
+            ->addValidatorStringLength(2, 128));
 
         //początek publikacji
         $this->addElement((new Element\DateTimePicker('dateStart'))
@@ -69,7 +68,7 @@ class Category extends \Cms\Form\AttributeForm
             ->setLabel('meta tytuł')
             ->setDescription('jeśli brak, użyta zostanie kaskada złożona nazw')
             ->addFilterStringTrim()
-            ->addValidator(new Validator\StringLength(2, 128)));
+            ->addValidatorStringLength(2, 128));
 
         //meta description
         $this->addElement((new Element\Textarea('description'))
@@ -84,9 +83,9 @@ class Category extends \Cms\Form\AttributeForm
             ->setDescription('domyślnie: ' . substr($view->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->getRecord()->uri], true), strlen($view->baseUrl) + 1))
             ->addFilterStringTrim()
             ->addFilterEmptyToNull()
-            ->addValidator(new Validator\RecordUnique(new \Cms\Orm\CmsCategoryQuery, 'uri'))
-            ->addValidator(new Validator\RecordUnique(new \Cms\Orm\CmsCategoryQuery, 'customUri', $this->getRecord()->id))
-            ->addValidator(new Validator\StringLength(1, 255)));
+            ->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryQuery, 'uri')
+            ->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryQuery, 'customUri', $this->getRecord()->id)
+            ->addValidatorStringLength(1, 255));
 
         //blank
         $this->addElement((new Element\Checkbox('follow'))
@@ -117,13 +116,13 @@ class Category extends \Cms\Form\AttributeForm
             ->setLabel('przekierowanie na moduł CMS')
             ->setDescription('np. module=blog&controller=index&action=index')
             ->addFilterStringTrim()
-            ->addValidator(new Validator\Regex('@module\=[a-zA-Z0-9\&\=]+@', 'niepoprawny adres modułu cms')));
+            ->addValidatorRegex('@module\=[a-zA-Z0-9\&\=]+@', 'niepoprawny adres modułu cms'));
 
         //config JSON
         $this->addElement((new Element\Text('configJson'))
             ->setLabel('dodatkowe flagi')
             ->setDescription('format JSON')
-            ->addValidator(new Validator\Json)
+            ->addValidatorJson()
             ->addFilterStringTrim());
 
         //https

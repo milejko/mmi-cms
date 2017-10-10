@@ -26,14 +26,14 @@ class AttributeValue extends \Cms\Form\Form
             ->setLabel('wartość')
             ->setRequired()
             ->addFilterStringTrim()
-            ->addValidator(new \Mmi\Validator\StringLength(1, 1024)));
+            ->addValidatorStringLength(1, 1024));
 
         //labelka
         $this->addElement((new Element\Text('label'))
             ->setLabel('etykieta')
             ->addFilterStringTrim()
             ->addFilterEmptyToNull()
-            ->addValidator(new \Mmi\Validator\StringLength(1, 64)));
+            ->addValidatorStringLength(1, 64));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))

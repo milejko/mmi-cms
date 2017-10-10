@@ -10,8 +10,7 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element,
-    Mmi\Validator;
+use Cms\Form\Element;
 
 /**
  * Formularz typu kategorii
@@ -26,15 +25,15 @@ class CategoryType extends \Cms\Form\Form
         $this->addElement((new Element\Text('name'))
             ->setRequired()
             ->addFilterStringTrim()
-            ->addValidator(new Validator\NotEmpty)
-            ->addValidator(new Validator\RecordUnique(new \Cms\Orm\CmsCategoryTypeQuery, 'name', $this->getRecord()->id))
+            ->addValidatorNotEmpty()
+            ->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryTypeQuery, 'name', $this->getRecord()->id)
             ->setLabel('nazwa'));
 
         //klasa modułu wyświetlania
         $this->addElement((new Element\Select('mvcParams'))
             ->setMultioptions([null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard(3))
             ->setRequired()
-            ->addValidator(new Validator\NotEmpty)
+            ->addValidatorNotEmpty()
             ->setLabel('moduł wyświetlania'));
 
         //ustawienie bufora

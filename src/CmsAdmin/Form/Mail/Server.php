@@ -10,8 +10,7 @@
 
 namespace CmsAdmin\Form\Mail;
 
-use Cms\Form\Element,
-    Mmi\Validator;
+use Cms\Form\Element;
 
 class Server extends \Cms\Form\Form
 {
@@ -25,13 +24,13 @@ class Server extends \Cms\Form\Form
         $this->addElement((new Element\Select('ssl'))
             ->setLabel('Rodzaj połączenia')
             ->setRequired()
-            ->addValidator(new Validator\NotEmpty())
+            ->addValidatorNotEmpty()
             ->setMultioptions(['plain' => 'plain', 'tls' => 'tls', 'ssl' => 'ssl']));
 
         $this->addElement((new Element\Text('port'))
             ->setLabel('Port')
             ->setRequired()
-            ->addValidator(new Validator\Integer(true))
+            ->addValidatorInteger(true)
             ->setValue(25)
             ->setDescription('Plain: 25, SSL: 465, TLS: 587'));
 

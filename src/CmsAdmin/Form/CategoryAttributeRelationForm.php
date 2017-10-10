@@ -10,8 +10,7 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element,
-    Mmi\Validator;
+use Cms\Form\Element;
 
 /**
  * Formularz wiązania szablon <-> atrybut
@@ -25,15 +24,15 @@ class CategoryAttributeRelationForm extends \Cms\Form\Form
         //atrybut
         $this->addElement((new Element\Select('cmsAttributeId'))
             ->setRequired()
-            ->addValidator(new Validator\NotEmpty())
+            ->addValidatorNotEmpty()
             ->setMultioptions([null => '---'] + (new \Cms\Orm\CmsAttributeQuery)
                 ->orderAscName()
                 ->findPairs('id', 'name'))
             //unikalność atrybutu dla wybranego szablonu
-            ->addValidator(new Validator\RecordUnique((new \Cms\Orm\CmsAttributeRelationQuery)
+            ->addValidatorRecordUnique((new \Cms\Orm\CmsAttributeRelationQuery)
                 ->whereObject()->equals($this->getRecord()->object)
                 ->andFieldObjectId()->equals($this->getRecord()->objectId)
-                , 'cmsAttributeId', $this->getRecord()->id))
+                , 'cmsAttributeId', $this->getRecord()->id)
             ->setLabel('atrybut'));
 
         //zablokowana edycja
@@ -80,7 +79,7 @@ class CategoryAttributeRelationForm extends \Cms\Form\Form
         $this->addElement((new Element\Text('order'))
             ->setRequired()
             ->setLabel('kolejność')
-            ->addValidator(new Validator\NumberBetween(0, 10000000))
+            ->addValidatorNumberBetween(0, 10000000)
             ->setValue(0));
 
         //zapis

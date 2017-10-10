@@ -10,8 +10,7 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element,
-    Mmi\Validator;
+use Cms\Form\Element;
 
 /**
  * Pierwszy krok importu danych
@@ -25,7 +24,7 @@ class ConnectorImportContentForm extends \Cms\Form\Form
     public function init()
     {
         $this->addElement((new Element\Text('url'))
-            ->addValidator(new Validator\Regex('/^https?:\/\/[a-z0-9\.\/]+$/', 'link nie jest poprawnym adresem HTTPS'))
+            ->addValidatorRegex('/^https?:\/\/[a-z0-9\.\/]+$/', 'link nie jest poprawnym adresem HTTPS')
             ->setDescription('wymagany HTTPS')
             ->setRequired()
             ->setLabel('adres źródłowego CMS'));

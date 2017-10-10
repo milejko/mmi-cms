@@ -10,8 +10,7 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element,
-    Mmi\Validator;
+use Cms\Form\Element;
 
 /**
  * Formularz harmonogramu
@@ -26,12 +25,12 @@ class Cron extends \Mmi\Form\Form
         $this->addElement((new Element\Text('name'))
             ->setLabel('nazwa zadania')
             ->setRequired()
-            ->addValidator(new Validator\StringLength(0, 50)));
+            ->addValidatorStringLength(0, 50));
 
         //opis
         $this->addElement((new Element\Textarea('description'))
             ->setRequired()
-            ->addValidator(new Validator\NotEmpty)
+            ->addValidatorNotEmpty()
             ->setLabel('Opis'));
 
         //minuta
@@ -39,35 +38,35 @@ class Cron extends \Mmi\Form\Form
             ->setLabel('Minuta')
             ->setDescription('minuta (0 - 59) lub np ( */5 wykonaj co 5 minut), (10,20 w dziesiątej i dwudziestej minucie godziny) , ( * w każdej minucie)')
             ->setRequired()
-            ->addValidator(new Validator\NotEmpty));
+            ->addValidatorNotEmpty());
 
         //godzina
         $this->addElement((new Element\Text('hour'))
             ->setLabel('Godzina')
             ->setDescription('godzina (0 - 23)')
             ->setRequired()
-            ->addValidator(new Validator\NotEmpty));
+            ->addValidatorNotEmpty());
 
         //dzień miesiąca
         $this->addElement((new Element\Text('dayOfMonth'))
             ->setLabel('Dzień miesiąca')
             ->setDescription('dzień miesiąca (1 - 31)')
             ->setRequired()
-            ->addValidator(new Validator\NotEmpty));
+            ->addValidatorNotEmpty());
 
         //miesiąc
         $this->addElement((new Element\Text('month'))
             ->setLabel('Miesiąc')
             ->setDescription('miesiąc (1 - 12)')
             ->setRequired()
-            ->addValidator(new Validator\NotEmpty));
+            ->addValidatorNotEmpty());
 
         //dzień tygodnia
         $this->addElement((new Element\Text('dayOfWeek'))
             ->setLabel('Dzień tygodnia')
             ->setDescription('dzień tygodnia (1 - 7) (Poniedziałek=1, Wtorek=2,..., Niedziela=7)')
             ->setRequired()
-            ->addValidator(new Validator\NotEmpty));
+            ->addValidatorNotEmpty());
 
         //obiekt
         $value = $this->getRecord() ? ('module=' . $this->getRecord()->module .
@@ -88,7 +87,7 @@ class Cron extends \Mmi\Form\Form
             ->setLabel('Obiekt CMS')
             ->setDescription('Istniejące obiekty CMS')
             ->setRequired()
-            ->addValidator(new Validator\NotEmpty)
+            ->addValidatorNotEmpty()
             ->setMultioptions($options)
             ->setOption('id', 'objectId')
             ->setValue($value));
@@ -98,7 +97,7 @@ class Cron extends \Mmi\Form\Form
             ->setLabel('Aktywny')
             ->setChecked()
             ->setRequired()
-            ->addValidator(new Validator\NotEmpty));
+            ->addValidatorNotEmpty());
 
         //zapis
         $this->addElement((new Element\Submit('submit'))

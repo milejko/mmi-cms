@@ -10,8 +10,7 @@
 
 namespace CmsAdmin\Form\Stat;
 
-use Cms\Form\Element,
-    Mmi\Validator;
+use Cms\Form\Element;
 
 class Label extends \Cms\Form\Form
 {
@@ -22,13 +21,13 @@ class Label extends \Cms\Form\Form
         $this->addElement((new Element\Select('object'))
             ->setLabel('klucz')
             ->setRequired()
-            ->addValidator(new Validator\NotEmpty())
+            ->addValidatorNotEmpty()
             ->setMultioptions(\Cms\Model\Stat::getUniqueObjects()));
 
         $this->addElement((new Element\Text('label'))
             ->setLabel('nazwa statystyki')
             ->setRequired()
-            ->addValidator(new Validator\NotEmpty()));
+            ->addValidatorNotEmpty());
 
         $this->addElement((new Element\Textarea('description'))
             ->setLabel('opis'));

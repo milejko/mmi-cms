@@ -237,11 +237,11 @@ abstract class AttributeForm extends Form
         }
         //unikalność
         if ($attribute->getJoined('cms_attribute_relation')->unique) {
-            $field->addValidator(new \Mmi\Validator\RecordUnique((new \Cms\Orm\CmsAttributeValueQuery)
+            $field->addValidatorRecordUnique((new \Cms\Orm\CmsAttributeValueQuery)
                     ->join('cms_attribute_value_relation')->on('id', 'cms_attribute_value_id')
                     ->whereCmsAttributeId()->equals($attribute->id)
                     ->where('object', 'cms_attribute_value_relation')->equals($this->_saveToObject), 'value', $this->getRecord()->id
-            ));
+            );
         }
         //zwrot skonfigurowanego pola
         return $this->_cmsAttributeElements[$attribute->id] = $field;

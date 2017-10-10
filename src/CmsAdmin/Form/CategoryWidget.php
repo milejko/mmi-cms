@@ -10,8 +10,7 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element,
-    Mmi\Validator;
+use Cms\Form\Element;
 
 /**
  * Formularz edycji widgetu kategorii
@@ -29,28 +28,28 @@ class CategoryWidget extends \Cms\Form\Form
         $this->addElement((new Element\Text('name'))
             ->setLabel('nazwa')
             ->setRequired()
-            ->addValidator(new Validator\StringLength(3, 64)));
+            ->addValidatorStringLength(3, 64));
 
         //parametry wyświetlania
         $this->addElement((new Element\Select('mvcParams'))
             ->setLabel('adres modułu wyświetlania')
             ->setMultioptions($widgets)
             ->setRequired()
-            ->addValidator(new Validator\NotEmpty()));
+            ->addValidatorNotEmpty());
 
         //parametry podglądu
         $this->addElement((new Element\Select('mvcPreviewParams'))
             ->setLabel('adres modułu podglądu')
             ->setMultioptions($widgets)
             ->setRequired()
-            ->addValidator(new Validator\NotEmpty()));
+            ->addValidatorNotEmpty());
 
         //klasa formularza (brak - domyślna)
         $this->addElement((new Element\Text('formClass'))
             ->setLabel('klasa formularza')
             ->setDescription('dane i konfiguracja')
             ->addFilterEmptyToNull()
-            ->addValidator(new Validator\StringLength(3, 64)));
+            ->addValidatorStringLength(3, 64));
 
         //ustawienie bufora
         $this->addElement((new Element\Select('cacheLifetime'))
