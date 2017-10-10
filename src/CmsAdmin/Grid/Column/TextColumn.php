@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -10,14 +10,16 @@
 
 namespace CmsAdmin\Grid\Column;
 
+use Mmi\App\FrontController;
+
 /**
  * Klasa Columnu tekstowego
- * 
+ *
  * @method self setName($name) ustawia nazwę pola
  * @method string getName() pobiera nazwę pola
  * @method self setLabel($label) ustawia labelkę
  * @method string getLabel() pobiera labelkę
- * 
+ *
  * @method self setFilterMethodEquals() ustawia metodę filtracji na równość
  * @method self setFilterMethodLike() ustawia metodę filtracji na podobny
  * @method self setFilterMethodSearch() ustawia metodę filtracji na wyszukaj
@@ -27,17 +29,35 @@ class TextColumn extends ColumnAbstract
 {
 
     /**
+     * Template filtra text
+     */
+    const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/text';
+
+    /**
+     * Template komorki text
+     */
+    const TEMPLATE_CELL = 'cmsAdmin/grid/cell/text';
+
+    /**
+     * @return string
+     */
+    public function renderFilter()
+    {
+        FrontController::getInstance()->getView()->_column = $this;
+        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_FILTER);
+    }
+
+    /**
      * Renderuje pole tekstowe
      * @param \Mmi\Orm\RecordRo $record
      * @return string
      */
     public function renderCell(\Mmi\Orm\RecordRo $record)
     {
-        $value = (new \Mmi\Filter\Escape)->filter($this->getValueFromRecord($record));
-        $truncated = (new \Mmi\Filter\Truncate)->filter($value);
-        return ($value == $truncated) ? $value : '<span title="' . $value . '">' .
-            $truncated .
-            '</span>';
+        $view = FrontController::getInstance()->getView();
+        $view->_value = (new \Mmi\Filter\Escape)->filter($this->getValueFromRecord($record));
+        $view->_truncated = (new \Mmi\Filter\Truncate)->filter($view->_value);
+        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_CELL);
     }
 
 }
