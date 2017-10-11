@@ -10,8 +10,6 @@
 
 namespace CmsAdmin\Grid;
 
-use Mmi\App\FrontController;
-
 /**
  * Klasa stanu grida
  * @method GridState setFilters()
@@ -144,6 +142,7 @@ class GridState extends \Mmi\OptionObject
      * Dekoruje querę na podstawie filtrów
      * @param \Mmi\Orm\Query $query
      * @return \Mmi\Orm\Query
+     * @throws GridException
      */
     public function setupQuery(\Mmi\Orm\Query $query)
     {
@@ -179,6 +178,7 @@ class GridState extends \Mmi\OptionObject
      * Stosuje filtry na zapytaniu
      * @param \Mmi\Orm\Query $query
      * @return GridState
+     * @throws GridException
      */
     private function _applyFilters(\Mmi\Orm\Query $query)
     {
@@ -222,6 +222,7 @@ class GridState extends \Mmi\OptionObject
      * Stosuje sortowania na zapytaniu
      * @param \Mmi\Orm\Query $query
      * @return GridState
+     * @throws GridException
      */
     private function _applyOrder(\Mmi\Orm\Query $query)
     {

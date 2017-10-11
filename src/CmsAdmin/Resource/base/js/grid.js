@@ -18,8 +18,8 @@ var CMS = CMS ? CMS : {};
 CMS.grid = function () {
     "use strict";
     var initGridFilter,
-            initGridOrder,
-            initGridOperation;
+        initGridOrder,
+        initGridOperation;
 
     initGridFilter = function () {
 
@@ -56,9 +56,9 @@ CMS.grid = function () {
 
         function filter(field) {
             var filter = field.attr('name'),
-                    value = field.val(),
-                    fieldName = field.attr('name'),
-                    gridId = field.parent('div').parent('th').parent('tr').parent('tbody').parent('table').attr('id');
+                value = field.val(),
+                fieldName = field.attr('name'),
+                gridId = field.parent('div').parent('th').parent('tr').parent('tbody').parent('table').attr('id');
             $.ajax({
                 url: window.location,
                 type: 'POST',
@@ -79,8 +79,8 @@ CMS.grid = function () {
         //sortowanie grida
         $('table.grid').on('click', 'th > a.order', function () {
             var field = $(this).attr('href'),
-                    gridId = $(this).parent('th').parent('tr').parent('tbody').parent('table').attr('id'),
-                    method = $(this).attr('data-method');
+                gridId = $(this).parent('th').parent('tr').parent('tbody').parent('table').attr('id'),
+                method = $(this).attr('data-method');
             $.ajax({
                 url: window.location,
                 type: 'POST',

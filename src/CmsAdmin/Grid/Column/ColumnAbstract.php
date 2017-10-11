@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -10,14 +10,16 @@
 
 namespace CmsAdmin\Grid\Column;
 
+use Mmi\App\FrontController;
+
 /**
  * Abstrakcyjna klasa Columnu
- * 
+ *
  * @method self setName($name) ustawia nazwę pola
  * @method string getName() pobiera nazwę pola
  * @method self setLabel($label) ustawia labelkę
  * @method string getLabel() pobiera labelkę
- * 
+ *
  * @method self setFilterMethodEquals() ustawia metodę filtracji na równość
  * @method self setFilterMethodLike() ustawia metodę filtracji na podobny
  * @method self setFilterMethodSearch() ustawia metodę filtracji na wyszukaj
@@ -77,7 +79,7 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
     public function renderLabel()
     {
         //brak property
-        if (!$this->_fieldInRecord()) {
+        if (!$this->isFieldInRecord()) {
             return $this->getLabel() ? $this->getLabel() : $this->getName();
         }
         $html = '<a class="order" href="#' . $this->getFormColumnName() . '" data-method="' . $this->_getOrderMethod() . '">' . ($this->getLabel() ? $this->getLabel() : $this->getName()) . '</a>';
@@ -100,13 +102,13 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
     public function renderFilter()
     {
         //brak property
-        if (!$this->_fieldInRecord()) {
+        if (!$this->isFieldInRecord()) {
             return;
         }
         //zwrot filtra
         return (new \Mmi\Form\Element\Text($this->getFormColumnName()))
-                ->setOption('data-method', $this->getOption('method'))
-                ->setValue($this->_getFilterValue());
+            ->setOption('data-method', $this->getOption('method'))
+            ->setValue($this->getFilterValue());
     }
 
     /**
@@ -123,7 +125,7 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
      */
     public function getValueFromRecord(\Mmi\Orm\RecordRo $record)
     {
-        if (!$this->_fieldInRecord()) {
+        if (!$this->isFieldInRecord()) {
             return '?';
         }
         if (strpos($this->getName(), '.')) {
@@ -137,9 +139,9 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
      * Zwraca filtr dla pola
      * @return string
      */
-    protected function _getFilterValue()
+    public function getFilterValue()
     {
-        //iteracja po filtrache w gridzie
+        //iteracja po filtrach w gridzie
         foreach ($this->_grid->getState()->getFilters() as $filter) {
             //znaleziony filtr dla tego pola z tabelą
             if ($filter->getTableName() . '.' . $filter->getField() == $this->getName()) {
@@ -158,7 +160,7 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
      * Sprawdza istnienie pola w rekordzie
      * @return boolean
      */
-    protected function _fieldInRecord()
+    public function isFieldInRecord()
     {
         //zażądany join
         if (strpos($this->getName(), '.')) {

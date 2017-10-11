@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -11,15 +11,16 @@
 namespace CmsAdmin\Grid\Column;
 
 use Cms\Mvc\ViewHelper\AclAllowed;
+use Mmi\App\FrontController;
 
 /**
  * Klasa Columnu checkbox
- * 
+ *
  * @method self setName($name) ustawia nazwę pola
  * @method string getName() pobiera nazwę pola
  * @method self setLabel($label) ustawia labelkę
  * @method string getLabel() pobiera labelkę
- * 
+ *
  * @method self setFilterMethodEquals() ustawia metodę filtracji na równość
  * @method self setFilterMethodLike() ustawia metodę filtracji na podobny
  * @method self setFilterMethodSearch() ustawia metodę filtracji na wyszukaj
@@ -27,9 +28,14 @@ use Cms\Mvc\ViewHelper\AclAllowed;
  */
 class CheckboxColumn extends SelectColumn
 {
+    /**
+     * Template komórki checkboxa
+     */
+    const TEMPLATE_CELL = 'cmsAdmin/grid/cell/checkbox';
 
     /**
      * Domyślne opcje dla checkboxa
+     * @param string $name
      */
     public function __construct($name)
     {
@@ -43,7 +49,7 @@ class CheckboxColumn extends SelectColumn
     /**
      * Ustawia grid
      * @param \CmsAdmin\Grid\Grid $grid
-     * @return \CmsAdmin\Grid\Column\CheckboxColumn
+     * @return $this
      */
     public function setGrid(\CmsAdmin\Grid\Grid $grid)
     {
@@ -54,12 +60,12 @@ class CheckboxColumn extends SelectColumn
 
     /**
      * Ustawia wyłączenie z edycji
-     * @param boolean $disabled
-     * @return \CmsAdmin\Grid\Column\CheckboxColumn
+     * @param bool $disabled
+     * @return \Mmi\OptionObject
      */
     public function setDisabled($disabled = true)
     {
-        return $this->setOption('disabled', (bool) $disabled);
+        return $this->setOption('disabled', (bool)$disabled);
     }
 
     /**
@@ -69,10 +75,10 @@ class CheckboxColumn extends SelectColumn
      */
     public function renderCell(\Mmi\Orm\RecordRo $record)
     {
-        //brak pola
-        if (!$this->_fieldInRecord()) {
-            return '?';
-        }
+        FrontController::getInstance()->getView()->_column = $this;
+        FrontController::getInstance()->getView()->_record = $record;
+        FrontController::getInstance()->getView()->_value = $this->getValueFromRecord($record);
+
         //wyłączanie edycji jeśli acl w operacjach (edycji) zabrania
         if ($this->getGrid()->getColumn('_operation_') && !(new AclAllowed)->aclAllowed($this->getGrid()->getColumn('_operation_')->getOption('editParams'))) {
             $this->setDisabled();
@@ -80,20 +86,21 @@ class CheckboxColumn extends SelectColumn
         //obsługa zapisu rekordu
         (new CheckboxRequestHandler($this))->handleRequest();
         //nowy Column select
+
+        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_CELL);
         return (new \Mmi\Form\Element\Checkbox($this->getFormColumnName()))
-                //ustawia wartość na odpowiadającą zaznaczeniu
-                ->setValue($this->_getCheckedValue())
-                ->setId($this->getFormColumnName() . '-' . $record->id)
-                ->setDisabled($this->getOption('disabled') ? true : false)
-                //ustawia zaznaczenie
-                ->setChecked($this->_getCheckedValue() <= $this->getValueFromRecord($record));
+            //ustawia wartość na odpowiadającą zaznaczeniu
+            ->setValue($this->getCheckedValue())
+            ->setId($this->getFormColumnName() . '-' . $record->id)
+            //ustawia zaznaczenie
+            ->setChecked($this->getCheckedValue() <= $this->getValueFromRecord($record));
     }
 
     /**
      * Określa wartość dla zaznaczonego checkboxa (najwyższa)
      * @return integer
      */
-    protected function _getCheckedValue()
+    public function getCheckedValue()
     {
         $checked = 0;
         //iteracja po opcjach

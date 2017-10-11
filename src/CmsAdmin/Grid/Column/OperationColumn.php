@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -10,12 +10,12 @@
 
 namespace CmsAdmin\Grid\Column;
 
-use Mmi\App\FrontController,
-    Cms\Mvc\ViewHelper\AclAllowed;
+use Mmi\App\FrontController;
+use Cms\Mvc\ViewHelper\AclAllowed;
 
 /**
  * Klasa Columnu indeksującego
- * 
+ *
  * @method IndexColumn setIndex($index) ustawia index
  * @method integer getIndex() pobiera wartość indeksu
  * @method self setName($name) ustawia nazwę pola
@@ -44,7 +44,7 @@ class OperationColumn extends ColumnAbstract
      * Ustawia parametry linku edycyjnego
      * ['action' => 'edit', 'id' => '%id%']
      * %pole% zastępowany jest przez $record->pole
-     * 
+     *
      * @param array $params
      * @param string $hashTarget część url po #
      * @return OperationColumn
@@ -52,15 +52,15 @@ class OperationColumn extends ColumnAbstract
     public function setEditParams(array $params = ['action' => 'edit', 'id' => '%id%'], $hashTarget = '')
     {
         return $this
-                ->setOption('editHashTarget', $hashTarget)
-                ->setOption('editParams', $params);
+            ->setOption('editHashTarget', $hashTarget)
+            ->setOption('editParams', $params);
     }
 
     /**
      * Ustawia parametry linku usuwającego
      * ['action' => 'delete', 'id' => '%id%']
      * %pole% zastępowany jest przez $record->pole
-     * 
+     *
      * @param array $params
      * @param string $hashTarget część url po #
      * @return OperationColumn
@@ -68,15 +68,15 @@ class OperationColumn extends ColumnAbstract
     public function setDeleteParams(array $params = ['action' => 'delete', 'id' => '%id%'], $hashTarget = '')
     {
         return $this
-                ->setOption('deleteHashTarget', $hashTarget)
-                ->setOption('deleteParams', $params);
+            ->setOption('deleteHashTarget', $hashTarget)
+            ->setOption('deleteParams', $params);
     }
 
     /**
      * Ustawia parametry linku usuwającego
      * ['action' => 'delete', 'id' => '%id%']
      * %pole% zastępowany jest przez $record->pole
-     * 
+     *
      * @param array $params
      * @return OperationColumn
      */

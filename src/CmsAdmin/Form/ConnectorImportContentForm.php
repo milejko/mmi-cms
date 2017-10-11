@@ -1,12 +1,24 @@
 <?php
 
+/**
+ * Mmi Framework (https://github.com/milejko/mmi.git)
+ * 
+ * @link       https://github.com/milejko/mmi.git
+ * @copyright  Copyright (c) 2010-2017 Mariusz Miłejko (http://milejko.com)
+ * @license    http://milejko.com/new-bsd.txt New BSD License
+ */
+
 namespace CmsAdmin\Form;
 
+/**
+ * Pierwszy krok importu danych
+ */
 class ConnectorImportContentForm extends \Mmi\Form\Form
 {
 
-    CONST SESSION_SPACE = 'connector-data';
-
+    /**
+     * Budowa formularza
+     */
     public function init()
     {
         $this->addElementText('url')
@@ -36,39 +48,34 @@ class ConnectorImportContentForm extends \Mmi\Form\Form
             ->setLabel('importuj');
     }
 
+    /**
+     * Import danych
+     * @return boolean
+     */
     public function afterSave()
     {
-        $session = new \Mmi\Session\SessionSpace(self::SESSION_SPACE);
+        //model konektora
+        $connector = new \Cms\Model\ConnectorModel;
+        //zapis danych z pierwszego kroku do sesji
+        $session = new \Mmi\Session\SessionSpace(\Cms\Model\ConnectorModel::SESSION_SPACE);
+        //dane autoryzacyjne
         $session->identity = $this->getElement('identity')->getValue();
         $session->credential = $this->getElement('credential')->getValue();
+        //adres zdalnego CMS
         $session->url = $this->getElement('url')->getValue();
-        $query = $session->url . '/?' . http_build_query([
-                'module' => 'cms',
-                'controller' => 'connector',
-                'action' => 'exportContent'
-        ]);
-
-        $context = stream_context_create([
-            'http' => [
-                'method' => 'POST',
-                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-                'content' => http_build_query([
-                    'acl' => $this->getElement('acl')->getValue(),
-                    'content' => $this->getElement('content')->getValue(),
-                    'identity' => $session->identity,
-                    'credential' => $session->credential,
-                    'instanceHash' => (new \Cms\Model\ConnectorModel)->getInstanceHash()
-                ])
-            ]
-        ]);
-
         try {
-            $data = file_get_contents($query, false, $context);
-        } catch (\Exception $e) {
+            //pobranie danych
+            $data = $connector->getData($session->url, 'exportContent', ['acl' => $this->getElement('acl')->isChecked(),
+                'content' => $this->getElement('content')->isChecked()
+                ], $session->identity, $session->credential);
+        } catch (\Cms\Exception\ConnectorException $e) {
+            //dane nie mogą być pobrane
             $this->getElement('url')->addError('Połączenie z CMS niemożliwe');
             return false;
         }
-        if (!(new \Cms\Model\ConnectorModel)->importData($data)) {
+        //próba importu
+        if (!$connector->importData($data)) {
+            //dane są puste, lub nieprawidłowe
             $this->getElement('url')->addError('Dane są nieprawidłowe');
             return false;
         }

@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -10,15 +10,17 @@
 
 namespace CmsAdmin\Grid\Column;
 
+use Mmi\App\FrontController;
+
 /**
  * Klasa Columnu select
- * 
+ *
  * @method array getMultioptions()
  * @method self setName($name) ustawia nazwę pola
  * @method string getName() pobiera nazwę pola
  * @method self setLabel($label) ustawia labelkę
  * @method string getLabel() pobiera labelkę
- * 
+ *
  * @method self setFilterMethodEquals() ustawia metodę filtracji na równość
  * @method self setFilterMethodLike() ustawia metodę filtracji na podobny
  * @method self setFilterMethodSearch() ustawia metodę filtracji na wyszukaj
@@ -26,6 +28,15 @@ namespace CmsAdmin\Grid\Column;
  */
 class SelectColumn extends ColumnAbstract
 {
+    /**
+     * Template filtra selecta
+     */
+    const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/select';
+
+    /**
+     * Template komórki selecta
+     */
+    const TEMPLATE_CELL = 'cmsAdmin/grid/cell/select';
 
     /**
      * Ustawia opcje selecta
@@ -42,7 +53,7 @@ class SelectColumn extends ColumnAbstract
      * @param string $key
      * @return string
      */
-    public function getMultiOptionByKey($key)
+    public function getMultioptionByKey($key)
     {
         $multioptions = $this->getMultioptions();
         //wyszukiwanie w multiopcjach
@@ -55,10 +66,11 @@ class SelectColumn extends ColumnAbstract
      */
     public function renderFilter()
     {
-        //tworzy Column form selecta, ustawia opcje i wartość filtra
-        return (new \Mmi\Form\Element\Select($this->getFormColumnName()))
-                ->setMultioptions([null => '---'] + $this->getMultioptions())
-                ->setValue($this->_getFilterValue());
+        FrontController::getInstance()->getView()->_column = $this;
+        //pusta opcja
+        $this->setMultioptions(array_merge([null => '---'], $this->getMultioptions()));
+        //tworzy selecta z template'u
+        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_FILTER);
     }
 
     /**
@@ -68,12 +80,10 @@ class SelectColumn extends ColumnAbstract
      */
     public function renderCell(\Mmi\Orm\RecordRo $record)
     {
-        //brak pola
-        if (!$this->_fieldInRecord()) {
-            return '?';
-        }
+        FrontController::getInstance()->getView()->_column = $this;
         //zwrot z mapy opcji
-        return $this->getMultiOptionByKey($this->getValueFromRecord($record));
+        FrontController::getInstance()->getView()->_value = $this->getMultioptionByKey($this->getValueFromRecord($record));
+        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_CELL);
     }
 
 }

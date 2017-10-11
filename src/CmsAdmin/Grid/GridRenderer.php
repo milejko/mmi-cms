@@ -24,6 +24,18 @@ class GridRenderer
      */
     private $_grid;
 
+    //szablon scalający grida
+    const TEMPLATE_GRID = 'cmsAdmin/grid/grid';
+
+    //szablon nagłówka grida (filtrów)
+    const TEMPLATE_HEADER = 'cmsAdmin/grid/header';
+
+    //szablon wnętrza grida (danych)
+    const TEMPLATE_BODY = 'cmsAdmin/grid/body';
+
+    //szablon stopki grida
+    const TEMPLATE_FOOTER = 'cmsAdmin/grid/footer';
+
     /**
      * Konstruktror
      * @param Grid $grid
@@ -32,6 +44,10 @@ class GridRenderer
     {
         //podpięcie grida
         $this->_grid = $grid;
+        //grid do widoku
+        FrontController::getInstance()->getView()->_grid = $grid;
+        //renderer do widoku
+        FrontController::getInstance()->getView()->_renderer = $this;
     }
 
     /**
@@ -40,15 +56,8 @@ class GridRenderer
      */
     public function renderHeader()
     {
-        //wiersz nagłówka
-        $html = '<tr>';
-        //iteracja po Columnach
-        foreach ($this->_grid->getColumns() as $column) {
-            //renderuje kolumnę z labelką i filtrem
-            $html .= '<th>' . $column->renderLabel() . '<br />' . $column->renderFilter() . '</th>';
-        }
-        //zwrot html
-        return $html . '</tr>';
+        //render szablonu
+        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_HEADER);
     }
 
     /**
@@ -57,21 +66,8 @@ class GridRenderer
      */
     public function renderBody()
     {
-        $html = '';
-        //iteracja po rekordach
-        foreach ($this->_grid->getDataCollection() as $record) {
-            //tworzenie wiersza
-            $html .= '<tr>';
-            //iteracja po Columnach
-            foreach ($this->_grid->getColumns() as $column) {
-                //renderuje krotkę
-                $html .= '<td>' . $column->renderCell($record) . '</td>';
-            }
-            //zamknięcie wiersza
-            $html .= '</tr>';
-        }
-        //zwrot html
-        return $html;
+        //render szablonu
+        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_BODY);
     }
 
     /**
@@ -90,15 +86,8 @@ class GridRenderer
      */
     public function render()
     {
-        $view = FrontController::getInstance()->getView();
-        //dołączenie js
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/grid.js');
-        //render nagłówka ciała i stopki
-        return '<table id="' . $this->_grid->getClass() . '" class="grid striped">' .
-            $this->renderHeader() .
-            $this->renderBody() .
-            $this->renderFooter() .
-            '</table>';
+        //render nagłówka, ciała i stopki
+        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_GRID);
     }
 
 }
