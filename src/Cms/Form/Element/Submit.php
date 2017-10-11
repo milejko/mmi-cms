@@ -16,17 +16,4 @@ namespace Cms\Form\Element;
 class Submit extends \Mmi\Form\Element\Submit
 {
 
-    /**
-     * Buduje pole
-     * @return string
-     */
-    public function fetchField()
-    {
-        //labelka jako value
-        if ($this->getLabel()) {
-            $this->setValue($this->getLabel());
-        }
-        return '<input type="submit" ' . $this->_getHtmlOptions() . '/>';
-    }
-
 }

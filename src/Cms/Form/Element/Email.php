@@ -13,17 +13,7 @@ namespace Cms\Form\Element;
 /**
  * Element pole na adres e-mail
  */
-class Email extends \Mmi\Form\Element\ElementAbstract
+class Email extends \Mmi\Form\Element\Email
 {
-
-    /**
-     * Rendering pola typu e-mail
-     * @return string
-     */
-    public function fetchField()
-    {
-        $this->setValue((new \Mmi\Filter\Input)->filter($this->getValue()));
-        return '<input type="email" ' . $this->_getHtmlOptions() . '/>';
-    }
 
 }

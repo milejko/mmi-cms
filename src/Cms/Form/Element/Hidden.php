@@ -16,13 +16,4 @@ namespace Cms\Form\Element;
 class Hidden extends \Mmi\Form\Element\Hidden
 {
 
-    /**
-     * Buduje pole
-     * @return string
-     */
-    public function fetchField()
-    {
-        return '<input type="hidden" ' . $this->_getHtmlOptions() . '/>';
-    }
-
 }

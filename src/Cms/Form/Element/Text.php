@@ -16,14 +16,4 @@ namespace Cms\Form\Element;
 class Text extends \Mmi\Form\Element\Text
 {
 
-    /**
-     * Rendering pola tekstowego
-     * @return string
-     */
-    public function fetchField()
-    {
-        $this->setValue((new \Mmi\Filter\Input)->filter($this->getValue()));
-        return '<input type="text" ' . $this->_getHtmlOptions() . '/>';
-    }
-
 }

@@ -16,13 +16,4 @@ namespace Cms\Form\Element;
 class File extends \Mmi\Form\Element\File
 {
 
-    /**
-     * Buduje pole
-     * @return string
-     */
-    public function fetchField()
-    {
-        return '<input type="file" ' . $this->_getHtmlOptions() . '/>';
-    }
-
 }

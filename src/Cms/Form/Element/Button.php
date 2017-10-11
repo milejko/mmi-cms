@@ -15,18 +15,5 @@ namespace Cms\Form\Element;
  */
 class Button extends \Mmi\Form\Element\Button
 {
-
-    /**
-     * Buduje pole
-     * @return string
-     */
-    public function fetchField()
-    {
-        //labelka jako value
-        if ($this->getLabel()) {
-            $this->setValue($this->getLabel());
-        }
-        return '<input type="button" ' . $this->_getHtmlOptions() . '/>';
-    }
-
+    
 }

@@ -16,15 +16,4 @@ namespace Cms\Form\Element;
 class Textarea extends \Mmi\Form\Element\Textarea
 {
 
-    /**
-     * Buduje pole
-     * @return string
-     */
-    public function fetchField()
-    {
-        $value = (new \Mmi\Filter\Input)->filter($this->getValue());
-        $this->unsetOption('value');
-        return '<textarea ' . $this->_getHtmlOptions() . '>' . $value . '</textarea>';
-    }
-
 }

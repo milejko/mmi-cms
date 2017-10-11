@@ -15,14 +15,5 @@ namespace Cms\Form\Element;
  */
 class Password extends \Mmi\Form\Element\Password
 {
-
-    /**
-     * Buduje pole
-     * @return string
-     */
-    public function fetchField()
-    {
-        return '<input type="password" ' . $this->_getHtmlOptions() . '/>';
-    }
-
+    
 }

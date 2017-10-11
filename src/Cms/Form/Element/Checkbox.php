@@ -16,13 +16,4 @@ namespace Cms\Form\Element;
 class Checkbox extends \Mmi\Form\Element\Checkbox
 {
 
-    /**
-     * Render pola
-     * @return string
-     */
-    public function fetchField()
-    {
-        return '<input type="checkbox" ' . $this->_getHtmlOptions() . '/>';
-    }
-
 }
