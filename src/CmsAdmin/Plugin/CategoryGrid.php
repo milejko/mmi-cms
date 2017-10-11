@@ -51,9 +51,11 @@ class CategoryGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('włączona'));
 
         //operacje
-        $this->addColumnCustom()
+        $this->addColumn((new Column\CustomColumn('operation'))
             ->setLabel('operacje')
-            ->setTemplateCode('{$id = $record->id}{if categoryAclAllowed($id)}<a href="{@module=cmsAdmin&controller=category&action=edit&id={$id}@}"><i class="icon-pencil"></i></a>&nbsp;&nbsp;<a href="{@module=cmsAdmin&controller=category&action=delete&id={$id}@}" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>{else}-{/if}');
+            ->setTemplateCode('{$id = $record->id}{if categoryAclAllowed($id)}<a href="{@module=cmsAdmin&controller=category&action=edit&id={$id}@}"><i class="icon-pencil"></i></a>&nbsp;&nbsp;<a href="{@module=cmsAdmin&controller=category&action=delete&id={$id}@}" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>{else}-{/if}')
+        );
+            
     }
 
 }

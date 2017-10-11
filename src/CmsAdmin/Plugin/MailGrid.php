@@ -55,8 +55,8 @@ class MailGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('od'));
 
         //operacje
-        $this->addColumnOperation()
-            ->setEditParams(['module' => 'cmsAdmin', 'controller' => 'mail', 'action' => 'preview', 'id' => '%id%']);
+        $this->addColumn((new Column\OperationColumn)
+            ->setEditParams(['module' => 'cmsAdmin', 'controller' => 'mail', 'action' => 'preview', 'id' => '%id%']));
     }
 
 }

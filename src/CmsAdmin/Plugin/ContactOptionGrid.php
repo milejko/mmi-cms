@@ -33,8 +33,7 @@ class ContactOptionGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('prześlij na e-mail'));
 
         //operacje
-        $this->addColumnOperation()
-            ->setEditParams([
+        $this->addColumn((new Column\OperationColumn())->setEditParams([
                 'module' => 'cmsAdmin',
                 'controller' => 'contact',
                 'action' => 'editSubject',
@@ -45,7 +44,7 @@ class ContactOptionGrid extends \CmsAdmin\Grid\Grid
                 'controller' => 'contact',
                 'action' => 'deleteSubject',
                 'id' => '%id%'
-        ]);
+        ]));
     }
 
 }

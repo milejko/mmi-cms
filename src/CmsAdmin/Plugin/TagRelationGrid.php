@@ -27,8 +27,8 @@ class TagRelationGrid extends \CmsAdmin\Grid\Grid
         );
 
         //nazwa taga
-        $this->addColumnText('cms_tag.tag')
-            ->setLabel('tag');
+        $this->addColumn((new Column\TextColumn('cms_tag.tag'))
+            ->setLabel('tag'));
 
         //obiekt
         $this->addColumn((new Column\TextColumn('object'))

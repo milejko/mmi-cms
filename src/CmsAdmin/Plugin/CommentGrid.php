@@ -45,8 +45,7 @@ class CommentGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('id zasobu'));
 
         //operacje bez edycji
-        $this->addColumnOperation()
-            ->setEditParams([]);
+        $this->addColumn((new Column\OperationColumn())->setEditParams([]));
     }
 
 }

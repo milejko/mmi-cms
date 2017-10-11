@@ -97,8 +97,7 @@ class FileGrid extends \CmsAdmin\Grid\Grid
             ->setTemplateCode('<a class="button small" href="{$record->getUrl()}">pobierz</a>'));
 
         //operacje
-        $this->addColumnOperation()
-            ->setEditParams([]);
+        $this->addColumn((new Column\OperationColumn())->setEditParams([]));
     }
 
 }

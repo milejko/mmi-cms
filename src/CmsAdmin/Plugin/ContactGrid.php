@@ -54,9 +54,8 @@ class ContactGrid extends \CmsAdmin\Grid\Grid
             ->setDisabled());
 
         //operacje
-        $this->addColumnOperation()
-            ->setEditParams(['module' => 'cmsAdmin', 'controller' => 'contact', 'action' => 'edit', 'id' => '%id%'])
-            ->setDeleteParams([]);
+        $this->addColumn((new Column\OperationColumn())->setEditParams(['module' => 'cmsAdmin', 'controller' => 'contact', 'action' => 'edit', 'id' => '%id%'])
+            ->setDeleteParams([]));
     }
 
 }

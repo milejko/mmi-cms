@@ -32,16 +32,15 @@ class CategoryAttributeRelationGrid extends \CmsAdmin\Grid\Grid
         );
 
         //nazwa typu
-        $this->addColumnText('cms_attribute.name')
-            ->setLabel('nazwa');
+        $this->addColumn((new Column\TextColumn('cms_attribute.name'))
+            ->setLabel('nazwa'));
 
         //kolejność
         $this->addColumn((new Column\TextColumn('order'))
             ->setLabel('kolejność'));
 
         //wartość domyślna
-        $this->addColumnText('cms_attribute_value.value')
-            ->setLabel('wartość domyślna');
+        $this->addColumn((new Column\TextColumn('cms_attribute_value.value'))->setLabel('wartość domyślna'));
 
         //wymagany
         $this->addColumn((new Column\CheckboxColumn('required'))
@@ -57,9 +56,9 @@ class CategoryAttributeRelationGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('zmaterializowany'));
 
         //operacje
-        $this->addColumnOperation()
+        $this->addColumn((new Column\OperationColumn())
             ->setDeleteParams(['action' => 'deleteAttributeRelation', 'relationId' => '%id%'])
-            ->setEditParams(['action' => 'edit', 'relationId' => '%id%']);
+            ->setEditParams(['action' => 'edit', 'relationId' => '%id%']));
     }
 
 }

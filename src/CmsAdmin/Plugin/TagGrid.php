@@ -31,9 +31,9 @@ class TagGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('tag'));
 
         //operacje
-        $this->addColumnOperation()
+        $this->addColumn((new Column\OperationColumn)
             ->setDeleteParams([])
-            ->setDeleteTagParams(['action' => 'delete', 'id' => '%id%']);
+            ->setDeleteTagParams(['action' => 'delete', 'id' => '%id%']));
     }
 
 }

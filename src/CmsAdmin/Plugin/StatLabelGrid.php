@@ -37,8 +37,8 @@ class StatLabelGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('opis'));
 
         //operacje bez usuwania
-        $this->addColumnOperation()
-            ->setDeleteParams([]);
+        $this->addColumn((new Column\OperationColumn)
+            ->setDeleteParams([]));
     }
 
 }

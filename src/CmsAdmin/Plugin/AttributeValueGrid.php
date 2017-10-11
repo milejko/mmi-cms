@@ -41,9 +41,8 @@ class AttributeValueGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('etykieta'));
 
         //operacje
-        $this->addColumnOperation()
-            ->setEditParams(['module' => 'cmsAdmin', 'controller' => 'attribute', 'action' => 'edit', 'id' => '%cmsAttributeId%', 'valueId' => '%id%'])
-            ->setDeleteParams(['module' => 'cmsAdmin', 'controller' => 'attributeValue', 'action' => 'delete', 'id' => '%id%']);
+        $this->addColumn((new Column\OperationColumn())->setEditParams(['module' => 'cmsAdmin', 'controller' => 'attribute', 'action' => 'edit', 'id' => '%cmsAttributeId%', 'valueId' => '%id%'])
+            ->setDeleteParams(['module' => 'cmsAdmin', 'controller' => 'attributeValue', 'action' => 'delete', 'id' => '%id%']));
     }
 
 }
