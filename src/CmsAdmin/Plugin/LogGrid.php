@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -23,7 +23,7 @@ class LogGrid extends \CmsAdmin\Grid\Grid
 
         //domyślnie posortowane po dacie i czasie
         $this->setQuery((new \Cms\Orm\CmsLogQuery)
-                ->orderDescDateTime());
+            ->orderDescDateTime());
 
         //data i czas
         $this->addColumn((new Column\TextColumn('dateTime'))
