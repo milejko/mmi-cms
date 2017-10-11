@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Plugin;
 
+use CmsAdmin\Grid\Column;
+
 /**
  * Grid opcji kontaktu
  */
@@ -23,12 +25,12 @@ class ContactOptionGrid extends \CmsAdmin\Grid\Grid
         $this->setQuery(new \Cms\Orm\CmsContactOptionQuery);
 
         //temat
-        $this->addColumnText('name')
-            ->setLabel('temat pytania');
+        $this->addColumn((new Column\TextColumn('name'))
+            ->setLabel('temat pytania'));
 
         //forward
-        $this->addColumnText('sendTo')
-            ->setLabel('prześlij na e-mail');
+        $this->addColumn((new Column\TextColumn('sendTo'))
+            ->setLabel('prześlij na e-mail'));
 
         //operacje
         $this->addColumnOperation()

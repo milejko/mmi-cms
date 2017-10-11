@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Plugin;
 
+use CmsAdmin\Grid\Column;
+
 /**
  * Grid komentarzy
  */
@@ -23,24 +25,24 @@ class CommentGrid extends \CmsAdmin\Grid\Grid
         $this->setQuery((new \Cms\Orm\CmsCommentQuery));
 
         //data dodania
-        $this->addColumnText('dateAdd')
-            ->setLabel('data dodania');
+        $this->addColumn((new Column\TextColumn('dateAdd'))
+            ->setLabel('data dodania'));
 
         //komentarz
-        $this->addColumnText('text')
-            ->setLabel('komentarz');
+        $this->addColumn((new Column\TextColumn('text'))
+            ->setLabel('komentarz'));
 
         //podpis
-        $this->addColumnText('signature')
-            ->setLabel('podpis');
+        $this->addColumn((new Column\TextColumn('signature'))
+            ->setLabel('podpis'));
 
         //zasób
-        $this->addColumnText('object')
-            ->setLabel('zasób');
+        $this->addColumn((new Column\TextColumn('object'))
+            ->setLabel('zasób'));
 
         //id zasobu
-        $this->addColumnText('objectId')
-            ->setLabel('id zasobu');
+        $this->addColumn((new Column\TextColumn('objectId'))
+            ->setLabel('id zasobu'));
 
         //operacje bez edycji
         $this->addColumnOperation()

@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Plugin;
 
+use CmsAdmin\Grid\Column;
+
 /**
  * Grid atrybutów w szablonie artykułu
  */
@@ -34,25 +36,25 @@ class CategoryAttributeRelationGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('nazwa');
 
         //kolejność
-        $this->addColumnText('order')
-            ->setLabel('kolejność');
+        $this->addColumn((new Column\TextColumn('order'))
+            ->setLabel('kolejność'));
 
         //wartość domyślna
         $this->addColumnText('cms_attribute_value.value')
             ->setLabel('wartość domyślna');
 
         //wymagany
-        $this->addColumnCheckbox('required')
-            ->setLabel('wymagany');
+        $this->addColumn((new Column\CheckboxColumn('required'))
+            ->setLabel('wymagany'));
 
         //unikalny
-        $this->addColumnCheckbox('unique')
-            ->setLabel('unikalny');
+        $this->addColumn((new Column\CheckboxColumn('unique'))
+            ->setLabel('unikalny'));
 
         //zmaterializowany
-        $this->addColumnSelect('materialized')
+        $this->addColumn((new Column\SelectColumn('materialized'))
             ->setMultioptions([0 => 'nie', 1 => 'tak', 2 => 'tak, odziedziczony'])
-            ->setLabel('zmaterializowany');
+            ->setLabel('zmaterializowany'));
 
         //operacje
         $this->addColumnOperation()

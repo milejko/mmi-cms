@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Plugin;
 
+use CmsAdmin\Grid\Column;
+
 /**
  * Grid plików
  */
@@ -23,7 +25,7 @@ class FileGrid extends \CmsAdmin\Grid\Grid
         $this->setQuery(new \Cms\Orm\CmsFileQuery);
 
         //miniatura (lub ikona)
-        $this->addColumnCustom('thumb')
+        $this->addColumn((new Column\CustomColumn('thumb'))
             ->setLabel('miniatura')
             ->setTemplateCode('{if ($record->class ==\'image\')}<img src="{thumb($record, \'scaley\', \'30\')}" />{else}' .
                 '{$mime = $record->mimeType}' .
@@ -55,44 +57,44 @@ class FileGrid extends \CmsAdmin\Grid\Grid
                 '	<img src="{$baseUrl}/resource/cmsAdmin/images/types/mp3-32.png" alt="Music File" />' .
                 '{/if}' .
                 '{/if}'
-        );
+        ));
 
         //rozmiar pliku
-        $this->addColumnText('size')
-            ->setLabel('rozmiar');
+        $this->addColumn((new Column\TextColumn('size'))
+            ->setLabel('rozmiar'));
 
         //nazwa pliku
-        $this->addColumnText('original')
-            ->setLabel('nazwa pliku');
+        $this->addColumn((new Column\TextColumn('original'))
+            ->setLabel('nazwa pliku'));
 
         //tytuł
-        $this->addColumnText('title')
-            ->setLabel('tytuł');
+        $this->addColumn((new Column\TextColumn('title'))
+            ->setLabel('tytuł'));
 
         //autor
-        $this->addColumnText('author')
-            ->setLabel('autor');
+        $this->addColumn((new Column\TextColumn('author'))
+            ->setLabel('autor'));
 
         //źródło
-        $this->addColumnText('source')
-            ->setLabel('źródło');
+        $this->addColumn((new Column\TextColumn('source'))
+            ->setLabel('źródło'));
 
         //zasób
-        $this->addColumnText('object')
-            ->setLabel('zasób');
+        $this->addColumn((new Column\TextColumn('object'))
+            ->setLabel('zasób'));
 
         //id zasobu
-        $this->addColumnText('objectId')
-            ->setLabel('id zasobu');
+        $this->addColumn((new Column\TextColumn('objectId'))
+            ->setLabel('id zasobu'));
 
         //checkbox aktywności
-        $this->addColumnCheckbox('active')
+        $this->addColumn((new Column\CheckboxColumn('active'))
             ->setLabel('widoczny')
-            ->setDisabled();
+            ->setDisabled());
 
-        $this->addColumnCustom('download')
+        $this->addColumn((new Column\CustomColumn('download'))
             ->setLabel('pobierz')
-            ->setTemplateCode('<a class="button small" href="{$record->getUrl()}">pobierz</a>');
+            ->setTemplateCode('<a class="button small" href="{$record->getUrl()}">pobierz</a>'));
 
         //operacje
         $this->addColumnOperation()

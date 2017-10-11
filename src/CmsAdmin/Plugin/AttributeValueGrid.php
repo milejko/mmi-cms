@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Plugin;
 
+use CmsAdmin\Grid\Column;
+
 /**
  * Grid wartości atrybutów
  */
@@ -31,12 +33,12 @@ class AttributeValueGrid extends \CmsAdmin\Grid\Grid
         }
 
         //wartość
-        $this->addColumnText('value')
-            ->setLabel('wartość');
+        $this->addColumn((new Column\TextColumn('value'))
+            ->setLabel('wartość'));
 
         //etykieta
-        $this->addColumnText('label')
-            ->setLabel('etykieta');
+        $this->addColumn((new Column\TextColumn('label'))
+            ->setLabel('etykieta'));
 
         //operacje
         $this->addColumnOperation()

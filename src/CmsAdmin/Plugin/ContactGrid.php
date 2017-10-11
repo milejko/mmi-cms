@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Plugin;
 
+use CmsAdmin\Grid\Column;
+
 /**
  * Grid kontaktu
  */
@@ -23,33 +25,33 @@ class ContactGrid extends \CmsAdmin\Grid\Grid
         $this->setQuery(new \Cms\Orm\CmsContactQuery);
 
         //id
-        $this->addColumnCustom('id')
-            ->setTemplateCode('#{$record->id}');
+        $this->addColumn((new Column\CustomColumn('id'))
+            ->setTemplateCode('#{$record->id}'));
 
         //data dodania
-        $this->addColumnText('dateAdd')
-            ->setLabel('data dodania');
+        $this->addColumn((new Column\TextColumn('dateAdd'))
+            ->setLabel('data dodania'));
 
         //tekst
-        $this->addColumnText('text')
-            ->setLabel('zapytanie');
+        $this->addColumn((new Column\TextColumn('text'))
+            ->setLabel('zapytanie'));
 
         //email
-        $this->addColumnText('email')
-            ->setLabel('e-mail');
+        $this->addColumn((new Column\TextColumn('email'))
+            ->setLabel('e-mail'));
 
         //strona wejściowa
-        $this->addColumnText('uri')
-            ->setLabel('strona wejściowa');
+        $this->addColumn((new Column\TextColumn('uri'))
+            ->setLabel('strona wejściowa'));
 
         //ip
-        $this->addColumnText('ip')
-            ->setLabel('ip');
+        $this->addColumn((new Column\TextColumn('ip'))
+            ->setLabel('ip'));
 
         //aktywny
-        $this->addColumnCheckbox('active')
+        $this->addColumn((new Column\CheckboxColumn('active'))
             ->setLabel('czeka')
-            ->setDisabled();
+            ->setDisabled());
 
         //operacje
         $this->addColumnOperation()

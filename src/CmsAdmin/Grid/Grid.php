@@ -59,7 +59,7 @@ abstract class Grid extends \Mmi\OptionObject
         //tworzy obiekt stanu
         $this->_state = (new GridState)->setGrid($this);
         //indeks
-        $this->addColumnIndex();
+        $this->addColumn(new Column\IndexColumn);
         $this->init();
         //obsługa zapytań JSON do grida
         (new GridRequestHandler($this))->handleRequest();
