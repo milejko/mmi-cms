@@ -59,6 +59,13 @@ CMS.grid = function () {
                 value = field.val(),
                 fieldName = field.attr('name'),
                 gridId = field.parent('div').parent('th').parent('tr').parent('tbody').parent('table').attr('id');
+
+            //obsługa filtrowania po dacie
+            if (field.parent().hasClass('date-time')) {
+                var from = field.parent().find('input.from').val(),
+                    to = field.parent().find('input.to').val();
+                value = JSON.stringify({"from": from, "to": to});
+            };
             $.ajax({
                 url: window.location,
                 type: 'POST',
