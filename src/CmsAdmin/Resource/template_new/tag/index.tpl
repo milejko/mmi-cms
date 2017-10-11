@@ -1,8 +1,16 @@
-<div class="content-box">
-    <div class="content-box-header">
-        <h3>{#Tagi#}</h3>
-    </div>
-    <div class="content-box-content clearfix">
-        {$grid}
+<div class="container-fluid">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>{#Tagi#}</strong>
+                    </div>
+                    <div class="card-body">
+                        {$grid}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

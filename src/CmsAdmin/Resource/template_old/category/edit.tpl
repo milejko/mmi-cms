@@ -80,6 +80,7 @@
                 {$categoryForm->getElement('configJson')}
                 {$categoryForm->getElement('https')}
                 {$categoryForm->getElement('blank')}
+				{$categoryForm->getElement('roles')}
                 {$categoryForm->getElement('submit4')}
             </div>
             {$categoryForm->end()}

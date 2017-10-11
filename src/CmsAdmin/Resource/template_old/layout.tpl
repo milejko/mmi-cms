@@ -1,34 +1,42 @@
 {'cmsAdmin/header'}
-<nav class="navbar">
-    <ul>
-        <li>
-            <a href="{@module=cmsAdmin&controller=index&action=index@}"><span>{$domain|replace:'www.':''}</span></a>
-        </li>
-        {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'index', 'action' => 'logout'])}
-            <li>
-                <a href="{@module=cmsAdmin&controller=index&action=logout@}">{#Wyloguj#}<span>{if $auth} {$auth->getUsername()}</span> ({foreach name=role $auth->getRoles() as $role}{$role}{if !$_roleLast}, {/if}{/foreach}){/if}</a>
-            </li>
-        {/if}
-    </ul>
-</nav>
-{if $auth}
-    <div class="breadcrumbs">
-        {navigation()->breadcrumbs()}
-        {widget('cmsAdmin', 'index', 'languageWidget')}
-    </div>
+{if !$auth}
+<body class="app flex-row align-items-center">
 {/if}
-<nav id="main-menu">
-    {navigation()->setRoot(1000000)->menu()}
-</nav>
-<div class="grid">
-    {messenger()}
-    <nav class="local">
-        {$currentDepth = navigation()->getCurrentDepth()}
-        {navigation()->setRoot(1000000)->setActiveBranchOnly()->setMinDepth($currentDepth)->setMaxDepth($currentDepth)->menu()}
-    </nav>
-    {content()}
+
+{if $auth}
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
+<header class="app-header navbar">
+    <button class="navbar-toggler mobile-sidebar-toggler d-lg-none mr-auto" type="button">☰</button>
+    <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button">☰</button>
+    <ul class="nav navbar-nav ml-auto"></ul>
+</header>
+{/if}
+<div class="app-body">
+    {if $auth}
+    <div class="sidebar">
+        <nav class="sidebar-nav">
+            <ul class="nav">
+                {navigation()->setRoot(1000000)->menu()}
+            </ul>
+        </nav>
+        <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+    </div>
+    {/if}
+    <main class="main">
+        {if $auth}
+        <ol class="breadcrumb">
+            {navigation()->breadcrumbs()}
+        </ol>
+        {/if}
+        {content()}
+    </main>
 </div>
-<div id="footer">
-    {$domain} &copy; {system_date('Y')}. Powered by MMi CMS
-</div>
+{if $auth}
+<footer class="app-footer">
+    <a href="https://github.com/milejko/mmi-cms">{$domain}</a> &copy; {system_date('Y')}.
+    <span class="float-right">Powered by
+        <a href="https://github.com/milejko/mmi-cms">MMi CMS</a>
+    </span>
+</footer>
+{/if}
 {'cmsAdmin/footer'}
