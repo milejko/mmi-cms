@@ -11,8 +11,7 @@
 namespace Cms\Form\Element;
 
 /**
- * Element ElementHtml
- *  
+ * Element html
  */
 class Html extends \Mmi\Form\Element\ElementAbstract
 {
@@ -34,11 +33,13 @@ class Html extends \Mmi\Form\Element\ElementAbstract
 
     /**
      * Ustawia element html
-     * @param string $format
+     * @param string $html
+     * @return self
      */
     public function setHtml($html)
     {
         $this->element = $html;
+        return $this;
     }
 
     /**

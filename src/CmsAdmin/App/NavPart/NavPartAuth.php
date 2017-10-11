@@ -10,9 +10,16 @@
 
 namespace CmsAdmin\App\NavPart;
 
+/**
+ * Konfiguracja nawigatora użytkowników
+ */
 class NavPartAuth extends \Mmi\Navigation\NavigationConfig
 {
 
+    /**
+     * Zwraca menu
+     * @return \Mmi\Navigation\NavigationConfigElement
+     */
     public static function getMenu()
     {
         return (new \Mmi\Navigation\NavigationConfigElement)

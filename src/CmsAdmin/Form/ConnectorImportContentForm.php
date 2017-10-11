@@ -10,10 +10,12 @@
 
 namespace CmsAdmin\Form;
 
+use Cms\Form\Element;
+
 /**
  * Pierwszy krok importu danych
  */
-class ConnectorImportContentForm extends \Mmi\Form\Form
+class ConnectorImportContentForm extends \Cms\Form\Form
 {
 
     /**
@@ -21,31 +23,31 @@ class ConnectorImportContentForm extends \Mmi\Form\Form
      */
     public function init()
     {
-        $this->addElementText('url')
-            ->addValidatorRegex('/^https?:\/\/[a-z0-9\.\/]+$/', 'link nie jest poprawnym adresem HTTPS')
+        $this->addElement((new Element\Text('url'))
+            ->addValidator(new \Mmi\Validator\Regex(['/^https?:\/\/[a-z0-9\.\/]+$/', 'link nie jest poprawnym adresem HTTPS']))
             ->setDescription('wymagany HTTPS')
             ->setRequired()
-            ->setLabel('adres źródłowego CMS');
+            ->setLabel('adres źródłowego CMS'));
 
-        $this->addElementText('identity')
+        $this->addElement((new Element\Text('identity'))
             ->setLabel('login administratora źródłowego CMS')
-            ->setRequired();
+            ->setRequired());
 
-        $this->addElementPassword('credential')
+        $this->addElement((new Element\Password('credential'))
             ->setLabel('hasło administratora źródłowego CMS')
-            ->setRequired();
+            ->setRequired());
 
-        $this->addElementCheckbox('acl')
-            ->setLabel('role i ich uprawnienia');
+        $this->addElement((new Element\Checkbox('acl'))
+            ->setLabel('role i ich uprawnienia'));
 
-        $this->addElementCheckbox('content')
-            ->setLabel('treści cms (bez plików)');
+        $this->addElement((new Element\Checkbox('content'))
+            ->setLabel('treści cms (bez plików)'));
 
-        $this->addElementCheckbox('file')
-            ->setLabel('pliki');
+        $this->addElement((new Element\Checkbox('file'))
+            ->setLabel('pliki'));
 
-        $this->addElementSubmit('submit')
-            ->setLabel('importuj');
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('importuj'));
     }
 
     /**

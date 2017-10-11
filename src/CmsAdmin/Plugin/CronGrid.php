@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Plugin;
 
+use CmsAdmin\Grid\Column;
+
 /**
  * Grid harmonogramu
  */
@@ -23,32 +25,32 @@ class CronGrid extends \CmsAdmin\Grid\Grid
         $this->setQuery(new \Cms\Orm\CmsCronQuery);
 
         //nazwa
-        $this->addColumnText('name')
-            ->setLabel('nazwa');
+        $this->addColumn((new Column\TextColumn('name'))
+            ->setLabel('nazwa'));
 
         //opis
-        $this->addColumnText('description')
-            ->setLabel('opis');
+        $this->addColumn((new Column\TextColumn('description'))
+            ->setLabel('opis'));
 
         //crontab
-        $this->addColumnCustom('crontab')
+        $this->addColumn((new Column\CustomColumn('crontab'))
             ->setLabel('crontab')
-            ->setTemplateCode('{$record->minute} {$record->hour} {$record->dayOfMonth} {$record->month} {$record->dayOfWeek}');
+            ->setTemplateCode('{$record->minute} {$record->hour} {$record->dayOfMonth} {$record->month} {$record->dayOfWeek}'));
 
         //data dodania
-        $this->addColumnText('dateAdd')
-            ->setLabel('data dodania');
+        $this->addColumn((new Column\TextColumn('dateAdd'))
+            ->setLabel('data dodania'));
 
         //ostatnie wywołanie
-        $this->addColumnText('dateLastExecute')
-            ->setLabel('ostatnie wywołanie');
+        $this->addColumn((new Column\TextColumn('dateLastExecute'))
+            ->setLabel('ostatnie wywołanie'));
 
         //aktywny
-        $this->addColumnCheckbox('active')
-            ->setLabel('włączony');
+        $this->addColumn((new Column\CheckboxColumn('active'))
+            ->setLabel('włączony'));
 
         //operacje
-        $this->addColumnOperation();
+        $this->addColumn(new Column\OperationColumn);
     }
 
 }

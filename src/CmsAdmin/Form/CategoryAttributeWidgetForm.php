@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Form;
 
+use Cms\Form\Element;
+
 /**
  * Formularz widgetu z podpiętymi atrybutami
  * @method \Cms\Orm\CmsCategoryWidgetCategoryRecord getRecord()
@@ -22,8 +24,8 @@ class CategoryAttributeWidgetForm extends \Cms\Form\AttributeForm
 
         $this->initAttributes('cmsCategoryWidget', $this->getOption('widgetId'), 'categoryWidgetRelation');
 
-        $this->addElementSubmit('submit')
-            ->setLabel('zapisz');
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('zapisz'));
     }
 
 }

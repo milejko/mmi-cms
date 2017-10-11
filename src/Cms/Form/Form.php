@@ -10,8 +10,6 @@
 
 namespace Cms\Form;
 
-use Cms\Form\Element;
-
 /**
  * Formularz CMS
  */
@@ -78,116 +76,6 @@ abstract class Form extends \Mmi\Form\Form
             }
             \Cms\Model\File::move('tmp-' . $element->getObject(), $element->getUploaderId(), $element->getObject(), $this->getRecord()->getPk());
         }
-    }
-
-    /**
-     * Zabezpieczenie spamowe
-     * @param string $name nazwa
-     * @return \Cms\Form\Element\Antirobot
-     */
-    public function addElementAntirobot($name)
-    {
-        return $this->addElement(new Element\Antirobot($name));
-    }
-
-    /**
-     * Captcha
-     * @param string $name nazwa
-     * @param string $message wiadomość o błędzie captcha
-     * @return \Cms\Form\Element\Captcha
-     */
-    public function addElementCaptcha($name, $message = null)
-    {
-        return $this->addElement(new Element\Captcha($name, $message));
-    }
-
-    /**
-     * Wybór koloru
-     * @param string $name nazwa
-     * @return \Cms\Form\Element\ColorPicker
-     */
-    public function addElementColorPicker($name)
-    {
-        return $this->addElement(new Element\ColorPicker($name));
-    }
-
-    /**
-     * Date picker
-     * @param string $name nazwa
-     * @return \Cms\Form\Element\DatePicker
-     */
-    public function addElementDatePicker($name)
-    {
-        return $this->addElement(new Element\DatePicker($name));
-    }
-
-    /**
-     * Date-time picker
-     * @param string $name nazwa
-     * @return \Cms\Form\Element\DateTimePicker
-     */
-    public function addElementDateTimePicker($name)
-    {
-        return $this->addElement(new Element\DateTimePicker($name));
-    }
-
-    /**
-     * TinyMce
-     * @param string $name nazwa
-     * @return \Cms\Form\Element\TinyMce
-     */
-    public function addElementTinyMce($name)
-    {
-        return $this->addElement(new Element\TinyMce($name));
-    }
-
-    /**
-     * Tree
-     * @param string $name nazwa
-     * @return \Cms\Form\Element\Tree
-     */
-    public function addElementTree($name)
-    {
-        return $this->addElement(new Element\Tree($name));
-    }
-
-    /**
-     * Plupload
-     * @param string $name nazwa
-     * @return \Cms\Form\Element\Plupload
-     */
-    public function addElementPlupload($name)
-    {
-        return $this->addElement(new Element\Plupload($name));
-    }
-
-    /**
-     * Uploader
-     * @param string $name nazwa
-     * @return \Cms\Form\Element\Uploader
-     */
-    public function addElementUploader($name)
-    {
-        return $this->addElement(new Element\Uploader($name));
-    }
-
-    /**
-     * Tagi
-     * @param string $name nazwa
-     * @return \Cms\Form\Element\MultiSelect
-     */
-    public function addElementTags($name)
-    {
-        return $this->addElement(new Element\Tags($name));
-    }
-
-    /**
-     * Html
-     * @param string $html html
-     */
-    public function addElementHtml($html)
-    {
-        return $this->addElement(new Element\Html($html));
     }
 
     /**

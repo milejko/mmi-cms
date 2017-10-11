@@ -10,6 +10,10 @@
 
 namespace CmsAdmin\Form;
 
+use Cms\Form\Element,
+    Mmi\Validator,
+    Mmi\Filter;
+
 /**
  * Formularz edycji szegółów kategorii
  */
@@ -21,130 +25,130 @@ class Category extends \Cms\Form\AttributeForm
 
         //szablony/typy (jeśli istnieją)
         if ([] !== $types = (new \Cms\Orm\CmsCategoryTypeQuery)->orderAscName()->findPairs('id', 'name')) {
-            $this->addElementSelect('cmsCategoryTypeId')
+            $this->addElement((new Element\Select('cmsCategoryTypeId'))
                 ->setLabel('szablon strony')
-                ->addFilterEmptyToNull()
-                ->setMultioptions([null => 'Domyślny'] + $types);
+                ->addFilter(new Filter\EmptyToNull)
+                ->setMultioptions([null => 'Domyślny'] + $types));
         }
 
         //nazwa kategorii
-        $this->addElementText('name')
+        $this->addElement((new Element\Text('name'))
             ->setLabel('nazwa')
             ->setRequired()
-            ->addFilterStringTrim()
-            ->addValidatorStringLength(2, 128);
+            ->addFilter(new Filter\StringTrim)
+            ->addValidator(new Validator\StringLength([2, 128])));
 
         //początek publikacji
-        $this->addElementDateTimePicker('dateStart')
+        $this->addElement((new Element\DateTimePicker('dateStart'))
             ->setLabel('początek publikacji')
-            ->setDateMin(date('Y-m-d H:i'));
+            ->setDateMin(date('Y-m-d H:i')));
 
         //zakończenie publikacji
-        $this->addElementDateTimePicker('dateEnd')
+        $this->addElement((new Element\DateTimePicker('dateEnd'))
             ->setLabel('zakończenie publikacji')
             ->setDateMin(date('Y-m-d H:i'))
-            ->setDateMinField($this->getElement('dateStart'));
+            ->setDateMinField($this->getElement('dateStart')));
 
         //ustawienie bufora
-        $this->addElementSelect('cacheLifetime')
+        $this->addElement((new Element\Select('cacheLifetime'))
             ->setLabel('odświeżanie')
             ->setMultioptions([null => 'domyślne dla szablonu'] + \Cms\Orm\CmsCategoryRecord::CACHE_LIFETIMES)
-            ->addFilterEmptyToNull();
+            ->addFilter(new Filter\EmptyToNull));
 
         //aktywna
-        $this->addElementCheckbox('active')
+        $this->addElement((new Element\Checkbox('active'))
             ->setChecked()
-            ->setLabel('włączona');
+            ->setLabel('włączona'));
 
         //zapis
-        $this->addElementSubmit('submit1')
-            ->setLabel('zapisz');
+        $this->addElement((new Element\Submit('submit1'))
+            ->setLabel('zapisz'));
 
         //SEO
         //nazwa kategorii
-        $this->addElementText('title')
+        $this->addElement((new Element\Text('title'))
             ->setLabel('meta tytuł')
             ->setDescription('jeśli brak, użyta zostanie kaskada złożona nazw')
-            ->addFilterStringTrim()
-            ->addValidatorStringLength(2, 128);
+            ->addFilter(new Filter\StringTrim)
+            ->addValidator(new Validator\StringLength([2, 128])));
 
         //meta description
-        $this->addElementTextarea('description')
-            ->setLabel('meta opis');
+        $this->addElement((new Element\Textarea('description'))
+            ->setLabel('meta opis'));
 
         $view = \Mmi\App\FrontController::getInstance()->getView();
 
         //własny uri
-        $this->addElementText('customUri')
+        $this->addElement((new Element\Text('customUri'))
             ->setLabel('własny adres strony')
             //adres domyślny (bez baseUrl)
             ->setDescription('domyślnie: ' . substr($view->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->getRecord()->uri], true), strlen($view->baseUrl) + 1))
-            ->addFilterStringTrim()
-            ->addFilterEmptyToNull()
-            ->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryQuery, 'uri')
-            ->addValidatorRecordUnique(new \Cms\Orm\CmsCategoryQuery, 'customUri', $this->getRecord()->id)
-            ->addValidatorStringLength(1, 255);
+            ->addFilter(new Filter\StringTrim)
+            ->addFilter(new Filter\EmptyToNull)
+            ->addValidator(new Validator\RecordUnique([new \Cms\Orm\CmsCategoryQuery, 'uri']))
+            ->addValidator(new Validator\RecordUnique([new \Cms\Orm\CmsCategoryQuery, 'customUri', $this->getRecord()->id]))
+            ->addValidator(new Validator\StringLength([1, 255])));
 
         //blank
-        $this->addElementCheckbox('follow')
+        $this->addElement((new Element\Checkbox('follow'))
             ->setChecked()
-            ->setLabel('widoczna dla wyszukiwarek');
+            ->setLabel('widoczna dla wyszukiwarek'));
 
         //zapis
-        $this->addElementSubmit('submit2')
-            ->setLabel('zapisz');
+        $this->addElement((new Element\Submit('submit2'))
+            ->setLabel('zapisz'));
 
         //Treść
         //atrybuty
         $this->initAttributes('cmsCategoryType', $this->getRecord()->cmsCategoryTypeId, 'category');
 
         //jeśli wstawione, dodany button z zapisem
-        $this->addElementSubmit('submit3')
-            ->setLabel('zapisz');
+        $this->addElement((new Element\Submit('submit3'))
+            ->setLabel('zapisz'));
 
         //Zaawansowane
         //przekierowanie na link
-        $this->addElementText('redirectUri')
+        $this->addElement((new Element\Text('redirectUri'))
             ->setLabel('przekierowanie na adres')
             ->setDescription('np. http://www.google.pl')
-            ->addFilterStringTrim();
+            ->addFilter(new Filter\StringTrim));
 
         //przekierowanie na moduł
-        $this->addElementText('mvcParams')
+        $this->addElement((new Element\Text('mvcParams'))
             ->setLabel('przekierowanie na moduł CMS')
             ->setDescription('np. module=blog&controller=index&action=index')
-            ->addFilterStringTrim()
-            ->addValidatorRegex('@module\=[a-zA-Z0-9\&\=]+@', 'niepoprawny adres modułu cms');
+            ->addFilter(new Filter\StringTrim)
+            ->addValidator(new Validator\Regex(['@module\=[a-zA-Z0-9\&\=]+@', 'niepoprawny adres modułu cms'])));
 
         //config JSON
-        $this->addElementText('configJson')
+        $this->addElement((new Element\Text('configJson'))
             ->setLabel('dodatkowe flagi')
             ->setDescription('format JSON')
-            ->addValidatorJson()
-            ->addFilterStringTrim();
+            ->addValidator(new Validator\Json([]))
+            ->addFilter(new Filter\StringTrim));
 
         //https
-        $this->addElementSelect('https')
+        $this->addElement((new Element\Select('https'))
             ->setMultioptions([null => 'bez zmian', '0' => 'wymuś brak https', 1 => 'wymuś https'])
-            ->addFilterEmptyToNull()
-            ->setLabel('https');
+            ->addFilter(new Filter\EmptyToNull)
+            ->setLabel('https'));
 
         //blank
-        $this->addElementCheckbox('blank')
-            ->setLabel('otwieranie w nowym oknie');
+        $this->addElement((new Element\Checkbox('blank'))
+            ->setLabel('otwieranie w nowym oknie'));
 		
 		//role uprawnione do wyświetlenia kategorii/strony
-		$this->addElementMultiCheckbox('roles')
+		$this->addElement((new Element\MultiCheckbox('roles'))
 			->setLabel('widoczne dla')
 			->setMultioptions((new \Cms\Orm\CmsRoleQuery)->orderAscName()->findPairs('id', 'name'))
 			->setValue($this->getRecord()->id ? (new \Cms\Orm\CmsCategoryRoleQuery)
 				->whereCmsCategoryId()->equals($this->getRecord()->id)
 				->findPairs('cms_role_id', 'cms_role_id') : []
-			);
+			));
 
         //zapis
-        $this->addElementSubmit('submit4')
-            ->setLabel('zapisz');
+        $this->addElement((new Element\Submit('submit4'))
+            ->setLabel('zapisz'));
     }
 	
     /**

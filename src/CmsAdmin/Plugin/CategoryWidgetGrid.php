@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Plugin;
 
+use CmsAdmin\Grid\Column;
+
 /**
  * Grid widgetów
  */
@@ -24,32 +26,32 @@ class CategoryWidgetGrid extends \CmsAdmin\Grid\Grid
                 ->orderAscId());
 
         //nazwa
-        $this->addColumnText('name')
-            ->setLabel('nazwa');
+        $this->addColumn((new Column\TextColumn('name'))
+            ->setLabel('nazwa'));
 
         $widgets = [null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard(3, '/widget/');
 
         //klasa modułu wyświetlania
-        $this->addColumnSelect('mvcParams')
+        $this->addColumn((new Column\SelectColumn('mvcParams'))
             ->setMultioptions($widgets)
-            ->setLabel('moduł wyświetlania');
+            ->setLabel('moduł wyświetlania'));
 
         //klasa modułu wyświetlania
-        $this->addColumnSelect('mvcPreviewParams')
+        $this->addColumn((new Column\SelectColumn('mvcPreviewParams'))
             ->setMultioptions($widgets)
-            ->setLabel('modułu podglądu');
+            ->setLabel('modułu podglądu'));
 
         //klasa forma
-        $this->addColumnText('formClass')
-            ->setLabel('klasa formularza konfiguracji');
+        $this->addColumn((new Column\TextColumn('formClass'))
+            ->setLabel('klasa formularza konfiguracji'));
 
         //długość bufora
-        $this->addColumnSelect('cacheLifetime')
+        $this->addColumn((new Column\SelectColumn('cacheLifetime'))
             ->setLabel('odświeżanie')
-            ->setMultioptions(\Cms\Orm\CmsCategoryWidgetRecord::CACHE_LIFETIMES);
+            ->setMultioptions(\Cms\Orm\CmsCategoryWidgetRecord::CACHE_LIFETIMES));
 
         //operacje
-        $this->addColumnOperation();
+        $this->addColumn(new Column\OperationColumn);
     }
 
 }

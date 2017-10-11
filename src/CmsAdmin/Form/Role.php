@@ -10,18 +10,27 @@
 
 namespace CmsAdmin\Form;
 
+use Cms\Form\Element;
+
+/**
+ * Formularz roli
+ */
 class Role extends \Mmi\Form\Form
 {
 
+    /**
+     * Konfiguracja formularza
+     */
     public function init()
     {
-
-        $this->addElementText('name')
+        //nazwa roli
+        $this->addElement((new Element\Text('name'))
             ->setLabel('nazwa roli')
-            ->addValidatorStringLength(3, 64);
+            ->addValidator(new \Mmi\Validator\StringLength([3, 64])));
 
-        $this->addElementSubmit('submit')
-            ->setLabel('utwórz nową rolę');
+        //submit
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('utwórz nową rolę'));
     }
 
 }
