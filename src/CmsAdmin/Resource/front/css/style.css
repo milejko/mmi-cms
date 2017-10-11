@@ -8892,3 +8892,12 @@ hr.transparent {
 
 .control-checkbox input:disabled ~ .control_indicator:after {
   border-color: #7b7b7b; }
+
+.main .card-body .btn:hover a, .main .card-block .btn:hover a {
+  color: white; }
+
+#rules {
+  margin-top: 30px; }
+
+.clear {
+  clear: both; }

@@ -1,3 +1,4 @@
+
 // Here you can add other styles
 .nowa-era-logo{
   background-image: url('../images/logo.png') !important;
@@ -93,4 +94,16 @@
   input:disabled ~ .control_indicator:after {
     border-color: #7b7b7b;
   }
+}
+
+.main .card-body .btn:hover a {
+  color: white;
+}
+
+#rules {
+  margin-top: 30px;
+}
+
+.clear {
+  clear: both;
 }
