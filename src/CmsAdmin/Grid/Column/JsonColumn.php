@@ -44,7 +44,7 @@ class JsonColumn extends ColumnAbstract
     /**
      * Renderowanie rekursywne
      * @param array $jsonData
-     * @param wcięcie $indent
+     * @param int $indent wcięcie
      * @return string
      */
     protected function _renderRecursive(array $jsonData, $indent = 0)
