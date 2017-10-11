@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -10,11 +10,18 @@
 
 namespace CmsAdmin\Grid;
 
+use Mmi\App\FrontController;
+
 /**
  * Obiekt stronicowania grida
  */
 class GridPaginator
 {
+
+    /**
+     * Template paginatora
+     */
+    const TEMPLATE_PAGINATOR = 'cmsAdmin/grid/paginator';
 
     /**
      * Obiekt grida
@@ -33,17 +40,14 @@ class GridPaginator
     }
 
     /**
-     * Renderuje 
+     * Renderuje
      * @return type
      */
     public function render()
     {
-        return '<tr><th class="paginator" colspan="' . count($this->_grid->getColumns()) . '">' .
-            'Znaleziono: <strong>' . $this->_grid->getState()->getDataCount() . '</strong> pozycji, strona: ' .
-            $this->_renderSelect() .
-            ' z ' . $this->getPagesCount() .
-            (\App\Registry::$auth->hasRole('admin') ? ', <a target="_blank" href="' . \Mmi\App\FrontController::getInstance()->getView()->url([$this->_grid->getClass() => 'export']) . '">export csv</a>' : '') .
-            '</th></tr>';
+        FrontController::getInstance()->getView()->_grid = $this->_grid;
+        FrontController::getInstance()->getView()->_paginator = $this;
+        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_PAGINATOR);
     }
 
     /**
@@ -56,22 +60,10 @@ class GridPaginator
     }
 
     /**
-     * Renderuje Column select
-     * @return \Mmi\Form\Element\Select
-     */
-    protected function _renderSelect()
-    {
-        //ustawienie opcji i zaznaczenia
-        return (new \Mmi\Form\Element\Select($this->_grid->getClass() . '[_paginator_]'))
-                ->setMultioptions($this->_getPages())
-                ->setValue($this->_grid->getState()->getPage());
-    }
-
-    /**
      * Pobiera tablicę ze stronami
      * @return array
      */
-    protected function _getPages()
+    public function getPages()
     {
         $multioptions = [];
         for ($i = 1; $i <= $this->getPagesCount(); $i++) {
@@ -80,4 +72,11 @@ class GridPaginator
         return $multioptions;
     }
 
+    /**
+     * @return string
+     */
+    public function getExportCsvUrl()
+    {
+        return \Mmi\App\FrontController::getInstance()->getView()->url([$this->_grid->getClass() => 'export']);
+    }
 }
