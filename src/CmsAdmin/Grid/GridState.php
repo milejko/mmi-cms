@@ -212,6 +212,16 @@ class GridState extends \Mmi\OptionObject
                 $query->andField($filter->getField(), $filter->getTableName())->lessOrEquals($filter->getValue());
                 continue;
             }
+            if ($filter->getMethod() == 'between') {
+                $range = json_decode($filter->getValue());
+                if ($range->from && !empty($range->from)) {
+                    $query->andField($filter->getField(), $filter->getTableName())->greaterOrEquals($range->from);
+                }
+                if ($range->to && !empty($range->to)) {
+                    $query->andField($filter->getField(), $filter->getTableName())->lessOrEquals($range->to);
+                }
+                continue;
+            }
             //domyślnie - wyszukanie
             $query->andField($filter->getField(), $filter->getTableName())->like('%' . $filter->getValue() . '%');
         }
