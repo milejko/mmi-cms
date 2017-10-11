@@ -10,8 +10,6 @@
 
 namespace CmsAdmin\Grid;
 
-use Mmi\App\FrontController;
-
 /**
  * Klasa stanu grida
  * @method GridState setFilters()
@@ -144,6 +142,7 @@ class GridState extends \Mmi\OptionObject
      * Dekoruje querę na podstawie filtrów
      * @param \Mmi\Orm\Query $query
      * @return \Mmi\Orm\Query
+     * @throws GridException
      */
     public function setupQuery(\Mmi\Orm\Query $query)
     {
@@ -179,6 +178,7 @@ class GridState extends \Mmi\OptionObject
      * Stosuje filtry na zapytaniu
      * @param \Mmi\Orm\Query $query
      * @return GridState
+     * @throws GridException
      */
     private function _applyFilters(\Mmi\Orm\Query $query)
     {
@@ -212,6 +212,16 @@ class GridState extends \Mmi\OptionObject
                 $query->andField($filter->getField(), $filter->getTableName())->lessOrEquals($filter->getValue());
                 continue;
             }
+            if ($filter->getMethod() == 'between') {
+                $range = json_decode($filter->getValue());
+                if ($range->from && !empty($range->from)) {
+                    $query->andField($filter->getField(), $filter->getTableName())->greaterOrEquals($range->from);
+                }
+                if ($range->to && !empty($range->to)) {
+                    $query->andField($filter->getField(), $filter->getTableName())->lessOrEquals($range->to);
+                }
+                continue;
+            }
             //domyślnie - wyszukanie
             $query->andField($filter->getField(), $filter->getTableName())->like('%' . $filter->getValue() . '%');
         }
@@ -222,6 +232,7 @@ class GridState extends \Mmi\OptionObject
      * Stosuje sortowania na zapytaniu
      * @param \Mmi\Orm\Query $query
      * @return GridState
+     * @throws GridException
      */
     private function _applyOrder(\Mmi\Orm\Query $query)
     {

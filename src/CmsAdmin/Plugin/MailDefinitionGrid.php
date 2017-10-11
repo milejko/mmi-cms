@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Plugin;
 
+use CmsAdmin\Grid\Column;
+
 /**
  * Grid definicji maila
  */
@@ -23,48 +25,48 @@ class MailDefinitionGrid extends \CmsAdmin\Grid\Grid
         $this->setQuery(\Cms\Orm\CmsMailDefinitionQuery::lang());
 
         //język
-        $this->addColumnCustom('lang')
-            ->setLabel('język');
+        $this->addColumn((new Column\CustomColumn('lang'))
+            ->setLabel('język'));
 
         //nazwa
-        $this->addColumnText('name')
-            ->setLabel('nazwa');
+        $this->addColumn((new Column\TextColumn('name'))
+            ->setLabel('nazwa'));
 
         //treść w html
-        $this->addColumnCheckbox('html')
-            ->setLabel('HTML');
+        $this->addColumn((new Column\CheckboxColumn('html'))
+            ->setLabel('HTML'));
 
         //temat
-        $this->addColumnText('subject')
-            ->setLabel('temat');
+        $this->addColumn((new Column\TextColumn('subject'))
+            ->setLabel('temat'));
 
         //nazwa od
-        $this->addColumnText('fromName')
-            ->setLabel('nazwa od');
+        $this->addColumn((new Column\TextColumn('fromName'))
+            ->setLabel('nazwa od'));
 
         //odpowiedz
-        $this->addColumnText('replyTo')
-            ->setLabel('odpowiedz');
+        $this->addColumn((new Column\TextColumn('replyTo'))
+            ->setLabel('odpowiedz'));
 
         //serwer
-        $this->addColumnSelect('cmsMailServerId')
+        $this->addColumn((new Column\SelectColumn('cmsMailServerId'))
             ->setMultioptions((new \Cms\Orm\CmsMailServerQuery)->findPairs('id', 'address'))
-            ->setLabel('serwer');
+            ->setLabel('serwer'));
 
         //data dodania
-        $this->addColumnText('dateAdd')
-            ->setLabel('data dodania');
+        $this->addColumn((new Column\TextColumn('dateAdd'))
+            ->setLabel('data dodania'));
 
         //data modyfikacji
-        $this->addColumnText('dateModify')
-            ->setLabel('data modyfikacji');
+        $this->addColumn((new Column\TextColumn('dateModify'))
+            ->setLabel('data modyfikacji'));
 
         //aktywny
-        $this->addColumnCheckbox('active')
-            ->setLabel('aktywny');
+        $this->addColumn((new Column\CheckboxColumn('active'))
+            ->setLabel('aktywny'));
 
         //operacje
-        $this->addColumnOperation();
+        $this->addColumn(new Column\OperationColumn);
     }
 
 }

@@ -10,41 +10,45 @@
 
 namespace Cms\Form;
 
-class Contact extends \Cms\Form\Form
+use Mmi\Form\Element,
+    Mmi\Validator,
+    Mmi\Filter;
+
+class Contact extends \Mmi\Form\Form
 {
 
     public function init()
     {
 
         if (!$this->getOption('subjectId')) {
-            $this->addElementSelect('cmsContactOptionId')
+            $this->addElement((new Element\Select('cmsContactOptionId'))
                 ->setLabel('Wybierz temat')
                 ->setMultioptions(\Cms\Model\Contact::getMultioptions())
-                ->addValidatorInteger();
+                ->addValidator(new Validator\Integer));
         }
 
         $auth = \App\Registry::$auth;
 
-        $this->addElementText('email')
+        $this->addElement((new Element\Text('email'))
             ->setLabel('Twój adres email')
             ->setValue($auth->getEmail())
             ->setRequired()
-            ->addValidatorEmailAddress();
+            ->addValidator(new Validator\EmailAddress));
 
-        $this->addElementTextarea('text')
+        $this->addElement((new Element\Textarea('text'))
             ->setLabel('Wiadomość')
             ->setRequired()
-            ->addValidatorNotEmpty()
-            ->addFilterStripTags();
+            ->addValidator(new Validator\NotEmpty)
+            ->addFilter(new Filter\StripTags));
 
         //captcha dla niezalogowanych
         if (!($auth->getId() > 0)) {
-            $this->addElementCaptcha('regCaptcha')
-                ->setLabel('Przepisz kod');
+            $this->addElement((new Element\Captcha('regCaptcha'))
+                ->setLabel('Przepisz kod'));
         }
 
-        $this->addElementSubmit('submit')
-            ->setLabel('Wyślij');
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('Wyślij'));
     }
 
     /**

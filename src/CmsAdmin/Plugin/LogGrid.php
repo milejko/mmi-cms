@@ -2,13 +2,15 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
 namespace CmsAdmin\Plugin;
+
+use CmsAdmin\Grid\Column;
 
 /**
  * Klasa grid loga CMS
@@ -21,38 +23,38 @@ class LogGrid extends \CmsAdmin\Grid\Grid
 
         //domyślnie posortowane po dacie i czasie
         $this->setQuery((new \Cms\Orm\CmsLogQuery)
-                ->orderDescDateTime());
+            ->orderDescDateTime());
 
         //data i czas
-        $this->addColumnText('dateTime')
-            ->setLabel('data i czas');
+        $this->addColumn((new Column\TextColumn('dateTime'))
+            ->setLabel('data i czas'));
 
         //operacja
-        $this->addColumnText('operation')
-            ->setLabel('operacja');
+        $this->addColumn((new Column\TextColumn('operation'))
+            ->setLabel('operacja'));
 
         //url
-        $this->addColumnText('url')
+        $this->addColumn((new Column\TextColumn('url'))
             ->setLabel('URL')
-            ->setFilterMethodLike();
+            ->setFilterMethodLike());
 
         //dane
-        $this->addColumnJson('data')
+        $this->addColumn((new Column\JsonColumn('data'))
             ->setLabel('dane')
-            ->setFilterMethodLike();
+            ->setFilterMethodLike());
 
         //zasób
-        $this->addColumnText('object')
-            ->setLabel('zasób');
+        $this->addColumn((new Column\TextColumn('object'))
+            ->setLabel('zasób'));
 
         //id
-        $this->addColumnText('objectId')
-            ->setLabel('id zasobu');
+        $this->addColumn((new Column\TextColumn('objectId'))
+            ->setLabel('id zasobu'));
 
         //sukces
-        $this->addColumnCheckbox('success')
+        $this->addColumn((new Column\CheckboxColumn('success'))
             ->setLabel('sukces')
-            ->setDisabled();
+            ->setDisabled());
     }
 
 }

@@ -10,52 +10,56 @@
 
 namespace CmsAdmin\Form;
 
+use Cms\Form\Element,
+    Mmi\Validator,
+    Mmi\Filter;
+
 /**
  * Formularz atrybutów
  */
-class Attribute extends \Mmi\Form\Form
+class Attribute extends \Cms\Form\Form
 {
 
     public function init()
     {
 
         //nazwa
-        $this->addElementText('name')
+        $this->addElement((new Element\Text('name'))
             ->setLabel('nazwa')
             ->setRequired()
-            ->addFilterStringTrim()
-            ->addValidatorStringLength(2, 128);
+            ->addFilter(new Filter\StringTrim)
+            ->addValidator(new Validator\StringLength([2, 128])));
 
         //klucz pola
-        $this->addElementText('key')
+        $this->addElement((new Element\Text('key'))
             ->setLabel('klucz')
-            ->addFilterAscii()
+            ->addFilter(new Filter\Ascii([]))
             ->setRequired()
-            ->addValidatorAlnum('klucz może zawierać wyłącznie litery i cyfry')
-            ->addValidatorStringLength(2, 64)
-            ->addValidatorRecordUnique(new \Cms\Orm\CmsAttributeQuery, 'key', $this->getRecord()->id);
+            ->addValidator((new Validator\Alnum)->setMessage('klucz może zawierać wyłącznie litery i cyfry'))
+            ->addValidator(new Validator\StringLength([2, 64]))
+            ->addValidator(new Validator\RecordUnique([new \Cms\Orm\CmsAttributeQuery, 'key', $this->getRecord()->id])));
 
         //opis
-        $this->addElementText('description')
+        $this->addElement((new Element\Text('description'))
             ->setLabel('opis')
-            ->addFilterStringTrim();
+            ->addFilter(new Filter\StringTrim));
 
         //pole formularza
-        $this->addElementSelect('cmsAttributeTypeId')
+        $this->addElement((new Element\Select('cmsAttributeTypeId'))
             ->setLabel('pole formularza')
             ->setRequired()
-            ->addValidatorNotEmpty()
+            ->addValidator(new Validator\NotEmpty)
             ->setMultioptions((new \Cms\Orm\CmsAttributeTypeQuery)
                 ->orderAscName()
-                ->findPairs('id', 'name'));
+                ->findPairs('id', 'name')));
 
         //opcje pola formularz
-        $this->addElementTextarea('fieldOptions')
-            ->setLabel('opcje pola');
+        $this->addElement((new Element\Textarea('fieldOptions'))
+            ->setLabel('opcje pola'));
 
         //zapis
-        $this->addElementSubmit('submit')
-            ->setLabel('zapisz atrybut');
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('zapisz atrybut'));
     }
 
 }

@@ -407,6 +407,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         \App\Registry::$cache->remove('category-id-' . md5($this->getInitialStateValue('customUri')));
         \App\Registry::$cache->remove('category-attributes-' . $this->id);
         \App\Registry::$cache->remove('category-widget-model-' . $this->id);
+		\App\Registry::$cache->remove('categories-roles');
         return true;
     }
 

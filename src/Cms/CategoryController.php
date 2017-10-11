@@ -136,6 +136,11 @@ class CategoryController extends \Mmi\Mvc\Controller
         if ($this->preview == 1 && \App\Registry::$acl->isAllowed(\App\Registry::$auth->getRoles(), 'cmsAdmin:category:index')) {
             return $category;
         }
+		//sprawdzenie dostępu dla roli
+		if (!(new Model\CategoryRole($category, \App\Registry::$auth->getRoles()))->isAllowed()) {
+            //404
+            throw new \Mmi\Mvc\MvcForbiddenException('Category: ' . $category->uri . ' forbidden for roles: ' . implode(', ', \App\Registry::$auth->getRoles()));
+		}
         //kategoria manualnie wyłączona
         if (!$category->active) {
             //404

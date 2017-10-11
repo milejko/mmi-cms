@@ -43,7 +43,7 @@
                         </li>
                     {/if}
                     <li>
-                        <a class="reload-preview" href="#tab-preview">Podgląd</a>
+                        <a href="{$categoryForm->getRecord()->getUrl()}?preview=1" target="_blank">Podgląd</a>
                     </li>
                 </ul>
                 {$categoryForm->start()}
@@ -80,6 +80,7 @@
                 {$categoryForm->getElement('configJson')}
                 {$categoryForm->getElement('https')}
                 {$categoryForm->getElement('blank')}
+				{$categoryForm->getElement('roles')}
                 {$categoryForm->getElement('submit4')}
             </div>
             {$categoryForm->end()}
@@ -92,9 +93,6 @@
                     </div>
                 </div>
             {/if}
-            <div class="tab-content clearfix" id="tab-preview">
-                <iframe id="preview-frame" src="{$categoryForm->getRecord()->getUrl()}?preview=1"></iframe>
-            </div>
         {/if}
     </div>
 </div>

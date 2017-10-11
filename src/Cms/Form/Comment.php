@@ -10,29 +10,43 @@
 
 namespace Cms\Form;
 
+use Mmi\Form\Element;
+
+/**
+ * Klasa formularza kontaktu
+ */
 class Comment extends \Mmi\Form\Form
 {
 
+    /**
+     * Konfiguracja formularza
+     */
     public function init()
     {
+        //ustawienie obiektu
         $this->_record->object = $this->getOption('object');
+        //ustawianie id obiektu
         $this->_record->objectId = $this->getOption('objectId');
 
-        $this->addElementText('title')
-            ->setLabel('tytuł');
+        //tytuł
+        $this->addElement((new Element\Text('title'))
+            ->setLabel('tytuł'));
 
-        $this->addElementTextarea('text')
+        //komentarz
+        $this->addElement((new Element\Textarea('text'))
             ->setRequired()
-            ->addValidatorNotEmpty()
-            ->setLabel('komentarz');
+            ->addValidator(new \Mmi\Validator\NotEmpty)
+            ->setLabel('komentarz'));
 
+        //podpis
         if (!\App\Registry::$auth->hasIdentity()) {
-            $this->addElementText('signature')
-                ->setLabel('podpis');
+            $this->addElement((new Element\Text('signature'))
+                ->setLabel('podpis'));
         }
 
-        $this->addElementSubmit('submit')
-            ->setLabel('dodaj komentarz');
+        //submit
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('dodaj komentarz'));
     }
 
 }

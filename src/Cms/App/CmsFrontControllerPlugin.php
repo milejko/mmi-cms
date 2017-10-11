@@ -19,6 +19,8 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
     /**
      * Przed uruchomieniem dispatchera
      * @param \Mmi\Http\Request $request
+     * @return \Mmi\Http\Request|void
+     * @throws \Mmi\Mvc\MvcNotFoundException
      */
     public function preDispatch(\Mmi\Http\Request $request)
     {
@@ -113,6 +115,7 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
     /**
      * Ustawia request na logowanie admina
      * @param \Mmi\Http\Request $request
+     * @return \Mmi\Http\Request
      */
     protected function _setLoginRequest(\Mmi\Http\Request $request, $preferAdmin)
     {

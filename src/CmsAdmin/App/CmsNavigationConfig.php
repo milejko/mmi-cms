@@ -48,6 +48,7 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig
                 ->addChild(NavPart\NavPartText::getMenu())
                 ->addChild(NavPart\NavPartCategory::getMenu())
                 ->addChild(NavPart\NavPartAuth::getMenu())
+                ->addChild(NavPart\NavPartConnector::getMenu())
         ;
     }
 

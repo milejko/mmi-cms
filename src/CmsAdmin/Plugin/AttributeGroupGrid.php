@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Plugin;
 
+use CmsAdmin\Grid\Column;
+
 /**
  * Grid grup atrybutów
  */
@@ -23,15 +25,15 @@ class AttributeGroupGrid extends \CmsAdmin\Grid\Grid
         $this->setQuery(new \Cms\Orm\CmsAttributeGroupQuery);
 
         //nazwa taga
-        $this->addColumnText('name')
-            ->setLabel('nazwa');
+        $this->addColumn((new Column\TextColumn('name'))
+            ->setLabel('nazwa'));
 
         //klasa pola
-        $this->addColumnText('description')
-            ->setLabel('opis');
+        $this->addColumn((new Column\TextColumn('description'))
+            ->setLabel('opis'));
 
         //operacje
-        $this->addColumnOperation();
+        $this->addColumn(new Column\OperationColumn);
     }
 
 }

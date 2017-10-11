@@ -10,9 +10,16 @@
 
 namespace CmsAdmin\App\NavPart;
 
+/**
+ * Konfiguracja nawigatora kategorii
+ */
 class NavPartCategory extends \Mmi\Navigation\NavigationConfig
 {
 
+    /**
+     * Zwraca menu
+     * @return \Mmi\Navigation\NavigationConfigElement
+     */
     public static function getMenu()
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
@@ -20,6 +27,7 @@ class NavPartCategory extends \Mmi\Navigation\NavigationConfig
                 ->setModule('cmsAdmin')
                 ->setController('category')
                 ->setAction('edit')
+                //lista treści
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setLabel('Lista treści')
                     ->setModule('cmsAdmin')
@@ -40,6 +48,7 @@ class NavPartCategory extends \Mmi\Navigation\NavigationConfig
                         ->setDisabled(true)
                     )
                 )
+                //szablony
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setLabel('Szablony')
                     ->setModule('cmsAdmin')
@@ -51,6 +60,7 @@ class NavPartCategory extends \Mmi\Navigation\NavigationConfig
                         ->setController('categoryType')
                         ->setAction('edit'))
                 )
+                //widgety
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setLabel('Widgety')
                     ->setModule('cmsAdmin')
@@ -61,6 +71,7 @@ class NavPartCategory extends \Mmi\Navigation\NavigationConfig
                         ->setModule('cmsAdmin')
                         ->setController('categoryWidget')
                         ->setAction('edit')))
+                //uprawnienia
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setLabel('Uprawnienia')
                     ->setModule('cmsAdmin')

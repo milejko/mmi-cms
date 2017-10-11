@@ -13,7 +13,7 @@ namespace Cms\Form\Element;
 /**
  * Wybór koloru
  */
-class ColorPicker extends \Mmi\Form\Element\Text
+class ColorPicker extends Text
 {
 
     /**
