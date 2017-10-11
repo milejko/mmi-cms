@@ -1,10 +1,17 @@
-<div class="content-box">
-    <div class="content-box-header">
-        <h3>{#Logi systemowe#}</h3>
-        <div class="clear"></div>
-    </div>
-    <div class="content-box-content clearfix">
-        {$grid}
-        {$grid2}
+<div class="container-fluid">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>{#Logi systemowe#}</strong>
+                    </div>
+                    <div class="card-body">
+                        {$grid}
+                        {$grid2}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
