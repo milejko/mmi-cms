@@ -12,22 +12,30 @@ namespace CmsAdmin\Form;
 
 use Cms\Form\Element;
 
+/**
+ * Formularz tekstów stałych
+ */
 class Text extends \Mmi\Form\Form
 {
-
+    
+    /**
+     * Konfiguracja formularza
+     */
     public function init()
     {
-
+        //klucz
         $this->addElement((new Element\Text('key'))
-            ->setLabel('klucz')
-            ->setRequired()
-            ->addValidator(new \Mmi\Validator\NotEmpty));
+                ->setLabel('klucz')
+                ->setRequired()
+                ->addValidator(new \Mmi\Validator\NotEmpty));
 
+        //zawartość
         $this->addElement((new Element\Textarea('content'))
-            ->setLabel('zawartość'));
+                ->setLabel('zawartość'));
 
+        //submit
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('zapisz tekst'));
+                ->setLabel('zapisz tekst'));
     }
 
 }
