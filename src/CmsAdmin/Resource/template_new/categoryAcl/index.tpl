@@ -19,11 +19,13 @@
                                     </button>
                                 {/foreach}
                             </div>
-                            <div class="tab-content">
-                                {$categoryAclForm}
+                            <div id="rules">
+                                <div class="tab-content">
+                                    {$categoryAclForm}
+                                </div>
+                            {else}
+                                <p>Brak zdefiniowanych ról.</p>
                             </div>
-                        {else}
-                            <p>Brak zdefiniowanych ról.</p>
                         {/if}
                         <div class="clear"></div>
                     </div>
