@@ -10,6 +10,9 @@
 
 namespace CmsAdmin\Form;
 
+use Cms\Form\Element,
+    Mmi\Validator;
+
 /**
  * Formularz wiązania szablon <-> atrybut
  */
@@ -18,20 +21,20 @@ class CategoryAttributeRelationForm extends \Cms\Form\Form
 
     public function init()
     {
+        $query = (new \Cms\Orm\CmsAttributeRelationQuery)
+                ->whereObject()->equals($this->getRecord()->object)
+                ->andFieldObjectId()->equals($this->getRecord()->objectId);
 
         //atrybut
-        $this->addElementSelect('cmsAttributeId')
-            ->setRequired()
-            ->addValidatorNotEmpty()
-            ->setMultioptions([null => '---'] + (new \Cms\Orm\CmsAttributeQuery)
-                ->orderAscName()
-                ->findPairs('id', 'name'))
-            //unikalność atrybutu dla wybranego szablonu
-            ->addValidatorRecordUnique((new \Cms\Orm\CmsAttributeRelationQuery)
-                ->whereObject()->equals($this->getRecord()->object)
-                ->andFieldObjectId()->equals($this->getRecord()->objectId)
-                , 'cmsAttributeId', $this->getRecord()->id)
-            ->setLabel('atrybut');
+        $this->addElement((new Element\Select('cmsAttributeId'))
+                ->setRequired()
+                ->addValidator(new Validator\NotEmpty)
+                ->setMultioptions([null => '---'] + (new \Cms\Orm\CmsAttributeQuery)
+                    ->orderAscName()
+                    ->findPairs('id', 'name'))
+                //unikalność atrybutu dla wybranego szablonu
+                ->addValidator(new Validator\RecordUnique([$query, 'cmsAttributeId', $this->getRecord()->id]))
+                ->setLabel('atrybut'));
 
         //zablokowana edycja
         if ($this->getRecord()->id) {
@@ -45,44 +48,44 @@ class CategoryAttributeRelationForm extends \Cms\Form\Form
             ->findPk($this->getRecord()->cmsAttributeValueId);
 
         //wartość domyślna
-        $this->addElementText('defaultValue')
-            ->setLabel('wartość domyślna')
-            ->addFilterEmptyToNull()
-            //string odpowiadający wartości domyślnej
-            ->setValue($defaultValueRecord ? $defaultValueRecord->value : null);
+        $this->addElement((new Element\Text('defaultValue'))
+                ->setLabel('wartość domyślna')
+                ->addFilter(new \Mmi\Filter\EmptyToNull)
+                //string odpowiadający wartości domyślnej
+                ->setValue($defaultValueRecord ? $defaultValueRecord->value : null));
 
         //filtry
-        $this->addElementText('filterClasses')
-            ->setLabel('filtry');
+        $this->addElement((new Element\Text('filterClasses'))
+                ->setLabel('filtry'));
 
         //walidatory
-        $this->addElementText('validatorClasses')
-            ->setLabel('walidatory');
+        $this->addElement((new Element\Text('validatorClasses'))
+                ->setLabel('walidatory'));
 
         //wymagany
-        $this->addElementCheckbox('required')
-            ->setLabel('wymagany');
+        $this->addElement((new Element\Checkbox('required'))
+                ->setLabel('wymagany'));
 
         //unikalny
-        $this->addElementCheckbox('unique')
-            ->setLabel('unikalny');
+        $this->addElement((new Element\Checkbox('unique'))
+                ->setLabel('unikalny'));
 
         //zmaterializowany
-        $this->addElementSelect('materialized')
-            ->setMultioptions([0 => 'nie', 1 => 'tak', 2 => 'tak, odziedziczony'])
-            ->setLabel('zmaterializowany')
-            ->setDescription('opcja administracyjna, zmiana może uszkodzić formularze zawierające ten atrybut');
+        $this->addElement((new Element\Select('materialized'))
+                ->setMultioptions([0 => 'nie', 1 => 'tak', 2 => 'tak, odziedziczony'])
+                ->setLabel('zmaterializowany')
+                ->setDescription('opcja administracyjna, zmiana może uszkodzić formularze zawierające ten atrybut'));
 
         //kolejność
-        $this->addElementText('order')
-            ->setRequired()
-            ->setLabel('kolejność')
-            ->addValidatorNumberBetween(0, 10000000)
-            ->setValue(0);
+        $this->addElement((new Element\Text('order'))
+                ->setRequired()
+                ->setLabel('kolejność')
+                ->addValidator(new Validator\NumberBetween([0, 10000000]))
+                ->setValue(0));
 
         //zapis
-        $this->addElementSubmit('submit')
-            ->setLabel('zapisz wiązanie');
+        $this->addElement((new Element\Submit('submit'))
+                ->setLabel('zapisz wiązanie'));
     }
 
     /**

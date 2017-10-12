@@ -13,7 +13,7 @@ namespace Cms\Form\Element;
 /**
  * Element utrudniający wysłanie formularza robotom, poprzez dodanie wartości przepisywanej JS'em
  */
-class Antirobot extends \Mmi\Form\Element\Hidden
+class Antirobot extends Hidden
 {
 
     /**

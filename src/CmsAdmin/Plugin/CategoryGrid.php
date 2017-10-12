@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Plugin;
 
+use CmsAdmin\Grid\Column;
+
 /**
  * Grid kategorii
  */
@@ -23,35 +25,37 @@ class CategoryGrid extends \CmsAdmin\Grid\Grid
         $this->setQuery(new \Cms\Orm\CmsCategoryQuery);
 
         //nazwa
-        $this->addColumnText('name')
-            ->setLabel('nazwa');
+        $this->addColumn((new Column\TextColumn('name'))
+            ->setLabel('nazwa'));
 
         //uri
-        $this->addColumnSelect('uri')
+        $this->addColumn((new Column\SelectColumn('uri'))
             ->setMultioptions((new \Cms\Orm\CmsCategoryQuery)->orderAscUri()->findPairs('uri', 'uri'))
             ->setFilterMethodLike()
-            ->setLabel('okruszki');
+            ->setLabel('okruszki'));
 
         //uri
-        $this->addColumnText('customUri')
-            ->setLabel('inny adres strony');
+        $this->addColumn((new Column\TextColumn('customUri'))
+            ->setLabel('inny adres strony'));
 
         //title
-        $this->addColumnText('title')
-            ->setLabel('meta tytuł');
+        $this->addColumn((new Column\TextColumn('title'))
+            ->setLabel('meta tytuł'));
 
         //follow
-        $this->addColumnCheckbox('follow')
-            ->setLabel('w wyszukiwarkach');
+        $this->addColumn((new Column\CheckboxColumn('follow'))
+            ->setLabel('w wyszukiwarkach'));
 
         //aktywności
-        $this->addColumnCheckbox('active')
-            ->setLabel('włączona');
+        $this->addColumn((new Column\CheckboxColumn('active'))
+            ->setLabel('włączona'));
 
         //operacje
-        $this->addColumnCustom()
+        $this->addColumn((new Column\CustomColumn('operation'))
             ->setLabel('operacje')
-            ->setTemplateCode('{$id = $record->id}{if categoryAclAllowed($id)}<a href="{@module=cmsAdmin&controller=category&action=edit&id={$id}@}"><i class="icon-pencil"></i></a>&nbsp;&nbsp;<a href="{@module=cmsAdmin&controller=category&action=delete&id={$id}@}" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>{else}-{/if}');
+            ->setTemplateCode('{$id = $record->id}{if categoryAclAllowed($id)}<a href="{@module=cmsAdmin&controller=category&action=edit&id={$id}@}"><i class="icon-pencil"></i></a>&nbsp;&nbsp;<a href="{@module=cmsAdmin&controller=category&action=delete&id={$id}@}" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>{else}-{/if}')
+        );
+            
     }
 
 }

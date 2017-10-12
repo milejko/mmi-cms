@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Form;
 
+use Cms\Form\Element;
+
 /**
  * Drugi krok - lista obiektów plików do importu
  */
@@ -33,14 +35,14 @@ class ConnectorImportFilesForm extends \Mmi\Form\Form
         //obiekty do przesłania
         if (!empty($data)) {
             //lista obiektów
-            $this->addElementMultiCheckbox('fileObjects')
+            $this->addElement((new Element\MultiCheckbox('fileObjects'))
                 ->setLabel('klasy plików')
                 ->setMultioptions($data)
-                ->setValue($data);
+                ->setValue($data));
 
             //submit
-            $this->addElementSubmit('submit')
-                ->setLabel('importuj');
+            $this->addElement((new Element\Submit('submit'))
+                ->setLabel('importuj'));
         }
     }
 

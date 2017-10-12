@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Plugin;
 
+use CmsAdmin\Grid\Column;
+
 /**
  * Grid maila
  */
@@ -24,37 +26,37 @@ class MailGrid extends \CmsAdmin\Grid\Grid
                 ->orderDescId());
 
         //wysłany
-        $this->addColumnSelect('active')
+        $this->addColumn((new Column\SelectColumn('active'))
             ->setMultioptions([
                 0 => 'do wysyłki',
                 1 => 'wysłany',
                 2 => 'w trakcie wysyłki',
             ])
-            ->setLabel('wysłany');
+            ->setLabel('wysłany'));
 
         //data dodania
-        $this->addColumnText('dateAdd')
-            ->setLabel('data dodania');
+        $this->addColumn((new Column\TextColumn('dateAdd'))
+            ->setLabel('data dodania'));
 
         //data wysyłki
-        $this->addColumnText('dateSent')
-            ->setLabel('data wysłania');
+        $this->addColumn((new Column\TextColumn('dateSent'))
+            ->setLabel('data wysłania'));
 
         //do
-        $this->addColumnText('to')
-            ->setLabel('do');
+        $this->addColumn((new Column\TextColumn('to'))
+            ->setLabel('do'));
 
         //temat
-        $this->addColumnText('subject')
-            ->setLabel('temat');
+        $this->addColumn((new Column\TextColumn('subject'))
+            ->setLabel('temat'));
 
         //nazwa od
-        $this->addColumnText('fromName')
-            ->setLabel('od');
+        $this->addColumn((new Column\TextColumn('fromName'))
+            ->setLabel('od'));
 
         //operacje
-        $this->addColumnOperation()
-            ->setEditParams(['module' => 'cmsAdmin', 'controller' => 'mail', 'action' => 'preview', 'id' => '%id%']);
+        $this->addColumn((new Column\OperationColumn)
+            ->setEditParams(['module' => 'cmsAdmin', 'controller' => 'mail', 'action' => 'preview', 'id' => '%id%']));
     }
 
 }

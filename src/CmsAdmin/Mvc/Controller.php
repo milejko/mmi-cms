@@ -10,24 +10,32 @@
 
 namespace CmsAdmin\Mvc;
 
+/**
+ * Kontroler stron adminowych
+ */
 abstract class Controller Extends \Mmi\Mvc\Controller
 {
 
+    /**
+     * Inicjalizacja
+     */
     public function init()
     {
         //ustawienie języka edycji
         $session = new \Mmi\Session\SessionSpace('cms-language');
         $lang = in_array($session->lang, \App\Registry::$config->languages) ? $session->lang : null;
-        if ($lang === null && isset(\App\Registry::$config->languages[0])) {
+        //brak zdefiniowanego języka, przy czym istnieje język domyślny
+        if (null === $lang && isset(\App\Registry::$config->languages[0])) {
             $lang = \App\Registry::$config->languages[0];
         }
+        //usunięcie języka z requestu
         unset($this->getRequest()->lang);
         unset(\Mmi\App\FrontController::getInstance()->getRequest()->lang);
-        if ($lang !== null) {
+        //język istnieje
+        if (null !== $lang) {
             \Mmi\App\FrontController::getInstance()->getRequest()->lang = $lang;
             $this->getRequest()->lang = $lang;
         }
-        \Mmi\App\FrontController::getInstance()->getResponse()->setHeader('X-UA-Compatible', 'IE=EmulateIE10', true);
     }
 
 }

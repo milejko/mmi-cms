@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Plugin;
 
+use CmsAdmin\Grid\Column;
+
 /**
  * Grid typów artykułu
  */
@@ -23,15 +25,15 @@ class CategoryTypeGrid extends \CmsAdmin\Grid\Grid
         $this->setQuery(new \Cms\Orm\CmsCategoryTypeQuery);
 
         //nazwa typu
-        $this->addColumnText('name')
-            ->setLabel('nazwa');
+        $this->addColumn((new Column\TextColumn('name'))
+            ->setLabel('nazwa'));
 
         //klucz
-        $this->addColumnText('key')
-            ->setLabel('klucz');
+        $this->addColumn((new Column\TextColumn('key'))
+            ->setLabel('klucz'));
 
         //operacje
-        $this->addColumnOperation();
+        $this->addColumn(new Column\OperationColumn);
     }
 
 }

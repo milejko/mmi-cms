@@ -18,6 +18,12 @@ use Cms\Orm\CmsCategoryRecord;
  */
 class Navigation
 {
+	
+	/**
+	 * Model sprawdzania dostępu do kategorii przez role
+	 * @var \Cms\Model\CategoryRole
+	 */
+	protected $_categoryRole = null;
 
     /**
      * Multiopcje nawigacji
@@ -75,8 +81,8 @@ class Navigation
     }
 
     /**
-     * 
-     * @param \Cms\Orm\CmsNavigationRecord $record
+     * Buduje strukturę
+     * @param \Cms\Orm\CmsCategoryRecord $record
      * @param \Mmi\Navigation\NavigationConfigElement $element
      * @param array $objectArray
      */
@@ -96,8 +102,8 @@ class Navigation
     }
 
     /**
-     * 
-     * @param \Cms\Orm\CmsNavigationRecord $record
+     * Ustawia dane elementu nawigacji na podstawie rekordu kategorii
+     * @param \Cms\Orm\CmsCategoryRecord $record
      * @param \Mmi\Navigation\NavigationConfigElement $element
      * @return \Mmi\Navigation\NavigationConfigElement
      */
@@ -130,7 +136,24 @@ class Navigation
 		if ($record->description) {
 			$element->setDescription($record->description);
 		}
-        return $element;
+        return $this->_setNavigationElementRoles($record, $element);
     }
+	
+    /**
+     * Ustawia listę ról, które mają dostęp do elementu
+     * @param \Cms\Orm\CmsCategoryRecord $record
+     * @param \Mmi\Navigation\NavigationConfigElement $element
+     * @return \Mmi\Navigation\NavigationConfigElement
+     */
+    protected function _setNavigationElementRoles(CmsCategoryRecord $record, \Mmi\Navigation\NavigationConfigElement $element)
+    {
+		if ($this->_categoryRole === null) {
+			$this->_categoryRole = new \Cms\Model\CategoryRole($record);
+		} else {
+			$this->_categoryRole->setCategory($record);
+		}
+		$element->setRoles($this->_categoryRole->allowedFor());
+		return $element;
+	}
 
 }
