@@ -13,14 +13,14 @@
         <li class="page-item previous"><a class="page-link" data-page="{$_firstPage}" href="#">{$_previousLabel}</a>
         </li>
     {else}
-        <li class="page-item previous">{$_previousLabel}</li>
+        <li class="page-item previous"><a class="page-link" data-page="{$_firstPage}" href="#">{$_previousLabel}</a></li>
     {/if}
 
     {* generowanie strony pierwszej *}
     {if 1 == $_page}
-        <li class="page-item current">1</li>
+        <li class="page-item active"><a class="page-link" data-page="1" href="#">1</a></li>
     {else}
-        <li class="page-item"><a class="page-link" data-page="" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" data-page="1" href="#">1</a></li>
     {/if}
 
     {* obliczanie zakresów *}
@@ -45,7 +45,7 @@
     {* generowanie stron w zakresie *}
     {for $_i = $_rangeBegin; $_i <= $_rangeEnd; $_i++}
         {if $_i == $_page}
-            <li class="page-item current">{$_i}</li>
+            <li class="page-item active">{$_i}</li>
         {else}
             <li class="page-item"><a class="page-link" data-page="{$_i}" href="#">{$_i}</a></li>
         {/if}
@@ -58,7 +58,7 @@
 
     {* ostatnia strona w ogóle *}
     {if $_pagesCount == $_page}
-        <li class="page-item last current">{$_pagesCount}</li>
+        <li class="page-item last active">{$_pagesCount}</li>
     {else}
         <li class="page-item last page"><a class="page-link" data-page="{$_pagesCount}" href="#">{$_pagesCount}</a></li>
     {/if}
