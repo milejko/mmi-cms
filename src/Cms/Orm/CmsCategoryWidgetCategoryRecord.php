@@ -43,6 +43,7 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     /**
      * Zwraca rekord kategorii
      * @return CmsCategoryRecord
+     * @throws \Cms\Exception\CategoryWidgetException
      */
     public function getCategoryRecord()
     {
@@ -57,6 +58,7 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     /**
      * Zwraca rekord widgeta
      * @return CmsCategoryWidgetRecord
+     * @throws \Cms\Exception\CategoryWidgetException
      */
     public function getWidgetRecord()
     {

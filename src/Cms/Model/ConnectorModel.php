@@ -76,8 +76,8 @@ class ConnectorModel
 
     /**
      * Pobranie danych
-     * @param type $acl
-     * @param type $content
+     * @param bool $acl
+     * @param bool $content
      * @return array
      */
     public function getExportData($acl = true, $content = true)

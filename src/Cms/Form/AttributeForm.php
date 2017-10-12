@@ -102,6 +102,7 @@ abstract class AttributeForm extends Form
     /**
      * Zapisuje atrybuty powiązane z formularzem
      * @return bool
+     * @throws \Exception
      */
     public function afterSave()
     {

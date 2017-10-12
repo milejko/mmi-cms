@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -98,6 +98,7 @@ class File
      * @param string $destObject obiekt docelowy
      * @param int $destId docelowy id
      * @param int ilość przeniesionych
+     * @return int
      */
     public static function move($srcObject, $srcId, $destObject, $destId)
     {
@@ -121,6 +122,7 @@ class File
      * @param string $destObject obiekt docelowy
      * @param int $destId docelowy id
      * @param int ilość przeniesionych
+     * @return int
      */
     public static function copy($srcObject, $srcId, $destObject, $destId)
     {
@@ -138,6 +140,25 @@ class File
             $i++;
         }
         return $i;
+    }
+
+    /**
+     * @param $cmsFileRecord
+     * @param $destId
+     * @return CmsFileRecord|null
+     */
+    public static function copyWithData(CmsFileRecord $file, $destId)
+    {
+        $copy = new \Mmi\Http\RequestFile([
+            'name' => $file->original,
+            'tmp_name' => $file->getRealPath(),
+            'size' => $file->size
+        ]);
+        $newFile = self::appendFile($copy, $file->object, $destId);
+        $newFile->data = $file->data;
+        $newFile->sticky = $file->sticky;
+        $newFile->order = $file->order;
+        return ($newFile->save()) ? $newFile : null;
     }
 
     /**
@@ -195,8 +216,8 @@ class File
     {
         //wybieramy kolekcję i usuwamy całą
         return CmsFileQuery::byObject($object, $objectId)
-                ->find()
-                ->delete();
+            ->find()
+            ->delete();
     }
 
     /**

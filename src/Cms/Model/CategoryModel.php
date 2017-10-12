@@ -128,7 +128,9 @@ class CategoryModel
     /**
      * Buduje drzewo rekurencyjnie
      * @param array $tree
-     * @param integer $parentId
+     * @param array $parents
+     * @param array $orderedCategories
+     * @param CmsCategoryRecord|null $parentCategory
      */
     private function _buildTree(array &$tree, array $parents, array $orderedCategories, CmsCategoryRecord $parentCategory = null)
     {

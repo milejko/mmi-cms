@@ -2,13 +2,15 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
 namespace CmsAdmin;
+
+use Cms\Orm\CmsAttributeValueRecord;
 
 /**
  * Kontroler kategorii - stron CMS
@@ -157,6 +159,70 @@ class CategoryController extends Mvc\Controller
             return json_encode(['status' => false, 'error' => 'Nie można usunąć strony zawierającej strony podrzędne']);
         }
         return json_encode(['status' => false, 'error' => 'Nie udało się usunąć strony']);
+    }
+
+    /**
+     * Kopiowanie artykułu
+     */
+    public function copyAction()
+    {
+        $this->getResponse()->setTypePlain();
+        $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id);
+        $newCat = new \Cms\Orm\CmsCategoryRecord();
+        $newCat->setFromArray($cat->toArray());
+        $newCat->id = null;
+        $newCat->name = $cat->name . '_kopia';
+        $newCat->active = false;
+        $newCat->dateAdd = null;
+        $newCat->dateModify = null;
+        //zapis nowej kategorii i widgetów do niej
+        if ($newCat->save()) {
+            //kopiowanie relacji widgetów
+            $this->_copyWidgetRelations($cat, $newCat);
+            //kopiowanie relacji atrybut - kategoria
+            $this->_copyAttributeValues('category', $cat->id, $newCat->id);
+            //kopiowanie relacji atrybut - widget kategorii
+            $this->_copyAttributeValues('categoryWidgetRelation', $cat->id, $newCat->id);
+            return json_encode(['status' => true, 'id' => $newCat->id, 'message' => 'Strona została skopiowana']);
+        }
+        return json_encode(['status' => false, 'error' => 'Nie udało się skopiować strony']);
+    }
+
+    protected function _copyWidgetRelations($sourceCat, $destCat)
+    {
+        foreach ($sourceCat->getWidgetModel()->getWidgetRelations() as $widgetRelation) {
+            $relation = new \Cms\Orm\CmsCategoryWidgetCategoryRecord();
+            $relation->setFromArray($widgetRelation->toArray());
+            $relation->id = null;
+            $relation->cmsCategoryId = $destCat->id;
+            if (!$relation->save()) {
+                return false;
+            };
+            $files = (new \Cms\Model\AttributeValueRelationModel('categoryWidgetRelation', $widgetRelation->id))->getRelationFiles();
+            foreach ($files as $file) {
+                \Cms\Model\File::copyWithData($file, $relation->id);
+            }
+        }
+        return true;
+    }
+
+    protected function _copyAttributeValues($object, $sourceId, $destId)
+    {
+        //zrodlowe wartosci atrybutów
+        $sourceAttributeValues = (new \Cms\Model\AttributeValueRelationModel($object, $sourceId))->getAttributeValues();
+        //docelowa relacja
+        $destAttributeValueRelation = new \Cms\Model\AttributeValueRelationModel($object, $destId);
+        foreach ($sourceAttributeValues as $record) {
+            //tworze relacje atrybutu dla nowej kategorii
+            $destAttributeValueRelation->createAttributeValueRelationByValue($record->cmsAttributeId, $record->value);
+            //jesli uploader to kopiuje też pliki z danymi
+            if ($record->getJoined('cms_attribute_type')->uploader) {
+                $files = \Cms\Orm\CmsFileQuery::byObject($record->value, $sourceId)->find();
+                foreach ($files as $file) {
+                    \Cms\Model\File::copyWithData($file, $destId);
+                }
+            }
+        }
     }
 
 }

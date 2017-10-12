@@ -197,6 +197,7 @@ class PluploadHandler
     /**
      * Obsługa procesu odbierania pliku
      * @param boolean $headers Czy wysłać nagłówki no-cache
+     * @return bool
      */
     public function handle($headers = true)
     {
