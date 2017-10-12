@@ -10,40 +10,58 @@
 
 namespace CmsAdmin\Form\Stat;
 
-class Object extends \Mmi\Form\Form
+use Cms\Form\Element;
+
+/**
+ * Obiekt wyboru statystyki do podglądu
+ */
+class Object extends \Cms\Form\Form
 {
 
+    /**
+     * Konfiguracja formularza
+     */
     public function init()
     {
+        //obiekt
+        $this->addElement((new Element\Select('object'))
+                ->setLabel('statystyka')
+                ->setValue($this->getOption('object'))
+                ->setMultioptions([null => '---'] + (new \Cms\Orm\CmsStatLabelQuery)->orderAsc('label')->findPairs('object', 'label')));
 
-        $this->addElementSelect('object')
-            ->setLabel('statystyka')
-            ->setValue($this->getOption('object'))
-            ->setMultioptions([null => '---'] + (new \Cms\Orm\CmsStatLabelQuery)->orderAsc('label')->findPairs('object', 'label'));
+        //rok
+        $this->addElement((new Element\Select('year'))
+                ->setLabel('rok')
+                ->setValue($this->getOption('year'))
+                ->setMultioptions([date('Y') - 1 => date('Y') - 1, date('Y') => date('Y')]));
 
-        $this->addElementSelect('year')
-            ->setLabel('rok')
-            ->setValue($this->getOption('year'))
-            ->setMultioptions([date('Y') - 1 => date('Y') - 1, date('Y') => date('Y')]);
+        //miesiąc
+        $this->addElement((new Element\Select('month'))
+                ->setLabel('miesiąc')
+                ->setValue($this->getOption('month'))
+                ->setMultioptions($this->_getMonthMultioptions()));
+    }
 
-        $view = \Mmi\App\FrontController::getInstance()->getView();
-
-        $this->addElementSelect('month')
-            ->setLabel('miesiąc')
-            ->setValue($this->getOption('month'))
-            ->setMultioptions([1 => $view->getTranslate()->_('styczeń'),
-                2 => $view->getTranslate()->_('luty'),
-                3 => $view->getTranslate()->_('marzec'),
-                4 => $view->getTranslate()->_('kwiecień'),
-                5 => $view->getTranslate()->_('maj'),
-                6 => $view->getTranslate()->_('czerwiec'),
-                7 => $view->getTranslate()->_('lipiec'),
-                8 => $view->getTranslate()->_('sierpień'),
-                9 => $view->getTranslate()->_('wrzesień'),
-                10 => $view->getTranslate()->_('październik'),
-                11 => $view->getTranslate()->_('listopad'),
-                12 => $view->getTranslate()->_('grudzień'),
-        ]);
+    /**
+     * Zwraca miesiące rzymskie
+     * @return array
+     */
+    private function _getMonthMultioptions()
+    {
+        //budowa tabeli
+        return [1 => 'I',
+            2 => 'II',
+            3 => 'III',
+            4 => 'IV',
+            5 => 'V',
+            6 => 'VI',
+            7 => 'VII',
+            8 => 'VIII',
+            9 => 'IX',
+            10 => 'X',
+            11 => 'XI',
+            12 => 'XII',
+        ];
     }
 
 }

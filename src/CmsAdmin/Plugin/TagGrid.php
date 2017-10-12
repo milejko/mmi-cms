@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Plugin;
 
+use CmsAdmin\Grid\Column;
+
 /**
  * Grid tagów
  */
@@ -25,13 +27,13 @@ class TagGrid extends \CmsAdmin\Grid\Grid
         );
 
         //nazwa taga
-        $this->addColumnText('tag')
-            ->setLabel('tag');
+        $this->addColumn((new Column\TextColumn('tag'))
+            ->setLabel('tag'));
 
         //operacje
-        $this->addColumnOperation()
+        $this->addColumn((new Column\OperationColumn)
             ->setDeleteParams([])
-            ->setDeleteTagParams(['action' => 'delete', 'id' => '%id%']);
+            ->setDeleteTagParams(['action' => 'delete', 'id' => '%id%']));
     }
 
 }

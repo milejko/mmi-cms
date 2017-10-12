@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Plugin;
 
+use CmsAdmin\Grid\Column;
+
 /**
  * Grid tagów
  */
@@ -25,19 +27,19 @@ class TagRelationGrid extends \CmsAdmin\Grid\Grid
         );
 
         //nazwa taga
-        $this->addColumnText('cms_tag.tag')
-            ->setLabel('tag');
+        $this->addColumn((new Column\TextColumn('cms_tag.tag'))
+            ->setLabel('tag'));
 
         //obiekt
-        $this->addColumnText('object')
-            ->setLabel('zasób');
+        $this->addColumn((new Column\TextColumn('object'))
+            ->setLabel('zasób'));
 
         //id obiektu
-        $this->addColumnText('objectId')
-            ->setLabel('ID zasobu');
+        $this->addColumn((new Column\TextColumn('objectId'))
+            ->setLabel('ID zasobu'));
 
         //operacje
-        $this->addColumnOperation();
+        $this->addColumn(new Column\OperationColumn);
     }
 
 }

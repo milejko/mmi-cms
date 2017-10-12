@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Plugin;
 
+use CmsAdmin\Grid\Column;
+
 /**
  * Grid tekstów stałych
  */
@@ -24,23 +26,23 @@ class TextGrid extends \CmsAdmin\Grid\Grid
                 ->orderAscKey());
 
         //klucz
-        $this->addColumnText('key')
-            ->setLabel('klucz');
+        $this->addColumn((new Column\TextColumn('key'))
+            ->setLabel('klucz'));
 
         //język
-        $this->addColumnText('lang')
-            ->setLabel('język');
+        $this->addColumn((new Column\TextColumn('lang'))
+            ->setLabel('język'));
 
         //zawartość
-        $this->addColumnText('content')
-            ->setLabel('treść');
+        $this->addColumn((new Column\TextColumn('content'))
+            ->setLabel('treść'));
 
         //data modyfikacji
-        $this->addColumnText('dateModify')
-            ->setLabel('data modyfikacji');
+        $this->addColumn((new Column\TextColumn('dateModify'))
+            ->setLabel('data modyfikacji'));
 
         //operacje
-        $this->addColumnOperation();
+        $this->addColumn(new Column\OperationColumn);
     }
 
 }

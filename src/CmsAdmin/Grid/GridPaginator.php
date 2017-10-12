@@ -21,7 +21,7 @@ class GridPaginator
     /**
      * Template paginatora
      */
-    const TEMPLATE_PAGINATOR = 'cmsAdmin/grid/paginator';
+    const TEMPLATE = 'cmsAdmin/grid/paginator';
 
     /**
      * Obiekt grida
@@ -47,7 +47,7 @@ class GridPaginator
     {
         FrontController::getInstance()->getView()->_grid = $this->_grid;
         FrontController::getInstance()->getView()->_paginator = $this;
-        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_PAGINATOR);
+        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE);
     }
 
     /**

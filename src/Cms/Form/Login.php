@@ -10,6 +10,8 @@
 
 namespace Cms\Form;
 
+use Mmi\Form\Element;
+
 /**
  * Formularz logowania do CMS
  */
@@ -18,16 +20,16 @@ class Login extends \Mmi\Form\Form
 
     public function init()
     {
-        $this->addElementText('username')
+        $this->addElement((new Element\Text('username'))
             ->setLabel('Nazwa użytkownika')
-            ->addFilterStringTrim();
+            ->addFilter(new \Mmi\Filter\StringTrim));
 
-        $this->addElementPassword('password')
+        $this->addElement((new Element\Password('password'))
             ->setLabel('Hasło')
-            ->addFilterStringTrim();
+            ->addFilter(new \Mmi\Filter\StringTrim));
 
-        $this->addElementSubmit('submit')
-            ->setLabel('Zaloguj się');
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('Zaloguj się'));
     }
 
     /**

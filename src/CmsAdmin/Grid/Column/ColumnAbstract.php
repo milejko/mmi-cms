@@ -139,7 +139,7 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
      * Zwraca filtr dla pola
      * @return string
      */
-    public function getFilterValue()
+    public function getFilterValue($param = null)
     {
         //iteracja po filtrach w gridzie
         foreach ($this->_grid->getState()->getFilters() as $filter) {
@@ -150,6 +150,11 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
             }
             //znaleziony filtr dla tego pola (bez tabeli)
             if (!$filter->getTableName() && $filter->getField() == $this->getName()) {
+                /** @var \stdClass $value */
+                $valueObj = json_decode($filter->getValue());
+                if (null !== $param && is_object($valueObj) && property_exists($valueObj, $param)) {
+                    return $valueObj->{$param};
+                }
                 //zwrot wartości filtra
                 return $filter->getValue();
             }

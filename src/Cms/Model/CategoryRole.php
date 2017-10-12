@@ -45,10 +45,20 @@ class CategoryRole
 		$this->_roles = $roles;
 		$this->_prepareData();
     }
+	
+	/**
+	 * Ustawia rekord kategorii
+	 * @param \Cms\Orm\CmsCategoryRecord $category
+	 * @return \Cms\Model\CategoryRole
+	 */
+	public function setCategory(\Cms\Orm\CmsCategoryRecord $category) {
+		$this->_category = $category;
+		return $this;
+	}
 
     /**
-     * Czy dana rola ma dostęp do kategorii Cms - może wyświetlić
-     * @return $boolean
+     * Czy jest dostęp do kategorii Cms przez ustawione role - można wyświetlić
+     * @return boolean
      */
     public function isAllowed()
     {
@@ -62,6 +72,19 @@ class CategoryRole
 		}
         return true;
     }
+	
+	/**
+	 * Lista ról, które są uprawnione do wyświetlenia ustawionej kategorii
+	 * (jeśli brak ograniczeń, to zwracana jest pusta tablica)
+	 * @return array
+	 */
+	public function allowedFor()
+	{
+		if (array_key_exists($this->_category->id, $this->_acl)) {
+			return $this->_acl[$this->_category->id];
+		}
+		return [];
+	}
 	
 	/**
 	 * Przygotowuje dane - strukturę do sprawdzenia uprawnień

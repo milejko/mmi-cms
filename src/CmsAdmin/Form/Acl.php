@@ -10,10 +10,12 @@
 
 namespace CmsAdmin\Form;
 
+use Cms\Form\Element;
+
 /**
  * Klasa formularza ACL
  */
-class Acl extends \Mmi\Form\Form
+class Acl extends \Cms\Form\Form
 {
 
     public function init()
@@ -22,19 +24,19 @@ class Acl extends \Mmi\Form\Form
         $this->_record->cmsRoleId = \Mmi\App\FrontController::getInstance()->getRequest()->roleId;
 
         //parametry MVC
-        $this->addElementSelect('mvcParams')
-            ->setMultioptions(array_merge([null => '---'], \CmsAdmin\Model\Reflection::getOptionsWildcard()));
+        $this->addElement((new Element\Select('mvcParams'))
+            ->setMultioptions(array_merge([null => '---'], \CmsAdmin\Model\Reflection::getOptionsWildcard())));
 
         //dozwolone/zabronione
-        $this->addElementSelect('access')
+        $this->addElement((new Element\Select('access'))
             ->setMultioptions([
                 'allow' => 'dozwolone',
                 'deny' => 'zabronione'
-        ]);
+        ]));
 
         //zapis
-        $this->addElementSubmit('submit')
-            ->setLabel('dodaj regułę');
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('dodaj regułę'));
     }
 
     /**

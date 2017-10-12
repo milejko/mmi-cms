@@ -10,9 +10,16 @@
 
 namespace CmsAdmin\App\NavPart;
 
+/**
+ * Konfiguracja nawigatora logów systemowych
+ */
 class NavPartLog extends \Mmi\Navigation\NavigationConfig
 {
 
+    /**
+     * Zwraca menu
+     * @return \Mmi\Navigation\NavigationConfigElement
+     */
     public static function getMenu()
     {
         return (new \Mmi\Navigation\NavigationConfigElement)

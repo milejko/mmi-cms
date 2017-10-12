@@ -12,15 +12,6 @@ namespace CmsAdmin\Grid;
 
 /**
  * Abstrakcyjna klasa grida
- * 
- * @method Column\CheckboxColumn addColumnCheckbox($field) dodaje kolumnę checkbox
- * @method Column\CustomColumn addColumnCustom($field) dodaje kolumnę dowolną
- * @method Column\IndexColumn addColumnIndex() dodaje kolumnę indeksującą
- * @method Column\SelectColumn addColumnSelect($field) dodaje kolumnę select
- * @method Column\TextColumn addColumnText($field) dodaje kolumnę z danymi tekstowymi
- * @method Column\TextColumn addColumnTextarea($field) dodaje kolumnę z danymi tekstowymi długimi
- * @method Column\TextColumn addColumnJson($field) dodaje kolumnę z danymi JSON
- * @method Column\OperationColumn addColumnOperation() dodaje Column operacji na rekordzie
  */
 abstract class Grid extends \Mmi\OptionObject
 {
@@ -59,7 +50,7 @@ abstract class Grid extends \Mmi\OptionObject
         //tworzy obiekt stanu
         $this->_state = (new GridState)->setGrid($this);
         //indeks
-        $this->addColumnIndex();
+        $this->addColumn(new Column\IndexColumn);
         $this->init();
         //obsługa zapytań JSON do grida
         (new GridRequestHandler($this))->handleRequest();
@@ -175,25 +166,6 @@ abstract class Grid extends \Mmi\OptionObject
         } catch (\Exception $e) {
             return $e->getMessage() . ' ' . $e->getTraceAsString();
         }
-    }
-
-    /**
-     * Magicznie wywoływanie metod
-     * @param string $name
-     * @param array $params
-     * @return mixed
-     */
-    public function __call($name, $params)
-    {
-        $matches = [];
-        //obsługa addColumn
-        if (preg_match('/^addColumn([a-zA-Z0-9]+)/', $name, $matches)) {
-            $columnClass = '\\CmsAdmin\\Grid\\Column\\' . $matches[1] . 'Column';
-            //dodaje Column
-            return $this->addColumn(new $columnClass(isset($params[0]) ? $params[0] : null));
-        }
-        //obsługa nadrzędnych
-        return parent::__call($name, $params);
     }
 
 }
