@@ -121,14 +121,8 @@ class CategoryRole
 		if (!array_key_exists($categoryId, $this->_acl)) {
 			return true;
 		}
-		//dla każdej roli użytkownika
-		foreach ($this->_roles as $role) {
-			//sprawdzenie czy dopuszczona
-			if (in_array($role, $this->_acl[$categoryId])) {
-				return true;
-			}
-		}
-		return false;
+		//czy jest część wspólna
+		return [] !== array_intersect($this->_roles, $this->_acl[$categoryId]);
 	}
 	
 	/**
