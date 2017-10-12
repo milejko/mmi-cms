@@ -58,7 +58,7 @@
 
     {* ostatnia strona w ogóle *}
     {if $_pagesCount == $_page}
-        <li class="page-item last active">{$_pagesCount}</li>
+        <li class="page-item last active"><a class="page-link" data-page="{$_i}" href="#">{$_pagesCount}</a></li>
     {else}
         <li class="page-item last page"><a class="page-link" data-page="{$_pagesCount}" href="#">{$_pagesCount}</a></li>
     {/if}
@@ -67,6 +67,6 @@
     {if $_page < $_pagesCount}
         <li class="page-item next"><a class="page-link" data-page="{$_page + 1}" href="#">{$_nextLabel}</a></li>
     {else}
-        <li class="page-item next">{$_nextLabel}</li>
+        <li class="page-item next"><a class="page-link" data-page="{$_page + 1}" href="#">{$_nextLabel}</a></li>
     {/if}
 </ul>
