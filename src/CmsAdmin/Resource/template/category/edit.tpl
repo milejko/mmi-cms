@@ -43,7 +43,7 @@
                         </li>
                     {/if}
                     <li>
-                        <a href="{$categoryForm->getRecord()->getUrl()}?preview=1" target="_blank">Podgląd</a>
+                        <a class="reload-preview" href="#tab-preview">Podgląd</a>
                     </li>
                 </ul>
                 {$categoryForm->start()}
@@ -92,6 +92,9 @@
                     </div>
                 </div>
             {/if}
+            <div class="tab-content clearfix" id="tab-preview">
+                <iframe id="preview-frame" src="{$categoryForm->getRecord()->getUrl()}?preview=1"></iframe>
+            </div>
         {/if}
     </div>
 </div>

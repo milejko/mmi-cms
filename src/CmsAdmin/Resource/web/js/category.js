@@ -7,8 +7,10 @@ CMS.category = function () {
             initSortableWidgets,
             initNewWindowButtons,
             initWidgetButtons,
+            initPreviewReload,
             initCategoryChange,
-            reloadWidgets;
+            reloadWidgets,
+            resizeIframe;
 
     initSortableWidgets = function () {
         $('#widget-list').sortable({
@@ -68,6 +70,14 @@ CMS.category = function () {
         });
     };
 
+    initPreviewReload = function () {
+        $('#categoryContentContainer').on('click', 'a.reload-preview', function () {
+            var src = $('#preview-frame').attr('src');
+            $('#preview-frame').attr('src', '');
+            $('#preview-frame').attr('src', src);
+        });
+    };
+
     initCategoryChange = function () {
         $('#categoryContentContainer').on('change', '#cmsadmin-form-category-cmsCategoryTypeId', function () {
             $('#cmsadmin-form-category-submit1').click();
@@ -86,12 +96,23 @@ CMS.category = function () {
         });
     };
 
+    resizeIframe = function () {
+        //resize ramki tylko dla stron cms-owych
+        if ($('input#cmsadmin-form-category-redirectUri').size() && $('input#cmsadmin-form-category-redirectUri').first().val().length === 0) {
+            $('iframe#preview-frame').on('load', function () {
+                $(this).height($(this).contents().find('body').height());
+            });
+        }
+    };
+
     that.reloadWidgets = reloadWidgets;
 
     initSortableWidgets();
     initNewWindowButtons();
     initWidgetButtons();
+    initPreviewReload();
     initCategoryChange();
+    resizeIframe();
     return that;
 };
 
