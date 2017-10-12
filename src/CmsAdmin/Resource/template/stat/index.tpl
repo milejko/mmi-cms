@@ -9,51 +9,87 @@
     {$avgHourlyChart}
     {$avgHourlyAllChart}
 </script>
-<div class="content-box">
-    <div class="content-box-header">
-        <h3 class="charts">{if $label}{$label->label}{else}{#Statystyki#}{/if}{if $label}{/if}</h3>
-        <div class="clear"></div>
-    </div>
-    <div class="content-box-content clearfix">
-        {$objectForm}
-        <div class="clear"></div>
-        {if $label}
-            <p>{$label->description}</p>
-        {else}
-            <p>{#Ustaw parametry by przeglądać statystyki#}.</p>
-        {/if}
+<div class="container-fluid">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>{if $label}{$label->label}{else}{#Statystyki#}{/if}{if $label}{/if}</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                {$objectForm}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                {if $label}
+                                <p>{$label->description}</p>
+                                {else}
+                                <p>{#Ustaw parametry by przeglądać statystyki#}.</p>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+
+
 {if $label}
-    <div class="content-box">
-        <div class="content-box-header">
-            <h3>{#Statystyki dzienne#}</h3>
-            <div class="clear"></div>
-        </div>
-        <div class="content-box-content clearfix">
-            <div id="dailyChart" class="chart"></div>
-        </div>
-    </div>
-
-    <div class="content-box">
-        <div class="content-box-header">
-            <h3>{#Statystyki miesięczne#} / {#roczne#}</h3>
-            <div class="clear"></div>
-        </div>
-        <div class="content-box-content clearfix">
-            <div id="monthlyChart" class="chart"></div>
-            <div id="yearlyChart" class="chart"></div>
+<div class="container-fluid">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>{#Statystyki dzienne#}</strong>
+                    </div>
+                    <div class="card-body">
+                        <div id="dailyChart" class="chart"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="content-box">
-        <div class="content-box-header">
-            <h3>{#Rozkład godzinowy bieżący miesiąc#} / {#rozkład godzinowy od początku#}</h3>
-            <div class="clear"></div>
-        </div>
-        <div class="content-box-content clearfix">
-            <div id="avgHourlyChart" class="chart"></div>
-            <div id="avgHourlyAllChart" class="chart"></div>
+</div>
+<div class="container-fluid">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>{#Statystyki miesięczne#} / {#roczne#}</strong>
+                    </div>
+                    <div class="card-body">
+                        <div id="monthlyChart" class="chart"></div>
+                        <div id="yearlyChart" class="chart"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
+<div class="container-fluid">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>{#Rozkład godzinowy bieżący miesiąc#} / {#rozkład godzinowy od początku#}</strong>
+                    </div>
+                    <div class="card-body">
+                        <div id="avgHourlyChart" class="chart"></div>
+                        <div id="avgHourlyAllChart" class="chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {/if}

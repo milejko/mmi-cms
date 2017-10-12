@@ -1,9 +1,16 @@
-<div class="content-box">
-    <div class="content-box-header">
-        <h3>{if !$request->id}{#Dodawanie#}{else}{#Edycja#}{/if} {#atrybutu w szablonine#}</h3>
-        <div class="clear"></div>
-    </div>
-    <div class="content-box-content clearfix">
-        {$categoryTypeAttributeForm}
+<div class="container-fluid">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>{if !$request->id}{#Dodawanie#}{else}{#Edycja#}{/if} {#atrybutu w szablonine#}</strong>
+                    </div>
+                    <div class="card-body">
+                        {$categoryTypeAttributeForm}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
