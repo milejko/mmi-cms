@@ -8935,19 +8935,8 @@ h4 {
   width: 50%;
   float: left; }
 
-form div {
-  float: left;
-  margin: 0px 10px 0px 0px; }
-
 div.legend table {
   width: auto; }
 
 div.legend table td {
   padding: 0 2px; }
-
-form div {
-  margin-bottom: 10px; }
-
-form div, form.cmsadmin-form-categoryalcform label {
-  float: left;
-  width: 100%; }

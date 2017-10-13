@@ -16,7 +16,7 @@
     <div class="sidebar">
         <nav class="sidebar-nav">
             <ul class="nav">
-                {adminNavigation()->setRoot(1000000)->menu()}
+                {navigation()->setRoot(1000000)->menu()}
             </ul>
         </nav>
         <button class="sidebar-minimizer brand-minimizer" type="button"></button>
@@ -25,7 +25,7 @@
     <main class="main">
         {if $auth}
         <ol class="breadcrumb">
-            {adminNavigation()->breadcrumbs()}
+            {navigation()->breadcrumbs()}
         </ol>
         {/if}
         {content()}

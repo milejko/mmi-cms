@@ -36,5 +36,13 @@ class Submit extends \Mmi\Form\Element\Submit
         $this->addClass('form-control');
         parent::__construct($name);
     }
+    public function fetchField()
+    {
+        //labelka jako value
+        if ($this->getLabel()) {
+            $this->setValue($this->getLabel());
+        }
+        return '<input type="submit" class="btn btn-primary float-right"' . $this->_getHtmlOptions() . '/>';
+    }
 
 }
