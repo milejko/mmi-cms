@@ -16,4 +16,14 @@ namespace Cms\Form\Element;
 class Button extends \Mmi\Form\Element\Button
 {
     
+    /**
+     * Konstruktor
+     * @param string $name
+     */
+    public function __construct($name)
+    {
+        $this->addClass('form-control');
+        parent::__construct($name);
+    }
+    
 }
