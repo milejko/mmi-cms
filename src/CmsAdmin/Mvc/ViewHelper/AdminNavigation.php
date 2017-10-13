@@ -16,6 +16,11 @@ namespace CmsAdmin\Mvc\ViewHelper;
 class AdminNavigation extends \Mmi\Mvc\ViewHelper\Navigation
 {
 
+    /**
+     * Separator breadcrumbs
+     * @var string
+     */
+    protected $_separator = '';
     //szablon menu
     CONST TEMPLATE = 'cmsAdmin/mvc/view-helper/adminNavigation/menu-item';
 
