@@ -59,7 +59,7 @@ gulp.task('new_templates', ['clean_templates'], function () {
 
 gulp.task('serve:new', function () {
     return new Promise(function (suc, e) {
-        runSequence('sass', 'build:dist', 'new_assets', 'new_templates', suc)
+        runSequence('sass','copy_jstree', 'build:dist', 'new_assets', 'new_templates', suc)
     }).then(function () {
         browserSync.init({
             proxy: 'http://localhost/cmsAdmin'
