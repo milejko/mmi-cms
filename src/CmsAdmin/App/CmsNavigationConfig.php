@@ -37,7 +37,7 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
                 ->setLabel('CMS')
-                ->setModule('cmsAdmin')
+                ->setUri('#')
                 ->addChild(self::_getAdminPart())
                 ->addChild(NavPart\NavPartAttribute::getMenu())
                 ->addChild(NavPart\NavPartComment::getMenu())
