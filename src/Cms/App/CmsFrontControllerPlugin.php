@@ -35,6 +35,7 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
         \App\Registry::$auth = $auth;
         \Mmi\Mvc\ActionHelper::getInstance()->setAuth($auth);
         \Mmi\Mvc\ViewHelper\Navigation::setAuth($auth);
+        \CmsAdmin\Mvc\ViewHelper\AdminNavigation::setAuth($auth);
 
         //funkcja pamiętaj mnie realizowana poprzez cookie
         $cookie = new \Mmi\Http\Cookie;
@@ -62,6 +63,7 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
         \Mmi\App\FrontController::getInstance()->getView()->acl = \App\Registry::$acl = $acl;
         \Mmi\Mvc\ActionHelper::getInstance()->setAcl($acl);
         \Mmi\Mvc\ViewHelper\Navigation::setAcl($acl);
+        \CmsAdmin\Mvc\ViewHelper\AdminNavigation::setAcl($acl);
 
         //ustawienie nawigatora
         if (null === ($navigation = \App\Registry::$cache->load('mmi-cms-navigation-' . $request->__get('lang')))) {
@@ -73,6 +75,7 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
         $navigation->setup($request);
         //przypinanie nawigatora do helpera widoku nawigacji
         \Mmi\Mvc\ViewHelper\Navigation::setNavigation(\App\Registry::$navigation = $navigation);
+        \CmsAdmin\Mvc\ViewHelper\AdminNavigation::setNavigation(\App\Registry::$navigation = $navigation);
 
         //zablokowane na ACL
         if ($acl->isAllowed($auth->getRoles(), $actionLabel = strtolower($request->getModuleName() . ':' . $request->getControllerName() . ':' . $request->getActionName()))) {

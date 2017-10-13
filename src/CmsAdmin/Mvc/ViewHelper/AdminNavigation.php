@@ -13,7 +13,7 @@ namespace CmsAdmin\Mvc\ViewHelper;
 /**
  * Helper nawigatora
  */
-class Navigation extends \Mmi\Mvc\ViewHelper\HelperAbstract
+class AdminNavigation extends \Mmi\Mvc\ViewHelper\Navigation
 {
 
     /**
@@ -451,17 +451,9 @@ class Navigation extends \Mmi\Mvc\ViewHelper\HelperAbstract
      * Metoda główna, zwraca swoją instancję
      * @return \Mmi\Mvc\ViewHelper\Navigation
      */
-    public function navigation()
+    public function adminNavigation()
     {
-        //brak wygenerowanych breadcrumbów
-        if (null === $this->_breadcrumbs) {
-            return $this->_buildBreadcrumbs();
-        }
-        //ustawienia domyślne
-        return $this->setMaxDepth()
-                ->setMinDepth()
-                ->setActiveBranchOnly(false)
-                ->setAllowedOnly(true);
+        return parent::navigation();
     }
 
     /**
