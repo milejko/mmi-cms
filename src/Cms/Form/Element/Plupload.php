@@ -16,6 +16,16 @@ namespace Cms\Form\Element;
 class Plupload extends \Mmi\Form\Element\ElementAbstract
 {
 
+    //szablon początku pola
+    CONST TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    //szablon opisu
+    CONST TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    //szablon końca pola
+    CONST TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    //szablon błędów
+    CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    //szablon etykiety
+    CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
     CONST UPLOADER_ID_KEY = 'uploaderId';
 
     /**
