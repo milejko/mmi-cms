@@ -15,5 +15,15 @@ namespace Cms\Form\Element;
  */
 class Label extends \Mmi\Form\Element\Label
 {
-    
+
+    /**
+     * Konstruktor
+     * @param string $name
+     */
+    public function __construct($name)
+    {
+        $this->addClass('form-control');
+        parent::__construct($name);
+    }
+
 }

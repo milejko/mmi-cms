@@ -16,4 +16,14 @@ namespace Cms\Form\Element;
 class Checkbox extends \Mmi\Form\Element\Checkbox
 {
 
+    /**
+     * Konstruktor
+     * @param string $name
+     */
+    public function __construct($name)
+    {
+        $this->addClass('form-control');
+        parent::__construct($name);
+    }
+
 }
