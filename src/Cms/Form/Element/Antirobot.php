@@ -23,6 +23,7 @@ class Antirobot extends Hidden
     {
         parent::__construct($name);
         $this->setIgnore()
+            ->addClass('form-control')
             ->setRequired()
             ->addValidator(new \Cms\Validator\Antirobot);
     }
