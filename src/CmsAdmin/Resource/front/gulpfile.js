@@ -32,6 +32,10 @@ gulp.task('old_assets', ['clean_assets'], function () {
     return gulp.src(project_path.base, {base: './../base/'})
         .pipe(gulp.dest(project_path.output));
 });
+gulp.task('copy_jstree', function () {
+    return gulp.src('./jstree/**/*', {base: './'})
+        .pipe(gulp.dest(project_path.output));
+});
 
 gulp.task('new_assets', ['clean_assets'], function () {
     return gulp.src(project_path.front, {base: './dist'})
