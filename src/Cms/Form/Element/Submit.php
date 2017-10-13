@@ -16,4 +16,14 @@ namespace Cms\Form\Element;
 class Submit extends \Mmi\Form\Element\Submit
 {
 
+    /**
+     * Konstruktor
+     * @param string $name
+     */
+    public function __construct($name)
+    {
+        $this->addClass('form-control');
+        parent::__construct($name);
+    }
+
 }
