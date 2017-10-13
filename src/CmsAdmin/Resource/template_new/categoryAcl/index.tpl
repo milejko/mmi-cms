@@ -20,7 +20,7 @@
                                 {/foreach}
                             </div>
                             <div id="rules">
-                                <div class="tab-content">
+                                <div class="tab-content tab-aclForm">
                                     {$categoryAclForm}
                                 </div>
                             {else}

@@ -8940,3 +8940,8 @@ div.legend table {
 
 div.legend table td {
   padding: 0 2px; }
+
+.tab-aclForm {
+  padding: 10px; }
+  .tab-aclForm .btn {
+    margin: 10px; }
