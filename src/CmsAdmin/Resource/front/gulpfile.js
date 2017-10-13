@@ -32,6 +32,10 @@ gulp.task('old_assets', ['clean_assets'], function () {
     return gulp.src(project_path.base, {base: './../base/'})
         .pipe(gulp.dest(project_path.output));
 });
+gulp.task('copy_jstree', function () {
+    return gulp.src('./jstree/**/*', {base: './'})
+        .pipe(gulp.dest(project_path.output));
+});
 
 gulp.task('new_assets', ['clean_assets'], function () {
     return gulp.src(project_path.front, {base: './dist'})
@@ -55,7 +59,7 @@ gulp.task('new_templates', ['clean_templates'], function () {
 
 gulp.task('serve:new', function () {
     return new Promise(function (suc, e) {
-        runSequence('sass', 'build:dist', 'new_assets', 'new_templates', suc)
+        runSequence('sass','copy_jstree', 'build:dist', 'new_assets', 'new_templates', suc)
     }).then(function () {
         browserSync.init({
             proxy: 'http://localhost/cmsAdmin'
