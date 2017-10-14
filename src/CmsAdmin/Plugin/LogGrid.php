@@ -26,7 +26,7 @@ class LogGrid extends \CmsAdmin\Grid\Grid
             ->orderDescDateTime());
 
         //data i czas
-        $this->addColumn((new Column\TextColumn('dateTime'))
+        $this->addColumn((new Column\DateTimeColumn('dateTime'))
             ->setLabel('data i czas'));
 
         //operacja
