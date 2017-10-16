@@ -123,7 +123,7 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract
             ->unsetOption('datepicker')
             ->unsetOption('timepicker');
 
-        return '<input class="datePickerField" autocomplete="off" data-min-date="' . $this->_formatDate($dateMin) . '" data-max-date="' . $this->_formatDate($dateMax) . '" type="datetime" ' . $this->_getHtmlOptions() . '/>';
+        return '<input class="form-control datePickerField" autocomplete="off" data-min-date="' . $this->_formatDate($dateMin) . '" data-max-date="' . $this->_formatDate($dateMax) . '" type="datetime" ' . $this->_getHtmlOptions() . '/>';
     }
 
     /**

@@ -121,4 +121,7 @@ CMS.category = function () {
 $(document).ready(function () {
     "use strict";
     CMS.category();
+    $(function () {
+        $('#cat-tabs a:first').tab('show');
+    });
 });
