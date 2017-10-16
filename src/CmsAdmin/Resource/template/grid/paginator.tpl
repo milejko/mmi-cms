@@ -43,7 +43,7 @@
     {* generowanie stron w zakresie *}
     {for $_i = $_rangeBegin; $_i <= $_rangeEnd; $_i++}
         {if $_i == $_page}
-            <li class="page-item active">{$_i}</li>
+            <li class="page-item active"><a class="page-link" data-page="{$_i}" href="#">{$_i}</a></li>
         {else}
             <li class="page-item"><a class="page-link" data-page="{$_i}" href="#">{$_i}</a></li>
         {/if}
