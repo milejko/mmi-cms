@@ -26,6 +26,8 @@ class Checkbox extends \Mmi\Form\Element\Checkbox
     CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
     CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    //szablon pola
+    const TEMPLATE_FIELD = 'cmsAdmin/form/element/checkbox';
 
     /**
      * Konstruktor
