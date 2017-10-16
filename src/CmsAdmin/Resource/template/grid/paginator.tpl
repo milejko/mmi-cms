@@ -6,12 +6,14 @@
 {$_previousLabel = 'Prev'}
 {$_nextLabel = 'Next'}
 
-<ul class="pagination" data-name="{$_grid->getClass()}[_paginator_]">
+<ul class="pagination">
     {* pierwsza strona *}
     {if $_page > 1}
         {$_firstPage = (($_page - 1) > 1) ? ($_page - 1) : null}
         <li class="page-item previous"><a class="page-link" data-page="{$_firstPage}" href="#">{$_previousLabel}</a>
         </li>
+    {else}
+        <li class="page-item previous"><a class="page-link" data-page="{$_firstPage}" href="#">{$_previousLabel}</a></li>
     {/if}
 
     {* generowanie strony pierwszej *}

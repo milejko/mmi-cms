@@ -25,7 +25,7 @@ CMS.grid = function () {
 
         var stoptyping;
         var doFilter = true;
-        $('table.grid').on('keyup', "th > div.field > .field", function (event) {
+        $('table.table-striped').on('keyup', "th > div.form-group > .form-control", function (event) {
             if (event.which === 27) {
                 return;
             }
@@ -41,11 +41,11 @@ CMS.grid = function () {
             }, 500);
         });
 
-        $('table.grid').on('change', "th > div.field > select.field", function () {
+        $('table.table-striped').on('change', "th > div.form-group > select.form-control", function () {
             filter($(this));
         });
 
-        $('table.grid').on('input', "th > div.field > input.field", function () {
+        $('table.table-striped').on('input', "th > div.form-group > input.form-control", function () {
             if ($(this).val().length === 0) {
                 if (doFilter === true) {
                     filter($(this));
@@ -58,7 +58,7 @@ CMS.grid = function () {
             var filter = field.attr('name'),
                     value = field.val(),
                     fieldName = field.attr('name'),
-                    gridId = field.parent('div').parent('th').parent('tr').parent('tbody').parent('table').attr('id');
+                    gridId = field.parent().parent().parent().parent().parent().parent().find('table').attr("id");
             $.ajax({
                 url: window.location,
                 type: 'POST',
@@ -70,16 +70,16 @@ CMS.grid = function () {
                     $('#' + gridId).html(data);
                     $('input[name=\'' + fieldName + '\']').putCursorAtEnd();
                 }
-            });
+        });
         }
 
     };
 
     initGridOrder = function () {
         //sortowanie grida
-        $('table.grid').on('click', 'th > a.order', function () {
+        $('table.table-striped').on('click', 'th > div.form-group > a.order', function () {
             var field = $(this).attr('href'),
-                    gridId = $(this).parent('th').parent('tr').parent('tbody').parent('table').attr('id'),
+                    gridId = $(this).parent().parent().parent().parent().parent().parent().find('table').attr("id"),
                     method = $(this).attr('data-method');
             $.ajax({
                 url: window.location,
@@ -95,7 +95,7 @@ CMS.grid = function () {
 
     initGridOperation = function () {
         //akcja na zmianie checkboxa
-        $('table.grid').on('change', 'td > div.checkbox > input.checkbox', function () {
+        $('table.table-striped').on('change', 'td > div.control-checkbox > input.checkbox', function () {
             var id = $(this).attr('id').split('-');
             $.ajax({
                 url: window.location,

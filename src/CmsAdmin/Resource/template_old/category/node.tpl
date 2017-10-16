@@ -1,1 +1,0 @@
-{jsTreeNode($categoryTree, ($parentId === null)? true : false)}

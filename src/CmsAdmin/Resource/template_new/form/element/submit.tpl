@@ -1,1 +1,0 @@
-<button type="submit" {$_htmlOptions}></button>
