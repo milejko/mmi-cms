@@ -54,6 +54,28 @@ CMS.grid = function () {
             }
         });
 
+        function initDatePickers() {
+            $(".datePickerFieldFrom, .datePickerFieldTo").datetimepicker({
+                allowBlank: true,
+                scrollInput: false,
+                scrollMonth: false,
+                step: 60,
+                datepicker: true,
+                timepicker: true,
+                format: 'Y-m-d H:i',
+                validateOnBlur: true,
+                opened: false,
+                closeOnDateSelect: true,
+                onClose: function (current, element) {
+                    filter(element);
+                }
+            });
+
+            $.datetimepicker.setLocale('pl');
+        }
+
+        initDatePickers();
+
         function filter(field) {
             var filter = field.attr('name'),
                 value = field.val(),
@@ -64,8 +86,9 @@ CMS.grid = function () {
             if (field.parent().hasClass('date-time')) {
                 var from = field.parent().find('input.from').val(),
                     to = field.parent().find('input.to').val();
+                filter = field.data().name;
                 value = JSON.stringify({"from": from, "to": to});
-            };
+            }
             $.ajax({
                 url: window.location,
                 type: 'POST',
@@ -76,6 +99,7 @@ CMS.grid = function () {
                 success: function (data) {
                     $('#' + gridId).html(data);
                     $('input[name=\'' + fieldName + '\']').putCursorAtEnd();
+                    initDatePickers();
                 }
             });
         }
@@ -94,6 +118,7 @@ CMS.grid = function () {
                 data: {order: field, method: method},
                 success: function (data) {
                     $('#' + gridId).html(data);
+                    initDatePickers();
                 }
             });
             return false;
@@ -111,7 +136,6 @@ CMS.grid = function () {
             });
         });
     };
-
 
     initGridFilter();
     initGridOrder();

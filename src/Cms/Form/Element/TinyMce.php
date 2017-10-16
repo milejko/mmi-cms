@@ -105,6 +105,7 @@ class TinyMce extends Textarea
     {
         //wyłączenie CDN
         \Mmi\App\FrontController::getInstance()->getView()->setCdn(null);
+        $this->addClass('form-control');
         parent::__construct($name);
     }
 

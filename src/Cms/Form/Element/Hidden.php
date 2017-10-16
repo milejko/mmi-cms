@@ -16,4 +16,14 @@ namespace Cms\Form\Element;
 class Hidden extends \Mmi\Form\Element\Hidden
 {
 
+    /**
+     * Konstruktor
+     * @param string $name
+     */
+    public function __construct($name)
+    {
+        $this->addClass('form-control');
+        parent::__construct($name);
+    }
+
 }
