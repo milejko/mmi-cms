@@ -1,5 +1,3 @@
-{headLink()->appendStyleSheet('/resource/cmsAdmin/css/category.css')}
-{headScript()->appendFile('/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.js')}
 {headScript()->appendFile('/resource/cmsAdmin/js/category.js')}
 
 <div class="container-fluid">

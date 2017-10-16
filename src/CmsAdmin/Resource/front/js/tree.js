@@ -58,7 +58,10 @@ $(document).ready(function () {
         },
         'types': {
             '#': {'valid_children': ["root"]},
-            'root': {'valid_children': ["default", "leaf"], 'icon': request.baseUrl + '/resource/cmsAdmin/images/tree.png'},
+            'root': {
+                'valid_children': ["default", "leaf"],
+                'icon': request.baseUrl + '/resource/cmsAdmin/images/tree.png'
+            },
             'default': {'valid_children': ["default", "leaf"]},
             'leaf': {'valid_children': ["default", "leaf"]}
         },
@@ -97,121 +100,132 @@ $(document).ready(function () {
         },
         'plugins': ["state", "unique", "types", "contextmenu", "dnd", "wholerow"]
     })
-            .on('delete_node.jstree', function (e, data) {
-                CATEGORYCONF.hideMessage();
-                $.post(request.baseUrl + '/cmsAdmin/category/delete', {'id': data.node.id})
-                        .done(function (d) {
-                            if (d.status) {
-                                CATEGORYCONF.reload = true;
-                                $('#jstree').jstree('deselect_all');
-                                $('#jstree').jstree('select_node', data.parent);
-                            } else {
-                                data.instance.refresh();
-                            }
-                            CATEGORYCONF.showMessage(d);
-                        })
-                        .fail(function () {
-                            data.instance.refresh();
-                            CATEGORYCONF.showMessage({'error': 'Nie udało się usunąć strony'});
-                        });
+        .on('delete_node.jstree', function (e, data) {
+            CATEGORYCONF.hideMessage();
+            $.post(request.baseUrl + '/cmsAdmin/category/delete', {'id': data.node.id})
+                .done(function (d) {
+                    if (d.status) {
+                        CATEGORYCONF.reload = true;
+                        $('#jstree').jstree('deselect_all');
+                        $('#jstree').jstree('select_node', data.parent);
+                    } else {
+                        data.instance.refresh();
+                    }
+                    CATEGORYCONF.showMessage(d);
+                })
+                .fail(function () {
+                    data.instance.refresh();
+                    CATEGORYCONF.showMessage({'error': 'Nie udało się usunąć strony'});
+                });
+        })
+        .on('create_node.jstree', function (e, data) {
+            CATEGORYCONF.hideMessage();
+            $.post(request.baseUrl + '/cmsAdmin/category/create', {
+                'parentId': data.node.parent,
+                'order': data.position,
+                'name': data.node.text
             })
-            .on('create_node.jstree', function (e, data) {
-                CATEGORYCONF.hideMessage();
-                $.post(request.baseUrl + '/cmsAdmin/category/create', {'parentId': data.node.parent, 'order': data.position, 'name': data.node.text})
-                        .done(function (d) {
-                            if (d.status) {
-                                data.instance.set_id(data.node, d.id);
-                                $('#jstree').jstree('deselect_all');
-                                $('#jstree').jstree('select_node', d.id);
-                            } else {
-                                data.instance.refresh();
-                            }
-                            CATEGORYCONF.showMessage(d);
-                        })
-                        .fail(function () {
-                            data.instance.refresh();
-                            CATEGORYCONF.showMessage({'error': 'Nie udało się utworzyć strony'});
-                        });
-            })
-            .on('rename_node.jstree', function (e, data) {
-                CATEGORYCONF.hideMessage();
-                $.post(request.baseUrl + '/cmsAdmin/category/rename', {'id': data.node.id, 'name': data.text})
-                        .done(function (d) {
-                            if (d.status) {
-                                CATEGORYCONF.reload = true;
-                                data.node.text = d.name;
-                                $('#jstree').jstree('deselect_all');
-                                $('#jstree').jstree('select_node', d.id);
-                            } else {
-                                data.instance.refresh();
-                            }
-                            CATEGORYCONF.showMessage(d);
-                        })
-                        .fail(function () {
-                            data.instance.refresh();
-                            CATEGORYCONF.showMessage({'error': 'Nie udało się zmienić nazwy strony'});
-                        });
-            })
-            .on('move_node.jstree', function (e, data) {
-                CATEGORYCONF.hideMessage();
-                var params = {'id': data.node.id, 'parentId': data.parent, 'oldParentId': data.old_parent, 'order': data.position, 'oldOrder': data.old_position};
-                $.post(request.baseUrl + '/cmsAdmin/category/move', params)
-                        .done(function (d) {
-                            if (d.status) {
-                                CATEGORYCONF.reload = true;
-                                $('#jstree').jstree('deselect_all');
-                                $('#jstree').jstree('select_node', d.id);
-                            } else {
-                                data.instance.refresh();
-                            }
-                            CATEGORYCONF.showMessage(d);
-                        })
-                        .fail(function () {
-                            data.instance.refresh();
-                            CATEGORYCONF.showMessage({'error': 'Nie udało się przenieść strony'});
-                        });
-            })
-            .on('changed.jstree', function (e, data) {
-                if (!data || !data.selected || !data.selected.length || !(0 in data.selected)) {
+                .done(function (d) {
+                    if (d.status) {
+                        data.instance.set_id(data.node, d.id);
+                        $('#jstree').jstree('deselect_all');
+                        $('#jstree').jstree('select_node', d.id);
+                    } else {
+                        data.instance.refresh();
+                    }
+                    CATEGORYCONF.showMessage(d);
+                })
+                .fail(function () {
+                    data.instance.refresh();
+                    CATEGORYCONF.showMessage({'error': 'Nie udało się utworzyć strony'});
+                });
+        })
+        .on('rename_node.jstree', function (e, data) {
+            CATEGORYCONF.hideMessage();
+            $.post(request.baseUrl + '/cmsAdmin/category/rename', {'id': data.node.id, 'name': data.text})
+                .done(function (d) {
+                    if (d.status) {
+                        CATEGORYCONF.reload = true;
+                        data.node.text = d.name;
+                        $('#jstree').jstree('deselect_all');
+                        $('#jstree').jstree('select_node', d.id);
+                    } else {
+                        data.instance.refresh();
+                    }
+                    CATEGORYCONF.showMessage(d);
+                })
+                .fail(function () {
+                    data.instance.refresh();
+                    CATEGORYCONF.showMessage({'error': 'Nie udało się zmienić nazwy strony'});
+                });
+        })
+        .on('move_node.jstree', function (e, data) {
+            CATEGORYCONF.hideMessage();
+            var params = {
+                'id': data.node.id,
+                'parentId': data.parent,
+                'oldParentId': data.old_parent,
+                'order': data.position,
+                'oldOrder': data.old_position
+            };
+            $.post(request.baseUrl + '/cmsAdmin/category/move', params)
+                .done(function (d) {
+                    if (d.status) {
+                        CATEGORYCONF.reload = true;
+                        $('#jstree').jstree('deselect_all');
+                        $('#jstree').jstree('select_node', d.id);
+                    } else {
+                        data.instance.refresh();
+                    }
+                    CATEGORYCONF.showMessage(d);
+                })
+                .fail(function () {
+                    data.instance.refresh();
+                    CATEGORYCONF.showMessage({'error': 'Nie udało się przenieść strony'});
+                });
+        })
+        .on('changed.jstree', function (e, data) {
+            console.log(data)
+            if (!data || !data.selected || !data.selected.length || !(0 in data.selected)) {
+                return;
+            }
+            //jeśli nie jest to zaznaczenie, wychodzimy
+            if (data.action !== "select_node") {
+                return;
+            }
+            //jeśli aktualny url nie pochodzi z drzewka, wychodzimy
+            if (window.location.search.indexOf("from=tree") === -1 && window.location.search.indexOf("id=") !== -1 && !CATEGORYCONF.reload) {
+                if (parseFloat(request.id) === parseFloat(data.selected[0])) {
+                    CATEGORYCONF.reload = true;
+                }
+                return;
+            }
+            setTimeout(function () {
+                if (!CATEGORYCONF.reload && parseFloat(request.id) === parseFloat(data.selected[0])) {
                     return;
                 }
-                //jeśli nie jest to zaznaczenie, wychodzimy
-                if (data.action !== "select_node") {
+                if (CATEGORYCONF.contextMenu && !CATEGORYCONF.reload) {
+                    CATEGORYCONF.contextMenu = false;
                     return;
                 }
-                //jeśli aktualny url nie pochodzi z drzewka, wychodzimy
-                if (window.location.search.indexOf("from=tree") === -1 && window.location.search.indexOf("id=") !== -1 && !CATEGORYCONF.reload) {
-                    if (parseFloat(request.id) === parseFloat(data.selected[0])) {
+                if (CATEGORYCONF.reload || parseFloat(request.id) !== parseFloat(data.selected[0])) {
+                    CATEGORYCONF.loadUrl(data.selected[0]);
+                }
+            }, 150);
+        })
+        .on('state_ready.jstree', function (e, data) {
+            //jeśli aktualny url nie pochodzi z drzewka
+            if (window.location.search.indexOf("from=tree") === -1) {
+                resExp = window.location.search.match(/id=(\d+)/);
+                if (resExp !== null && parseFloat(resExp[1])) {
+                    $('#jstree').jstree('deselect_all');
+                    var selRes = $('#jstree').jstree('select_node', resExp[1]);
+                    if (selRes === false) {
                         CATEGORYCONF.reload = true;
                     }
-                    return;
                 }
-                setTimeout(function () {
-                    if (!CATEGORYCONF.reload && parseFloat(request.id) === parseFloat(data.selected[0])) {
-                        return;
-                    }
-                    if (CATEGORYCONF.contextMenu && !CATEGORYCONF.reload) {
-                        CATEGORYCONF.contextMenu = false;
-                        return;
-                    }
-                    if (CATEGORYCONF.reload || parseFloat(request.id) !== parseFloat(data.selected[0])) {
-                        CATEGORYCONF.loadUrl(data.selected[0]);
-                    }
-                }, 150);
-            })
-            .on('state_ready.jstree', function (e, data) {
-                //jeśli aktualny url nie pochodzi z drzewka
-                if (window.location.search.indexOf("from=tree") === -1) {
-                    resExp = window.location.search.match(/id=(\d+)/);
-                    if (resExp !== null && parseFloat(resExp[1])) {
-                        $('#jstree').jstree('deselect_all');
-                        var selRes = $('#jstree').jstree('select_node', resExp[1]);
-                        if (selRes === false) {
-                            CATEGORYCONF.reload = true;
-                        }
-                    }
-                }
-            });
+            }
+        });
 });
 
 //przeładowanie strony
@@ -225,19 +239,23 @@ CATEGORYCONF.loadUrl = function (nodeId) {
     };
     //przy ładowaniu zewnętrznej ramki wyrzuca cors
     //stop playerów tylko na wewnętrznych stronach
-    if ($('input#cmsadmin-form-category-redirectUri').size() && $('input#cmsadmin-form-category-redirectUri').first().val().length === 0) {
-        $('audio, video').each(function () {
-            stopPlaying(this);
-        });
-        $('iframe#preview-frame').contents().find('audio, video').each(function () {
-            stopPlaying(this);
-        });
+    if ($('input#cmsadmin-form-category-redirectUri').length === 1) {
+        if ($('input#cmsadmin-form-category-redirectUri').size() && $('input#cmsadmin-form-category-redirectUri').first().val().length === 0) {
+            $('audio, video').each(function () {
+                stopPlaying(this);
+            });
+            $('iframe#preview-frame').contents().find('audio, video').each(function () {
+                stopPlaying(this);
+            });
+        }
     }
     if (parseFloat(request.id) === parseFloat(nodeId) && window.location.search.indexOf("from=tree") !== -1) {
         window.location.reload();
     } else {
         window.location.assign(request.baseUrl + '/cmsAdmin/category/edit?id=' + nodeId + '&from=tree' + window.location.hash);
     }
+
+
 };
 
 CATEGORYCONF.showMessage = function (data) {

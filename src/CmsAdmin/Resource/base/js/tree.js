@@ -172,6 +172,7 @@ $(document).ready(function () {
                         });
             })
             .on('changed.jstree', function (e, data) {
+                console.log(data)
                 if (!data || !data.selected || !data.selected.length || !(0 in data.selected)) {
                     return;
                 }
@@ -225,6 +226,7 @@ CATEGORYCONF.loadUrl = function (nodeId) {
     };
     //przy ładowaniu zewnętrznej ramki wyrzuca cors
     //stop playerów tylko na wewnętrznych stronach
+    /*
     if ($('input#cmsadmin-form-category-redirectUri').size() && $('input#cmsadmin-form-category-redirectUri').first().val().length === 0) {
         $('audio, video').each(function () {
             stopPlaying(this);
@@ -238,6 +240,7 @@ CATEGORYCONF.loadUrl = function (nodeId) {
     } else {
         window.location.assign(request.baseUrl + '/cmsAdmin/category/edit?id=' + nodeId + '&from=tree' + window.location.hash);
     }
+    */
 };
 
 CATEGORYCONF.showMessage = function (data) {

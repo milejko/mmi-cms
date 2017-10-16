@@ -33,7 +33,7 @@ gulp.task('old_assets', ['clean_assets'], function () {
         .pipe(gulp.dest(project_path.output));
 });
 gulp.task('copy_jstree', function () {
-    return gulp.src('./jstree/**/*', {base: './'})
+    return gulp.src('./js/**/*', {base: './'})
         .pipe(gulp.dest(project_path.output));
 });
 

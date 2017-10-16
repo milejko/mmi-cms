@@ -13,17 +13,19 @@ CMS.category = function () {
             resizeIframe;
 
     initSortableWidgets = function () {
-        $('#widget-list').sortable({
-            handle: '.handle-widget',
-            update: function (event, ui) {
-                $.post(request.baseUrl + "/?module=cmsAdmin&controller=categoryWidgetRelation&action=sort&categoryId=" + $(this).attr('data-category-id'), $(this).sortable('serialize'),
+        if($('#widget-list').length > 0) {
+            $('#widget-list').sortable({
+                handle: '.handle-widget',
+                update: function (event, ui) {
+                    $.post(request.baseUrl + "/?module=cmsAdmin&controller=categoryWidgetRelation&action=sort&categoryId=" + $(this).attr('data-category-id'), $(this).sortable('serialize'),
                         function (result) {
                             if (result) {
                                 alert(result);
                             }
                         });
-            }
-        });
+                }
+            });
+        }
     };
 
     initNewWindowButtons = function () {
