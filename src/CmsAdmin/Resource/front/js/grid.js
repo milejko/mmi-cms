@@ -45,6 +45,24 @@ CMS.grid = function () {
             filter($(this));
         });
 
+
+        $('ul.pagination > li.page-item > a').on('click', function (evt){
+            var filter = $('ul.pagination').data('name'),
+                value = $(this).data('page'),
+                gridId = $('table').attr("id");
+            $.ajax({
+                url: window.location,
+                type: 'POST',
+                data: {filter: filter, value: value},
+                beforeSend: function () {
+                    $(this).addClass('grid-loader');
+                },
+                success: function (data) {
+                    $('#' + gridId).html(data);
+                }
+            });
+        });
+
         $('table.table-striped').on('input', "th > div.form-group > input.form-control", function () {
             if ($(this).val().length === 0) {
                 if (doFilter === true) {
