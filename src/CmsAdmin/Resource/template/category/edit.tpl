@@ -43,6 +43,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-auto">
                 <div class="card">
                     <div class="card-header">
@@ -102,6 +103,7 @@
                     </div>
                 </div>
             </div>
+            {/if}
             {/if}
         </div>
     </div>

@@ -1,2 +1,1 @@
-{* @TODO tu se Rafał rób *}
-<input type="checkbox" {$_multiOptions} />
+<input class="form-control" type="checkbox" {$_multiOptions} />
