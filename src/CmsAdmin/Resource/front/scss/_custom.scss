@@ -163,6 +163,14 @@ div.legend table td {
   }
 }
 
-.card-body {
-  overflow: auto;
+@include media-breakpoint-up(sm) {
+  .card-body {
+    overflow: scroll;
+  }
+}
+
+@include media-breakpoint-up(xs) {
+  .card-body {
+    overflow: scroll;
+  }
 }

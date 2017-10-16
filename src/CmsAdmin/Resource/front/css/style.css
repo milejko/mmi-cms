@@ -8946,5 +8946,9 @@ div.legend table td {
   .tab-aclForm .btn {
     margin: 10px; }
 
+@media (min-width: 576px) {
+  .card-body, .card-block {
+    overflow: scroll; } }
+
 .card-body, .card-block {
-  overflow: auto; }
+  overflow: scroll; }
