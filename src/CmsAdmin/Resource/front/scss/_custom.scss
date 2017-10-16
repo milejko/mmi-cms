@@ -165,12 +165,12 @@ div.legend table td {
 
 @include media-breakpoint-up(sm) {
   .card-body {
-    overflow: scroll;
+    overflow: auto;
   }
 }
 
 @include media-breakpoint-up(xs) {
   .card-body {
-    overflow: scroll;
+    overflow: auto;
   }
 }

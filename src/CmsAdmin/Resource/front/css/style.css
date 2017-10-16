@@ -8948,7 +8948,7 @@ div.legend table td {
 
 @media (min-width: 576px) {
   .card-body, .card-block {
-    overflow: scroll; } }
+    overflow: auto; } }
 
 .card-body, .card-block {
-  overflow: scroll; }
+  overflow: auto; }
