@@ -11,16 +11,16 @@
                         <strong>{#Uprawnienia ról#}</strong>
                     </div>
                     <div class="card-body">
-                        <div class="tabs btn-group" id="roles-list">
+
                             {foreach name="roles" $roles as $role}
-                                <button class="btn btn-outline-primary"{if $request->roleId && $request->roleId == $role->id}class="current"{$chosenRole = $role}{/if}>
+                                <button class="btn btn-outline-primary m-2"{if $request->roleId && $request->roleId == $role->id}class="current"{$chosenRole = $role}{/if}>
                                     <a href="{@module=cmsAdmin&controller=acl&action=index&roleId={$role->id}@}">{$role->name}</a>
                                 </button>
                             {/foreach}
-                        </div>
+
                         <div id="rules">
                             {if $request->roleId}
-                                <table class="grid striped">
+                                <table class="table table-striped">
                                     <tr>
                                         <th>{#Lp#}.</th>
                                         <th>{#zasób#}</th>
