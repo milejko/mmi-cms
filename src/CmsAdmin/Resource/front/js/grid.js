@@ -47,9 +47,8 @@ CMS.grid = function () {
 
 
         $('ul.pagination > li.page-item > a').on('click', function (evt){
-            var filter = 'pagination',
+            var filter = $('ul.pagination').data('name'),
                 value = $(this).data('page'),
-                fieldName = 'pagination',
                 gridId = $('table').attr("id");
             $.ajax({
                 url: window.location,
@@ -60,7 +59,6 @@ CMS.grid = function () {
                 },
                 success: function (data) {
                     $('#' + gridId).html(data);
-                    $('input[name=\'' + fieldName + '\']').putCursorAtEnd();
                 }
             });
         });
