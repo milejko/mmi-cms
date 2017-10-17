@@ -7,6 +7,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         {headLink()->appendStyleSheet('/resource/cmsAdmin/vendors/css/font-awesome.min.css')}
         {headLink()->appendStyleSheet('/resource/cmsAdmin/vendors/css/simple-line-icons.min.css')}
+        {headLink()->appendStyleSheet('/resource/cmsAdmin/css/chosen.min.css')}
+        {headLink()->appendStyleSheet('/resource/cmsAdmin/css/jquery-ui.min.css')}
+        {headLink()->appendStyleSheet('/resource/cmsAdmin/css/jquery-ui.structure.min.css')}
+        {headLink()->appendStyleSheet('/resource/cmsAdmin/css/jquery-ui.theme.min.css')}
         {headLink()->appendStyleSheet('/resource/cmsAdmin/css/style.css')}
         {headLink()}
     </head>
