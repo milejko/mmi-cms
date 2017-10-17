@@ -8852,6 +8852,13 @@ hr.transparent {
 .control-radio .control_indicator {
   border-radius: 0; }
 
+.control span {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.875rem;
+  font-weight: normal;
+  line-height: 1.5;
+  color: #151b1e; }
+
 .control:hover input ~ .control_indicator {
   background: #cccccc; }
 
