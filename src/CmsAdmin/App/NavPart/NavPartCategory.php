@@ -76,7 +76,12 @@ class NavPartCategory extends \Mmi\Navigation\NavigationConfig
                     ->setLabel('Uprawnienia')
                     ->setModule('cmsAdmin')
                     ->setController('categoryAcl')
-        );
+                )
+                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                    ->setLabel('Wyczyść bufor')
+                    ->setModule('cmsAdmin')
+                    ->setController('cache')
+                );
     }
 
 }
