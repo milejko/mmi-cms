@@ -35,8 +35,9 @@ class Checkbox extends \Mmi\Form\Element\Checkbox
      */
     public function __construct($name)
     {
-        $this->addClass('form-control');
         parent::__construct($name);
+        $this->setRenderingOrder(['fetchBegin', 'fetchField', 'fetchLabel', 'fetchDescription', 'fetchErrors', 'fetchEnd'])
+            ->addClass('form-control');
     }
 
 }
