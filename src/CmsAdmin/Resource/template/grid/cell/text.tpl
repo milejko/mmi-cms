@@ -2,6 +2,6 @@
     {$_value}
 {else}
     <span title="{$value}">
-        $truncated
+        {$truncated}
     </span>
 {/if}
