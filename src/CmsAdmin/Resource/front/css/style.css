@@ -9027,3 +9027,26 @@ ul.chosen-choices {
 
 #preview-frame {
   width: 100% !important; }
+
+.reddish {
+  color: red !important; }
+
+ul.wlist {
+  list-style-type: none;
+  margin: 0;
+  padding: 0; }
+  ul.wlist li {
+    background: #fff;
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    margin: 10px 0;
+    padding: 10px;
+    overflow: hidden;
+    clear: both; }
+    ul.wlist li div.preview {
+      float: left;
+      width: calc(100% - 60px); }
+    ul.wlist li div.operation {
+      float: right; }
+      ul.wlist li div.operation a {
+        margin-bottom: 5px; }

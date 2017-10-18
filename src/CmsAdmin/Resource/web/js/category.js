@@ -58,13 +58,13 @@ CMS.category = function () {
 
             $.get($(this).attr('href'), {'state': state});
             if (state === 1) {
-                $(this).children('i').attr('class', 'icon-eye-open');
+                $(this).children('i').attr('class', 'icon-eye');
                 $(this).attr('title', 'aktywny');
             } else if (state === 2) {
-                $(this).children('i').attr('class', 'icon-eye-open red');
+                $(this).children('i').attr('class', 'icon-eye reddish');
                 $(this).attr('title', 'roboczy');
             } else {
-                $(this).children('i').attr('class', 'icon-eye-close');
+                $(this).children('i').attr('class', 'fa fa-eye-slash');
                 $(this).attr('title', 'ukryty');
             }
             $(this).data('state', state);

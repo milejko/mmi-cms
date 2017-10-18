@@ -131,19 +131,19 @@ class OperationColumn extends ColumnAbstract
         }
         //link edycyjny ze sprawdzeniem ACL
         if (!empty($editParams) && (new AclAllowed)->aclAllowed($params = $this->_parseParams($editParams, $record))) {
-            $html .= '<a href="' . $view->url($params) . rtrim('#' . $this->getOption('editHashTarget'), '#') . '"><i class="icon-pencil"></i></a>&nbsp;&nbsp;';
+            $html .= '<a href="' . $view->url($params) . rtrim('#' . $this->getOption('editHashTarget'), '#') . '"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';
         }
         //link kasujący ze sprawdzeniem ACL
         if (!empty($deleteParams) && (new AclAllowed)->aclAllowed($params = $this->_parseParams($deleteParams, $record))) {
-            $html .= '<a href="' . $view->url($params) . rtrim('#' . $this->getOption('deleteHashTarget'), '#') . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
+            $html .= '<a href="' . $view->url($params) . rtrim('#' . $this->getOption('deleteHashTarget'), '#') . '" title="Czy na pewno usunąć" class="confirm"><i class="fa fa fa-trash-o"></i></a>&nbsp;&nbsp;';
         }
         //link kasujący tag
         if (!empty($deleteTagParams)) {
             if ($record->getJoined('cms_tag_relation')->id) {
-                $html .= '<a href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Tag jest przypisany do zasobu. Jeżeli zostanie usunięty nie ma możliwości przywrócenia relacji. Czy na pewno usunąć" class="confirm red"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
+                $html .= '<a href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Tag jest przypisany do zasobu. Jeżeli zostanie usunięty nie ma możliwości przywrócenia relacji. Czy na pewno usunąć" class="confirm red"><i class="fa fa fa-trash-o"></i></a>&nbsp;&nbsp;';
             }
             if (!$record->getJoined('cms_tag_relation')->id) {
-                $html .= '<a href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="icon-remove-circle"></i></a>&nbsp;&nbsp;';
+                $html .= '<a href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="fa fa fa-trash-o"></i></a>&nbsp;&nbsp;';
             }
         }
         return $html;
