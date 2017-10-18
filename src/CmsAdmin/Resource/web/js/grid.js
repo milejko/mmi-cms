@@ -54,6 +54,26 @@ CMS.grid = function () {
             }
         });
 
+        function filter(field) {
+            var filter = field.attr('name'),
+                value = field.val(),
+                fieldName = field.attr('name'),
+                gridId = field.parent('div').parent('th').parent('tr').parent('tbody').parent('table').attr('id');
+
+            $.ajax({
+                url: window.location,
+                type: 'POST',
+                data: {filter: filter, value: value},
+                beforeSend: function () {
+                    field.addClass('grid-loader');
+                },
+                success: function (data) {
+                    $('#' + gridId).html(data);
+                    $('input[name=\'' + fieldName + '\']').putCursorAtEnd();
+                }
+            });
+        }
+
         function initDatePickers() {
             $(".datePickerFieldFrom, .datePickerFieldTo").datetimepicker({
                 allowBlank: true,
@@ -67,28 +87,19 @@ CMS.grid = function () {
                 opened: false,
                 closeOnDateSelect: true,
                 onClose: function (current, element) {
-                    filter(element);
+                    filterDateRange(element);
                 }
             });
-
-            $.datetimepicker.setLocale('pl');
         }
 
+        $.datetimepicker.setLocale('pl');
         initDatePickers();
 
-        function filter(field) {
-            var filter = field.attr('name'),
-                value = field.val(),
-                fieldName = field.attr('name'),
+        function filterDateRange(field) {
+            var filter = field.data().name,
+                value = JSON.stringify({"from": field.parent().find('input.from').val(), "to": field.parent().find('input.to').val()}),
                 gridId = field.parent('div').parent('th').parent('tr').parent('tbody').parent('table').attr('id');
 
-            //obsługa filtrowania po dacie
-            if (field.parent().hasClass('date-time')) {
-                var from = field.parent().find('input.from').val(),
-                    to = field.parent().find('input.to').val();
-                filter = field.data().name;
-                value = JSON.stringify({"from": from, "to": to});
-            }
             $.ajax({
                 url: window.location,
                 type: 'POST',
@@ -98,7 +109,6 @@ CMS.grid = function () {
                 },
                 success: function (data) {
                     $('#' + gridId).html(data);
-                    $('input[name=\'' + fieldName + '\']').putCursorAtEnd();
                     initDatePickers();
                 }
             });
