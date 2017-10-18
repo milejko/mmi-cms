@@ -45,13 +45,19 @@ gulp.task('new_assets', ['clean_assets'], function () {
 
 gulp.task('serve:new', function () {
     return new Promise(function (suc, e) {
-        runSequence('sass','copy_jstree', 'build:dist', 'new_assets', suc)
+        runSequence('sass','copy_jstree', 'build:dist', 'new_assets', suc);
     }).then(function () {
         browserSync.init({
             proxy: 'http://localhost/cmsAdmin'
         });
         gulp.watch('./scss/**/*.scss', ['sass', 'new_assets'], browserSync.reload);
     })
+});
+
+gulp.task('build:prod', function(){
+    return new Promise(function (suc, e) {
+        runSequence('sass','copy_jstree', 'build:dist', 'new_assets');
+    });
 });
 
 gulp.task('sass', function () {
