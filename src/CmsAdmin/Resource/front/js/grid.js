@@ -17,12 +17,8 @@ var CMS = CMS ? CMS : {};
 
 CMS.grid = function () {
     "use strict";
-    var initGridFilter,
-            initGridOrder,
-            initGridOperation;
 
-    initGridFilter = function () {
-
+    var initGridFilter = function () {
         var stoptyping;
         var doFilter = true;
         $('table.table-striped').on('keyup', "th > div.form-group > .form-control", function (event) {
@@ -46,7 +42,7 @@ CMS.grid = function () {
         });
 
 
-        $('ul.pagination > li.page-item > a').on('click', function (evt){
+        $('ul.pagination > li.page-item > a').on('click', function (evt) {
             var filter = $('ul.pagination').data('name'),
                 value = $(this).data('page'),
                 gridId = $('table').attr("id");
@@ -74,9 +70,9 @@ CMS.grid = function () {
 
         function filter(field) {
             var filter = field.attr('name'),
-                    value = field.val(),
-                    fieldName = field.attr('name'),
-                    gridId = field.parent().parent().parent().parent().parent().parent().find('table').attr("id");
+                value = field.val(),
+                fieldName = field.attr('name'),
+                gridId = field.parent().parent().parent().parent().parent().parent().find('table').attr("id");
             $.ajax({
                 url: window.location,
                 type: 'POST',
@@ -88,17 +84,17 @@ CMS.grid = function () {
                     $('#' + gridId).html(data);
                     $('input[name=\'' + fieldName + '\']').putCursorAtEnd();
                 }
-        });
+            });
         }
 
     };
 
-    initGridOrder = function () {
+    var initGridOrder = function () {
         //sortowanie grida
         $('table.table-striped').on('click', 'th > div.form-group > a.order', function () {
             var field = $(this).attr('href'),
-                    gridId = $(this).parent().parent().parent().parent().parent().parent().find('table').attr("id"),
-                    method = $(this).attr('data-method');
+                gridId = $(this).parent().parent().parent().parent().parent().parent().find('table').attr("id"),
+                method = $(this).attr('data-method');
             $.ajax({
                 url: window.location,
                 type: 'POST',
@@ -111,7 +107,12 @@ CMS.grid = function () {
         });
     };
 
-    initGridOperation = function () {
+    var initDt = function () {
+        $(".dtFrom").datetimepicker({format:'Y-m-d H:i'});
+        $(".dtTo").datetimepicker({format:'Y-m-d H:i'});
+    };
+
+    var initGridOperation = function () {
         //akcja na zmianie checkboxa
         $('table.table-striped').on('change', 'td > div.control-checkbox > input.checkbox', function () {
             var id = $(this).attr('id').split('-');
@@ -127,6 +128,7 @@ CMS.grid = function () {
     initGridFilter();
     initGridOrder();
     initGridOperation();
+    initDt();
 };
 
 $(document).ready(function () {
