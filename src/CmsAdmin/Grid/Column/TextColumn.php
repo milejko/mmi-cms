@@ -29,23 +29,9 @@ class TextColumn extends ColumnAbstract
 {
 
     /**
-     * Template filtra text
-     */
-    const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/text';
-
-    /**
      * Template komorki text
      */
     const TEMPLATE_CELL = 'cmsAdmin/grid/cell/text';
-
-    /**
-     * @return string
-     */
-    public function renderFilter()
-    {
-        FrontController::getInstance()->getView()->_column = $this;
-        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_FILTER);
-    }
 
     /**
      * Renderuje pole tekstowe

@@ -28,6 +28,8 @@ use Mmi\App\FrontController;
 abstract class ColumnAbstract extends \Mmi\OptionObject
 {
 
+    const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/text';
+
     /**
      * Obiekt grida
      * @var \CmsAdmin\Grid\Grid
@@ -101,14 +103,9 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
      */
     public function renderFilter()
     {
-        //brak property
-        if (!$this->isFieldInRecord()) {
-            return;
-        }
         //zwrot filtra
-        return (new \Mmi\Form\Element\Text($this->getFormColumnName()))
-            ->setOption('data-method', $this->getOption('method'))
-            ->setValue($this->getFilterValue());
+        FrontController::getInstance()->getView()->_column = $this;
+        return FrontController::getInstance()->getView()->renderTemplate(static::TEMPLATE_FILTER);
     }
 
     /**
