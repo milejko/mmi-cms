@@ -3,11 +3,15 @@
 {headScript()->appendFile('/resource/cmsAdmin/js/tooltip.js')}
 {headLink()->appendStylesheet('/resource/cmsAdmin/css/stat.css')}
 <script type="text/javascript">
-    {$dailyChart}
-    {$monthlyChart}
-    {$yearlyChart}
-    {$avgHourlyChart}
-    {$avgHourlyAllChart}
+    document.onreadystatechange = function () {
+        if (document.readyState === 'complete') {
+            {$dailyChart}
+            {$monthlyChart}
+            {$yearlyChart}
+            {$avgHourlyChart}
+            {$avgHourlyAllChart}
+        }
+    };
 </script>
 <div class="container-fluid">
     <div class="animated fadeIn">
