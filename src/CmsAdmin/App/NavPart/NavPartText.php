@@ -24,8 +24,11 @@ class NavPartText extends \Mmi\Navigation\NavigationConfig
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
                 ->setLabel('Teksty stałe')
-                ->setModule('cmsAdmin')
-                ->setController('text')
+                ->setUri('#')
+                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                    ->setLabel('Lista tekstów')
+                    ->setModule('cmsAdmin')
+                    ->setController('text'))
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setLabel('Dodaj')
                     ->setModule('cmsAdmin')

@@ -24,18 +24,21 @@ class NavPartStat extends \Mmi\Navigation\NavigationConfig
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
                 ->setLabel('Statystyki')
-                ->setModule('cmsAdmin')
-                ->setController('stat')
+                ->setUri('#')
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
-                    ->setLabel('Nazwy')
+                    ->setLabel('Wykresy')
+                    ->setModule('cmsAdmin')
+                    ->setController('stat'))
+                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                    ->setLabel('Typy statystyk')
                     ->setModule('cmsAdmin')
                     ->setController('stat')
-                    ->setAction('label')
-                    ->addChild((new \Mmi\Navigation\NavigationConfigElement)
-                        ->setLabel('Dodaj')
-                        ->setModule('cmsAdmin')
-                        ->setController('stat')
-                        ->setAction('edit')));
+                    ->setAction('label'))
+                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                    ->setLabel('Dodaj typ')
+                    ->setModule('cmsAdmin')
+                    ->setController('stat')
+                    ->setAction('edit'));
     }
 
 }

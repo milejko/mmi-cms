@@ -40,15 +40,13 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig
                 ->setLabel('CMS')
                 ->setUri('#')
                 ->addChild(NavPart\NavPartAttribute::getMenu())
-                ->addChild(NavPart\NavPartComment::getMenu())
+                //->addChild(NavPart\NavPartComment::getMenu())
                 ->addChild(NavPart\NavPartContact::getMenu())
                 ->addChild(NavPart\NavPartFile::getMenu())
                 ->addChild(NavPart\NavPartStat::getMenu())
                 ->addChild(NavPart\NavPartTag::getMenu())
                 ->addChild(NavPart\NavPartText::getMenu())
                 ->addChild(NavPart\NavPartCategory::getMenu())
-                ->addChild(NavPart\NavPartAuth::getMenu())
-                ->addChild(NavPart\NavPartConnector::getMenu())
         ;
     }
 
@@ -74,9 +72,16 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig
                     ->setLabel('Logowanie CMS')
                     ->setDisabled(true))
                 ->addChild(NavPart\NavPartCron::getMenu())
+                ->addChild(NavPart\NavPartConnector::getMenu())
                 ->addChild(NavPart\NavPartLog::getMenu())
                 ->addChild(NavPart\NavPartMail::getMenu())
-                ->addChild(NavPart\NavPartAcl::getMenu());
+                ->addChild(NavPart\NavPartAcl::getMenu())
+                ->addChild(NavPart\NavPartAuth::getMenu())
+                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                    ->setLabel('Wyczyść bufor')
+                    ->setModule('cmsAdmin')
+                    ->setController('cache'))
+        ;
     }
 
 }
