@@ -166,7 +166,7 @@ class CategoryController extends Mvc\Controller
      */
     public function copyAction()
     {
-        $this->getResponse()->setTypePlain();
+        $this->getResponse()->setTypeJson();
         $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id);
         $newCat = new \Cms\Orm\CmsCategoryRecord();
         $newCat->setFromArray($cat->toArray());

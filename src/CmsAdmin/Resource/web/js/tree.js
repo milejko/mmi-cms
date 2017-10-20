@@ -73,6 +73,7 @@ $(document).ready(function () {
                 tmp.create.label = "Utwórz podstronę";
                 tmp.rename.label = "Zmień nazwę";
                 tmp.remove.label = "Usuń";
+                //kopia artykułu z menu kontekstowego
                 tmp.copy = {
                     "label": "Kopiuj",
                     "action": function (data) {
@@ -82,6 +83,7 @@ $(document).ready(function () {
                         $.post(request.baseUrl + '/cmsAdmin/category/copy', {'id': node.id})
                             .done(function (d) {
                                 if (d.status) {
+                                    CATEGORYCONF.reload = true;
                                     inst.set_id(node, d.id);
                                     $('#jstree').jstree('deselect_all');
                                     $('#jstree').jstree('select_node', d.id);
