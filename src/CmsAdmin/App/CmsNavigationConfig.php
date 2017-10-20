@@ -26,6 +26,7 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig
                 ->setLabel('Panel administracyjny')
                 ->setModule('cmsAdmin')
                 ->setController('index')
+                ->addChild(self::_getAdminPart())
                 ->addChild(self::_getContentPart());
     }
 
@@ -38,7 +39,6 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig
         return (new \Mmi\Navigation\NavigationConfigElement)
                 ->setLabel('CMS')
                 ->setUri('#')
-                ->addChild(self::_getAdminPart())
                 ->addChild(NavPart\NavPartAttribute::getMenu())
                 ->addChild(NavPart\NavPartComment::getMenu())
                 ->addChild(NavPart\NavPartContact::getMenu())
@@ -60,7 +60,7 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
                 ->setLabel('Administracja')
-                ->setModule('cmsAdmin')
+                ->setUri('#')
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setModule('cmsAdmin')
                     ->setController('index')

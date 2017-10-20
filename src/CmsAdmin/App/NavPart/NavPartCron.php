@@ -24,13 +24,18 @@ class NavPartCron extends \Mmi\Navigation\NavigationConfig
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
                 ->setLabel('Cron')
-                ->setModule('cmsAdmin')
-                ->setController('cron')
+                ->setUri('#')
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
-                    ->setLabel('Dodaj')
+                    ->setLabel('Lista zadań')
+                    ->setModule('cmsAdmin')
+                    ->setModule('cmsAdmin')
+                    ->setController('cron'))
+                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                    ->setLabel('Dodaj zadanie')
                     ->setModule('cmsAdmin')
                     ->setController('cron')
-                    ->setAction('edit'));
+                    ->setAction('edit')
+        );
     }
 
 }

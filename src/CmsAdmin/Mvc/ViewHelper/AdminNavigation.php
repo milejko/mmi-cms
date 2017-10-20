@@ -113,10 +113,7 @@ class AdminNavigation extends \Mmi\Mvc\ViewHelper\Navigation
                 $childHtml .= $menuItem['subMenu'];
             }
             //nadawanie klas html
-            $menuItem['class'] = (isset($menuItem['active']) && $menuItem['active']) ? '' : '';
-
-            //$menuItem['class'] .= ($index == 0) ? 'first ' : '';
-            //$menuItem['class'] .= ($index == ($count - 1)) ? 'last ' : '';
+            $menuItem['class'] = (isset($menuItem['active']) && $menuItem['active']) ? 'active' : '';
             //obiekt do widoku
             $this->view->_menuItem = $menuItem;
             //render itemu
@@ -130,8 +127,6 @@ class AdminNavigation extends \Mmi\Mvc\ViewHelper\Navigation
         }
         //jeśli wyrenderowano HTML
         return $html;
-        //
-        //? ' <ul class="nav-dropdown-items">' . $html . '</ul>' : ''
     }
 
     /**
