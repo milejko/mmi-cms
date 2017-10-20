@@ -13,9 +13,7 @@
                     <div class="card-body">
 
                             {foreach name="roles" $roles as $role}
-                                <button class="btn btn-outline-primary m-2"{if $request->roleId && $request->roleId == $role->id}class="current"{$chosenRole = $role}{/if}>
-                                    <a href="{@module=cmsAdmin&controller=acl&action=index&roleId={$role->id}@}">{$role->name}</a>
-                                </button>
+                                    <a href="{@module=cmsAdmin&controller=acl&action=index&roleId={$role->id}@}" class="btn btn-outline-primary m-2"{if $request->roleId && $request->roleId == $role->id}class="current"{$chosenRole = $role}{/if}>{$role->name}</a>
                             {/foreach}
 
                         <div id="rules">

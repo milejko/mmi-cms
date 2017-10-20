@@ -14,9 +14,7 @@
                         {if $roles|count}
                             <div class="tabs btn-group" id="roles-list">
                                 {foreach name="roles" $roles as $role}
-                                    <button class="btn btn-outline-primary" {if $request->roleId && $request->roleId == $role->id}class="current"{/if}>
-                                        <a href="{@module=cmsAdmin&controller=categoryAcl&action=index&roleId={$role->id}@}">{$role->name}</a>
-                                    </button>
+                                        <a class="btn btn-outline-primary" {if $request->roleId && $request->roleId == $role->id}class="current"{/if} href="{@module=cmsAdmin&controller=categoryAcl&action=index&roleId={$role->id}@}">{$role->name}</a>
                                 {/foreach}
                             </div>
                             <div id="rules">
