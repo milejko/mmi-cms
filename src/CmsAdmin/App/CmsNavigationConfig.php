@@ -60,6 +60,7 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
                 ->setLabel('Administracja')
+                ->setIcon('icon-list')
                 ->setUri('#')
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setModule('cmsAdmin')
