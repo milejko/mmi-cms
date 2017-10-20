@@ -12,9 +12,11 @@
                     </div>
                     <div class="card-body">
 
+                        <div class="tabs btn-group">
                             {foreach name="roles" $roles as $role}
-                                    <a href="{@module=cmsAdmin&controller=acl&action=index&roleId={$role->id}@}" class="btn btn-outline-primary m-2"{if $request->roleId && $request->roleId == $role->id}class="current"{$chosenRole = $role}{/if}>{$role->name}</a>
+                                    <a class="btn btn-outline-primary{if $request->roleId && $request->roleId == $role->id} active{$chosenRole = $role}{/if}" href="{@module=cmsAdmin&controller=acl&action=index&roleId={$role->id}@}">{$role->name}</a>
                             {/foreach}
+                        </div>
 
                         <div id="rules">
                             {if $request->roleId}
@@ -50,13 +52,13 @@
                                               </div>
                                             </td>
                                             <td>
-                                                <a id="rule-remove-{$rule->id}" class="remove-rule confirm" title="{#Czy na pewno chcesz usunąć tę regułę#}" href="#"><i class="icon-remove-circle"></i></a>
+                                                <a id="rule-remove-{$rule->id}" class="remove-rule confirm" title="{#Czy na pewno chcesz usunąć tę regułę#}" href="#"><i class="fa fa2 fa-trash-o"></i></a>
                                             </td>
                                         </tr>
                                     {/foreach}
                                 </table>
                                 {if $chosenRole && $chosenRole->name != 'admin' && $chosenRole->name != 'guest'}
-                                    <br /><a class="button confirm" title="Usunąć rolę" href="{@module=cmsAdmin&controller=acl&action=deleteRole&id={$request->roleId}@}"><i class="icon-trash"></i> usuń rolę</a>
+                                    <br /><a class="button confirm" title="Usunąć rolę" href="{@module=cmsAdmin&controller=acl&action=deleteRole&id={$request->roleId}@}"><i class="fa fa2 fa-trash-o"></i> usuń rolę</a>
                                 {/if}
                                 <br /> <br />
                                 <h5>{#Nowa reguła#}:</h5>
