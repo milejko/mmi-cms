@@ -10,6 +10,7 @@
 
 namespace CmsAdmin;
 
+use Cms\Model\AttributeValueRelationModel;
 use Cms\Orm\CmsAttributeValueRecord;
 
 /**
@@ -177,12 +178,10 @@ class CategoryController extends Mvc\Controller
         $newCat->dateModify = null;
         //zapis nowej kategorii i widgetów do niej
         if ($newCat->save()) {
-            //kopiowanie relacji widgetów
-            $this->_copyWidgetRelations($cat, $newCat);
             //kopiowanie relacji atrybut - kategoria
             $this->_copyAttributeValues('category', $cat->id, $newCat->id);
-            //kopiowanie relacji atrybut - widget kategorii
-            $this->_copyAttributeValues('categoryWidgetRelation', $cat->id, $newCat->id);
+            //kopiowanie relacji widgetów
+            $this->_copyWidgetRelations($cat, $newCat);
             return json_encode(['status' => true, 'id' => $newCat->id, 'message' => 'Strona została skopiowana']);
         }
         return json_encode(['status' => false, 'error' => 'Nie udało się skopiować strony']);
@@ -198,9 +197,20 @@ class CategoryController extends Mvc\Controller
             if (!$relation->save()) {
                 return false;
             };
-            $files = (new \Cms\Model\AttributeValueRelationModel('categoryWidgetRelation', $widgetRelation->id))->getRelationFiles();
-            foreach ($files as $file) {
-                \Cms\Model\File::copyWithData($file, $relation->id);
+
+            (new AttributeValueRelationModel('categoryWidgetRelation', $relation->id))->deleteAttributeValueRelations();
+
+            $relationAttributes = $widgetRelation->getAttributeValues();
+            foreach ($relationAttributes as $key => $value) {
+                $attribute = (new \Cms\Orm\CmsAttributeQuery)->withTypeByKey($key)->findFirst();
+                if ($attribute->getJoined('cms_attribute_type')->uploader) {
+                    foreach ($value as $file) {
+                        \Cms\Model\File::copyWithData($file, $relation->id);
+                    }
+                    (new AttributeValueRelationModel('categoryWidgetRelation', $relation->id))->createAttributeValueRelationByValue($attribute->id, 'categoryWidgetRelation' . ucfirst($key));
+                    continue;
+                }
+                (new AttributeValueRelationModel('categoryWidgetRelation', $relation->id))->createAttributeValueRelationByValue($attribute->id, $value);
             }
         }
         return true;
@@ -210,11 +220,10 @@ class CategoryController extends Mvc\Controller
     {
         //zrodlowe wartosci atrybutów
         $sourceAttributeValues = (new \Cms\Model\AttributeValueRelationModel($object, $sourceId))->getAttributeValues();
-        //docelowa relacja
-        $destAttributeValueRelation = new \Cms\Model\AttributeValueRelationModel($object, $destId);
+        //iteracja po atrybutach
         foreach ($sourceAttributeValues as $record) {
             //tworze relacje atrybutu dla nowej kategorii
-            $destAttributeValueRelation->createAttributeValueRelationByValue($record->cmsAttributeId, $record->value);
+            (new \Cms\Model\AttributeValueRelationModel($object, $destId))->createAttributeValueRelationByValue($record->cmsAttributeId, $record->value);
             //jesli uploader to kopiuje też pliki z danymi
             if ($record->getJoined('cms_attribute_type')->uploader) {
                 $files = \Cms\Orm\CmsFileQuery::byObject($record->value, $sourceId)->find();
