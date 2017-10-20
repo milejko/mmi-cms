@@ -6,7 +6,7 @@ jQuery.fn.putCursorAtEnd = function () {
         $(this).focus();
         if (this.setSelectionRange) {
             var len = $(this).val().length * 2;
-            this.setSelectionRange(len, len);
+            //this.setSelectionRange(len, len);
         } else {
             $(this).val($(this).val());
         }
@@ -18,9 +18,15 @@ var CMS = CMS ? CMS : {};
 CMS.grid = function () {
     "use strict";
 
+    var initDt = function () {
+        $(".dtFrom").datetimepicker({format:'Y-m-d H:i'});
+        $(".dtTo").datetimepicker({format:'Y-m-d H:i'});
+    };
+
     var initGridFilter = function () {
         var stoptyping;
         var doFilter = true;
+
         $('table.table-striped').on('keyup', "th > div.form-group > .form-control", function (event) {
             if (event.which === 27) {
                 return;
@@ -55,6 +61,7 @@ CMS.grid = function () {
                 },
                 success: function (data) {
                     $('#' + gridId).html(data);
+                    initDt();
                 }
             });
         });
@@ -83,6 +90,7 @@ CMS.grid = function () {
                 success: function (data) {
                     $('#' + gridId).html(data);
                     $('input[name=\'' + fieldName + '\']').putCursorAtEnd();
+                    initDt();
                 }
             });
         }
@@ -101,17 +109,12 @@ CMS.grid = function () {
                 data: {order: field, method: method},
                 success: function (data) {
                     $('#' + gridId).html(data);
+                    initDt();
                 }
             });
             return false;
         });
     };
-
-    var initDt = function () {
-        $(".dtFrom").datetimepicker({format:'Y-m-d H:i'});
-        $(".dtTo").datetimepicker({format:'Y-m-d H:i'});
-    };
-
     var initGridOperation = function () {
         //akcja na zmianie checkboxa
         $('table.table-striped').on('change', 'td > div.control-checkbox > input.checkbox', function () {
@@ -119,7 +122,10 @@ CMS.grid = function () {
             $.ajax({
                 url: window.location,
                 type: 'POST',
-                data: {id: id[1], name: id[0], value: $(this).val(), checked: $(this).is(':checked')}
+                data: {id: id[1], name: id[0], value: $(this).val(), checked: $(this).is(':checked')},
+                success: function() {
+                    initDt();
+                }
             });
         });
     };
@@ -134,4 +140,8 @@ CMS.grid = function () {
 $(document).ready(function () {
     "use strict";
     CMS.grid();
+    var initDt = function () {
+        $(".dtFrom").datetimepicker({format:'Y-m-d H:i'});
+        $(".dtTo").datetimepicker({format:'Y-m-d H:i'});
+    };
 });
