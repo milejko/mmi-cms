@@ -24,6 +24,7 @@ class NavPartAcl extends \Mmi\Navigation\NavigationConfig
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
                 ->setLabel('Uprawnienia')
+                ->setIcon('fa-linux')
                 ->setModule('cmsAdmin')
                 ->setController('acl');
     }

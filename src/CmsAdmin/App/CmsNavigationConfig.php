@@ -58,17 +58,19 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
                 ->setLabel('Administracja')
-                ->setIcon('icon-list')
+                ->setIcon('fa-list')
                 ->setUri('#')
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setModule('cmsAdmin')
                     ->setController('index')
+                    ->setIcon('fa-unlock-alt')
                     ->setAction('password')
                     ->setLabel('Zmiana hasła'))
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setModule('cmsAdmin')
                     ->setController('index')
                     ->setAction('login')
+                    ->setIcon('fa-unlock-alt')
                     ->setLabel('Logowanie CMS')
                     ->setDisabled(true))
                 ->addChild(NavPart\NavPartCron::getMenu())
@@ -80,6 +82,7 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setLabel('Wyczyść bufor')
                     ->setModule('cmsAdmin')
+                    ->setIcon('fa-exclamation-triangle ')
                     ->setController('cache'))
         ;
     }

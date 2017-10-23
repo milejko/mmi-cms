@@ -24,6 +24,7 @@ class NavPartLog extends \Mmi\Navigation\NavigationConfig
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
                 ->setLabel('Log systemowy')
+                ->setIcon('fa-table')
                 ->setModule('cmsAdmin')
                 ->setController('log');
     }
