@@ -23,6 +23,12 @@ CMS.grid = function () {
         $(".dtTo").datetimepicker({format:'Y-m-d H:i'});
     };
 
+    var quickSwitch = function(data){
+        $('#CmsAdminPluginLogGrid').html(data.body);
+        $('#CmsAdminPluginLogGrid-paginator').html(data.paginator);
+        initDt();
+    };
+
     var initGridFilter = function () {
         var stoptyping;
         var doFilter = true;
@@ -59,9 +65,8 @@ CMS.grid = function () {
                 beforeSend: function () {
                     $(this).addClass('grid-loader');
                 },
-                success: function (data) {
-                    $('#' + gridId).html(data);
-                    initDt();
+                success:  function (data) {
+                    quickSwitch(data);
                 }
             });
         });
@@ -88,9 +93,8 @@ CMS.grid = function () {
                     field.addClass('grid-loader');
                 },
                 success: function (data) {
-                    $('#' + gridId).html(data);
                     $('input[name=\'' + fieldName + '\']').putCursorAtEnd();
-                    initDt();
+                    quickSwitch(data);
                 }
             });
         }
@@ -108,13 +112,13 @@ CMS.grid = function () {
                 type: 'POST',
                 data: {order: field, method: method},
                 success: function (data) {
-                    $('#' + gridId).html(data);
-                    initDt();
+                    quickSwitch(data);
                 }
             });
             return false;
         });
     };
+
     var initGridOperation = function () {
         //akcja na zmianie checkboxa
         $('table.table-striped').on('change', 'td > div.control-checkbox > input.checkbox', function () {
@@ -129,7 +133,6 @@ CMS.grid = function () {
             });
         });
     };
-
 
     initGridFilter();
     initGridOrder();

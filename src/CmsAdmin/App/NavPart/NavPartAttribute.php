@@ -24,6 +24,7 @@ class NavPartAttribute extends \Mmi\Navigation\NavigationConfig
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
                 ->setLabel('Atrybuty')
+                ->setIcon('fa-linode')
                 ->setUri('#')
                 ->setModule('cmsAdmin')
                 ->setController('attribute')

@@ -38,6 +38,7 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
                 ->setLabel('CMS')
+                ->setIcon('fa-connectdevelop')
                 ->setUri('#')
                 ->addChild(NavPart\NavPartAttribute::getMenu())
                 //->addChild(NavPart\NavPartComment::getMenu())
@@ -83,8 +84,7 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig
                     ->setLabel('Wyczyść bufor')
                     ->setModule('cmsAdmin')
                     ->setIcon('fa-exclamation-triangle ')
-                    ->setController('cache'))
-        ;
+                    ->setController('cache'));
     }
 
 }
