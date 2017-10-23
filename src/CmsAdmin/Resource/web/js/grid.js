@@ -26,6 +26,9 @@ CMS.grid = function () {
     var quickSwitch = function(data){
         $('#CmsAdminPluginLogGrid').html(data.body);
         $('#CmsAdminPluginLogGrid-paginator').html(data.paginator);
+        initGridFilter();
+        initGridOrder();
+        initGridOperation();
         initDt();
     };
 

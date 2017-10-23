@@ -87,14 +87,14 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
         $html = '<a class="order" href="#' . $this->getFormColumnName() . '" data-method="' . $this->_getOrderMethod() . '">' . ($this->getLabel() ? $this->getLabel() : $this->getName()) . '</a>';
         //brak sortowania
         if (!$this->_getOrderMethod()) {
-            return $html;
+            return $html . ' <i class="fa fa-sort" style="color:#20a8d8"></i>';
         }
         //ikona w dół
         if ($this->_getOrderMethod() == 'orderDesc') {
-            return $html . ' <i class="icon-download"></i>';
+            return $html . ' <i class="fa fa-sort-desc" style="color:#20a8d8"></i>';
         }
         //ikona w górę
-        return $html . ' <i class="icon-upload"></i>';
+        return $html . ' <i class="fa fa-sort-asc" style="color:#20a8d8"></i>';
     }
 
     /**
