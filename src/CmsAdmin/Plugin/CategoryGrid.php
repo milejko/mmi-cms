@@ -52,7 +52,6 @@ class CategoryGrid extends \CmsAdmin\Grid\Grid
 
         //operacje
         $this->addColumn((new Column\CustomColumn('operation'))
-            ->setLabel('operacje')
             ->setTemplateCode('{$id = $record->id}{if categoryAclAllowed($id)}<a href="{@module=cmsAdmin&controller=category&action=edit&id={$id}@}"><i class="fa fa-2 fa-edit"></i></a>&nbsp;&nbsp;<a href="{@module=cmsAdmin&controller=category&action=delete&id={$id}@}" title="Czy na pewno usunąć" class="confirm"><i class="fa fa-2 fa-trash-o"></i></a>{else}-{/if}')
         );
             

@@ -33,7 +33,7 @@ class OperationColumn extends ColumnAbstract
     public function __construct()
     {
         //ustawia domyślne parametry
-        $this->setLabel('operacje')
+        $this->setLabel('<div style="width: 40px; text-align: center;"><i class="fa fa-2 fa-gears"></i></div>')
             ->setEditParams()
             ->setDeleteParams();
         //ustawia nazwę na _operation_
