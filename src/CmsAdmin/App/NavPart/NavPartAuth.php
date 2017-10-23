@@ -28,7 +28,7 @@ class NavPartAuth extends \Mmi\Navigation\NavigationConfig
                 ->setUri('#')
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setLabel('Lista użytkowników')
-                    ->setIcon('fa-list')
+                    ->setIcon('fa-table')
                     ->setModule('cmsAdmin')
                     ->setController('auth'))
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)

@@ -28,7 +28,7 @@ class NavPartCron extends \Mmi\Navigation\NavigationConfig
                 ->setUri('#')
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setLabel('Lista zadań')
-                    ->setIcon('fa-list')
+                    ->setIcon('fa-table')
                     ->setModule('cmsAdmin')
                     ->setModule('cmsAdmin')
                     ->setController('cron'))

@@ -24,6 +24,7 @@ class NavPartFile extends \Mmi\Navigation\NavigationConfig
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
                 ->setLabel('Pliki')
+            ->setIcon('fa-file')
                 ->setModule('cmsAdmin')
                 ->setController('file');
     }
