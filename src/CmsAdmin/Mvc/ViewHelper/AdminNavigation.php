@@ -114,6 +114,7 @@ class AdminNavigation extends \Mmi\Mvc\ViewHelper\Navigation
             }
             //nadawanie klas html
             $menuItem['class'] = (isset($menuItem['active']) && $menuItem['active']) ? 'active' : '';
+            $menuItem['depth'] = $depth;
             //obiekt do widoku
             $this->view->_menuItem = $menuItem;
             //render itemu
