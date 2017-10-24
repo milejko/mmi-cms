@@ -85,16 +85,19 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
             return $this->getLabel() ? $this->getLabel() : $this->getName();
         }
         $html = '<a class="order" href="#' . $this->getFormColumnName() . '" data-method="' . $this->_getOrderMethod() . '">' . ($this->getLabel() ? $this->getLabel() : $this->getName());
+
         //brak sortowania
         if (!$this->_getOrderMethod()) {
-            return $html . ' <i class="fa fa-sort" style="color:#20a8d8"></i></a>';
+            return $html . ' <i class="fa fa-2 fa-sort" style="color:#20a8d8"></i></a>';
         }
+
         //ikona w dół
         if ($this->_getOrderMethod() == 'orderDesc') {
-            return $html . ' <i class="fa fa-sort-desc" style="color:#20a8d8"></i></a>';
+            return $html . ' <i class="fa fa-2 fa-sort-desc" style="color:#20a8d8"></i></a>';
         }
+
         //ikona w górę
-        return $html . ' <i class="fa fa-sort-asc" style="color:#20a8d8"></i></a>';
+        return $html . ' <i class="fa fa-2 fa-sort-asc" style="color:#20a8d8"></i></a>';
     }
 
     /**

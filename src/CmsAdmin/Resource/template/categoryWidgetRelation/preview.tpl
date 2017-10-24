@@ -7,7 +7,7 @@
             </div>
             <div class="operation">
                 {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'config'])}
-                    <a href="{@module=cmsAdmin&controller=categoryWidgetRelation&action=config&widgetId={$widgetRelation->getWidgetRecord()->id}&categoryId={$category->id}&id={$widgetRelation->id}@}" class="button new-window edit" target="_blank" title="zmień widget"><i class="fa fa-pencil-square-o fa-2"></i></a><br />
+                    <a href="{@module=cmsAdmin&controller=categoryWidgetRelation&action=config&widgetId={$widgetRelation->getWidgetRecord()->id}&categoryId={$category->id}&id={$widgetRelation->id}@}" class="button new-window edit" target="_blank" title="zmień widget"><i class="fa fa-pencil-square-o pull-right fa-2"></i></a><br />
                     {/if}
                     {if $widgetRelation->active == 1}
                         {$class='open'}
@@ -20,13 +20,13 @@
                         {$title='ukryty'}
                     {/if}
                     {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'toggle'])}
-                    <a href="{@module=cmsAdmin&controller=categoryWidgetRelation&action=toggle&widgetId={$widgetRelation->getWidgetRecord()->id}&categoryId={$category->id}&id={$widgetRelation->id}@}" data-state="{$widgetRelation->active}" class="button toggle-widget" target="_blank" title="{$title}"><i class="fa fa-eye fa-2{$class}"></i></a><br />
+                    <a href="{@module=cmsAdmin&controller=categoryWidgetRelation&action=toggle&widgetId={$widgetRelation->getWidgetRecord()->id}&categoryId={$category->id}&id={$widgetRelation->id}@}" data-state="{$widgetRelation->active}" class="button toggle-widget" target="_blank" title="{$title}"><i class="fa fa-eye pull-right fa-2 {$class}"></i></a><br />
                     {/if}
                     {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'sort'])}
-                    <a href="#" class="button handle-widget" title="sortuj"><i class="fa fa-sort"></i></a><br />
+                    <a href="#" class="button handle-widget" title="sortuj"><i class="fa fa-2 mr-fix-6  pull-right fa-sort"></i></a><br />
                     {/if}
                     {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'delete'])}
-                    <a href="{@module=cmsAdmin&controller=categoryWidgetRelation&action=delete&categoryId={$category->id}&id={$widgetRelation->id}@}" class="button delete-widget" target="_blank" title="usuń widget"><i class="fa fa-trash-o fa-2"></i></a>
+                    <a href="{@module=cmsAdmin&controller=categoryWidgetRelation&action=delete&categoryId={$category->id}&id={$widgetRelation->id}@}" class="button delete-widget" target="_blank" title="usuń widget"><i class="fa fa-trash-o mr-fix-3 pull-right fa-2"></i></a>
                     {/if}
             </div>
         </li>

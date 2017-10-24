@@ -9052,7 +9052,7 @@ ul.wlist {
         margin-bottom: 5px; }
 
 .fa-2 {
-  font-size: 2em !important; }
+  font-size: 1.7em !important; }
 
 .fa-3 {
   font-size: 3em !important; }
@@ -9062,3 +9062,9 @@ ul.wlist {
 
 .fa-5 {
   font-size: 5em !important; }
+
+.mr-fix-3 {
+  margin-right: 3px !important; }
+
+.mr-fix-6 {
+  margin-right: 6px !important; }
