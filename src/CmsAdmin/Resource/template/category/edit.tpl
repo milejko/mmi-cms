@@ -31,13 +31,13 @@
                     <div class="card">
                         <div class="card-header" role="tab" id="headingOne">
                             <h5 class="mb-0">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#tab-config" aria-expanded="true" aria-controls="collapseOne">
                                     {#Konfiguracja#}
                                 </a>
                             </h5>
                         </div>
 
-                        <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne">
+                        <div id="tab-config" class="collapse show" role="tabpanel" aria-labelledby="headingOne">
                             <div class="card-block">
                                 {$categoryForm->getElement('cmsCategoryTypeId')}
                                 {$categoryForm->getElement('cmsCategoryTypeChanged')}
@@ -54,12 +54,12 @@
                     <div class="card">
                         <div class="card-header" role="tab" id="headingTwo">
                             <h5 class="mb-0">
-                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#tab-content" aria-expanded="false" aria-controls="collapseTwo">
                                     {#Atrybuty#}
                                 </a>
                             </h5>
                         </div>
-                        <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
+                        <div id="tab-content" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
                             <div class="card-block">
                                 {foreach $categoryForm->getElements() as $element}
                                 {if php_substr($element->getName(), 0 ,12) != 'cmsAttribute'}{continue}{/if}
@@ -72,12 +72,12 @@
                     <div class="card">
                         <div class="card-header" role="tab" id="headingThree">
                             <h5 class="mb-0">
-                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#tab-advanced" aria-expanded="false" aria-controls="collapseThree">
                                     {#Zaawansowane#}
                                 </a>
                             </h5>
                         </div>
-                        <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree">
+                        <div id="tab-advanced" class="collapse" role="tabpanel" aria-labelledby="headingThree">
                             <div class="card-block">
                                 {$categoryForm->getElement('redirectUri')}
                                 {$categoryForm->getElement('mvcParams')}
@@ -95,12 +95,12 @@
                     <div class="card">
                         <div class="card-header" role="tab" id="headingThree">
                             <h5 class="mb-0">
-                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
+                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#tab-widget" aria-expanded="false" aria-controls="collapseThree">
                                     {#Widgety#}
                                 </a>
                             </h5>
                         </div>
-                        <div id="collapseFour" class="collapse" role="tabpanel" aria-labelledby="collapseFour">
+                        <div id="tab-widget" class="collapse" role="tabpanel" aria-labelledby="collapseFour">
                             <div class="card-block">
                                 {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action'
                                 => 'add'])}<a
@@ -115,12 +115,12 @@
                     <div class="card">
                         <div class="card-header" role="tab" id="headingThree">
                             <h5 class="mb-0">
-                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseThree">
+                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#tab-preview" aria-expanded="false" aria-controls="collapseThree">
                                     {#Podgląd#}
                                 </a>
                             </h5>
                         </div>
-                        <div id="collapseFive" class="collapse" role="tabpanel" aria-labelledby="collapseFive">
+                        <div id="tab-preview" class="collapse" role="tabpanel" aria-labelledby="collapseFive">
                             <div class="card-block">
                                 <iframe id="preview-frame" src="{$categoryForm->getRecord()->getUrl()}?preview=1"></iframe>
                             </div>

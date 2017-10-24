@@ -9068,3 +9068,6 @@ ul.wlist {
 
 .mr-fix-6 {
   margin-right: 6px !important; }
+
+.nav-dropdown-items .nav-item .nav-link, .nav-dropdown-items .nav-item .navbar .dropdown-toggle, .navbar .nav-dropdown-items .nav-item .dropdown-toggle {
+  padding-left: 25px !important; }

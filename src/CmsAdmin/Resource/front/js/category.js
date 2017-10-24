@@ -109,6 +109,16 @@ CMS.category = function () {
 
     that.reloadWidgets = reloadWidgets;
 
+    var dataTabRestore = function(){
+        var currentTab = sessionStorage.getItem('catActiveTab');
+        $('h5 > a').on('click', function (evt) {
+            sessionStorage.setItem('catActiveTab', $(this).attr("href"));
+        });
+       if(currentTab){
+           $('a[href$="'+currentTab+'"]').click();
+       }
+    };
+    dataTabRestore();
     initSortableWidgets();
     initNewWindowButtons();
     initWidgetButtons();
