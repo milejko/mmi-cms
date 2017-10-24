@@ -268,9 +268,11 @@ ul.chosen-choices {
 #preview-frame {
   width: 100% !important;
 }
-.reddish{
-  color:red !important;
+
+.reddish {
+  color: red !important;
 }
+
 ul {
   &.wlist {
     list-style-type: none;
@@ -298,4 +300,20 @@ ul {
       }
     }
   }
+}
+
+.fa-2 {
+  font-size: 2em !important;
+}
+
+.fa-3 {
+  font-size: 3em !important;
+}
+
+.fa-4 {
+  font-size: 4em !important;
+}
+
+.fa-5 {
+  font-size: 5em !important;
 }
