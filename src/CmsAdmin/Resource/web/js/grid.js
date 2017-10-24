@@ -21,8 +21,12 @@ CMS.grid = function () {
     var doFilter = true;
 
     var initDt = function () {
-        $(".dtFrom").datetimepicker({format:'Y-m-d H:i'});
-        $(".dtTo").datetimepicker({format:'Y-m-d H:i'});
+        if($('.dtFrom').length === 1){
+            $('.dtFrom').datetimepicker({format:'Y-m-d H:i'});
+        }
+        if($('.dtTo').length === 1){
+            $('.dtTo').datetimepicker({format:'Y-m-d H:i'});
+        }
     };
 
     var filter = function(field) {
