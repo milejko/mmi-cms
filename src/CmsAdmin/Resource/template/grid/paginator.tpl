@@ -6,7 +6,7 @@
 {$_previousLabel = 'Prev'}
 {$_nextLabel = 'Next'}
 
-{if 1 == $_pagesCount}{return}{/if}
+{if 1 >= $_pagesCount}{return}{/if}
 <ul class="pagination" data-name="{$_grid->getClass()}[_paginator_]">
     {* pierwsza strona *}
     {if $_page > 1}
