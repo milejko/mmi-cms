@@ -17,25 +17,39 @@ var CMS = CMS ? CMS : {};
 
 CMS.grid = function () {
     "use strict";
+    var stoptyping;
+    var doFilter = true;
 
     var initDt = function () {
         $(".dtFrom").datetimepicker({format:'Y-m-d H:i'});
         $(".dtTo").datetimepicker({format:'Y-m-d H:i'});
     };
 
+    var filter = function(field) {
+        var filter = field.attr('name'),
+            value = field.val(),
+            fieldName = field.attr('name'),
+            gridId = field.parent().parent().parent().parent().parent().parent().find('table').attr("id");
+        $.ajax({
+            url: window.location,
+            type: 'POST',
+            data: {filter: filter, value: value},
+            beforeSend: function () {
+                field.addClass('grid-loader');
+            },
+            success: function (data) {
+                $('input[name=\'' + fieldName + '\']').putCursorAtEnd();
+                quickSwitch(data);
+            }
+        });
+    };
+
     var quickSwitch = function(data){
         $('#CmsAdminPluginLogGrid').html(data.body);
         $('#CmsAdminPluginLogGrid-paginator').html(data.paginator);
-        initGridFilter();
-        initGridOrder();
-        initGridOperation();
         initDt();
     };
-
     var initGridFilter = function () {
-        var stoptyping;
-        var doFilter = true;
-
         $('table.table-striped').on('keyup', "th > div.form-group > .form-control", function (event) {
             if (event.which === 27) {
                 return;
@@ -83,24 +97,7 @@ CMS.grid = function () {
             }
         });
 
-        function filter(field) {
-            var filter = field.attr('name'),
-                value = field.val(),
-                fieldName = field.attr('name'),
-                gridId = field.parent().parent().parent().parent().parent().parent().find('table').attr("id");
-            $.ajax({
-                url: window.location,
-                type: 'POST',
-                data: {filter: filter, value: value},
-                beforeSend: function () {
-                    field.addClass('grid-loader');
-                },
-                success: function (data) {
-                    $('input[name=\'' + fieldName + '\']').putCursorAtEnd();
-                    quickSwitch(data);
-                }
-            });
-        }
+
 
     };
 

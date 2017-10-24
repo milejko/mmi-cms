@@ -43,7 +43,7 @@ gulp.task('new_assets', ['clean_assets'], function () {
 });
 
 
-gulp.task('serve:new', function () {
+gulp.task('serve', function () {
     return new Promise(function (suc, e) {
         runSequence('sass','copy_jstree', 'build:dist', 'new_assets', suc);
     }).then(function () {
