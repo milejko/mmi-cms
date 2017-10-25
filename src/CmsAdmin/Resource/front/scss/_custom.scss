@@ -327,9 +327,18 @@ ul {
 }
 
 .nav-dropdown-items {
+  border-left: 1px solid #167495 !important;
   .nav-item {
     .nav-link {
-      padding-left: 25px !important;
+      padding-left: 23px !important;
+    }
+    .nav-dropdown-items{
+      border-left: 2px solid #1abae2 !important;
+      .nav-item {
+        .nav-link {
+          padding-left: 43px !important;
+        }
+      }
     }
   }
 }

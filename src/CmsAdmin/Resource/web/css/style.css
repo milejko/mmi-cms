@@ -9069,5 +9069,11 @@ ul.wlist {
 .mr-fix-6 {
   margin-right: 6px !important; }
 
-.nav-dropdown-items .nav-item .nav-link, .nav-dropdown-items .nav-item .navbar .dropdown-toggle, .navbar .nav-dropdown-items .nav-item .dropdown-toggle {
-  padding-left: 25px !important; }
+.nav-dropdown-items {
+  border-left: 1px solid #167495 !important; }
+  .nav-dropdown-items .nav-item .nav-link, .nav-dropdown-items .nav-item .navbar .dropdown-toggle, .navbar .nav-dropdown-items .nav-item .dropdown-toggle {
+    padding-left: 23px !important; }
+  .nav-dropdown-items .nav-item .nav-dropdown-items {
+    border-left: 2px solid #1abae2 !important; }
+    .nav-dropdown-items .nav-item .nav-dropdown-items .nav-item .nav-link, .nav-dropdown-items .nav-item .nav-dropdown-items .nav-item .navbar .dropdown-toggle, .navbar .nav-dropdown-items .nav-item .nav-dropdown-items .nav-item .dropdown-toggle {
+      padding-left: 43px !important; }
