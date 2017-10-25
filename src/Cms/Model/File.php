@@ -59,6 +59,29 @@ class File
      */
     public static function appendFile(\Mmi\Http\RequestFile $file, $object, $id = null, $allowedTypes = [])
     {
+        //sprawdzenie i skopiowanie pliku do odpowiedniego katalogu na dysku
+        if (null === $name = self::_checkAndCopyFile($file, $allowedTypes)) {
+            return null;
+        }
+        //przypisywanie pól w rekordzie
+        $record = self::_updateRecordFromRequestFile($file, new \Cms\Orm\CmsFileRecord());
+        //zapis nazwy pliku
+        $record->name = $name;
+        //obiekt i id
+        $record->object = $object;
+        $record->objectId = $id;
+        //zapis rekordu
+        return ($record->save()) ? $record : null;
+    }
+    
+    /**
+     * Sprawdza parametry i kopiuje plik do odpowiedniego katalogu na dysku
+     * @param \Mmi\Http\RequestFile $file obiekt pliku
+     * @param array $allowedTypes dozwolone typy plików
+     * @return string|null zwraca nazwę utworzonego pliku na dysku
+     */
+    protected static function _checkAndCopyFile(\Mmi\Http\RequestFile $file, $allowedTypes = [])
+    {
         //pomijanie plików typu bmp (bitmapy windows - nieobsługiwane w PHP)
         if ($file->type == 'image/x-ms-bmp' || $file->type == 'image/tiff') {
             $file->type = 'application/octet-stream';
@@ -80,15 +103,7 @@ class File
         chmod($file->tmpName, 0664);
         //kopiowanie pliku
         copy($file->tmpName, $dir . '/' . $name);
-        //przypisywanie pól w rekordzie
-        $record = self::_newRecordFromRequestFile($file);
-        //zapis nazwy pliku
-        $record->name = $name;
-        //obiekt i id
-        $record->object = $object;
-        $record->objectId = $id;
-        //zapis rekordu
-        return ($record->save()) ? $record : null;
+        return $name;
     }
 
     /**
@@ -97,7 +112,7 @@ class File
      * @param int $srcId id źródła
      * @param string $destObject obiekt docelowy
      * @param int $destId docelowy id
-     * @param int ilość przeniesionych
+     * @return int ilość przeniesionych
      */
     public static function move($srcObject, $srcId, $destObject, $destId)
     {
@@ -120,7 +135,7 @@ class File
      * @param int $srcId id źródła
      * @param string $destObject obiekt docelowy
      * @param int $destId docelowy id
-     * @param int ilość przeniesionych
+     * @return ilość skopiowanych
      */
     public static function copy($srcObject, $srcId, $destObject, $destId)
     {
@@ -133,11 +148,38 @@ class File
                 'tmp_name' => $file->getRealPath(),
                 'size' => $file->size
             ]);
+            $newFile = clone $file;
+            $newFile->id = null;
             //dołączanie pliku
-            self::appendFile($copy, $destObject, $destId);
+            self::_copyFile($copy, $destObject, $destId, $newFile);
             $i++;
         }
         return $i;
+    }
+    
+    /**
+     * Kopiuje plik Cms, zachowując pola oryginalnego rekordu
+     * @param \Mmi\Http\RequestFile $file obiekt pliku
+     * @param string $object obiekt
+     * @param integer $id id obiektu
+     * @param \Cms\Orm\CmsFileRecord $copy rekord pliku Cms
+     * @return \Cms\Orm\CmsFileRecord
+     */
+    protected static function _copyFile(\Mmi\Http\RequestFile $file, $object, $id, \Cms\Orm\CmsFileRecord $copy)
+    {
+        //sprawdzenie i skopiowanie pliku do odpowiedniego katalogu na dysku
+        if (null === $name = self::_checkAndCopyFile($file)) {
+            return null;
+        }
+        //przypisywanie pól w rekordzie
+        $record = self::_updateRecordFromRequestFile($file, $copy);
+        //zapis nazwy pliku
+        $record->name = $name;
+        //obiekt i id
+        $record->object = $object;
+        $record->objectId = $id;
+        //zapis rekordu
+        return ($record->save()) ? $record : null;
     }
 
     /**
@@ -158,14 +200,13 @@ class File
     }
 
     /**
-     * Tworzy nowy rekord na podstawie pliku z requestu
+     * Aktualizuje rekord na podstawie pliku z requestu
      * @param \Mmi\Http\RequestFile $file plik z requesta
+     * @param \Cms\Orm\CmsFileRecord $record rekord pliku Cms
      * @return CmsFileRecord rekord pliku
      */
-    protected static function _newRecordFromRequestFile(\Mmi\Http\RequestFile $file)
+    protected static function _updateRecordFromRequestFile(\Mmi\Http\RequestFile $file, \Cms\Orm\CmsFileRecord $record)
     {
-        //nowy rekord
-        $record = new CmsFileRecord;
         //typ zasobu
         $record->mimeType = $file->type;
         //klasa zasobu
@@ -176,12 +217,16 @@ class File
         //rozmiar pliku
         $record->size = $file->size;
         //daty dodania i modyfikacji
-        $record->dateAdd = date('Y-m-d H:i:s');
+        if (!$record->dateAdd) {
+            $record->dateAdd = date('Y-m-d H:i:s');
+        }
         $record->dateModify = date('Y-m-d H:i:s');
         //właściciel pliku
         $record->cmsAuthId = \App\Registry::$auth ? \App\Registry::$auth->getId() : null;
-        //domyślnie aktywny
-        $record->active = 1;
+        if ($record->active === null) {
+            //domyślnie aktywny
+            $record->active = 1;
+        }
         return $record;
     }
 
