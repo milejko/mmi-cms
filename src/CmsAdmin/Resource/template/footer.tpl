@@ -1,3 +1,5 @@
+{headScript()->prependFile('/resource/cmsAdmin/vendors/js/jquery.min.js')}
+{headScript()->appendFile('/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.js')}
 {headScript()->appendFile('/resource/cmsAdmin/vendors/js/popper.min.js')}
 {headScript()->appendFile('/resource/cmsAdmin/vendors/js/bootstrap.min.js')}
 {headScript()->appendFile('/resource/cmsAdmin/vendors/js/pace.min.js')}
