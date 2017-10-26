@@ -10,8 +10,14 @@
 
 .ne-error-list {
   ul {
+    margin-left: -40px;
     list-style-type: none;
     color: red;
+    li{
+      i{
+        margin-right: 5px;
+      }
+    }
   }
 }
 

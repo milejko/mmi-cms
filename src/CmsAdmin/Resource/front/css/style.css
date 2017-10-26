@@ -8823,8 +8823,11 @@ hr.transparent {
   line-height: 49px !important; }
 
 .ne-error-list ul {
+  margin-left: -40px;
   list-style-type: none;
   color: red; }
+  .ne-error-list ul li i {
+    margin-right: 5px; }
 
 .control {
   font-family: arial;
