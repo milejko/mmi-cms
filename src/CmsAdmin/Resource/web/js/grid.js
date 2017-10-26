@@ -48,7 +48,6 @@ CMS.grid = function () {
             success: function (data) {
                 $('input[name=\'' + fieldName + '\']').putCursorAtEnd();
                 quickSwitch(data);
-                console.log('d');
             }
         });
     };
