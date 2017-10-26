@@ -20,6 +20,12 @@ CMS.grid = function () {
     var stoptyping;
     var doFilter = true;
 
+    var quickSwitch = function(data){
+        $('.grid-anchor').html(data.body);
+        $('.paginator-anchor').html(data.paginator);
+        initDt();
+    };
+
     var initDt = function () {
         if($('.dtFrom').length === 1){
             $('.dtFrom').datetimepicker({format:'Y-m-d H:i'});
@@ -44,15 +50,11 @@ CMS.grid = function () {
             success: function (data) {
                 $('input[name=\'' + fieldName + '\']').putCursorAtEnd();
                 quickSwitch(data);
+                console.log('d');
             }
         });
     };
 
-    var quickSwitch = function(data){
-        $('#CmsAdminPluginLogGrid').html(data.body);
-        $('#CmsAdminPluginLogGrid-paginator').html(data.paginator);
-        initDt();
-    };
     var initGridFilter = function () {
         $('table.table-striped').on('keyup', "th > div.form-group > .form-control", function (event) {
             if (event.which === 27) {
@@ -74,23 +76,24 @@ CMS.grid = function () {
             filter($(this));
         });
 
-
-        $('ul.pagination > li.page-item > a').on('click', function (evt) {
-            var filter = $('ul.pagination').data('name'),
-                value = $(this).data('page'),
-                gridId = $('table').attr("id");
-            $.ajax({
-                url: window.location,
-                type: 'POST',
-                data: {filter: filter, value: value},
-                beforeSend: function () {
-                    $(this).addClass('grid-loader');
-                },
-                success:  function (data) {
-                    quickSwitch(data);
-                }
+        if($('ul.pagination > li.page-item > a').length) {
+            $('ul.pagination > li.page-item > a').on('click', function (evt) {
+                var filter = $('ul.pagination').data('name'),
+                    value = $(this).data('page'),
+                    gridId = $('table').attr("id");
+                $.ajax({
+                    url: window.location,
+                    type: 'POST',
+                    data: {filter: filter, value: value},
+                    beforeSend: function () {
+                        $(this).addClass('grid-loader');
+                    },
+                    success: function (data) {
+                        quickSwitch(data);
+                    }
+                });
             });
-        });
+        }
 
         $('table.table-striped').on('input', "th > div.form-group > input.form-control", function () {
             if ($(this).val().length === 0) {
