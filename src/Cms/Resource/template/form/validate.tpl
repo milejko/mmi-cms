@@ -1,10 +1,10 @@
 {if !$errors|isEmpty}
     <div>
         <span class="marker"></span>
-        <ul>
+        <ul style="list-style: none;">
             <li class="point first"></li>
                 {foreach $errors as $error}
-                <li class="notice error"><i class="icon-remove-sign icon-large"></i>{$error}</li>
+                <li class="notice error"><i class="fa fa-times" aria-hidden="true"></i>{$error}</li>
                 {/foreach}
             <li class="close last"></li>
         </ul>

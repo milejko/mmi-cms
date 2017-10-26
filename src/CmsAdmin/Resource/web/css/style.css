@@ -8971,9 +8971,6 @@ div#categoryNodeContainer {
   margin-left: 20px;
   width: calc(100% - 340px); }
 
-ul#messenger {
-  display: none; }
-
 div#categoryMessageContainer ul#messenger {
   margin-top: 0; }
   div#categoryMessageContainer ul#messenger .notice {
@@ -9072,8 +9069,18 @@ ul.wlist {
 .nav-dropdown-items {
   border-left: 1px solid #167495 !important; }
   .nav-dropdown-items .nav-item .nav-link, .nav-dropdown-items .nav-item .navbar .dropdown-toggle, .navbar .nav-dropdown-items .nav-item .dropdown-toggle {
-    padding-left: 23px !important; }
+    padding-left: 13px !important; }
   .nav-dropdown-items .nav-item .nav-dropdown-items {
     border-left: 2px solid #1abae2 !important; }
     .nav-dropdown-items .nav-item .nav-dropdown-items .nav-item .nav-link, .nav-dropdown-items .nav-item .nav-dropdown-items .nav-item .navbar .dropdown-toggle, .navbar .nav-dropdown-items .nav-item .nav-dropdown-items .nav-item .dropdown-toggle {
-      padding-left: 43px !important; }
+      padding-left: 23px !important; }
+
+#cmsadmin-form-auth-cmsRoles-list {
+  list-style: none; }
+
+.messenger {
+  position: absolute;
+  top: 50px;
+  right: 50px;
+  border-radius: 10px;
+  list-style: none; }

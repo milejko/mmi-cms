@@ -199,9 +199,6 @@ div {
   }
 }
 
-ul#messenger {
-  display: none;
-}
 
 div {
   &#categoryMessageContainer ul#messenger {
@@ -330,15 +327,25 @@ ul {
   border-left: 1px solid #167495 !important;
   .nav-item {
     .nav-link {
-      padding-left: 23px !important;
+      padding-left: 13px !important;
     }
     .nav-dropdown-items{
       border-left: 2px solid #1abae2 !important;
       .nav-item {
         .nav-link {
-          padding-left: 43px !important;
+          padding-left: 23px !important;
         }
       }
     }
   }
+}
+#cmsadmin-form-auth-cmsRoles-list{
+  list-style:none
+}
+.messenger{
+  position: absolute;
+  top: 50px;
+  right: 50px;
+  border-radius: 10px;
+  list-style:none;
 }
