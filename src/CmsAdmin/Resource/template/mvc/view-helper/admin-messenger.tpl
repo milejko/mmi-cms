@@ -6,10 +6,24 @@
             {* message type przyjmuje wartości error, notice i warning *}
             {$class = $message['type']}
             {$icon = ($message['type'] == 'error') ? 'remove-sign' : 'ok'}
+            {if $message.type == 'error'}
+                {$class = 'alert alert-danger'}
+                {$icon = 'fa-times'}
+            {/if}
+            {if $message.type == 'warning'}
+                {$class = 'alert alert-warning'}
+                {$icon = 'fa-check'}
+            {/if}
+            {if $message.type == 'notice'}
+                {$class = 'alert alert-info'}
+                {$icon = 'fa-info'}
+            {/if}
         {/if}
-        <li class="notice {$class}">
-            <i class="icon-{$icon} icon-large"></i>
-            <div class="alert">{$_messenger->prepareTranslatedMessage($message)}
+        <li class="notice">
+            <i class="fa fa-2 {$icon}"></i>
+            <div class="alert {$class}" role="alert">
+                dupa
+                {$_messenger->prepareTranslatedMessage($message)}
                 <a class="close-alert" href="#"></a>
             </div>
         </li>
