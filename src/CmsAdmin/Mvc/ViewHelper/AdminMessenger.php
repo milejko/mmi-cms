@@ -19,4 +19,13 @@ class AdminMessenger extends \Mmi\Mvc\ViewHelper\Messenger
     //szablon menu
     CONST TEMPLATE = 'cmsAdmin/mvc/view-helper/admin-messenger';
 
+    /**
+     * Metoda renderingu
+     * @return string
+     */
+    public function adminMessenger()
+    {
+        return parent::messenger();
+    }
+
 }
