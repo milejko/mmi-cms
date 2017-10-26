@@ -147,8 +147,4 @@ CMS.grid = function () {
 $(document).ready(function () {
     "use strict";
     CMS.grid();
-    var initDt = function () {
-        $(".dtFrom").datetimepicker({format:'Y-m-d H:i'});
-        $(".dtTo").datetimepicker({format:'Y-m-d H:i'});
-    };
 });
