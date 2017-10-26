@@ -12,7 +12,7 @@
 </header>
 {/if}
 <div class="app-body">
-    {messenger()}
+    {adminMessenger()}
     {if $auth}
     <div class="sidebar">
         <nav class="sidebar-nav">

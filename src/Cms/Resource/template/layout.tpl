@@ -5,7 +5,7 @@
         {headMeta(['name' => 'description', 'content' => adminNavigation()->description()])}
     </head>
     <body>
-        {messenger()}
+        {adminMessenger()}
         {content()}
     </body>
 </html>
