@@ -12,5 +12,7 @@
         {headLink()->appendStyleSheet('/resource/cmsAdmin/css/jquery-ui.structure.min.css')}
         {headLink()->appendStyleSheet('/resource/cmsAdmin/css/jquery-ui.theme.min.css')}
         {headLink()->appendStyleSheet('/resource/cmsAdmin/css/style.css')}
+        {headScript()->prependFile('/resource/cmsAdmin/vendors/js/jquery.min.js')}
+        {headScript()->prependFile('/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.js')}
         {headLink()}
     </head>
