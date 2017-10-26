@@ -5,7 +5,7 @@
             <div class="col">
             <div class="container-fluid">
                 <div class="animated fadeIn">
-                    {messenger()}
+                    {adminMessenger()}
                     {content()}
                 </div>
             </div>
