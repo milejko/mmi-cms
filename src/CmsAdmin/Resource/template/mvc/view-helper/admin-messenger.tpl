@@ -20,10 +20,9 @@
             {/if}
         {/if}
         <li class="notice">
-            <i class="fa fa-2 {$icon}"></i>
             <div class="alert {$class}" role="alert">
-                dupa
-                {$_messenger->prepareTranslatedMessage($message)}
+                <i class="fa {$icon}"></i>
+                <span>{$_messenger->prepareTranslatedMessage($message)}</span>
                 <a class="close-alert" href="#"></a>
             </div>
         </li>

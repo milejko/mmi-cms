@@ -10,7 +10,7 @@
 
 .ne-error-list {
   ul {
-    margin-left: -40px;
+    padding: 0;
     list-style-type: none;
     color: red;
     li{
@@ -346,7 +346,8 @@ ul {
   }
 }
 #cmsadmin-form-auth-cmsRoles-list{
-  list-style:none
+  padding: 0;
+  list-style-type: none;
 }
 .messenger{
   position: absolute;

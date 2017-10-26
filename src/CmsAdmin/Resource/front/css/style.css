@@ -8823,7 +8823,7 @@ hr.transparent {
   line-height: 49px !important; }
 
 .ne-error-list ul {
-  margin-left: -40px;
+  padding: 0;
   list-style-type: none;
   color: red; }
   .ne-error-list ul li i {
@@ -9079,7 +9079,8 @@ ul.wlist {
       padding-left: 23px !important; }
 
 #cmsadmin-form-auth-cmsRoles-list {
-  list-style: none; }
+  padding: 0;
+  list-style-type: none; }
 
 .messenger {
   position: absolute;
