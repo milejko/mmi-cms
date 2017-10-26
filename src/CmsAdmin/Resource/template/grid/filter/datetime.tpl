@@ -1,7 +1,3 @@
-{headLink()->appendStylesheet('/resource/cmsAdmin/css/datetimepicker.css')}
-{headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js')}
-{headScript()->appendFile('/resource/cmsAdmin/js/jquery-ui/jquery-ui.js')}
-{headScript()->appendFile('/resource/cmsAdmin/js/jquery/datetimepicker.js')}
 {if $_column->isFieldInRecord()}
 <div class="input-group">
     <span class="input-group-addon">od</span>

@@ -12,5 +12,6 @@
         {headLink()->appendStyleSheet('/resource/cmsAdmin/css/jquery-ui.structure.min.css')}
         {headLink()->appendStyleSheet('/resource/cmsAdmin/css/jquery-ui.theme.min.css')}
         {headLink()->appendStyleSheet('/resource/cmsAdmin/css/style.css')}
+        {headLink()->appendStylesheet('/resource/cmsAdmin/css/datetimepicker.css')}
         {headLink()}
     </head>
