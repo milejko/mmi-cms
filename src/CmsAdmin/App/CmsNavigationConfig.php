@@ -23,68 +23,43 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig
     public static function getMenu()
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
+                ->setId('admin-menu')
                 ->setLabel('Panel administracyjny')
                 ->setModule('cmsAdmin')
-                ->setController('index')
-                ->addChild(self::_getAdminPart())
-                ->addChild(self::_getContentPart());
-    }
-
-    /**
-     * Pobiera część kontentową
-     * @return \Mmi\Navigation\NavigationConfigElement
-     */
-    protected static function _getContentPart()
-    {
-        return (new \Mmi\Navigation\NavigationConfigElement)
-                ->setLabel('CMS')
-                ->setIcon('fa-connectdevelop')
-                ->setUri('#')
-                ->addChild(NavPart\NavPartAttribute::getMenu())
-                //->addChild(NavPart\NavPartComment::getMenu())
-                ->addChild(NavPart\NavPartContact::getMenu())
-                ->addChild(NavPart\NavPartFile::getMenu())
-                ->addChild(NavPart\NavPartStat::getMenu())
-                ->addChild(NavPart\NavPartTag::getMenu())
-                ->addChild(NavPart\NavPartText::getMenu())
-                ->addChild(NavPart\NavPartCategory::getMenu())
-        ;
-    }
-
-    /**
-     * Pobiera część administracyjną
-     * @return \Mmi\Navigation\NavigationConfigElement
-     */
-    protected static function _getAdminPart()
-    {
-        return (new \Mmi\Navigation\NavigationConfigElement)
-                ->setLabel('Administracja')
-                ->setIcon('fa-list')
-                ->setUri('#')
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setModule('cmsAdmin')
-                    ->setController('index')
-                    ->setIcon('fa-unlock-alt')
+                    ->setDisabled()
                     ->setAction('password')
                     ->setLabel('Zmiana hasła'))
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setModule('cmsAdmin')
-                    ->setController('index')
                     ->setAction('login')
                     ->setIcon('fa-unlock-alt')
-                    ->setLabel('Logowanie CMS')
-                    ->setDisabled(true))
-                ->addChild(NavPart\NavPartCron::getMenu())
-                ->addChild(NavPart\NavPartConnector::getMenu())
-                ->addChild(NavPart\NavPartLog::getMenu())
-                ->addChild(NavPart\NavPartMail::getMenu())
-                ->addChild(NavPart\NavPartAcl::getMenu())
-                ->addChild(NavPart\NavPartAuth::getMenu())
+                    ->setLabel('Logowanie')
+                    ->setDisabled())
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
-                    ->setLabel('Wyczyść bufor')
-                    ->setModule('cmsAdmin')
-                    ->setIcon('fa-exclamation-triangle ')
-                    ->setController('cache'));
+                    ->setLabel('CMS')
+                    ->setIcon('fa-connectdevelop')
+                    ->setUri('#')
+                    ->addChild(NavPart\NavPartAttribute::getMenu())
+                    ->addChild(NavPart\NavPartCron::getMenu())
+                    ->addChild(NavPart\NavPartConnector::getMenu())
+                    ->addChild(NavPart\NavPartContact::getMenu())
+                    ->addChild(NavPart\NavPartLog::getMenu())
+                    //->addChild(NavPart\NavPartComment::getMenu())
+                    ->addChild(NavPart\NavPartFile::getMenu())
+                    ->addChild(NavPart\NavPartMail::getMenu())
+                    ->addChild(NavPart\NavPartStat::getMenu())
+                    ->addChild(NavPart\NavPartTag::getMenu())
+                    ->addChild(NavPart\NavPartText::getMenu())
+                    ->addChild(NavPart\NavPartCategory::getMenu())
+                    ->addChild(NavPart\NavPartAcl::getMenu())
+                    ->addChild(NavPart\NavPartAuth::getMenu())
+                    ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                        ->setLabel('Wyczyść bufor')
+                        ->setModule('cmsAdmin')
+                        ->setIcon('fa-exclamation-triangle ')
+                        ->setController('cache')));
     }
 
 }
