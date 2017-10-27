@@ -9090,3 +9090,7 @@ ul.wlist {
   right: 50px;
   border-radius: 10px;
   list-style: none; }
+
+@media (min-width: 576px) {
+  .card-body, .card-block {
+    overflow: hidden; } }

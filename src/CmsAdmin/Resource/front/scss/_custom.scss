@@ -362,3 +362,6 @@ ul {
       @extend .is-invalid
     }
 }
+@include media-breakpoint-up(sm) {
+  .card-body{overflow: hidden}
+}
