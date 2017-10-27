@@ -27,10 +27,12 @@ CMS.grid = function () {
     };
 
     var initDt = function () {
-        $('.xdsoft_datetimepicker').remove();
-        $.each($( ":contains(data)" ).parent('.form-group').children('input'), function( index, value ) {
-            $(value).datetimepicker({format:'Y-m-d H:i'});
-        });
+        if($('.dtFrom').length === 1){
+            $('.dtFrom').datetimepicker({format:'Y-m-d H:i'});
+        }
+        if($('.dtTo').length === 1){
+            $('.dtTo').datetimepicker({format:'Y-m-d H:i'});
+        }
     };
 
     var filter = function(field) {
@@ -53,7 +55,7 @@ CMS.grid = function () {
     };
 
     var initGridFilter = function () {
-        $('table.table-striped').on('change', "th > div.form-group > .form-control", function (event) {
+        $('table.table-striped').on('keyup', "th > div.form-group > .form-control", function (event) {
             if (event.which === 27) {
                 return;
             }

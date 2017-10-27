@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-12">
+    <div class="col-md-6">
         <div class="card mt-4">
             <div class="card-header">
                 <strong>{if $widgetRecord}{$widgetRecord->name} - {/if}{#konfiguracja#}</strong>

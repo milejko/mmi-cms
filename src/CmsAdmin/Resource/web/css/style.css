@@ -1273,39 +1273,41 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
 .was-validated .custom-file-input:valid:focus, .custom-file-input.is-valid:focus {
   box-shadow: 0 0 0 0.2rem rgba(77, 189, 116, 0.25); }
 
-.was-validated .form-control:invalid, .form-control.is-invalid, .was-validated
+.was-validated .form-control:invalid, .form-control.is-invalid, .form-control.error, .was-validated
 .custom-select:invalid,
-.custom-select.is-invalid {
+.custom-select.is-invalid,
+.custom-select.form-control.error {
   border-color: #f86c6b; }
-  .was-validated .form-control:invalid:focus, .form-control.is-invalid:focus, .was-validated
+  .was-validated .form-control:invalid:focus, .form-control.is-invalid:focus, .form-control.error:focus, .was-validated
   .custom-select:invalid:focus,
-  .custom-select.is-invalid:focus {
+  .custom-select.is-invalid:focus,
+  .custom-select.form-control.error:focus {
     box-shadow: 0 0 0 0.2rem rgba(248, 108, 107, 0.25); }
   .was-validated .form-control:invalid ~ .invalid-feedback,
-  .was-validated .form-control:invalid ~ .invalid-tooltip, .form-control.is-invalid ~ .invalid-feedback,
-  .form-control.is-invalid ~ .invalid-tooltip, .was-validated
+  .was-validated .form-control:invalid ~ .invalid-tooltip, .form-control.is-invalid ~ .invalid-feedback, .form-control.error ~ .invalid-feedback,
+  .form-control.is-invalid ~ .invalid-tooltip, .form-control.error ~ .invalid-tooltip, .was-validated
   .custom-select:invalid ~ .invalid-feedback,
   .was-validated
   .custom-select:invalid ~ .invalid-tooltip,
-  .custom-select.is-invalid ~ .invalid-feedback,
-  .custom-select.is-invalid ~ .invalid-tooltip {
+  .custom-select.is-invalid ~ .invalid-feedback, .custom-select.form-control.error ~ .invalid-feedback,
+  .custom-select.is-invalid ~ .invalid-tooltip, .custom-select.form-control.error ~ .invalid-tooltip {
     display: block; }
 
-.was-validated .form-check-input:invalid + .form-check-label, .form-check-input.is-invalid + .form-check-label {
+.was-validated .form-check-input:invalid + .form-check-label, .form-check-input.is-invalid + .form-check-label, .form-check-input.form-control.error + .form-check-label {
   color: #f86c6b; }
 
-.was-validated .custom-control-input:invalid ~ .custom-control-indicator, .custom-control-input.is-invalid ~ .custom-control-indicator {
+.was-validated .custom-control-input:invalid ~ .custom-control-indicator, .custom-control-input.is-invalid ~ .custom-control-indicator, .custom-control-input.form-control.error ~ .custom-control-indicator {
   background-color: rgba(248, 108, 107, 0.25); }
 
-.was-validated .custom-control-input:invalid ~ .custom-control-description, .custom-control-input.is-invalid ~ .custom-control-description {
+.was-validated .custom-control-input:invalid ~ .custom-control-description, .custom-control-input.is-invalid ~ .custom-control-description, .custom-control-input.form-control.error ~ .custom-control-description {
   color: #f86c6b; }
 
-.was-validated .custom-file-input:invalid ~ .custom-file-control, .custom-file-input.is-invalid ~ .custom-file-control {
+.was-validated .custom-file-input:invalid ~ .custom-file-control, .custom-file-input.is-invalid ~ .custom-file-control, .custom-file-input.form-control.error ~ .custom-file-control {
   border-color: #f86c6b; }
-  .was-validated .custom-file-input:invalid ~ .custom-file-control::before, .custom-file-input.is-invalid ~ .custom-file-control::before {
+  .was-validated .custom-file-input:invalid ~ .custom-file-control::before, .custom-file-input.is-invalid ~ .custom-file-control::before, .custom-file-input.form-control.error ~ .custom-file-control::before {
     border-color: inherit; }
 
-.was-validated .custom-file-input:invalid:focus, .custom-file-input.is-invalid:focus {
+.was-validated .custom-file-input:invalid:focus, .custom-file-input.is-invalid:focus, .custom-file-input.form-control.error:focus {
   box-shadow: 0 0 0 0.2rem rgba(248, 108, 107, 0.25); }
 
 .form-inline {

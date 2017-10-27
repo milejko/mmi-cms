@@ -356,3 +356,9 @@ ul {
   border-radius: 10px;
   list-style:none;
 }
+
+.form-control{
+    &.error{
+      @extend .is-invalid
+    }
+}
