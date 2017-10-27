@@ -13,8 +13,8 @@
     padding: 0;
     list-style-type: none;
     color: red;
-    li{
-      i{
+    li {
+      i {
         margin-right: 5px;
       }
     }
@@ -205,7 +205,6 @@ div {
   }
 }
 
-
 div {
   &#categoryMessageContainer ul#messenger {
     margin-top: 0;
@@ -335,7 +334,7 @@ ul {
     .nav-link {
       padding-left: 13px !important;
     }
-    .nav-dropdown-items{
+    .nav-dropdown-items {
       border-left: 2px solid #1abae2 !important;
       .nav-item {
         .nav-link {
@@ -345,28 +344,37 @@ ul {
     }
   }
 }
-#cmsadmin-form-auth-cmsRoles-list{
+
+#cmsadmin-form-auth-cmsRoles-list {
   padding: 0;
   list-style-type: none;
 }
-.messenger{
+
+.messenger {
   position: absolute;
   top: 50px;
   right: 50px;
   border-radius: 10px;
-  list-style:none;
+  list-style: none;
 }
 
-.form-control{
-    &.error{
-      @extend .is-invalid
-    }
+.form-control {
+  &.error {
+    @extend .is-invalid
+  }
 }
+
 @include media-breakpoint-up(sm) {
-  .card-body{overflow: hidden}
+  .card-body {
+    overflow: hidden
+  }
 }
-text-align: center;
-width: 100px;
-.operation-button{
-  display: inline-block;
+
+.operation-container {
+  width: 100px;
+  text-align: center;
+  .operation-button {
+    display: inline-block;
+    margin-right: 10px;
+  }
 }

@@ -9095,5 +9095,9 @@ ul.wlist {
   .card-body, .card-block {
     overflow: hidden; } }
 
-.operation-button {
-  display: inline-block; }
+.operation-container {
+  width: 100px;
+  text-align: center; }
+  .operation-container .operation-button {
+    display: inline-block;
+    margin-right: 10px; }

@@ -33,7 +33,7 @@ class OperationColumn extends ColumnAbstract
     public function __construct()
     {
         //ustawia domyślne parametry
-        $this->setLabel('<div style="width: 40px; text-align: center;"><i class="fa fa-2 fa-gears"></i></div>')
+        $this->setLabel('<div style="width: 100px;color: #20a8d8; text-align: center;"><i class="fa fa-2 fa-gears"></i></div>')
             ->setEditParams()
             ->setDeleteParams();
         //ustawia nazwę na _operation_
@@ -108,7 +108,7 @@ class OperationColumn extends ColumnAbstract
     {
 
         $view = FrontController::getInstance()->getView();
-        $html = '';
+        $html = '<div class="operation-container">';
         //pobieranie parametrów linku edycji
         $editParams = $this->getOption('editParams');
         //pobieranie parametrów linku usuwania
@@ -131,7 +131,7 @@ class OperationColumn extends ColumnAbstract
         }
         //link edycyjny ze sprawdzeniem ACL
         if (!empty($editParams) && (new AclAllowed)->aclAllowed($params = $this->_parseParams($editParams, $record))) {
-            $html .= '<a class="operation-button" href="' . $view->url($params) . rtrim('#' . $this->getOption('editHashTarget'), '#') . '"><i class="fa fa-2 fa-edit "></i></a>';
+            $html .= '<a class="operation-button" href="' . $view->url($params) . rtrim('#' . $this->getOption('editHashTarget'), '#') . '"><i class="fa fa-2 fa-pencil "></i></a>';
         }
         //link kasujący ze sprawdzeniem ACL
         if (!empty($deleteParams) && (new AclAllowed)->aclAllowed($params = $this->_parseParams($deleteParams, $record))) {
@@ -146,6 +146,7 @@ class OperationColumn extends ColumnAbstract
                 $html .= '<a class="operation-button" href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="fa fa-2 fa-trash-o "></i></a>';
             }
         }
+        $html .='</div>';
         return $html;
     }
 
