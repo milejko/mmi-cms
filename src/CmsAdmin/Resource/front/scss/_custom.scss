@@ -365,3 +365,8 @@ ul {
 @include media-breakpoint-up(sm) {
   .card-body{overflow: hidden}
 }
+text-align: center;
+width: 100px;
+.operation-button{
+  display: inline-block;
+}

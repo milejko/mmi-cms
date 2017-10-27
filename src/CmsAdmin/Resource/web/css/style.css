@@ -9094,3 +9094,6 @@ ul.wlist {
 @media (min-width: 576px) {
   .card-body, .card-block {
     overflow: hidden; } }
+
+.operation-button {
+  display: inline-block; }
