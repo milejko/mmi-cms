@@ -24,6 +24,7 @@ CMS.grid = function () {
         $('.grid-anchor').html(data.body);
         $('.paginator-anchor').html(data.paginator);
         initDt();
+        initPaginator();
     };
 
     var initDt = function () {
@@ -54,6 +55,27 @@ CMS.grid = function () {
         });
     };
 
+    var initPaginator = function () {
+        if($('.paginator-anchor ul.pagination > li.page-item > a').length) {
+            $('.paginator-anchor ul.pagination > li.page-item > a').on('click', function (evt) {
+                var filter = $('ul.pagination').data('name'),
+                    value = $(this).data('page'),
+                    gridId = $('table').attr("id");
+                $.ajax({
+                    url: window.location,
+                    type: 'POST',
+                    data: {filter: filter, value: value},
+                    beforeSend: function () {
+                        $(this).addClass('grid-loader');
+                    },
+                    success: function (data) {
+                        quickSwitch(data);
+                    }
+                });
+            });
+        }
+    };
+
     var initGridFilter = function () {
         $('table.table-striped').on('keyup', "th > div.form-group > .form-control", function (event) {
             if (event.which === 27) {
@@ -74,25 +96,6 @@ CMS.grid = function () {
         $('table.table-striped').on('change', "th > div.form-group > select.form-control", function () {
             filter($(this));
         });
-
-        if($('ul.pagination > li.page-item > a').length) {
-            $('ul.pagination > li.page-item > a').on('click', function (evt) {
-                var filter = $('ul.pagination').data('name'),
-                    value = $(this).data('page'),
-                    gridId = $('table').attr("id");
-                $.ajax({
-                    url: window.location,
-                    type: 'POST',
-                    data: {filter: filter, value: value},
-                    beforeSend: function () {
-                        $(this).addClass('grid-loader');
-                    },
-                    success: function (data) {
-                        quickSwitch(data);
-                    }
-                });
-            });
-        }
 
         $('table.table-striped').on('input', "th > div.form-group > input.form-control", function () {
             if ($(this).val().length === 0) {
@@ -143,6 +146,7 @@ CMS.grid = function () {
     initGridFilter();
     initGridOrder();
     initGridOperation();
+    initPaginator();
     initDt();
 };
 
