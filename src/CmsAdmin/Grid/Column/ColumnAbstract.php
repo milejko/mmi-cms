@@ -88,16 +88,16 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
 
         //brak sortowania
         if (!$this->_getOrderMethod()) {
-            return $html . ' <i class="fa fa-sort" style="color:#20a8d8"></i></a>';
+            return $html . '&nbsp;<i class="fa fa-sort" style="color:#20a8d8"></i></a>';
         }
 
         //ikona w dół
         if ($this->_getOrderMethod() == 'orderDesc') {
-            return $html . ' <i class="fa fa-sort-desc" style="color:#20a8d8"></i></a>';
+            return $html . '&nbsp;<i class="fa fa-sort-desc" style="color:#20a8d8"></i></a>';
         }
 
         //ikona w górę
-        return $html . ' <i class="fa fa-sort-asc" style="color:#20a8d8"></i></a>';
+        return $html . '&nbsp;<i class="fa fa-sort-asc" style="color:#20a8d8"></i></a>';
     }
 
     /**
