@@ -76,4 +76,16 @@ class CmsAttributeQuery extends \Mmi\Orm\Query
 
     protected $_tableName = 'cms_attribute';
 
+    /**
+     * Po kluczu atrybutu
+     * @param $key
+     * @return CmsAttributeQuery
+     */
+    public function withTypeByKey($key)
+    {
+        return $this
+            ->join('cms_attribute_type')->on('cms_attribute_type_id')
+            ->whereKey()->equals($key);
+    }
+
 }

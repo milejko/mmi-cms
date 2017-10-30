@@ -76,6 +76,31 @@ $(document).ready(function () {
                 tmp.create.label = "Utwórz podstronę";
                 tmp.rename.label = "Zmień nazwę";
                 tmp.remove.label = "Usuń";
+                //kopia artykułu z menu kontekstowego
+                tmp.copy = {
+                    "label": "Kopiuj",
+                    "action": function (data) {
+                        var inst = $.jstree.reference(data.reference);
+                        var node = inst.get_node(data.reference);
+                        CATEGORYCONF.hideMessage();
+                        $.post(request.baseUrl + '/cmsAdmin/category/copy', {'id': node.id})
+                            .done(function (d) {
+                                if (d.status) {
+                                    CATEGORYCONF.reload = true;
+                                    inst.set_id(node, d.id);
+                                    $('#jstree').jstree('deselect_all');
+                                    $('#jstree').jstree('select_node', d.id);
+                                } else {
+                                    inst.refresh();
+                                }
+                                CATEGORYCONF.showMessage(d);
+                            })
+                            .fail(function () {
+                                inst.refresh();
+                                CATEGORYCONF.showMessage({'error': 'Nie udało się skopiować strony'});
+                            });
+                    }
+                };
                 if (this.get_type(node) !== "leaf") {
                     delete tmp.remove;
                 }
@@ -120,11 +145,7 @@ $(document).ready(function () {
         })
         .on('create_node.jstree', function (e, data) {
             CATEGORYCONF.hideMessage();
-            $.post(request.baseUrl + '/cmsAdmin/category/create', {
-                'parentId': data.node.parent,
-                'order': data.position,
-                'name': data.node.text
-            })
+            $.post(request.baseUrl + '/cmsAdmin/category/create', {'parentId': data.node.parent, 'order': data.position, 'name': data.node.text})
                 .done(function (d) {
                     if (d.status) {
                         data.instance.set_id(data.node, d.id);
@@ -161,13 +182,7 @@ $(document).ready(function () {
         })
         .on('move_node.jstree', function (e, data) {
             CATEGORYCONF.hideMessage();
-            var params = {
-                'id': data.node.id,
-                'parentId': data.parent,
-                'oldParentId': data.old_parent,
-                'order': data.position,
-                'oldOrder': data.old_position
-            };
+            var params = {'id': data.node.id, 'parentId': data.parent, 'oldParentId': data.old_parent, 'order': data.position, 'oldOrder': data.old_position};
             $.post(request.baseUrl + '/cmsAdmin/category/move', params)
                 .done(function (d) {
                     if (d.status) {
@@ -185,7 +200,6 @@ $(document).ready(function () {
                 });
         })
         .on('changed.jstree', function (e, data) {
-            console.log(data)
             if (!data || !data.selected || !data.selected.length || !(0 in data.selected)) {
                 return;
             }

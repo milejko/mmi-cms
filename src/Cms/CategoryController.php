@@ -122,8 +122,9 @@ class CategoryController extends \Mmi\Mvc\Controller
      * Sprawdza aktywność kategorii do wyświetlenia
      * przekierowuje na 404 i na inne strony (zgodnie z redirectUri)
      * @param \Cms\Orm\CmsCategoryRecord $category
+     * @return Orm\CmsCategoryRecord
+     * @throws \Mmi\Mvc\MvcForbiddenException
      * @throws \Mmi\Mvc\MvcNotFoundException
-     * @return \Cms\Orm\CmsCategoryRecord $category
      */
     protected function _checkCategory(\Cms\Orm\CmsCategoryRecord $category)
     {

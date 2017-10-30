@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -53,7 +53,7 @@ class File
      * Dołącza pliki dla danego object i id bezpośrednio z serwera
      * @param \Mmi\Http\RequestFile $file obiekt pliku
      * @param string $object obiekt
-     * @param integer $id id obiektu
+     * @param int $id id obiektu
      * @param array $allowedTypes dozwolone typy plików
      * @return \Cms\Orm\CmsFileRecord
      */
@@ -135,7 +135,7 @@ class File
      * @param int $srcId id źródła
      * @param string $destObject obiekt docelowy
      * @param int $destId docelowy id
-     * @return ilość skopiowanych
+     * @return int ilość skopiowanych
      */
     public static function copy($srcObject, $srcId, $destObject, $destId)
     {
@@ -161,9 +161,9 @@ class File
      * Kopiuje plik Cms, zachowując pola oryginalnego rekordu
      * @param \Mmi\Http\RequestFile $file obiekt pliku
      * @param string $object obiekt
-     * @param integer $id id obiektu
+     * @param int $id id obiektu
      * @param \Cms\Orm\CmsFileRecord $copy rekord pliku Cms
-     * @return \Cms\Orm\CmsFileRecord
+     * @return \Cms\Orm\CmsFileRecord|null
      */
     protected static function _copyFile(\Mmi\Http\RequestFile $file, $object, $id, \Cms\Orm\CmsFileRecord $copy)
     {
@@ -180,6 +180,25 @@ class File
         $record->objectId = $id;
         //zapis rekordu
         return ($record->save()) ? $record : null;
+    }
+
+    /**
+     * @param CmsFileRecord $file
+     * @param $destId
+     * @return CmsFileRecord|null
+     */
+    public static function copyWithData(CmsFileRecord $file, $destId)
+    {
+        $copy = new \Mmi\Http\RequestFile([
+            'name' => $file->original,
+            'tmp_name' => $file->getRealPath(),
+            'size' => $file->size
+        ]);
+        $newFile = self::appendFile($copy, $file->object, $destId);
+        $newFile->data = $file->data;
+        $newFile->sticky = $file->sticky;
+        $newFile->order = $file->order;
+        return ($newFile->save()) ? $newFile : null;
     }
 
     /**
@@ -234,14 +253,14 @@ class File
      * Usuwa kolekcję rekordów po obiekcie i id
      * @param string $object
      * @param string $objectId
-     * @return integer ilość usuniętych obiektów
+     * @return int ilość usuniętych obiektów
      */
     public static function deleteByObject($object = null, $objectId = null)
     {
         //wybieramy kolekcję i usuwamy całą
         return CmsFileQuery::byObject($object, $objectId)
-                ->find()
-                ->delete();
+            ->find()
+            ->delete();
     }
 
     /**
