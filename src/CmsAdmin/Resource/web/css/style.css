@@ -9080,7 +9080,7 @@ ul.wlist {
     .nav-dropdown-items .nav-item .nav-dropdown-items .nav-item .nav-link, .nav-dropdown-items .nav-item .nav-dropdown-items .nav-item .navbar .dropdown-toggle, .navbar .nav-dropdown-items .nav-item .nav-dropdown-items .nav-item .dropdown-toggle {
       padding-left: 23px !important; }
 
-#cmsadmin-form-auth-cmsRoles-list {
+#cmsadmin-form-auth-cmsRoles-list, .multicheckbox ul {
   padding: 0;
   list-style-type: none; }
 
@@ -9101,3 +9101,7 @@ ul.wlist {
   .operation-container .operation-button {
     display: inline-block;
     margin-right: 10px; }
+
+.header-url {
+  font-size: 1.3rem;
+  color: #29363D; }

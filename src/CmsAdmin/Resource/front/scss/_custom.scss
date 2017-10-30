@@ -344,12 +344,17 @@ ul {
     }
   }
 }
-
 #cmsadmin-form-auth-cmsRoles-list {
   padding: 0;
   list-style-type: none;
 }
 
+.multicheckbox
+{
+  ul{
+    @extend #cmsadmin-form-auth-cmsRoles-list;
+  }
+}
 .messenger {
   position: absolute;
   top: 50px;
@@ -377,4 +382,8 @@ ul {
     display: inline-block;
     margin-right: 10px;
   }
+}
+.header-url{
+  font-size: 1.3rem;
+  color:#29363D;
 }
