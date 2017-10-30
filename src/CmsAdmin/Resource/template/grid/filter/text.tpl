@@ -1,5 +1,3 @@
 {if $_column->isFieldInRecord()}
-    <div class="field text">
-        <input type="text" name="{$_column->getFormColumnName()}" class="field text" data-method="{$_column->getOption('method')}" value="{$_column->getFilterValue()}">
-    </div>
+    <input type="text" class="form-control" name="{$_column->getFormColumnName()}" data-method="{$_column->getOption('method')}" value="{$_column->getFilterValue()}">
 {/if}

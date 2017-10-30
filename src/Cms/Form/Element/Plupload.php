@@ -16,7 +16,41 @@ namespace Cms\Form\Element;
 class Plupload extends \Mmi\Form\Element\ElementAbstract
 {
 
+    //szablon początku pola
+    CONST TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    //szablon opisu
+    CONST TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    //szablon końca pola
+    CONST TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    //szablon błędów
+    CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    //szablon etykiety
+    CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
     CONST UPLOADER_ID_KEY = 'uploaderId';
+    
+    /**
+     * Id elementu formularza
+     * @var string
+     */
+    protected $_id = '';
+    
+    /**
+     * Typ obiektu
+     * @var string
+     */
+    protected $_object = 'library';
+    
+    /**
+     * Id obiektu
+     * @var integer
+     */
+    protected $_objectId = null;
+    
+    /**
+     * Tymczsowy typ obiektu
+     * @var string
+     */
+    protected $_tempObject = 'library';
 
     /**
      * Ustawia form macierzysty
@@ -32,17 +66,15 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
             //ustawianie obiektu
             $this->setObject($form->getFileObjectName());
         }
-        //form posiada rekord już edytowany (nie ma potrzeby identyfikować uploadera)
-        if ($form->getOption(\Cms\Form\Form::EDITING_RECORD_OPTION_KEY)) {
-            return $this;
-        }
+        //instancja front controllera
+        $frontController = \Mmi\App\FrontController::getInstance();
         //uploaderId znajduje się w requescie
-        if (\Mmi\App\FrontController::getInstance()->getRequest()->uploaderId) {
-            $this->setOption(self::UPLOADER_ID_KEY, \Mmi\App\FrontController::getInstance()->getRequest()->uploaderId);
+        if ($frontController->getRequest()->uploaderId) {
+            $this->setOption(self::UPLOADER_ID_KEY, $frontController->getRequest()->uploaderId);
             return $this;
         }
         //przekierowanie na url zawierający nowowygenerowany uploaderId
-        \Mmi\App\FrontController::getInstance()->getResponse()->redirectToUrl(\Mmi\App\FrontController::getInstance()->getRouter()->encodeUrl(\Mmi\App\FrontController::getInstance()->getRequest()->toArray() + ['uploaderId' => mt_rand(100000, 999999)]));
+        $frontController->getResponse()->redirectToUrl($frontController->getRouter()->encodeUrl($frontController->getRequest()->toArray() + ['uploaderId' => mt_rand(1000000, 9999999)]));
         return $this;
     }
 
@@ -54,7 +86,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
     {
         return $this->getOption(self::UPLOADER_ID_KEY);
     }
-
+    
     /**
      * Ustawia objekt cms_
      * @param string $object
@@ -289,9 +321,9 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
     public function fetchField()
     {
         $view = \Mmi\App\FrontController::getInstance()->getView();
-        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.css');
-        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.structure.min.css');
-        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.theme.min.css');
+        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/css/jquery-ui.min.css');
+        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/css/jquery-ui.structure.min.css');
+        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/css/jquery-ui.theme.min.css');
         $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/css/jquery.ui.plupload.css');
         $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/plupload/plupload.conf.css');
         $view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
@@ -301,48 +333,32 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
         $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/i18n/pl.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/jquery.ui.plupload.min.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/plupload.conf.js');
+        
+        //przygotowanie danych dla pola
+        $this->_beforeRender();
 
-        $id = $this->getOption('id');
-        $object = 'library';
-        $objectId = null;
-        if ($this->_form->hasRecord()) {
-            $object = $this->_form->getFileObjectName();
-            $objectId = $this->_form->getRecord()->getPk();
-        }
-        //jeśli wymuszony inny object
-        if ($this->getOption('object')) {
-            $object = $this->getOption('object');
-        }
-        if (!$objectId) {
-            $object = 'tmp-' . $object;
-            $objectId = $this->getUploaderId();
-        }
-        if (!$this->_form->hasRecord()) {
-            $objectId = null;
-        }
-
-        $html = '<div id="' . $id . '">';
+        $html = '<div id="' . $this->_id . '">';
         $html .= '<p>Twoja przeglądarka nie posiada wsparcia dla HTML5.</p>';
         $html .= '<p>Proszę zaktualizować oprogramowanie.</p>';
         $html .= '</div>';
-        $html .= '<div id="' . $id . '-confirm" class="plupload-confirm-container" title="">';
+        $html .= '<div id="' . $this->_id . '-confirm" class="plupload-confirm-container" title="">';
         $html .= '<p><span class="dialog-info"></span><span class="dialog-file"></span><span class="dialog-info-2"></span></p>';
         $html .= '</div>';
-        $html .= '<div id="' . $id . '-edit" class="plupload-edit-container" title="">';
+        $html .= '<div id="' . $this->_id . '-edit" class="plupload-edit-container" title="">';
         $html .= '<fieldset>';
         $html .= $this->_renderImprintElements();
-        $html .= '<label for="' . $id . '-edit-original">Nazwa wyświetlana</label>';
-        $html .= '<input type="text" class="text imprint" name="original" id="' . $id . '-edit-userFileName">';
-        $html .= '<div id="' . $id . '-edit-buttons" class="plupload-edit-buttons">';
-        $html .= '<input type="checkbox" name="active" id="' . $id . '-edit-active" value="1"><label for="' . $id . '-edit-active">aktywny</label>';
-        $html .= '<input type="checkbox" name="sticky" id="' . $id . '-edit-sticky" value="1"><label for="' . $id . '-edit-sticky">wyróżniony</label>';
+        $html .= '<label for="' . $this->_id . '-edit-original">Nazwa wyświetlana</label>';
+        $html .= '<input type="text" class="text imprint" name="original" id="' . $this->_id . '-edit-userFileName">';
+        $html .= '<div id="' . $this->_id . '-edit-buttons" class="plupload-edit-buttons">';
+        $html .= '<input type="checkbox" name="active" id="' . $this->_id . '-edit-active" value="1"><label for="' . $this->_id . '-edit-active">aktywny</label>';
+        $html .= '<input type="checkbox" name="sticky" id="' . $this->_id . '-edit-sticky" value="1"><label for="' . $this->_id . '-edit-sticky">wyróżniony</label>';
         $html .= '</div>';
         $html .= '</fieldset>';
         $html .= '<div class="dialog-error"><p></p><span class="ui-icon ui-icon-alert"></span></div>';
         $html .= '</div>';
         if ($this->getOption('showConsole')) {
             $html .= '<div class="plupload-log-container">';
-            $html .= '<pre class="plupload-log-console" id="' . $id . '-console"></pre>';
+            $html .= '<pre class="plupload-log-console" id="' . $this->_id . '-console"></pre>';
             $html .= '</div>';
         }
 
@@ -351,10 +367,10 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
 			$(document).ready(function () {
 				'use strict';
 				var conf = $.extend(true, {}, PLUPLOADCONF.settings);
-				conf.form_element_id = '$id';
-				conf.form_object = '$object';
-				conf.form_object_id = '$objectId';
-				" . ($this->getOption('showConsole') ? "conf.log_element = '" . $id . "-console';" : "") . "
+				conf.form_element_id = '$this->_id';
+				conf.form_object = '$this->_tempObject';
+				conf.form_object_id = '" . $this->getUploaderId() . "';
+				" . ($this->getOption('showConsole') ? "conf.log_element = '" . $this->_id . "-console';" : "") . "
 				" . ($this->getOption('chunkSize') ? "conf.chunk_size = '" . $this->getOption('chunkSize') . "';" : "") . "
 				" . ($this->getOption('maxFileSize') ? "conf.max_file_size = '" . $this->getOption('maxFileSize') . "';" : "") . "
 				" . ($this->getOption('maxFileCount') ? "conf.max_file_cnt = " . $this->getOption('maxFileCount') . ";" : "") . "
@@ -364,11 +380,46 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
 				" . ($this->getOption('afterDelete') ? "conf.after_delete = " . json_encode($this->getOption('afterDelete')) . ";" : "") . "
 				conf.preview = " . ($this->getOption('preview') ? $this->getOption('preview') : 0) . ";
 				" . ($this->getOption('afterEdit') ? "conf.after_edit = " . json_encode($this->getOption('afterEdit')) . ";" : "") . "
-				$('#$id').plupload(conf);
+				$('#$this->_id').plupload(conf);
 			});
 		");
 
         return $html;
+    }
+    
+    /**
+     * Przygotowanie danych przed renderingiem pola formularza
+     * @return \Cms\Form\Element\Plupload
+     */
+    protected function _beforeRender() {
+        $this->_id = $this->getOption('id');
+        if ($this->_form->hasRecord()) {
+            $this->_object = $this->_form->getFileObjectName();
+            $this->_objectId = $this->_form->getRecord()->getPk();
+        }
+        //jeśli wymuszony inny object
+        if ($this->getOption('object')) {
+            $this->_object = $this->getOption('object');
+        }
+        $this->_tempObject = 'tmp-' . $this->_object;
+        $this->_createTempFiles();
+        return $this;
+    }
+    
+    /**
+     * Utorzenie kopii plików dla tego uploadera
+     * @return boolean
+     */
+    protected function _createTempFiles() {
+        //jeśli już są pliki tymczasowe, to wychodzimy
+        if ((new \Cms\Orm\CmsFileQuery)
+            ->byObject($this->_tempObject, $this->getUploaderId())
+            ->count()) {
+            return true;
+        }
+        //tworzymy pliki tymczasowe - kopie oryginałów
+        \Cms\Model\File::copy($this->_object, $this->_objectId, $this->_tempObject, $this->getUploaderId());
+        return true;
     }
 
     /**
@@ -457,7 +508,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
 								src = $(this).find(':selected').attr('data-image-url')
 							}
 
-							$('#image_$fieldId').html( '<img src=\"' + src +'\"/>' );
+							$('#image_$fieldId').html( images + src +'\"/>' );
 						});
 					});
 				// ]]>

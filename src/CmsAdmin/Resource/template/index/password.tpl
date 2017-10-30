@@ -1,10 +1,16 @@
-<div class="content-box">
-    <div class="content-box-header">
-        <h3>
-            {#Zmiana hasła#}
-        </h3>
-    </div>
-    <div class="content-box-content clearfix">
-        {$passwordForm}
+<div class="container-fluid">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>{#Zmiana hasła#}</strong>
+                    </div>
+                    <div class="card-body">
+                        {$passwordForm}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

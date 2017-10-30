@@ -38,15 +38,6 @@ class TextareaColumn extends ColumnAbstract
     const TEMPLATE_CELL = 'cmsAdmin/grid/cell/textarea';
 
     /**
-     * @return string
-     */
-    public function renderFilter()
-    {
-        FrontController::getInstance()->getView()->_column = $this;
-        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_FILTER);
-    }
-
-    /**
      * Renderuje pole tekstowe, długie
      * @param \Mmi\Orm\RecordRo $record
      * @return string

@@ -58,7 +58,10 @@ $(document).ready(function () {
         },
         'types': {
             '#': {'valid_children': ["root"]},
-            'root': {'valid_children': ["default", "leaf"], 'icon': request.baseUrl + '/resource/cmsAdmin/images/tree.png'},
+            'root': {
+                'valid_children': ["default", "leaf"],
+                'icon': request.baseUrl + '/resource/cmsAdmin/images/tree.png'
+            },
             'default': {'valid_children': ["default", "leaf"]},
             'leaf': {'valid_children': ["default", "leaf"]}
         },
@@ -250,19 +253,23 @@ CATEGORYCONF.loadUrl = function (nodeId) {
     };
     //przy ładowaniu zewnętrznej ramki wyrzuca cors
     //stop playerów tylko na wewnętrznych stronach
-    if ($('input#cmsadmin-form-category-redirectUri').size() && $('input#cmsadmin-form-category-redirectUri').first().val().length === 0) {
-        $('audio, video').each(function () {
-            stopPlaying(this);
-        });
-        $('iframe#preview-frame').contents().find('audio, video').each(function () {
-            stopPlaying(this);
-        });
+    if ($('input#cmsadmin-form-category-redirectUri').length === 1) {
+        if ($('input#cmsadmin-form-category-redirectUri').size() && $('input#cmsadmin-form-category-redirectUri').first().val().length === 0) {
+            $('audio, video').each(function () {
+                stopPlaying(this);
+            });
+            $('iframe#preview-frame').contents().find('audio, video').each(function () {
+                stopPlaying(this);
+            });
+        }
     }
     if (parseFloat(request.id) === parseFloat(nodeId) && window.location.search.indexOf("from=tree") !== -1) {
         window.location.reload();
     } else {
         window.location.assign(request.baseUrl + '/cmsAdmin/category/edit?id=' + nodeId + '&from=tree' + window.location.hash);
     }
+
+
 };
 
 CATEGORYCONF.showMessage = function (data) {

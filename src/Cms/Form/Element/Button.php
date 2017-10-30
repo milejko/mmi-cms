@@ -15,7 +15,18 @@ namespace Cms\Form\Element;
  */
 class Button extends \Mmi\Form\Element\Button
 {
-    
+
+    //szablon początku pola
+    CONST TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    //szablon opisu
+    CONST TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    //szablon końca pola
+    CONST TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    //szablon błędów
+    CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    //szablon etykiety
+    CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+
     /**
      * Konstruktor
      * @param string $name
@@ -25,5 +36,5 @@ class Button extends \Mmi\Form\Element\Button
         $this->addClass('form-control');
         parent::__construct($name);
     }
-    
+
 }

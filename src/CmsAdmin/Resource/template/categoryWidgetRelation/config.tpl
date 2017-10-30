@@ -1,18 +1,20 @@
-<div class="content-box">
-    <div class="content-box-header">
-        <h3>{if $widgetRecord}{$widgetRecord->name} - {/if}{#konfiguracja#}</h3>
-        <div class="clear"></div>
-    </div>
-    <div class="content-box-content clearfix">
-        {if $widgetRelationForm}
-            {$widgetRelationForm}
-        {else}
-            {* Przeładowanie widgetów *}
-            <script>
-                window.opener.CMS.category().reloadWidgets();
-                window.close();
-            </script>
-        {/if}
-        <div class="cl"></div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mt-4">
+            <div class="card-header">
+                <strong>{if $widgetRecord}{$widgetRecord->name} - {/if}{#konfiguracja#}</strong>
+            </div>
+            <div class="card-body">
+                {if $widgetRelationForm}
+                {$widgetRelationForm}
+                {else}
+                {* Przeładowanie widgetów *}
+                <script>
+                    window.opener.CMS.category().reloadWidgets();
+                    window.close();
+                </script>
+                {/if}
+            </div>
+        </div>
     </div>
 </div>

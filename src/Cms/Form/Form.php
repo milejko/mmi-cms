@@ -47,12 +47,12 @@ abstract class Form extends \Mmi\Form\Form
      */
     public function save()
     {
-        if ($this->hasRecord() && parent::save()) {
+        $result = parent::save();
+        if ($result) {
+            if ($this->hasRecord()) {
+                $this->_appendFiles($this->_record->getPk(), $this->getFiles());
+            }
             $this->afterUpload();
-            $this->_appendFiles($this->_record->getPk(), $this->getFiles());
-        }
-        if (!$this->hasRecord()) {
-            parent::save();
         }
         return $this->isSaved();
     }
@@ -62,19 +62,21 @@ abstract class Form extends \Mmi\Form\Form
      */
     public function afterUpload()
     {
-        if (!$this->getRecord()->getPk()) {
-            return;
+        //domyślnie objectId NULL dla elementów bez rekordu
+        $objectId = null;
+        //jeśli mamy rekord, to bierzemy z niego objectId
+        if ($this->hasRecord() && $this->getRecord()->getPk()) {
+            $objectId = $this->getRecord()->getPk();
         }
-        //rekord edytowany - nie łączymy uploaderów z tymczasowym uploadem
-        if ($this->getOption(self::EDITING_RECORD_OPTION_KEY)) {
-            return;
-        }
-        //przenoszenie z uploadera plików ze zmienionym object
+        //dla każdego elementu Plupload
         foreach ($this->getElements() as $element) {
             if (!$element instanceof \Cms\Form\Element\Plupload || !$element->getObject()) {
                 continue;
             }
-            \Cms\Model\File::move('tmp-' . $element->getObject(), $element->getUploaderId(), $element->getObject(), $this->getRecord()->getPk());
+            //usunięcie poprzednich plików - oryginalnych
+            \Cms\Model\File::deleteByObject($element->getObject(), $objectId);
+            //przenoszenie z uploadera plików ze zmienionym object
+            \Cms\Model\File::move('tmp-' . $element->getObject(), $element->getUploaderId(), $element->getObject(), $objectId);
         }
     }
 

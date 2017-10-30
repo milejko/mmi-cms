@@ -193,8 +193,8 @@ class GridRequestHandler
         $renderer = new GridRenderer($this->_grid);
         //ustawianie odpowiedzi
         FrontController::getInstance()->getResponse()
-            ->setTypePlain()
-            ->setContent($renderer->renderHeader() . $renderer->renderBody() . $renderer->renderFooter());
+            ->setTypeJson()
+            ->setContent(json_encode(['body' => $renderer->renderHeader() . $renderer->renderBody(), 'paginator' => $renderer->renderFooter()]));
         exit;
     }
 

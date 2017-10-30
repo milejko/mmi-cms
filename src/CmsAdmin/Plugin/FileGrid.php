@@ -67,18 +67,6 @@ class FileGrid extends \CmsAdmin\Grid\Grid
         $this->addColumn((new Column\TextColumn('original'))
             ->setLabel('nazwa pliku'));
 
-        //tytuł
-        $this->addColumn((new Column\TextColumn('title'))
-            ->setLabel('tytuł'));
-
-        //autor
-        $this->addColumn((new Column\TextColumn('author'))
-            ->setLabel('autor'));
-
-        //źródło
-        $this->addColumn((new Column\TextColumn('source'))
-            ->setLabel('źródło'));
-
         //zasób
         $this->addColumn((new Column\TextColumn('object'))
             ->setLabel('zasób'));
@@ -93,8 +81,8 @@ class FileGrid extends \CmsAdmin\Grid\Grid
             ->setDisabled());
 
         $this->addColumn((new Column\CustomColumn('download'))
-            ->setLabel('pobierz')
-            ->setTemplateCode('<a class="button small" href="{$record->getUrl()}">pobierz</a>'));
+            ->setLabel('<i class="fa fa-2 fa-download"></i>')
+            ->setTemplateCode('<a class="button small" href="{$record->getUrl()}"><i class="fa fa-2 fa-download"></i></a>'));
 
         //operacje
         $this->addColumn((new Column\OperationColumn())->setEditParams([]));
