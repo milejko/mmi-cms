@@ -349,7 +349,7 @@ ul {
   list-style-type: none;
 }
 
-.multicheckbox
+.multi-checkbox
 {
   ul{
     @extend #cmsadmin-form-auth-cmsRoles-list;
@@ -386,4 +386,14 @@ ul {
 .header-url{
   font-size: 1.3rem;
   color:#29363D;
+}
+
+.plupload_button{
+  color:#1CA1D4 !important;
+}
+.plupload_file_action{
+  top:0  !important;
+}
+.plupload_file_size{
+  top:2px !important;
 }

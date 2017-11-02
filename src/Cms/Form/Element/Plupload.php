@@ -321,18 +321,6 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
     public function fetchField()
     {
         $view = \Mmi\App\FrontController::getInstance()->getView();
-        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/css/jquery-ui.min.css');
-        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/css/jquery-ui.structure.min.css');
-        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/css/jquery-ui.theme.min.css');
-        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/css/jquery.ui.plupload.css');
-        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/plupload/plupload.conf.css');
-        $view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/tinymce.min.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/plupload.full.min.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/i18n/pl.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/jquery.ui.plupload.min.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/plupload.conf.js');
         
         //przygotowanie danych dla pola
         $this->_beforeRender();

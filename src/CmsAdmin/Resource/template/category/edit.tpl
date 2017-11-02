@@ -1,5 +1,15 @@
 {headScript()->appendFile('/resource/cmsAdmin/js/jquery-ui/jquery-ui.js')}
+{headScript()->appendFile('/resource/cmsAdmin/js/tiny/tinymce.min.js')}
+{headScript()->appendFile('/resource/cmsAdmin/js/plupload/plupload.full.min.js')}
+{headScript()->appendFile('/resource/cmsAdmin/js/plupload/plupload.conf.js')}
+{headScript()->appendFile('/resource/cmsAdmin/js/plupload/i18n/pl.js')}
+{headScript()->appendFile('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/jquery.ui.plupload.min.js')}
 {headScript()->appendFile('/resource/cmsAdmin/js/category.js')}
+{headLink()->appendStylesheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.css')}
+{headLink()->appendStylesheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.structure.min.css')}
+{headLink()->appendStylesheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.theme.min.css')}
+{headLink()->appendStylesheet('/resource/cmsAdmin/js/plupload/plupload.conf.css')}
+{headLink()->appendStylesheet('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/css/jquery.ui.plupload.css')}
 
 <div class="container-fluid">
     <div class="animated fadeIn">
