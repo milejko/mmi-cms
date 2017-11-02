@@ -149,6 +149,7 @@ class File
                 'size' => $file->size
             ]);
             $newFile = clone $file;
+            $newFile->cmsFileOriginalId = $file->id;
             $newFile->id = null;
             //dołączanie pliku
             self::_copyFile($copy, $destObject, $destId, $newFile);
@@ -239,7 +240,9 @@ class File
         if (!$record->dateAdd) {
             $record->dateAdd = date('Y-m-d H:i:s');
         }
-        $record->dateModify = date('Y-m-d H:i:s');
+        if (!$record->dateModify) {
+            $record->dateModify = date('Y-m-d H:i:s');
+        }
         //właściciel pliku
         $record->cmsAuthId = \App\Registry::$auth ? \App\Registry::$auth->getId() : null;
         if ($record->active === null) {

@@ -65,6 +65,18 @@ class CmsFileRecord extends \Mmi\Orm\Record
      * @var boolean
      */
     public $active;
+    
+    /**
+     * Id oryginalnego pliku, z którego powstała kopia
+     * @var integer
+     */
+    public $cmsFileOriginalId;
+    
+    /**
+     * Czy nowo przesłany
+     * @var boolean
+     */
+    public $newUploaded;
 
     /**
      * Ustawia plik jako przyklejony w obrębie danego object+objectId

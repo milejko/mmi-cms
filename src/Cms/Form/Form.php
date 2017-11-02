@@ -73,10 +73,8 @@ abstract class Form extends \Mmi\Form\Form
             if (!$element instanceof \Cms\Form\Element\Plupload || !$element->getObject()) {
                 continue;
             }
-            //usunięcie poprzednich plików - oryginalnych
-            \Cms\Model\File::deleteByObject($element->getObject(), $objectId);
-            //przenoszenie z uploadera plików ze zmienionym object
-            \Cms\Model\File::move('tmp-' . $element->getObject(), $element->getUploaderId(), $element->getObject(), $objectId);
+            //łączenie tymczasowych plików z uploadera (kopii) z oryginałami
+            (new \Cms\Model\FileMerge('tmp-' . $element->getObject(), $element->getUploaderId(), $element->getObject(), $objectId))->merge();
         }
     }
 
