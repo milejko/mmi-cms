@@ -131,6 +131,7 @@ class FileMerge
         $original->data = $tmp->data;
         $original->dateModify = $tmp->dateModify;
         $original->order = $tmp->order;
+        $original->original = $tmp->original;
         $original->sticky = $tmp->sticky;
         return $original->save();
     }

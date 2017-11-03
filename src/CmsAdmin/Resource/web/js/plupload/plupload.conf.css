@@ -56,12 +56,12 @@ div.plupload-edit-container div.plupload-edit-buttons label, div.plupload-edit-c
     float: left;
 }
 
-div.plupload-edit-container div.plupload-edit-buttons input.checkbox {
-    margin: 4px 4px 0 25px;
+div.plupload-edit-container div.plupload-edit-buttons input[type="radio"], div.plupload-edit-container div.plupload-edit-buttons input[type="checkbox"] {
+	margin: 4px 4px 0 25px;
 }
 
-div.plupload-edit-container div.plupload-edit-buttons input.checkbox:first-child {
-    margin-left: 0;
+div.plupload-edit-container div.plupload-edit-buttons input[type="radio"]:first-child, div.plupload-edit-container div.plupload-edit-buttons input[type="checkbox"]:first-child {
+	margin-left: 0;
 }
 
 div.plupload-edit-container input.text, div.plupload-edit-container textarea {

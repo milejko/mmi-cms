@@ -172,7 +172,6 @@ $(document).ready(function () {
                         });
             })
             .on('changed.jstree', function (e, data) {
-                console.log(data)
                 if (!data || !data.selected || !data.selected.length || !(0 in data.selected)) {
                     return;
                 }

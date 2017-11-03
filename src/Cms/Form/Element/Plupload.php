@@ -335,7 +335,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
         $html .= '<div id="' . $this->_id . '-edit" class="plupload-edit-container" title="">';
         $html .= '<fieldset>';
         $html .= $this->_renderImprintElements();
-        $html .= '<label for="' . $this->_id . '-edit-original">Nazwa wyświetlana</label>';
+        $html .= '<label for="' . $this->_id . '-edit-original">nazwa wyświetlana</label>';
         $html .= '<input type="text" class="text imprint" name="original" id="' . $this->_id . '-edit-userFileName">';
         $html .= '<div id="' . $this->_id . '-edit-buttons" class="plupload-edit-buttons">';
         $html .= '<input type="checkbox" name="active" id="' . $this->_id . '-edit-active" value="1"><label for="' . $this->_id . '-edit-active">aktywny</label>';
