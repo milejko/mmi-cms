@@ -46,7 +46,7 @@ class CronController extends \Mmi\Mvc\Controller
     }
 
     /**
-     * Czyściciel logów i cms file
+     * Czyściciel logów
      */
     public function cleanAction()
     {
@@ -54,9 +54,18 @@ class CronController extends \Mmi\Mvc\Controller
         if ($this->months > 0) {
             $months = intval($this->months);
         }
+        //czyszczenie logów
+        \Cms\Model\Log::clean($months);
+        return '';
+    }
+    
+    /**
+     * Usuwa pliki tymczasowe Cms File
+     */
+    public function deleteOrphansAction()
+    {
         //usuwanie plików tmp
         \Cms\Model\File::deleteOrphans();
-        \Cms\Model\Log::clean($months);
         return '';
     }
 

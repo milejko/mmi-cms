@@ -172,6 +172,7 @@ class File
         if (null === $name = self::_checkAndCopyFile($file)) {
             return null;
         }
+        $copy->dateModify = date('Y-m-d H:i:s');
         //przypisywanie pól w rekordzie
         $record = self::_updateRecordFromRequestFile($file, $copy);
         //zapis nazwy pliku
@@ -268,11 +269,15 @@ class File
 
     /**
      * Usuwanie nieużywanych plików przypiętych do tmp-XXX
+     * @param string $modifiedDate graniczna data modyfikacji
      */
-    public static function deleteOrphans()
+    public static function deleteOrphans($modifiedDate = '')
     {
+        if (empty($modifiedDate)) {
+            $modifiedDate = date('Y-m-d H:i:s', strtotime('-1 week'));
+        }
         (new CmsFileQuery)->whereObject()->like('tmp-%')
-            ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-1 week')))
+            ->andFieldDateModify()->less($modifiedDate)
             ->find()
             ->delete();
     }
