@@ -1,4 +1,5 @@
 {'cmsAdmin/header'}
+{adminMessenger()}
 {if !$auth}
     <body class="app flex-row align-items-center">
     {else}
@@ -32,7 +33,6 @@
         </header>
     {/if}
     <div class="app-body">
-        {adminMessenger()}
         {if $auth}
             <div class="sidebar">
                 <nav class="sidebar-nav">
