@@ -321,6 +321,23 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
     public function fetchField()
     {
         $view = \Mmi\App\FrontController::getInstance()->getView();
+
+        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/jquery.ui.plupload.min.js');
+        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.css');
+        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.structure.min.css');
+        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.theme.min.css');
+        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/plupload/plupload.conf.css');
+        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/css/jquery.ui.plupload.css');
+        $view->headScript()->prependFile('/resource/cmsAdmin/vendors/js/jquery.min.js');
+        $view->headScript()->appendFile('/resource/cmsAdmin/vendors/js/popper.min.js');
+        $view->headScript()->appendFile('/resource/cmsAdmin/vendors/js/pace.min.js');
+        $view->headScript()->appendFile('/resource/cmsAdmin/vendors/js/bootstrap.min.js');
+        $view->headScript()->appendFile('/resource/cmsAdmin/js/jquery-ui/jquery-ui.js');
+        $view->headScript()->appendFile('/resource/cmsAdmin/js/jquery/datetimepicker.js');
+        $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/plupload.full.min.js');
+        $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/plupload.conf.js');
+        $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/i18n/pl.js');
+        $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/jquery.ui.plupload.min.js');
         
         //przygotowanie danych dla pola
         $this->_beforeRender();
