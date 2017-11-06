@@ -326,6 +326,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
         $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.theme.min.css');
         $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/plupload/plupload.conf.css');
         $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/css/jquery.ui.plupload.css');
+        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/css/jquery.ui.plupload.css');
         $view->headScript()->prependFile('/resource/cmsAdmin/vendors/js/jquery.min.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/vendors/js/popper.min.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/vendors/js/pace.min.js');
@@ -337,7 +338,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
         $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/plupload.conf.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/i18n/pl.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/jquery.ui.plupload.min.js');
-        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/jquery.ui.plupload.min.js');
+
 
 
 
