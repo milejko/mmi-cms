@@ -71,7 +71,6 @@ PLUPLOADCONF.settings.preinit = {
 
 PLUPLOADCONF.settings.init = {
     FilesAdded: function (up, files) {
-        console.log('dupa')
         plupload.each(files, function (file) {
             if (!file.cmsFileId) {
                 PLUPLOADCONF.log(up, 'Dodano do kolejki plik: ' + file.name);
@@ -506,7 +505,7 @@ PLUPLOADCONF.sortable = function (up) {
 };
 
 PLUPLOADCONF.editable = function (up, file) {
-    if (file.cmsFileId && $('div#' + up.getOption('form_element_id') + ' li#' + file.id + ' div.plupload_file_name span span.ui-icon-pencil').size() === 0) {
+    if (file.cmsFileId && $('div#' + up.getOption('form_element_id') + ' li#' + file.id + ' div.plupload_file_name span span.ui-icon-pencil').length === 0) {
         $('div#' + up.getOption('form_element_id') + ' li#' + file.id + ' div.plupload_file_name span').prepend('<span class="ui-icon ui-icon-pencil"></span>');
     }
 };

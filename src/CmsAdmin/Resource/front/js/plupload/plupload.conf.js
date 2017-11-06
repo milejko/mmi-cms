@@ -505,7 +505,7 @@ PLUPLOADCONF.sortable = function (up) {
 };
 
 PLUPLOADCONF.editable = function (up, file) {
-    if (file.cmsFileId && $('div#' + up.getOption('form_element_id') + ' li#' + file.id + ' div.plupload_file_name span span.ui-icon-pencil').size() === 0) {
+    if (file.cmsFileId && $('div#' + up.getOption('form_element_id') + ' li#' + file.id + ' div.plupload_file_name span span.ui-icon-pencil').length === 0) {
         $('div#' + up.getOption('form_element_id') + ' li#' + file.id + ' div.plupload_file_name span').prepend('<span class="ui-icon ui-icon-pencil"></span>');
     }
 };
