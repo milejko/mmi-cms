@@ -71,6 +71,7 @@ PLUPLOADCONF.settings.preinit = {
 
 PLUPLOADCONF.settings.init = {
     FilesAdded: function (up, files) {
+        console.log('dupa')
         plupload.each(files, function (file) {
             if (!file.cmsFileId) {
                 PLUPLOADCONF.log(up, 'Dodano do kolejki plik: ' + file.name);
