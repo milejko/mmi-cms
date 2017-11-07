@@ -18,7 +18,6 @@ gulp.paths = {
 var paths = gulp.paths;
 
 var project_path = {
-    base: './../base/**/*',
     front: './dist/**/*',
     output: './../web/'
 };
@@ -28,10 +27,6 @@ gulp.task('clean_assets', function () {
         .pipe(clean({force: true}));
 });
 
-gulp.task('old_assets', ['clean_assets'], function () {
-    return gulp.src(project_path.base, {base: './../base/'})
-        .pipe(gulp.dest(project_path.output));
-});
 gulp.task('copy_jstree', function () {
     return gulp.src('./js/**/*', {base: './'})
         .pipe(gulp.dest(project_path.output));
@@ -54,7 +49,7 @@ gulp.task('serve', function () {
     });
 });
 
-gulp.task('build:prod', function(){
+gulp.task('build', function(){
     return new Promise(function (suc, e) {
         runSequence('sass','copy_jstree', 'build:dist', 'new_assets');
     });
