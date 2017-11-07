@@ -114,7 +114,7 @@
                             <div class="card">
                                 <div class="card-header" role="tab" id="headingThree">
                                     <h5 class="mb-0">
-                                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#tab-widget" aria-expanded="false" aria-controls="collapseThree">
+                                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#tab-widget" aria-expanded="false" aria-controls="collapseThree" id="category-widgets">
                                             {#Widgety#}
                                         </a>
                                     </h5>
