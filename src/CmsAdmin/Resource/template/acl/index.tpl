@@ -12,13 +12,14 @@
                     </div>
                     <div class="card-body">
 
-                        <div class="tabs btn-group">
-                            {foreach name="roles" $roles as $role}
-                                    <a class="btn btn-outline-primary{if $request->roleId && $request->roleId == $role->id} active{$chosenRole = $role}{/if}" href="{@module=cmsAdmin&controller=acl&action=index&roleId={$role->id}@}">{$role->name}</a>
-                            {/foreach}
+                        <div class="row">
+                            <div class="col">
+                                {foreach name="roles" $roles as $role}
+                                <a class="btn btn-outline-primary m-1 {if $request->roleId && $request->roleId == $role->id} active{$chosenRole = $role}{/if}" href="{@module=cmsAdmin&controller=acl&action=index&roleId={$role->id}@}">{$role->name}</a>
+                                {/foreach}
+                            </div>
                         </div>
-
-                        <div id="rules">
+                         <div id="rules">
                             {if $request->roleId}
                                 <table class="table table-striped">
                                     <tr>
