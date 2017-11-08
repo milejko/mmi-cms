@@ -344,17 +344,18 @@ ul {
     }
   }
 }
+
 #cmsadmin-form-auth-cmsRoles-list {
   padding: 0;
   list-style-type: none;
 }
 
-.multi-checkbox
-{
-  ul{
+.multi-checkbox {
+  ul {
     @extend #cmsadmin-form-auth-cmsRoles-list;
   }
 }
+
 .messenger {
   position: absolute;
   top: 50px;
@@ -384,21 +385,39 @@ ul {
     margin-right: 10px;
   }
 }
-.header-url{
+
+.header-url {
   font-size: 1.3rem;
-  color:#29363D;
+  color: #29363D;
 }
 
-.plupload_button{
-  color:#1CA1D4 !important;
-}
-.plupload_file_action{
-  top:0  !important;
-}
-.plupload_file_size{
-  top:2px !important;
+.plupload_button {
+  color: #1CA1D4 !important;
 }
 
-.select{
+.plupload_file_action {
+  top: 0 !important;
+}
+
+.plupload_file_size {
+  top: 2px !important;
+}
+
+.select {
   height: 38px !important;
+}
+
+.cms-widget {
+  position: relative;
+  .widget-panel {
+    .widget-btn{
+      cursor: pointer;
+    }
+    position: absolute;
+    top: 0;
+    left: 20px;
+    .fa{
+      font-size: 2.7rem !important;
+    }
+  }
 }

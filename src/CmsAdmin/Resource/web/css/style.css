@@ -9111,10 +9111,21 @@ ul.wlist {
   color: #1CA1D4 !important; }
 
 .plupload_file_action {
-  top: 0  !important; }
+  top: 0 !important; }
 
 .plupload_file_size {
   top: 2px !important; }
 
 .select {
   height: 38px !important; }
+
+.cms-widget {
+  position: relative; }
+  .cms-widget .widget-panel {
+    position: absolute;
+    top: 0;
+    left: 20px; }
+    .cms-widget .widget-panel .widget-btn {
+      cursor: pointer; }
+    .cms-widget .widget-panel .fa {
+      font-size: 2.7rem !important; }
