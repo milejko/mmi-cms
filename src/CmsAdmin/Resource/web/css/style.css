@@ -9089,7 +9089,8 @@ ul.wlist {
   top: 50px;
   right: 50px;
   border-radius: 10px;
-  list-style: none; }
+  list-style: none;
+  z-index: 99999; }
 
 @media (min-width: 576px) {
   .card-body, .card-block {

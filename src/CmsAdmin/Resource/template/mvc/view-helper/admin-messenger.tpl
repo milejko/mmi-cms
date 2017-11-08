@@ -18,9 +18,13 @@
                 {$class = 'alert alert-info'}
                 {$icon = 'fa-info'}
             {/if}
+            {if $message.type == 'success'}
+                {$class = 'alert alert-success'}
+                {$icon = 'fa-info'}
+            {/if}
         {/if}
         <li class="notice">
-            <div class="alert {$class}" role="alert">
+            <div class="alert {$class} {$message.type}" role="alert">
                 <i class="fa {$icon}"></i>
                 <span>{$_messenger->prepareTranslatedMessage($message)}</span>
                 <a class="close-alert" href="#"></a>
