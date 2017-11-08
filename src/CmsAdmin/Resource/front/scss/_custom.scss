@@ -410,14 +410,18 @@ ul {
 .cms-widget {
   position: relative;
   .widget-panel {
-    .widget-btn{
+    .widget-btn {
       cursor: pointer;
+      margin-top: 20px;
     }
     position: absolute;
     top: 0;
     left: 20px;
-    .fa{
+    .fa {
       font-size: 2.7rem !important;
+      i {
+        color: #20a8d8;
+      }
     }
   }
 }

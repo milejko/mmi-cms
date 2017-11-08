@@ -1,7 +1,7 @@
 {$_widgetData}
 {if $auth && $auth->hasRole('admin')}
     <div class="widget-panel">
-        <div class="widget-btn" onclick="editWidget('{@module=cmsAdmin&controller=categoryWidgetRelation&action=config&id={$_widgetRelation->id}&categoryId={$_widgetRelation->cmsCategoryId}&widgetId={$_widgetRelation->cmsCategoryWidgetId}@}')" data-link="">
+        <div class="widget-btn first" onclick="editWidget('{@module=cmsAdmin&controller=categoryWidgetRelation&action=config&id={$_widgetRelation->id}&categoryId={$_widgetRelation->cmsCategoryId}&widgetId={$_widgetRelation->cmsCategoryWidgetId}@}')" data-link="">
             <i class="fa fa-2 fa-pencil-square-o" aria-hidden="true"></i>
         </div>
         <div class="widget-btn" onclick="deleteWidget('{@module=cmsAdmin&controller=categoryWidgetRelation&action=delete&id={$_widgetRelation->id}&categoryId={$_widgetRelation->cmsCategoryId}&widgetId={$_widgetRelation->cmsCategoryWidgetId}@}', this)">

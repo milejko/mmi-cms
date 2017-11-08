@@ -26,6 +26,11 @@
 */
 
 $(document).ready(function($){
+    if($('#messenger').length > 0) {
+        setTimeout(function(){
+          $('#messenger').fadeOut("slow", function () {})
+        }, 3000);
+    }
 
   // Add class .active to current link
   $.navigation.find('a').each(function(){

@@ -5,6 +5,8 @@
     top: 0;
     left: 20px; }
 .cms-widget .widget-panel .widget-btn {
-    cursor: pointer; }
+    cursor: pointer;
+    margin-top: 20px;}
 .cms-widget .widget-panel .fa {
-    color: #20a8d8;font-size: 2.7rem !important;margin-bottom: 10px; }
+    color: #20a8d8 !important; font-size: 2.7rem !important; }
+
