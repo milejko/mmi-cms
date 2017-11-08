@@ -8,7 +8,7 @@
             <i class="fa fa-2 fa-trash-o" aria-hidden="true"></i>
         </div>
     </div>
+    {headLink()->appendStyleSheet('/resource/cms/js/widget/widget.css')}
+    {headLink()->appendStyleSheet('/resource/cmsAdmin/vendors/css/font-awesome.min.css')}
+    {headScript()->appendFile('/resource/cms/js/widget/widgets.js')}
 {/if}
-{headLink()->appendStyleSheet('/resource/cmsAdmin/js/widget/widget.css')}
-{headLink()->appendStyleSheet('/resource/cmsAdmin/vendors/css/font-awesome.min.css')}
-{headScript()->appendFile('/resource/cmsAdmin/js/widget/widgets.js')}
