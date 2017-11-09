@@ -93,7 +93,7 @@ abstract class AttributeForm extends Form
             $attribute = $this->_findAttributeById($attributeId);
             //jeśli atrybut jest zmaterializowany
             if (null !== $attribute && $attribute->getJoined('cms_attribute_relation')->isMaterialized()) {
-                //ustawienie w wartości rekordzie
+                //ustawienie wartości w rekordzie
                 $this->getRecord()->{$attribute->key} = $element->getValue();
             }
         }
@@ -102,6 +102,7 @@ abstract class AttributeForm extends Form
     /**
      * Zapisuje atrybuty powiązane z formularzem
      * @return bool
+     * @throws \Exception
      */
     public function afterSave()
     {

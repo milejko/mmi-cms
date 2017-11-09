@@ -1,9 +1,16 @@
-<div class="content-box">
-    <div class="content-box-header">
-        <h3>{#Odpowiedź na zapytanie#}</h3>
-        <div class="clear"></div>
-    </div>
-    <div class="content-box-content clearfix">
-        {$contactForm}
+<div class="container-fluid">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>{#Odpowiedź na zapytanie#}</strong>
+                    </div>
+                    <div class="card-body">
+                        {$contactForm}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

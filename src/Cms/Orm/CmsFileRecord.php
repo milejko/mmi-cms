@@ -65,6 +65,18 @@ class CmsFileRecord extends \Mmi\Orm\Record
      * @var boolean
      */
     public $active;
+    
+    /**
+     * Id oryginalnego pliku, z którego powstała kopia
+     * @var integer
+     */
+    public $cmsFileOriginalId;
+    
+    /**
+     * Czy nowo przesłany
+     * @var boolean
+     */
+    public $newUploaded;
 
     /**
      * Ustawia plik jako przyklejony w obrębie danego object+objectId
@@ -131,7 +143,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
     /**
      * Pobiera adres pliku
      * @param string $scaleType scale, scalex, scaley, scalecrop
-     * @param string $scale 320, 320x240
+     * @param int|string $scale 320, 320x240
      * @param boolean $https null - bez zmian, true - tak, false - nie
      * @return string adres publiczny pliku
      */

@@ -33,6 +33,7 @@ class CategoryWidgetModel
     /**
      * Identyfikator relacji
      * @param integer $categoryId
+     * @throws \Cms\Exception\CategoryWidgetException
      */
     public function __construct($categoryId)
     {

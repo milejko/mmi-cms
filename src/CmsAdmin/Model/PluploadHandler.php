@@ -197,6 +197,7 @@ class PluploadHandler
     /**
      * Obsługa procesu odbierania pliku
      * @param boolean $headers Czy wysłać nagłówki no-cache
+     * @return bool
      */
     public function handle($headers = true)
     {
@@ -545,7 +546,8 @@ class PluploadHandler
             $this->_setError(PLUPLOAD_MOVE_ERR, "Błąd tworzenia nowego rekordu pliku");
             $result = false;
         } else {
-            $result = true;
+            $this->_cmsFileRecord->newUploaded = true;
+            $result = $this->_cmsFileRecord->save();
         }
         //usuwamy plik z katalogu plupload
         @unlink($this->_filePath);
@@ -562,6 +564,7 @@ class PluploadHandler
         if ($this->_cmsFileRecord === null) {
             $result = false;
         } else {
+            $this->_cmsFileRecord->newUploaded = true;
             $result = ($this->_cmsFileRecord->replaceFile($requestFile) && $this->_cmsFileRecord->save());
         }
         if ($result === false) {

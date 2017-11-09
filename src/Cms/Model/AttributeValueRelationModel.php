@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -10,9 +10,10 @@
 
 namespace Cms\Model;
 
-use Cms\Orm\CmsAttributeValueQuery,
-    Cms\Orm\CmsAttributeValueRelationQuery,
-    Cms\Orm\CmsAttributeValueRelationRecord;
+use Cms\Orm\CmsAttributeValueQuery;
+use Cms\Orm\CmsAttributeValueRelationQuery;
+use Cms\Orm\CmsAttributeValueRelationRecord;
+use Mmi\Orm\RecordCollection;
 
 /**
  * Model relacji wartości atrybutu
@@ -52,7 +53,7 @@ class AttributeValueRelationModel
     {
         //niepoprawna kategoria
         if (null === $attributeValueRecord = (new CmsAttributeValueQuery)
-            ->findPk($attributeValueId)) {
+                ->findPk($attributeValueId)) {
             return;
         }
         //wyszukiwanie relacji
@@ -84,9 +85,9 @@ class AttributeValueRelationModel
         $valueRecord = null;
         //wyszukiwanie kolekcji wstępnie pasujących rekordów wartości
         foreach ((new \Cms\Orm\CmsAttributeValueQuery)
-            ->whereCmsAttributeId()->equals($attributeId)
-            ->andFieldValue()->like($attributeValue)
-            ->find() as $val) {
+                     ->whereCmsAttributeId()->equals($attributeId)
+                     ->andFieldValue()->like($attributeValue)
+                     ->find() as $val) {
             if ($attributeValue === "") {
                 if ($val->value === "") {
                     $valueRecord = $val;
@@ -122,15 +123,15 @@ class AttributeValueRelationModel
     {
         //brak kategorii - nic do zrobienia
         if (null === $attributeValueRecord = (new CmsAttributeValueQuery)
-            ->findPk($attributeValueId)) {
+                ->findPk($attributeValueId)) {
             return;
         }
         //wyszukiwanie relacji
         if (null === $relationRecord = (new CmsAttributeValueRelationQuery)
-            ->whereCmsAttributeValueId()->equals($attributeValueRecord->id)
-            ->andFieldObject()->equals($this->_object)
-            ->andFieldObjectId()->equals($this->_objectId)
-            ->findFirst()) {
+                ->whereCmsAttributeValueId()->equals($attributeValueRecord->id)
+                ->andFieldObject()->equals($this->_object)
+                ->andFieldObjectId()->equals($this->_objectId)
+                ->findFirst()) {
             //brak relacji - nic do zrobienia
             return;
         }
@@ -173,10 +174,10 @@ class AttributeValueRelationModel
     public function getAttributeValueIds()
     {
         return array_keys((new CmsAttributeValueRelationQuery)
-                ->join('cms_attribute_value')->on('cms_attribute_value_id')
-                ->whereObject()->equals($this->_object)
-                ->andFieldObjectId()->equals($this->_objectId)
-                ->findPairs('cms_attribute_value.id', 'cms_attribute_value.id'));
+            ->join('cms_attribute_value')->on('cms_attribute_value_id')
+            ->whereObject()->equals($this->_object)
+            ->andFieldObjectId()->equals($this->_objectId)
+            ->findPairs('cms_attribute_value.id', 'cms_attribute_value.id'));
     }
 
     /**
@@ -186,12 +187,12 @@ class AttributeValueRelationModel
     public function getAttributeValues()
     {
         return (new CmsAttributeValueQuery)
-                ->join('cms_attribute')->on('cms_attribute_id')
-                ->join('cms_attribute_value_relation')->on('id', 'cms_attribute_value_id')
-                ->join('cms_attribute_type', 'cms_attribute')->on('cms_attribute_type_id')
-                ->where('object', 'cms_attribute_value_relation')->equals($this->_object)
-                ->where('objectId', 'cms_attribute_value_relation')->equals($this->_objectId)
-                ->find();
+            ->join('cms_attribute')->on('cms_attribute_id')
+            ->join('cms_attribute_value_relation')->on('id', 'cms_attribute_value_id')
+            ->join('cms_attribute_type', 'cms_attribute')->on('cms_attribute_type_id')
+            ->where('object', 'cms_attribute_value_relation')->equals($this->_object)
+            ->where('objectId', 'cms_attribute_value_relation')->equals($this->_objectId)
+            ->find();
     }
 
     /**
@@ -224,6 +225,27 @@ class AttributeValueRelationModel
         }
         //zwrot zgrupowanych wartości atrybutów
         return $grouppedByAttributeKey;
+    }
+
+    /**
+     * Pobiera wszystkie rekordy plikowe
+     * @return \Mmi\DataObject
+     */
+    public function getRelationFiles()
+    {
+        $filesByObject = new \Mmi\Orm\RecordCollection;
+        //wyszukiwanie wartości
+        foreach ($this->getAttributeValues() as $record) {
+            //pobieranie klucza atrybutu (w celu zgrupowania
+            if ($record->getJoined('cms_attribute_type')->uploader) {
+                $object = $record->value;
+                //dołączanie plików
+                foreach (\Cms\Orm\CmsFileQuery::byObject($object, $this->_objectId)->find() as $file) {
+                    $filesByObject->append($file);
+                };
+            }
+        }
+        return $filesByObject;
     }
 
 }

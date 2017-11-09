@@ -1,10 +1,12 @@
-<div class="content-box">
-    <div class="content-box-header">
-        <h3>{#Nowy widget#}</h3>
-        <div class="clear"></div>
-    </div>
-    <div class="content-box-content clearfix">
-        {$widgetForm}
-        <div class="cl"></div>
+<div class="row ">
+    <div class="col-md-6">
+        <div class="card mt-4">
+            <div class="card-header">
+                <strong>{#Nowy widget#}</strong>
+            </div>
+            <div class="card-body">
+                {$widgetForm}
+            </div>
+        </div>
     </div>
 </div>

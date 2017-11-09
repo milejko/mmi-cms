@@ -48,7 +48,7 @@ class AttributeValue extends \Cms\Form\Form
      */
     public function beforeSave()
     {
-        //labelka jest podana - nic do zrobioenia
+        //labelka jest podana - nic do zrobienia
         if ($this->getElement('label')->getValue()) {
             return true;
         }

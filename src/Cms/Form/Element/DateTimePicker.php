@@ -16,6 +16,17 @@ namespace Cms\Form\Element;
 class DateTimePicker extends \Mmi\Form\Element\ElementAbstract
 {
 
+    //szablon początku pola
+    CONST TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    //szablon opisu
+    CONST TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    //szablon końca pola
+    CONST TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    //szablon błędów
+    CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    //szablon etykiety
+    CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+
     /**
      * Ustawia format np. Y-m-d H:i
      * @param string $format
@@ -46,6 +57,7 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract
         $this->view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
         $this->view->headScript()->appendFile('/resource/cmsAdmin/js/jquery/datetimepicker.js');
         $this->addFilter(new \Mmi\Filter\EmptyToNull)
+            ->addClass('form-control')
             ->setStep(15)
             ->setDatepicker(true)
             ->setTimepicker(true)
@@ -111,7 +123,7 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract
             ->unsetOption('datepicker')
             ->unsetOption('timepicker');
 
-        return '<input class="datePickerField" autocomplete="off" data-min-date="' . $this->_formatDate($dateMin) . '" data-max-date="' . $this->_formatDate($dateMax) . '" type="datetime" ' . $this->_getHtmlOptions() . '/>';
+        return '<input class="form-control datePickerField" autocomplete="off" data-min-date="' . $this->_formatDate($dateMin) . '" data-max-date="' . $this->_formatDate($dateMax) . '" type="datetime" ' . $this->_getHtmlOptions() . '/>';
     }
 
     /**

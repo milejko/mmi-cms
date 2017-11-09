@@ -1,3 +1,4 @@
+<tbody>
 {foreach $_grid->getDataCollection() as $record}
     <tr>
         {*iteracja po Columnach*}
@@ -7,3 +8,4 @@
         {/foreach}
     </tr>
 {/foreach}
+</tbody>

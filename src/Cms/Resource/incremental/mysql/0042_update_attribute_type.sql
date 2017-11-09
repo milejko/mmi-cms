@@ -1,0 +1,1 @@
+UPDATE `cms_attribute_type` SET `fieldClass` = REPLACE(`fieldClass`, 'Mmi', 'Cms') WHERE `fieldClass` LIKE ('\\\\Mmi\\\\%');

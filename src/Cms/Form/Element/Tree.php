@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -15,6 +15,17 @@ namespace Cms\Form\Element;
  */
 class Tree extends \Mmi\Form\Element\ElementAbstract
 {
+
+    //szablon początku pola
+    CONST TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    //szablon opisu
+    CONST TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    //szablon końca pola
+    CONST TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    //szablon błędów
+    CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    //szablon etykiety
+    CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
     /**
      * Funkcja użytkownika, jest wykonywana na końcu konstruktora
@@ -90,7 +101,7 @@ class Tree extends \Mmi\Form\Element\ElementAbstract
         $html = '<div class="tree_structure" id="' . $treeId . '">';
         $html .= $this->_generateTree($structure, '');
         $html .= '</div>';
-        $html .= '<input type="button" id="' . $treeId . '_clear" class="tree_clear" value="wyczyść wybór" />';
+        $html .= '<button type="button" id="' . $treeId . '_clear" class="tree_clear btn" /> Wyczyść wybór </button>';
 
         $this->_generateJs($treeId);
 
@@ -166,7 +177,7 @@ class Tree extends \Mmi\Form\Element\ElementAbstract
 						selectedStr = data.selected[0];
 					}
 					for (idx = 1, len = data.selected.length; idx < len; ++idx) {
-						selectedStr = selectedStr.concat(';' + data.selected[idx]) 
+						selectedStr = selectedStr.concat(';' + data.selected[idx])
 					}
 					$('#$id').val(selectedStr);
 				});

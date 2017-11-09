@@ -1,7 +1,7 @@
 {if $_value == $_truncated}
     {$_value}
 {else}
-    <span title="{$value}">
-        $truncated
+    <span title="{$_value}">
+        {$_truncated}
     </span>
 {/if}

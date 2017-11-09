@@ -24,18 +24,25 @@ class NavPartContact extends \Mmi\Navigation\NavigationConfig
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
                 ->setLabel('Kontakt')
-                ->setModule('cmsAdmin')
-                ->setController('contact')
+                ->setIcon('fa-comments')
+                ->setUri('#')
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
-                    ->setLabel('Tematy')
+                    ->setLabel('Lista zgłoszeń')
+                    ->setIcon('fa-table')
+                    ->setModule('cmsAdmin')
+                    ->setController('contact'))
+                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                    ->setLabel('Lista tematów')
+                    ->setIcon('fa-table')
                     ->setModule('cmsAdmin')
                     ->setController('contact')
-                    ->setAction('subject')
-                    ->addChild((new \Mmi\Navigation\NavigationConfigElement)
-                        ->setLabel('Dodaj')
-                        ->setModule('cmsAdmin')
-                        ->setController('contact')
-                        ->setAction('editSubject')));
+                    ->setAction('subject'))
+                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                    ->setLabel('Dodaj temat')
+                    ->setIcon('fa-plus')
+                    ->setModule('cmsAdmin')
+                    ->setController('contact')
+                    ->setAction('editSubject'));
     }
 
 }

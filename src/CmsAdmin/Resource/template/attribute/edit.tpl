@@ -1,30 +1,52 @@
-<div class="content-box">
-    <div class="content-box-header">
-        <h3>{if !$request->id}{#Dodawanie#}{else}{#Edycja#}{/if} {#atrybutu#}</h3>
-    </div>
-    <div class="content-box-content clearfix">
-        {$attributeForm}
+<div class="container-fluid">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>{if !$request->id}{#Dodawanie#}{else}{#Edycja#}{/if} {#atrybutu#}</strong>
+                    </div>
+                    <div class="card-body">
+                        {$attributeForm}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
 {if $valueForm}
-    <div class="content-box">
-        <div class="content-box-header">
-            <h3>{#Nowa wartość atrybutu#}</h3>
-        </div>
-        <div class="content-box-content clearfix">
-            {$valueForm}
+<div class="container-fluid">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>{#Nowa wartość atrybutu#}</strong>
+                    </div>
+                    <div class="card-body">
+                        {$valueForm}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 {/if}
-
 {if $valueGrid}
-    <div class="content-box">
-        <div class="content-box-header">
-            <h3>{#Wartości atrybutu#}</h3>
-        </div>
-        <div class="content-box-content clearfix">
-            {$valueGrid}
+<div class="container-fluid">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>{#Wartości atrybutu#}</strong>
+                    </div>
+                    <div class="card-body">
+                        {$valueGrid}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 {/if}

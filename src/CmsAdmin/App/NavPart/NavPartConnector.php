@@ -24,10 +24,12 @@ class NavPartConnector extends \Mmi\Navigation\NavigationConfig
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
                 ->setLabel('Import danych')
+                ->setIcon('fa-cloud-upload')
                 ->setModule('cmsAdmin')
                 ->setController('connector')
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setLabel('Import plików')
+                    ->setIcon('fa-file')
                     ->setModule('cmsAdmin')
                     ->setController('connector')
                     ->setAction('files')

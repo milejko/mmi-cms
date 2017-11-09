@@ -2,8 +2,8 @@
 
 namespace Cms\Orm;
 
-use \Cms\Model\AttributeValueRelationModel,
-    \Cms\Model\AttributeRelationModel;
+use Cms\Model\AttributeRelationModel;
+use Cms\Model\AttributeValueRelationModel;
 
 /**
  * Rekord kategorii CMSowych
@@ -169,11 +169,11 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         if ($this->isModified('cmsCategoryTypeId')) {
             //iteracja po różnicy międy obecnymi atrybutami a nowymi
             foreach (array_diff(
-                //obecne id atrybutów
-                (new AttributeRelationModel('cmsCategoryType', $this->getInitialStateValue('cmsCategoryTypeId')))->getAttributeIds(),
-                //nowe id atrybutów
-                (new AttributeRelationModel('cmsCategoryType', $this->cmsCategoryTypeId))->getAttributeIds())
-            as $deletedAttributeId) {
+                     //obecne id atrybutów
+                         (new AttributeRelationModel('cmsCategoryType', $this->getInitialStateValue('cmsCategoryTypeId')))->getAttributeIds(),
+                         //nowe id atrybutów
+                         (new AttributeRelationModel('cmsCategoryType', $this->cmsCategoryTypeId))->getAttributeIds())
+                     as $deletedAttributeId) {
                 //usuwanie wartości usuniętego atrybutu
                 (new AttributeValueRelationModel('category', $this->id))
                     ->deleteAttributeValueRelationsByAttributeId($deletedAttributeId);
@@ -227,6 +227,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     /**
      * Pobiera url kategorii
      * @param boolean $https true - tak, false - nie, null - bez zmiany protokołu
+     * @return string
      */
     public function getUrl($https = null)
     {
@@ -343,12 +344,12 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     protected function _getChildren($parentId)
     {
         return (new CmsCategoryQuery)
-                ->whereParentId()->equals($parentId)
-                ->joinLeft('cms_category_type')->on('cms_category_type_id')
-                ->orderAscOrder()
-                ->orderAscId()
-                ->find()
-                ->toObjectArray();
+            ->whereParentId()->equals($parentId)
+            ->joinLeft('cms_category_type')->on('cms_category_type_id')
+            ->orderAscOrder()
+            ->orderAscId()
+            ->find()
+            ->toObjectArray();
     }
 
     /**
@@ -407,8 +408,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         \App\Registry::$cache->remove('category-id-' . md5($this->getInitialStateValue('customUri')));
         \App\Registry::$cache->remove('category-attributes-' . $this->id);
         \App\Registry::$cache->remove('category-widget-model-' . $this->id);
-		\App\Registry::$cache->remove('categories-roles');
+        \App\Registry::$cache->remove('categories-roles');
         return true;
     }
-
 }

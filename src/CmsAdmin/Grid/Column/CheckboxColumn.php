@@ -88,12 +88,6 @@ class CheckboxColumn extends SelectColumn
         //nowy Column select
 
         return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_CELL);
-        return (new \Mmi\Form\Element\Checkbox($this->getFormColumnName()))
-            //ustawia wartość na odpowiadającą zaznaczeniu
-            ->setValue($this->getCheckedValue())
-            ->setId($this->getFormColumnName() . '-' . $record->id)
-            //ustawia zaznaczenie
-            ->setChecked($this->getCheckedValue() <= $this->getValueFromRecord($record));
     }
 
     /**

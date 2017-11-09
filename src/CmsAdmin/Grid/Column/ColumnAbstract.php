@@ -28,6 +28,8 @@ use Mmi\App\FrontController;
 abstract class ColumnAbstract extends \Mmi\OptionObject
 {
 
+    const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/text';
+
     /**
      * Obiekt grida
      * @var \CmsAdmin\Grid\Grid
@@ -82,17 +84,20 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
         if (!$this->isFieldInRecord()) {
             return $this->getLabel() ? $this->getLabel() : $this->getName();
         }
-        $html = '<a class="order" href="#' . $this->getFormColumnName() . '" data-method="' . $this->_getOrderMethod() . '">' . ($this->getLabel() ? $this->getLabel() : $this->getName()) . '</a>';
+        $html = '<a class="order" href="#' . $this->getFormColumnName() . '" data-method="' . $this->_getOrderMethod() . '">' . ($this->getLabel() ? $this->getLabel() : $this->getName());
+
         //brak sortowania
         if (!$this->_getOrderMethod()) {
-            return $html;
+            return $html . '&nbsp;<i class="fa fa-sort" style="color:#20a8d8"></i></a>';
         }
+
         //ikona w dół
         if ($this->_getOrderMethod() == 'orderDesc') {
-            return $html . ' <i class="icon-download"></i>';
+            return $html . '&nbsp;<i class="fa fa-sort-desc" style="color:#20a8d8"></i></a>';
         }
+
         //ikona w górę
-        return $html . ' <i class="icon-upload"></i>';
+        return $html . '&nbsp;<i class="fa fa-sort-asc" style="color:#20a8d8"></i></a>';
     }
 
     /**
@@ -101,14 +106,9 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
      */
     public function renderFilter()
     {
-        //brak property
-        if (!$this->isFieldInRecord()) {
-            return;
-        }
         //zwrot filtra
-        return (new \Mmi\Form\Element\Text($this->getFormColumnName()))
-            ->setOption('data-method', $this->getOption('method'))
-            ->setValue($this->getFilterValue());
+        FrontController::getInstance()->getView()->_column = $this;
+        return FrontController::getInstance()->getView()->renderTemplate(static::TEMPLATE_FILTER);
     }
 
     /**

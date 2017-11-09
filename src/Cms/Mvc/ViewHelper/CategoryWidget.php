@@ -16,6 +16,8 @@ namespace Cms\Mvc\ViewHelper;
 class CategoryWidget extends \Mmi\Mvc\ViewHelper\HelperAbstract
 {
 
+    CONST TEMPLATE = 'cms/mvc/view-helper/category-widget';
+
     /**
      * Render widgetu
      * @param \Cms\Orm\CmsCategoryWidgetCategoryRecord $widgetRelation
@@ -33,13 +35,17 @@ class CategoryWidget extends \Mmi\Mvc\ViewHelper\HelperAbstract
             //render widgetu
             $widgetData = \Mmi\Mvc\ActionHelper::getInstance()->action($widgetRequest);
             //bufor wyłączony parametrem
-            if (!$widgetRecord->cacheLifetime) {
-                return $widgetData;
+            if ($widgetRecord->cacheLifetime) {
+                //zapis do bufora (czas określony parametrem)
+                \App\Registry::$cache->save($widgetData, $cacheKey, $widgetRecord->cacheLifetime);
             }
-            //zapis do bufora (czas określony parametrem)
-            \App\Registry::$cache->save($widgetData, $cacheKey, $widgetRecord->cacheLifetime);
         }
-        return $widgetData;
+        //relacja do widoku
+        $this->view->_widgetRelation = $widgetRelation;
+        //dane html do widoku
+        $this->view->_widgetData = $widgetData;
+        //render szablonu
+        return \Mmi\App\FrontController::getInstance()->getView()->renderTemplate(static::TEMPLATE);
     }
 
 }

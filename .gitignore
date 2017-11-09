@@ -6,3 +6,7 @@
 /var/
 /vendor/
 /web/
+.idea/
+node_modules/
+bower_libs/
+src/CmsAdmin/Resource/front/dist/**/*
