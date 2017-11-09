@@ -116,6 +116,18 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
     }
 
     /**
+     * Wykonywana przed wysłaniem treści
+     * @param \Mmi\Http\Request $request
+     */
+    public function beforeSend(\Mmi\Http\Request $request)
+    {
+        //pobranie odpowiedzi
+        $response = \Mmi\App\FrontController::getInstance()->getResponse();
+        //zmiana contentu
+        $response->setContent((new \Cms\Model\ContentFilter($response->getContent()))->getFilteredContent());
+    }
+
+    /**
      * Ustawia request na logowanie admina
      * @param \Mmi\Http\Request $request
      * @return \Mmi\Http\Request
