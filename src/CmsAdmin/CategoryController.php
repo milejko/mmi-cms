@@ -163,75 +163,21 @@ class CategoryController extends Mvc\Controller
     }
 
     /**
-     * Kopiowanie artykułu
+     * Kopiowanie strony - kategorii
      */
     public function copyAction()
     {
         $this->getResponse()->setTypeJson();
-        $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id);
-        $newCat = new \Cms\Orm\CmsCategoryRecord();
-        $newCat->setFromArray($cat->toArray());
-        $newCat->id = null;
-        $newCat->name = $cat->name . '_kopia';
-        $newCat->active = false;
-        $newCat->dateAdd = null;
-        $newCat->dateModify = null;
-        //zapis nowej kategorii i widgetów do niej
-        if ($newCat->save()) {
-            //kopiowanie relacji atrybut - kategoria
-            $this->_copyAttributeValues('category', $cat->id, $newCat->id);
-            //kopiowanie relacji widgetów
-            $this->_copyWidgetRelations($cat, $newCat);
-            return json_encode(['status' => true, 'id' => $newCat->id, 'message' => 'Strona została skopiowana']);
+        if (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
+            return json_encode(['status' => false, 'error' => 'Strona nie istnieje']);
+        }
+        //model do kopiowania kategorii
+        $copyModel = new \Cms\Model\CategoryCopy($category);
+        //kopiowanie z transakcją
+        if ($copyModel->copyWithTransaction()) {
+            return json_encode(['status' => true, 'id' => $copyModel->getCopyRecord()->id, 'message' => 'Strona została skopiowana']);
         }
         return json_encode(['status' => false, 'error' => 'Nie udało się skopiować strony']);
-    }
-
-    protected function _copyWidgetRelations($sourceCat, $destCat)
-    {
-        foreach ($sourceCat->getWidgetModel()->getWidgetRelations() as $widgetRelation) {
-            $relation = new \Cms\Orm\CmsCategoryWidgetCategoryRecord();
-            $relation->setFromArray($widgetRelation->toArray());
-            $relation->id = null;
-            $relation->cmsCategoryId = $destCat->id;
-            if (!$relation->save()) {
-                return false;
-            };
-
-            (new AttributeValueRelationModel('categoryWidgetRelation', $relation->id))->deleteAttributeValueRelations();
-
-            $relationAttributes = $widgetRelation->getAttributeValues();
-            foreach ($relationAttributes as $key => $value) {
-                $attribute = (new \Cms\Orm\CmsAttributeQuery)->withTypeByKey($key)->findFirst();
-                if ($attribute->getJoined('cms_attribute_type')->uploader) {
-                    foreach ($value as $file) {
-                        \Cms\Model\File::copyWithData($file, $relation->id);
-                    }
-                    (new AttributeValueRelationModel('categoryWidgetRelation', $relation->id))->createAttributeValueRelationByValue($attribute->id, 'categoryWidgetRelation' . ucfirst($key));
-                    continue;
-                }
-                (new AttributeValueRelationModel('categoryWidgetRelation', $relation->id))->createAttributeValueRelationByValue($attribute->id, $value);
-            }
-        }
-        return true;
-    }
-
-    protected function _copyAttributeValues($object, $sourceId, $destId)
-    {
-        //zrodlowe wartosci atrybutów
-        $sourceAttributeValues = (new \Cms\Model\AttributeValueRelationModel($object, $sourceId))->getAttributeValues();
-        //iteracja po atrybutach
-        foreach ($sourceAttributeValues as $record) {
-            //tworze relacje atrybutu dla nowej kategorii
-            (new \Cms\Model\AttributeValueRelationModel($object, $destId))->createAttributeValueRelationByValue($record->cmsAttributeId, $record->value);
-            //jesli uploader to kopiuje też pliki z danymi
-            if ($record->getJoined('cms_attribute_type')->uploader) {
-                $files = \Cms\Orm\CmsFileQuery::byObject($record->value, $sourceId)->find();
-                foreach ($files as $file) {
-                    \Cms\Model\File::copyWithData($file, $destId);
-                }
-            }
-        }
     }
 
 }

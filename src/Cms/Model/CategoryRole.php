@@ -51,7 +51,8 @@ class CategoryRole
 	 * @param \Cms\Orm\CmsCategoryRecord $category
 	 * @return \Cms\Model\CategoryRole
 	 */
-	public function setCategory(\Cms\Orm\CmsCategoryRecord $category) {
+	public function setCategory(\Cms\Orm\CmsCategoryRecord $category)
+    {
 		$this->_category = $category;
 		return $this;
 	}
