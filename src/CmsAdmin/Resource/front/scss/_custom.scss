@@ -358,11 +358,37 @@ ul {
 
 .messenger {
   position: absolute;
-  top: 50px;
-  right: 50px;
-  border-radius: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  width: 100%;
+  transition: width 1s ease-out;
+  height: 48px;
+  text-align: center;
+  font-size: 18px;
   list-style: none;
   z-index: 99999;
+  &.animation-show{
+    animation: messangerShow 1s;
+  }
+}
+@keyframes messangerHide {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0);
+  }
+}
+
+@keyframes messangerShow {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 .form-control {
