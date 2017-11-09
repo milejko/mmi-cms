@@ -296,6 +296,9 @@ ul {
         &.operation {
           float: right;
           a {
+            height: 24px;
+            width: 24px;
+            display: inherit;
             margin-bottom: 5px;
           }
         }

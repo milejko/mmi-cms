@@ -9051,6 +9051,9 @@ ul.wlist {
     ul.wlist li div.operation {
       float: right; }
       ul.wlist li div.operation a {
+        height: 24px;
+        width: 24px;
+        display: inherit;
         margin-bottom: 5px; }
 
 .fa-2 {
