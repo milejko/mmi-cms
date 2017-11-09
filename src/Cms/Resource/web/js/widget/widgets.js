@@ -4,7 +4,7 @@ function editWidget(link){
 }
 
 function deleteWidget(link, btn){
-    $('<div class="cd-popup is-visible" role="alert"><div class="cd-popup-container"><p>Czy chcesz usunąć ten widget?</p><ul class="cd-buttons"><li><a id="clickYes" href="#0">Tak</a></li><li><a id="clickNo" href="#0">Nie</a></li></ul> <a id="clickClose" href="#0" class="cd-popup-close img-replace">zamknij</a></div></div>').appendTo(document.body);
+    $('<div class="cd-popup is-visible" role="alert"><div class="cd-popup-container"><p>Czy chcesz usunąć ten widget?</p><ul class="cd-buttons"><li><a id="clickYes" href="#">Tak</a></li><li><a id="clickNo" href="#">Nie</a></li></ul> <a id="clickClose" href="#" class="cd-popup-close img-replace">zamknij</a></div></div>').appendTo(document.body);
     $('#clickYes').on('click', function(){
         $.get(link, function(){
             if($(btn).parent().parent().hasClass('cms-widget')){
