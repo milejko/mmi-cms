@@ -1,0 +1,12 @@
+.cms-widget {
+    position: relative; }
+.cms-widget .widget-panel {
+    position: absolute;
+    top: 0;
+    left: 20px; }
+.cms-widget .widget-panel .widget-btn {
+    cursor: pointer;
+    margin-top: 20px;}
+.cms-widget .widget-panel .fa {
+    color: #20a8d8 !important; font-size: 2.7rem !important; }
+
