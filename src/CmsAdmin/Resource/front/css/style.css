@@ -9292,3 +9292,6 @@ ul.cd-buttons {
 @media only screen and (min-width: 1170px) {
   .cd-popup-container {
     margin: 8em auto; } }
+
+.form-group textarea {
+  overflow: hidden; }
