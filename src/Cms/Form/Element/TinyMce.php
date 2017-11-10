@@ -26,6 +26,53 @@ class TinyMce extends Textarea
     CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
     CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    //klucz z losowym id uploadera
+    CONST UPLOADER_ID_KEY = 'uploaderId';
+    
+    /**
+     * Ustawia form macierzysty
+     * @param \Mmi\Form\Form $form
+     * @return self
+     */
+    public function setForm(\Mmi\Form\Form $form)
+    {
+        //parent
+        parent::setForm($form);
+        //obiekt niezdefiniowany
+        if (!$this->getUploaderObject()) {
+            //ustawianie obiektu
+            $this->setUploaderObject($form->getFileObjectName());
+        }
+        //instancja front controllera
+        $frontController = \Mmi\App\FrontController::getInstance();
+        //uploaderId znajduje się w requescie
+        if ($frontController->getRequest()->uploaderId) {
+            $this->setOption(self::UPLOADER_ID_KEY, $frontController->getRequest()->uploaderId);
+            return $this;
+        }
+        //przekierowanie na url zawierający nowowygenerowany uploaderId
+        $frontController->getResponse()->redirectToUrl($frontController->getRouter()->encodeUrl($frontController->getRequest()->toArray() + ['uploaderId' => mt_rand(1000000, 9999999)]));
+        return $this;
+    }
+
+    /**
+     * Pobranie ID uploadera
+     * @return string
+     */
+    public function getUploaderId()
+    {
+        return $this->getOption(self::UPLOADER_ID_KEY);
+    }
+    
+    /**
+     * Ustawia objekt cms_
+     * @param string $object
+     * @return \Cms\Form\Element\TinyMce
+     */
+    public function setUpladerObject($object)
+    {
+        return $this->setOption('uploaderObject', $object);
+    }
 
     /**
      * Ustawia tryb zaawansowany
@@ -141,19 +188,11 @@ class TinyMce extends Textarea
 
         $class = $this->getOption('id');
         $this->setOption('class', trim($this->getOption('class') . ' ' . $class));
-        $object = '';
-        $objectId = '';
-        //odczyt zmiennych z rekordu
-        if ($this->_form->hasRecord()) {
-            $object = $this->_form->getFileObjectName();
-            $objectId = $this->_form->getRecord()->getPk();
-        }
-        if (!$objectId) {
-            $object = 'tmp-' . $object;
-            $objectId = \Mmi\Session\Session::getNumericId();
-        }
+        $object = 'tmp-' . $this->getUploaderObject();
+        $objectId = $this->getUploaderId();
         $t = round(microtime(true));
         $hash = md5(\Mmi\Session\Session::getId() . '+' . $t . '+' . $objectId);
+        $this->_createTempFiles();
         //dołączanie skryptu
         $view->headScript()->appendScript("
 			tinyMCE.init({
@@ -339,6 +378,26 @@ class TinyMce extends Textarea
         if ($this->getContextMenu() === null) {
             $this->setContextMenu('link image media inserttable | cell row column deletetable');
         }
+    }
+    
+    /**
+     * Utorzenie kopii plików dla tego uploadera
+     * @return boolean
+     */
+    protected function _createTempFiles() {
+        //jeśli już są pliki tymczasowe, to wychodzimy
+        if ((new \Cms\Orm\CmsFileQuery)
+            ->byObject('tmp-' . $this->getUploaderObject(), $this->getUploaderId())
+            ->count()) {
+            return true;
+        }
+        $objectId = null;
+        if ($this->_form->hasRecord()) {
+            $objectId = $this->_form->getRecord()->getPk();
+        }
+        //tworzymy pliki tymczasowe - kopie oryginałów
+        \Cms\Model\File::copy($this->getUploaderObject(), $objectId, 'tmp-' . $this->getUploaderObject(), $this->getUploaderId());
+        return true;
     }
 
 }

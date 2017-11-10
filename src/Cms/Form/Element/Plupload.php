@@ -26,6 +26,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
     CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
     CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    //klucz z losowym id uploadera
     CONST UPLOADER_ID_KEY = 'uploaderId';
     
     /**

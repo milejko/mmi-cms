@@ -68,13 +68,25 @@ abstract class Form extends \Mmi\Form\Form
         if ($this->hasRecord() && $this->getRecord()->getPk()) {
             $objectId = $this->getRecord()->getPk();
         }
-        //dla każdego elementu Plupload
+        $tinyObjects = [];
+        //dla każdego elementu formularza
         foreach ($this->getElements() as $element) {
-            if (!$element instanceof \Cms\Form\Element\Plupload || !$element->getObject()) {
+            //dla każdego elementu Plupload
+            if ($element instanceof \Cms\Form\Element\Plupload && $element->getObject()) {
+                //łączenie tymczasowych plików z uploadera (kopii) z oryginałami
+                (new \Cms\Model\FileMerge('tmp-' . $element->getObject(), $element->getUploaderId(), $element->getObject(), $objectId))->merge();
                 continue;
             }
-            //łączenie tymczasowych plików z uploadera (kopii) z oryginałami
-            (new \Cms\Model\FileMerge('tmp-' . $element->getObject(), $element->getUploaderId(), $element->getObject(), $objectId))->merge();
+            //dla każdego elementu TinyMce
+            if ($element instanceof \Cms\Form\Element\TinyMce && $element->getUploaderObject()) {
+                if (in_array($element->getUploaderObject(), $tinyObjects)) {
+                    continue;
+                }
+                array_push($tinyObjects, $element->getUploaderObject());
+                //łączenie tymczasowych plików z uploadu przez TinyMce (kopii) z oryginałami
+                (new \Cms\Model\FileMerge('tmp-' . $element->getUploaderObject(), $element->getUploaderId(), $element->getUploaderObject(), $objectId))->merge();
+                continue;
+            }
         }
     }
 
