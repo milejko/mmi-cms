@@ -20,7 +20,7 @@
                         {$title='ukryty'}
                     {/if}
                     {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'toggle'])}
-                    <a href="{@module=cmsAdmin&controller=categoryWidgetRelation&action=toggle&widgetId={$widgetRelation->getWidgetRecord()->id}&categoryId={$category->id}&id={$widgetRelation->id}@}" data-state="{$widgetRelation->active}" class="button toggle-widget" target="_blank" title="{$title}"><i class="fa fa-eye pull-right fa-2 {$class}"></i></a>
+                    <a href="{@module=cmsAdmin&controller=categoryWidgetRelation&action=toggle&widgetId={$widgetRelation->getWidgetRecord()->id}&categoryId={$category->id}&id={$widgetRelation->id}@}" data-state="{$widgetRelation->active}" class="button toggle-widget" target="_blank" title="{$title}" id="widget-activate-{$widgetRelation->getWidgetRecord()->id}"><i class="fa fa-eye pull-right fa-2 {$class}"></i></a>
                     {/if}
                     {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'sort'])}
                     <a href="#" class="button handle-widget" title="sortuj"><i class="fa fa-2 mr-fix-6  pull-right fa-sort"></i></a>

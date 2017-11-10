@@ -134,7 +134,7 @@
                             <div class="card">
                                 <div class="card-header" role="tab" id="headingThree">
                                     <h5 class="mb-0">
-                                        <a class="collapsed" data-parent="#accordion" href="{$categoryForm->getRecord()->getUrl()}?preview=1" aria-expanded="false" target="_blank">
+                                        <a class="collapsed" data-parent="#accordion" href="{$categoryForm->getRecord()->getUrl()}?preview=1" aria-expanded="false" target="_blank" id="category-preview">
                                             {#Podgląd#}
                                         </a>
                                     </h5>
