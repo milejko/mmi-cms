@@ -7,7 +7,7 @@
             </div>
             <div class="operation">
                 {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'config'])}
-                    <a href="{@module=cmsAdmin&controller=categoryWidgetRelation&action=config&widgetId={$widgetRelation->getWidgetRecord()->id}&categoryId={$category->id}&id={$widgetRelation->id}@}" class="button new-window edit" target="_blank" title="zmień widget" id="widget-edit-{$widgetRelation->getWidgetRecord()->id}"><i class="fa fa-pencil-square-o pull-right fa-2"></i></a>
+                    <a href="javascript:void(0);" onclick="PopupCenter('{@module=cmsAdmin&controller=categoryWidgetRelation&action=config&widgetId={$widgetRelation->getWidgetRecord()->id}&categoryId={$category->id}&id={$widgetRelation->id}@}', 'edycja widgetu id={$widgetRelation->id}');return false;" class="button new-window edit" title="zmień widget" id="widget-edit-{$widgetRelation->getWidgetRecord()->id}"><i class="fa fa-pencil-square-o pull-right fa-2"></i></a>
                     {/if}
                     {if $widgetRelation->active == 1}
                         {$class='fa fa-2 fa-eye pull-right'}
