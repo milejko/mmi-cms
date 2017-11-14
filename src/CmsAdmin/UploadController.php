@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -117,7 +117,7 @@ class UploadController extends Mvc\Controller
                         return json_encode(['result' => 'OK', 'url' => $url]);
                     }
                 } catch (\Exception $ex) {
-                    
+
                 }
             }
         }
@@ -136,7 +136,9 @@ class UploadController extends Mvc\Controller
         }
         //szukamy rekordu pliku
         if (null !== $record = (new \Cms\Orm\CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
-            return json_encode(['result' => 'OK', 'record' => $record, 'data' => $record->data->toArray()]);
+            $data = $record->data->toArray();
+            $data['urlFile'] = $record->getUrl();
+            return json_encode(['result' => 'OK', 'record' => $record, 'data' => $data]);
         }
         return $this->_jsonError(185);
     }

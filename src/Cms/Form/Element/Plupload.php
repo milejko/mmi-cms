@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -27,25 +27,25 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
     //szablon etykiety
     CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
     CONST UPLOADER_ID_KEY = 'uploaderId';
-    
+
     /**
      * Id elementu formularza
      * @var string
      */
     protected $_id = '';
-    
+
     /**
      * Typ obiektu
      * @var string
      */
     protected $_object = 'library';
-    
+
     /**
      * Id obiektu
      * @var integer
      */
     protected $_objectId = null;
-    
+
     /**
      * Tymczsowy typ obiektu
      * @var string
@@ -86,7 +86,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
     {
         return $this->getOption(self::UPLOADER_ID_KEY);
     }
-    
+
     /**
      * Ustawia objekt cms_
      * @param string $object
@@ -254,7 +254,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
         if (null === $imprint) {
             $imprint = [];
         }
-        $imprint[] = ['type' => $type, 'name' => $name, 'label' => ($label ? : $name), 'options' => $options];
+        $imprint[] = ['type' => $type, 'name' => $name, 'label' => ($label ?: $name), 'options' => $options];
         return $this->setOption('imprint', $imprint);
     }
 
@@ -393,12 +393,13 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
 
         return $html;
     }
-    
+
     /**
      * Przygotowanie danych przed renderingiem pola formularza
      * @return \Cms\Form\Element\Plupload
      */
-    protected function _beforeRender() {
+    protected function _beforeRender()
+    {
         $this->_id = $this->getOption('id');
         if ($this->_form->hasRecord()) {
             $this->_object = $this->_form->getFileObjectName();
@@ -412,16 +413,17 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
         $this->_createTempFiles();
         return $this;
     }
-    
+
     /**
      * Utorzenie kopii plików dla tego uploadera
      * @return boolean
      */
-    protected function _createTempFiles() {
+    protected function _createTempFiles()
+    {
         //jeśli już są pliki tymczasowe, to wychodzimy
         if ((new \Cms\Orm\CmsFileQuery)
-            ->byObject($this->_tempObject, $this->getUploaderId())
-            ->count()) {
+                ->byObject($this->_tempObject, $this->getUploaderId())
+                ->count()) {
             return true;
         }
         //tworzymy pliki tymczasowe - kopie oryginałów
@@ -455,11 +457,24 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
     protected function _renderImprintElement($element)
     {
         //walidacja
-        if (!isset($element['type']) || !isset($element['name']) || !isset($element['label'])) {
+        if (!isset($element['type']) || !isset($element['name'])) {
             return;
         }
         //identyfikator pola
         $fieldId = $this->getId() . '-' . (new \Mmi\Filter\Url)->filter($element['name']);
+
+        //input poster video
+        if ($element['type'] == 'poster') {
+            $html = "
+                <input type='text' name='urlFile' id='" . $this->getId() . '-urlFile' . "' class='imprint' required />
+			";
+            return $html;
+        }
+
+        //walidacja
+        if (!isset($element['label'])) {
+            return;
+        }
         //element label
         $label = '<label for="' . $fieldId . '">' . $element['label'] . (($element['type'] != 'checkbox') ? ':' : '') . '</label>';
         //input text
@@ -509,7 +524,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
 				// <![CDATA[
 					$(document).ready(function () {
 						'use strict';
-						$('#$fieldId').change(function() {							
+						$('#$fieldId').change(function() {
 							var src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 							if( $(this).find(':selected').attr('data-image-url') != undefined ){
 								src = $(this).find(':selected').attr('data-image-url')
