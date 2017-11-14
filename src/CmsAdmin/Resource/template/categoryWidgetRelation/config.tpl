@@ -10,15 +10,8 @@
                 {if $widgetRelationForm}
                 {$widgetRelationForm}
                 {else}
-                {* Przeładowanie widgetów *}
-                <script>
-                    if ($('#widget-list-container').length > 0) {
-                        window.opener.CMS.category().reloadWidgets();
-                    } else {
-                        window.opener.postMessage('updateWidgets', window.opener.location);
-                    }
-                    window.close();
-                </script>
+                    {* Przeładowanie widgetów *}
+                    {headScript()->appendFile('/resource/cmsAdmin/js/window-messenger.js')}
                 {/if}
             </div>
         </div>
