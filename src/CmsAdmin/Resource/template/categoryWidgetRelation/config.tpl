@@ -12,7 +12,7 @@
                 {else}
                 {* Przeładowanie widgetów *}
                 <script>
-                    window.opener.CMS.category().reloadWidgets();
+                    window.opener.postMessage('updateWidgets', window.opener.location);
                     window.close();
                 </script>
                 {/if}

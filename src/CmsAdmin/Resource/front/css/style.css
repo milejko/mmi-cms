@@ -9148,6 +9148,7 @@ ul.wlist {
   .cms-widget .widget-panel {
     position: absolute;
     top: 0;
+    z-index: 9999;
     width: 24px;
     left: 20px; }
     .cms-widget .widget-panel .widget-btn {

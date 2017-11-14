@@ -21,7 +21,7 @@ $(document).on("mousemove", function(e) {
             return v + delta;
         });
     }
-    webkitRequestAnimationFrame(f);
+    webkitRequestAnimationFramewebkitRequestAnimationFrame(f);
 })();
 
 
