@@ -444,7 +444,10 @@ ul {
       cursor: pointer;
       margin-top: 20px;
       img{
-        height: 24px;
+        &.img-btn{
+          height: 48px;
+          width: auto !important;
+        }
       }
     }
     position: absolute;

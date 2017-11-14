@@ -9154,8 +9154,9 @@ ul.wlist {
     .cms-widget .widget-panel .widget-btn {
       cursor: pointer;
       margin-top: 20px; }
-      .cms-widget .widget-panel .widget-btn img {
-        height: 24px; }
+      .cms-widget .widget-panel .widget-btn img.img-btn {
+        height: 48px;
+        width: auto !important; }
     .cms-widget .widget-panel .fa {
       font-size: 2.7rem !important; }
       .cms-widget .widget-panel .fa i {
