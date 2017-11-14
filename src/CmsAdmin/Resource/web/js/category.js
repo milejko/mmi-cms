@@ -21,7 +21,7 @@ $(document).on("mousemove", function(e) {
             return v + delta;
         });
     }
-    webkitRequestAnimationFramewebkitRequestAnimationFrame(f);
+    webkitRequestAnimationFrame(f);
 })();
 
 
@@ -144,8 +144,22 @@ CMS.category = function () {
         $('h5 > a').on('click', function (evt) {
             sessionStorage.setItem('catActiveTab', $(this).attr("href"));
         });
+
        if(currentTab){
            $('a[href$="'+currentTab+'"]').click();
+       }
+       console.log(currentTab)
+       if(currentTab === '#tab-widget') {
+           setTimeout(function(){
+               var scrollLocation = sessionStorage.getItem('widgetScrollTarget');
+               if (scrollLocation) {
+                   var element = document.getElementById(scrollLocation);
+                   var elementRect = element.getBoundingClientRect();
+                   var absoluteElementTop = elementRect.top + window.pageYOffset;
+                   var middle = absoluteElementTop - 100;
+                   window.scrollTo(0, middle);
+               }
+           }, 400)
        }
     };
     dataTabRestore();

@@ -9,8 +9,11 @@ function editWidget(link){
     },false);
 }
 
-function redirectToCMS(link) {
-    console.log(link);
+function redirectToCMS(link, src, id) {
+    console.log(id);
+    sessionStorage.setItem('catActiveTab', '#tab-widget');
+    sessionStorage.setItem('widgetScrollTarget', 'widget-item-'+id);
+    location = link;
 }
 
 function PopupCenter(pageURL, title) {
