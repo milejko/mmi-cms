@@ -192,7 +192,10 @@ class TinyMce extends Textarea
         $objectId = $this->getUploaderId();
         $t = round(microtime(true));
         $hash = md5(\Mmi\Session\Session::getId() . '+' . $t . '+' . $objectId);
+        //tworzenie kopii plików załadowanych do TinyMce
         $this->_createTempFiles();
+        //aktualizacja wartości pola - poprawka ścieżek do plików
+        $this->_updateValue();
         //dołączanie skryptu
         $view->headScript()->appendScript("
 			tinyMCE.init({
@@ -384,7 +387,8 @@ class TinyMce extends Textarea
      * Utorzenie kopii plików dla tego uploadera
      * @return boolean
      */
-    protected function _createTempFiles() {
+    protected function _createTempFiles()
+    {
         //jeśli już są pliki tymczasowe, to wychodzimy
         if ((new \Cms\Orm\CmsFileQuery)
             ->byObject('tmp-' . $this->getUploaderObject(), $this->getUploaderId())
@@ -398,6 +402,28 @@ class TinyMce extends Textarea
         //tworzymy pliki tymczasowe - kopie oryginałów
         \Cms\Model\File::copy($this->getUploaderObject(), $objectId, 'tmp-' . $this->getUploaderObject(), $this->getUploaderId());
         return true;
+    }
+    
+    /**
+     * Aktualizuje wartość pola - poprawia ścieżki do plików wewnątrz TinyMce
+     * (zamienia je na ścieżki do plików tymczasowych)
+     * @return string
+     */
+    protected function _updateValue()
+    {
+        $value = $this->getValue();
+        foreach (\Cms\Orm\CmsFileQuery::byObjectJoinedOriginal('tmp-' . $this->getUploaderObject(), $this->getUploaderId())
+            ->find() as $file) {
+            if (!$file->getJoined('original_file')) {
+                continue;
+            }
+            $oName = $file->getJoined('original_file')->name;
+            $tName = $file->name;
+            $value = preg_replace('@/data/'.$oName[0].'/'.$oName[1].'/'.$oName[2].'/'.$oName[3].'/(scalecrop|scalex|scaley|default)/([0-9x]{0,10})/'.$oName.'@',
+                '/data/'.$tName[0].'/'.$tName[1].'/'.$tName[2].'/'.$tName[3].'/$1/$2/'.$tName, $value);
+        }
+        $this->setValue($value);
+        return $value;
     }
 
 }
