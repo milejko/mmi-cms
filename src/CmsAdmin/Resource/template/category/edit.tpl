@@ -3,7 +3,7 @@
 <div class="container-fluid">
     <div class="animated fadeIn">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
                         <strong>{#Zarządzanie treścią#}</strong>
@@ -17,7 +17,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-9">
+            <div class="col-8">
                 {if $categoryForm}
                     {$attributeCount = 0}
                     {* zliczanie atrybutów *}
