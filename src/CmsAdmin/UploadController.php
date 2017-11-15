@@ -140,12 +140,19 @@ class UploadController extends Mvc\Controller
             return $this->_jsonError(185);
         }
         //szukamy rekordu pliku
-        if (null !== $record = (new \Cms\Orm\CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
-            $data = $record->data->toArray();
-            $data['urlFile'] = 'http://' . \App\Registry::$config->host . $record->getUrl();
-            return json_encode(['result' => 'OK', 'record' => $record, 'data' => $data]);
+        if (null == $record = (new \Cms\Orm\CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
+            return $this->_jsonError(185);
         }
-        return $this->_jsonError(185);
+        //parametry
+        $data = $record->data->toArray();
+
+        //sprawdzenie czy jest poster
+        if (null !== $poster = $this->_getPosterBase64($record)) {
+            $data['poster'] = $poster;
+        }
+
+        $data['urlFile'] = 'http://' . \App\Registry::$config->host . $record->getUrl();
+        return json_encode(['result' => 'OK', 'record' => $record, 'data' => $data]);
     }
 
     /**
@@ -206,7 +213,7 @@ class UploadController extends Mvc\Controller
      * @param type $record
      * @return type
      */
-    public function _savePoster($imageBlob, $record)
+    protected function _savePoster($imageBlob, $record)
     {
         $object = self::objectPoster . '-' . $record->id;
 
@@ -240,6 +247,24 @@ class UploadController extends Mvc\Controller
         $recordPoster->active = 1;
         $recordPoster->object = $object;
         return $recordPoster->save() ? $recordPoster : null;
+    }
+
+    /**
+     * Pobranie postera base64 na podstwie recordu video
+     * @param type $record
+     * @return type
+     */
+    protected function _getPosterBase64($record)
+    {
+        $object = self::objectPoster . '-' . $record->id;
+        if (null === $poster = (new CmsFileQuery)->whereObject()->equals($object)
+            ->andFieldObjectId()->equals($record->objectId)
+            ->findFirst()) {
+            return null;
+        }
+
+        $data = file_get_contents(BASE_PATH . 'web/' . $poster->getUrl());
+        return 'data:image/' . pathinfo($poster->getUrl(), PATHINFO_EXTENSION) . ';base64,' . base64_encode($data);
     }
 
     /**
