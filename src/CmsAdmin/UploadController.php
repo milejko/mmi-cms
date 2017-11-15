@@ -10,11 +10,16 @@
 
 namespace CmsAdmin;
 
+use Cms\Orm\CmsFileQuery;
+
 /**
  * Kontroler pobierania plików
  */
 class UploadController extends Mvc\Controller
 {
+
+    CONST objectPoster = 'posterVideo';
+    CONST acceptPosterFormat = ['image/png'];
 
     /**
      * Odbieranie danych z plugina Plupload
@@ -158,6 +163,7 @@ class UploadController extends Mvc\Controller
         if (null === $record = (new \Cms\Orm\CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
             return $this->_jsonError(186);
         }
+        //pobranie danych
         $form = ['active' => 0, 'sticky' => null];
         foreach ($this->getPost()->form as $field) {
             $form[$field['name']] = $field['value'];
@@ -165,6 +171,10 @@ class UploadController extends Mvc\Controller
                 continue;
             }
             $record->data->{$field['name']} = $field['value'];
+        }
+        //szukamy czy jest poster
+        if (isset($form['poster']) && null !== $poster = $this->_savePoster($form['poster'], $record)) {
+            $record->data->poster = $poster->object;
         }
         //czyszczenie nieprzesłanych checkboxów
         foreach ($record->data as $name => $value) {
@@ -188,6 +198,48 @@ class UploadController extends Mvc\Controller
             return json_encode(['result' => 'OK']);
         }
         return $this->_jsonError(186);
+    }
+
+    /**
+     * Zapisanie postera dla video
+     * @param type $imageBlob
+     * @param type $record
+     * @return type
+     */
+    public function _savePoster($imageBlob, $record)
+    {
+        $object = self::objectPoster . '-' . $record->id;
+
+        //test bloba
+        \preg_match("/^data:(.*);base64,(.*)/i", $imageBlob, $match);
+        if (!in_array($match[1], self::acceptPosterFormat)) {
+            return null;
+        }
+
+        //zapis
+        $tmp_file = BASE_PATH . 'var/cache/' . uniqid();
+        $ext = explode('/', $match[1])[1];
+        file_put_contents($tmp_file, base64_decode($match[2]));
+        $file = new \Mmi\Http\RequestFile([
+            'name' => $object . '.' . $ext,
+            'tmp_name' => $tmp_file,
+            'size' => filesize($tmp_file)
+        ]);
+
+        if (null === $recordPoster = \Cms\Model\File::appendFile($file, 'tmp-' . $object, $record->objectId, self::acceptPosterFormat)) {
+            return null;
+        }
+
+        //usuniecie poprzedniego
+        (new CmsFileQuery)->whereObject()->equals($object)
+            ->andFieldObjectId()->equals($record->objectId)
+            ->find()
+            ->delete();
+
+        //rekord pliku
+        $recordPoster->active = 1;
+        $recordPoster->object = $object;
+        return $recordPoster->save() ? $recordPoster : null;
     }
 
     /**
