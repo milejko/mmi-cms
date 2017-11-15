@@ -414,7 +414,7 @@ class TinyMce extends Textarea
         $value = $this->getValue();
         foreach (\Cms\Orm\CmsFileQuery::byObjectJoinedOriginal('tmp-' . $this->getUploaderObject(), $this->getUploaderId())
             ->find() as $file) {
-            if (!$file->getJoined('original_file')) {
+            if (!$file->getJoined('original_file') || !$file->getJoined('original_file')->name) {
                 continue;
             }
             $oName = $file->getJoined('original_file')->name;

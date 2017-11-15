@@ -79,7 +79,7 @@ abstract class Form extends \Mmi\Form\Form
             $value = $element->getValue();
             foreach (\Cms\Orm\CmsFileQuery::byObjectJoinedOriginal('tmp-' . $element->getUploaderObject(), $element->getUploaderId())
                 ->find() as $file) {
-                if (!$file->getJoined('original_file')) {
+                if (!$file->getJoined('original_file') || !$file->getJoined('original_file')->name) {
                     continue;
                 }
                 $oName = $file->getJoined('original_file')->name;
