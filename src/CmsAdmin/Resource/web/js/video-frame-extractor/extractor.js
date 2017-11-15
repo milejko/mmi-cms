@@ -16,6 +16,22 @@ var VideoFrameExtractor = function () {
         }, 100);
     };
 
+    extractor.prependSelected = function(){
+        console.log('dupa');
+        var selectedImg = $('#poster').val();
+        if(selectedImg){
+            var img = document.createElement('img');
+            img.src = selectedImg;
+            img.classList.add('active');
+            $(img).on('click', function(){
+                $('#output > img').removeClass('active');
+                $(this).addClass('active');
+                $('#poster').val(this.src);
+            });
+            extractor.output.prepend(img);
+        }
+    };
+
     extractor.initialize = function () {
         extractor.modalFixer();
         extractor.output = $('#output');
@@ -64,6 +80,8 @@ var VideoFrameExtractor = function () {
     extractor.timeSeeked = function () {
         if (extractor.currentFrameId <= 10) {
             extractor.captureFrame(true);
+        }else{
+            extractor.prependSelected();
         }
     };
 
