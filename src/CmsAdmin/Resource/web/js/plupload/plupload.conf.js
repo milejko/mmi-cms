@@ -252,7 +252,13 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                             if (args.up.getOption('poster')) {
                                 $('#video').find('#urlVideo').attr('src', data.data['urlFile']);
                                 $(edit + ' input[name="poster"]').val(data.data['poster']);
-                                new VideoFrameExtractor().initialize();
+                                new VideoFrameExtractor().initialize({
+                                    input: '#poster',
+                                    video: '#video',
+                                    btn: '#frame-camera',
+                                    output: '#output',
+                                    dialog: '.ui-dialog'
+                                });
                             }
                             $(edit + ' > fieldset > .imprint').each(function () {
                                 var fieldName = $(this).attr('name');
