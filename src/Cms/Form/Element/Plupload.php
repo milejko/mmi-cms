@@ -471,16 +471,19 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
             $html = "
                 <div class='frame-extractor'>
                     <div class='row'>
-                        <div class='col d-flex justify-content-center'>
+                        <div class='col d-flex justify-content-center video-container'>
                             <video id='video' controls='controls'>
-                                <source id='urlVideo' src=''/>
+                                <source id='urlVideo' src='' type='video/mp4'/>
                             </video>
+                            <input id='poster' type='hidden' name='poster' value=''/>
+                            <button id='frame-camera' type='button' class='btn btn-outline-primary frame-camera'>
+                                <i class='fa fa-2 fa-camera'></i>
+                            </button>
                         </div>
                     </div>
                     <div class='row'>
                         <div class='col'>
-                            <div id='output'>
-                            
+                            <div id='output'>                            
                             </div>
                         </div>
                     </div>

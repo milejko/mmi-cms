@@ -1,57 +1,74 @@
-(function() {
-    'use strict';
+"use strict";
+var VideoFrameExtractor = function () {
+    var extractor = {};
+    extractor.video = null;
+    extractor.ghostVideo = null;
+    extractor.output = null;
+    extractor.scale = 0.25;
+    extractor.currentFrameId = 1;
+    extractor.autoFramesGenerated = false;
 
-    var video, $output;
-    var scale = 0.25;
-    var currentFrameId = 1;
-    var autoFramesGenerated  = false;
-    var initialize = function() {
-        $output = $('#output');
-        video = $('#video').clone();
-        video = $(video).get(0);
-        video.addEventListener('loadedmetadata', captureFrames, false);
-        video.addEventListener('seeked', timeSeeked, false);
-        $('#capture').click(userCapture);
+    extractor.modalFixer = function () {
+        setTimeout(function(){
+            if($('.ui-dialog').length > 0){
+                $('.ui-dialog').css({top:'25px'});
+            }
+        }, 100);
     };
 
-    var userCapture = function(){
-        captureFrame(false);
+    extractor.initialize = function () {
+        extractor.modalFixer();
+        extractor.output = $('#output');
+        extractor.output.empty();
+        extractor.video = $('#video').clone();
+        extractor.video = $(extractor.video).get(0);
+        extractor.video.addEventListener('loadedmetadata', extractor.captureFrames, false);
+        extractor.video.addEventListener('seeked', extractor.timeSeeked, false);
+        $('#frame-camera').on('click', extractor.userCapture);
     };
-
-    var captureFrame = function(isAutoProcess){
+    extractor.userCapture = function () {
+        extractor.captureFrame(false);
+    };
+    extractor.captureFrame = function (isAutoProcess) {
+        if(!isAutoProcess){
+            extractor.video = $('#video').get(0);
+        }
         var canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth * scale;
-        canvas.height = video.videoHeight * scale;
+        canvas.width = extractor.video.videoWidth * extractor.scale;
+        canvas.height = extractor.video.videoHeight * extractor.scale;
         canvas.getContext('2d')
-            .drawImage(video, 0, 0, canvas.width, canvas.height);
+            .drawImage(extractor.video, 0, 0, canvas.width, canvas.height);
 
         var img = document.createElement('img');
         img.src = canvas.toDataURL();
-        img.style.height = '100px';
-        $output.prepend(img);
-        if(isAutoProcess){
-            currentFrameId++;
-            if(currentFrameId > 10){
-                if(autoFramesGenerated) {
-                    video.currentTime = 0;
-                    autoFramesGenerated = true;
+        $(img).on('click', function(){
+            $('#output > img').removeClass('active');
+            $(this).addClass('active');
+            $('#poster').val(this.src);
+        });
+        extractor.output.prepend(img);
+        if (isAutoProcess) {
+            extractor.currentFrameId++;
+            if (extractor.currentFrameId > 10) {
+                if (extractor.autoFramesGenerated) {
+                    extractor.video.currentTime = 0;
+                    extractor.autoFramesGenerated = true;
                 }
             }
-            if(!autoFramesGenerated){
-                captureFrames();
+            if (!extractor.autoFramesGenerated) {
+                extractor.captureFrames();
             }
         }
     };
 
-    var timeSeeked = function () {
-        if(currentFrameId <= 10) {
-            captureFrame(true);
+    extractor.timeSeeked = function () {
+        if (extractor.currentFrameId <= 10) {
+            extractor.captureFrame(true);
         }
     };
 
-    var captureFrames = function(){
-        video.currentTime += (video.duration / 10);
+    extractor.captureFrames = function () {
+        extractor.video.currentTime += (extractor.video.duration / 10);
     };
-
-    $(initialize);
-}());
+    return extractor;
+};
