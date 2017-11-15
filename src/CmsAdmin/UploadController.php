@@ -137,7 +137,7 @@ class UploadController extends Mvc\Controller
         //szukamy rekordu pliku
         if (null !== $record = (new \Cms\Orm\CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
             $data = $record->data->toArray();
-            $data['urlFile'] = $record->getUrl();
+            $data['urlFile'] = 'http://' . \App\Registry::$config->host . $record->getUrl();
             return json_encode(['result' => 'OK', 'record' => $record, 'data' => $data]);
         }
         return $this->_jsonError(185);
