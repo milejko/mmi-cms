@@ -386,6 +386,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
 				" . ($this->getOption('afterUpload') ? "conf.after_upload = " . json_encode($this->getOption('afterUpload')) . ";" : "") . "
 				" . ($this->getOption('afterDelete') ? "conf.after_delete = " . json_encode($this->getOption('afterDelete')) . ";" : "") . "
 				conf.preview = " . ($this->getOption('preview') ? $this->getOption('preview') : 0) . ";
+                conf.poster = " . ($this->getOption('poster') ? $this->getOption('poster') : 1) . ";
 				" . ($this->getOption('afterEdit') ? "conf.after_edit = " . json_encode($this->getOption('afterEdit')) . ";" : "") . "
 				$('#$this->_id').plupload(conf);
 			});
@@ -465,8 +466,11 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
 
         //input poster video
         if ($element['type'] == 'poster') {
+            $this->setOption('poster', true);
             $html = "
-                <input type='text' name='urlFile' id='" . $this->getId() . '-urlFile' . "' class='imprint' required />
+                <video id='video' controls='controls' style='height: 200px;'>
+                    <source id='urlVideo' src=''/>
+                </video>
 			";
             return $html;
         }
