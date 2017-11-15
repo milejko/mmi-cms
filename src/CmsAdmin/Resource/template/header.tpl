@@ -11,4 +11,7 @@
         {headLink()->appendStyleSheet('/resource/cmsAdmin/css/style.css')}
         {headLink()->appendStylesheet('/resource/cmsAdmin/css/datetimepicker.css')}
         {headLink()}
+        <script>
+            var request = {baseUrl:""};
+        </script>
     </head>
