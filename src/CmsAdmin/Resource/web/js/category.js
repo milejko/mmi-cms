@@ -1,5 +1,29 @@
 var CMS = CMS || {};
 var openedWindow = {closed: true};
+var followScroll = false;
+
+var $elems = $("html, body");
+var delta = 0;
+
+$(document).on("mousemove", function(e) {
+    if(followScroll){
+        var h = $(window).height();
+        var y = e.clientY - h / 2;
+        delta = y * 0.1;
+    }else{
+        delta = 0;
+    }
+});
+
+(function f() {
+    if(delta) {
+        $elems.scrollTop(function(i, v) {
+            return v + delta;
+        });
+    }
+    webkitRequestAnimationFrame(f);
+})();
+
 
 CMS.category = function () {
     "use strict";
@@ -15,6 +39,12 @@ CMS.category = function () {
     initSortableWidgets = function () {
         if($('#widget-list').length > 0) {
             $('#widget-list').sortable({
+                start:function () {
+                    followScroll = true;
+                },
+                stop:function () {
+                    followScroll = false;
+                },
                 handle: '.handle-widget',
                 update: function (event, ui) {
                     $.post(request.baseUrl + "/?module=cmsAdmin&controller=categoryWidgetRelation&action=sort&categoryId=" + $(this).attr('data-category-id'), $(this).sortable('serialize'),
@@ -114,8 +144,22 @@ CMS.category = function () {
         $('h5 > a').on('click', function (evt) {
             sessionStorage.setItem('catActiveTab', $(this).attr("href"));
         });
+
        if(currentTab){
            $('a[href$="'+currentTab+'"]').click();
+       }
+
+       if(currentTab === '#tab-widget') {
+           setTimeout(function(){
+               var scrollLocation = sessionStorage.getItem('widgetScrollTarget');
+               if (scrollLocation) {
+                   var element = document.getElementById(scrollLocation);
+                   var elementRect = element.getBoundingClientRect();
+                   var absoluteElementTop = elementRect.top + window.pageYOffset;
+                   var middle = absoluteElementTop - 100;
+                   window.scrollTo(0, middle);
+               }
+           }, 400)
        }
     };
     dataTabRestore();

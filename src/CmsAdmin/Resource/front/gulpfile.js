@@ -51,8 +51,14 @@ gulp.task('serve', function () {
 
 gulp.task('build', function(){
     return new Promise(function (suc, e) {
-        runSequence('sass','copy_jstree', 'build:dist', 'new_assets');
+        runSequence('sass', 'extractor', 'copy_jstree', 'build:dist', 'new_assets');
     });
+});
+
+gulp.task('extractor', function(){
+    return gulp.src('./scss/frame-extractor/extractor.scss')
+        .pipe(sass())
+        .pipe(gulp.dest('./js/video-frame-extractor/'))
 });
 
 gulp.task('sass', function () {

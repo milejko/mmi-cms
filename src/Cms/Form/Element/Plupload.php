@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -28,25 +28,25 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
     CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
     //klucz z losowym id uploadera
     CONST UPLOADER_ID_KEY = 'uploaderId';
-    
+
     /**
      * Id elementu formularza
      * @var string
      */
     protected $_id = '';
-    
+
     /**
      * Typ obiektu
      * @var string
      */
     protected $_object = 'library';
-    
+
     /**
      * Id obiektu
      * @var integer
      */
     protected $_objectId = null;
-    
+
     /**
      * Tymczsowy typ obiektu
      * @var string
@@ -87,7 +87,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
     {
         return $this->getOption(self::UPLOADER_ID_KEY);
     }
-    
+
     /**
      * Ustawia objekt cms_
      * @param string $object
@@ -255,7 +255,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
         if (null === $imprint) {
             $imprint = [];
         }
-        $imprint[] = ['type' => $type, 'name' => $name, 'label' => ($label ? : $name), 'options' => $options];
+        $imprint[] = ['type' => $type, 'name' => $name, 'label' => ($label ?: $name), 'options' => $options];
         return $this->setOption('imprint', $imprint);
     }
 
@@ -327,6 +327,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
         $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.theme.min.css');
         $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/plupload/plupload.conf.css');
         $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/css/jquery.ui.plupload.css');
+        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/video-frame-extractor/extractor.css');
         $view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/vendors/js/popper.min.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/vendors/js/pace.min.js');
@@ -338,8 +339,8 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
         $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/plupload.conf.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/i18n/pl.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/jquery.ui.plupload.min.js');
-
-
+        $view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/tinymce.min.js');
+        $view->headScript()->appendFile('/resource/cmsAdmin/js/video-frame-extractor/extractor.js');
 
 
         //przygotowanie danych dla pola
@@ -387,6 +388,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
 				" . ($this->getOption('afterUpload') ? "conf.after_upload = " . json_encode($this->getOption('afterUpload')) . ";" : "") . "
 				" . ($this->getOption('afterDelete') ? "conf.after_delete = " . json_encode($this->getOption('afterDelete')) . ";" : "") . "
 				conf.preview = " . ($this->getOption('preview') ? $this->getOption('preview') : 0) . ";
+                conf.poster = " . ($this->getOption('poster') ? $this->getOption('poster') : 1) . ";
 				" . ($this->getOption('afterEdit') ? "conf.after_edit = " . json_encode($this->getOption('afterEdit')) . ";" : "") . "
 				$('#$this->_id').plupload(conf);
 			});
@@ -394,12 +396,13 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
 
         return $html;
     }
-    
+
     /**
      * Przygotowanie danych przed renderingiem pola formularza
      * @return \Cms\Form\Element\Plupload
      */
-    protected function _beforeRender() {
+    protected function _beforeRender()
+    {
         $this->_id = $this->getOption('id');
         if ($this->_form->hasRecord()) {
             $this->_object = $this->_form->getFileObjectName();
@@ -413,12 +416,13 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
         $this->_createTempFiles();
         return $this;
     }
-    
+
     /**
      * Utorzenie kopii plików dla tego uploadera
      * @return boolean
      */
-    protected function _createTempFiles() {
+    protected function _createTempFiles()
+    {
         //jeśli już są pliki tymczasowe, to wychodzimy
         if ((new \Cms\Orm\CmsFileQuery)
             ->byObject($this->_tempObject, $this->getUploaderId())
@@ -456,17 +460,49 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
     protected function _renderImprintElement($element)
     {
         //walidacja
-        if (!isset($element['type']) || !isset($element['name']) || !isset($element['label'])) {
+        if (!isset($element['type']) || !isset($element['name'])) {
             return;
         }
         //identyfikator pola
         $fieldId = $this->getId() . '-' . (new \Mmi\Filter\Url)->filter($element['name']);
+
+        //input poster video
+        if ($element['type'] == 'poster') {
+            $this->setOption('poster', true);
+            $html = "
+                <div class='frame-extractor'>
+                    <div class='row'>
+                        <div class='col d-flex justify-content-center video-container'>
+                            <video id='video' controls='controls'>
+                                <source id='urlVideo' src='' type='video/mp4'/>
+                            </video>
+                            <input id='poster' type='hidden' name='poster' value=''/>
+                            <button id='frame-camera' type='button' class='btn btn-outline-primary frame-camera'>
+                                <i class='fa fa-2 fa-camera'></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='col'>
+                            <div id='output'>                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			";
+            return $html;
+        }
+
+        //walidacja
+        if (!isset($element['label'])) {
+            return;
+        }
         //element label
-        $label = '<label for="' . $fieldId . '">' . $element['label'] . (($element['type'] != 'checkbox') ? ':' : '') . '</label>';
+        $label = ' <div class="form-group"><label for="' . $fieldId . '">' . $element['label'] . (($element['type'] != 'checkbox') ? ':' : '') . '</label>';
         //input text
         if ($element['type'] == 'text') {
             return $label .
-                '<input id="' . $fieldId . '" type="' . $element['type'] . '" name="' . $element['name'] . '" class="imprint ' . $element['type'] . '">';
+                '<input id="' . $fieldId . '" type="' . $element['type'] . '" name="' . $element['name'] . '" class="imprint ' . $element['type'] . '"></div>';
         }
         //input checkbox
         if ($element['type'] == 'checkbox') {
@@ -475,12 +511,12 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
         //textarea
         if ($element['type'] == 'textarea') {
             return $label .
-                '<textarea id="' . $fieldId . '" name="' . $element['name'] . '" class="imprint ' . $element['type'] . '"></textarea>';
+                '<textarea id="' . $fieldId . '" name="' . $element['name'] . '" class="imprint ' . $element['type'] . '"></textarea></div>';
         }
         //tinymce
         if ($element['type'] == 'tinymce') {
             return $label .
-                '<textarea id="' . $fieldId . '" name="' . $element['name'] . '" class="plupload-edit-tinymce imprint ' . $element['type'] . '"></textarea>';
+                '<textarea id="' . $fieldId . '" name="' . $element['name'] . '" class="plupload-edit-tinymce imprint ' . $element['type'] . '"></textarea></div>';
         }
         //lista
         if ($element['type'] == 'select') {
@@ -510,7 +546,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
 				// <![CDATA[
 					$(document).ready(function () {
 						'use strict';
-						$('#$fieldId').change(function() {							
+						$('#$fieldId').change(function() {
 							var src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 							if( $(this).find(':selected').attr('data-image-url') != undefined ){
 								src = $(this).find(':selected').attr('data-image-url')
@@ -526,7 +562,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
             }
 
             return $label .
-                '<select id="' . $fieldId . '" name="' . $element['name'] . '" class="' . ($image != '' ? 'col_9' : '') . ' plupload-edit-tinymce imprint ' . $element['type'] . '">' . implode($option) . '</select>' . $image;
+                '<select id="' . $fieldId . '" name="' . $element['name'] . '" class="' . ($image != '' ? 'col_9' : '') . ' plupload-edit-tinymce imprint ' . $element['type'] . '">' . implode($option) . '</select></div>' . $image;
         }
     }
 

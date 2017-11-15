@@ -249,6 +249,11 @@ PLUPLOADCONF.settings.ready = function (event, args) {
 
                             //przygotowujemy zawartość okienka edycji i pokazujemy go
                             var edit = 'div#' + args.up.getOption('form_element_id') + '-edit';
+                            if (args.up.getOption('poster')) {
+                                $('#video').find('#urlVideo').attr('src', data.data['urlFile']);
+                                $(edit + ' input[name="poster"]').val(data.data['poster']);
+                                new VideoFrameExtractor().initialize();
+                            }
                             $(edit + ' > fieldset > .imprint').each(function () {
                                 var fieldName = $(this).attr('name');
                                 if ($(this).attr('type') === 'checkbox') {

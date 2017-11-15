@@ -1,0 +1,35 @@
+.frame-extractor{
+  video{
+    height: 250px;
+    width: auto;
+  }
+  .frame-camera{
+    position: absolute;
+    top: 20px;
+    height: 54px;
+    height: 54px;
+    right: 50px;
+    border-radius: 110px;
+  }
+  .row{
+    &.video-container{
+      position: relative;
+    }
+    .col{
+      #output{
+        max-height: 250px;
+        overflow: auto;
+        text-align: center;
+        img{
+          cursor:pointer;
+          width:31%;
+          margin:2px;
+          height: auto;
+          &.active{
+            border: 2px solid #3dbb5d;
+          }
+        }
+      }
+    }
+  }
+}
