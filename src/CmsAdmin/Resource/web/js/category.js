@@ -148,7 +148,7 @@ CMS.category = function () {
        if(currentTab){
            $('a[href$="'+currentTab+'"]').click();
        }
-       console.log(currentTab)
+
        if(currentTab === '#tab-widget') {
            setTimeout(function(){
                var scrollLocation = sessionStorage.getItem('widgetScrollTarget');
