@@ -11,6 +11,8 @@ var VideoFrameExtractor = function () {
         input: '',
         video: '',
         btn: '',
+        uploadInput:'',
+        uploadBtn:'',
         output: '',
         dialog: ''
     };
@@ -49,12 +51,17 @@ var VideoFrameExtractor = function () {
             extractor.video.addEventListener('seeked', extractor.timeSeeked, false);
             $(extractor.selectors.btn).off('click');
             $(extractor.selectors.btn).on('click', extractor.userCapture);
+            $(extractor.selectors.uploadBtn).off('click');
+            $(extractor.selectors.uploadBtn).on('click', extractor.uploadFile);
         } else {
             console.log('selectors was not provided');
         }
     };
     extractor.userCapture = function () {
         extractor.captureFrame(false);
+    };
+    extractor.uploadFile = function () {
+       $(extractor.selectors.uploadInput).click();
     };
     extractor.captureFrame = function (isAutoProcess) {
         if (!isAutoProcess) {

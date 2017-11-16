@@ -142,20 +142,18 @@
                                     //przygotowujemy zawartość okienka edycji i pokazujemy go
                                     var edit = 'div#dialog-edit';
 
-                                    $.getJSON(parentEditor.settings.baseUrl + '/?module=cms&controller=file&action=list&class=image&object=' + parentEditor.settings.object + '&objectId=' + parentEditor.settings.objectId + '&t=' + parentEditor.settings.time + '&hash=' + parentEditor.settings.hash, function (resp) {
-                                        select = $("div#dialog-edit select[name='source']");
-                                        select.find('option:not(:first)').remove();
-                                        $.each(resp, function (k, v) {
-                                            state = "";
-                                            if (v.value === data.record.source) {
-                                                state = "selected";
-                                                if (v.value != "") {
-                                                    $("div#dialog-edit #img-edit").attr('src', v.value);
-                                                }
-                                            }
-                                            select.append($("<option>", {value: v.value, html: v.title}).prop('selected', state));
+                                    //video poster
+                                    if( data.data['urlFile'] != undefined ){                                        
+                                        $('#video').find('#urlVideo').attr('src', data.data['urlFile']);
+                                        $(edit + ' input[name="poster"]').val(data.data['poster']);
+                                        new VideoFrameExtractor().initialize({
+                                            input: '#poster',
+                                            video: '#video',
+                                            btn: '#frame-camera',
+                                            output: '#output',
+                                            dialog: '.ui-dialog'
                                         });
-                                    });
+                                    }
 
                                     $(edit + ' input[name="title"]').val(data.record.title);
                                     $(edit + ' input[name="author"]').val(data.record.author);

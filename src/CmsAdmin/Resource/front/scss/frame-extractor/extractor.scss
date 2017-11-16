@@ -1,4 +1,7 @@
 .frame-extractor{
+  #userPoster{
+    visibility: hidden;
+  }
   video{
     height: 250px;
     width: auto;
@@ -7,9 +10,13 @@
     position: absolute;
     top: 20px;
     height: 54px;
-    height: 54px;
+    width: 54px;
     right: 50px;
     border-radius: 110px;
+  }
+  .frame-upload{
+   @extend .frame-camera;
+    top: 90px;
   }
   .row{
     &.video-container{
