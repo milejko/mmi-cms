@@ -180,7 +180,7 @@ class UploadController extends Mvc\Controller
             $record->data->{$field['name']} = $field['value'];
         }
         //szukamy czy jest poster
-        if (isset($form['poster']) && null !== $poster = $this->_savePoster($form['poster'], $record)) {
+        if (isset($form['poster']) && !empty($form['poster']) && null !== $poster = $this->_savePoster($form['poster'], $record)) {
             $record->data->posterFileId = $form['posterFileId'] = $poster->id;
             unset($form['poster']);
         }
