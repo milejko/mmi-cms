@@ -242,6 +242,8 @@ class UploadController extends Mvc\Controller
             ->andFieldObjectId()->equals($record->objectId)
             ->find()
             ->delete();
+        //usuniecie tmp
+        unlink($tmp_file);
 
         //rekord pliku
         $recordPoster->active = 1;
