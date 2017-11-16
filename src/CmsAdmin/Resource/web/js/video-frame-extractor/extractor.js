@@ -30,11 +30,7 @@ var VideoFrameExtractor = function () {
             var img = document.createElement('img');
             img.src = selectedImg;
             img.classList.add('active');
-            $(img).on('click', function () {
-                $(extractor.selectors.output + ' > img').removeClass('active');
-                $(this).addClass('active');
-                $(extractor.selectors.input).val(this.src);
-            });
+            $(img).on('click',extractor.imageClick  );
             extractor.output.prepend(img);
         }
     };
@@ -62,8 +58,33 @@ var VideoFrameExtractor = function () {
     extractor.userCapture = function () {
         extractor.captureFrame(false);
     };
+
+    extractor.imageClick = function () {
+        $(extractor.selectors.output + ' > img').removeClass('active');
+        $(this).addClass('active');
+        $(extractor.selectors.input).val(this.src);
+    }
+
     extractor.uploadFile = function () {
        $(extractor.selectors.uploadInput).click();
+        function handleFileSelect(evt) {
+            var files = evt.target.files;
+            var f = files[0];
+            var reader = new FileReader();
+            reader.onload = (function(theFile) {
+                return function(e) {
+                    var img = document.createElement('img');
+                    img.src = e.target.result;
+                    $(img).on('click',extractor.imageClick  );
+                    $(extractor.selectors.output + ' > img').removeClass('active');
+                    img.classList.add('active');
+                    extractor.output.prepend(img);
+                };
+            })(f);
+            reader.readAsDataURL(f);
+        }
+        $(extractor.selectors.uploadInput).off('change');
+        $(extractor.selectors.uploadInput).on('change', handleFileSelect)
     };
     extractor.captureFrame = function (isAutoProcess) {
         if (!isAutoProcess) {
@@ -77,11 +98,7 @@ var VideoFrameExtractor = function () {
 
         var img = document.createElement('img');
         img.src = canvas.toDataURL();
-        $(img).on('click', function () {
-            $(extractor.selectors.output + ' > img').removeClass('active');
-            $(this).addClass('active');
-            $(extractor.selectors.input).val(this.src);
-        });
+        $(img).on('click',extractor.imageClick  );
         extractor.output.prepend(img);
         if (isAutoProcess) {
             extractor.currentFrameId++;
