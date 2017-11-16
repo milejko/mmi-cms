@@ -40,7 +40,7 @@ gulp.task('new_assets', ['clean_assets'], function () {
 
 gulp.task('serve', function () {
     return new Promise(function (suc, e) {
-        runSequence('sass','copy_jstree', 'build:dist', 'new_assets', suc);
+        runSequence('sass', 'extractor','tinymc-mod','copy_jstree', 'build:dist', 'new_assets', suc);
     }).then(function () {
         browserSync.init({
             proxy: 'http://localhost/cmsAdmin'
@@ -51,7 +51,7 @@ gulp.task('serve', function () {
 
 gulp.task('build', function(){
     return new Promise(function (suc, e) {
-        runSequence('sass', 'extractor', 'copy_jstree', 'build:dist', 'new_assets');
+        runSequence('sass', 'extractor','tinymc-mod', 'copy_jstree', 'build:dist', 'new_assets');
     });
 });
 
@@ -59,6 +59,12 @@ gulp.task('extractor', function(){
     return gulp.src('./scss/frame-extractor/extractor.scss')
         .pipe(sass())
         .pipe(gulp.dest('./js/video-frame-extractor/'))
+});
+
+gulp.task('tinymc-mod', function(){
+    return gulp.src('./scss/tinymc-mods/tinymc-mods.scss')
+        .pipe(sass())
+        .pipe(gulp.dest('./css'))
 });
 
 gulp.task('sass', function () {
