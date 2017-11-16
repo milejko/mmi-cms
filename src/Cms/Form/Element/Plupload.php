@@ -476,10 +476,10 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
                                 <source id='urlVideo' src='' type='video/mp4'/>
                             </video>
                             <input id='poster' type='hidden' name='poster' value=''/>
-                            <button id='frame-camera' type='button' class='btn btn-outline-primary frame-camera'>
+                            <button id='frame-camera' type='button' class='btn btn-outline-primary frame-camera' data-toggle='tooltip' data-placement='top' title='Złap aktualną ramkę z wideo'>
                                 <i class='fa fa-2 fa-camera'></i>
                             </button>
-                            <button id='frame-upload' type='button' class='btn btn-outline-primary frame-upload'>
+                            <button id='frame-upload' type='button'  data-toggle='tooltip' data-placement='top' title='Prześlij swoja ramkę wideo' class='btn btn-outline-primary frame-upload'>
                                 <i class='fa fa-2 fa-upload'></i>
                             </button>
                         </div>
