@@ -11,6 +11,7 @@
 namespace CmsAdmin;
 
 use Cms\Orm\CmsFileQuery;
+use Cms\Orm\CmsFileRecord;
 
 /**
  * Kontroler pobierania plików
@@ -18,7 +19,6 @@ use Cms\Orm\CmsFileQuery;
 class UploadController extends Mvc\Controller
 {
 
-    CONST objectPoster = 'posterVideo';
     CONST acceptPosterFormat = ['image/png'];
 
     /**
@@ -181,7 +181,8 @@ class UploadController extends Mvc\Controller
         }
         //szukamy czy jest poster
         if (isset($form['poster']) && null !== $poster = $this->_savePoster($form['poster'], $record)) {
-            $record->data->poster = $poster->object;
+            $record->data->posterFileId = $form['posterFileId'] = $poster->id;
+            unset($form['poster']);
         }
         //czyszczenie nieprzesłanych checkboxów
         foreach ($record->data as $name => $value) {
@@ -215,7 +216,7 @@ class UploadController extends Mvc\Controller
      */
     protected function _savePoster($imageBlob, $record)
     {
-        $object = self::objectPoster . '-' . $record->id;
+        $object = CmsFileRecord::objectPoster;
 
         //test bloba
         \preg_match("/^data:(.*);base64,(.*)/i", $imageBlob, $match);
@@ -233,13 +234,13 @@ class UploadController extends Mvc\Controller
             'size' => filesize($tmp_file)
         ]);
 
-        if (null === $recordPoster = \Cms\Model\File::appendFile($file, 'tmp-' . $object, $record->objectId, self::acceptPosterFormat)) {
+        if (null === $recordPoster = \Cms\Model\File::appendFile($file, 'tmp-' . $object, $record->id, self::acceptPosterFormat)) {
             return null;
         }
 
         //usuniecie poprzedniego
         (new CmsFileQuery)->whereObject()->equals($object)
-            ->andFieldObjectId()->equals($record->objectId)
+            ->andFieldObjectId()->equals($record->id)
             ->find()
             ->delete();
         //usuniecie tmp
@@ -258,9 +259,13 @@ class UploadController extends Mvc\Controller
      */
     protected function _getPosterBase64($record)
     {
-        $object = self::objectPoster . '-' . $record->id;
-        if (null === $poster = (new CmsFileQuery)->whereObject()->equals($object)
-            ->andFieldObjectId()->equals($record->objectId)
+        if (!isset($record->data->posterFileId)) {
+            return null;
+        }
+
+        if (null === $poster = (new CmsFileQuery)->whereObject()->equals(CmsFileRecord::objectPoster)
+            ->andFieldId()->equals($record->data->posterFileId)
+            ->andFieldActive()->equals(1)
             ->findFirst()) {
             return null;
         }

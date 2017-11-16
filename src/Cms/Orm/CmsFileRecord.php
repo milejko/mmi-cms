@@ -10,6 +10,8 @@ use Mmi\App\FrontController;
 class CmsFileRecord extends \Mmi\Orm\Record
 {
 
+    CONST objectPoster = 'posterVideo';
+
     public $id;
 
     /**
@@ -449,15 +451,12 @@ class CmsFileRecord extends \Mmi\Orm\Record
 
     /**
      * Pobranie posteru dla video
-     * @return boolean
+     * @return record poster
      */
     public function getVideoPoster()
     {
-        if (!isset($this->data->poster)) {
-            return null;
-        }
-
-        if (null === $poster = (new CmsFileQuery)->whereObject()->equals($this->data->poster)
+        if (!isset($this->data->posterFileId) || null === $poster = (new CmsFileQuery)->whereObject()->equals(self::objectPoster)
+            ->andFieldId()->equals($this->data->posterFileId)
             ->andFieldActive()->equals(1)
             ->findFirst()) {
             return null;
