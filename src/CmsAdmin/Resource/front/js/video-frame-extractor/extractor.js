@@ -47,6 +47,7 @@ var VideoFrameExtractor = function () {
             extractor.video = $(extractor.video).get(0);
             extractor.video.addEventListener('loadedmetadata', extractor.captureFrames, false);
             extractor.video.addEventListener('seeked', extractor.timeSeeked, false);
+            $(extractor.selectors.btn).off('click');
             $(extractor.selectors.btn).on('click', extractor.userCapture);
         } else {
             console.log('selectors was not provided');
