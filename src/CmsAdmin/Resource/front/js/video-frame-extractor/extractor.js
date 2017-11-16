@@ -7,47 +7,58 @@ var VideoFrameExtractor = function () {
     extractor.scale = 0.25;
     extractor.currentFrameId = 1;
     extractor.autoFramesGenerated = false;
-
+    extractor.selectors = {
+        input: '',
+        video: '',
+        btn: '',
+        output: '',
+        dialog: ''
+    };
     extractor.modalFixer = function () {
-        setTimeout(function(){
-            if($('.ui-dialog').length > 0){
-                $('.ui-dialog').css({top:'25px'});
+        setTimeout(function () {
+            if ($(extractor.selectors.dialog).length > 0) {
+                $(extractor.selectors.dialog).css({top: '25px'});
             }
         }, 100);
     };
 
-    extractor.prependSelected = function(){
-        console.log('dupa');
+    extractor.prependSelected = function () {
         var selectedImg = $('#poster').val();
-        if(selectedImg){
+        if (selectedImg) {
             var img = document.createElement('img');
             img.src = selectedImg;
             img.classList.add('active');
-            $(img).on('click', function(){
-                $('#output > img').removeClass('active');
+            $(img).on('click', function () {
+                $(extractor.selectors.output + ' > img').removeClass('active');
                 $(this).addClass('active');
-                $('#poster').val(this.src);
+                $(extractor.selectors.input).val(this.src);
             });
             extractor.output.prepend(img);
         }
     };
 
-    extractor.initialize = function () {
-        extractor.modalFixer();
-        extractor.output = $('#output');
-        extractor.output.empty();
-        extractor.video = $('#video').clone();
-        extractor.video = $(extractor.video).get(0);
-        extractor.video.addEventListener('loadedmetadata', extractor.captureFrames, false);
-        extractor.video.addEventListener('seeked', extractor.timeSeeked, false);
-        $('#frame-camera').on('click', extractor.userCapture);
+    extractor.initialize = function (selectors) {
+        if (selectors) {
+            extractor.selectors = selectors;
+            extractor.modalFixer();
+            extractor.output = $(extractor.selectors.output);
+            extractor.output.empty();
+            extractor.video = $(extractor.selectors.video).clone();
+            extractor.video = $(extractor.video).get(0);
+            extractor.video.addEventListener('loadedmetadata', extractor.captureFrames, false);
+            extractor.video.addEventListener('seeked', extractor.timeSeeked, false);
+            $(extractor.selectors.btn).off('click');
+            $(extractor.selectors.btn).on('click', extractor.userCapture);
+        } else {
+            console.log('selectors was not provided');
+        }
     };
     extractor.userCapture = function () {
         extractor.captureFrame(false);
     };
     extractor.captureFrame = function (isAutoProcess) {
-        if(!isAutoProcess){
-            extractor.video = $('#video').get(0);
+        if (!isAutoProcess) {
+            extractor.video = $(extractor.selectors.video).get(0);
         }
         var canvas = document.createElement('canvas');
         canvas.width = extractor.video.videoWidth * extractor.scale;
@@ -57,10 +68,10 @@ var VideoFrameExtractor = function () {
 
         var img = document.createElement('img');
         img.src = canvas.toDataURL();
-        $(img).on('click', function(){
-            $('#output > img').removeClass('active');
+        $(img).on('click', function () {
+            $(extractor.selectors.output + ' > img').removeClass('active');
             $(this).addClass('active');
-            $('#poster').val(this.src);
+            $(extractor.selectors.input).val(this.src);
         });
         extractor.output.prepend(img);
         if (isAutoProcess) {
@@ -80,7 +91,7 @@ var VideoFrameExtractor = function () {
     extractor.timeSeeked = function () {
         if (extractor.currentFrameId <= 10) {
             extractor.captureFrame(true);
-        }else{
+        } else {
             extractor.prependSelected();
         }
     };

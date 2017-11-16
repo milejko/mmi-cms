@@ -1,7 +1,7 @@
 {'cmsAdmin/header'}
 {adminMessenger()}
 {if !$auth}
-    <body class="app flex-row align-items-center">
+    <body class="app flex-row align-items-center login-screen-bg">
     {else}
     <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
         <header class="app-header navbar">
