@@ -479,6 +479,14 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
                             <button id='frame-camera' type='button' class='btn btn-outline-primary frame-camera'>
                                 <i class='fa fa-2 fa-camera'></i>
                             </button>
+                            <button id='frame-upload' type='button' class='btn btn-outline-primary frame-upload'>
+                                <i class='fa fa-2 fa-upload'></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='col'>
+                            <input type='file' name='userPoster' id='userPoster' accept='image/png'>
                         </div>
                     </div>
                     <div class='row'>

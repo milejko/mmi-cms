@@ -256,6 +256,8 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                                     input: '#poster',
                                     video: '#video',
                                     btn: '#frame-camera',
+                                    uploadInput:'#userPoster',
+                                    uploadBtn:'#frame-upload',
                                     output: '#output',
                                     dialog: '.ui-dialog'
                                 });
