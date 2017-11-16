@@ -42,17 +42,19 @@ var VideoFrameExtractor = function () {
     extractor.initialize = function (selectors) {
         if (selectors) {
             extractor.selectors = selectors;
-            extractor.modalFixer();
-            extractor.output = $(extractor.selectors.output);
-            extractor.output.empty();
-            extractor.video = $(extractor.selectors.video).clone();
-            extractor.video = $(extractor.video).get(0);
-            extractor.video.addEventListener('loadedmetadata', extractor.captureFrames, false);
-            extractor.video.addEventListener('seeked', extractor.timeSeeked, false);
-            $(extractor.selectors.btn).off('click');
-            $(extractor.selectors.btn).on('click', extractor.userCapture);
-            $(extractor.selectors.uploadBtn).off('click');
-            $(extractor.selectors.uploadBtn).on('click', extractor.uploadFile);
+            if($(extractor.selectors.video).length > 0) {
+                extractor.video = $(extractor.selectors.video).clone();
+                extractor.video = $(extractor.video).get(0);
+                extractor.modalFixer();
+                extractor.output = $(extractor.selectors.output);
+                extractor.output.empty();
+                extractor.video.addEventListener('loadedmetadata', extractor.captureFrames, false);
+                extractor.video.addEventListener('seeked', extractor.timeSeeked, false);
+                $(extractor.selectors.btn).off('click');
+                $(extractor.selectors.btn).on('click', extractor.userCapture);
+                $(extractor.selectors.uploadBtn).off('click');
+                $(extractor.selectors.uploadBtn).on('click', extractor.uploadFile);
+            }
         } else {
             console.log('selectors was not provided');
         }

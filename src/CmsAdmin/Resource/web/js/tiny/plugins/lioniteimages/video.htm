@@ -11,12 +11,15 @@
         <link rel="stylesheet" href="../../../jquery-ui/jquery-ui.theme.min.css">
         <link rel="stylesheet" type="text/css" href="css/images.css">
         <link rel="stylesheet" type="text/css" href="../../../../css/tinymc-mods.css">
+        <link rel="stylesheet" type="text/css" href="../../../../css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../video-frame-extractor/extractor.css">
         <script type="text/javascript" src="../../../jquery/jquery.js"></script>
         <script type="text/javascript" src="../../../jquery-ui/jquery-ui.min.js"></script>
         <script type="text/javascript" src="js/jquery.fileupload.js"></script>
         <script type="text/javascript" src="js/jquery.fileupload-process.js"></script>
         <script type="text/javascript" src="js/jquery.fileupload-validate.js"></script>
         <script type="text/javascript" src="js/jquery.iframe-transport.js"></script>
+        <script type="text/javascript" src="../../../video-frame-extractor/extractor.js"></script>
         <script type="text/javascript">
             var config = {
                 dataTyp: "video",
@@ -24,6 +27,15 @@
                 maxFileSize: 500000099,
                 maxChunkSize: 10000000 // 10 MB
             };
+            new VideoFrameExtractor().initialize({
+                input: '#poster',
+                video: '#video',
+                btn: '#frame-camera',
+                uploadInput:'#userPoster',
+                uploadBtn:'#frame-upload',
+                output: '#output',
+                dialog: '.ui-dialog'
+            });
         </script>
         <script type="text/javascript" src="js/lioniteimages.js"></script>
     </head>
