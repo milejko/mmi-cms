@@ -146,7 +146,9 @@ CMS.category = function () {
         });
 
        if(currentTab){
-           $('a[href$="'+currentTab+'"]').click();
+           if(!$(currentTab).hasClass('show')) {
+               $('a[href$="' + currentTab + '"]').click();
+           }
        }
 
        if(currentTab === '#tab-widget') {

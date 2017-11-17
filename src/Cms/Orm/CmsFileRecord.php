@@ -292,24 +292,5 @@ class CmsFileRecord extends \Mmi\Orm\Record
         //usuwanie rekordu
         return parent::delete();
     }
-    
-    /**
-     * Pobranie posteru dla video
-     * @return boolean
-     */
-    public function getVideoPoster()
-    {
-        if (!isset($this->data->poster)) {
-            return null;
-        }
-
-        if (null === $poster = (new CmsFileQuery)->whereObject()->equals($this->data->poster)
-            ->andFieldActive()->equals(1)
-            ->findFirst()) {
-            return null;
-        }
-
-        return $poster;
-    }
 
 }
