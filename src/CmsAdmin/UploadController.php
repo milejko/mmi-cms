@@ -19,6 +19,7 @@ use Cms\Orm\CmsFileRecord;
 class UploadController extends Mvc\Controller
 {
 
+    CONST objectPoster = 'posterVideo';
     CONST acceptPosterFormat = ['image/png'];
 
     /**
@@ -216,7 +217,7 @@ class UploadController extends Mvc\Controller
      */
     protected function _savePoster($imageBlob, $record)
     {
-        $object = CmsFileRecord::objectPoster;
+        $object = self::objectPoster;
 
         //test bloba
         \preg_match("/^data:(.*);base64,(.*)/i", $imageBlob, $match);
@@ -263,7 +264,7 @@ class UploadController extends Mvc\Controller
             return null;
         }
 
-        if (null === $poster = (new CmsFileQuery)->whereObject()->equals(CmsFileRecord::objectPoster)
+        if (null === $poster = (new CmsFileQuery)->whereObject()->equals(self::objectPoster)
             ->andFieldId()->equals($record->data->posterFileId)
             ->andFieldActive()->equals(1)
             ->findFirst()) {
