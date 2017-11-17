@@ -11,7 +11,6 @@
 namespace CmsAdmin;
 
 use Cms\Orm\CmsFileQuery;
-use Cms\Orm\CmsFileRecord;
 
 /**
  * Kontroler pobierania plików
@@ -20,6 +19,8 @@ class UploadController extends Mvc\Controller
 {
 
     CONST objectPoster = 'posterVideo';
+    //suffix obiektu
+    CONST objectSuffix = 'Poster';
     CONST acceptPosterFormat = ['image/png'];
 
     /**
@@ -215,10 +216,10 @@ class UploadController extends Mvc\Controller
      * @param type $record
      * @return type
      */
-    protected function _savePoster($imageBlob, $record)
+    protected function _savePoster($imageBlob, \Cms\Orm\CmsFileRecord $record)
     {
-        $object = self::objectPoster;
-
+        //nazwa obiektu
+        $object = $record->object . self::objectSuffix;
         //test bloba
         \preg_match("/^data:(.*);base64,(.*)/i", $imageBlob, $match);
         if (!in_array($match[1], self::acceptPosterFormat)) {
@@ -230,26 +231,18 @@ class UploadController extends Mvc\Controller
         $ext = explode('/', $match[1])[1];
         file_put_contents($tmp_file, base64_decode($match[2]));
         $file = new \Mmi\Http\RequestFile([
-            'name' => $object . '.' . $ext,
+            'name' => self::objectSuffix . '.' . $ext,
             'tmp_name' => $tmp_file,
             'size' => filesize($tmp_file)
         ]);
 
-        if (null === $recordPoster = \Cms\Model\File::appendFile($file, 'tmp-' . $object, $record->id, self::acceptPosterFormat)) {
+        if (null === $recordPoster = \Cms\Model\File::appendFile($file, $object, $record->objectId, self::acceptPosterFormat)) {
             return null;
         }
-
-        //usuniecie poprzedniego
-        (new CmsFileQuery)->whereObject()->equals($object)
-            ->andFieldObjectId()->equals($record->id)
-            ->find()
-            ->delete();
         //usuniecie tmp
         unlink($tmp_file);
-
         //rekord pliku
         $recordPoster->active = 1;
-        $recordPoster->object = $object;
         return $recordPoster->save() ? $recordPoster : null;
     }
 
@@ -260,11 +253,12 @@ class UploadController extends Mvc\Controller
      */
     protected function _getPosterBase64($record)
     {
+        $object = $record->object . self::objectSuffix;
         if (!isset($record->data->posterFileId)) {
             return null;
         }
 
-        if (null === $poster = (new CmsFileQuery)->whereObject()->equals(self::objectPoster)
+        if (null === $poster = (new CmsFileQuery)->whereObject()->equals($object)
             ->andFieldId()->equals($record->data->posterFileId)
             ->andFieldActive()->equals(1)
             ->findFirst()) {
@@ -330,7 +324,7 @@ class UploadController extends Mvc\Controller
      * @param \Cms\Orm\CmsFileRecord $record
      * @return mixed
      */
-    protected function _operationAfter($action, $record)
+    protected function _operationAfter($action, \Cms\Orm\CmsFileRecord $record)
     {
         return \Mmi\Mvc\ActionHelper::getInstance()->action(new \Mmi\Http\Request(array_merge($record->toArray(), $action)));
     }
