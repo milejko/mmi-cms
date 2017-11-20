@@ -33,9 +33,6 @@ class GridRenderer
     //szablon wnętrza grida (danych)
     const TEMPLATE_BODY = 'cmsAdmin/grid/body';
 
-    //szablon stopki grida
-    const TEMPLATE_FOOTER = 'cmsAdmin/grid/footer';
-
     /**
      * Konstruktror
      * @param Grid $grid
