@@ -155,8 +155,8 @@
                                         });
                                     }
 
-                                    $(edit + ' input[name="title"]').val(data.record.title);
-                                    $(edit + ' input[name="author"]').val(data.record.author);
+                                    $(edit + ' input[name="title"]').val(data.data.title);
+                                    $(edit + ' input[name="author"]').val(data.data.author);
                                     $(edit + ' .dialog-error').hide().find('p').text('');
 
                                     $("div#dialog-edit select[name='source']").change(function () {
