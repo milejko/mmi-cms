@@ -47,6 +47,8 @@ abstract class Form extends \Mmi\Form\Form
      */
     public function save()
     {
+        //aktualizacja wartości pól w rekordzie
+        $this->_updateRecordDataBeforeSave();
         $result = parent::save();
         if ($result) {
             if ($this->hasRecord()) {
@@ -55,6 +57,39 @@ abstract class Form extends \Mmi\Form\Form
             $this->afterUpload();
         }
         return $this->isSaved();
+    }
+    
+    /**
+     * Aktualizuje wartości pól rekordu formularza przed zapisem
+     * @return null
+     */
+    protected function _updateRecordDataBeforeSave()
+    {
+        //jeśli formularz nie ma rekordu
+        if (!$this->hasRecord()) {
+            return;
+        }
+        //dla każdego elementu formularza
+        foreach ($this->getElements() as $element) {
+            //pomijamy inne elementy niż TinyMce
+            if (!$element instanceof \Cms\Form\Element\TinyMce || !$element->getUploaderObject()) {
+                continue;
+            }
+            //dla każdego elementu TinyMce
+            $value = $element->getValue();
+            foreach (\Cms\Orm\CmsFileQuery::byObjectJoinedOriginal('tmp-' . $element->getUploaderObject(), $element->getUploaderId())
+                ->find() as $file) {
+                if (!$file->getJoined('original_file') || !$file->getJoined('original_file')->name) {
+                    continue;
+                }
+                $oName = $file->getJoined('original_file')->name;
+                $tName = $file->name;
+                $value = preg_replace('@/data/'.$tName[0].'/'.$tName[1].'/'.$tName[2].'/'.$tName[3].'/(scalecrop|scalex|scaley|default)/([0-9x]{0,10})/'.$tName.'@',
+                    '/data/'.$oName[0].'/'.$oName[1].'/'.$oName[2].'/'.$oName[3].'/$1/$2/'.$oName, $value);
+            }
+            $element->setValue($value);
+            $this->_record->setFromArray([$element->getName() => $value]);
+        }
     }
 
     /**
@@ -68,13 +103,27 @@ abstract class Form extends \Mmi\Form\Form
         if ($this->hasRecord() && $this->getRecord()->getPk()) {
             $objectId = $this->getRecord()->getPk();
         }
-        //dla każdego elementu Plupload
+        //lista kluczy Cms File dla elementów TinyMce
+        $tinyObjects = [];
+        //dla każdego elementu formularza
         foreach ($this->getElements() as $element) {
-            if (!$element instanceof \Cms\Form\Element\Plupload || !$element->getObject()) {
+            //dla każdego elementu Plupload
+            if ($element instanceof \Cms\Form\Element\Plupload && $element->getObject()) {
+                //łączenie tymczasowych plików z uploadera (kopii) z oryginałami
+                (new \Cms\Model\FileMerge('tmp-' . $element->getObject(), $element->getUploaderId(), $element->getObject(), $objectId))->merge();
                 continue;
             }
-            //łączenie tymczasowych plików z uploadera (kopii) z oryginałami
-            (new \Cms\Model\FileMerge('tmp-' . $element->getObject(), $element->getUploaderId(), $element->getObject(), $objectId))->merge();
+            //dla każdego elementu TinyMce
+            if ($element instanceof \Cms\Form\Element\TinyMce && $element->getUploaderObject()) {
+                //jeśli już obsłużono klucz Cms File
+                if (in_array($element->getUploaderObject(), $tinyObjects)) {
+                    continue;
+                }
+                array_push($tinyObjects, $element->getUploaderObject());
+                //łączenie tymczasowych plików z uploadu przez TinyMce (kopii) z oryginałami
+                (new \Cms\Model\FileMerge('tmp-' . $element->getUploaderObject(), $element->getUploaderId(), $element->getUploaderObject(), $objectId))->merge();
+                continue;
+            }
         }
     }
 
