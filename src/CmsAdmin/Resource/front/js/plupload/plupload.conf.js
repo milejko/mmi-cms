@@ -246,11 +246,10 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                                             selBackground.val(data.data['background']).change();
                                         });
                             }
-
                             //przygotowujemy zawartość okienka edycji i pokazujemy go
                             var edit = 'div#' + args.up.getOption('form_element_id') + '-edit';
                             if (args.up.getOption('poster')) {
-                                $('#video').find('#urlVideo').attr('src', data.data['urlFile']);
+                                $('#video').attr('src', data.data['urlFile']);
                                 $(edit + ' input[name="poster"]').val(data.data['poster']);
                                 new VideoFrameExtractor().initialize({
                                     input: '#poster',

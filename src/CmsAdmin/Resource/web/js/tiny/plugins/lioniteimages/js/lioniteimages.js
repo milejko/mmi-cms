@@ -167,8 +167,9 @@
                                     });
 
                                     var editDialog = $(edit).dialog({
-                                        height: 400,
-                                        width: 350,
+                                        width: ((screen.width * 0.5) * 0.8),
+                                        height:  ((screen.height * 0.8) * 0.8),
+                                        maximiziable: true,
                                         modal: true,
                                         resizable: false,
                                         closeText: 'Zamknij',

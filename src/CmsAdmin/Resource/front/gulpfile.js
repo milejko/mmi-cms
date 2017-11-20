@@ -32,6 +32,11 @@ gulp.task('copy_jstree', function () {
         .pipe(gulp.dest(project_path.output));
 });
 
+gulp.task('fonts', function () {
+    return gulp.src('./fonts/**/*', {base: './'})
+        .pipe(gulp.dest(project_path.output));
+});
+
 gulp.task('new_assets', ['clean_assets'], function () {
     return gulp.src(project_path.front, {base: './dist'})
         .pipe(gulp.dest(project_path.output));
@@ -40,7 +45,7 @@ gulp.task('new_assets', ['clean_assets'], function () {
 
 gulp.task('serve', function () {
     return new Promise(function (suc, e) {
-        runSequence('sass', 'extractor','tinymc-mod','copy_jstree', 'build:dist', 'new_assets', suc);
+        runSequence('sass', 'fonts', 'extractor','tinymc-mod','copy_jstree', 'build:dist', 'new_assets', suc);
     }).then(function () {
         browserSync.init({
             proxy: 'http://localhost/cmsAdmin'
@@ -51,7 +56,7 @@ gulp.task('serve', function () {
 
 gulp.task('build', function(){
     return new Promise(function (suc, e) {
-        runSequence('sass', 'extractor','tinymc-mod', 'copy_jstree', 'build:dist', 'new_assets');
+        runSequence('sass', 'fonts', 'extractor','tinymc-mod', 'copy_jstree', 'build:dist', 'new_assets');
     });
 });
 
