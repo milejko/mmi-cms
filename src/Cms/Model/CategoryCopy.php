@@ -10,6 +10,8 @@
 
 namespace Cms\Model;
 
+use Cms\Orm\CmsCategoryQuery;
+
 /**
  * Model do kopiowania kategorii wraz z wszystkimi elementami zależnymi.
  */
@@ -167,11 +169,39 @@ class CategoryCopy
         $this->_copy = new \Cms\Orm\CmsCategoryRecord();
         $this->_copy->setFromArray($this->_category->toArray());
         $this->_copy->id = null;
-        $this->_copy->name .= $this->_nameSuffix;
+        $this->_copy->name = $this->_generateCategoryName();
         $this->_copy->active = false;
         $this->_copy->dateAdd = null;
         $this->_copy->dateModify = null;
         return $this->_copy->save();
+    }
+    
+    /**
+     * Generuje nazwę dla skopiowanej kategorii (unika kolizji URI)
+     * @return string
+     */
+    protected function _generateCategoryName()
+    {
+        //filtr Url
+        $filterUrl = new \Mmi\Filter\Url;
+        //bazowe Uri skopiowanej kategorii na podstawie rodzica
+        $baseUri = '';
+        if ($this->_copy->parentId && (null !== $parent = (new CmsCategoryQuery)->findPk($this->_copy->parentId))) {
+            //nieaktywny rodzic -> nie wlicza się do ścieżki
+            if (!$parent->active) {
+                $parent->uri = substr($parent->uri, 0, strrpos($parent->uri, '/'));
+            }
+            $baseUri = ltrim($parent->uri . '/', '/');
+        }
+        $baseName = $this->_copy->name . $this->_nameSuffix;
+        //unikamy kolizji URI - dodajemy pierwszą wolną liczbę na koniec
+        $number = 0;
+        do {
+            $number++;
+            $copyName = $baseName . (($number > 1) ? '_' . $number : '');
+            $copyUri = $baseUri . $filterUrl->filter($copyName);
+        } while((new CmsCategoryQuery)->searchByUri($copyUri)->count());
+        return $copyName;
     }
     
     /**
