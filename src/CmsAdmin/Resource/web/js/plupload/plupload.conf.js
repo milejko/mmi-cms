@@ -261,7 +261,7 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                                     dialog: '.ui-dialog'
                                 });
                             }
-                            $(edit + ' > fieldset > .imprint').each(function () {
+                            $(edit + ' > fieldset .imprint').each(function () {
                                 var fieldName = $(this).attr('name');
                                 if ($(this).attr('type') === 'checkbox') {
                                     $(this).prop('checked', (parseInt(data.data[fieldName])) > 0 ? 'checked' : '');
