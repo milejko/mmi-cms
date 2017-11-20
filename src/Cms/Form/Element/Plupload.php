@@ -472,8 +472,9 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
                 <div class='frame-extractor'>
                     <div class='row'>
                         <div class='col d-flex justify-content-center video-container'>
-                            <video id='video' controls='controls'>
-                                <source id='urlVideo' src='' type='video/mp4'/>
+                            <video id='video' controls=''>
+                                <source  id='urlVideo' type='video/mp4'>
+                                <p>Twója przeglądarka nie obsługuje video w formacie mp4.</p>
                             </video>
                             <input id='poster' type='hidden' name='poster' value=''/>
                             <button id='frame-camera' type='button' class='btn btn-outline-primary frame-camera' data-toggle='tooltip' data-placement='top' title='Złap aktualną ramkę z wideo'>

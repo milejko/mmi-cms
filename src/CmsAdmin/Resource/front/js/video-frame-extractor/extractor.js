@@ -63,7 +63,7 @@ var VideoFrameExtractor = function () {
         $(extractor.selectors.output + ' > img').removeClass('active');
         $(this).addClass('active');
         $(extractor.selectors.input).val(this.src);
-    }
+    };
 
     extractor.uploadFile = function () {
        $(extractor.selectors.uploadInput).click();
@@ -75,6 +75,7 @@ var VideoFrameExtractor = function () {
                 return function(e) {
                     var img = document.createElement('img');
                     img.src = e.target.result;
+                    $(extractor.selectors.input).val(e.target.result);
                     $(img).on('click',extractor.imageClick  );
                     $(extractor.selectors.output + ' > img').removeClass('active');
                     img.classList.add('active');
