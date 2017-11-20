@@ -1,10 +1,9 @@
-{* ustawianie zmiennych *}
 {$_showPages = 10}
 {$_halfPages = php_floor($_showPages / 2)}
 {$_page = $_grid->getState()->getPage()}
 {$_pagesCount = $_paginator->getPagesCount()}
-{$_previousLabel = 'Prev'}
-{$_nextLabel = 'Next'}
+{$_previousLabel = '&laquo;'}
+{$_nextLabel = '&raquo;'}
 
 {if 1 >= $_pagesCount}{return}{/if}
 <ul class="pagination" data-name="{$_grid->getClass()}[_paginator_]">
@@ -67,5 +66,8 @@
         <li class="page-item next"><a class="page-link" data-page="{$_page + 1}" href="#">{$_nextLabel}</a></li>
     {else}
         <li class="page-item next"><a class="page-link" data-page="{$_page + 1}" href="#">{$_nextLabel}</a></li>
+    {/if}
+    {if $auth && $auth->hasRole('admin')}
+        <li class="page-item"><a class="btn btn-primary" target="_blank" href="{url([$_grid->getClass() => 'export'])}">CSV</a></li>
     {/if}
 </ul>
