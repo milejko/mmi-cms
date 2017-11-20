@@ -236,13 +236,12 @@ class AttributeValueRelationModel
         $filesByObject = new \Mmi\Orm\RecordCollection;
         //wyszukiwanie wartości
         foreach ($this->getAttributeValues() as $record) {
-            //pobieranie klucza atrybutu (w celu zgrupowania
+            //pobieranie klucza atrybutu (w celu zgrupowania)
             if ($record->getJoined('cms_attribute_type')->uploader) {
-                $object = $record->value;
                 //dołączanie plików
-                foreach (\Cms\Orm\CmsFileQuery::byObject($object, $this->_objectId)->find() as $file) {
+                foreach (\Cms\Orm\CmsFileQuery::byObject($record->value, $this->_objectId)->find() as $file) {
                     $filesByObject->append($file);
-                };
+                }
             }
         }
         return $filesByObject;

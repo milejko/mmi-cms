@@ -200,6 +200,7 @@ class File
         $newFile->data = $file->data;
         $newFile->sticky = $file->sticky;
         $newFile->order = $file->order;
+        $newFile->active = $file->active;
         return ($newFile->save()) ? $newFile : null;
     }
 

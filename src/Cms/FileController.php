@@ -39,7 +39,7 @@ class FileController extends \Mmi\Mvc\Controller
         }
         $files = [];
         foreach (\Cms\Orm\CmsFileQuery::imagesByObject($this->object, $this->objectId)->find() as $file) {
-            $files[] = ['title' => $file->original, 'value' => $file->getUrl('scalex', '1200')];
+            $files[] = ['title' => $file->original, 'value' => $file->getUrl('default', '')];
         }
         return json_encode($files);
     }

@@ -212,5 +212,25 @@ class CmsFileQuery extends \Mmi\Orm\Query
         return self::byObject($object, $objectId)
                 ->whereClass()->notEquals('image');
     }
+    
+    /**
+     * Po obiekcie i id z dołączoną informacją o pliku oryginalnym
+     * @param string $object
+     * @param string $objectId
+     * @return CmsFileQuery
+     */
+    public static function byObjectJoinedOriginal($object = null, $objectId = null)
+    {
+        //zapytanie o pliki po obiektach i id
+        return (new self)
+                ->joinLeft('cms_file', 'cms_file', 'original_file')
+                ->on('cms_file_original_id', 'id')
+                ->whereObject()->equals($object)
+                ->andFieldObjectId()->equals($objectId)
+                //posortowane po kolejności
+                ->orderAscOrder()
+                //sortowanie po ID, jeśli ordery są NULL
+                ->orderAscId();
+    }
 
 }
