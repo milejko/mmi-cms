@@ -166,14 +166,24 @@ class CategoryCopy
      */
     protected function _copyCategory()
     {
+        $this->_createCopyRecord();
+        return $this->_copy->save();
+    }
+    
+    /**
+     * Tworzy obiekt rekordu kopii kategorii - bez zapisu
+     * @return \Cms\Orm\CmsCategoryRecord
+     */
+    protected function _createCopyRecord()
+    {
         $this->_copy = new \Cms\Orm\CmsCategoryRecord();
         $this->_copy->setFromArray($this->_category->toArray());
         $this->_copy->id = null;
-        $this->_copy->name = $this->_generateCategoryName();
         $this->_copy->active = false;
         $this->_copy->dateAdd = null;
         $this->_copy->dateModify = null;
-        return $this->_copy->save();
+        $this->_copy->name = $this->_generateCategoryName();
+        return $this->_copy;
     }
     
     /**
@@ -186,14 +196,14 @@ class CategoryCopy
         $filterUrl = new \Mmi\Filter\Url;
         //bazowe Uri skopiowanej kategorii na podstawie rodzica
         $baseUri = '';
-        if ($this->_copy->parentId && (null !== $parent = (new CmsCategoryQuery)->findPk($this->_copy->parentId))) {
+        if ($this->_category->parentId && (null !== $parent = (new CmsCategoryQuery)->findPk($this->_category->parentId))) {
             //nieaktywny rodzic -> nie wlicza się do ścieżki
             if (!$parent->active) {
                 $parent->uri = substr($parent->uri, 0, strrpos($parent->uri, '/'));
             }
             $baseUri = ltrim($parent->uri . '/', '/');
         }
-        $baseName = $this->_copy->name . $this->_nameSuffix;
+        $baseName = $this->_category->name . $this->_nameSuffix;
         //unikamy kolizji URI - dodajemy pierwszą wolną liczbę na koniec
         $number = 0;
         do {
@@ -272,9 +282,6 @@ class CategoryCopy
             if (!$this->_copyWidgetRelationFiles($widgetRelation->id, $relation)) {
                 return false;
             }
-
-            //(new AttributeValueRelationModel(self::CATEGORY_WIDGET_RELATION, $relation->id))
-            //    ->deleteAttributeValueRelations();
 
             $relationAttributes = $widgetRelation->getAttributeValues();
             foreach ($relationAttributes as $key => $value) {
