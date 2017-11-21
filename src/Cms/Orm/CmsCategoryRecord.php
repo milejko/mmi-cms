@@ -27,6 +27,17 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      * @var integer
      */
     public $cmsCategoryTypeId;
+    
+    /**
+     * Identyfikator głównego rekordu wersji
+     * @var integer
+     */
+    public $cmsCategoryOriginalId;
+    
+    /**
+     * Język
+     * @var string
+     */
     public $lang;
 
     /**
@@ -221,6 +232,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             throw new \Cms\Exception\ChildrenExistException();
         }
         //usuwanie kategorii
+        //@TODO - usuwanie widgetów
         return parent::delete() && $this->clearCache();
     }
 
