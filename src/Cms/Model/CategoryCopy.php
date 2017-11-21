@@ -167,6 +167,7 @@ class CategoryCopy
     protected function _copyCategory()
     {
         $this->_createCopyRecord();
+        $this->_copy->cmsCategoryOriginalId = null;
         return $this->_copy->save();
     }
     

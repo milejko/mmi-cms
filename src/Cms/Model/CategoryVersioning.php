@@ -48,6 +48,7 @@ class CategoryVersioning extends \Cms\Model\CategoryCopy
     protected function _copyCategory()
     {
         $this->_createCopyRecord();
+        $this->_copy->cmsCategoryOriginalId = $this->_category->getPk();
         return $this->_copy->save();
     }
     
