@@ -141,28 +141,33 @@ CMS.category = function () {
 
     var dataTabRestore = function(){
         var currentTab = sessionStorage.getItem('catActiveTab');
+        try {
         $('h5 > a').on('click', function (evt) {
             sessionStorage.setItem('catActiveTab', $(this).attr("href"));
         });
+            if (currentTab) {
+                if (!$(currentTab).hasClass('show')) {
+                    $('a[href$="' + currentTab + '"]').click();
+                }
+            }
 
-       if(currentTab){
-           if(!$(currentTab).hasClass('show')) {
-               $('a[href$="' + currentTab + '"]').click();
-           }
-       }
-
-       if(currentTab === '#tab-widget') {
-           setTimeout(function(){
-               var scrollLocation = sessionStorage.getItem('widgetScrollTarget');
-               if (scrollLocation) {
-                   var element = document.getElementById(scrollLocation);
-                   var elementRect = element.getBoundingClientRect();
-                   var absoluteElementTop = elementRect.top + window.pageYOffset;
-                   var middle = absoluteElementTop - 100;
-                   window.scrollTo(0, middle);
-               }
-           }, 400)
-       }
+            if (currentTab === '#tab-widget') {
+                setTimeout(function () {
+                    var scrollLocation = sessionStorage.getItem('widgetScrollTarget');
+                    if (scrollLocation) {
+                        var element = document.getElementById(scrollLocation);
+                        var elementRect = element.getBoundingClientRect();
+                        var absoluteElementTop = elementRect.top + window.pageYOffset;
+                        var middle = absoluteElementTop - 100;
+                        window.scrollTo(0, middle);
+                    }
+                }, 400)
+            }
+        }catch(er){
+            if (!$('#tab-config').hasClass('show')) {
+                $('a[href$="#tab-config"]').click();
+            }
+        }
     };
     dataTabRestore();
     initSortableWidgets();
