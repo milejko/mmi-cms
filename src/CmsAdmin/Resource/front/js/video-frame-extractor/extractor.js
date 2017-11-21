@@ -107,6 +107,7 @@ var VideoFrameExtractor = function () {
                 if (extractor.autoFramesGenerated) {
                     extractor.video.currentTime = 0;
                     extractor.autoFramesGenerated = true;
+                    extractor.prependSelected();
                 }
             }
             if (!extractor.autoFramesGenerated) {
