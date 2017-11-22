@@ -11,32 +11,32 @@
 namespace Cms\Model;
 
 /**
- * Model do zapisu wersji kategorii wraz z wszystkimi elementami zależnymi.
+ * Model do zapisu wersji roboczej kategorii wraz z wszystkimi elementami zależnymi.
  */
-class CategoryVersioning extends \Cms\Model\CategoryCopy
+class CategoryDraft extends \Cms\Model\CategoryCopy
 {
     
     /**
-     * Sufiks dla nazwy wersionowanej kategorii
+     * Sufiks dla nazwy wersji roboczej kategorii
      * @var string
      */
     protected $_nameSuffix = '';
     
     /**
-     * Wersjonuje kategorię z wszystkimki zależnościami
+     * Tworzy wersję roboczą kategorii z wszystkimki zależnościami
      * @return boolean
      */
-    public function versionig()
+    public function create()
     {
         return parent::copy();
     }
     
     /**
-     * Wersjonuje kategorię z wszystkimki zależnościami,
+     * Tworzy wersję roboczą kategorii z wszystkimki zależnościami,
      * obejmując wszystko transakcją na bazie danych
      * @return boolean
      */
-    public function versioningWithTransaction()
+    public function createWithTransaction()
     {
         return parent::copyWithTransaction();
     }
@@ -48,7 +48,9 @@ class CategoryVersioning extends \Cms\Model\CategoryCopy
     protected function _copyCategory()
     {
         $this->_createCopyRecord();
+        $this->_copy->active = $this->_category->active;
         $this->_copy->cmsCategoryOriginalId = $this->_category->getPk();
+        $this->_copy->status = \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT;
         return $this->_copy->save();
     }
     

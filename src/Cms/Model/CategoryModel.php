@@ -39,7 +39,7 @@ class CategoryModel
         //pobieranie kategorii
         $categories = (new CmsCategoryQuery)
             ->withType()
-            ->andFieldCmsCategoryOriginalId()->equals(null)
+            //->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
             ->orderAscOrder()
             ->find()
             ->toObjectArray();

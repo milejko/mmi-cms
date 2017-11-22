@@ -145,6 +145,9 @@ class CategoryCopy
             if (!$this->_copyCategory()) {
                 return false;
             }
+            if (!$this->_copyCategoryRoles()) {
+                return false;
+            }
             if (!$this->_copyCategoryFiles()) {
                 return false;
             }
@@ -168,6 +171,7 @@ class CategoryCopy
     {
         $this->_createCopyRecord();
         $this->_copy->cmsCategoryOriginalId = null;
+        $this->_copy->status = \Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE;
         return $this->_copy->save();
     }
     
@@ -345,6 +349,27 @@ class CategoryCopy
                 '/data/'.$cName[0].'/'.$cName[1].'/'.$cName[2].'/'.$cName[3].'/$1/$2/'.$cName, $value);
         }
         return $value;
+    }
+    
+    /**
+     * Kopiuje powiązania roli z rekordem kategorii
+     * @return boolean
+     */
+    protected function _copyCategoryRoles()
+    {
+		//role zapisane w bazie
+		$roles = (new \Cms\Orm\CmsCategoryRoleQuery)
+				->whereCmsCategoryId()->equals($this->_category->getPk())
+				->findUnique('cms_role_id');
+		foreach ($roles as $roleId) {
+			$record = new \Cms\Orm\CmsCategoryRoleRecord();
+			$record->cmsCategoryId = $this->_copy->getPk();
+			$record->cmsRoleId = $roleId;
+			if (!$record->save()) {
+				return false;
+			}
+		}
+		return true;
     }
 
 }

@@ -32,8 +32,8 @@ namespace Cms\Orm;
  * @method CmsCategoryQuery orderDescCmsCategoryOriginalId()
  * @method CmsCategoryQuery groupByCmsCategoryOriginalId()
  * @method QueryHelper\CmsCategoryQueryField whereStatus()
- * @method QueryHelper\CmsCategoryQueryField andStatus()
- * @method QueryHelper\CmsCategoryQueryField orStatus()
+ * @method QueryHelper\CmsCategoryQueryField andFieldStatus()
+ * @method QueryHelper\CmsCategoryQueryField orFieldStatus()
  * @method CmsCategoryQuery orderAscStatus()
  * @method CmsCategoryQuery orderDescStatus()
  * @method CmsCategoryQuery groupByStatus()
@@ -231,7 +231,7 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
         foreach ($this
             ->withType()
             ->searchByUri($uri)
-            ->andFieldCmsCategoryOriginalId()->equals(null)
+            ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
             ->find() as $category) {
             //kategoria jest przekierowaniem
             if ($category->redirectUri) {
