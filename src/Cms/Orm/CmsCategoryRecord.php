@@ -35,6 +35,12 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     public $cmsCategoryOriginalId;
     
     /**
+     * Status - draft, wpis historyczny, artykuł
+     * @var integer
+     */
+    public $status;
+    
+    /**
      * Język
      * @var string
      */
@@ -128,6 +134,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public $cacheLifetime;
     public $active;
+    
+    //status draft
+    CONST STATUS_DRAFT = 0;
+    //status artykuł aktywny
+    CONST STATUS_ACTIVE = 10;
+    //status historia
+    CONST STATUS_HISTORY = 20;
 
     /**
      * Zapis rekordu
