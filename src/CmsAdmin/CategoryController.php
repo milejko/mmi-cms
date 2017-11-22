@@ -10,9 +10,6 @@
 
 namespace CmsAdmin;
 
-use Cms\Model\AttributeValueRelationModel;
-use Cms\Orm\CmsAttributeValueRecord;
-
 /**
  * Kontroler kategorii - stron CMS
  */
