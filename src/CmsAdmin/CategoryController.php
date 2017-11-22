@@ -10,9 +10,6 @@
 
 namespace CmsAdmin;
 
-use Cms\Model\AttributeValueRelationModel;
-use Cms\Orm\CmsAttributeValueRecord;
-
 /**
  * Kontroler kategorii - stron CMS
  */
@@ -36,10 +33,24 @@ class CategoryController extends Mvc\Controller
         if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
             return;
         }
+        //jeśli to nie był DRAFT
+        if ($cat->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
+            //tworzymy wersję roboczą - DRAFT
+            $draftModel = new \Cms\Model\CategoryDraft($cat);
+            if (!$draftModel->createWithTransaction()) {
+                $this->getMessenger()->addMessage('Nie udało się utworzyć wersji roboczej, spróbuj ponownie', false);
+                return;
+            }
+            //czyścimy cache uprawnień, bo powstała nowa kategoria
+            \App\Registry::$cache->remove('mmi-cms-category-acl');
+            //przekierowanie do edycji DRAFTu - nowego ID
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draftModel->getCopyRecord()->getPk()]);
+        }
         //znaleziono kategorię o tym samym uri
         if (null !== (new \Cms\Orm\CmsCategoryQuery)
                 ->whereId()->notEquals($cat->id)
                 ->andFieldRedirectUri()->equals(null)
+                ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
                 ->andQuery((new \Cms\Orm\CmsCategoryQuery)->searchByUri($cat->uri))
                 ->findFirst() && !$cat->redirectUri) {
             $this->view->duplicateAlert = true;
@@ -100,7 +111,8 @@ class CategoryController extends Mvc\Controller
         $cat->name = $this->getPost()->name;
         $cat->parentId = ($this->getPost()->parentId > 0) ? $this->getPost()->parentId : null;
         $cat->order = $this->getPost()->order;
-        $cat->active = true;
+        $cat->active = false;
+        $cat->status = \Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE;
         if ($cat->save()) {
             return json_encode(['status' => true, 'id' => $cat->id, 'message' => 'Strona została utworzona']);
         }
@@ -175,7 +187,7 @@ class CategoryController extends Mvc\Controller
         $copyModel = new \Cms\Model\CategoryCopy($category);
         //kopiowanie z transakcją
         if ($copyModel->copyWithTransaction()) {
-            return json_encode(['status' => true, 'id' => $copyModel->getCopyRecord()->id, 'message' => 'Strona została skopiowana']);
+            return json_encode(['status' => true, 'id' => $copyModel->getCopyRecord()->getPk(), 'message' => 'Strona została skopiowana']);
         }
         return json_encode(['status' => false, 'error' => 'Nie udało się skopiować strony']);
     }

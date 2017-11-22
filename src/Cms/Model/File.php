@@ -142,12 +142,17 @@ class File
         $i = 0;
         //przenoszenie plików
         foreach (CmsFileQuery::byObject($srcObject, $srcId)->find() as $file) {
-            //tworzenie kopii
-            $copy = new \Mmi\Http\RequestFile([
-                'name' => $file->original,
-                'tmp_name' => $file->getRealPath(),
-                'size' => $file->size
-            ]);
+            try {
+                //tworzenie kopii
+                $copy = new \Mmi\Http\RequestFile([
+                    'name' => $file->original,
+                    'tmp_name' => $file->getRealPath(),
+                    'size' => $file->size
+                ]);
+            } catch (\Mmi\App\KernelException $e) {
+                \Mmi\App\FrontController::getInstance()->getLogger()->warning('Unable to copy file, file not found: ' . $file->getRealPath());
+                continue;
+            }
             $newFile = clone $file;
             $newFile->cmsFileOriginalId = $file->id;
             $newFile->id = null;

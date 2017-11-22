@@ -150,6 +150,27 @@ class Category extends \Cms\Form\AttributeForm
         $this->addElement((new Element\Submit('submit4'))
             ->setLabel('zapisz'));
     }
+    
+    /**
+     * Metoda użytkownika wywoływana przed zapisem
+     * odrzuca transakcję jeśli zwróci false
+     * @return boolean
+     */
+    public function beforeSave()
+    {
+        //jeśli rekord nie był wcześniej zapisany - jest nowy
+        if (!$this->getRecord()->getPk())  {
+            return true;
+        }
+        //pobieramy aktualny stan rekordu z bazy danych
+        if (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getRecord()->getPk())) {
+            return true;
+        }
+        //model do wersjonowania kategorii
+        $versioningModel = new \Cms\Model\CategoryVersioning($category);
+        //zapis wersji przez zapisem zmian z formularza
+        return $versioningModel->versionig();
+    }
 	
     /**
      * Zapisuje dodatkowe dane, m.in. role
@@ -179,7 +200,7 @@ class Category extends \Cms\Form\AttributeForm
 		$formRoles = $this->getElement('roles')->getValue();
 		//role zapisane w bazie
 		$savedRoles = (new \Cms\Orm\CmsCategoryRoleQuery)
-				->whereCmsCategoryId()->equals($this->getRecord()->id)
+				->whereCmsCategoryId()->equals($this->getRecord()->getPk())
 				->findPairs('cms_role_id', 'cms_role_id');
 		//usuwanie zbędnych
 		if (!$this->_deleteRoles(array_diff($savedRoles, $formRoles))) {
@@ -203,7 +224,7 @@ class Category extends \Cms\Form\AttributeForm
 			return true;
 		}
 		return count($delete) === (new \Cms\Orm\CmsCategoryRoleQuery)
-				->whereCmsCategoryId()->equals($this->getRecord()->id)
+				->whereCmsCategoryId()->equals($this->getRecord()->getPk())
 				->andFieldCmsRoleId()->equals($delete)
 				->find()->delete();
 	}
@@ -217,7 +238,7 @@ class Category extends \Cms\Form\AttributeForm
     {
 		foreach ($insert as $roleId) {
 			$record = new \Cms\Orm\CmsCategoryRoleRecord();
-			$record->cmsCategoryId = $this->getRecord()->id;
+			$record->cmsCategoryId = $this->getRecord()->getPk();
 			$record->cmsRoleId = $roleId;
 			if (!$record->save()) {
 				return false;

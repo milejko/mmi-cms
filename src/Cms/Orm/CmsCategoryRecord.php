@@ -27,6 +27,23 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      * @var integer
      */
     public $cmsCategoryTypeId;
+    
+    /**
+     * Identyfikator głównego rekordu wersji
+     * @var integer
+     */
+    public $cmsCategoryOriginalId;
+    
+    /**
+     * Status - draft, wpis historyczny, artykuł
+     * @var integer
+     */
+    public $status;
+    
+    /**
+     * Język
+     * @var string
+     */
     public $lang;
 
     /**
@@ -117,6 +134,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public $cacheLifetime;
     public $active;
+    
+    //status draft
+    CONST STATUS_DRAFT = 0;
+    //status artykuł aktywny
+    CONST STATUS_ACTIVE = 10;
+    //status historia
+    CONST STATUS_HISTORY = 20;
 
     /**
      * Zapis rekordu
@@ -221,6 +245,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             throw new \Cms\Exception\ChildrenExistException();
         }
         //usuwanie kategorii
+        //@TODO - usuwanie widgetów
         return parent::delete() && $this->clearCache();
     }
 
