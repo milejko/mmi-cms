@@ -13,6 +13,9 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     public $cmsCategoryId;
     public $configJson;
     public $active = 1;
+    
+    //prefiks obiektów plików dla widgetu
+    CONST FILE_OBJECT_PREFIX = 'categoryWidgetRelation';
 
     /**
      * Kolejność
@@ -36,6 +39,11 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
      */
     public function delete()
     {
+        //usuwanie plików
+        (new CmsFileQuery)->whereObject()->like(self::FILE_OBJECT_PREFIX . '%')
+            ->andFieldObjectId()->equals($this->getPk())
+            ->find()
+            ->delete();
         //usunięcie z czyszczeniem bufora
         return parent::delete() && $this->clearCache();
     }
