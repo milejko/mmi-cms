@@ -150,27 +150,6 @@ class Category extends \Cms\Form\AttributeForm
         $this->addElement((new Element\Submit('submit4'))
             ->setLabel('zapisz'));
     }
-    
-    /**
-     * Metoda użytkownika wywoływana przed zapisem
-     * odrzuca transakcję jeśli zwróci false
-     * @return boolean
-     */
-    public function beforeSave()
-    {
-        //jeśli rekord nie był wcześniej zapisany - jest nowy
-        if (!$this->getRecord()->getPk())  {
-            return true;
-        }
-        //pobieramy aktualny stan rekordu z bazy danych
-        if (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getRecord()->getPk())) {
-            return true;
-        }
-        //model do wersjonowania kategorii
-        $versioningModel = new \Cms\Model\CategoryVersioning($category);
-        //zapis wersji przez zapisem zmian z formularza
-        return $versioningModel->versionig();
-    }
 	
     /**
      * Zapisuje dodatkowe dane, m.in. role
