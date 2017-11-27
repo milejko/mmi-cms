@@ -41,8 +41,6 @@ class CategoryController extends Mvc\Controller
                 $this->getMessenger()->addMessage('Nie udało się utworzyć wersji roboczej, spróbuj ponownie', false);
                 return;
             }
-            //czyścimy cache uprawnień, bo powstała nowa kategoria
-            \App\Registry::$cache->remove('mmi-cms-category-acl');
             //przekierowanie do edycji DRAFTu - nowego ID
             $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draftModel->getCopyRecord()->getPk()]);
         }
@@ -56,7 +54,7 @@ class CategoryController extends Mvc\Controller
             $this->view->duplicateAlert = true;
         }
         //sprawdzenie uprawnień do edycji węzła kategorii
-        if (!(new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed(\App\Registry::$auth->getRoles(), $cat->id)) {
+        if (!(new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed(\App\Registry::$auth->getRoles(), $cat->cmsCategoryOriginalId ? $cat->cmsCategoryOriginalId : $cat->id)) {
             $this->getMessenger()->addMessage('Nie posiadasz uprawnień do edycji wybranej strony', false);
             //redirect po zmianie (zmienią się atrybuty)
             $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
