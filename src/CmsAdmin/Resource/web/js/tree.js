@@ -73,8 +73,8 @@ $(document).ready(function () {
                 CATEGORYCONF.contextMenu = true;
                 var tmp = $.jstree.defaults.contextmenu.items();
                 delete tmp.ccp;
+				delete tmp.rename;
                 tmp.create.label = "Utwórz podstronę";
-                tmp.rename.label = "Zmień nazwę";
                 tmp.remove.label = "Usuń";
                 //kopia artykułu z menu kontekstowego
                 tmp.copy = {
@@ -124,7 +124,7 @@ $(document).ready(function () {
             }
         },
         'plugins': ["state", "unique", "types", "contextmenu", "dnd", "wholerow"]
-    })
+		})
         .on('delete_node.jstree', function (e, data) {
             CATEGORYCONF.hideMessage();
             $.post(request.baseUrl + '/cmsAdmin/category/delete', {'id': data.node.id})
@@ -209,10 +209,9 @@ $(document).ready(function () {
             }
             //jeśli aktualny url nie pochodzi z drzewka, wychodzimy
             if (window.location.search.indexOf("from=tree") === -1 && window.location.search.indexOf("id=") !== -1 && !CATEGORYCONF.reload) {
-                if (parseFloat(request.id) === parseFloat(data.selected[0])) {
-                    CATEGORYCONF.reload = true;
+                if (parseFloat(request.originalId) === parseFloat(data.selected[0])) {
+					return;
                 }
-                return;
             }
             setTimeout(function () {
                 if (!CATEGORYCONF.reload && parseFloat(request.id) === parseFloat(data.selected[0])) {
@@ -230,6 +229,15 @@ $(document).ready(function () {
         .on('state_ready.jstree', function (e, data) {
             //jeśli aktualny url nie pochodzi z drzewka
             if (window.location.search.indexOf("from=tree") === -1) {
+                resExp = window.location.search.match(/originalId=(\d+)/);
+                if (resExp !== null && parseFloat(resExp[1])) {
+                    $('#jstree').jstree('deselect_all');
+                    var selRes = $('#jstree').jstree('select_node', resExp[1]);
+                    if (selRes === false) {
+                        CATEGORYCONF.reload = true;
+                    }
+					return;
+                }
                 resExp = window.location.search.match(/id=(\d+)/);
                 if (resExp !== null && parseFloat(resExp[1])) {
                     $('#jstree').jstree('deselect_all');

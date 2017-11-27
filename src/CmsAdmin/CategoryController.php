@@ -42,7 +42,8 @@ class CategoryController extends Mvc\Controller
                 return;
             }
             //przekierowanie do edycji DRAFTu - nowego ID
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draftModel->getCopyRecord()->getPk()]);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit',
+                ['id' => $draftModel->getCopyRecord()->getPk(), 'originalId' => $cat->getPk()]);
         }
         //znaleziono kategorię o tym samym uri
         if (null !== (new \Cms\Orm\CmsCategoryQuery)
