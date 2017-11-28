@@ -171,6 +171,23 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     }
 
     /**
+     * Zapisuje draft lub przywraca wersję
+     * @return boolean
+     */
+    public function commitVersion()
+    {
+        //sprawdzenie czy posiada rodzica (oryginał)
+        if (!$this->cmsCategoryOriginalId) {
+            return false;
+        }
+        
+        $originalRecord = (new CmsCategoryQuery)->findPk($this->cmsCategoryOriginalId);
+        $versionModel = new \Cms\Model\CategoryVersion($originalRecord);
+        $versionModel->create();
+        return $versionModel->exchangeOriginal($this);
+    }
+
+    /**
      * Wstawienie kategorii z obliczeniem kodu i przebudową drzewa
      * @return boolean
      */
@@ -238,9 +255,16 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public function delete()
     {
+        //brak pk
         if ($this->getPk() === null) {
             return false;
         }
+        //usuwanie historycznych, draftów i dzieci
+        (new CmsCategoryQuery)
+            ->whereCmsCategoryOriginalId()->equals($this->id)
+            ->orFieldParentId()->equals($this->id)
+            ->find()
+            ->delete();
         //pobranie dzieci
         $children = (new \Cms\Model\CategoryModel)->getCategoryTree($this->getPk());
         if (!empty($children)) {

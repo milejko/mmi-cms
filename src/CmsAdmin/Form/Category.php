@@ -60,10 +60,6 @@ class Category extends \Cms\Form\AttributeForm
             ->setChecked()
             ->setLabel('włączona'));
 
-        //zapis
-        $this->addElement((new Element\Submit('submit1'))
-            ->setLabel('zapisz'));
-
         //SEO
         //nazwa kategorii
         $this->addElement((new Element\Text('title'))
@@ -94,17 +90,9 @@ class Category extends \Cms\Form\AttributeForm
             ->setChecked()
             ->setLabel('widoczna dla wyszukiwarek'));
 
-        //zapis
-        $this->addElement((new Element\Submit('submit2'))
-            ->setLabel('zapisz'));
-
         //Treść
         //atrybuty
         $this->initAttributes('cmsCategoryType', $this->getRecord()->cmsCategoryTypeId, 'category');
-
-        //jeśli wstawione, dodany button z zapisem
-        $this->addElement((new Element\Submit('submit3'))
-            ->setLabel('zapisz'));
 
         //Zaawansowane
         //przekierowanie na link
@@ -147,8 +135,12 @@ class Category extends \Cms\Form\AttributeForm
 			));
 
         //zapis
-        $this->addElement((new Element\Submit('submit4'))
-            ->setLabel('zapisz'));
+        $this->addElement((new Element\Submit('commit'))
+            ->setLabel('zapisz i zatwierdź'));
+
+        //zapis
+        $this->addElement((new Element\Submit('submit'))
+            ->setLabel('zapisz roboczo'));
     }
 	
     /**
@@ -165,6 +157,10 @@ class Category extends \Cms\Form\AttributeForm
 		if (!$this->_saveRoles()) {
 			return false;
 		}
+        //commit wersji
+        if ($this->getElement('commit')->getValue()) {
+            $this->getRecord()->commitVersion();
+        }
         //zapis udany
         return true;
 	}
