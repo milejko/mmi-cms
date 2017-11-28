@@ -11,6 +11,8 @@ var VideoFrameExtractor = function () {
         input: '',
         video: '',
         btn: '',
+        uploadInput: '',
+        uploadBtn: '',
         output: '',
         dialog: ''
     };
@@ -28,11 +30,7 @@ var VideoFrameExtractor = function () {
             var img = document.createElement('img');
             img.src = selectedImg;
             img.classList.add('active');
-            $(img).on('click', function () {
-                $(extractor.selectors.output + ' > img').removeClass('active');
-                $(this).addClass('active');
-                $(extractor.selectors.input).val(this.src);
-            });
+            $(img).on('click', extractor.imageClick);
             extractor.output.prepend(img);
         }
     };
@@ -40,21 +38,56 @@ var VideoFrameExtractor = function () {
     extractor.initialize = function (selectors) {
         if (selectors) {
             extractor.selectors = selectors;
-            extractor.modalFixer();
-            extractor.output = $(extractor.selectors.output);
-            extractor.output.empty();
-            extractor.video = $(extractor.selectors.video).clone();
-            extractor.video = $(extractor.video).get(0);
-            extractor.video.addEventListener('loadedmetadata', extractor.captureFrames, false);
-            extractor.video.addEventListener('seeked', extractor.timeSeeked, false);
-            $(extractor.selectors.btn).off('click');
-            $(extractor.selectors.btn).on('click', extractor.userCapture);
+            if ($(extractor.selectors.video).length > 0) {
+                extractor.video = $(extractor.selectors.video).clone();
+                extractor.video = $(extractor.video).get(0);
+                extractor.modalFixer();
+                extractor.output = $(extractor.selectors.output);
+                extractor.output.empty();
+                extractor.video.addEventListener('loadedmetadata', extractor.captureFrames, false);
+                extractor.video.addEventListener('seeked', extractor.timeSeeked, false);
+                $(extractor.selectors.btn).off('click');
+                $(extractor.selectors.btn).on('click', extractor.userCapture);
+                $(extractor.selectors.uploadBtn).off('click');
+                $(extractor.selectors.uploadBtn).on('click', extractor.uploadFile);
+            }
         } else {
             console.log('selectors was not provided');
         }
     };
     extractor.userCapture = function () {
         extractor.captureFrame(false);
+    };
+
+    extractor.imageClick = function () {
+        $(extractor.selectors.output + ' > img').removeClass('active');
+        $(this).addClass('active');
+        $(extractor.selectors.input).val(this.src);
+    };
+
+    extractor.uploadFile = function () {
+        $(extractor.selectors.uploadInput).click();
+
+        function handleFileSelect(evt) {
+            var files = evt.target.files;
+            var f = files[0];
+            var reader = new FileReader();
+            reader.onload = (function (theFile) {
+                return function (e) {
+                    var img = document.createElement('img');
+                    img.src = e.target.result;
+                    $(extractor.selectors.input).val(e.target.result);
+                    $(img).on('click', extractor.imageClick);
+                    $(extractor.selectors.output + ' > img').removeClass('active');
+                    img.classList.add('active');
+                    extractor.output.prepend(img);
+                };
+            })(f);
+            reader.readAsDataURL(f);
+        }
+
+        $(extractor.selectors.uploadInput).off('change');
+        $(extractor.selectors.uploadInput).on('change', handleFileSelect)
     };
     extractor.captureFrame = function (isAutoProcess) {
         if (!isAutoProcess) {
@@ -68,11 +101,7 @@ var VideoFrameExtractor = function () {
 
         var img = document.createElement('img');
         img.src = canvas.toDataURL();
-        $(img).on('click', function () {
-            $(extractor.selectors.output + ' > img').removeClass('active');
-            $(this).addClass('active');
-            $(extractor.selectors.input).val(this.src);
-        });
+        $(img).on('click', extractor.imageClick);
         extractor.output.prepend(img);
         if (isAutoProcess) {
             extractor.currentFrameId++;
@@ -80,6 +109,7 @@ var VideoFrameExtractor = function () {
                 if (extractor.autoFramesGenerated) {
                     extractor.video.currentTime = 0;
                     extractor.autoFramesGenerated = true;
+                    extractor.prependSelected();
                 }
             }
             if (!extractor.autoFramesGenerated) {

@@ -246,21 +246,22 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                                             selBackground.val(data.data['background']).change();
                                         });
                             }
-
                             //przygotowujemy zawartość okienka edycji i pokazujemy go
                             var edit = 'div#' + args.up.getOption('form_element_id') + '-edit';
                             if (args.up.getOption('poster')) {
-                                $('#video').find('#urlVideo').attr('src', data.data['urlFile']);
+                                $('#video').attr('src', data.data['urlFile']);
                                 $(edit + ' input[name="poster"]').val(data.data['poster']);
                                 new VideoFrameExtractor().initialize({
                                     input: '#poster',
                                     video: '#video',
                                     btn: '#frame-camera',
+                                    uploadInput:'#userPoster',
+                                    uploadBtn:'#frame-upload',
                                     output: '#output',
                                     dialog: '.ui-dialog'
                                 });
                             }
-                            $(edit + ' > fieldset > .imprint').each(function () {
+                            $(edit + ' > fieldset .imprint').each(function () {
                                 var fieldName = $(this).attr('name');
                                 if ($(this).attr('type') === 'checkbox') {
                                     $(this).prop('checked', (parseInt(data.data[fieldName])) > 0 ? 'checked' : '');

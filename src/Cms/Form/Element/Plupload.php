@@ -26,6 +26,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
     CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
     CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    //klucz z losowym id uploadera
     CONST UPLOADER_ID_KEY = 'uploaderId';
 
     /**
@@ -472,13 +473,22 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
                 <div class='frame-extractor'>
                     <div class='row'>
                         <div class='col d-flex justify-content-center video-container'>
-                            <video id='video' controls='controls'>
-                                <source id='urlVideo' src='' type='video/mp4'/>
+                            <video id='video' controls=''>
+                                <source  id='urlVideo' type='video/mp4'>
+                                <p>Twója przeglądarka nie obsługuje video w formacie mp4.</p>
                             </video>
                             <input id='poster' type='hidden' name='poster' value=''/>
-                            <button id='frame-camera' type='button' class='btn btn-outline-primary frame-camera'>
+                            <button id='frame-camera' type='button' class='btn btn-outline-primary frame-camera' data-toggle='tooltip' data-placement='top' title='Złap aktualną ramkę z wideo'>
                                 <i class='fa fa-2 fa-camera'></i>
                             </button>
+                            <button id='frame-upload' type='button'  data-toggle='tooltip' data-placement='top' title='Prześlij swoja ramkę wideo' class='btn btn-outline-primary frame-upload'>
+                                <i class='fa fa-2 fa-upload'></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='col'>
+                            <input type='file' name='userPoster' id='userPoster' accept='image/png'>
                         </div>
                     </div>
                     <div class='row'>

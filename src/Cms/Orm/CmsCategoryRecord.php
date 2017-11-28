@@ -2,8 +2,8 @@
 
 namespace Cms\Orm;
 
-use Cms\Model\AttributeRelationModel;
-use Cms\Model\AttributeValueRelationModel;
+use Cms\Model\AttributeRelationModel,
+    Cms\Model\AttributeValueRelationModel;
 
 /**
  * Rekord kategorii CMSowych
@@ -27,6 +27,23 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      * @var integer
      */
     public $cmsCategoryTypeId;
+
+    /**
+     * Identyfikator głównego rekordu wersji
+     * @var integer
+     */
+    public $cmsCategoryOriginalId;
+
+    /**
+     * Status - draft, wpis historyczny, artykuł
+     * @var integer
+     */
+    public $status;
+
+    /**
+     * Język
+     * @var string
+     */
     public $lang;
 
     /**
@@ -118,6 +135,15 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     public $cacheLifetime;
     public $active;
 
+    //status draft
+    CONST STATUS_DRAFT = 0;
+    //status artykuł aktywny
+    CONST STATUS_ACTIVE = 10;
+    //status historia
+    CONST STATUS_HISTORY = 20;
+    //nazwa obiektu plików cms
+    CONST FILE_OBJECT = 'cmscategory';
+
     /**
      * Zapis rekordu
      * @return boolean
@@ -169,11 +195,11 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         if ($this->isModified('cmsCategoryTypeId')) {
             //iteracja po różnicy międy obecnymi atrybutami a nowymi
             foreach (array_diff(
-                     //obecne id atrybutów
-                         (new AttributeRelationModel('cmsCategoryType', $this->getInitialStateValue('cmsCategoryTypeId')))->getAttributeIds(),
-                         //nowe id atrybutów
-                         (new AttributeRelationModel('cmsCategoryType', $this->cmsCategoryTypeId))->getAttributeIds())
-                     as $deletedAttributeId) {
+                //obecne id atrybutów
+                (new AttributeRelationModel('cmsCategoryType', $this->getInitialStateValue('cmsCategoryTypeId')))->getAttributeIds(),
+                //nowe id atrybutów
+                (new AttributeRelationModel('cmsCategoryType', $this->cmsCategoryTypeId))->getAttributeIds())
+            as $deletedAttributeId) {
                 //usuwanie wartości usuniętego atrybutu
                 (new AttributeValueRelationModel('category', $this->id))
                     ->deleteAttributeValueRelationsByAttributeId($deletedAttributeId);
@@ -220,7 +246,17 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         if (!empty($children)) {
             throw new \Cms\Exception\ChildrenExistException();
         }
-        //usuwanie kategorii
+        //usuwanie plików
+        (new CmsFileQuery)->whereObject()->equals(self::FILE_OBJECT)
+            ->andFieldObjectId()->equals($this->getPk())
+            ->find()
+            ->delete();
+        //usuwanie widgetów
+        (new CmsCategoryWidgetCategoryQuery)
+            ->whereCmsCategoryId()->equals($this->getPk())
+            ->find()
+            ->delete();
+        //usuwanie kategorii i czyszczenie bufora
         return parent::delete() && $this->clearCache();
     }
 
@@ -344,12 +380,12 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     protected function _getChildren($parentId)
     {
         return (new CmsCategoryQuery)
-            ->whereParentId()->equals($parentId)
-            ->joinLeft('cms_category_type')->on('cms_category_type_id')
-            ->orderAscOrder()
-            ->orderAscId()
-            ->find()
-            ->toObjectArray();
+                ->whereParentId()->equals($parentId)
+                ->joinLeft('cms_category_type')->on('cms_category_type_id')
+                ->orderAscOrder()
+                ->orderAscId()
+                ->find()
+                ->toObjectArray();
     }
 
     /**
@@ -411,4 +447,5 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         \App\Registry::$cache->remove('categories-roles');
         return true;
     }
+
 }

@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -39,7 +39,7 @@ class FileController extends \Mmi\Mvc\Controller
         }
         $files = [];
         foreach (\Cms\Orm\CmsFileQuery::imagesByObject($this->object, $this->objectId)->find() as $file) {
-            $files[] = ['title' => $file->original, 'value' => $file->getUrl('scalex', '1200')];
+            $files[] = ['title' => $file->original, 'value' => $file->getUrl('default', '')];
         }
         return json_encode($files);
     }
@@ -60,12 +60,26 @@ class FileController extends \Mmi\Mvc\Controller
         $files = [];
         $thumb = new \Cms\Mvc\ViewHelper\Thumb();
         foreach (\Cms\Orm\CmsFileQuery::byObjectAndClass($this->object, $this->objectId, $this->class)->find() as $file) {
+            switch ($file->class) {
+                case 'image':
+                    $full = $thumb->thumb($file, 'default');
+                    $small = $file->getUrl('scaley', '60', false);
+                    $poster = null;
+                    break;
+                case 'audio':
+                case 'video':
+                    $full = $file->getUrl();
+                    $small = '';
+                    $poster = $file->data->poster ? $file->data->poster : null;
+                    break;
+            }
+
             $files[] = [
                 'id' => $file->id,
                 'title' => $file->original,
-                'full' => $thumb->thumb($file, 'default'),
-                'thumb' => $file->getUrl('scaley', '60', false),
-                'poster' => !empty($file->source) ? $file->source : '',
+                'full' => $full,
+                'thumb' => $small,
+                'poster' => $poster,
                 'class' => $file->class,
                 'mime' => $file->mimeType,
             ];

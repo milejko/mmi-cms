@@ -179,7 +179,7 @@ class Category extends \Cms\Form\AttributeForm
 		$formRoles = $this->getElement('roles')->getValue();
 		//role zapisane w bazie
 		$savedRoles = (new \Cms\Orm\CmsCategoryRoleQuery)
-				->whereCmsCategoryId()->equals($this->getRecord()->id)
+				->whereCmsCategoryId()->equals($this->getRecord()->getPk())
 				->findPairs('cms_role_id', 'cms_role_id');
 		//usuwanie zbędnych
 		if (!$this->_deleteRoles(array_diff($savedRoles, $formRoles))) {
@@ -203,7 +203,7 @@ class Category extends \Cms\Form\AttributeForm
 			return true;
 		}
 		return count($delete) === (new \Cms\Orm\CmsCategoryRoleQuery)
-				->whereCmsCategoryId()->equals($this->getRecord()->id)
+				->whereCmsCategoryId()->equals($this->getRecord()->getPk())
 				->andFieldCmsRoleId()->equals($delete)
 				->find()->delete();
 	}
@@ -217,7 +217,7 @@ class Category extends \Cms\Form\AttributeForm
     {
 		foreach ($insert as $roleId) {
 			$record = new \Cms\Orm\CmsCategoryRoleRecord();
-			$record->cmsCategoryId = $this->getRecord()->id;
+			$record->cmsCategoryId = $this->getRecord()->getPk();
 			$record->cmsRoleId = $roleId;
 			if (!$record->save()) {
 				return false;

@@ -142,23 +142,21 @@
                                     //przygotowujemy zawartość okienka edycji i pokazujemy go
                                     var edit = 'div#dialog-edit';
 
-                                    $.getJSON(parentEditor.settings.baseUrl + '/?module=cms&controller=file&action=list&class=image&object=' + parentEditor.settings.object + '&objectId=' + parentEditor.settings.objectId + '&t=' + parentEditor.settings.time + '&hash=' + parentEditor.settings.hash, function (resp) {
-                                        select = $("div#dialog-edit select[name='source']");
-                                        select.find('option:not(:first)').remove();
-                                        $.each(resp, function (k, v) {
-                                            state = "";
-                                            if (v.value === data.record.source) {
-                                                state = "selected";
-                                                if (v.value != "") {
-                                                    $("div#dialog-edit #img-edit").attr('src', v.value);
-                                                }
-                                            }
-                                            select.append($("<option>", {value: v.value, html: v.title}).prop('selected', state));
+                                    //video poster
+                                    if( data.data['urlFile'] != undefined ){                                        
+                                        $('#video').find('#urlVideo').attr('src', data.data['urlFile']);
+                                        $(edit + ' input[name="poster"]').val(data.data['poster']);
+                                        new VideoFrameExtractor().initialize({
+                                            input: '#poster',
+                                            video: '#video',
+                                            btn: '#frame-camera',
+                                            output: '#output',
+                                            dialog: '.ui-dialog'
                                         });
-                                    });
+                                    }
 
-                                    $(edit + ' input[name="title"]').val(data.record.title);
-                                    $(edit + ' input[name="author"]').val(data.record.author);
+                                    $(edit + ' input[name="title"]').val(data.data.title);
+                                    $(edit + ' input[name="author"]').val(data.data.author);
                                     $(edit + ' .dialog-error').hide().find('p').text('');
 
                                     $("div#dialog-edit select[name='source']").change(function () {
@@ -169,8 +167,9 @@
                                     });
 
                                     var editDialog = $(edit).dialog({
-                                        height: 400,
-                                        width: 350,
+                                        width: ((screen.width * 0.5) * 0.8),
+                                        height:  ((screen.height * 0.8) * 0.8),
+                                        maximiziable: true,
                                         modal: true,
                                         resizable: false,
                                         closeText: 'Zamknij',

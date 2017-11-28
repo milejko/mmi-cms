@@ -18,8 +18,7 @@ use Cms\Orm\CmsFileQuery;
 class UploadController extends Mvc\Controller
 {
 
-    CONST objectPoster = 'posterVideo';
-    CONST acceptPosterFormat = ['image/png'];
+    CONST ACCEPTED_POSTER_FORMAT = ['image/png'];
 
     /**
      * Odbieranie danych z plugina Plupload
@@ -53,15 +52,15 @@ class UploadController extends Mvc\Controller
         switch ($this->getPost()->fileTypes) {
             case 'images' :
                 //zapytanie o obrazki
-                $query = \Cms\Orm\CmsFileQuery::imagesByObject($this->getPost()->object, $objectId);
+                $query = CmsFileQuery::imagesByObject($this->getPost()->object, $objectId);
                 break;
             case 'notImages' :
                 //wszystkie pliki bez obrazków
-                $query = \Cms\Orm\CmsFileQuery::notImagesByObject($this->getPost()->object, $objectId);
+                $query = CmsFileQuery::notImagesByObject($this->getPost()->object, $objectId);
                 break;
             default :
                 //domyślne zapytanie o wszystkie pliki
-                $query = \Cms\Orm\CmsFileQuery::byObject($this->getPost()->object, $objectId);
+                $query = CmsFileQuery::byObject($this->getPost()->object, $objectId);
         }
 
         $records = $query->find();
@@ -84,7 +83,7 @@ class UploadController extends Mvc\Controller
         $this->view->setLayoutDisabled();
         $this->getResponse()->setTypeJson(true);
         //szukamy rekordu pliku
-        if (!$this->getPost()->cmsFileId || null === $record = (new \Cms\Orm\CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
+        if (!$this->getPost()->cmsFileId || null === $record = (new CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
             return $this->_jsonError(178);
         }
         //sprawdzenie zgodności z obiektem formularza
@@ -112,7 +111,7 @@ class UploadController extends Mvc\Controller
             return $this->_jsonError(179);
         }
         //szukamy rekordu pliku
-        if (null !== $record = (new \Cms\Orm\CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
+        if (null !== $record = (new CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
             //sprawdzenie czy obrazek
             if ($record->class === 'image') {
                 try {
@@ -122,7 +121,7 @@ class UploadController extends Mvc\Controller
                         return json_encode(['result' => 'OK', 'url' => $url]);
                     }
                 } catch (\Exception $ex) {
-
+                    
                 }
             }
         }
@@ -140,18 +139,14 @@ class UploadController extends Mvc\Controller
             return $this->_jsonError(185);
         }
         //szukamy rekordu pliku
-        if (null == $record = (new \Cms\Orm\CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
+        if (null == $record = (new CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
             return $this->_jsonError(185);
         }
-        //parametry
-        $data = $record->data->toArray();
-
-        //sprawdzenie czy jest poster
-        if (null !== $poster = $this->_getPosterBase64($record)) {
-            $data['poster'] = $poster;
+        if ($record->data) {
+            //parametry
+            $data = $record->data->toArray();
+            $data['urlFile'] = 'http://' . \App\Registry::$config->host . $record->getUrl();
         }
-
-        $data['urlFile'] = 'http://' . \App\Registry::$config->host . $record->getUrl();
         return json_encode(['result' => 'OK', 'record' => $record, 'data' => $data]);
     }
 
@@ -167,7 +162,7 @@ class UploadController extends Mvc\Controller
             return $this->_jsonError(186);
         }
         //szukamy rekordu pliku
-        if (null === $record = (new \Cms\Orm\CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
+        if (null === $record = (new CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
             return $this->_jsonError(186);
         }
         //pobranie danych
@@ -178,10 +173,6 @@ class UploadController extends Mvc\Controller
                 continue;
             }
             $record->data->{$field['name']} = $field['value'];
-        }
-        //szukamy czy jest poster
-        if (isset($form['poster']) && null !== $poster = $this->_savePoster($form['poster'], $record)) {
-            $record->data->poster = $poster->object;
         }
         //czyszczenie nieprzesłanych checkboxów
         foreach ($record->data as $name => $value) {
@@ -208,74 +199,12 @@ class UploadController extends Mvc\Controller
     }
 
     /**
-     * Zapisanie postera dla video
-     * @param type $imageBlob
-     * @param type $record
-     * @return type
-     */
-    protected function _savePoster($imageBlob, $record)
-    {
-        $object = self::objectPoster . '-' . $record->id;
-
-        //test bloba
-        \preg_match("/^data:(.*);base64,(.*)/i", $imageBlob, $match);
-        if (!in_array($match[1], self::acceptPosterFormat)) {
-            return null;
-        }
-
-        //zapis
-        $tmp_file = BASE_PATH . 'var/cache/' . uniqid();
-        $ext = explode('/', $match[1])[1];
-        file_put_contents($tmp_file, base64_decode($match[2]));
-        $file = new \Mmi\Http\RequestFile([
-            'name' => $object . '.' . $ext,
-            'tmp_name' => $tmp_file,
-            'size' => filesize($tmp_file)
-        ]);
-
-        if (null === $recordPoster = \Cms\Model\File::appendFile($file, 'tmp-' . $object, $record->objectId, self::acceptPosterFormat)) {
-            return null;
-        }
-
-        //usuniecie poprzedniego
-        (new CmsFileQuery)->whereObject()->equals($object)
-            ->andFieldObjectId()->equals($record->objectId)
-            ->find()
-            ->delete();
-        //usuniecie tmp
-        unlink($tmp_file);
-
-        //rekord pliku
-        $recordPoster->active = 1;
-        $recordPoster->object = $object;
-        return $recordPoster->save() ? $recordPoster : null;
-    }
-
-    /**
-     * Pobranie postera base64 na podstwie recordu video
-     * @param type $record
-     * @return type
-     */
-    protected function _getPosterBase64($record)
-    {
-        $object = self::objectPoster . '-' . $record->id;
-        if (null === $poster = (new CmsFileQuery)->whereObject()->equals($object)
-            ->andFieldObjectId()->equals($record->objectId)
-            ->findFirst()) {
-            return null;
-        }
-
-        $data = file_get_contents(BASE_PATH . 'web/' . $poster->getUrl());
-        return 'data:image/' . pathinfo($poster->getUrl(), PATHINFO_EXTENSION) . ';base64,' . base64_encode($data);
-    }
-
-    /**
      * Przekierowanie na plik
      * @return string
      */
     public function downloadAction()
     {
-        if (null === $file = (new \Cms\Orm\CmsFileQuery)->byObject($this->object, $this->objectId)
+        if (null === $file = (new CmsFileQuery)->byObject($this->object, $this->objectId)
             ->findPk($this->id)) {
             return '';
         }
@@ -324,7 +253,7 @@ class UploadController extends Mvc\Controller
      * @param \Cms\Orm\CmsFileRecord $record
      * @return mixed
      */
-    protected function _operationAfter($action, $record)
+    protected function _operationAfter($action, \Cms\Orm\CmsFileRecord $record)
     {
         return \Mmi\Mvc\ActionHelper::getInstance()->action(new \Mmi\Http\Request(array_merge($record->toArray(), $action)));
     }

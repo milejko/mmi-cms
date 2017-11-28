@@ -135,7 +135,7 @@ class OperationColumn extends ColumnAbstract
         }
         //link kasujący ze sprawdzeniem ACL
         if (!empty($deleteParams) && (new AclAllowed)->aclAllowed($params = $this->_parseParams($deleteParams, $record))) {
-            $html .= '<a class="operation-button" href="' . $view->url($params) . rtrim('#' . $this->getOption('deleteHashTarget'), '#') . '" title="Czy na pewno usunąć" class="confirm"><i class="fa fa-2 fa-trash-o "></i></a>';
+            $html .= '<a class="operation-button confirm" href="' . $view->url($params) . rtrim('#' . $this->getOption('deleteHashTarget'), '#') . '" title="Czy na pewno usunąć" class="confirm"><i class="fa fa-2 fa-trash-o "></i></a>';
         }
         //link kasujący tag
         if (!empty($deleteTagParams)) {
