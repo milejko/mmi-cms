@@ -81,8 +81,6 @@ class Category extends \Cms\Form\AttributeForm
             ->setDescription('domyślnie: ' . substr($view->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->getRecord()->uri], true), strlen($view->baseUrl) + 1))
             ->addFilter(new Filter\StringTrim)
             ->addFilter(new Filter\EmptyToNull)
-            ->addValidator(new Validator\RecordUnique([new \Cms\Orm\CmsCategoryQuery, 'uri']))
-            ->addValidator(new Validator\RecordUnique([new \Cms\Orm\CmsCategoryQuery, 'customUri', $this->getRecord()->id]))
             ->addValidator(new Validator\StringLength([1, 255])));
 
         //blank

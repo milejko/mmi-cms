@@ -108,7 +108,7 @@ abstract class AttributeForm extends Form
     {
         //brak obiektu
         if (!$this->_saveToObject) {
-            return true;
+            return parent::afterSave();
         }
         //czyszczenie relacji
         (new AttributeValueRelationModel($this->_saveToObject, $this->getRecord()->id))->deleteAttributeValueRelations();
@@ -131,7 +131,7 @@ abstract class AttributeForm extends Form
             $this->_createValueRelationByElement($attribute->id, $element);
         }
         //zapis udany
-        return true;
+        return parent::afterSave();
     }
 
     /**

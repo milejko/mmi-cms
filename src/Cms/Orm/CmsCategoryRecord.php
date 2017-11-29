@@ -180,10 +180,12 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         if (!$this->cmsCategoryOriginalId) {
             return false;
         }
-        
+        //wyszukiwanie oryginału
         $originalRecord = (new CmsCategoryQuery)->findPk($this->cmsCategoryOriginalId);
+        //tworzenie wersji
         $versionModel = new \Cms\Model\CategoryVersion($originalRecord);
         $versionModel->create();
+        //zmiana miejscami draftu z oryginałem
         return $versionModel->exchangeOriginal($this);
     }
 

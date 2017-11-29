@@ -42,8 +42,7 @@ class CategoryController extends Mvc\Controller
                 return;
             }
             //przekierowanie do edycji DRAFTu - nowego ID
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit',
-                ['id' => $draftModel->getCopyRecord()->getPk(), 'originalId' => $cat->getPk()]);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draftModel->getCopyRecord()->getPk(), 'originalId' => $cat->getPk()]);
         }
         //znaleziono kategorię o tym samym uri
         if (null !== (new \Cms\Orm\CmsCategoryQuery)
@@ -67,11 +66,6 @@ class CategoryController extends Mvc\Controller
         //zapis
         if ($form->isMine() && !$form->isSaved()) {
             $this->getMessenger()->addMessage('Zmiany nie zostały zapisane, formularz zawiera błędy', false);
-        }
-        //zmiana kategorii
-        if ($cmsCategoryTypeId != $form->getRecord()->cmsCategoryTypeId) {
-            //redirect po zmianie (zmienią się atrybuty)
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $form->getRecord()->id]);
         }
         //kategoria do widoku
         $this->view->category = $cat;

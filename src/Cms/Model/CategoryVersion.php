@@ -30,7 +30,7 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
     {
         $this->_createCopyRecord();
         $this->_copy->active = $this->_category->active;
-        $this->_copy->cmsCategoryOriginalId = $this->_category->getPk();
+        $this->_copy->cmsCategoryOriginalId = $this->_category->id;
         $this->_copy->status = \Cms\Orm\CmsCategoryRecord::STATUS_HISTORY;
         return $this->_copy->save();
     }
@@ -42,21 +42,23 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
      */
     public function exchangeOriginal(\Cms\Orm\CmsCategoryRecord $draft)
     {
-        //usuwanie plików
-        (new \Cms\Orm\CmsFileQuery)->whereObject()->equals(self::FILE_CATEGORY_OBJECT)
-            ->andFieldObjectId()->equals($this->_category->getPk())
+        //usuwanie plików tinymce i z atrybutów
+        (new \Cms\Orm\CmsFileQuery)
+            //tinymce
+            ->orQuery((new \Cms\Orm\CmsFileQuery)->whereObject()->equals(self::FILE_CATEGORY_OBJECT)
+                ->andFieldObjectId()->equals($this->_category->id))
+            //atrybuty
+            ->orQuery((new \Cms\Orm\CmsFileQuery)->whereObject()->like(self::OBJECT_TYPE . '%')
+                ->andFieldObjectId()->equals($this->_category->id))
             ->find()
             ->delete();
         //usuwanie widgetów
         (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
-            ->whereCmsCategoryId()->equals($this->_category->getPk())
+            ->whereCmsCategoryId()->equals($this->_category->id)
             ->find()
             ->delete();
-        //czyszczenie atrybutów
-        (new \Cms\Orm\CmsAttributeRelationQuery)->whereObject()->equals(self::OBJECT_TYPE)
-            ->andFieldObjectId()->equals($this->_category->getPk())
-            ->find()
-            ->delete();
+        $attributeValueRelationModel = new AttributeValueRelationModel(self::OBJECT_TYPE, $this->_category->id);
+        $attributeValueRelationModel->deleteAttributeValueRelations();
         //nadpisanie danych oryginału
         $this->_category->setFromArray($draft->toArray());
         //id pozostaje niezmienione
@@ -68,9 +70,35 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
         //przenoszenie plików
         \Cms\Model\File::move(self::FILE_CATEGORY_OBJECT, $draft->id, self::FILE_CATEGORY_OBJECT, $this->_category->id);
         //przepinanie widgetów
-        \Mmi\Orm\DbConnector::getAdapter()->update('cms_category_widget_category', ['cms_category_id' => $this->_category->id], 'WHERE cms_category_id = :id', [':id' => $draft->id]);
+        foreach ((new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
+            ->whereCmsCategoryId()->equals($draft->id)
+            ->find() as $widgetCategory) {
+            //przepinanie id
+            $widgetCategory->cmsCategoryId = $this->_category->id;
+            $widgetCategory->save();
+        }
         //przepinanie atrybutów
-        \Mmi\Orm\DbConnector::getAdapter()->update('cms_attribute_value_relation', ['objectId' => $this->_category->id], 'WHERE objectId = :id AND object = :object', [':id' => $draft->id, ':object' => self::OBJECT_TYPE]);
+        foreach ((new \Cms\Orm\CmsAttributeValueRelationQuery)
+            ->whereObject()->equals(self::OBJECT_TYPE)
+            ->whereObjectId()->equals($draft->id)
+            ->find() as $attributeRelation) {
+            //przepinanie id
+            $attributeRelation->objectId = $this->_category->id;
+            $attributeRelation->save();
+        }
+        //przepinanie plików
+        foreach ((new \Cms\Orm\CmsFileQuery)
+            //tinymce
+            ->orQuery((new \Cms\Orm\CmsFileQuery)->whereObject()->equals(self::FILE_CATEGORY_OBJECT)
+                ->andFieldObjectId()->equals($draft->id))
+            //atrybuty
+            ->orQuery((new \Cms\Orm\CmsFileQuery)->whereObject()->like(self::OBJECT_TYPE . '%')
+                ->andFieldObjectId()->equals($draft->id))
+            ->find() as $file) {
+            //przepinanie id
+            $file->objectId = $this->_category->id;
+            $file->save();
+        }
         //usuwanie draftu
         $draft->delete();
         return $this->_category->save();
