@@ -59,8 +59,6 @@ class CategoryController extends Mvc\Controller
             //redirect po zmianie (zmienią się atrybuty)
             $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
-        //zapis początkowej kategorii
-        $cmsCategoryTypeId = $cat->cmsCategoryTypeId;
         //konfiguracja kategorii
         $form = (new \CmsAdmin\Form\Category($cat));
         //zapis
@@ -76,6 +74,8 @@ class CategoryController extends Mvc\Controller
         $this->view->category = $cat;
         //form do widoku
         $this->view->categoryForm = $form;
+        //grid z listą wersji historycznych
+        $this->view->historyGrid = new \CmsAdmin\Plugin\CategoryHistoryGrid(['originalId' => $cat->cmsCategoryOriginalId]);
     }
 
     /**

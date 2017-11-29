@@ -136,6 +136,21 @@
                         </div>
                     </div>
                     {/if}
+                    <div class="card">
+                        <div class="card-header" role="tab" id="headingThree">
+                            <h5 class="mb-0">
+                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#tab-history"
+                                   aria-expanded="false" aria-controls="collapseThree">
+                                    {#Wersje historyczane#}
+                                </a>
+                            </h5>
+                        </div>
+                        <div id="tab-history" class="collapse" role="tabpanel" aria-labelledby="headingThree">
+                            <div class="card-block">
+								{$historyGrid}
+                            </div>
+                        </div>
+                    </div>
                 </div>
                {$categoryForm->getElement('commit')}
                <a style="margin-right: 10px; color: #fff;" class="btn btn-dark float-right" href="{$categoryForm->getRecord()->getUrl()}?preview=1">podgląd</a>
