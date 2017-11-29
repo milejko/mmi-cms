@@ -138,7 +138,7 @@ class Category extends \Cms\Form\AttributeForm
 
         //zapis
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('zapisz roboczo'));
+            ->setLabel('zapisz kopię roboczą'));
     }
 	
     /**

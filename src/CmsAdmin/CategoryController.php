@@ -67,6 +67,11 @@ class CategoryController extends Mvc\Controller
         if ($form->isMine() && !$form->isSaved()) {
             $this->getMessenger()->addMessage('Zmiany nie zostały zapisane, formularz zawiera błędy', false);
         }
+        //po zapisie
+        if ($form->isSaved()) {
+            $this->getMessenger()->addMessage('Zmiany zostały zapisane', true);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $form->getRecord()->cmsCategoryOriginalId]);
+        }
         //kategoria do widoku
         $this->view->category = $cat;
         //form do widoku

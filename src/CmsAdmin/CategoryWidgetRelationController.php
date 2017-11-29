@@ -95,9 +95,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
         //wyłączenie layout
         $this->view->setLayoutDisabled();
         //wyszukiwanie kategorii
-        if (null === $this->view->category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->categoryId)) {
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit');
-        }
+        $this->view->category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->categoryId);
     }
 
     /**

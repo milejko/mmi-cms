@@ -139,9 +139,10 @@
                 </div>
                {$categoryForm->getElement('commit')}
                <a style="margin-right: 10px; color: #fff;" class="btn btn-dark float-right" href="{$categoryForm->getRecord()->getUrl()}?preview=1">podgląd</a>
-               <input style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit" type="submit" class="btn btn-secondary float-right" name="cmsadmin-form-category[submit]" value="zapisz roboczo" >
+               <input style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit" type="submit" class="btn btn-secondary float-right" name="cmsadmin-form-category[submit]" value="zapisz kopię roboczą" >
                {$categoryForm->end()}
                {/if}
+               <div style="clear: both"><br /></div>
             </div>
         </div>
     </div>
