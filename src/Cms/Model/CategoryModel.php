@@ -104,6 +104,7 @@ class CategoryModel
                 return $child;
             }
         }
+        return [];
     }
 
     /**
