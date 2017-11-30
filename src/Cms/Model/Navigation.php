@@ -33,6 +33,7 @@ class Navigation
     {
         return [null => '---'] + (new CmsCategoryQuery)
                 ->lang()
+                ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
                 ->orderAscParentId()
                 ->orderAscOrder()->findPairs('id', 'name');
     }
@@ -45,6 +46,7 @@ class Navigation
     {
         $objectArray = (new CmsCategoryQuery)
             ->lang()
+            ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
             ->orderAscParentId()
             ->orderAscOrder()
             ->find()

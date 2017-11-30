@@ -23,31 +23,31 @@ class CategoryCopy
     CONST CMS_ATTRIBUTE_TYPE = 'cms_attribute_type';
     CONST FILE_CATEGORY_OBJECT = 'cmscategory';
     CONST FILE_CATEGORY_WIDGET_OBJECT = 'cmscategorywidgetcategory';
-    
+
     /**
      * Obiekt kategorii Cms do skopiowania
      * @var \Cms\Orm\CmsCategoryRecord
      */
     protected $_category;
-    
+
     /**
      * Obiekt nowo utworzonej kopii kategorii Cms
      * @var \Cms\Orm\CmsCategoryRecord
      */
     protected $_copy;
-    
+
     /**
      * Sufiks dla nazwy kopiowanej kategorii
      * @var string
      */
     protected $_nameSuffix = '_kopia';
-    
+
     /**
      * Mapowanie plików powiązanych z kategorią: oryginałów na kopie
      * @var array
      */
     private $_categoryFiles = [];
-    
+
     /**
      * Mapowanie plików powiązanych z widgetem: oryginałów na kopie
      * @var array
@@ -62,18 +62,18 @@ class CategoryCopy
     {
         $this->_category = $category;
     }
-	
-	/**
-	 * Ustawia rekord kategorii do skopiowania
-	 * @param \Cms\Orm\CmsCategoryRecord $category
-	 * @return \Cms\Model\CategoryCopy
-	 */
-	public function setCategory(\Cms\Orm\CmsCategoryRecord $category)
+
+    /**
+     * Ustawia rekord kategorii do skopiowania
+     * @param \Cms\Orm\CmsCategoryRecord $category
+     * @return \Cms\Model\CategoryCopy
+     */
+    public function setCategory(\Cms\Orm\CmsCategoryRecord $category)
     {
-		$this->_category = $category;
-		return $this;
-	}
-    
+        $this->_category = $category;
+        return $this;
+    }
+
     /**
      * Ustawia sufiks dla nazwy nowej kategorii
      * @param string $suffix
@@ -84,7 +84,7 @@ class CategoryCopy
         $this->_nameSuffix = $suffix;
         return $this;
     }
-    
+
     /**
      * Zwraca rekord skopiowanej kategorii
      * @return \Cms\Orm\CmsCategoryRecord
@@ -93,7 +93,7 @@ class CategoryCopy
     {
         return $this->_copy;
     }
-    
+
     /**
      * Kopiuje kategorię z wszystkimki zależnościami
      * @return boolean
@@ -102,7 +102,7 @@ class CategoryCopy
     {
         return $this->_copyAll();
     }
-    
+
     /**
      * Kopiuje kategorię z wszystkimki zależnościami,
      * obejmując wszystko transakcją na bazie danych
@@ -111,7 +111,7 @@ class CategoryCopy
     public function copyWithTransaction()
     {
         //rozpoczęcie transakcji
-		\App\Registry::$db->beginTransaction();
+        \App\Registry::$db->beginTransaction();
         if ($this->_copyAll()) {
             //commit po transakcji
             \App\Registry::$db->commit();
@@ -121,7 +121,7 @@ class CategoryCopy
         \App\Registry::$db->rollBack();
         return false;
     }
-    
+
     /**
      * Czyści stan obiektu
      * @return \Cms\Model\CategoryCopy
@@ -133,7 +133,7 @@ class CategoryCopy
         $this->_categoryWidgetFiles = [];
         return $this;
     }
-    
+
     /**
      * Kopiuje kategorię z wszystkimki zależnościami
      * @return boolean
@@ -141,41 +141,56 @@ class CategoryCopy
     protected function _copyAll()
     {
         $this->_clear();
-        try {
-            if (!$this->_copyCategory()) {
-                return false;
-            }
-            if (!$this->_copyCategoryFiles()) {
-                return false;
-            }
-            if (!$this->_copyWidgetRelations()) {
-                return false;
-            }
-            if (!$this->_copyAttributeValues()) {
-                return false;
-            }
-        } catch (\Exception $ex) {
+        //try {
+        if (!$this->_copyCategory()) {
             return false;
         }
+        if (!$this->_copyCategoryRoles()) {
+            return false;
+        }
+        if (!$this->_copyCategoryFiles()) {
+            return false;
+        }
+        if (!$this->_copyWidgetRelations()) {
+            return false;
+        }
+        if (!$this->_copyAttributeValues()) {
+            return false;
+        }
+        //} catch (\Exception $ex) {
+//            return false;
+        //      }
         return true;
     }
-    
+
     /**
      * Kopiuje rekord kategorii
      * @return boolean
      */
     protected function _copyCategory()
     {
+        $this->_createCopyRecord();
+        $this->_copy->cmsCategoryOriginalId = null;
+        $this->_copy->status = \Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE;
+        return $this->_copy->save();
+    }
+
+    /**
+     * Tworzy obiekt rekordu kopii kategorii - bez zapisu
+     * @return \Cms\Orm\CmsCategoryRecord
+     */
+    protected function _createCopyRecord()
+    {
         $this->_copy = new \Cms\Orm\CmsCategoryRecord();
         $this->_copy->setFromArray($this->_category->toArray());
         $this->_copy->id = null;
-        $this->_copy->name = $this->_generateCategoryName();
         $this->_copy->active = false;
         $this->_copy->dateAdd = null;
         $this->_copy->dateModify = null;
-        return $this->_copy->save();
+        $this->_copy->name = $this->_generateCategoryName();
+        return $this->_copy;
     }
-    
+
     /**
      * Generuje nazwę dla skopiowanej kategorii (unika kolizji URI)
      * @return string
@@ -186,24 +201,24 @@ class CategoryCopy
         $filterUrl = new \Mmi\Filter\Url;
         //bazowe Uri skopiowanej kategorii na podstawie rodzica
         $baseUri = '';
-        if ($this->_copy->parentId && (null !== $parent = (new CmsCategoryQuery)->findPk($this->_copy->parentId))) {
+        if ($this->_category->parentId && (null !== $parent = (new CmsCategoryQuery)->findPk($this->_category->parentId))) {
             //nieaktywny rodzic -> nie wlicza się do ścieżki
             if (!$parent->active) {
                 $parent->uri = substr($parent->uri, 0, strrpos($parent->uri, '/'));
             }
             $baseUri = ltrim($parent->uri . '/', '/');
         }
-        $baseName = $this->_copy->name . $this->_nameSuffix;
+        $baseName = $this->_category->name . $this->_nameSuffix;
         //unikamy kolizji URI - dodajemy pierwszą wolną liczbę na koniec
         $number = 0;
         do {
             $number++;
             $copyName = $baseName . (($number > 1) ? '_' . $number : '');
             $copyUri = $baseUri . $filterUrl->filter($copyName);
-        } while((new CmsCategoryQuery)->searchByUri($copyUri)->count());
+        } while ((new CmsCategoryQuery)->searchByUri($copyUri)->count());
         return $copyName;
     }
-    
+
     /**
      * Kopiuje pliki powiązane z rekordem kategorii, np. wgrane przez TinyMce
      * @return boolean
@@ -216,7 +231,7 @@ class CategoryCopy
         }
         //dla każdego pliku powiązanego z kategorią
         foreach (\Cms\Orm\CmsFileQuery::byObject(self::FILE_CATEGORY_OBJECT, $this->_category->getPk())
-                ->find() as $original) {
+            ->find() as $original) {
             if (null === $copy = \Cms\Model\File::copyWithData($original, $this->_copy->getPk())) {
                 return false;
             }
@@ -225,7 +240,7 @@ class CategoryCopy
         }
         return true;
     }
-    
+
     /**
      * Kopiuje pliki powiązane z widgetem, np. wgrane przez TinyMce
      * @param integer $relationId
@@ -241,7 +256,7 @@ class CategoryCopy
         }
         //dla każdego pliku powiązanego z widgetem
         foreach (\Cms\Orm\CmsFileQuery::byObject(self::FILE_CATEGORY_WIDGET_OBJECT, $relationId)
-                ->find() as $original) {
+            ->find() as $original) {
             if (null === $copy = \Cms\Model\File::copyWithData($original, $newRelation->getPk())) {
                 return false;
             }
@@ -250,7 +265,7 @@ class CategoryCopy
         }
         return true;
     }
-    
+
     /**
      * Kopiuje widgety kategorii
      * @return boolean
@@ -267,14 +282,11 @@ class CategoryCopy
             if (!$relation->save()) {
                 return false;
             }
-            
+
             //kopiowanie plików powiązanych w widgetem
             if (!$this->_copyWidgetRelationFiles($widgetRelation->id, $relation)) {
                 return false;
             }
-
-            //(new AttributeValueRelationModel(self::CATEGORY_WIDGET_RELATION, $relation->id))
-            //    ->deleteAttributeValueRelations();
 
             $relationAttributes = $widgetRelation->getAttributeValues();
             foreach ($relationAttributes as $key => $value) {
@@ -287,13 +299,20 @@ class CategoryCopy
                         ->createAttributeValueRelationByValue($attribute->id, self::CATEGORY_WIDGET_RELATION . ucfirst($key));
                     continue;
                 }
+                if ($value instanceof \Mmi\Orm\RecordCollection) {
+                    foreach ($value as $val) {
+                        (new AttributeValueRelationModel(self::CATEGORY_WIDGET_RELATION, $relation->id))
+                            ->createAttributeValueRelationByValue($attribute->id, $val->value);
+                    }
+                    continue;
+                }
                 (new AttributeValueRelationModel(self::CATEGORY_WIDGET_RELATION, $relation->id))
                     ->createAttributeValueRelationByValue($attribute->id, $this->_updateValue($value, $this->_categoryWidgetFiles));
             }
         }
         return true;
     }
-    
+
     /**
      * Kopiuje atrybuty kategorii
      * @return boolean
@@ -317,7 +336,7 @@ class CategoryCopy
         }
         return true;
     }
-    
+
     /**
      * Aktualizuje wartość - zamienia ścieżki do plików
      * @param string $value
@@ -333,10 +352,30 @@ class CategoryCopy
             }
             $oName = $map['original']->name;
             $cName = $map['copy']->name;
-            $value = preg_replace('@/data/'.$oName[0].'/'.$oName[1].'/'.$oName[2].'/'.$oName[3].'/(scalecrop|scalex|scaley|default)/([0-9x]{0,10})/'.$oName.'@',
-                '/data/'.$cName[0].'/'.$cName[1].'/'.$cName[2].'/'.$cName[3].'/$1/$2/'.$cName, $value);
+            $value = preg_replace('@/data/' . $oName[0] . '/' . $oName[1] . '/' . $oName[2] . '/' . $oName[3] . '/(scalecrop|scalex|scaley|default)/([0-9x]{0,10})/' . $oName . '@', '/data/' . $cName[0] . '/' . $cName[1] . '/' . $cName[2] . '/' . $cName[3] . '/$1/$2/' . $cName, $value);
         }
         return $value;
+    }
+
+    /**
+     * Kopiuje powiązania roli z rekordem kategorii
+     * @return boolean
+     */
+    protected function _copyCategoryRoles()
+    {
+        //role zapisane w bazie
+        $roles = (new \Cms\Orm\CmsCategoryRoleQuery)
+            ->whereCmsCategoryId()->equals($this->_category->getPk())
+            ->findUnique('cms_role_id');
+        foreach ($roles as $roleId) {
+            $record = new \Cms\Orm\CmsCategoryRoleRecord();
+            $record->cmsCategoryId = $this->_copy->getPk();
+            $record->cmsRoleId = $roleId;
+            if (!$record->save()) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

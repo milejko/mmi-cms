@@ -60,6 +60,13 @@ class Category extends \Cms\Form\AttributeForm
             ->setChecked()
             ->setLabel('włączona'));
 
+<<<<<<< HEAD
+        //zapis
+        $this->addElement((new Element\Submit('submit1'))
+            ->setLabel('zapisz'));
+
+=======
+>>>>>>> develop
         //SEO
         //nazwa kategorii
         $this->addElement((new Element\Text('title'))
@@ -81,6 +88,11 @@ class Category extends \Cms\Form\AttributeForm
             ->setDescription('domyślnie: ' . substr($view->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->getRecord()->uri], true), strlen($view->baseUrl) + 1))
             ->addFilter(new Filter\StringTrim)
             ->addFilter(new Filter\EmptyToNull)
+<<<<<<< HEAD
+            ->addValidator(new Validator\RecordUnique([new \Cms\Orm\CmsCategoryQuery, 'uri']))
+            ->addValidator(new Validator\RecordUnique([new \Cms\Orm\CmsCategoryQuery, 'customUri', $this->getRecord()->id]))
+=======
+>>>>>>> develop
             ->addValidator(new Validator\StringLength([1, 255])));
 
         //blank
@@ -88,10 +100,24 @@ class Category extends \Cms\Form\AttributeForm
             ->setChecked()
             ->setLabel('widoczna dla wyszukiwarek'));
 
+<<<<<<< HEAD
+        //zapis
+        $this->addElement((new Element\Submit('submit2'))
+            ->setLabel('zapisz'));
+
+=======
+>>>>>>> develop
         //Treść
         //atrybuty
         $this->initAttributes('cmsCategoryType', $this->getRecord()->cmsCategoryTypeId, 'category');
 
+<<<<<<< HEAD
+        //jeśli wstawione, dodany button z zapisem
+        $this->addElement((new Element\Submit('submit3'))
+            ->setLabel('zapisz'));
+
+=======
+>>>>>>> develop
         //Zaawansowane
         //przekierowanie na link
         $this->addElement((new Element\Text('redirectUri'))
@@ -133,12 +159,17 @@ class Category extends \Cms\Form\AttributeForm
 			));
 
         //zapis
+<<<<<<< HEAD
+        $this->addElement((new Element\Submit('submit4'))
+            ->setLabel('zapisz'));
+=======
         $this->addElement((new Element\Submit('commit'))
             ->setLabel('zapisz i zatwierdź'));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))
             ->setLabel('zapisz kopię roboczą'));
+>>>>>>> develop
     }
 	
     /**
@@ -155,10 +186,13 @@ class Category extends \Cms\Form\AttributeForm
 		if (!$this->_saveRoles()) {
 			return false;
 		}
+<<<<<<< HEAD
+=======
         //commit wersji
         if ($this->getElement('commit')->getValue()) {
             $this->getRecord()->commitVersion();
         }
+>>>>>>> develop
         //zapis udany
         return true;
 	}
@@ -173,7 +207,11 @@ class Category extends \Cms\Form\AttributeForm
 		$formRoles = $this->getElement('roles')->getValue();
 		//role zapisane w bazie
 		$savedRoles = (new \Cms\Orm\CmsCategoryRoleQuery)
+<<<<<<< HEAD
+				->whereCmsCategoryId()->equals($this->getRecord()->id)
+=======
 				->whereCmsCategoryId()->equals($this->getRecord()->getPk())
+>>>>>>> develop
 				->findPairs('cms_role_id', 'cms_role_id');
 		//usuwanie zbędnych
 		if (!$this->_deleteRoles(array_diff($savedRoles, $formRoles))) {
@@ -197,7 +235,11 @@ class Category extends \Cms\Form\AttributeForm
 			return true;
 		}
 		return count($delete) === (new \Cms\Orm\CmsCategoryRoleQuery)
+<<<<<<< HEAD
+				->whereCmsCategoryId()->equals($this->getRecord()->id)
+=======
 				->whereCmsCategoryId()->equals($this->getRecord()->getPk())
+>>>>>>> develop
 				->andFieldCmsRoleId()->equals($delete)
 				->find()->delete();
 	}
@@ -211,7 +253,11 @@ class Category extends \Cms\Form\AttributeForm
     {
 		foreach ($insert as $roleId) {
 			$record = new \Cms\Orm\CmsCategoryRoleRecord();
+<<<<<<< HEAD
+			$record->cmsCategoryId = $this->getRecord()->id;
+=======
 			$record->cmsCategoryId = $this->getRecord()->getPk();
+>>>>>>> develop
 			$record->cmsRoleId = $roleId;
 			if (!$record->save()) {
 				return false;

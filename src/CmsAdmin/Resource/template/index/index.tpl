@@ -41,9 +41,9 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-6 col-form-label">{$user->lastLog}</label>
+                                <label class="col-sm-6 col-form-label">Data i IP ostatniego poprawnego logowania</label>
                                 <div class="col-sm-6">
-                                    <p class="form-control-static">[{$user->lastIp}]</p>
+                                    <p class="form-control-static">{$user->lastLog}<br />[{$user->lastIp}]</p>
                                 </div>
                             </div>
                             <div class="form-group row">

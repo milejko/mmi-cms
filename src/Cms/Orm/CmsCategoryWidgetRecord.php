@@ -64,6 +64,20 @@ class CmsCategoryWidgetRecord extends \Mmi\Orm\Record
     }
 
     /**
+     * Usunięcie definicji widgeta
+     */
+    public function delete()
+    {
+        //usuwanie utworzonych widgetów
+        (new CmsCategoryWidgetCategoryQuery)
+            ->whereCmsCategoryWidgetId()->equals($this->getPk())
+            ->find()
+            ->delete();
+        //usuwanie widgeta
+        return parent::delete();
+    }
+
+    /**
      * Usuwanie zbuforowanych renderów widgetów
      * @return boolean
      */
