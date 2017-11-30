@@ -141,7 +141,6 @@ class CategoryCopy
     protected function _copyAll()
     {
         $this->_clear();
-        //try {
         if (!$this->_copyCategory()) {
             return false;
         }
@@ -157,9 +156,6 @@ class CategoryCopy
         if (!$this->_copyAttributeValues()) {
             return false;
         }
-        //} catch (\Exception $ex) {
-//            return false;
-        //      }
         return true;
     }
 
@@ -230,7 +226,17 @@ class CategoryCopy
             return false;
         }
         //dla każdego pliku powiązanego z kategorią
-        foreach (\Cms\Orm\CmsFileQuery::byObject(self::FILE_CATEGORY_OBJECT, $this->_category->getPk())
+        foreach ((new \Cms\Orm\CmsFileQuery)
+            ->whereQuery(
+                (new \Cms\Orm\CmsFileQuery)
+                ->whereObject()->equals(self::FILE_CATEGORY_OBJECT)
+                ->orQuery(
+                    (new \Cms\Orm\CmsFileQuery)
+                    ->orFieldObject()->like(self::OBJECT_TYPE . '%')
+                    ->andFieldObject()->notLike(self::CATEGORY_WIDGET_RELATION . '%')
+                )
+            )
+            ->whereObjectId()->equals($this->_category->id)
             ->find() as $original) {
             if (null === $copy = \Cms\Model\File::copyWithData($original, $this->_copy->getPk())) {
                 return false;
@@ -254,14 +260,22 @@ class CategoryCopy
         if (!$newRelation->getPk()) {
             return false;
         }
-        //dla każdego pliku powiązanego z widgetem
-        foreach (\Cms\Orm\CmsFileQuery::byObject(self::FILE_CATEGORY_WIDGET_OBJECT, $relationId)
-            ->find() as $original) {
-            if (null === $copy = \Cms\Model\File::copyWithData($original, $newRelation->getPk())) {
-                return false;
+        //kopiowanie plików ze starej relacji do nowej
+        foreach ((new \Cms\Orm\CmsFileQuery)
+            ->whereQuery((new \Cms\Orm\CmsFileQuery)
+                //obiekt podobny do categoryWidgetRelation
+                ->whereObject()->like(self::CATEGORY_WIDGET_RELATION . '%')
+                //lub równy cmscategorywidgetcategory
+                ->orFieldObject()->equals(self::FILE_CATEGORY_WIDGET_OBJECT))
+            //identyfikator równy ID relacji
+            ->andFieldObjectId()->equals($relationId)
+            ->find() as $originalFile) {
+            //kopiowanie pliku
+            if (null === $copy = \Cms\Model\File::copyWithData($originalFile, $newRelation->id)) {
+                continue;
             }
             //zapamiętujemy mapowanie plików
-            array_push($this->_categoryWidgetFiles, ['original' => $original, 'copy' => $copy]);
+            array_push($this->_categoryWidgetFiles, ['original' => $originalFile, 'copy' => $copy]);
         }
         return true;
     }
@@ -291,14 +305,13 @@ class CategoryCopy
             $relationAttributes = $widgetRelation->getAttributeValues();
             foreach ($relationAttributes as $key => $value) {
                 $attribute = (new \Cms\Orm\CmsAttributeQuery)->withTypeByKey($key)->findFirst();
+                //obsługa uploaderów
                 if ($attribute->getJoined(self::CMS_ATTRIBUTE_TYPE)->uploader) {
-                    foreach ($value as $file) {
-                        \Cms\Model\File::copyWithData($file, $relation->id);
-                    }
                     (new AttributeValueRelationModel(self::CATEGORY_WIDGET_RELATION, $relation->id))
                         ->createAttributeValueRelationByValue($attribute->id, self::CATEGORY_WIDGET_RELATION . ucfirst($key));
                     continue;
                 }
+                //obsługa wielokrotnych
                 if ($value instanceof \Mmi\Orm\RecordCollection) {
                     foreach ($value as $val) {
                         (new AttributeValueRelationModel(self::CATEGORY_WIDGET_RELATION, $relation->id))
@@ -326,13 +339,6 @@ class CategoryCopy
             //tworze relacje atrybutu dla nowej kategorii
             (new \Cms\Model\AttributeValueRelationModel(self::OBJECT_TYPE, $this->_copy->id))
                 ->createAttributeValueRelationByValue($record->cmsAttributeId, $this->_updateValue($record->value, $this->_categoryFiles));
-            //jesli uploader to kopiuje też pliki z danymi
-            if ($record->getJoined(self::CMS_ATTRIBUTE_TYPE)->uploader) {
-                $files = \Cms\Orm\CmsFileQuery::byObject($record->value, $this->_category->id)->find();
-                foreach ($files as $file) {
-                    \Cms\Model\File::copyWithData($file, $this->_copy->id);
-                }
-            }
         }
         return true;
     }
