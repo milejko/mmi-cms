@@ -21,13 +21,13 @@ class CategoryController extends \Mmi\Mvc\Controller
      */
     public function dispatchAction()
     {
-        //pobranie kategorii
-        $category = $this->_getPublishedCategoryByUri($this->uri);
         //żądanie o wersję artykułu (rola redaktora)
         if ($this->versionId && \App\Registry::$acl->isAllowed(\App\Registry::$auth->getRoles(), 'cmsAdmin:category:index')) {
-            //zwraca podgląd redaktora
-            return $this->_adminPreview($category, $this->versionId);
+            //zwraca podgląd wersji
+            return $this->_versionPreview($this->originalId, $this->versionId);
         }
+        //pobranie kategorii
+        $category = $this->_getPublishedCategoryByUri($this->uri);
         //klucz bufora
         $cacheKey = 'category-html-' . $category->id;
         //buforowanie dozwolone
@@ -243,17 +243,31 @@ class CategoryController extends \Mmi\Mvc\Controller
         return $buffering->isAllowed();
     }
 
-    protected function _adminPreview(Orm\CmsCategoryRecord $originalCategory, $versionId)
+    /**
+     * Podgląd admina
+     * @param integer $originalId
+     * @param integer $versionId
+     * @return string html
+     * @throws \Mmi\Mvc\MvcNotFoundException
+     */
+    protected function _versionPreview($originalId, $versionId)
     {
-        //brak wersji
+        //brak id oryginalnego
+        if (!$originalId) {
+            throw new \Mmi\Mvc\MvcNotFoundException('Original not found');
+        }
+        //wyszukiwanie
         if (null === $category = (new Orm\CmsCategoryQuery)
             ->withType()
-            ->whereCmsCategoryOriginalId()->equals($originalCategory->id)
+            ->whereCmsCategoryOriginalId()->equals($originalId)
             ->findPk($versionId)) {
             //404
-            throw new \Mmi\Mvc\MvcNotFoundException();
+            throw new \Mmi\Mvc\MvcNotFoundException('Version not found');
         }
         $this->view->category = $category;
+        //nadpisanie tytułu i opisu (gdyż inaczej brany jest z kategorii oryginalnej)
+        $this->view->navigation()->setTitle($category->title)
+            ->setDescription($category->description);
         //renderowanie docelowej akcji
         return \Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category));
     }
