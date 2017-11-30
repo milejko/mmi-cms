@@ -34,7 +34,7 @@ class CategoryController extends Mvc\Controller
             return;
         }
         //jeśli to nie był DRAFT
-        if ($cat->status == \Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE) {
+        if ($cat->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
             //tworzymy wersję roboczą - DRAFT
             $draftModel = new \Cms\Model\CategoryDraft($cat);
             if (!$draftModel->createWithTransaction()) {

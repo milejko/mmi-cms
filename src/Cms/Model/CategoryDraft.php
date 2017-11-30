@@ -49,7 +49,8 @@ class CategoryDraft extends \Cms\Model\CategoryCopy
     {
         $this->_createCopyRecord();
         $this->_copy->active = $this->_category->active;
-        $this->_copy->cmsCategoryOriginalId = $this->_category->getPk();
+        //nadawanie id oryginału (chyba że już nadany w przypadku rekordów z historii)
+        $this->_copy->cmsCategoryOriginalId = $this->_category->cmsCategoryOriginalId ? $this->_category->cmsCategoryOriginalId : $this->_category->getPk();
         $this->_copy->status = \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT;
         return $this->_copy->save();
     }
