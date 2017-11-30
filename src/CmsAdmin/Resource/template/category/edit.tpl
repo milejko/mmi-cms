@@ -141,7 +141,7 @@
                             <h5 class="mb-0">
                                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#tab-history"
                                    aria-expanded="false" aria-controls="collapseThree">
-                                    {#Wersje historyczane#}
+                                    {#Historia zmian#}
                                 </a>
                             </h5>
                         </div>
@@ -153,7 +153,7 @@
                     </div>
                 </div>
                {$categoryForm->getElement('commit')}
-               <a style="margin-right: 10px; color: #fff;" class="btn btn-dark float-right" href="{$categoryForm->getRecord()->getUrl()}?preview=1">podgląd</a>
+               <a target="_blank" style="margin-right: 10px; color: #fff;" class="btn btn-dark float-right" href="{$categoryForm->getRecord()->getUrl()}?versionId={$categoryForm->getRecord()->id}">podgląd</a>
                <input style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit" type="submit" class="btn btn-secondary float-right" name="cmsadmin-form-category[submit]" value="zapisz kopię roboczą" >
                {$categoryForm->end()}
                {/if}

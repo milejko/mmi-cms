@@ -34,13 +34,13 @@ class CategoryHistoryGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('nazwa'));
 
         //data utworzenia wersji
-        $this->addColumn((new Column\DateTimeColumn('dateAdd'))
+        $this->addColumn((new Column\TextColumn('dateAdd'))
             ->setLabel('data utworzenia'));
 
         //operacje
         $this->addColumn((new Column\CustomColumn('operation'))
             ->setLabel('<div style="width: 55px;color: #20a8d8; text-align: center;"><i class="fa fa-2 fa-gears"></i></div>')
-            ->setTemplateCode('{if categoryAclAllowed($record->cmsCategoryOriginalId)}<a href="{@module=cmsAdmin&controller=category&action=preview&id={$record->id}@}" id="category-preview-{$record->id}"><i class="fa fa-2 fa-eye"></i></a>&nbsp;&nbsp;<a href="{@module=cmsAdmin&controller=category&action=restore&id={$record->id}@}" title="Czy na pewno przywrócić wersję" class="confirm" id="category-restore-{$record->id}"><i class="fa fa-2 fa-history"></i></a>{else}-{/if}')
+            ->setTemplateCode('{if categoryAclAllowed($record->cmsCategoryOriginalId)}<a target="_blank" href="{$record->getUrl()}?versionId={$record->id}" id="category-preview-{$record->id}"><i class="fa fa-2 fa-eye"></i></a>&nbsp;&nbsp;<a href="{@module=cmsAdmin&controller=category&action=edit&id={$record->id}&originalId={$record->cmsCategoryOriginalId}@}" id="category-restore-{$record->id}"><i class="fa fa-2 fa-history"></i></a>{else}-{/if}')
         );
             
     }
