@@ -8908,6 +8908,19 @@ hr.transparent {
 .main .card-body .btn:hover a, .main .card-block .btn:hover a {
   color: white; }
 
+.card-body .tab-content .row, .card-block .tab-content .row {
+  display: block; }
+  .card-body .tab-content .row .btn, .card-block .tab-content .row .btn {
+    margin-left: 15px; }
+
+.card-body .tab-content .ui-sortable, .card-block .tab-content .ui-sortable {
+  display: block;
+  max-width: calc(100% - 30px); }
+  .card-body .tab-content .ui-sortable .col-md-3, .card-block .tab-content .ui-sortable .col-md-3 {
+    flex: 1;
+    max-width: 100%;
+    margin: 15px 30px; }
+
 #rules {
   margin-top: 30px; }
 
