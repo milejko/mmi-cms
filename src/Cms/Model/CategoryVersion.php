@@ -47,8 +47,9 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
             //tinymce
             ->orQuery((new \Cms\Orm\CmsFileQuery)->whereObject()->equals(self::FILE_CATEGORY_OBJECT)
                 ->andFieldObjectId()->equals($this->_category->id))
-            //atrybuty
+            //atrybuty like 'category%' ale bez 'categoryWidgetRelation%'
             ->orQuery((new \Cms\Orm\CmsFileQuery)->whereObject()->like(self::OBJECT_TYPE . '%')
+                ->andFieldObject()->notLike(self::CATEGORY_WIDGET_RELATION . '%')
                 ->andFieldObjectId()->equals($this->_category->id))
             ->find()
             ->delete();
@@ -91,8 +92,9 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
             //tinymce
             ->orQuery((new \Cms\Orm\CmsFileQuery)->whereObject()->equals(self::FILE_CATEGORY_OBJECT)
                 ->andFieldObjectId()->equals($draft->id))
-            //atrybuty
+            //atrybuty like 'category%' ale bez 'categoryWidgetRelation%'
             ->orQuery((new \Cms\Orm\CmsFileQuery)->whereObject()->like(self::OBJECT_TYPE . '%')
+                ->andFieldObject()->notLike(self::CATEGORY_WIDGET_RELATION . '%')
                 ->andFieldObjectId()->equals($draft->id))
             ->find() as $file) {
             //przepinanie id
