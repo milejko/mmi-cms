@@ -153,7 +153,7 @@
                     </div>
                 </div>
                {$categoryForm->getElement('commit')}
-               <a target="_blank" style="margin-right: 10px; color: #fff;" class="btn btn-dark float-right" href="{$categoryForm->getRecord()->getUrl()}?versionId={$categoryForm->getRecord()->id}">podgląd</a>
+               <a target="_blank" style="margin-right: 10px; color: #fff;" class="btn btn-dark float-right" href="{$categoryForm->getRecord()->getUrl()}?originalId={$categoryForm->getRecord()->cmsCategoryOriginalId}&versionId={$categoryForm->getRecord()->id}">podgląd</a>
                <input style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit" type="submit" class="btn btn-secondary float-right" name="cmsadmin-form-category[submit]" value="zapisz kopię roboczą" >
                {$categoryForm->end()}
                {/if}

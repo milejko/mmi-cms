@@ -40,7 +40,7 @@ class CategoryHistoryGrid extends \CmsAdmin\Grid\Grid
         //operacje
         $this->addColumn((new Column\CustomColumn('operation'))
             ->setLabel('<div style="width: 55px;color: #20a8d8; text-align: center;"><i class="fa fa-2 fa-gears"></i></div>')
-            ->setTemplateCode('{if categoryAclAllowed($record->cmsCategoryOriginalId)}<a target="_blank" href="{$record->getUrl()}?versionId={$record->id}" id="category-preview-{$record->id}"><i class="fa fa-2 fa-eye"></i></a>&nbsp;&nbsp;<a href="{@module=cmsAdmin&controller=category&action=edit&id={$record->id}@}" id="category-restore-{$record->id}"><i class="fa fa-2 fa-history"></i></a>{else}-{/if}')
+            ->setTemplateCode('{if categoryAclAllowed($record->cmsCategoryOriginalId)}<a target="_blank" href="{$record->getUrl()}?originalId={$record->cmsCategoryOriginalId}&versionId={$record->id}" id="category-preview-{$record->id}"><i class="fa fa-2 fa-eye"></i></a>&nbsp;&nbsp;<a href="{@module=cmsAdmin&controller=category&action=edit&id={$record->id}@}" id="category-restore-{$record->id}"><i class="fa fa-2 fa-history"></i></a>{else}-{/if}')
         );
             
     }
