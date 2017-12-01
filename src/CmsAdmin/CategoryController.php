@@ -37,8 +37,10 @@ class CategoryController extends Mvc\Controller
         $originalType = $cat->cmsCategoryTypeId;
         //jeśli to nie był DRAFT
         if ($cat->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
+            //wymuszony świeży draft jeśli informacja przyszła w url, lub kategoria jest z archiwum
+            $force = $this->force || ($cat->status == \Cms\Orm\CmsCategoryRecord::STATUS_HISTORY);
             //draft nie może być utworzony, ani wczytany
-            if (!$draft = (new \Cms\Model\CategoryDraft($cat))->createAndGetDraftForUser(\App\Registry::$auth->getId(), $this->force)) {
+            if (!$draft = (new \Cms\Model\CategoryDraft($cat))->createAndGetDraftForUser(\App\Registry::$auth->getId(), $force)) {
                 $this->getMessenger()->addMessage('Nie udało się utworzyć wersji roboczej, spróbuj ponownie', false);
                 return;
             }
