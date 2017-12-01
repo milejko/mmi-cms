@@ -239,7 +239,7 @@ class CategoryCopy
             ->whereObjectId()->equals($this->_category->id)
             ->find() as $original) {
             if (null === $copy = \Cms\Model\File::copyWithData($original, $this->_copy->getPk())) {
-                return false;
+                continue;
             }
             //zapamiętujemy mapowanie plików
             array_push($this->_categoryFiles, ['original' => $original, 'copy' => $copy]);

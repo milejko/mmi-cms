@@ -81,6 +81,11 @@ class AttributeValueRelationModel
      */
     public function createAttributeValueRelationByValue($attributeId, $attributeValue)
     {
+        //jeśli wartość NULL, to kasujemy relacje z wartościami
+        if ($attributeValue === null) {
+            $this->deleteAttributeValueRelationsByAttributeId($attributeId);
+            return;
+        }
         //na wybrany rekord wartości
         $valueRecord = null;
         //wyszukiwanie kolekcji wstępnie pasujących rekordów wartości

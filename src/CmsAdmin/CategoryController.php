@@ -33,24 +33,21 @@ class CategoryController extends Mvc\Controller
         if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
             return;
         }
+        //zapisywanie oryginalnego typu
+        $originalType = $cat->cmsCategoryTypeId;
         //jeśli to nie był DRAFT
         if ($cat->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
-            //tworzymy wersję roboczą - DRAFT
-            $draftModel = new \Cms\Model\CategoryDraft($cat);
-            if (!$draftModel->createWithTransaction()) {
+            //draft nie może być utworzony, ani wczytany
+            if (!$draft = (new \Cms\Model\CategoryDraft($cat))->createAndGetDraftForUser(\App\Registry::$auth->getId(), $this->force)) {
                 $this->getMessenger()->addMessage('Nie udało się utworzyć wersji roboczej, spróbuj ponownie', false);
                 return;
             }
             //przekierowanie do edycji DRAFTu - nowego ID
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draftModel->getCopyRecord()->getPk(), 'originalId' => $cat->getPk()]);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draft->id, 'originalId' => $cat->id]);
         }
         //znaleziono kategorię o tym samym uri
-        if (null !== (new \Cms\Orm\CmsCategoryQuery)
-                ->whereId()->notEquals($cat->id)
-                ->andFieldRedirectUri()->equals(null)
-                ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
-                ->andQuery((new \Cms\Orm\CmsCategoryQuery)->searchByUri($cat->uri))
-                ->findFirst() && !$cat->redirectUri) {
+        if ($this->_isCategoryDuplicate($cat)) {
+            //alarm o duplikacie
             $this->view->duplicateAlert = true;
         }
         //sprawdzenie uprawnień do edycji węzła kategorii
@@ -65,13 +62,17 @@ class CategoryController extends Mvc\Controller
         if ($form->isMine() && !$form->isSaved()) {
             $this->getMessenger()->addMessage('Zmiany nie zostały zapisane, formularz zawiera błędy', false);
         }
-        //po zapisie
-        if ($form->isSaved()) {
+        //po zapisie jeśli wybrany commit
+        if ($form->isSaved() && $form->getElement('commit')->getValue()) {
+            //zmiany zapisane
             $this->getMessenger()->addMessage('Zmiany zostały zapisane', true);
-            //jeśli zatwierdzono zmiany, to przekierowanie na nową edycję
-            if ($form->getElement('commit')->getValue()) {
-                $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $form->getRecord()->cmsCategoryOriginalId]);
-            }
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $form->getRecord()->cmsCategoryOriginalId]);
+        }
+        //zapisany form ze zmianą kategorii
+        if ($form->isSaved() && $originalType != $form->getRecord()->cmsCategoryOriginalId) {
+            //zmiany zapisane
+            $this->getMessenger()->addMessage('Szablon strony został zmieniony');
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $cat->id, 'originalId' => $cat->cmsCategoryOriginalId]);
         }
         //kategoria do widoku
         $this->view->category = $cat;
@@ -188,9 +189,25 @@ class CategoryController extends Mvc\Controller
         $copyModel = new \Cms\Model\CategoryCopy($category);
         //kopiowanie z transakcją
         if ($copyModel->copyWithTransaction()) {
-            return json_encode(['status' => true, 'id' => $copyModel->getCopyRecord()->getPk(), 'message' => 'Strona została skopiowana']);
+            return json_encode(['status' => true, 'id' => $copyModel->getCopyRecord()->id, 'message' => 'Strona została skopiowana']);
         }
         return json_encode(['status' => false, 'error' => 'Nie udało się skopiować strony']);
+    }
+
+    /**
+     * Sprawdzanie czy kategoria ma duplikat
+     * @param \Cms\Orm\CmsCategoryRecord $category
+     * @return boolean
+     */
+    private function _isCategoryDuplicate(\Cms\Orm\CmsCategoryRecord $category)
+    {
+        //znaleziono kategorię o tym samym uri
+        return null !== (new \Cms\Orm\CmsCategoryQuery)
+                ->whereId()->notEquals($category->id)
+                ->andFieldRedirectUri()->equals(null)
+                ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
+                ->andQuery((new \Cms\Orm\CmsCategoryQuery)->searchByUri($category->uri))
+                ->findFirst() && !$category->redirectUri;
     }
 
 }

@@ -16,6 +16,7 @@ use Cms\Form\Element,
 
 /**
  * Formularz edycji szegółów kategorii
+ * @method \Cms\Orm\CmsCategoryRecord getRecord()
  */
 class Category extends \Cms\Form\AttributeForm
 {

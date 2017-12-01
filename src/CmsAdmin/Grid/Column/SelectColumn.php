@@ -68,7 +68,7 @@ class SelectColumn extends ColumnAbstract
     {
         FrontController::getInstance()->getView()->_column = $this;
         //pusta opcja
-        $this->setMultioptions(array_merge([null => '---'], $this->getMultioptions()));
+        $this->setMultioptions([null => '---'] + $this->getMultioptions());
         //tworzy selecta z template'u
         return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_FILTER);
     }
