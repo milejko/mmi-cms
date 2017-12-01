@@ -33,25 +33,21 @@ class CategoryController extends Mvc\Controller
         if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
             return;
         }
+        //zapisywanie oryginalnego typu
         $originalType = $cat->cmsCategoryTypeId;
         //jeśli to nie był DRAFT
         if ($cat->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
-            //tworzymy wersję roboczą - DRAFT
-            $draftModel = new \Cms\Model\CategoryDraft($cat);
-            if (!$draftModel->createWithTransaction()) {
+            //draft nie może być utworzony, ani wczytany
+            if (!$draft = (new \Cms\Model\CategoryDraft($cat))->createAndGetDraftForUser(\App\Registry::$auth->getId())) {
                 $this->getMessenger()->addMessage('Nie udało się utworzyć wersji roboczej, spróbuj ponownie', false);
                 return;
             }
             //przekierowanie do edycji DRAFTu - nowego ID
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draftModel->getCopyRecord()->getPk(), 'originalId' => $cat->getPk()]);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draft->id, 'originalId' => $cat->id]);
         }
         //znaleziono kategorię o tym samym uri
-        if (null !== (new \Cms\Orm\CmsCategoryQuery)
-                ->whereId()->notEquals($cat->id)
-                ->andFieldRedirectUri()->equals(null)
-                ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
-                ->andQuery((new \Cms\Orm\CmsCategoryQuery)->searchByUri($cat->uri))
-                ->findFirst() && !$cat->redirectUri) {
+        if ($this->_isCategoryDuplicate($cat)) {
+            //alarm o duplikacie
             $this->view->duplicateAlert = true;
         }
         //sprawdzenie uprawnień do edycji węzła kategorii
@@ -193,9 +189,25 @@ class CategoryController extends Mvc\Controller
         $copyModel = new \Cms\Model\CategoryCopy($category);
         //kopiowanie z transakcją
         if ($copyModel->copyWithTransaction()) {
-            return json_encode(['status' => true, 'id' => $copyModel->getCopyRecord()->getPk(), 'message' => 'Strona została skopiowana']);
+            return json_encode(['status' => true, 'id' => $copyModel->getCopyRecord()->id, 'message' => 'Strona została skopiowana']);
         }
         return json_encode(['status' => false, 'error' => 'Nie udało się skopiować strony']);
+    }
+
+    /**
+     * Sprawdzanie czy kategoria ma duplikat
+     * @param \Cms\Orm\CmsCategoryRecord $category
+     * @return boolean
+     */
+    private function _isCategoryDuplicate(\Cms\Orm\CmsCategoryRecord $category)
+    {
+        //znaleziono kategorię o tym samym uri
+        return null !== (new \Cms\Orm\CmsCategoryQuery)
+                ->whereId()->notEquals($category->id)
+                ->andFieldRedirectUri()->equals(null)
+                ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
+                ->andQuery((new \Cms\Orm\CmsCategoryQuery)->searchByUri($category->uri))
+                ->findFirst() && !$category->redirectUri;
     }
 
 }

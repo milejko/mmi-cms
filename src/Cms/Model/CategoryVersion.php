@@ -105,6 +105,7 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
         $this->_synchronizeRoles($draft);
         //usuwanie draftu
         $draft->delete();
+        $this->_category->dateAdd = date('Y-m-d H:i:s');
         return $this->_category->save();
     }
     
