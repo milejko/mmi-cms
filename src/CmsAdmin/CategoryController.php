@@ -38,7 +38,7 @@ class CategoryController extends Mvc\Controller
         //jeśli to nie był DRAFT
         if ($cat->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
             //draft nie może być utworzony, ani wczytany
-            if (!$draft = (new \Cms\Model\CategoryDraft($cat))->createAndGetDraftForUser(\App\Registry::$auth->getId())) {
+            if (!$draft = (new \Cms\Model\CategoryDraft($cat))->createAndGetDraftForUser(\App\Registry::$auth->getId(), $this->force)) {
                 $this->getMessenger()->addMessage('Nie udało się utworzyć wersji roboczej, spróbuj ponownie', false);
                 return;
             }

@@ -36,10 +36,10 @@ class CategoryDraft extends \Cms\Model\CategoryCopy
      * obejmując wszystko transakcją na bazie danych
      * @return \Cms\Orm\CmsCategoryRecord
      */
-    public function createAndGetDraftForUser($userId)
+    public function createAndGetDraftForUser($userId, $force = false)
     {
-        //wyszukiwanie najnowszego draftu
-        if (null !== $lastDraft = (new \Cms\Orm\CmsCategoryQuery)
+        //wyszukiwanie najnowszego draftu (chyba że wymuszony nowy)
+        if (!$force && null !== $lastDraft = (new \Cms\Orm\CmsCategoryQuery)
             ->whereCmsCategoryOriginalId()->equals($this->_category->id)
             ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_DRAFT)
             ->andFieldCmsAuthId()->equals($userId)
