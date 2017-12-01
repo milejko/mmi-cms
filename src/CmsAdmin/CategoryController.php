@@ -35,6 +35,7 @@ class CategoryController extends Mvc\Controller
         }
         //zapisywanie oryginalnego typu
         $originalType = $cat->cmsCategoryTypeId;
+        $originalId = $cat->cmsCategoryOriginalId ? $cat->cmsCategoryOriginalId : $cat->id;
         //jeśli to nie był DRAFT
         if ($cat->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
             //wymuszony świeży draft jeśli informacja przyszła w url, lub kategoria jest z archiwum
@@ -45,7 +46,7 @@ class CategoryController extends Mvc\Controller
                 return;
             }
             //przekierowanie do edycji DRAFTu - nowego ID
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draft->id, 'originalId' => $cat->id]);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draft->id, 'originalId' => $originalId]);
         }
         //znaleziono kategorię o tym samym uri
         if ($this->_isCategoryDuplicate($cat)) {
@@ -53,7 +54,7 @@ class CategoryController extends Mvc\Controller
             $this->view->duplicateAlert = true;
         }
         //sprawdzenie uprawnień do edycji węzła kategorii
-        if (!(new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed(\App\Registry::$auth->getRoles(), $cat->cmsCategoryOriginalId ? $cat->cmsCategoryOriginalId : $cat->id)) {
+        if (!(new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed(\App\Registry::$auth->getRoles(), $originalId)) {
             $this->getMessenger()->addMessage('Nie posiadasz uprawnień do edycji wybranej strony', false);
             //redirect po zmianie (zmienią się atrybuty)
             $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
