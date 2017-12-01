@@ -47,7 +47,6 @@
                                 {$categoryForm->getElement('dateEnd')}
                                 {$categoryForm->getElement('cacheLifetime')}
                                 {$categoryForm->getElement('active')}
-                                {$categoryForm->getElement('submit1')}
                             </div>
                         </div>
                     </div>
@@ -67,7 +66,6 @@
                                 {$categoryForm->getElement('description')}
                                 {$categoryForm->getElement('customUri')}
                                 {$categoryForm->getElement('follow')}
-                                {$categoryForm->getElement('submit2')}
                             </div>
                         </div>
                     </div>
@@ -86,7 +84,6 @@
                                 {if php_substr($element->getName(), 0 ,12) != 'cmsAttribute'}{continue}{/if}
                                 {$element}
                                 {/foreach}
-                                {$categoryForm->getElement('submit3')}
                             </div>
                         </div>
                     </div>
@@ -111,11 +108,8 @@
                             </div>
                         </div>
                     </div>
-                    {$categoryForm->end()}
-
                     {$categoryId = $categoryForm->getRecord()->id}
-                    {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' =>
-                    'preview'])}
+                    {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
                     <div class="card">
                         <div class="card-header" role="tab" id="headingThree">
                             <h5 class="mb-0">
@@ -141,20 +135,29 @@
                             </div>
                         </div>
                     </div>
+                    {/if}
                     <div class="card">
                         <div class="card-header" role="tab" id="headingThree">
                             <h5 class="mb-0">
-                                <a class="collapsed" data-parent="#accordion"
-                                   href="{$categoryForm->getRecord()->getUrl()}?preview=1" aria-expanded="false"
-                                   target="_blank" id="category-preview">
-                                    {#Podgląd#}
+                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#tab-history"
+                                   aria-expanded="false" aria-controls="collapseThree">
+                                    {#Historia zmian#}
                                 </a>
                             </h5>
                         </div>
+                        <div id="tab-history" class="collapse" role="tabpanel" aria-labelledby="headingThree">
+                            <div class="card-block">
+								{$historyGrid}
+                            </div>
+                        </div>
                     </div>
-                    {/if}
                 </div>
-                {/if}
+               {$categoryForm->getElement('commit')}
+               <a target="_blank" style="margin-right: 10px; color: #fff;" class="btn btn-dark float-right" href="{$categoryForm->getRecord()->getUrl()}?originalId={$categoryForm->getRecord()->cmsCategoryOriginalId}&versionId={$categoryForm->getRecord()->id}">podgląd</a>
+               <input style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit" type="submit" class="btn btn-secondary float-right" name="cmsadmin-form-category[submit]" value="zapisz kopię roboczą" >
+               {$categoryForm->end()}
+               {/if}
+               <div style="clear: both"><br /></div>
             </div>
         </div>
     </div>

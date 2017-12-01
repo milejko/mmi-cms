@@ -10,9 +10,6 @@
 
 namespace CmsAdmin;
 
-use Cms\Model\AttributeValueRelationModel;
-use Cms\Orm\CmsAttributeValueRecord;
-
 /**
  * Kontroler kategorii - stron CMS
  */
@@ -36,37 +33,52 @@ class CategoryController extends Mvc\Controller
         if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
             return;
         }
+        //jeśli to nie był DRAFT
+        if ($cat->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
+            //tworzymy wersję roboczą - DRAFT
+            $draftModel = new \Cms\Model\CategoryDraft($cat);
+            if (!$draftModel->createWithTransaction()) {
+                $this->getMessenger()->addMessage('Nie udało się utworzyć wersji roboczej, spróbuj ponownie', false);
+                return;
+            }
+            //przekierowanie do edycji DRAFTu - nowego ID
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draftModel->getCopyRecord()->getPk(), 'originalId' => $cat->getPk()]);
+        }
         //znaleziono kategorię o tym samym uri
         if (null !== (new \Cms\Orm\CmsCategoryQuery)
                 ->whereId()->notEquals($cat->id)
                 ->andFieldRedirectUri()->equals(null)
+                ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
                 ->andQuery((new \Cms\Orm\CmsCategoryQuery)->searchByUri($cat->uri))
                 ->findFirst() && !$cat->redirectUri) {
             $this->view->duplicateAlert = true;
         }
         //sprawdzenie uprawnień do edycji węzła kategorii
-        if (!(new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed(\App\Registry::$auth->getRoles(), $cat->id)) {
+        if (!(new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed(\App\Registry::$auth->getRoles(), $cat->cmsCategoryOriginalId ? $cat->cmsCategoryOriginalId : $cat->id)) {
             $this->getMessenger()->addMessage('Nie posiadasz uprawnień do edycji wybranej strony', false);
             //redirect po zmianie (zmienią się atrybuty)
             $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
-        //zapis początkowej kategorii
-        $cmsCategoryTypeId = $cat->cmsCategoryTypeId;
         //konfiguracja kategorii
         $form = (new \CmsAdmin\Form\Category($cat));
         //zapis
         if ($form->isMine() && !$form->isSaved()) {
             $this->getMessenger()->addMessage('Zmiany nie zostały zapisane, formularz zawiera błędy', false);
         }
-        //zmiana kategorii
-        if ($cmsCategoryTypeId != $form->getRecord()->cmsCategoryTypeId) {
-            //redirect po zmianie (zmienią się atrybuty)
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $form->getRecord()->id]);
+        //po zapisie
+        if ($form->isSaved()) {
+            $this->getMessenger()->addMessage('Zmiany zostały zapisane', true);
+            //jeśli zatwierdzono zmiany, to przekierowanie na nową edycję
+            if ($form->getElement('commit')->getValue()) {
+                $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $form->getRecord()->cmsCategoryOriginalId]);
+            }
         }
         //kategoria do widoku
         $this->view->category = $cat;
         //form do widoku
         $this->view->categoryForm = $form;
+        //grid z listą wersji historycznych
+        $this->view->historyGrid = new \CmsAdmin\Plugin\CategoryHistoryGrid(['originalId' => $cat->cmsCategoryOriginalId]);
     }
 
     /**
@@ -100,7 +112,8 @@ class CategoryController extends Mvc\Controller
         $cat->name = $this->getPost()->name;
         $cat->parentId = ($this->getPost()->parentId > 0) ? $this->getPost()->parentId : null;
         $cat->order = $this->getPost()->order;
-        $cat->active = true;
+        $cat->active = false;
+        $cat->status = \Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE;
         if ($cat->save()) {
             return json_encode(['status' => true, 'id' => $cat->id, 'message' => 'Strona została utworzona']);
         }
@@ -175,7 +188,7 @@ class CategoryController extends Mvc\Controller
         $copyModel = new \Cms\Model\CategoryCopy($category);
         //kopiowanie z transakcją
         if ($copyModel->copyWithTransaction()) {
-            return json_encode(['status' => true, 'id' => $copyModel->getCopyRecord()->id, 'message' => 'Strona została skopiowana']);
+            return json_encode(['status' => true, 'id' => $copyModel->getCopyRecord()->getPk(), 'message' => 'Strona została skopiowana']);
         }
         return json_encode(['status' => false, 'error' => 'Nie udało się skopiować strony']);
     }

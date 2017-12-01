@@ -196,6 +196,9 @@
       background-repeat: no-repeat;
       background-position: center;
       transition: transform .3s;
+      @-moz-document url-prefix() {
+        padding-right: 14px;
+      }
     }
   }
 

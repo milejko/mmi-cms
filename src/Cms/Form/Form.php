@@ -49,16 +49,25 @@ abstract class Form extends \Mmi\Form\Form
     {
         //aktualizacja wartości pól w rekordzie
         $this->_updateRecordDataBeforeSave();
-        $result = parent::save();
-        if ($result) {
-            if ($this->hasRecord()) {
-                $this->_appendFiles($this->_record->getPk(), $this->getFiles());
-            }
-            $this->afterUpload();
-        }
+        parent::save();
         return $this->isSaved();
     }
-    
+
+    /**
+     * Po zapisie
+     * @return boolean
+     */
+    public function afterSave()
+    {
+        //sprawdzenie istnienia rekordu
+        if ($this->hasRecord()) {
+            $this->_appendFiles($this->_record->getPk(), $this->getFiles());
+        }
+        //po uploadzie
+        $this->afterUpload();
+        return true;
+    }
+
     /**
      * Aktualizuje wartości pól rekordu formularza przed zapisem
      * @return null
@@ -84,8 +93,7 @@ abstract class Form extends \Mmi\Form\Form
                 }
                 $oName = $file->getJoined('original_file')->name;
                 $tName = $file->name;
-                $value = preg_replace('@/data/'.$tName[0].'/'.$tName[1].'/'.$tName[2].'/'.$tName[3].'/(scalecrop|scalex|scaley|default)/([0-9x]{0,10})/'.$tName.'@',
-                    '/data/'.$oName[0].'/'.$oName[1].'/'.$oName[2].'/'.$oName[3].'/$1/$2/'.$oName, $value);
+                $value = preg_replace('@/data/' . $tName[0] . '/' . $tName[1] . '/' . $tName[2] . '/' . $tName[3] . '/(scalecrop|scalex|scaley|default)/([0-9x]{0,10})/' . $tName . '@', '/data/' . $oName[0] . '/' . $oName[1] . '/' . $oName[2] . '/' . $oName[3] . '/$1/$2/' . $oName, $value);
             }
             $element->setValue($value);
             $this->_record->setFromArray([$element->getName() => $value]);

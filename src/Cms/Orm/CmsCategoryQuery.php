@@ -25,6 +25,18 @@ namespace Cms\Orm;
  * @method CmsCategoryQuery orderAscCmsCategoryTypeId()
  * @method CmsCategoryQuery orderDescCmsCategoryTypeId()
  * @method CmsCategoryQuery groupByCmsCategoryTypeId()
+ * @method QueryHelper\CmsCategoryQueryField whereCmsCategoryOriginalId()
+ * @method QueryHelper\CmsCategoryQueryField andFieldCmsCategoryOriginalId()
+ * @method QueryHelper\CmsCategoryQueryField orFieldCmsCategoryOriginalId()
+ * @method CmsCategoryQuery orderAscCmsCategoryOriginalId()
+ * @method CmsCategoryQuery orderDescCmsCategoryOriginalId()
+ * @method CmsCategoryQuery groupByCmsCategoryOriginalId()
+ * @method QueryHelper\CmsCategoryQueryField whereStatus()
+ * @method QueryHelper\CmsCategoryQueryField andFieldStatus()
+ * @method QueryHelper\CmsCategoryQueryField orFieldStatus()
+ * @method CmsCategoryQuery orderAscStatus()
+ * @method CmsCategoryQuery orderDescStatus()
+ * @method CmsCategoryQuery groupByStatus()
  * @method QueryHelper\CmsCategoryQueryField whereLang()
  * @method QueryHelper\CmsCategoryQueryField andFieldLang()
  * @method QueryHelper\CmsCategoryQueryField orFieldLang()
@@ -219,6 +231,7 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
         foreach ($this
             ->withType()
             ->searchByUri($uri)
+            ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
             ->find() as $category) {
             //kategoria jest przekierowaniem
             if ($category->redirectUri) {

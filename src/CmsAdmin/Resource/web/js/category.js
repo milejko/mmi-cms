@@ -5,19 +5,19 @@ var followScroll = false;
 var $elems = $("html, body");
 var delta = 0;
 
-$(document).on("mousemove", function(e) {
-    if(followScroll){
+$(document).on("mousemove", function (e) {
+    if (followScroll) {
         var h = $(window).height();
         var y = e.clientY - h / 2;
         delta = y * 0.1;
-    }else{
+    } else {
         delta = 0;
     }
 });
 
 (function f() {
-    if(delta) {
-        $elems.scrollTop(function(i, v) {
+    if (delta) {
+        $elems.scrollTop(function (i, v) {
             return v + delta;
         });
     }
@@ -28,21 +28,21 @@ $(document).on("mousemove", function(e) {
 CMS.category = function () {
     "use strict";
     var that = {},
-            initSortableWidgets,
-            initNewWindowButtons,
-            initWidgetButtons,
-            initPreviewReload,
-            initCategoryChange,
-            reloadWidgets,
-            resizeIframe;
+        initSortableWidgets,
+        initNewWindowButtons,
+        initWidgetButtons,
+        initPreviewReload,
+        initCategoryChange,
+        reloadWidgets,
+        resizeIframe;
 
     initSortableWidgets = function () {
-        if($('#widget-list').length > 0) {
+        if ($('#widget-list').length > 0) {
             $('#widget-list').sortable({
-                start:function () {
+                start: function () {
                     followScroll = true;
                 },
-                stop:function () {
+                stop: function () {
                     followScroll = false;
                 },
                 handle: '.handle-widget',
@@ -129,7 +129,6 @@ CMS.category = function () {
     };
 
     resizeIframe = function () {
-        //resize ramki tylko dla stron cms-owych
         if ($('input#cmsadmin-form-category-redirectUri').size() && $('input#cmsadmin-form-category-redirectUri').first().val().length === 0) {
             $('iframe#preview-frame').on('load', function () {
                 $(this).height($(this).contents().find('body').height());
@@ -139,12 +138,12 @@ CMS.category = function () {
 
     that.reloadWidgets = reloadWidgets;
 
-    var dataTabRestore = function(){
+    var dataTabRestore = function () {
         var currentTab = sessionStorage.getItem('catActiveTab');
         try {
-        $('h5 > a').on('click', function (evt) {
-            sessionStorage.setItem('catActiveTab', $(this).attr("href"));
-        });
+            $('h5 > a').on('click', function (evt) {
+                sessionStorage.setItem('catActiveTab', $(this).attr("href"));
+            });
             if (currentTab) {
                 if (!$(currentTab).hasClass('show')) {
                     $('a[href$="' + currentTab + '"]').click();
@@ -163,7 +162,7 @@ CMS.category = function () {
                     }
                 }, 400)
             }
-        }catch(er){
+        } catch (er) {
             if (!$('#tab-config').hasClass('show')) {
                 $('a[href$="#tab-config"]').click();
             }

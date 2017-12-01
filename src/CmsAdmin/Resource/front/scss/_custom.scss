@@ -115,6 +115,26 @@
   color: white;
 }
 
+.card-body {
+  .tab-content {
+    .row {
+      display: block;
+      .btn { 
+        margin-left: 15px;
+      }
+    }
+    .ui-sortable {
+      display: block;
+      max-width: calc(100% - 30px);
+      .col-md-3 {
+        flex: 1;
+        max-width: 100%;
+        margin: 15px 30px;
+      }
+    }
+  }
+}
+
 #rules {
   margin-top: 30px;
 }

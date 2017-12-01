@@ -45,7 +45,7 @@
                 if (el.is('.insert')) {
 
                     if (el.attr('data-typ') == 'image') {
-                        var box = '<figure class="image caption" contenteditable="false"><img contenteditable="true" src="' + el.attr('href') + '" alt="" /><figcaption>opis</figcaption></figure>';
+                        var box = '<figure class="image caption" contenteditable="false"><img data-fix="true" contenteditable="false" src="' + el.attr('href') + '" alt="" /><figcaption>opis</figcaption></figure>';
                     }
 
                     if (el.attr('data-typ') == 'audio') {

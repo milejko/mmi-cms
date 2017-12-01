@@ -73,7 +73,7 @@ class File
         //zapis rekordu
         return ($record->save()) ? $record : null;
     }
-    
+
     /**
      * Sprawdza parametry i kopiuje plik do odpowiedniego katalogu na dysku
      * @param \Mmi\Http\RequestFile $file obiekt pliku
@@ -142,12 +142,17 @@ class File
         $i = 0;
         //przenoszenie plików
         foreach (CmsFileQuery::byObject($srcObject, $srcId)->find() as $file) {
-            //tworzenie kopii
-            $copy = new \Mmi\Http\RequestFile([
-                'name' => $file->original,
-                'tmp_name' => $file->getRealPath(),
-                'size' => $file->size
-            ]);
+            try {
+                //tworzenie kopii
+                $copy = new \Mmi\Http\RequestFile([
+                    'name' => $file->original,
+                    'tmp_name' => $file->getRealPath(),
+                    'size' => $file->size
+                ]);
+            } catch (\Mmi\App\KernelException $e) {
+                \Mmi\App\FrontController::getInstance()->getLogger()->warning('Unable to copy file, file not found: ' . $file->getRealPath());
+                continue;
+            }
             $newFile = clone $file;
             $newFile->cmsFileOriginalId = $file->id;
             $newFile->id = null;
@@ -157,7 +162,7 @@ class File
         }
         return $i;
     }
-    
+
     /**
      * Kopiuje plik Cms, zachowując pola oryginalnego rekordu
      * @param \Mmi\Http\RequestFile $file obiekt pliku
@@ -191,12 +196,17 @@ class File
      */
     public static function copyWithData(CmsFileRecord $file, $destId)
     {
-        $copy = new \Mmi\Http\RequestFile([
-            'name' => $file->original,
-            'tmp_name' => $file->getRealPath(),
-            'size' => $file->size
-        ]);
-        $newFile = self::appendFile($copy, $file->object, $destId);
+        try {
+            $copy = new \Mmi\Http\RequestFile([
+                'name' => $file->original,
+                'tmp_name' => $file->getRealPath(),
+                'size' => $file->size
+            ]);
+            $newFile = self::appendFile($copy, $file->object, $destId);
+        } catch (\Exception $e) {
+            \Mmi\App\FrontController::getInstance()->getLogger()->warning($e->getMessage());
+            return;
+        }
         $newFile->data = $file->data;
         $newFile->sticky = $file->sticky;
         $newFile->order = $file->order;
@@ -264,8 +274,8 @@ class File
     {
         //wybieramy kolekcję i usuwamy całą
         return CmsFileQuery::byObject($object, $objectId)
-            ->find()
-            ->delete();
+                ->find()
+                ->delete();
     }
 
     /**

@@ -21,6 +21,11 @@ class CategoryController extends \Mmi\Mvc\Controller
      */
     public function dispatchAction()
     {
+        //żądanie o wersję artykułu (rola redaktora)
+        if ($this->versionId && \App\Registry::$acl->isAllowed(\App\Registry::$auth->getRoles(), 'cmsAdmin:category:index')) {
+            //zwraca podgląd wersji
+            return $this->_versionPreview($this->originalId, $this->versionId);
+        }
         //pobranie kategorii
         $category = $this->_getPublishedCategoryByUri($this->uri);
         //klucz bufora
@@ -133,15 +138,11 @@ class CategoryController extends \Mmi\Mvc\Controller
             //przekierowanie na uri
             $this->getResponse()->redirectToUrl($category->redirectUri);
         }
-        //kategoria dozwolona - flaga podglądu + rola redaktora
-        if ($this->preview == 1 && \App\Registry::$acl->isAllowed(\App\Registry::$auth->getRoles(), 'cmsAdmin:category:index')) {
-            return $category;
-        }
-		//sprawdzenie dostępu dla roli
-		if (!(new Model\CategoryRole($category, \App\Registry::$auth->getRoles()))->isAllowed()) {
+        //sprawdzenie dostępu dla roli
+        if (!(new Model\CategoryRole($category, \App\Registry::$auth->getRoles()))->isAllowed()) {
             //404
             throw new \Mmi\Mvc\MvcForbiddenException('Category: ' . $category->uri . ' forbidden for roles: ' . implode(', ', \App\Registry::$auth->getRoles()));
-		}
+        }
         //kategoria manualnie wyłączona
         if (!$category->active) {
             //404
@@ -177,8 +178,8 @@ class CategoryController extends \Mmi\Mvc\Controller
         //tworzenie nowego requestu na podstawie obecnego
         $request = clone $this->getRequest();
         $request->setModuleName('cms')
-                ->setControllerName('category')
-                ->setActionName('article');
+            ->setControllerName('category')
+            ->setActionName('article');
         //przekierowanie MVC
         if ($category->mvcParams) {
             //tablica z tpl
@@ -232,8 +233,7 @@ class CategoryController extends \Mmi\Mvc\Controller
     protected function _bufferingAllowed()
     {
         //jeśli zdefiniowano własny obiekt sprawdzający, czy można buforować
-        if (\App\Registry::$config->category instanceof \Cms\Config\CategoryConfig
-            && \App\Registry::$config->category->bufferingAllowedClass) {
+        if (\App\Registry::$config->category instanceof \Cms\Config\CategoryConfig && \App\Registry::$config->category->bufferingAllowedClass) {
             $class = \App\Registry::$config->category->bufferingAllowedClass;
             $buffering = new $class($this->_request);
         } else {
@@ -241,6 +241,35 @@ class CategoryController extends \Mmi\Mvc\Controller
             $buffering = new \Cms\Model\CategoryBuffering($this->_request);
         }
         return $buffering->isAllowed();
+    }
+
+    /**
+     * Podgląd admina
+     * @param integer $originalId
+     * @param integer $versionId
+     * @return string html
+     * @throws \Mmi\Mvc\MvcNotFoundException
+     */
+    protected function _versionPreview($originalId, $versionId)
+    {
+        //brak id oryginalnego
+        if (!$originalId) {
+            throw new \Mmi\Mvc\MvcNotFoundException('Original not found');
+        }
+        //wyszukiwanie
+        if (null === $category = (new Orm\CmsCategoryQuery)
+            ->withType()
+            ->whereCmsCategoryOriginalId()->equals($originalId)
+            ->findPk($versionId)) {
+            //404
+            throw new \Mmi\Mvc\MvcNotFoundException('Version not found');
+        }
+        $this->view->category = $category;
+        //nadpisanie tytułu i opisu (gdyż inaczej brany jest z kategorii oryginalnej)
+        $this->view->navigation()->setTitle($category->title)
+            ->setDescription($category->description);
+        //renderowanie docelowej akcji
+        return \Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category));
     }
 
 }
