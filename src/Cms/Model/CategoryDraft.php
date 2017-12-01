@@ -98,7 +98,7 @@ class CategoryDraft extends \Cms\Model\CategoryCopy
     {
         //usuwanie starych śmieci (GC)
         (new \Cms\Orm\CmsCategoryQuery)
-            ->whereCmsCategoryOriginalId()->equals($this->_category->id)
+            ->whereCmsCategoryOriginalId()->equals($this->_category->cmsCategoryOriginalId ? $this->_category->cmsCategoryOriginalId : $this->_category->id)
             ->whereQuery((new \Cms\Orm\CmsCategoryQuery)
                 ->whereCmsAuthId()->equals($userId)
                 ->orFieldCmsAuthId()->equals(null)
