@@ -33,6 +33,7 @@ class CategoryController extends Mvc\Controller
         if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
             return;
         }
+        $originalType = $cat->cmsCategoryTypeId;
         //jeśli to nie był DRAFT
         if ($cat->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
             //tworzymy wersję roboczą - DRAFT
@@ -65,13 +66,17 @@ class CategoryController extends Mvc\Controller
         if ($form->isMine() && !$form->isSaved()) {
             $this->getMessenger()->addMessage('Zmiany nie zostały zapisane, formularz zawiera błędy', false);
         }
-        //po zapisie
-        if ($form->isSaved()) {
+        //po zapisie jeśli wybrany commit
+        if ($form->isSaved() && $form->getElement('commit')->getValue()) {
+            //zmiany zapisane
             $this->getMessenger()->addMessage('Zmiany zostały zapisane', true);
-            //jeśli zatwierdzono zmiany, to przekierowanie na nową edycję
-            if ($form->getElement('commit')->getValue()) {
-                $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $form->getRecord()->cmsCategoryOriginalId]);
-            }
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $form->getRecord()->cmsCategoryOriginalId]);
+        }
+        //zapisany form ze zmianą kategorii
+        if ($form->isSaved() && $originalType != $form->getRecord()->cmsCategoryOriginalId) {
+            //zmiany zapisane
+            $this->getMessenger()->addMessage('Szablon strony został zmieniony');
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $cat->id, 'originalId' => $cat->cmsCategoryOriginalId]);
         }
         //kategoria do widoku
         $this->view->category = $cat;
