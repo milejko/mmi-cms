@@ -103,6 +103,8 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
         }
         //synchronizacja ról
         $this->_synchronizeRoles($draft);
+        //synchronizacja tagów
+        $this->_synchronizeTags($draft);
         //usuwanie draftu
         $draft->delete();
         $this->_category->dateAdd = date('Y-m-d H:i:s');
@@ -161,6 +163,28 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
 			$record->save();
 		}
 		return true;
+	}
+    
+    /**
+     * Synchronizuje powiązania kategorii i jej atrybutów z tagami
+     * @param \Cms\Orm\CmsCategoryRecord $draft
+     * @return bool
+     */
+    protected function _synchronizeTags(\Cms\Orm\CmsCategoryRecord $draft)
+    {
+        //usuwamy tagi przypisane do oryginału
+        $this->_getTagRelationQuery($this->_category->getPk())
+            ->find()
+            ->delete();
+        //przepisujemy tagi z draftu do oryginału
+        foreach ($this->_getTagRelationQuery($draft->id)
+            ->find() as $tag) {
+            $tag->objectId = $this->_category->getPk();
+            if (!$tag->save()) {
+                return false;
+            }
+        }
+        return true;
 	}
 
 }

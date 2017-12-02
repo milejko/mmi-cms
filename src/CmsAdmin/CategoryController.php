@@ -49,7 +49,7 @@ class CategoryController extends Mvc\Controller
             $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draft->id, 'originalId' => $originalId]);
         }
         //znaleziono kategorię o tym samym uri
-        if ($this->_isCategoryDuplicate($cat)) {
+        if ($this->_isCategoryDuplicate($originalId)) {
             //alarm o duplikacie
             $this->view->duplicateAlert = true;
         }
@@ -72,9 +72,9 @@ class CategoryController extends Mvc\Controller
             $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $form->getRecord()->cmsCategoryOriginalId]);
         }
         //zapisany form ze zmianą kategorii
-        if ($form->isSaved() && $originalType != $form->getRecord()->cmsCategoryOriginalId) {
+        if ($form->isSaved() && $originalType != $form->getRecord()->cmsCategoryTypeId) {
             //zmiany zapisane
-            $this->getMessenger()->addMessage('Szablon strony został zmieniony');
+            $this->getMessenger()->addMessage('Szablon strony został zmieniony', true);
             $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $cat->id, 'originalId' => $cat->cmsCategoryOriginalId]);
         }
         //kategoria do widoku
@@ -199,18 +199,19 @@ class CategoryController extends Mvc\Controller
 
     /**
      * Sprawdzanie czy kategoria ma duplikat
-     * @param \Cms\Orm\CmsCategoryRecord $category
+     * @param integer $originalId
      * @return boolean
      */
-    private function _isCategoryDuplicate(\Cms\Orm\CmsCategoryRecord $category)
+    private function _isCategoryDuplicate($originalId)
     {
+        $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($originalId);
         //znaleziono kategorię o tym samym uri
-        return null !== (new \Cms\Orm\CmsCategoryQuery)
+        return (null !== (new \Cms\Orm\CmsCategoryQuery)
                 ->whereId()->notEquals($category->id)
                 ->andFieldRedirectUri()->equals(null)
                 ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
                 ->andQuery((new \Cms\Orm\CmsCategoryQuery)->searchByUri($category->uri))
-                ->findFirst() && !$category->redirectUri;
+                ->findFirst()) && !$category->redirectUri;
     }
 
 }
