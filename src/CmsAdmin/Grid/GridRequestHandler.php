@@ -162,7 +162,7 @@ class GridRequestHandler
         }
         //obsługa paginatora
         if ($filter->getField() == '_paginator_') {
-            $this->_grid->getState()->setPage($filter->getValue());
+            $this->_grid->getState()->setPage(($filter->getValue()) ?: 1);
             return true;
         }
         //usuwa lub dodaje filtr

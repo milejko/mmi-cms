@@ -61,10 +61,8 @@
         <li class="page-item last page"><a class="page-link" data-page="{$_pagesCount}" href="#">{$_pagesCount}</a></li>
     {/if}
 
-    {* generowanie guzika następny *}
+    {* generowanie guzika następny, gdy nie jest ostatnia strona *}
     {if $_page < $_pagesCount}
-        <li class="page-item next"><a class="page-link" data-page="{$_page + 1}" href="#">{$_nextLabel}</a></li>
-    {else}
         <li class="page-item next"><a class="page-link" data-page="{$_page + 1}" href="#">{$_nextLabel}</a></li>
     {/if}
     {if $auth && $auth->hasRole('admin')}
