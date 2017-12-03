@@ -76,9 +76,9 @@ class Tags extends Select
     }
 
     /**
-     * Zapis tagów po zapisie formularza
+     * Zapis tagów po zapisie rekordu formularza
      */
-    public function onFormSaved()
+    public function onRecordSaved()
     {
         //zapis tagów
         (new TagRelationModel($this->getOption('object') ? $this->getOption('object') : $this->_form->getFileObjectName(), $this->_form->getRecord()->getPk()))
