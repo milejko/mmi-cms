@@ -46,7 +46,7 @@ class CategoryController extends Mvc\Controller
                 return;
             }
             //przekierowanie do edycji DRAFTu - nowego ID
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draft->id, 'originalId' => $originalId]);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draft->id, 'originalId' => $originalId, 'uploaderId' => $draft->id]);
         }
         //draft ma obcego właściciela
         if ($cat->cmsAuthId != \App\Registry::$auth->getId()) {
