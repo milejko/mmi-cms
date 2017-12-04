@@ -28,8 +28,9 @@ class CategoryHistoryGrid extends \CmsAdmin\Grid\Grid
                     ->whereCmsCategoryOriginalId()->equals($this->getOption('originalId'))
                     ->orFieldId()->equals($this->getOption('originalId'))
                 )
-                ->whereStatus()->notEquals(\Cms\Orm\CmsCategoryRecord::STATUS_DRAFT)
-                ->orderDescDateAdd());
+                ->orderDescDateAdd()
+                //kopia robocza na samą górę
+                ->orderDescId());
 
         //nazwa
         $this->addColumn((new Column\TextColumn('name'))
@@ -47,6 +48,7 @@ class CategoryHistoryGrid extends \CmsAdmin\Grid\Grid
         $this->addColumn((new Column\SelectColumn('status'))
                 ->setLabel('wersja')
                 ->setMultioptions([
+                    \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT => 'robocza',
                     \Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE => 'bieżąca',
                     \Cms\Orm\CmsCategoryRecord::STATUS_HISTORY => 'archiwalna',
                 ])
@@ -55,8 +57,8 @@ class CategoryHistoryGrid extends \CmsAdmin\Grid\Grid
         //operacje
         $this->addColumn((new Column\CustomColumn('operation'))
                 ->setLabel('<div style="width: 55px;color: #20a8d8; text-align: center;"><i class="fa fa-2 fa-gears"></i></div>')
-                ->setTemplateCode('{if categoryAclAllowed($record->cmsCategoryOriginalId ? $record->cmsCategoryOriginalId : $record->id)}<a target="_blank" href="{$record->getUrl()}?originalId={$record->cmsCategoryOriginalId}&versionId={$record->id}" id="category-preview-{$record->id}"><i class="fa fa-2 fa-eye"></i></a>&nbsp;&nbsp;<a title="{if $record->status == 10}utwórz kopię roboczą{elseif $record->status == 20}przywróć{else}kontynuuj edycję{/if}" href="{@module=cmsAdmin&controller=category&action=edit&id={$record->id}@}{if $record->cmsCategoryOriginalId}&originalId={$record->cmsCategoryOriginalId}{else}&force=1{/if}" id="category-restore-{$record->id}"><i class="fa fa-2 {if $record->status == 10}fa-clone{elseif $record->status == 20}fa-history{else}fa-pencil{/if}"></i></a>{else}-{/if}')
+                ->setTemplateCode('{if categoryAclAllowed($record->cmsCategoryOriginalId ? $record->cmsCategoryOriginalId : $record->id)}<a target="_blank" href="{$record->getUrl()}?originalId={$record->cmsCategoryOriginalId}&versionId={$record->id}" id="category-preview-{$record->id}"><i class="fa fa-2 fa-eye"></i></a>{if $record->status > 0}&nbsp;&nbsp;<a title="{if $record->status == 10}utwórz kopię roboczą{elseif $record->status == 20}przywróć{else}kontynuuj edycję{/if}" href="{@module=cmsAdmin&controller=category&action=edit&id={$record->id}@}{if $record->cmsCategoryOriginalId}&originalId={$record->cmsCategoryOriginalId}{else}&force=1{/if}" id="category-restore-{$record->id}"><i class="fa fa-2 {if $record->status == 10}fa-clone{elseif $record->status == 20}fa-history{else}fa-pencil{/if}"></i></a>{/if}{else}-{/if}')
         );
     }
-    
+
 }

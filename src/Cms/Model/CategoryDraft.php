@@ -61,6 +61,7 @@ class CategoryDraft extends \Cms\Model\CategoryCopy
         $draft = $this->getCopyRecord();
         //przypinanie użytkownika do draftu
         $draft->cmsAuthId = $userId;
+        $draft->dateAdd = date('Y-m-d H:i:s');
         $draft->save();
         //czyszczenie starych draftów
         $this->_gc($userId, $draft->id);

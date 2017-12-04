@@ -48,6 +48,10 @@ class CategoryController extends Mvc\Controller
             //przekierowanie do edycji DRAFTu - nowego ID
             $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draft->id, 'originalId' => $originalId]);
         }
+        //draft ma obcego właściciela
+        if ($cat->cmsAuthId != \App\Registry::$auth->getId()) {
+            throw new \Mmi\Mvc\MvcForbiddenException('Category not allowed');
+        }
         //znaleziono kategorię o tym samym uri
         if ($this->_isCategoryDuplicate($originalId)) {
             //alarm o duplikacie

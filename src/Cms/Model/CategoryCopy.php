@@ -168,6 +168,7 @@ class CategoryCopy
      */
     protected function _copyCategory()
     {
+        dump('xyz');exit;
         $this->_createCopyRecord();
         $this->_copy->cmsCategoryOriginalId = null;
         $this->_copy->status = \Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE;

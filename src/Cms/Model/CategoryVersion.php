@@ -30,6 +30,8 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
     {
         $this->_createCopyRecord();
         $this->_copy->active = $this->_category->active;
+        //ustawienie daty dodania na oryginalną kategorię
+        $this->_copy->dateAdd = $this->_category->dateAdd;
         $this->_copy->cmsCategoryOriginalId = $this->_category->id;
         $this->_copy->status = \Cms\Orm\CmsCategoryRecord::STATUS_HISTORY;
         return $this->_copy->save();
@@ -110,7 +112,7 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
         $this->_category->dateAdd = date('Y-m-d H:i:s');
         return $this->_category->save();
     }
-    
+
     /**
      * Synchronizuje powiązania kategorii z rolami
      * @param \Cms\Orm\CmsCategoryRecord $draft
@@ -118,53 +120,53 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
      */
     protected function _synchronizeRoles(\Cms\Orm\CmsCategoryRecord $draft)
     {
-		//role zaznaczone w draft
-		$draftRoles = (new \Cms\Orm\CmsCategoryRoleQuery)
-				->whereCmsCategoryId()->equals($draft->getPk())
-				->findUnique('cms_role_id');
-		//role zapisane w bazie
-		$savedRoles = (new \Cms\Orm\CmsCategoryRoleQuery)
-				->whereCmsCategoryId()->equals($this->_category->getPk())
-				->findUnique('cms_role_id');
-		//usuwanie zbędnych
-		$this->_deleteRoles(array_diff($savedRoles, $draftRoles));
-		//wstawianie brakujących
-		$this->_insertRoles(array_diff($draftRoles, $savedRoles));
+        //role zaznaczone w draft
+        $draftRoles = (new \Cms\Orm\CmsCategoryRoleQuery)
+            ->whereCmsCategoryId()->equals($draft->getPk())
+            ->findUnique('cms_role_id');
+        //role zapisane w bazie
+        $savedRoles = (new \Cms\Orm\CmsCategoryRoleQuery)
+            ->whereCmsCategoryId()->equals($this->_category->getPk())
+            ->findUnique('cms_role_id');
+        //usuwanie zbędnych
+        $this->_deleteRoles(array_diff($savedRoles, $draftRoles));
+        //wstawianie brakujących
+        $this->_insertRoles(array_diff($draftRoles, $savedRoles));
         return true;
-	}
-	
+    }
+
     /**
      * Usuwa zbędne powiązania kategorii z rolami
-	 * @param array $delete
+     * @param array $delete
      * @return bool
      */
     protected function _deleteRoles(array $delete = [])
     {
-		if (empty($delete)) {
-			return true;
-		}
-		return count($delete) === (new \Cms\Orm\CmsCategoryRoleQuery)
-				->whereCmsCategoryId()->equals($this->_category->getPk())
-				->andFieldCmsRoleId()->equals($delete)
-				->find()->delete();
-	}
-	
+        if (empty($delete)) {
+            return true;
+        }
+        return count($delete) === (new \Cms\Orm\CmsCategoryRoleQuery)
+                ->whereCmsCategoryId()->equals($this->_category->getPk())
+                ->andFieldCmsRoleId()->equals($delete)
+                ->find()->delete();
+    }
+
     /**
      * Wstawia brakujące powiązania kategorii z rolami
-	 * @param array $insert
+     * @param array $insert
      * @return bool
      */
     protected function _insertRoles(array $insert = [])
     {
-		foreach ($insert as $roleId) {
-			$record = new \Cms\Orm\CmsCategoryRoleRecord();
-			$record->cmsCategoryId = $this->_category->getPk();
-			$record->cmsRoleId = $roleId;
-			$record->save();
-		}
-		return true;
-	}
-    
+        foreach ($insert as $roleId) {
+            $record = new \Cms\Orm\CmsCategoryRoleRecord();
+            $record->cmsCategoryId = $this->_category->getPk();
+            $record->cmsRoleId = $roleId;
+            $record->save();
+        }
+        return true;
+    }
+
     /**
      * Synchronizuje powiązania kategorii i jej atrybutów z tagami
      * @param \Cms\Orm\CmsCategoryRecord $draft
@@ -185,6 +187,6 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
             }
         }
         return true;
-	}
+    }
 
 }
