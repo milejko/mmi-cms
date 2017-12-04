@@ -15,6 +15,8 @@ namespace Cms\Model;
  */
 class CategoryDraft extends \Cms\Model\CategoryCopy
 {
+    //maksymalny czas życia draftu (format strtotime)
+    CONST DRAFT_MAX_LIFETIME = '-48 hours';
 
     /**
      * Sufiks dla nazwy wersji roboczej kategorii
@@ -28,10 +30,7 @@ class CategoryDraft extends \Cms\Model\CategoryCopy
      */
     public function create()
     {
-        $result = parent::copy();
-        //ustawienie daty dodania na oryginalną kategorię
-        $this->getCopyRecord()->dateAdd = $this->_category->dateAdd;
-        return $result && $this->getCopyRecord()->save();
+        return parent::copy();
     }
 
     /**
@@ -45,6 +44,7 @@ class CategoryDraft extends \Cms\Model\CategoryCopy
         if (!$force && null !== $lastDraft = (new \Cms\Orm\CmsCategoryQuery)
             ->whereCmsCategoryOriginalId()->equals($this->_category->id)
             ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_DRAFT)
+            ->andFieldDateAdd()->greater(date('Y-m-d H:i:s', strtotime(self::DRAFT_MAX_LIFETIME)))
             ->andFieldCmsAuthId()->equals($userId)
             ->orderDescId()
             ->findFirst()) {
@@ -76,6 +76,8 @@ class CategoryDraft extends \Cms\Model\CategoryCopy
     {
         $this->_createCopyRecord();
         $this->_copy->active = $this->_category->active;
+        //ustawienie daty dodania na oryginalną kategorię
+        $this->_copy->dateAdd = $this->_category->dateAdd;
         //nadawanie id oryginału (chyba że już nadany w przypadku rekordów z historii)
         $this->_copy->cmsCategoryOriginalId = $this->_category->cmsCategoryOriginalId ? $this->_category->cmsCategoryOriginalId : $this->_category->getPk();
         $this->_copy->status = \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT;
