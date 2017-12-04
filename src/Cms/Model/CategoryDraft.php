@@ -28,7 +28,10 @@ class CategoryDraft extends \Cms\Model\CategoryCopy
      */
     public function create()
     {
-        return parent::copy();
+        $result = parent::copy();
+        //ustawienie daty dodania na oryginalną kategorię
+        $this->getCopyRecord()->dateAdd = $this->_category->dateAdd;
+        return $result && $this->getCopyRecord()->save();
     }
 
     /**

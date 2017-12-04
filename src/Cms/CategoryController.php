@@ -252,14 +252,10 @@ class CategoryController extends \Mmi\Mvc\Controller
      */
     protected function _versionPreview($originalId, $versionId)
     {
-        //brak id oryginalnego
-        if (!$originalId) {
-            throw new \Mmi\Mvc\MvcNotFoundException('Original not found');
-        }
         //wyszukiwanie
         if (null === $category = (new Orm\CmsCategoryQuery)
             ->withType()
-            ->whereCmsCategoryOriginalId()->equals($originalId)
+            ->whereCmsCategoryOriginalId()->equals($originalId ? $originalId : null)
             ->findPk($versionId)) {
             //404
             throw new \Mmi\Mvc\MvcNotFoundException('Version not found');

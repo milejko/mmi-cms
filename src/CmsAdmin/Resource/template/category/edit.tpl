@@ -69,6 +69,7 @@
                             </div>
                         </div>
                     </div>
+                    {if $attributeCount > 0}
                     <div class="card">
                         <div class="card-header" role="tab" id="headingThree">
                             <h5 class="mb-0">
@@ -87,6 +88,7 @@
                             </div>
                         </div>
                     </div>
+                    {/if}
                     <div class="card">
                         <div class="card-header" role="tab" id="headingThree">
                             <h5 class="mb-0">

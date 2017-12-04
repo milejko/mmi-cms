@@ -204,7 +204,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //usunięcie cache uprawnień
         \App\Registry::$cache->remove('mmi-cms-category-acl');
         //data aktualizacji
-        $this->dateAdd = date('Y-m-d H:i:s');
+        $this->dateAdd = $this->dateAdd ? $this->dateAdd : date('Y-m-d H:i:s');
         //próba utworzenia rekordu
         return parent::_insert();
     }
