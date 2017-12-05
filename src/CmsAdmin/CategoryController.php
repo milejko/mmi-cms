@@ -75,6 +75,11 @@ class CategoryController extends Mvc\Controller
             $this->getMessenger()->addMessage('Zmiany zostały zapisane', true);
             $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $form->getRecord()->cmsCategoryOriginalId]);
         }
+        //wybrano zapis i podgląd
+        if ($form->isSaved() && $form->getElement('submit')->getValue()) {
+            //przekierowanie na podgląd
+            $this->getResponse()->redirectToUrl($cat->getUrl() . '?originalId=' . $cat->cmsCategoryOriginalId . '&versionId=' . $cat->id);
+        }
         //zapisany form ze zmianą kategorii
         if ($form->isSaved() && $originalType != $form->getRecord()->cmsCategoryTypeId) {
             //zmiany zapisane
