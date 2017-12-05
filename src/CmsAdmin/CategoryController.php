@@ -31,7 +31,7 @@ class CategoryController extends Mvc\Controller
     {
         //wyszukiwanie kategorii
         if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
-            return;
+            return $this->originalId ? $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->originalId]) : null;
         }
         //zapisywanie oryginalnego typu
         $originalType = $cat->cmsCategoryTypeId;
