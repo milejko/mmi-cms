@@ -49,7 +49,8 @@ $(document).ready(function () {
             }
         },
         'state': {
-            'key': CATEGORYCONF.stateKey
+            'key': CATEGORYCONF.stateKey,
+			'events': 'open_node.jstree close_node.jstree'
         },
         'unique': {
             'duplicate': function (name, counter) {
