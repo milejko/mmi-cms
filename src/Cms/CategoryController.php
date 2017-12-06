@@ -15,6 +15,7 @@ namespace Cms;
  */
 class CategoryController extends \Mmi\Mvc\Controller
 {
+
     //akcja weryfikująca czy użytkownik jest redaktorem
     CONST REDACTOR_VERIFY_ACTION = 'cmsAdmin:category:index';
 
@@ -39,7 +40,7 @@ class CategoryController extends \Mmi\Mvc\Controller
             //wysyłanie nagłówka o buforowaniu strony
             $this->getResponse()->setHeader('X-Cache', 'HIT');
             //zwrot html
-            return $html . $this->_getCmsEditButton($category);
+            return $this->_decorateHtmlWithEditButton($html, $category);
         }
         //wysyłanie nagłówka o braku buforowaniu strony
         $this->getResponse()->setHeader('X-Cache', 'MISS');
@@ -50,12 +51,12 @@ class CategoryController extends \Mmi\Mvc\Controller
         //buforowanie niedozwolone
         if (!$bufferingAllowed || 0 == $cacheLifetime = $this->_getCategoryCacheLifetime($category)) {
             //zwrot html
-            return $html . $this->_getCmsEditButton($category);
+            return $this->_decorateHtmlWithEditButton($html, $category);
         }
         //zapis html kategorii do cache
         \App\Registry::$cache->save($html, $cacheKey, $cacheLifetime);
         //zwrot html
-        return $html . $this->_getCmsEditButton($category);
+        return $this->_decorateHtmlWithEditButton($html, $category);
     }
 
     /**
@@ -210,17 +211,17 @@ class CategoryController extends \Mmi\Mvc\Controller
     /**
      * Pobiera request do renderowania akcji
      * @param \Cms\Orm\CmsCategoryRecord $category
-     * @return \Mmi\Http\Request
+     * @return string
      * @throws \Mmi\App\KernelException
      */
-    protected function _getCmsEditButton(\Cms\Orm\CmsCategoryRecord $category)
+    protected function _decorateHtmlWithEditButton($html, \Cms\Orm\CmsCategoryRecord $category)
     {
         //brak roli redaktora
         if (!$this->_hasRedactorRole()) {
-            return;
+            return $html;
         }
         //zwraca wyrenderowany HTML
-        return \Mmi\Mvc\ActionHelper::getInstance()->action(new \Mmi\Http\Request(['module' => 'cms', 'controller' => 'category', 'action' => 'editButton', 'originalId' => $category->cmsCategoryOriginalId, 'categoryId' => $category->id]));
+        return str_replace('</body>', \Mmi\Mvc\ActionHelper::getInstance()->action(new \Mmi\Http\Request(['module' => 'cms', 'controller' => 'category', 'action' => 'editButton', 'originalId' => $category->cmsCategoryOriginalId, 'categoryId' => $category->id])) . '</body>', $html);
     }
 
     /**
