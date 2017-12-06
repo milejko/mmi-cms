@@ -50,7 +50,12 @@ $(document).ready(function () {
         },
         'state': {
             'key': CATEGORYCONF.stateKey,
-			'events': 'open_node.jstree close_node.jstree'
+			'filter': function (state) {
+				if (request.originalId) {
+					state.core.selected = [request.originalId];
+				}
+				return state;
+			}
         },
         'unique': {
             'duplicate': function (name, counter) {
