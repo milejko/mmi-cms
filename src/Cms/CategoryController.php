@@ -290,7 +290,7 @@ class CategoryController extends \Mmi\Mvc\Controller
         $this->view->navigation()->setTitle($category->title)
             ->setDescription($category->description);
         //renderowanie docelowej akcji
-        return \Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category)) . $this->_getCmsEditButton($category);
+        return $this->_decorateHtmlWithEditButton(\Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category)), $category);
     }
 
     /**
