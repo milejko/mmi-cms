@@ -425,8 +425,8 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
     {
         //jeśli już są pliki tymczasowe, to wychodzimy
         if ((new \Cms\Orm\CmsFileQuery)
-            ->byObject($this->_tempObject, $this->getUploaderId())
-            ->count()) {
+                ->byObject($this->_tempObject, $this->getUploaderId())
+                ->count()) {
             return true;
         }
         //tworzymy pliki tymczasowe - kopie oryginałów
@@ -481,19 +481,19 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
                             <button id='frame-camera' type='button' class='btn btn-outline-primary frame-camera' data-toggle='tooltip' data-placement='top' title='Złap aktualną ramkę z wideo'>
                                 <i class='fa fa-2 fa-camera'></i>
                             </button>
-                            <button id='frame-upload' type='button'  data-toggle='tooltip' data-placement='top' title='Prześlij swoja ramkę wideo' class='btn btn-outline-primary frame-upload'>
+                            <button id='frame-upload' type='button'  data-toggle='tooltip' data-placement='top' title='Prześlij swoją ramkę wideo. Rozmiar obraka musi być conajmniej takiego rozmiaru jak wgrane wideo.' class='btn btn-outline-primary frame-upload'>
                                 <i class='fa fa-2 fa-upload'></i>
                             </button>
                         </div>
                     </div>
                     <div class='row'>
                         <div class='col'>
-                            <input type='file' name='userPoster' id='userPoster' accept='image/png'>
+                            <input type='file' name='userPoster' id='userPoster' accept='image/*'>
                         </div>
                     </div>
                     <div class='row'>
                         <div class='col'>
-                            <div id='output'>                            
+                            <div id='output'>
                             </div>
                         </div>
                     </div>
