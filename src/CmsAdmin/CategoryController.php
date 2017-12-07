@@ -29,6 +29,10 @@ class CategoryController extends Mvc\Controller
      */
     public function editAction()
     {
+        //brak id przekierowanie na drzewo
+        if (!$this->id) {
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
+        }
         //wyszukiwanie kategorii
         if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
             return $this->originalId ? $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->originalId]) : null;
