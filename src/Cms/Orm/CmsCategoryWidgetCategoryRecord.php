@@ -115,14 +115,13 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     }
 
     /**
-     * Aktywacja 1/roboczy 2/deaktywacja 0
-     * @param int $state
+     * Przełączenie widoczności widgeta
      * @return boolean
      */
-    public function toggle($state = 0)
+    public function toggle()
     {
-        //aktywacja/roboczy/deaktywacja
-        $this->active = (int) $state < 3 ? $state : 0;
+        //aktywacja/deaktywacja
+        $this->active = ($this->active == 1) ? 0 : 1;
         return $this->save();
     }
 

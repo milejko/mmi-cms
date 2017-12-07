@@ -95,6 +95,14 @@ class CategoryController extends Mvc\Controller
     }
 
     /**
+     * Akcja zarządzania drzewem
+     */
+    public function treeAction()
+    {
+        
+    }
+
+    /**
      * Akcja podglądu widgeta
      */
     public function widgetAction()

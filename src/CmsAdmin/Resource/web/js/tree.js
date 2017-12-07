@@ -219,18 +219,6 @@ $(document).ready(function () {
 					return;
                 }
             }
-            setTimeout(function () {
-                if (!CATEGORYCONF.reload && parseFloat(request.id) === parseFloat(data.selected[0])) {
-                    return;
-                }
-                if (CATEGORYCONF.contextMenu && !CATEGORYCONF.reload) {
-                    CATEGORYCONF.contextMenu = false;
-                    return;
-                }
-                if (CATEGORYCONF.reload || parseFloat(request.id) !== parseFloat(data.selected[0])) {
-                    CATEGORYCONF.loadUrl(data.selected[0]);
-                }
-            }, 150);
         })
         .on('state_ready.jstree', function (e, data) {
             //jeśli aktualny url nie pochodzi z drzewka

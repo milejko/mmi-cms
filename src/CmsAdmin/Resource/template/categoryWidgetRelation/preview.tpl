@@ -12,9 +12,6 @@
                     {if $widgetRelation->active == 1}
                         {$class='fa fa-2 fa-eye pull-right'}
                         {$title='aktywny'}
-                    {elseif $widgetRelation->active == 2}
-                        {$class='fa fa-2 fa-eye reddish pull-right'}
-                        {$title='roboczy'}
                     {else}
                         {$class='fa fa-2 fa-eye-slash pull-right'}
                         {$title='ukryty'}
