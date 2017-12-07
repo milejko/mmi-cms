@@ -40,6 +40,10 @@ class CategoryWidgetRelationController extends Mvc\Controller
      */
     public function configAction()
     {
+        //wyszukiwanie kategorii
+        if ((null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->categoryId)) || $category->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
+            return;
+        }
         //wyszukiwanie widgeta
         if (null === $widgetRecord = (new \Cms\Orm\CmsCategoryWidgetQuery)->findPk($this->widgetId)) {
             //brak widgeta

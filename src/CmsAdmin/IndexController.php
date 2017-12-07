@@ -64,7 +64,7 @@ class IndexController extends Mvc\Controller
     public function logoutAction()
     {
         \App\Registry::$auth->clearIdentity();
-        $this->getMessenger()->addMessage('Dziękujemy za skorzystanie z serwisu, wylogowanio poprawnie', true);
+        $this->getMessenger()->addMessage('Dziękujemy za skorzystanie z serwisu, wylogowano poprawnie', true);
         //hit do statystyk
         \Cms\Model\Stat::hit('admin-logout');
         $this->getResponse()->redirect('cmsAdmin');

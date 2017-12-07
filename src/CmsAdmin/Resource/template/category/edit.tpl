@@ -69,6 +69,7 @@
                             </div>
                         </div>
                     </div>
+                    {if $attributeCount > 0}
                     <div class="card">
                         <div class="card-header" role="tab" id="headingThree">
                             <h5 class="mb-0">
@@ -87,6 +88,7 @@
                             </div>
                         </div>
                     </div>
+                    {/if}
                     <div class="card">
                         <div class="card-header" role="tab" id="headingThree">
                             <h5 class="mb-0">
@@ -141,7 +143,7 @@
                             <h5 class="mb-0">
                                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#tab-history"
                                    aria-expanded="false" aria-controls="collapseThree">
-                                    {#Wersje historyczane#}
+                                    {#Historia zmian#}
                                 </a>
                             </h5>
                         </div>
@@ -153,8 +155,7 @@
                     </div>
                 </div>
                {$categoryForm->getElement('commit')}
-               <a style="margin-right: 10px; color: #fff;" class="btn btn-dark float-right" href="{$categoryForm->getRecord()->getUrl()}?preview=1">podgląd</a>
-               <input style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit" type="submit" class="btn btn-secondary float-right" name="cmsadmin-form-category[submit]" value="zapisz kopię roboczą" >
+               <input style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit" type="submit" class="btn btn-secondary float-right" name="cmsadmin-form-category[submit]" value="podgląd" >
                {$categoryForm->end()}
                {/if}
                <div style="clear: both"><br /></div>

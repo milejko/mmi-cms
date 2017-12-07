@@ -100,10 +100,11 @@ class CategoryModel
             if ($id == $parentCategoryId) {
                 return $category['children'];
             }
-            if (null !== $child = $this->_searchChildren($category['children'], $parentCategoryId)) {
+            if ([] !== $child = $this->_searchChildren($category['children'], $parentCategoryId)) {
                 return $child;
             }
         }
+        return [];
     }
 
     /**

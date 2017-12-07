@@ -16,11 +16,19 @@ namespace Cms;
 class CategoryController extends \Mmi\Mvc\Controller
 {
 
+    //akcja weryfikująca czy użytkownik jest redaktorem
+    CONST REDACTOR_VERIFY_ACTION = 'cmsAdmin:category:index';
+
     /**
      * Akcja dispatchera kategorii
      */
     public function dispatchAction()
     {
+        //żądanie o wersję artykułu (rola redaktora)
+        if ($this->versionId && $this->_hasRedactorRole()) {
+            //zwraca podgląd wersji
+            return $this->_versionPreview($this->originalId, $this->versionId);
+        }
         //pobranie kategorii
         $category = $this->_getPublishedCategoryByUri($this->uri);
         //klucz bufora
@@ -32,7 +40,7 @@ class CategoryController extends \Mmi\Mvc\Controller
             //wysyłanie nagłówka o buforowaniu strony
             $this->getResponse()->setHeader('X-Cache', 'HIT');
             //zwrot html
-            return $html;
+            return $this->_decorateHtmlWithEditButton($html, $category);
         }
         //wysyłanie nagłówka o braku buforowaniu strony
         $this->getResponse()->setHeader('X-Cache', 'MISS');
@@ -43,12 +51,12 @@ class CategoryController extends \Mmi\Mvc\Controller
         //buforowanie niedozwolone
         if (!$bufferingAllowed || 0 == $cacheLifetime = $this->_getCategoryCacheLifetime($category)) {
             //zwrot html
-            return $html;
+            return $this->_decorateHtmlWithEditButton($html, $category);
         }
         //zapis html kategorii do cache
         \App\Registry::$cache->save($html, $cacheKey, $cacheLifetime);
         //zwrot html
-        return $html;
+        return $this->_decorateHtmlWithEditButton($html, $category);
     }
 
     /**
@@ -74,6 +82,12 @@ class CategoryController extends \Mmi\Mvc\Controller
             //brak - pusty zwrot
             return '';
         }
+    }
+
+    public function editButtonAction()
+    {
+        $this->view->categoryId = $this->categoryId;
+        $this->view->originalId = $this->originalId;
     }
 
     /**
@@ -133,15 +147,11 @@ class CategoryController extends \Mmi\Mvc\Controller
             //przekierowanie na uri
             $this->getResponse()->redirectToUrl($category->redirectUri);
         }
-        //kategoria dozwolona - flaga podglądu + rola redaktora
-        if ($this->preview == 1 && \App\Registry::$acl->isAllowed(\App\Registry::$auth->getRoles(), 'cmsAdmin:category:index')) {
-            return $category;
-        }
-		//sprawdzenie dostępu dla roli
-		if (!(new Model\CategoryRole($category, \App\Registry::$auth->getRoles()))->isAllowed()) {
+        //sprawdzenie dostępu dla roli
+        if (!(new Model\CategoryRole($category, \App\Registry::$auth->getRoles()))->isAllowed()) {
             //404
             throw new \Mmi\Mvc\MvcForbiddenException('Category: ' . $category->uri . ' forbidden for roles: ' . implode(', ', \App\Registry::$auth->getRoles()));
-		}
+        }
         //kategoria manualnie wyłączona
         if (!$category->active) {
             //404
@@ -177,8 +187,8 @@ class CategoryController extends \Mmi\Mvc\Controller
         //tworzenie nowego requestu na podstawie obecnego
         $request = clone $this->getRequest();
         $request->setModuleName('cms')
-                ->setControllerName('category')
-                ->setActionName('article');
+            ->setControllerName('category')
+            ->setActionName('article');
         //przekierowanie MVC
         if ($category->mvcParams) {
             //tablica z tpl
@@ -196,6 +206,22 @@ class CategoryController extends \Mmi\Mvc\Controller
         //parsowanie parametrów mvc
         parse_str($category->getJoined('cms_category_type')->mvcParams, $mvcParams);
         return $request->setParams($mvcParams);
+    }
+
+    /**
+     * Pobiera request do renderowania akcji
+     * @param \Cms\Orm\CmsCategoryRecord $category
+     * @return string
+     * @throws \Mmi\App\KernelException
+     */
+    protected function _decorateHtmlWithEditButton($html, \Cms\Orm\CmsCategoryRecord $category)
+    {
+        //brak roli redaktora
+        if (!$this->_hasRedactorRole()) {
+            return $html;
+        }
+        //zwraca wyrenderowany HTML
+        return str_replace('</body>', \Mmi\Mvc\ActionHelper::getInstance()->action(new \Mmi\Http\Request(['module' => 'cms', 'controller' => 'category', 'action' => 'editButton', 'originalId' => $category->cmsCategoryOriginalId, 'categoryId' => $category->id])) . '</body>', $html);
     }
 
     /**
@@ -232,8 +258,7 @@ class CategoryController extends \Mmi\Mvc\Controller
     protected function _bufferingAllowed()
     {
         //jeśli zdefiniowano własny obiekt sprawdzający, czy można buforować
-        if (\App\Registry::$config->category instanceof \Cms\Config\CategoryConfig
-            && \App\Registry::$config->category->bufferingAllowedClass) {
+        if (\App\Registry::$config->category instanceof \Cms\Config\CategoryConfig && \App\Registry::$config->category->bufferingAllowedClass) {
             $class = \App\Registry::$config->category->bufferingAllowedClass;
             $buffering = new $class($this->_request);
         } else {
@@ -241,6 +266,40 @@ class CategoryController extends \Mmi\Mvc\Controller
             $buffering = new \Cms\Model\CategoryBuffering($this->_request);
         }
         return $buffering->isAllowed();
+    }
+
+    /**
+     * Podgląd admina
+     * @param integer $originalId
+     * @param integer $versionId
+     * @return string html
+     * @throws \Mmi\Mvc\MvcNotFoundException
+     */
+    protected function _versionPreview($originalId, $versionId)
+    {
+        //wyszukiwanie
+        if (null === $category = (new Orm\CmsCategoryQuery)
+            ->withType()
+            ->whereCmsCategoryOriginalId()->equals($originalId ? $originalId : null)
+            ->findPk($versionId)) {
+            //404
+            throw new \Mmi\Mvc\MvcNotFoundException('Version not found');
+        }
+        $this->view->category = $category;
+        //nadpisanie tytułu i opisu (gdyż inaczej brany jest z kategorii oryginalnej)
+        $this->view->navigation()->setTitle($category->title)
+            ->setDescription($category->description);
+        //renderowanie docelowej akcji
+        return \Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category)) . $this->_getCmsEditButton($category);
+    }
+
+    /**
+     * Sprawdzenie czy jest redaktorem
+     * @return boolean
+     */
+    protected function _hasRedactorRole()
+    {
+        return \App\Registry::$acl->isAllowed(\App\Registry::$auth->getRoles(), 'cmsAdmin:category:index');
     }
 
 }

@@ -7493,6 +7493,10 @@ base-chart.chart {
       background-repeat: no-repeat;
       background-position: center;
       transition: transform .3s; }
+
+@-moz-document url-prefix() {
+  .sidebar .nav-dropdown-toggle::before {
+    padding-right: 14px; } }
   .sidebar .nav-dropdown.open {
     background: rgba(0, 0, 0, 0.2); }
     .sidebar .nav-dropdown.open > .nav-dropdown-items {
