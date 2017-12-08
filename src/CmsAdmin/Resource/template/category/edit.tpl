@@ -64,18 +64,18 @@
                     {if $attributeCount > 0}
                         <div class="tab-pane" id="attributes" role="tabpanel" aria-expanded="false">
                             {foreach $categoryForm->getElements() as $element}
-                            {if php_substr($element->getName(), 0 ,12) != 'cmsAttribute'}{continue}{/if}
-                            {$element}
-                        {/foreach}
-                    </div>
-                {/if}
-                {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
-                    <div class="tab-pane" id="widgets" role="tabpanel" aria-expanded="false">
-                        {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'add'])}
-                            <a href="javascript:void(0);" onclick="PopupCenter('{@module=cmsAdmin&controller=categoryWidgetRelation&action=add&id={$categoryId}@}'); return false;" class="button btn btn-primary btn-block new-window" target="_blank"><i class="icon-plus"></i> dodaj widget</a>{/if}
+                                {if php_substr($element->getName(), 0 ,12) != 'cmsAttribute'}{continue}{/if}
+                                {$element}
+                            {/foreach}
+                        </div>
+                    {/if}
+                    {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
+                        <div class="tab-pane" id="widgets" role="tabpanel" aria-expanded="false">
+                            {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'add'])}
+                                <a href="javascript:void(0);" onclick="PopupCenter('{@module=cmsAdmin&controller=categoryWidgetRelation&action=add&id={$categoryId}@}'); return false;" class="button btn btn-primary btn-block new-window" target="_blank"><i class="icon-plus"></i> dodaj widget</a>
+                            {/if}
                             <div id="widget-list-container" data-category-id="{$categoryId}">
-                                {widget('cmsAdmin', 'categoryWidgetRelation', 'preview', ['categoryId' =>
-                                $categoryId])}
+                                {widget('cmsAdmin', 'categoryWidgetRelation', 'preview', ['categoryId' => $categoryId])}
                             </div>
                         </div>
                     {/if}
@@ -83,6 +83,7 @@
                         {$historyGrid}
                     </div>
                     <div class="tab-pane" id="advanced" role="tabpanel" aria-expanded="false">
+                        adv
                         {$categoryForm->getElement('redirectUri')}
                         {$categoryForm->getElement('mvcParams')}
                         {$categoryForm->getElement('configJson')}
