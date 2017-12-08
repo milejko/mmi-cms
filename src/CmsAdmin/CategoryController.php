@@ -76,8 +76,8 @@ class CategoryController extends Mvc\Controller
         //po zapisie jeśli wybrany commit
         if ($form->isSaved() && $form->getElement('commit')->getValue()) {
             //zmiany zapisane
-            $this->getMessenger()->addMessage('Zmiany zostały zapisane', true);
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $form->getRecord()->cmsCategoryOriginalId]);
+            $this->getMessenger()->addMessage('Strona została zapisana', true);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
         }
         //wybrano zapis i podgląd
         if ($form->isSaved() && $form->getElement('submit')->getValue()) {
