@@ -22,7 +22,7 @@ class CategoryGrid extends \CmsAdmin\Grid\Grid
     {
 
         //query
-        $this->setQuery(new \Cms\Orm\CmsCategoryQuery);
+        $this->setQuery((new \Cms\Orm\CmsCategoryQuery)->whereStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE));
 
         //nazwa
         $this->addColumn((new Column\TextColumn('name'))

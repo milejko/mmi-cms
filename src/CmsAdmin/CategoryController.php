@@ -82,7 +82,7 @@ class CategoryController extends Mvc\Controller
         //wybrano zapis i podgląd
         if ($form->isSaved() && $form->getElement('submit')->getValue()) {
             //przekierowanie na podgląd
-            $this->getResponse()->redirectToUrl($cat->getUrl() . '?originalId=' . $cat->cmsCategoryOriginalId . '&versionId=' . $cat->id);
+            $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $cat->cmsCategoryOriginalId, 'versionId' => $cat->id]);
         }
         //zapisany form ze zmianą kategorii
         if ($form->isSaved() && $originalType != $form->getRecord()->cmsCategoryTypeId) {

@@ -24,11 +24,6 @@ class CategoryController extends \Mmi\Mvc\Controller
      */
     public function dispatchAction()
     {
-        //żądanie o wersję artykułu (rola redaktora)
-        if ($this->versionId && $this->_hasRedactorRole()) {
-            //zwraca podgląd wersji
-            return $this->_versionPreview($this->originalId, $this->versionId);
-        }
         //pobranie kategorii
         $category = $this->_getPublishedCategoryByUri($this->uri);
         //klucz bufora
@@ -57,6 +52,34 @@ class CategoryController extends \Mmi\Mvc\Controller
         \App\Registry::$cache->save($html, $cacheKey, $cacheLifetime);
         //zwrot html
         return $this->_decorateHtmlWithEditButton($html, $category);
+    }
+
+    /**
+     * Podgląd redaktora
+     * @return string html
+     * @throws \Mmi\Mvc\MvcNotFoundException
+     */
+    public function redactorPreviewAction()
+    {
+        //żądanie o wersję artykułu (rola redaktora)
+        if (!$this->_hasRedactorRole()) {
+            throw new \Mmi\Mvc\MvcForbiddenException('Preview not allowed');
+        }
+        //wyszukiwanie kategorii
+        if (null === $category = (new Orm\CmsCategoryQuery)
+            ->withType()
+            ->whereCmsCategoryOriginalId()->equals($this->originalId ? $this->originalId : null)
+            ->findPk($this->versionId)) {
+            //404
+            throw new \Mmi\Mvc\MvcNotFoundException('Version not found');
+        }
+        //kategoria do widoku
+        $this->view->category = $category;
+        //nadpisanie tytułu i opisu (gdyż inaczej brany jest z kategorii oryginalnej)
+        $this->view->navigation()->setTitle($category->title)
+            ->setDescription($category->description);
+        //renderowanie docelowej akcji
+        return $this->_decorateHtmlWithEditButton(\Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category)), $category);
     }
 
     /**
@@ -266,31 +289,6 @@ class CategoryController extends \Mmi\Mvc\Controller
             $buffering = new \Cms\Model\CategoryBuffering($this->_request);
         }
         return $buffering->isAllowed();
-    }
-
-    /**
-     * Podgląd admina
-     * @param integer $originalId
-     * @param integer $versionId
-     * @return string html
-     * @throws \Mmi\Mvc\MvcNotFoundException
-     */
-    protected function _versionPreview($originalId, $versionId)
-    {
-        //wyszukiwanie
-        if (null === $category = (new Orm\CmsCategoryQuery)
-            ->withType()
-            ->whereCmsCategoryOriginalId()->equals($originalId ? $originalId : null)
-            ->findPk($versionId)) {
-            //404
-            throw new \Mmi\Mvc\MvcNotFoundException('Version not found');
-        }
-        $this->view->category = $category;
-        //nadpisanie tytułu i opisu (gdyż inaczej brany jest z kategorii oryginalnej)
-        $this->view->navigation()->setTitle($category->title)
-            ->setDescription($category->description);
-        //renderowanie docelowej akcji
-        return $this->_decorateHtmlWithEditButton(\Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category)), $category);
     }
 
     /**

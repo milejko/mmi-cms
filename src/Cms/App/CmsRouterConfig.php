@@ -18,6 +18,9 @@ class CmsRouterConfig extends \Mmi\Mvc\RouterConfig
 
     public function __construct()
     {
+        //podgląd kategorii
+        $this->setRoute('cms-category-admin-preview', 'cms-content-preview', ['module' => 'cms', 'controller' => 'category', 'action' => 'redactorPreview']);
+
         //moduł - cmsAdmin
         $this->setRoute('cms-admin-module', 'cmsAdmin', ['module' => 'cmsAdmin'], ['controller' => 'index', 'action' => 'index']);
 
