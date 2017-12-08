@@ -82,7 +82,7 @@ CMS.category = function () {
             var state = parseInt($(this).data('state'));
             state++;
 
-            if (state > 2) {
+            if (state > 1) {
                 state = 0;
             }
 
@@ -90,9 +90,6 @@ CMS.category = function () {
             if (state === 1) {
                 $(this).children('i').attr('class', 'fa fa-2 fa-eye pull-right');
                 $(this).attr('title', 'aktywny');
-            } else if (state === 2) {
-                $(this).children('i').attr('class', 'fa fa-2 fa-eye reddish pull-right');
-                $(this).attr('title', 'roboczy');
             } else {
                 $(this).children('i').attr('class', 'fa fa-2 fa-eye-slash pull-right');
                 $(this).attr('title', 'ukryty');

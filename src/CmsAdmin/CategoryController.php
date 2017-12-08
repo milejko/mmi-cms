@@ -29,6 +29,10 @@ class CategoryController extends Mvc\Controller
      */
     public function editAction()
     {
+        //brak id przekierowanie na drzewo
+        if (!$this->id) {
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
+        }
         //wyszukiwanie kategorii
         if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
             return $this->originalId ? $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->originalId]) : null;
@@ -92,6 +96,14 @@ class CategoryController extends Mvc\Controller
         $this->view->categoryForm = $form;
         //grid z listą wersji historycznych
         $this->view->historyGrid = new \CmsAdmin\Plugin\CategoryHistoryGrid(['originalId' => $cat->cmsCategoryOriginalId]);
+    }
+
+    /**
+     * Akcja zarządzania drzewem
+     */
+    public function treeAction()
+    {
+        
     }
 
     /**

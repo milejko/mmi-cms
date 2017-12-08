@@ -31,6 +31,13 @@ class NavPartCategory extends \Mmi\Navigation\NavigationConfig
                     ->setIcon('fa-tree')
                     ->setModule('cmsAdmin')
                     ->setController('category')
+                    ->setAction('tree')
+                )
+                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                    ->setLabel('Edycja strony')
+                    ->setDisabled()
+                    ->setModule('cmsAdmin')
+                    ->setController('category')
                     ->setAction('edit')
                 )
                 //lista treści
