@@ -16,13 +16,13 @@
                 <h5>{$categoryForm->getRecord()->name}</h5>
                 <div class="float-right" style="margin-top: -60px;">
                     <br />
-                    <input style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit-top" type="submit" class="btn btn-secondary" name="cmsadmin-form-category[submit]" value="podgląd" >
-                    <input style="color: #fff;" id="cmsadmin-form-category-commit-top" type="submit" class="btn btn-primary" name="cmsadmin-form-category[commit]" value="zatwierdź" >
+                    <button style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit-top" type="submit" class="btn btn-secondary" name="cmsadmin-form-category[submit]" value="preview" >podgląd</button>
+                    <button style="color: #fff;" id="cmsadmin-form-category-commit-top" type="submit" class="btn btn-primary" name="cmsadmin-form-category[commit]" value="submit" >zatwierdź</button>
                 </div>
                 <div class="clear"></div>
-                <ul class="nav nav-tabs" role="tablist">
+                <ul class="nav nav-tabs" role="tablist" data-id="{$categoryForm->getRecord()->id}">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-expanded="true"><i class="icon-pencil"></i></a>
+                        <a class="nav-link" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-expanded="true"><i class="icon-pencil"></i></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#seo" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-magnifier"></i></a>
@@ -45,7 +45,7 @@
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="settings" role="tabpanel" aria-expanded="true">
+                    <div class="tab-pane" id="settings" role="tabpanel" aria-expanded="true">
                         {$categoryForm->getElement('cmsCategoryTypeId')}
                         {$categoryForm->getElement('cmsCategoryTypeChanged')}
                         {if $duplicateAlert}<span class="red">Nazwa jest zduplikowana, treść może nie wyświetlać się poprawnie</span>{/if}
@@ -83,7 +83,6 @@
                         {$historyGrid}
                     </div>
                     <div class="tab-pane" id="advanced" role="tabpanel" aria-expanded="false">
-                        adv
                         {$categoryForm->getElement('redirectUri')}
                         {$categoryForm->getElement('mvcParams')}
                         {$categoryForm->getElement('configJson')}

@@ -79,16 +79,16 @@ class CategoryController extends Mvc\Controller
             $this->getMessenger()->addMessage('Strona została zapisana', true);
             $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
         }
+        //zapisany form ze zmianą kategorii
+        if ($form->isSaved() && 'type' == $form->getElement('submit')->getValue()) {
+            //zmiany zapisane
+            $this->getMessenger()->addMessage('Szablon strony został zmieniony', true);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $cat->id, 'originalId' => $cat->cmsCategoryOriginalId]);
+        }
         //wybrano zapis i podgląd
         if ($form->isSaved() && $form->getElement('submit')->getValue()) {
             //przekierowanie na podgląd
             $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $cat->cmsCategoryOriginalId, 'versionId' => $cat->id]);
-        }
-        //zapisany form ze zmianą kategorii
-        if ($form->isSaved() && $originalType != $form->getRecord()->cmsCategoryTypeId) {
-            //zmiany zapisane
-            $this->getMessenger()->addMessage('Szablon strony został zmieniony', true);
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $cat->id, 'originalId' => $cat->cmsCategoryOriginalId]);
         }
         //kategoria do widoku
         $this->view->category = $cat;
