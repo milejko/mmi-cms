@@ -35,7 +35,7 @@ class CategoryHistoryGrid extends \CmsAdmin\Grid\Grid
         //nazwa
         $this->addColumn((new Column\TextColumn('name'))
                 ->setLabel('nazwa'));
-        
+
         $this->addColumn((new Column\SelectColumn('cms_auth.username'))
                 ->setMultioptions((new \Cms\Orm\CmsCategoryQuery)->join('cms_auth')->on('cms_auth_id')->groupByCmsAuthId()->findPairs('cms_auth.username', 'cms_auth.username'))
                 ->setLabel('użytkownik'));
