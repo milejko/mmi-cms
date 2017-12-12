@@ -28,13 +28,11 @@ $(document).on("mousemove", function (e) {
 CMS.category = function () {
     "use strict";
     var that = {},
-        initSortableWidgets,
-        initNewWindowButtons,
-        initWidgetButtons,
-        initPreviewReload,
-        initCategoryChange,
-        reloadWidgets,
-        resizeIframe;
+            initSortableWidgets,
+            initNewWindowButtons,
+            initWidgetButtons,
+            initCategoryChange,
+            reloadWidgets;
 
     initSortableWidgets = function () {
         if ($('#widget-list').length > 0) {
@@ -48,11 +46,11 @@ CMS.category = function () {
                 handle: '.handle-widget',
                 update: function (event, ui) {
                     $.post(request.baseUrl + "/?module=cmsAdmin&controller=categoryWidgetRelation&action=sort&categoryId=" + $(this).attr('data-category-id'), $(this).sortable('serialize'),
-                        function (result) {
-                            if (result) {
-                                alert(result);
-                            }
-                        });
+                            function (result) {
+                                if (result) {
+                                    alert(result);
+                                }
+                            });
                 }
             });
         }
@@ -99,17 +97,10 @@ CMS.category = function () {
         });
     };
 
-    initPreviewReload = function () {
-        $('#categoryContentContainer').on('click', 'a.reload-preview', function () {
-            var src = $('#preview-frame').attr('src');
-            $('#preview-frame').attr('src', '');
-            $('#preview-frame').attr('src', src);
-        });
-    };
-
     initCategoryChange = function () {
-        $('#categoryContentContainer').on('change', '#cmsadmin-form-category-cmsCategoryTypeId', function () {
-            $('#cmsadmin-form-category-submit1').click();
+        $('form.cmsadmin-form-category').on('change', '#cmsadmin-form-category-cmsCategoryTypeId', function () {
+            $('#cmsadmin-form-category-submit-top').val('type');
+            $('#cmsadmin-form-category-submit-top').click();
             return false;
         });
     };
@@ -125,40 +116,25 @@ CMS.category = function () {
         });
     };
 
-    resizeIframe = function () {
-        if ($('input#cmsadmin-form-category-redirectUri').size() && $('input#cmsadmin-form-category-redirectUri').first().val().length === 0) {
-            $('iframe#preview-frame').on('load', function () {
-                $(this).height($(this).contents().find('body').height());
-            });
-        }
-    };
-
     that.reloadWidgets = reloadWidgets;
 
     var dataTabRestore = function () {
-        var currentTab = sessionStorage.getItem('catActiveTab');
-        try {
-            $('h5 > a').on('click', function (evt) {
-                sessionStorage.setItem('catActiveTab', $(this).attr("href"));
-            });
-            if (currentTab) {
-                if (!$(currentTab).hasClass('show')) {
-                    $('a[href$="' + currentTab + '"]').click();
-                }
-            }
-        } catch (er) {
-            if (!$('#tab-config').hasClass('show')) {
-                $('a[href$="#tab-config"]').click();
-            }
+        var itemName = 'categoryActiveTab-' + $('ul.nav-tabs').attr('data-id');
+        $('ul.nav-tabs > li').on('click', 'a', function (evt) {
+            sessionStorage.setItem(itemName, $(this).attr("href"));
+        });
+        var currentTab = sessionStorage.getItem(itemName);
+        if (currentTab) {
+            $('ul.nav-tabs > li > a[href$="' + currentTab + '"]').click();
+            return;
         }
+        $('ul.nav-tabs > li > a[href$="#settings"]').click();
     };
     dataTabRestore();
     initSortableWidgets();
     initNewWindowButtons();
     initWidgetButtons();
-    initPreviewReload();
     initCategoryChange();
-    resizeIframe();
     return that;
 };
 

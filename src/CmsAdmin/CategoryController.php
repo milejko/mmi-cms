@@ -76,19 +76,19 @@ class CategoryController extends Mvc\Controller
         //po zapisie jeśli wybrany commit
         if ($form->isSaved() && $form->getElement('commit')->getValue()) {
             //zmiany zapisane
-            $this->getMessenger()->addMessage('Zmiany zostały zapisane', true);
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $form->getRecord()->cmsCategoryOriginalId]);
+            $this->getMessenger()->addMessage('Strona została zapisana', true);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
+        }
+        //zapisany form ze zmianą kategorii
+        if ($form->isSaved() && 'type' == $form->getElement('submit')->getValue()) {
+            //zmiany zapisane
+            $this->getMessenger()->addMessage('Szablon strony został zmieniony', true);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $cat->id, 'originalId' => $cat->cmsCategoryOriginalId]);
         }
         //wybrano zapis i podgląd
         if ($form->isSaved() && $form->getElement('submit')->getValue()) {
             //przekierowanie na podgląd
-            $this->getResponse()->redirectToUrl($cat->getUrl() . '?originalId=' . $cat->cmsCategoryOriginalId . '&versionId=' . $cat->id);
-        }
-        //zapisany form ze zmianą kategorii
-        if ($form->isSaved() && $originalType != $form->getRecord()->cmsCategoryTypeId) {
-            //zmiany zapisane
-            $this->getMessenger()->addMessage('Szablon strony został zmieniony', true);
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $cat->id, 'originalId' => $cat->cmsCategoryOriginalId]);
+            $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $cat->cmsCategoryOriginalId, 'versionId' => $cat->id]);
         }
         //kategoria do widoku
         $this->view->category = $cat;

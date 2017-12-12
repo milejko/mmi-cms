@@ -41,7 +41,10 @@ class MailController extends Mvc\Controller
      */
     public function previewAction()
     {
-        $mail = (new \Cms\Orm\CmsMailQuery)->findPk($this->id);
+        //wyszukiwanie wiadomości
+        if (null === $mail = (new \Cms\Orm\CmsMailQuery)->findPk($this->id)) {
+            $this->getResponse()->redirect('cmsAdmin', 'mail', 'index');
+        }
         $this->view->message = $mail->message;
     }
 

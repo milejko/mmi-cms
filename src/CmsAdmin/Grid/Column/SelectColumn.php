@@ -45,7 +45,8 @@ class SelectColumn extends ColumnAbstract
      */
     public function setMultioptions(array $options = [])
     {
-        return $this->setOption('multioptions', $options);
+        return $this->setOption('multioptions', $options)
+            ->setFilterMethodEquals();
     }
 
     /**
