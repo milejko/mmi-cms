@@ -187,6 +187,15 @@
                                                             if (data.result === 'OK') {
                                                                 editDialog.dialog('close');
                                                                 el.parent().find('a.insert').attr('data-poster', $("div#dialog-edit select[name='source']").val());
+                                                                
+                                                                //odswiezenie listy
+                                                                $.ajax({
+                                                                    url: o.galleryUrl,
+                                                                    success: function (response) {
+                                                                        $('#lionite-gallery').html(response);
+                                                                    }
+                                                                });
+                                                                
                                                             } else {
                                                                 $(edit + ' .dialog-error p').text('Nie udało się zapisać zmian! Spróbuj ponownie!').parent().show();
                                                             }
