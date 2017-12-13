@@ -22,26 +22,26 @@
                 <div class="clear"></div>
                 <ul class="nav nav-tabs" role="tablist" data-id="{$categoryForm->getRecord()->id}">
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-expanded="true"><i class="icon-pencil"></i></a>
+                        <a title="{#Konfiguracja#}" class="nav-link" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-expanded="true"><i class="icon-pencil"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#seo" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-magnifier"></i></a>
+                        <a title="{#SEO#}" class="nav-link" data-toggle="tab" href="#seo" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-magnifier"></i></a>
                     </li>
                     {if $attributeCount > 0}
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#attributes" role="tab" aria-controls="messages" aria-expanded="false"><i class="icon-note"></i></a>
+                            <a title="{#Atrybuty#}" class="nav-link" data-toggle="tab" href="#attributes" role="tab" aria-controls="messages" aria-expanded="false"><i class="icon-note"></i></a>
                         </li>
                     {/if}
                     {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#widgets" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-layers"></i></a>
+                            <a title="{#Widgety#}" class="nav-link" data-toggle="tab" href="#widgets" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-layers"></i></a>
                         </li>
                     {/if}
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#history" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-clock"></i></a>
+                        <a title="{#Historia#}" class="nav-link" data-toggle="tab" href="#history" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-clock"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#advanced" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-wrench"></i></a>
+                        <a title="{#Zaawansowane#}" class="nav-link" data-toggle="tab" href="#advanced" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-wrench"></i></a>
                     </li>
                 </ul>
                 <div class="tab-content">
