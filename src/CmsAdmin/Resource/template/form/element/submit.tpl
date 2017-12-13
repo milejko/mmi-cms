@@ -1,1 +1,1 @@
-<button type="submit" {$_htmlOptions}></button>
+<input class="btn btn-primary float-right" type="submit" {$_htmlOptions} />

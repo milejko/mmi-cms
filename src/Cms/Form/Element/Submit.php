@@ -26,6 +26,8 @@ class Submit extends \Mmi\Form\Element\Submit
     CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
     CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    //szablon pola
+    const TEMPLATE_FIELD = 'cmsAdmin/form/element/submit';
 
     /**
      * Konstruktor
@@ -35,14 +37,6 @@ class Submit extends \Mmi\Form\Element\Submit
     {
         $this->addClass('form-control');
         parent::__construct($name);
-    }
-    public function fetchField()
-    {
-        //labelka jako value
-        if ($this->getLabel()) {
-            $this->setValue($this->getLabel());
-        }
-        return '<input type="submit" class="btn btn-primary float-right"' . $this->_getHtmlOptions() . '/>';
     }
 
 }
