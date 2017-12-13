@@ -110,9 +110,8 @@ $(document).ready(function () {
                                         inst.set_id(node, d.id);
                                         $('#jstree').jstree('deselect_all');
                                         $('#jstree').jstree('select_node', d.id);
-                                    } else {
-                                        inst.refresh();
                                     }
+                                    inst.refresh();
                                     CATEGORYCONF.showMessage(d);
                                 })
                                 .fail(function () {
@@ -139,7 +138,7 @@ $(document).ready(function () {
                 menu.edit = tmp.edit;
                 menu.create = tmp.create;
                 if (this.get_type(node) !== "root") {
-                    //menu.copy = tmp.copy;
+                    menu.copy = tmp.copy;
                 }
                 if (this.get_type(node) == "leaf") {
                     menu.remove = tmp.remove;
