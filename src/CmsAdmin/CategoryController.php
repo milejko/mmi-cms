@@ -16,6 +16,11 @@ namespace CmsAdmin;
 class CategoryController extends Mvc\Controller
 {
 
+    //prefiks przestrzeni nazw w sesji
+    CONST SESSION_SPACE_PREFIX = 'category-edit-';
+    //parametry edycja kategorii
+    CONST EDIT_MVC_PARAMS = 'cmsAdmin/category/edit';
+
     /**
      * Lista stron CMS - prezentacja w formie grida
      */
@@ -35,37 +40,24 @@ class CategoryController extends Mvc\Controller
         }
         //wyszukiwanie kategorii
         if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
-            return $this->originalId ? $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->originalId]) : null;
+            //przekierowanie na originalId (lub na tree według powyższego warunku)
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->originalId]);
         }
-        //zapisywanie oryginalnego typu
-        $originalType = $cat->cmsCategoryTypeId;
+        //zapisywanie oryginalnego id
         $originalId = $cat->cmsCategoryOriginalId ? $cat->cmsCategoryOriginalId : $cat->id;
-        //jeśli to nie był DRAFT
-        if ($cat->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
-            //wymuszony świeży draft jeśli informacja przyszła w url, lub kategoria jest z archiwum
-            $force = $this->force || ($cat->status == \Cms\Orm\CmsCategoryRecord::STATUS_HISTORY);
-            //draft nie może być utworzony, ani wczytany
-            if (null === $draft = (new \Cms\Model\CategoryDraft($cat))->createAndGetDraftForUser(\App\Registry::$auth->getId(), $force)) {
-                $this->getMessenger()->addMessage('Nie udało się utworzyć wersji roboczej, spróbuj ponownie', false);
-                return;
-            }
-            //przekierowanie do edycji DRAFTu - nowego ID
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draft->id, 'originalId' => $originalId, 'uploaderId' => $draft->id]);
-        }
+        //przygotowanie draftu (lub przekierowanie)
+        $this->_prepareDraft($cat, $originalId);
         //draft ma obcego właściciela
         if ($cat->cmsAuthId != \App\Registry::$auth->getId()) {
             throw new \Mmi\Mvc\MvcForbiddenException('Category not allowed');
         }
-        //znaleziono kategorię o tym samym uri
-        if ($this->_isCategoryDuplicate($originalId)) {
-            //alarm o duplikacie
-            $this->view->duplicateAlert = true;
-        }
+        //sprawdzanie czy nie duplikat
+        $this->view->duplicateAlert = $this->_isCategoryDuplicate($originalId);
         //sprawdzenie uprawnień do edycji węzła kategorii
         if (!(new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed(\App\Registry::$auth->getRoles(), $originalId)) {
             $this->getMessenger()->addMessage('Nie posiadasz uprawnień do edycji wybranej strony', false);
-            //redirect po zmianie (zmienią się atrybuty)
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
+            //redirect na stronę startową
+            $this->_redirectAfterEdit();
         }
         //konfiguracja kategorii
         $form = (new \CmsAdmin\Form\Category($cat));
@@ -77,7 +69,7 @@ class CategoryController extends Mvc\Controller
         if ($form->isSaved() && $form->getElement('commit')->getValue()) {
             //zmiany zapisane
             $this->getMessenger()->addMessage('Strona została zapisana', true);
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
+            $this->_redirectAfterEdit();
         }
         //zapisany form ze zmianą kategorii
         if ($form->isSaved() && 'type' == $form->getElement('submit')->getValue()) {
@@ -233,6 +225,70 @@ class CategoryController extends Mvc\Controller
                 ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
                 ->andQuery((new \Cms\Orm\CmsCategoryQuery)->searchByUri($category->uri))
                 ->findFirst()) && !$category->redirectUri;
+    }
+
+    private function _prepareDraft(\Cms\Orm\CmsCategoryRecord $category, $originalId)
+    {
+        //jeśli to nie był DRAFT
+        if (\Cms\Orm\CmsCategoryRecord::STATUS_DRAFT == $category->status) {
+            return;
+        }
+        //sprawdzenie referera
+        $referer = $this->getRequest()->getReferer();
+        //wymuszony świeży draft jeśli informacja przyszła w url, lub kategoria jest z archiwum
+        $force = $this->force || (\Cms\Orm\CmsCategoryRecord::STATUS_HISTORY == $category->status);
+        //draft nie może być utworzony, ani wczytany
+        if (null === $draft = (new \Cms\Model\CategoryDraft($category))->createAndGetDraftForUser(\App\Registry::$auth->getId(), $force)) {
+            $this->getMessenger()->addMessage('Nie udało się utworzyć wersji roboczej, spróbuj ponownie', false);
+            $this->getResponse()->redirectToUrl($referer);
+        }
+        //ustawienie referera
+        $this->_setReferrer($referer, $originalId);
+        //przekierowanie do edycji DRAFTu - nowego ID
+        $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draft->id, 'originalId' => $originalId, 'uploaderId' => $draft->id]);
+    }
+
+    /**
+     * Przekierowanie po zakończeniu edycji
+     */
+    private function _redirectAfterEdit()
+    {
+        //referer
+        $referer = $this->_getReferrer();
+        //jeśli istnieje referer
+        if ($referer) {
+            $this->getResponse()->redirectToUrl($referer);
+        }
+        $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
+    }
+
+    /**
+     * Pobranie referera
+     * @return string
+     */
+    private function _getReferrer()
+    {
+        //powoływanie przestrzeni nazw
+        $space = new \Mmi\Session\SessionSpace(self::SESSION_SPACE_PREFIX . $this->originalId);
+        //pobranie referera
+        $referer = $space->referer;
+        //usunięcie
+        $space->unsetAll();
+        return $referer;
+    }
+
+    /**
+     * Ustawianie referer'a do sesji
+     * @param string $referer
+     */
+    private function _setReferrer($referer, $id)
+    {
+        //brak referera lub referer kieruje na stronę edycji
+        if (!$referer || strpos($referer, self::EDIT_MVC_PARAMS)) {
+            return;
+        }
+        $space = new \Mmi\Session\SessionSpace(self::SESSION_SPACE_PREFIX . $id);
+        $space->referer = $referer;
     }
 
 }
