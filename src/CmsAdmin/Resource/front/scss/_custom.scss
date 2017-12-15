@@ -312,6 +312,11 @@ ul {
         &.preview {
           float: left;
           width: calc(100% - 60px);
+          word-wrap: break-word;
+          img {
+            max-width: 100%;
+            height: auto;
+          }
         }
         &.operation {
           float: right;

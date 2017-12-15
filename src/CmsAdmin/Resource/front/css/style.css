@@ -9064,7 +9064,11 @@ ul.wlist {
     clear: both; }
     ul.wlist li div.preview {
       float: left;
-      width: calc(100% - 60px); }
+      width: calc(100% - 60px);
+      word-wrap: break-word; }
+      ul.wlist li div.preview img {
+        max-width: 100%;
+        height: auto; }
     ul.wlist li div.operation {
       float: right; }
       ul.wlist li div.operation a {
