@@ -42,7 +42,7 @@ class ConnectorController extends \Mmi\Mvc\Controller
             $data = json_decode(file_get_contents($endpoint . 'exportFileMeta'), true);
         } catch (\Exception $e) {
             //zwrot pustego statusu
-            return '';
+            return 'ERR';
         }
         //próba importu meta-danych
         if (null === $file = (new Model\ConnectorModel)->importFileMeta($data)) {

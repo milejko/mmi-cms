@@ -10,7 +10,8 @@
                     <div class="card-body">
                         {$form}
                         {if $files}
-                        <div class="auto-download list-group">
+                        
+                        <div class="auto-download list-group" data-url="{$downloadUrl}">
                             {foreach $files as $name => $label}
                                 <a href="#" data-name="{$name}" class="list-group-item list-group-item-action">{$label}</a>
                             {/foreach}
