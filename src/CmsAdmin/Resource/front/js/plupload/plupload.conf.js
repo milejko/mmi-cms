@@ -275,6 +275,7 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                             $(edit + ' .dialog-error').hide().find('p').text('');
                             //inicjalizacja tinyMce
                             PLUPLOADCONF.initTinyMce(args.up);
+                            window.scrollTo(0, 0);
                             var editDialog = $(edit).dialog({
                                 resizable: false,
                                 width: 700,
