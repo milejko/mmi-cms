@@ -194,6 +194,31 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //zmiana miejscami draftu z oryginałem
         return $versionModel->exchangeOriginal($this);
     }
+    
+    /**
+     * Czy kategoria (strona) jest widoczna na froncie - aktywna itp.
+     * @return boolean
+     */
+    public function isVisible()
+    {
+        //jeśli nie jest aktywna
+        if (!$this->active) {
+            return false;
+        }
+        //jeśli status różny od aktywna (bieżąca)
+        if ($this->status != \Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE) {
+            return false;
+        }
+        //nie osiągnięto czasu publikacji
+        if (null !== $this->dateStart && $this->dateStart > date('Y-m-d H:i:s')) {
+            return false;
+        }
+        //przekroczono czas publikacji
+        if (null !== $this->dateEnd && $this->dateEnd < date('Y-m-d H:i:s')) {
+            return false;
+        }
+        return true;
+    }
 
     /**
      * Wstawienie kategorii z obliczeniem kodu i przebudową drzewa
