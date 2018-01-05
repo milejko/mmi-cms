@@ -22,7 +22,12 @@ class AttributeValueGrid extends \CmsAdmin\Grid\Grid
     {
 
         //zapytanie
-        $this->setQuery(new \Cms\Orm\CmsAttributeValueQuery);
+        $this->setQuery(
+            (new \Cms\Orm\CmsAttributeValueQuery)
+                ->orderAscOrder()
+                ->orderAscLabel()
+                ->orderAscValue()
+        );
         $attributeQuery = new \Cms\Orm\CmsAttributeQuery;
 
         //zapytanie filtrowane ID atrybutu
@@ -39,6 +44,10 @@ class AttributeValueGrid extends \CmsAdmin\Grid\Grid
         //etykieta
         $this->addColumn((new Column\TextColumn('label'))
             ->setLabel('etykieta'));
+        
+        //kolejność
+        $this->addColumn((new Column\TextColumn('order'))
+            ->setLabel('kolejność'));
 
         //operacje
         $this->addColumn((new Column\OperationColumn())->setEditParams(['module' => 'cmsAdmin', 'controller' => 'attribute', 'action' => 'edit', 'id' => '%cmsAttributeId%', 'valueId' => '%id%'])

@@ -9,5 +9,6 @@ class CmsAttributeValueRecord extends \Mmi\Orm\Record
     public $cmsAttributeId;
     public $value;
     public $label;
+    public $order;
 
 }

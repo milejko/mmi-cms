@@ -36,6 +36,13 @@ class AttributeValue extends \Cms\Form\Form
             ->addFilter(new Filter\StringTrim)
             ->addFilter(new Filter\EmptyToNull)
             ->addValidator(new Validator\StringLength([1, 64])));
+        
+        //kolejność
+        $this->addElement((new Element\Text('order'))
+                ->setRequired()
+                ->setLabel('kolejność')
+                ->addValidator(new Validator\NumberBetween([0, 10000000]))
+                ->setValue(0));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))
