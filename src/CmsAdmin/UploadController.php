@@ -145,7 +145,7 @@ class UploadController extends Mvc\Controller
         if ($record->data) {
             //parametry
             $data = $record->data->toArray();
-            $data['urlFile'] = '//' . \App\Registry::$config->host . $record->getUrl();
+            $data['urlFile'] = ((\App\Registry::$config->cdn) ?: '//' . \App\Registry::$config->host) . $record->getUrl();
         }
         return json_encode(['result' => 'OK', 'record' => $record, 'data' => $data]);
     }
