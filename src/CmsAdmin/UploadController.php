@@ -121,7 +121,7 @@ class UploadController extends Mvc\Controller
                         return json_encode(['result' => 'OK', 'url' => $url]);
                     }
                 } catch (\Exception $ex) {
-                    
+
                 }
             }
         }
@@ -145,7 +145,7 @@ class UploadController extends Mvc\Controller
         if ($record->data) {
             //parametry
             $data = $record->data->toArray();
-            $data['urlFile'] = 'http://' . \App\Registry::$config->host . $record->getUrl();
+            $data['urlFile'] = '//' . \App\Registry::$config->host . $record->getUrl();
         }
         return json_encode(['result' => 'OK', 'record' => $record, 'data' => $data]);
     }
