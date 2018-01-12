@@ -494,13 +494,17 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //usuwanie cache
         \App\Registry::$cache->remove('mmi-cms-navigation-' . $this->lang);
         \App\Registry::$cache->remove('category-' . $this->id);
+        \App\Registry::$cache->remove('category-' . $this->cmsCategoryOriginalId);
         \App\Registry::$cache->remove('category-html-' . $this->id);
+        \App\Registry::$cache->remove('category-html-' . $this->cmsCategoryOriginalId);
         \App\Registry::$cache->remove('category-id-' . md5($this->uri));
         \App\Registry::$cache->remove('category-id-' . md5($this->getInitialStateValue('uri')));
         \App\Registry::$cache->remove('category-id-' . md5($this->customUri));
         \App\Registry::$cache->remove('category-id-' . md5($this->getInitialStateValue('customUri')));
         \App\Registry::$cache->remove('category-attributes-' . $this->id);
+        \App\Registry::$cache->remove('category-attributes-' . $this->cmsCategoryOriginalId);
         \App\Registry::$cache->remove('category-widget-model-' . $this->id);
+        \App\Registry::$cache->remove('category-widget-model-' . $this->cmsCategoryOriginalId);
         \App\Registry::$cache->remove('categories-roles');
         return true;
     }
