@@ -170,8 +170,10 @@ class CmsFileRecord extends \Mmi\Orm\Record
         if ($this->getOption('currentFile') === null) {
             $this->setOption('currentFile', $this->name);
         }
+        //pozycja ostatniej kropki w nazwie - rozszerzenie pliku
+        $pointPosition = strrpos($file->name, '.');
         //kalkulacja nazwy systemowej
-        $name = md5(microtime(true) . $file->tmpName) . substr($file->name, strrpos($file->name, '.'));
+        $name = md5(microtime(true) . $file->tmpName) . (($pointPosition !== false) ? substr($file->name, $pointPosition) : '');
         //określanie ścieżki
         $dir = BASE_PATH . '/var/data/' . $name[0] . '/' . $name[1] . '/' . $name[2] . '/' . $name[3];
         //tworzenie ścieżki

@@ -91,8 +91,10 @@ class File
         if (!empty($allowedTypes) && !in_array($file->type, $allowedTypes)) {
             return null;
         }
+        //pozycja ostatniej kropki w nazwie - rozszerzenie pliku
+        $pointPosition = strrpos($file->name, '.');
         //kalkulacja nazwy systemowej
-        $name = md5(microtime(true) . $file->tmpName) . substr($file->name, strrpos($file->name, '.'));
+        $name = md5(microtime(true) . $file->tmpName) . (($pointPosition !== false) ? substr($file->name, $pointPosition) : '');
         //określanie ścieżki
         $dir = BASE_PATH . '/var/data/' . $name[0] . '/' . $name[1] . '/' . $name[2] . '/' . $name[3];
         //tworzenie ścieżki

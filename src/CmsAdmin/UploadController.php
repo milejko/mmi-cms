@@ -142,11 +142,18 @@ class UploadController extends Mvc\Controller
         if (null == $record = (new CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
             return $this->_jsonError(185);
         }
-        if ($record->data) {
+        //wycinamy rozszerzenie z nazwy oryginalnego pliku do edycji
+        //pozycja ostatniej kropki w nazwie
+        $pointPosition = strrpos($record->original, '.');
+        if ($pointPosition !== false) {
+            $record->original = substr($record->original, 0, $pointPosition);
+        }
+        $data = [];
+        if ($record->data instanceof \Mmi\DataObject) {
             //parametry
             $data = $record->data->toArray();
-            $data['urlFile'] = ((\App\Registry::$config->cdn) ?: '//' . \App\Registry::$config->host) . $record->getUrl();
         }
+        $data['urlFile'] = ((\App\Registry::$config->cdn) ?: '//' . \App\Registry::$config->host) . $record->getUrl();
         return json_encode(['result' => 'OK', 'record' => $record, 'data' => $data]);
     }
 
@@ -172,12 +179,24 @@ class UploadController extends Mvc\Controller
             if ($field['name'] == 'active' || $field['name'] == 'sticky') {
                 continue;
             }
+            if ($field['name'] == 'original') {
+                //dodajemy rozszerzenie
+                //pozycja ostatniej kropki w nazwie - rozszerzenie pliku
+                $pointPosition = strrpos($record->name, '.');
+                if ($pointPosition !== false) {
+                    $form['original'] .= substr($record->name, $pointPosition);
+                }
+                $record->data->original = $form['original'];
+                continue;
+            }
             $record->data->{$field['name']} = $field['value'];
         }
-        //czyszczenie nieprzesłanych checkboxów
-        foreach ($record->data as $name => $value) {
-            if (!isset($form[$name])) {
-                $record->data->{$name} = null;
+        if ($record->data instanceof \Mmi\DataObject) {
+            //czyszczenie nieprzesłanych checkboxów
+            foreach (array_keys($record->data->toArray()) as $name) {
+                if (!isset($form[$name])) {
+                    $record->data->{$name} = null;
+                }
             }
         }
         $record->active = isset($form['active']) ? $form['active'] : $record->active;
