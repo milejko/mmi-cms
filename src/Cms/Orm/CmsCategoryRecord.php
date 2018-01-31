@@ -365,6 +365,10 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public function getParentRecord()
     {
+        //brak parenta
+        if (!$this->parentId) {
+            return;
+        }
         //próba pobrania rodzica z cache
         if (null === $parent = \App\Registry::$cache->load($cacheKey = 'category-' . $this->parentId)) {
             //pobieranie rodzica
