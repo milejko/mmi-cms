@@ -21,7 +21,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      * @var integer
      */
     public $id;
-    
+
     /**
      * Właściciel
      * @var integer
@@ -139,6 +139,11 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      * @var integer
      */
     public $cacheLifetime;
+
+    /**
+     * Aktywność
+     * @var integer 
+     */
     public $active;
 
     //status draft
@@ -194,7 +199,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //zmiana miejscami draftu z oryginałem
         return $versionModel->exchangeOriginal($this);
     }
-    
+
     /**
      * Czy kategoria (strona) jest widoczna na froncie - aktywna itp.
      * @return boolean

@@ -39,16 +39,16 @@ class CategoryController extends Mvc\Controller
             $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
         }
         //wyszukiwanie kategorii
-        if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
+        if (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
             //przekierowanie na originalId (lub na tree według powyższego warunku)
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->originalId]);
         }
         //zapisywanie oryginalnego id
-        $originalId = $cat->cmsCategoryOriginalId ? $cat->cmsCategoryOriginalId : $cat->id;
+        $originalId = $category->cmsCategoryOriginalId ? $category->cmsCategoryOriginalId : $category->id;
         //przygotowanie draftu (lub przekierowanie)
-        $this->_prepareDraft($cat, $originalId);
+        $this->_prepareDraft($category, $originalId);
         //draft ma obcego właściciela
-        if ($cat->cmsAuthId != \App\Registry::$auth->getId()) {
+        if ($category->cmsAuthId != \App\Registry::$auth->getId()) {
             throw new \Mmi\Mvc\MvcForbiddenException('Category not allowed');
         }
         //sprawdzanie czy nie duplikat
@@ -56,38 +56,38 @@ class CategoryController extends Mvc\Controller
         //sprawdzenie uprawnień do edycji węzła kategorii
         if (!(new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed(\App\Registry::$auth->getRoles(), $originalId)) {
             $this->getMessenger()->addMessage('Nie posiadasz uprawnień do edycji wybranej strony', false);
-            //redirect na stronę startową
-            $this->_redirectAfterEdit();
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
         }
+        //kategoria do widoku
+        $this->view->category = $category;
         //konfiguracja kategorii
-        $form = (new \CmsAdmin\Form\Category($cat));
-        //zapis
+        $form = (new \CmsAdmin\Form\Category($category));
+        //form do widoku
+        $this->view->categoryForm = $form;
+        //jeśli nie było posta
+        if (!$form->isMine()) {
+            //grid z listą wersji historycznych
+            $this->view->historyGrid = new \CmsAdmin\Plugin\CategoryHistoryGrid(['originalId' => $category->cmsCategoryOriginalId]);
+            return;
+        }
+        //błędy zapisu
         if ($form->isMine() && !$form->isSaved()) {
             $this->getMessenger()->addMessage('Zmiany nie zostały zapisane, formularz zawiera błędy', false);
         }
-        //po zapisie jeśli wybrany commit
+        //zatwierdzenie zmian - commit
         if ($form->isSaved() && $form->getElement('commit')->getValue()) {
             //zmiany zapisane
             $this->getMessenger()->addMessage('Strona została zapisana', true);
-            $this->_redirectAfterEdit();
+            $this->_redirectAfterEdit($category);
         }
         //zapisany form ze zmianą kategorii
         if ($form->isSaved() && 'type' == $form->getElement('submit')->getValue()) {
             //zmiany zapisane
             $this->getMessenger()->addMessage('Szablon strony został zmieniony', true);
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $cat->id, 'originalId' => $cat->cmsCategoryOriginalId]);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId]);
         }
-        //wybrano zapis i podgląd
-        if ($form->isSaved() && $form->getElement('submit')->getValue()) {
-            //przekierowanie na podgląd
-            $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $cat->cmsCategoryOriginalId, 'versionId' => $cat->id]);
-        }
-        //kategoria do widoku
-        $this->view->category = $cat;
-        //form do widoku
-        $this->view->categoryForm = $form;
-        //grid z listą wersji historycznych
-        $this->view->historyGrid = new \CmsAdmin\Plugin\CategoryHistoryGrid(['originalId' => $cat->cmsCategoryOriginalId]);
+        //przekierowanie na podgląd
+        $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);
     }
 
     /**
@@ -251,13 +251,17 @@ class CategoryController extends Mvc\Controller
     /**
      * Przekierowanie po zakończeniu edycji
      */
-    private function _redirectAfterEdit()
+    private function _redirectAfterEdit(\Cms\Orm\CmsCategoryRecord $category)
     {
         //referer
         $referer = $this->_getReferrer();
         //jeśli istnieje referer
         if ($referer) {
             $this->getResponse()->redirectToUrl($referer);
+        }
+        //przekierowanie na stronę frontową kategorii jeśli wskazana
+        if ($category) {
+            $this->getResponse()->redirectToUrl($category->getUrl());
         }
         $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
     }
@@ -276,7 +280,7 @@ class CategoryController extends Mvc\Controller
         $space->unsetAll();
         return $referer;
     }
-
+    
     /**
      * Ustawianie referer'a do sesji
      * @param string $referer
@@ -285,6 +289,9 @@ class CategoryController extends Mvc\Controller
     {
         //brak referera lub referer kieruje na stronę edycji
         if (!$referer || strpos($referer, self::EDIT_MVC_PARAMS)) {
+            return;
+        }
+        if (strpos($referer, 'cms-content-preview')) {
             return;
         }
         $space = new \Mmi\Session\SessionSpace(self::SESSION_SPACE_PREFIX . $id);

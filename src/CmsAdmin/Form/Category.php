@@ -132,6 +132,9 @@ class Category extends \Cms\Form\AttributeForm
 				->whereCmsCategoryId()->equals($this->getRecord()->id)
 				->findPairs('cms_role_id', 'cms_role_id') : []
 			));
+
+        //jednorazowy zapis
+        $this->addElement((new Element\Csrf('csrf')));
         
         //zapis
         $this->addElement((new Element\Submit('commit'))
@@ -141,7 +144,7 @@ class Category extends \Cms\Form\AttributeForm
         $this->addElement((new Element\Submit('submit'))
             ->setLabel('zapisz kopię roboczą'));
     }
-	
+    
     /**
      * Zapisuje dodatkowe dane, m.in. role
      * @return bool
