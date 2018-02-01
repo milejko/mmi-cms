@@ -24,6 +24,9 @@ class CategoryAttributeWidgetForm extends \Cms\Form\AttributeForm
 
         $this->initAttributes('cmsCategoryWidget', $this->getOption('widgetId'), 'categoryWidgetRelation');
 
+        //csrf - tylko jednokrotne kliknięcie możliwe
+        $this->addElement((new Element\Csrf('csrf')));
+        
         $this->addElement((new Element\Submit('submit'))
             ->setLabel('zapisz'));
     }
