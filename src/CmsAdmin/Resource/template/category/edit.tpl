@@ -14,7 +14,6 @@
                 {$categoryForm->start()}
                 {$categoryId = $categoryForm->getRecord()->id}
                 <h5>{$categoryForm->getRecord()->name}</h5>
-                {$categoryForm->getElement('csrf')}
                 <div class="float-right" style="margin-top: -60px;">
                     <br />
                     <button style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit-top" type="submit" class="btn btn-secondary" name="cmsadmin-form-category[submit]" value="preview" >podgląd</button>

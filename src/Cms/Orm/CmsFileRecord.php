@@ -63,18 +63,6 @@ class CmsFileRecord extends \Mmi\Orm\Record
      * @var boolean
      */
     public $active;
-    
-    /**
-     * Id oryginalnego pliku, z którego powstała kopia
-     * @var integer
-     */
-    public $cmsFileOriginalId;
-    
-    /**
-     * Czy nowo przesłany
-     * @var boolean
-     */
-    public $newUploaded;
 
     /**
      * Ustawia plik jako przyklejony w obrębie danego object+objectId
@@ -266,6 +254,14 @@ class CmsFileRecord extends \Mmi\Orm\Record
     {
         //data modyfikacji
         $this->dateModify = date('Y-m-d H:i:s');
+        //zmieniła się nazwa zasobu (upload)
+        if (!$this->getOption('children') && $this->getInitialStateValue('name') != $this->name) {
+            foreach ((new CmsFileQuery)->whereName()->equals($this->getInitialStateValue('name'))->find() as $file) {
+                $file->name = $this->name;
+                $file->setOption('children', true);
+                $file->save();
+            }
+        }
         return parent::_update();
     }
 
@@ -289,10 +285,18 @@ class CmsFileRecord extends \Mmi\Orm\Record
      */
     public function delete()
     {
+        //usuwanie meta
+        if (!parent::delete()) {
+            return false;
+        }
+        //plik jest ciągle potrzebny (ma linki)
+        if (0 != (new CmsFileQuery)->whereName()->equals($this->name)->count()) {
+            return true;
+        }
         //kasowanie z systemu plików
         (new \Cms\Model\FileSystemModel($this->name))->unlink();
         //usuwanie rekordu
-        return parent::delete();
+        return true;
     }
 
 }

@@ -430,7 +430,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
             return true;
         }
         //tworzymy pliki tymczasowe - kopie oryginałów
-        \Cms\Model\File::copy($this->_object, $this->_objectId, $this->_tempObject, $this->getUploaderId());
+        \Cms\Model\File::link($this->_object, $this->_objectId, $this->_tempObject, $this->getUploaderId());
         return true;
     }
 

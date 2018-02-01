@@ -142,7 +142,7 @@ class File
     public static function copy($srcObject, $srcId, $destObject, $destId)
     {
         $i = 0;
-        //przenoszenie plików
+        //kopiowanie plików
         foreach (CmsFileQuery::byObject($srcObject, $srcId)->find() as $file) {
             try {
                 //tworzenie kopii
@@ -156,10 +156,32 @@ class File
                 continue;
             }
             $newFile = clone $file;
-            $newFile->cmsFileOriginalId = $file->id;
             $newFile->id = null;
             //dołączanie pliku
             self::_copyFile($copy, $destObject, $destId, $newFile);
+            $i++;
+        }
+        return $i;
+    }
+
+    /**
+     * Linkuje plik
+     * @param string $srcObject obiekt źródłowy
+     * @param int $srcId id źródła
+     * @param string $destObject obiekt docelowy
+     * @param int $destId docelowy id
+     * @return int ilość zlinkowanych
+     */
+    public static function link($srcObject, $srcId, $destObject, $destId)
+    {
+        $i = 0;
+        //kopiowanie plików
+        foreach (CmsFileQuery::byObject($srcObject, $srcId)->find() as $file) {
+            $newFile = clone $file;
+            $newFile->object = $destObject;
+            $newFile->objectId = $destId;
+            $newFile->id = null;
+            $newFile->save();
             $i++;
         }
         return $i;

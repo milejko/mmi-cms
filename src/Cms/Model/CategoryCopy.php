@@ -239,17 +239,13 @@ class CategoryCopy
                     ->andFieldObject()->notLike(self::CATEGORY_WIDGET_RELATION . '%')
                 )
             )
-            ->whereObjectId()->equals($this->_category->id)
-            ->find() as $original) {
-            if (null === $copy = \Cms\Model\File::copyWithData($original, $this->_copy->getPk())) {
-                continue;
-            }
-            //zapamiętujemy mapowanie plików
-            array_push($this->_categoryFiles, ['original' => $original, 'copy' => $copy]);
+            ->findUnique('object')
+        as $object) {
+            \Cms\Model\File::link($object, $this->_category->id, $object, $this->_copy->getPk());
         }
         return true;
     }
-    
+
     /**
      * Kopiuje tagi powiązane z atrybutami kategorii
      * @return boolean
@@ -269,7 +265,7 @@ class CategoryCopy
         }
         return true;
     }
-    
+
     /**
      * Zwraca zapytanie o tagi powiązane z atrybutami kategorii
      * @param integer $categoryId
@@ -278,18 +274,18 @@ class CategoryCopy
     protected function _getTagRelationQuery($categoryId)
     {
         return (new \Cms\Orm\CmsTagRelationQuery)
-            ->whereQuery(
-                (new \Cms\Orm\CmsTagRelationQuery)
-                ->whereObject()->equals(self::FILE_CATEGORY_OBJECT)
-                ->orQuery(
+                ->whereQuery(
                     (new \Cms\Orm\CmsTagRelationQuery)
-                    ->orFieldObject()->like(self::OBJECT_TYPE . '%')
-                    ->andFieldObject()->notLike(self::CATEGORY_WIDGET_RELATION . '%')
+                    ->whereObject()->equals(self::FILE_CATEGORY_OBJECT)
+                    ->orQuery(
+                        (new \Cms\Orm\CmsTagRelationQuery)
+                        ->orFieldObject()->like(self::OBJECT_TYPE . '%')
+                        ->andFieldObject()->notLike(self::CATEGORY_WIDGET_RELATION . '%')
+                    )
                 )
-            )
-            ->whereObjectId()->equals($categoryId);
+                ->whereObjectId()->equals($categoryId);
     }
-    
+
     /**
      * Zapisuje relację tagu z obiektem
      * @param integer $cmsTagId
@@ -326,19 +322,13 @@ class CategoryCopy
                 ->whereObject()->like(self::CATEGORY_WIDGET_RELATION . '%')
                 //lub równy cmscategorywidgetcategory
                 ->orFieldObject()->equals(self::FILE_CATEGORY_WIDGET_OBJECT))
-            //identyfikator równy ID relacji
-            ->andFieldObjectId()->equals($relationId)
-            ->find() as $originalFile) {
-            //kopiowanie pliku
-            if (null === $copy = \Cms\Model\File::copyWithData($originalFile, $newRelation->id)) {
-                continue;
-            }
-            //zapamiętujemy mapowanie plików
-            array_push($this->_categoryWidgetFiles, ['original' => $originalFile, 'copy' => $copy]);
+            ->findUnique('object')
+        as $object) {
+            \Cms\Model\File::link($object, $relationId, $object, $newRelation->id);
         }
         return true;
     }
-    
+
     /**
      * Kopiuje tagi powiązane z widgetem
      * @param integer $relationId
@@ -389,7 +379,7 @@ class CategoryCopy
             if (!$this->_copyWidgetRelationFiles($widgetRelation->id, $relation)) {
                 return false;
             }
-            
+
             //kopiowanie tagów powiązanych w widgetem
             if (!$this->_copyWidgetRelationTags($widgetRelation->id, $relation)) {
                 return false;
@@ -413,7 +403,7 @@ class CategoryCopy
                     continue;
                 }
                 (new AttributeValueRelationModel(self::CATEGORY_WIDGET_RELATION, $relation->id))
-                    ->createAttributeValueRelationByValue($attribute->id, $this->_updateValue($value, $this->_categoryWidgetFiles));
+                    ->createAttributeValueRelationByValue($attribute->id, $value);
             }
         }
         return true;
@@ -431,29 +421,9 @@ class CategoryCopy
         foreach ($sourceAttributeValues as $record) {
             //tworze relacje atrybutu dla nowej kategorii
             (new \Cms\Model\AttributeValueRelationModel(self::OBJECT_TYPE, $this->_copy->id))
-                ->createAttributeValueRelationByValue($record->cmsAttributeId, $this->_updateValue($record->value, $this->_categoryFiles));
+                ->createAttributeValueRelationByValue($record->cmsAttributeId, $record->value);
         }
         return true;
-    }
-
-    /**
-     * Aktualizuje wartość - zamienia ścieżki do plików
-     * @param string $value
-     * @param array $filesMap mapowanie plików
-     * @return string
-     */
-    protected function _updateValue($value, $filesMap = [])
-    {
-        //dla każdej pozycji z mapy
-        foreach ($filesMap as $map) {
-            if (!isset($map['original']) || !isset($map['copy'])) {
-                continue;
-            }
-            $oName = $map['original']->name;
-            $cName = $map['copy']->name;
-            $value = preg_replace('@/data/' . $oName[0] . '/' . $oName[1] . '/' . $oName[2] . '/' . $oName[3] . '/(scalecrop|scalex|scaley|default)/([0-9x]{0,10})/' . $oName . '@', '/data/' . $cName[0] . '/' . $cName[1] . '/' . $cName[2] . '/' . $cName[3] . '/$1/$2/' . $cName, $value);
-        }
-        return $value;
     }
 
     /**

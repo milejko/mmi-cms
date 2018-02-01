@@ -546,7 +546,6 @@ class PluploadHandler
             $this->_setError(PLUPLOAD_MOVE_ERR, "Błąd tworzenia nowego rekordu pliku");
             $result = false;
         } else {
-            $this->_cmsFileRecord->newUploaded = true;
             $result = $this->_cmsFileRecord->save();
         }
         //usuwamy plik z katalogu plupload
@@ -564,7 +563,6 @@ class PluploadHandler
         if ($this->_cmsFileRecord === null) {
             $result = false;
         } else {
-            $this->_cmsFileRecord->newUploaded = true;
             $result = ($this->_cmsFileRecord->replaceFile($requestFile) && $this->_cmsFileRecord->save());
         }
         if ($result === false) {

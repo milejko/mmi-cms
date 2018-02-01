@@ -403,8 +403,8 @@ class TinyMce extends Textarea
         if ($this->_form->hasRecord()) {
             $objectId = $this->_form->getRecord()->getPk();
         }
-        //tworzymy pliki tymczasowe - kopie oryginałów
-        \Cms\Model\File::copy($this->getUploaderObject(), $objectId, 'tmp-' . $this->getUploaderObject(), $this->getUploaderId());
+        //tworzymy pliki tymczasowe - linki do oryginałów
+        \Cms\Model\File::link($this->getUploaderObject(), $objectId, 'tmp-' . $this->getUploaderObject(), $this->getUploaderId());
         return true;
     }
     

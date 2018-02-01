@@ -117,8 +117,9 @@ abstract class Form extends \Mmi\Form\Form
         foreach ($this->getElements() as $element) {
             //dla każdego elementu Plupload
             if ($element instanceof \Cms\Form\Element\Plupload && $element->getObject()) {
-                //łączenie tymczasowych plików z uploadera (kopii) z oryginałami
-                (new \Cms\Model\FileMerge('tmp-' . $element->getObject(), $element->getUploaderId(), $element->getObject(), $objectId))->merge();
+                //zastępowanie plików
+                \Cms\Model\File::deleteByObject($element->getObject(), $objectId);
+                \Cms\Model\File::move('tmp-' . $element->getObject(), $element->getUploaderId(), $element->getObject(), $objectId);
                 continue;
             }
             //dla każdego elementu TinyMce
@@ -128,8 +129,9 @@ abstract class Form extends \Mmi\Form\Form
                     continue;
                 }
                 array_push($tinyObjects, $element->getUploaderObject());
-                //łączenie tymczasowych plików z uploadu przez TinyMce (kopii) z oryginałami
-                (new \Cms\Model\FileMerge('tmp-' . $element->getUploaderObject(), $element->getUploaderId(), $element->getUploaderObject(), $objectId))->merge();
+                //zastępowanie plików
+                \Cms\Model\File::deleteByObject($element->getUploaderObject(), $objectId);
+                \Cms\Model\File::move('tmp-' . $element->getUploaderObject(), $element->getUploaderId(), $element->getUploaderObject(), $objectId);
                 continue;
             }
         }
