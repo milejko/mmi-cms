@@ -128,7 +128,7 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     /**
      * Usuwanie bufora
      */
-    protected function clearCache()
+    public function clearCache()
     {
         //usuwanie cache
         \App\Registry::$cache->remove('category-widget-model-' . $this->cmsCategoryId);

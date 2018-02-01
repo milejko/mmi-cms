@@ -173,7 +173,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             $this->order = $this->_maxChildOrder() + 1;
         }
         //zapis
-        return $this->clearCache() && parent::save() && $this->clearCache();
+        return parent::save() && $this->clearCache();
     }
 
     /**
