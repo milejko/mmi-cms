@@ -154,10 +154,6 @@ class CmsFileRecord extends \Mmi\Orm\Record
         if (!empty($allowedTypes) && !in_array($file->type, $allowedTypes)) {
             return false;
         }
-        //zapamiętujemy nazwę obecnego pliku na dysku
-        if ($this->getOption('currentFile') === null) {
-            $this->setOption('currentFile', $this->name);
-        }
         //pozycja ostatniej kropki w nazwie - rozszerzenie pliku
         $pointPosition = strrpos($file->name, '.');
         //kalkulacja nazwy systemowej
@@ -220,13 +216,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
         }
         //zapis json'a
         $this->data = empty($data) ? null : json_encode($data);
-        $result = parent::save();
-        //jeśli udało się zapisać rekord
-        if ($result) {
-            //usunięcie obecnego pliku z dysku
-            $this->_unlinkCurrent();
-        }
-        return $result;
+        return parent::save();
     }
 
     /**
@@ -255,28 +245,14 @@ class CmsFileRecord extends \Mmi\Orm\Record
         //data modyfikacji
         $this->dateModify = date('Y-m-d H:i:s');
         //zmieniła się nazwa zasobu (upload)
-        if (!$this->getOption('children') && $this->getInitialStateValue('name') != $this->name) {
+        /*if (!$this->getOption('children') && $this->getInitialStateValue('name') != $this->name) {
             foreach ((new CmsFileQuery)->whereName()->equals($this->getInitialStateValue('name'))->find() as $file) {
                 $file->name = $this->name;
                 $file->setOption('children', true);
                 $file->save();
             }
-        }
+        }*/
         return parent::_update();
-    }
-
-    /**
-     * Usuwa obecny plik, fizycznie z dysku
-     * @return boolean
-     */
-    protected function _unlinkCurrent()
-    {
-        $name = $this->getOption('currentFile');
-        if (empty($name) || strlen($name) < 4) {
-            return true;
-        }
-        (new \Cms\Model\FileSystemModel($name))->unlink();
-        return true;
     }
 
     /**
