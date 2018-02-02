@@ -73,6 +73,7 @@ class CategoryController extends Mvc\Controller
         //błędy zapisu
         if ($form->isMine() && !$form->isSaved()) {
             $this->getMessenger()->addMessage('Zmiany nie zostały zapisane, formularz zawiera błędy', false);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId]);
         }
         //zatwierdzenie zmian - commit
         if ($form->isSaved() && $form->getElement('commit')->getValue()) {

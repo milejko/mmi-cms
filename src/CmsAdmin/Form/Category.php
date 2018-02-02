@@ -13,6 +13,10 @@ namespace CmsAdmin\Form;
 use Cms\Form\Element,
     Mmi\Validator,
     Mmi\Filter;
+use Mmi\Cache\Cache;
+use Mmi\Cache\CacheConfig;
+use Mmi\Orm\CacheQuery;
+use Mmi\Orm\CacheRecord;
 
 /**
  * Formularz edycji szegółów kategorii
@@ -135,7 +139,7 @@ class Category extends \Cms\Form\AttributeForm
 
         //jednorazowy zapis
         $this->addElement((new Element\Csrf('csrf')));
-        
+
         //zapis
         $this->addElement((new Element\Submit('commit'))
             ->setLabel('zapisz i zatwierdź'));
@@ -144,7 +148,21 @@ class Category extends \Cms\Form\AttributeForm
         $this->addElement((new Element\Submit('submit'))
             ->setLabel('zapisz kopię roboczą'));
     }
-    
+
+    public function beforeSave() {
+        if (null === $lockRecord = (new CacheQuery)->findPk($lockKey = 'category-lock-' . $this->getRecord()->cmsCategoryOriginalId)) {
+            $lockRecord = new CacheRecord;
+            $lockRecord->id = $lockKey;
+            $lockRecord->data = true;
+        }
+        if ($lockRecord->ttl > time()) {
+            return false;
+        }
+        $lockRecord->ttl = time() + 10;
+        $lockRecord->save();
+        return true;
+    }
+
     /**
      * Zapisuje dodatkowe dane, m.in. role
      * @return bool
@@ -162,6 +180,11 @@ class Category extends \Cms\Form\AttributeForm
         //commit wersji
         if ($this->getElement('commit')->getValue()) {
             $this->getRecord()->commitVersion();
+        }
+        //usunięcie locka
+        if (null !== $lockRecord = (new CacheQuery)->findPk('category-lock-' . $this->getRecord()->cmsCategoryOriginalId)) {
+		    $lockRecord->ttl = time()+1;
+		    $lockRecord->save();
         }
         //zapis udany
         return true;

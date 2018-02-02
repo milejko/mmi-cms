@@ -13,7 +13,7 @@ namespace Cms\Form\Element;
 /**
  * Element ukrytego pola formularza
  */
-class Csrf extends Hidden
+class Csrf extends \Mmi\Form\Element\Csrf
 {
 
     //szablon początku pola
@@ -26,32 +26,5 @@ class Csrf extends Hidden
     CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
     CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
-
-    /**
-     * Ignorowanie tego pola, pole obowiązkowe, automatyczna walidacja
-     */
-    public function __construct($name)
-    {
-        parent::__construct($name);
-        $this->setIgnore()
-            ->setRequired()
-            ->addValidator(new \Mmi\Validator\Csrf(['name' => $name]));
-    }
-
-    /**
-     * Buduje pole
-     * @return string
-     */
-    public function fetchField()
-    {
-        foreach ($this->getValidators() as $validator) {
-            if (!($validator instanceof \Mmi\Validator\Csrf)) {
-                continue;
-            }
-            $this->setValue($validator->generateHash());
-            break;
-        }
-        return parent::fetchField();
-    }
 
 }
