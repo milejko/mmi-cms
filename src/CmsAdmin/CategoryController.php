@@ -60,6 +60,11 @@ class CategoryController extends Mvc\Controller
         }
         //konfiguracja kategorii
         $form = (new \CmsAdmin\Form\Category($category));
+        //sprawdzenie czy kategoria nadal istnieje (form robi zapis - to trwa)
+        if (!$form->isMine() && (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id))) {
+            //przekierowanie na originalId (lub na tree według powyższego warunku)
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->originalId]);
+        }
         //form do widoku
         $this->view->categoryForm = $form;
         //jeśli nie było posta
@@ -279,7 +284,7 @@ class CategoryController extends Mvc\Controller
         $space->unsetAll();
         return $referer;
     }
-    
+
     /**
      * Ustawianie referer'a do sesji
      * @param string $referer
