@@ -58,8 +58,6 @@ class CategoryController extends Mvc\Controller
             $this->getMessenger()->addMessage('Nie posiadasz uprawnień do edycji wybranej strony', false);
             $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
         }
-        //kategoria do widoku
-        $this->view->category = $category;
         //konfiguracja kategorii
         $form = (new \CmsAdmin\Form\Category($category));
         //form do widoku
