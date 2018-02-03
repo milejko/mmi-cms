@@ -22,9 +22,9 @@ class CategoryLockModel
     //prefix w buforze
     const CACHE_PREFIX = 'category-lock';
     //czas blokady (na transakcję)
-    const LOCK_TIMEOUT = 10;
+    const LOCK_TIMEOUT = 30;
     //dodatkowa blokada po zapisie
-    const RELEASE_TIMEOUT = 1;
+    const RELEASE_TIMEOUT = 2;
 
     /**
      * Identyfikator kategorii
@@ -38,6 +38,7 @@ class CategoryLockModel
      */
     public function __construct($categoryId)
     {
+        //przypisanie ID kategorii
         $this->_categoryId = $categoryId;
     }
 
