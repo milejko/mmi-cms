@@ -46,19 +46,29 @@ class CronController extends \Mmi\Mvc\Controller
     }
 
     /**
+     * Czyści stare wersje
+     */
+    public function versionCleanupAction()
+    {
+        (new \Cms\Orm\CmsCategoryQuery)->whereCmsCategoryOriginalId()->notEquals(null)
+            ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_HISTORY)
+            ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-' . ($this->weeks > 0 ? intval($this->weeks) : 53) . ' weeks')))
+            ->find()
+            ->delete();
+        return '';
+    }
+
+    /**
      * Czyściciel logów
      */
     public function cleanAction()
     {
-        $months = 12;
-        if ($this->months > 0) {
-            $months = intval($this->months);
-        }
+        $months = $this->months > 0 ? intval($this->months) : 12;
         //czyszczenie logów
         \Cms\Model\Log::clean($months);
         return '';
     }
-    
+
     /**
      * Usuwa pliki tymczasowe Cms File
      */

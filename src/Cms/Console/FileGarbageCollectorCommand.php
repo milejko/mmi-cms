@@ -81,8 +81,8 @@ class FileGarbageCollectorCommand extends CommandAbstract
      */
     protected function _checkForFile($directory, $file)
     {
-        //szukamy tylko plików o długości 33 znaków+
-        if (strlen($file) < 33) {
+        //szukamy tylko plików w przedziale 33 - 37 znaków
+        if (strlen($file) < 33 || strlen($file) > 37) {
             echo $file . "\n";
             return;
         }
@@ -106,8 +106,6 @@ class FileGarbageCollectorCommand extends CommandAbstract
     {
         echo $fileName . ' - ' . round($this->_size / 1024 / 1024,
                 2) . 'MB in ' . $this->_count . ' files - found: ' . $this->_found . "\n";
-        ob_flush();
-        flush();
     }
 
 }
