@@ -133,9 +133,6 @@ class Category extends \Cms\Form\AttributeForm
                         ->findPairs('cms_role_id', 'cms_role_id') : []
         ));
 
-        //jednorazowy zapis
-        $this->addElement((new Element\Csrf('csrf')));
-
         //zapis
         $this->addElement((new Element\Submit('commit'))
                 ->setLabel('zapisz i zatwierdź'));
