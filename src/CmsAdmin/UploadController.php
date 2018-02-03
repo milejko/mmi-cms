@@ -289,11 +289,18 @@ class UploadController extends Mvc\Controller
     protected function _savePoster($blob, \Cms\Orm\CmsFileRecord $file)
     {
         //brak danych
-        if (false === \preg_match('/^data:(.*);base64,(.*)/i', $blob, $match)) {
-            return null;
+        if (!\preg_match('/^data:(image\/[a-z]+);base64,(.*)/i', $blob, $match)) {
+            return;
         }
         //nazwa postera
         $posterFileName = substr($file->name, 0, strpos($file->name, '.')) . '-' . $file->id . '.' . \Mmi\Http\ResponseTypes::getExtensionByType($match[1]);
+        //próba utworzenia katalogu
+        try {
+            //tworzenie katalogu
+            mkdir(dirname($file->getRealPath()), 0777, true);
+        } catch (\Exception $e) {
+            //nic
+        }
         //zapis
         file_put_contents(str_replace($file->name, $posterFileName, $file->getRealPath()), base64_decode($match[2]));
         //zapis do rekordu
