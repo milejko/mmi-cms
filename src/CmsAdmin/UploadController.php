@@ -18,8 +18,6 @@ use Cms\Orm\CmsFileQuery;
 class UploadController extends Mvc\Controller
 {
 
-    CONST ACCEPTED_POSTER_FORMAT = ['image/png'];
-
     /**
      * Odbieranie danych z plugina Plupload
      */
@@ -121,7 +119,7 @@ class UploadController extends Mvc\Controller
                         return json_encode(['result' => 'OK', 'url' => $url]);
                     }
                 } catch (\Exception $ex) {
-
+                    
                 }
             }
         }
@@ -153,7 +151,7 @@ class UploadController extends Mvc\Controller
             //parametry
             $data = $record->data->toArray();
         }
-        $data['urlFile'] = ((\App\Registry::$config->cdn) ?: '//' . \App\Registry::$config->host) . $record->getUrl();
+        $data['urlFile'] = ((\App\Registry::$config->cdn) ? : '//' . \App\Registry::$config->host) . $record->getUrl();
         return json_encode(['result' => 'OK', 'record' => $record, 'data' => $data]);
     }
 
@@ -174,7 +172,7 @@ class UploadController extends Mvc\Controller
         }
         //pobranie danych
         $form = ['active' => 0, 'sticky' => null];
-        foreach ($this->getPost()->form as $field) {
+        foreach ($form = $this->getPost()->form as $field) {
             $form[$field['name']] = $field['value'];
             if ($field['name'] == 'active' || $field['name'] == 'sticky') {
                 continue;
@@ -190,6 +188,11 @@ class UploadController extends Mvc\Controller
                 continue;
             }
             $record->data->{$field['name']} = $field['value'];
+        }
+        //próba zapisu postera
+        if (isset($form['poster']) && !empty($form['poster'])) {
+            $form['posterFileName'] = $this->_savePoster($form['poster'], $record);
+            unset($form['poster']);
         }
         if ($record->data instanceof \Mmi\DataObject) {
             //czyszczenie nieprzesłanych checkboxów
@@ -275,6 +278,27 @@ class UploadController extends Mvc\Controller
     protected function _operationAfter($action, \Cms\Orm\CmsFileRecord $record)
     {
         return \Mmi\Mvc\ActionHelper::getInstance()->action(new \Mmi\Http\Request(array_merge($record->toArray(), $action)));
+    }
+
+    /**
+     * Zapisanie postera dla video
+     * @param string $blob
+     * @param \Cms\Orm\CmsFileRecord $file
+     * @return string
+     */
+    protected function _savePoster($blob, \Cms\Orm\CmsFileRecord $file)
+    {
+        //brak danych
+        if (false === \preg_match('/^data:(.*);base64,(.*)/i', $blob, $match)) {
+            return null;
+        }
+        //nazwa postera
+        $posterFileName = substr($file->name, 0, strpos($file->name, '.')) . '-' . $file->id . '.' . \Mmi\Http\ResponseTypes::getExtensionByType($match[1]);
+        //zapis
+        file_put_contents(str_replace($file->name, $posterFileName, $file->getRealPath()), base64_decode($match[2]));
+        //zapis do rekordu
+        $file->data->posterFileName = $posterFileName;
+        return $posterFileName;
     }
 
 }
