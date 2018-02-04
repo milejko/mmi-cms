@@ -55,10 +55,9 @@ class FileSystemModel
      * Pobiera ścieżkę publiczną
      * @param string $scaleType
      * @param string $scale
-     * @param boolean $https
      * @return string
      */
-    public function getPublicPath($scaleType = 'default', $scale = null, $https = null)
+    public function getPublicPath($scaleType = 'default', $scale = null)
     {
         //plik źródłowy
         $inputFile = $this->getRealPath();

@@ -125,7 +125,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
      * @param boolean $https null - bez zmian, true - tak, false - nie
      * @return string adres publiczny pliku
      */
-    public function getUrl($scaleType = 'default', $scale = 0, $https = null)
+    public function getUrl($scaleType = 'default', $scale = null, $https = null)
     {
         //brak pliku
         if ($this->id === null) {
@@ -134,7 +134,26 @@ class CmsFileRecord extends \Mmi\Orm\Record
         //ścieżka CDN
         $cdnPath = rtrim(\Mmi\App\FrontController::getInstance()->getView()->cdn ? \Mmi\App\FrontController::getInstance()->getView()->cdn : \Mmi\App\FrontController::getInstance()->getView()->url([], true, $https), '/');
         //pobranie ścieżki z systemu plików
-        return $cdnPath . (new \Cms\Model\FileSystemModel($this->name))->getPublicPath($scaleType, $scale, $https);
+        return $cdnPath . (new \Cms\Model\FileSystemModel($this->name))->getPublicPath($scaleType, $scale);
+    }
+
+    /**
+     * Pobiera adres postera pliku
+     * @param string $scaleType scale, scalex, scaley, scalecrop
+     * @param int|string $scale 320, 320x240
+     * @param boolean $https null - bez zmian, true - tak, false - nie
+     * @return string adres publiczny postera pliku
+     */
+    public function getPosterUrl($scaleType = 'default', $scale = null, $https = null)
+    {
+        //brak pliku
+        if (null === $this->id || !$this->data->posterFileName) {
+            return;
+        }
+        //ścieżka CDN
+        $cdnPath = rtrim(\Mmi\App\FrontController::getInstance()->getView()->cdn ? \Mmi\App\FrontController::getInstance()->getView()->cdn : \Mmi\App\FrontController::getInstance()->getView()->url([], true, $https), '/');
+        //pobranie ścieżki z systemu plików
+        return $cdnPath . (new \Cms\Model\FileSystemModel($this->data->posterFileName))->getPublicPath($scaleType, $scale);
     }
 
     /**
@@ -244,14 +263,6 @@ class CmsFileRecord extends \Mmi\Orm\Record
     {
         //data modyfikacji
         $this->dateModify = date('Y-m-d H:i:s');
-        //zmieniła się nazwa zasobu (upload)
-        /*if (!$this->getOption('children') && $this->getInitialStateValue('name') != $this->name) {
-            foreach ((new CmsFileQuery)->whereName()->equals($this->getInitialStateValue('name'))->find() as $file) {
-                $file->name = $this->name;
-                $file->setOption('children', true);
-                $file->save();
-            }
-        }*/
         return parent::_update();
     }
 

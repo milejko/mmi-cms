@@ -152,6 +152,9 @@ class UploadController extends Mvc\Controller
             $data = $record->data->toArray();
         }
         $data['urlFile'] = ((\App\Registry::$config->cdn) ? : '//' . \App\Registry::$config->host) . $record->getUrl();
+        if ($record->data->posterFileName) {
+            $data['poster'] = $record->getPosterUrl();
+        }    
         return json_encode(['result' => 'OK', 'record' => $record, 'data' => $data]);
     }
 
@@ -190,13 +193,17 @@ class UploadController extends Mvc\Controller
             $record->data->{$field['name']} = $field['value'];
         }
         //próba zapisu postera
-        if (isset($form['poster']) && !empty($form['poster'])) {
+        if (isset($form['poster']) && $form['poster']) {
             $form['posterFileName'] = $this->_savePoster($form['poster'], $record);
-            unset($form['poster']);
         }
+        unset($form['poster']);
         if ($record->data instanceof \Mmi\DataObject) {
             //czyszczenie nieprzesłanych checkboxów
             foreach (array_keys($record->data->toArray()) as $name) {
+                //nie czyścimy postera jeśli był wgrany
+                if ($name == 'posterFileName') {
+                    continue;
+                }
                 if (!isset($form[$name])) {
                     $record->data->{$name} = null;
                 }

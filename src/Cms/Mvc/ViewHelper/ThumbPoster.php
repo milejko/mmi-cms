@@ -26,13 +26,7 @@ class ThumbPoster extends \Mmi\Mvc\ViewHelper\HelperAbstract
      */
     public function thumbPoster(\Cms\Orm\CmsFileRecord $file, $type = 'default', $value = null, $https = null)
     {
-        if (!$file->data->posterFileName) {
-            return;
-        }
-        //ścieżka CDN
-        $cdnPath = rtrim($this->view->cdn ? \Mmi\App\FrontController::getInstance()->getView()->cdn : $this->view->url([], true, $https), '/');
-        //pobranie ścieżki z systemu plików
-        return $cdnPath . (new \Cms\Model\FileSystemModel($file->data->posterFileName))->getPublicPath($type, $value, $https);
+        return $file->getPosterUrl($type, $value, $https);
     }
 
 }
