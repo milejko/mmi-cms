@@ -23,8 +23,11 @@ class PosterMigratorCommand extends CommandAbstract
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        //wyszukiwanie plików z posterami (same identyfikatory, bo pamięć)
         foreach ((new \Cms\Orm\CmsFileQuery)->whereData()->like('%poster%')
-            ->find() as $file) {
+            ->findPairs('id', 'id') as $id) {
+            //pobieranie pojedynczego pliku
+            $file = (new \Cms\Orm\CmsFileQuery)->findPk($id);
             if (null !== $fileName = $this->_savePoster($file)) {
                 echo $this->_savePoster($file) . "\n";
             }
