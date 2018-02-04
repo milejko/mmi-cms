@@ -50,12 +50,17 @@ class CronController extends \Mmi\Mvc\Controller
      */
     public function versionCleanupAction()
     {
-        (new \Cms\Orm\CmsCategoryQuery)->whereCmsCategoryOriginalId()->notEquals(null)
-            ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_HISTORY)
-            ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-' . ($this->weeks > 0 ? intval($this->weeks) : 53) . ' weeks')))
-            ->find()
-            ->delete();
-        return '';
+        //zapytanie wyszukujące drafty i wersje robocze
+        $query = (new \Cms\Orm\CmsCategoryQuery)
+            ->whereCmsCategoryOriginalId()->notEquals(null)
+            ->andFieldStatus()->notEquals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE);
+        //obliczanie z ilu tygodni usunąć
+        $weeks = $this->weeks ? intval($this->weeks) : 53;
+        if ($weeks > 0) {
+            $query->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-' . $weeks . ' weeks')));
+        }
+        //usuwa wersje robocze
+        return 'Deleted: ' . $query->find()->delete() . ' archival versions';
     }
 
     /**
