@@ -3,7 +3,8 @@ var CMS = CMS ? CMS : {};
 CMS.default = function () {
     "use strict";
     var initConfirms,
-            initIframes;
+        initFormDoubleSendLock,
+        duringSend = false;
 
     initConfirms = function () {
         //linki potwierdzające
@@ -12,21 +13,18 @@ CMS.default = function () {
         });
     };
 
-    initIframes = function () {
-        $.each($('iframe'), function (key, frame) {
-            if ($('#' + frame.id).length) {
-                setTimeout(function () {
-                    if (!document.getElementById(frame.id).contentWindow.document.body) {
-                        return;
-                    }
-                    $('#' + frame.id).css('height', document.getElementById(frame.id).contentWindow.document.body.scrollHeight + 20 + 'px');
-                }, 1000);
+    initFormDoubleSendLock = function () {
+        $('form').submit(function () {
+            if (duringSend) {
+                event.preventDefault();
             }
+            duringSend = true;
+            $('input[type=submit]').attr('disabled', true);
+            $('button[type=submit]').attr('disabled', true);
         });
     };
-
+    initFormDoubleSendLock();
     initConfirms();
-    initIframes();
 };
 
 $(document).ready(function () {
