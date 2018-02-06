@@ -19,8 +19,8 @@ CMS.default = function () {
                 event.preventDefault();
             }
             duringSend = true;
-            $('input[type=submit]').attr('disabled', true);
-            $('button[type=submit]').attr('disabled', true);
+            $('input[type=submit]').addClass('disabled');
+            $('button[type=submit]').addClass('disabled');
         });
     };
     initFormDoubleSendLock();
