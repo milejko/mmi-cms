@@ -75,7 +75,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
             return $this;
         }
         //przekierowanie na url zawierający nowowygenerowany uploaderId
-        $frontController->getResponse()->redirectToUrl($frontController->getRouter()->encodeUrl($frontController->getRequest()->toArray() + ['uploaderId' => mt_rand(1000000, 9999999)]));
+        $frontController->getResponse()->redirectToUrl($frontController->getView()->url($frontController->getRequest()->toArray() + ['uploaderId' => mt_rand(1000000, 9999999)]));
         return $this;
     }
 
