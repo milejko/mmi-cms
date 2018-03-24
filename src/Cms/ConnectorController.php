@@ -105,7 +105,7 @@ class ConnectorController extends \Mmi\Mvc\Controller
         //iteracja po plikach
         foreach ($files as $file) {
             //spłaszczenie meta-danych
-            $file->data = $file->date->toArray();
+            $file->data = ($file->data && ($file->data instanceof \Mmi\DataObject)) ? json_encode($file->data->toArray()) : null;
             $data[] = $file->toArray();
         }
         //zwrot meta
