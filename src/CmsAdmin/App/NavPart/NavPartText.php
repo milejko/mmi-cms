@@ -24,8 +24,10 @@ class NavPartText extends \Mmi\Navigation\NavigationConfig
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
                 ->setLabel('Teksty stałe')
-            ->setIcon('fa-comment-o')
+                ->setIcon('fa-align-left')
                 ->setUri('#')
+                ->setModule('cmsAdmin')
+                ->setController('text')
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setLabel('Lista tekstów')
                     ->setIcon('fa-table')

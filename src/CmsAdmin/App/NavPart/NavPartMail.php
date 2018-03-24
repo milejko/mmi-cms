@@ -26,6 +26,8 @@ class NavPartMail extends \Mmi\Navigation\NavigationConfig
                 ->setLabel('Poczta')
                 ->setIcon('fa-envelope-o')
                 ->setUri('#')
+                ->setModule('cmsAdmin')
+                ->setController('mail')
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setLabel('Kolejka mailowa')
                     ->setIcon('fa-table')

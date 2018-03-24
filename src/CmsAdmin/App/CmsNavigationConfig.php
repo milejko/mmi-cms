@@ -39,27 +39,16 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig
                     ->setDisabled())
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setLabel('CMS')
-                    ->setIcon('fa-connectdevelop')
+                    ->setIcon('fa-cog')
                     ->setUri('#')
-                    ->addChild(NavPart\NavPartAttribute::getMenu())
-                    ->addChild(NavPart\NavPartCron::getMenu())
-                    ->addChild(NavPart\NavPartConnector::getMenu())
-                    ->addChild(NavPart\NavPartContact::getMenu())
-                    ->addChild(NavPart\NavPartLog::getMenu())
-                    //->addChild(NavPart\NavPartComment::getMenu())
-                    ->addChild(NavPart\NavPartFile::getMenu())
+                    ->addChild(NavPart\NavPartCategory::getMenu())
+                    ->addChild(NavPart\NavPartText::getMenu())
                     ->addChild(NavPart\NavPartMail::getMenu())
                     ->addChild(NavPart\NavPartStat::getMenu())
-                    ->addChild(NavPart\NavPartTag::getMenu())
-                    ->addChild(NavPart\NavPartText::getMenu())
-                    ->addChild(NavPart\NavPartCategory::getMenu())
-                    ->addChild(NavPart\NavPartAcl::getMenu())
+                    ->addChild(NavPart\NavPartContact::getMenu())
                     ->addChild(NavPart\NavPartAuth::getMenu())
-                    ->addChild((new \Mmi\Navigation\NavigationConfigElement)
-                        ->setLabel('Wyczyść bufor')
-                        ->setModule('cmsAdmin')
-                        ->setIcon('fa-exclamation-triangle ')
-                        ->setController('cache')));
+                    ->addChild(NavPart\NavPartSystem::getMenu())
+                    );
     }
 
 }

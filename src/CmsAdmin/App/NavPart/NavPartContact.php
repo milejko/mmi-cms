@@ -26,6 +26,8 @@ class NavPartContact extends \Mmi\Navigation\NavigationConfig
                 ->setLabel('Kontakt')
                 ->setIcon('fa-comments')
                 ->setUri('#')
+                ->setModule('cmsAdmin')
+                ->setController('contact')
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setLabel('Lista zgłoszeń')
                     ->setIcon('fa-table')
