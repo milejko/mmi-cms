@@ -186,6 +186,10 @@ class CategoryController extends Mvc\Controller
     {
         $this->getResponse()->setTypeJson();
         $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id);
+        //ma historię, nie możemy usunąć
+        if ($cat->hasHistoricalEntries()) {
+            return json_encode(['status' => false, 'error' => 'Strona nie może być usunięta, gdyż posiada wersje archiwalne']);
+        }
         try {
             if ($cat && $cat->delete()) {
                 return json_encode(['status' => true, 'message' => 'Strona została usunięta']);

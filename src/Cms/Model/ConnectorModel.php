@@ -60,12 +60,12 @@ class ConnectorModel
                 return;
             }
             //sprawdzanie istnienia pliku
-            if (null === $file = (new \Cms\Orm\CmsFileQuery)->whereName()->equals($importData['name'])->findFirst()) {
+            if (null === $file = (new \Cms\Orm\CmsFileQuery)->findPk($importData['id'])) {
                 $file = new \Cms\Orm\CmsFileRecord;
             }
             //identyfikatory niezgodne
-            if ($file->id && $file->id != $importData['id']) {
-                return;
+            if ($file->name && $file->name != $importData['name']) {
+                continue;
             }
             //ustawienie danych rekordu rekordu
             $file->setFromArray($importData);

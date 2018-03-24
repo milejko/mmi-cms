@@ -50,11 +50,15 @@ class ConnectorController extends \Mmi\Mvc\Controller
             return 'META ERROR';
         }
         try {
-            //rekursywne tworzenie katalogów
             mkdir(dirname($file->getRealPath()), 0777, true);
+        } catch (\Exception $e) {
+            //nic
+        }
+        try {
             //próba pobrania i zapisu binarium
             file_put_contents($file->getRealPath(), file_get_contents($endpoint . 'exportFileBinary'));
         } catch (\Exception $e) {
+            die($e->getMessage());
             //zwrot pustego statusu
             return 'BIN ERROR';
         }
@@ -97,8 +101,15 @@ class ConnectorController extends \Mmi\Mvc\Controller
             ->find()) {
             throw new \Mmi\Mvc\MvcNotFoundException('File not found');
         }
-        //zwrot meta i pluginów
-        return json_encode($files->toArray());
+        $data = [];
+        //iteracja po plikach
+        foreach ($files as $file) {
+            //spłaszczenie meta-danych
+            $file->data = $file->date->toArray();
+            $data[] = $file->toArray();
+        }
+        //zwrot meta
+        return json_encode($data);
     }
 
     /**

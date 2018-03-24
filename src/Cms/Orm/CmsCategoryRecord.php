@@ -419,6 +419,17 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         return $config;
     }
 
+
+    /**
+     * Zwraca czy istnieją rekordy historyczne
+     * @return boolean
+     */
+    public function hasHistoricalEntries() {
+        return 0 < (new CmsCategoryQuery)->whereCmsCategoryOriginalId()->equals($this->cmsCategoryOriginalId ? $this->cmsCategoryOriginalId : $this->id)
+                ->andFieldStatus()->equals(self::STATUS_HISTORY)
+                ->count();
+    }
+
     /**
      * Przebudowuje dzieci (wywołuje save)
      * @param integer $parentId rodzic
