@@ -93,12 +93,12 @@ class ConnectorController extends \Mmi\Mvc\Controller
     public function exportFileMetaAction()
     {
         //wyszukiwanie pliku
-        if (null === $file = (new Orm\CmsFileQuery)->whereName()->equals($this->name)
-            ->findFirst()) {
+        if (null === $files = (new Orm\CmsFileQuery)->whereName()->equals($this->name)
+            ->find()) {
             throw new \Mmi\Mvc\MvcNotFoundException('File not found');
         }
         //zwrot meta i pluginów
-        return json_encode($file->toArray());
+        return json_encode($files->toArray());
     }
 
     /**

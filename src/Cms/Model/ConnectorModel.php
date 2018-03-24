@@ -48,30 +48,34 @@ class ConnectorModel
 
     /**
      * Importuje meta pliku
-     * @param array $importData
+     * @param array $
      * @return \Cms\Orm\CmsFileRecord
      */
-    public function importFileMeta(array $importData)
+    public function importFileMeta(array $files)
     {
-        //brak id
-        if (!isset($importData['name']) || !isset($importData['id'])) {
-            return;
+        //iteracja po plikach (ta sama nazwa "name")
+        foreach ($files as $importData) {
+            //brak id
+            if (!isset($importData['name']) || !isset($importData['id'])) {
+                return;
+            }
+            //sprawdzanie istnienia pliku
+            if (null === $file = (new \Cms\Orm\CmsFileQuery)->whereName()->equals($importData['name'])->findFirst()) {
+                $file = new \Cms\Orm\CmsFileRecord;
+            }
+            //identyfikatory niezgodne
+            if ($file->id && $file->id != $importData['id']) {
+                return;
+            }
+            //ustawienie danych rekordu rekordu
+            $file->setFromArray($importData);
+            //poprawny zapis
+            if (!$file->save()) {
+                return;
+            }
         }
-        //sprawdzanie istnienia pliku
-        if (null === $file = (new \Cms\Orm\CmsFileQuery)->whereName()->equals($importData['name'])->findFirst()) {
-            $file = new \Cms\Orm\CmsFileRecord;
-        }
-        //identyfikatory niezgodne
-        if ($file->id && $file->id != $importData['id']) {
-            return;
-        }
-        //ustawienie danych rekordu rekordu
-        $file->setFromArray($importData);
-        //poprawny zapis
-        if ($file->save()) {
-            //zwrot rekordu
-            return $file;
-        }
+        //zwrot ostatniego pliku (potrzebny jest dowolny)
+        return $file;
     }
 
     /**
