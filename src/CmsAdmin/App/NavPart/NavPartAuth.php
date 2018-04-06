@@ -26,6 +26,8 @@ class NavPartAuth extends \Mmi\Navigation\NavigationConfig
                 ->setLabel('Użytkownicy')
                 ->setIcon('fa-users')
                 ->setUri('#')
+                ->setModule('cmsAdmin')
+                ->setController('auth')
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setLabel('Lista użytkowników')
                     ->setIcon('fa-table')
@@ -36,8 +38,13 @@ class NavPartAuth extends \Mmi\Navigation\NavigationConfig
                     ->setIcon('fa-user-plus')
                     ->setModule('cmsAdmin')
                     ->setController('auth')
-                    ->setAction('edit')
-        );
+                    ->setAction('edit'))
+                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                    ->setLabel('Uprawnienia')
+                    ->setIcon('fa-key')
+                    ->setModule('cmsAdmin')
+                    ->setController('acl')
+                );
     }
 
 }

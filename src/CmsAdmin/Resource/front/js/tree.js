@@ -274,25 +274,17 @@ CATEGORYCONF.loadPreviewUrl = function (nodeId) {
 CATEGORYCONF.showMessage = function (data) {
     $('#categoryMessageContainer').empty();
     var msg = null;
-    var msgClass = ' class="notice warning"';
-    var icon = '<i class="icon-warning-sign icon-large"></i>';
     if (typeof data.error === 'string') {
         msg = data.error;
-        msgClass = ' class="notice error"';
-        icon = '<i class="icon-remove-sign icon-large"></i>';
     } else if (typeof data.message === 'string') {
         msg = data.message;
-        msgClass = ' class="notice success"';
-        icon = '<i class="icon-ok icon-large"></i>';
     }
     if (msg === null) {
         return;
     }
-    var html = '<ul id="messenger">';
-    html += '<li' + msgClass + '>' + icon + '<div class="alert">' + msg + '<a class="close-alert" href="#"></a></div></li>';
-    html += '</ul>';
-    $('#categoryMessageContainer').html(html);
-    $('#categoryMessageContainer ul#messenger').show();
+    $('#categoryMessageContainer').html('<p style="position: absolute;">' + msg + '</p>');
+    $('#categoryMessageContainer > p').delay(1500).fadeOut(500);
+
 };
 
 CATEGORYCONF.hideMessage = function () {

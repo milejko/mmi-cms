@@ -24,8 +24,10 @@ class NavPartStat extends \Mmi\Navigation\NavigationConfig
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
                 ->setLabel('Statystyki')
-            ->setIcon('fa-pie-chart')
+                ->setIcon('fa-pie-chart')
                 ->setUri('#')
+                ->setModule('cmsAdmin')
+                ->setController('stat')
                 ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                     ->setLabel('Wykresy')
                     ->setIcon('fa-line-chart')

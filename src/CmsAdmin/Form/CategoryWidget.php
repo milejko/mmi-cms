@@ -57,8 +57,7 @@ class CategoryWidget extends \Cms\Form\Form
         $this->addElement((new Element\Select('cacheLifetime'))
             ->setLabel('odświeżanie')
             ->setMultioptions(\Cms\Orm\CmsCategoryWidgetRecord::CACHE_LIFETIMES)
-            ->setValue(\Cms\Orm\CmsCategoryWidgetRecord::DEFAULT_CACHE_LIFETIME)
-            ->addFilter(new Filter\EmptyToNull));
+            ->setValue(\Cms\Orm\CmsCategoryWidgetRecord::DEFAULT_CACHE_LIFETIME));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))

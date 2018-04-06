@@ -1,6 +1,7 @@
 <?php
 
 namespace Cms\Orm;
+use Mmi\DataObject;
 
 /**
  * Rekord pliku
@@ -216,7 +217,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
         } catch (\Exception $e) {
             $data = [];
         }
-        $this->data = (new \Mmi\DataObject)->setParams($data);
+        $this->data = (new DataObject)->setParams($data);
         return $this;
     }
 
@@ -227,7 +228,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
     public function save()
     {
         //iteracja po polach
-        foreach (($data = ($this->data instanceof \Mmi\DataObject) ? $this->data->toArray() : []) as $field => $value) {
+        foreach (($data = ($this->data instanceof DataObject) ? $this->data->toArray() : []) as $field => $value) {
             //usuwanie pustych pól
             if ($value === null) {
                 unset($data[$field]);
