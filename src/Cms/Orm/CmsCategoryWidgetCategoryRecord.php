@@ -16,6 +16,8 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     
     //prefiks obiektów plików dla widgetu
     CONST FILE_OBJECT_PREFIX = 'categoryWidgetRelation';
+    //prefiks atrybutów
+    CONST CMS_ATTRIBUTE_PREFIX = 'cmsAttribute';
 
     /**
      * Kolejność
@@ -112,6 +114,26 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
         }
         $config = (new \Mmi\DataObject())->setParams($configArr);
         return $config;
+    }
+
+    /**
+     * Ustawia configJson na podstawie danych
+     * z filtracją danych zapisanych w atrybutach
+     * @param array $data
+     * @return bool
+     */
+    public function setConfigFromArray(array $data = []) {
+        //iteracja po danych
+        foreach ($data as $key => $value) {
+            //wyszukiwanie patternu (np. cmsAttribute123)
+            if (preg_match('/' . self::CMS_ATTRIBUTE_PREFIX . '[0-9]+/', $key)) {
+                //usuwanie danych, gdyż są zapisane w atrybucie
+                unset($data[$key]);
+            }
+        }
+        //kodowanie konfiguracji
+        $this->configJson = empty($data) ? null : \json_encode($data);
+        return $this->save();
     }
 
     /**
