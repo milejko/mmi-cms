@@ -83,8 +83,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
         //form zapisany
         if ($form->isSaved()) {
             //zapis konfiguracji
-            $widgetRelationRecord->configJson = \json_encode($record->getOptions());
-            $widgetRelationRecord->save();
+            $widgetRelationRecord->setConfigFromArray($record->getOptions());
             $this->getResponse()->redirect('cmsAdmin', 'categoryWidgetRelation', 'config');
         }
         //form do widoku
