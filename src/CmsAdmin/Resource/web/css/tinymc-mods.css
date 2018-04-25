@@ -1,7 +1,10 @@
 #lionite-gallery li {
-  border: 1px solid #e0e0e0; }
+  border: 1px solid #20a8d8; }
   #lionite-gallery li:hover {
-    border: 1px solid #20a8d8 !important; }
+    border: 2px solid #20a8d8 !important; }
+
+.ui-dialog.ui-draggable {
+  z-index: 1001; }
 
 .ui-dialog .ui-dialog-titlebar {
   border-radius: 0;

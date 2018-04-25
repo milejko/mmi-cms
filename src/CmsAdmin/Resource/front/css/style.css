@@ -1285,12 +1285,15 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
     box-shadow: 0 0 0 0.2rem rgba(248, 108, 107, 0.25); }
   .was-validated .form-control:invalid ~ .invalid-feedback,
   .was-validated .form-control:invalid ~ .invalid-tooltip, .form-control.is-invalid ~ .invalid-feedback, .form-control.error ~ .invalid-feedback,
-  .form-control.is-invalid ~ .invalid-tooltip, .form-control.error ~ .invalid-tooltip, .was-validated
+  .form-control.is-invalid ~ .invalid-tooltip,
+  .form-control.error ~ .invalid-tooltip, .was-validated
   .custom-select:invalid ~ .invalid-feedback,
   .was-validated
   .custom-select:invalid ~ .invalid-tooltip,
-  .custom-select.is-invalid ~ .invalid-feedback, .custom-select.form-control.error ~ .invalid-feedback,
-  .custom-select.is-invalid ~ .invalid-tooltip, .custom-select.form-control.error ~ .invalid-tooltip {
+  .custom-select.is-invalid ~ .invalid-feedback,
+  .custom-select.form-control.error ~ .invalid-feedback,
+  .custom-select.is-invalid ~ .invalid-tooltip,
+  .custom-select.form-control.error ~ .invalid-tooltip {
     display: block; }
 
 .was-validated .form-check-input:invalid + .form-check-label, .form-check-input.is-invalid + .form-check-label, .form-check-input.form-control.error + .form-check-label {
@@ -2188,8 +2191,8 @@ tbody.collapse.show {
       border-color: transparent; }
   .nav-tabs .nav-link.active, .nav-tabs .navbar .active.dropdown-toggle, .navbar .nav-tabs .active.dropdown-toggle,
   .nav-tabs .nav-item.show .nav-link,
-  .nav-tabs .nav-item.show .navbar .dropdown-toggle, .navbar
-  .nav-tabs .nav-item.show .dropdown-toggle {
+  .nav-tabs .nav-item.show .navbar .dropdown-toggle,
+  .navbar .nav-tabs .nav-item.show .dropdown-toggle {
     color: #3e515b;
     background-color: #e4e5e6;
     border-color: #ddd #ddd #e4e5e6; }
@@ -2198,8 +2201,8 @@ tbody.collapse.show {
 
 .nav-pills .nav-link.active, .nav-pills .navbar .active.dropdown-toggle, .navbar .nav-pills .active.dropdown-toggle,
 .show > .nav-pills .nav-link,
-.show > .nav-pills .navbar .dropdown-toggle, .navbar
-.show > .nav-pills .dropdown-toggle {
+.show > .nav-pills .navbar .dropdown-toggle,
+.navbar .show > .nav-pills .dropdown-toggle {
   color: #fff;
   background-color: #20a8d8; }
 
@@ -2439,14 +2442,14 @@ tbody.collapse.show {
 
 .navbar-light .navbar-nav .show > .nav-link, .navbar-light .navbar-nav .navbar .show > .dropdown-toggle, .navbar .navbar-light .navbar-nav .show > .dropdown-toggle,
 .navbar-light .navbar-nav .active > .nav-link,
-.navbar-light .navbar-nav .navbar .active > .dropdown-toggle, .navbar
-.navbar-light .navbar-nav .active > .dropdown-toggle,
+.navbar-light .navbar-nav .navbar .active > .dropdown-toggle,
+.navbar .navbar-light .navbar-nav .active > .dropdown-toggle,
 .navbar-light .navbar-nav .nav-link.show,
-.navbar-light .navbar-nav .navbar .show.dropdown-toggle, .navbar
-.navbar-light .navbar-nav .show.dropdown-toggle,
+.navbar-light .navbar-nav .navbar .show.dropdown-toggle,
+.navbar .navbar-light .navbar-nav .show.dropdown-toggle,
 .navbar-light .navbar-nav .nav-link.active,
-.navbar-light .navbar-nav .navbar .active.dropdown-toggle, .navbar
-.navbar-light .navbar-nav .active.dropdown-toggle {
+.navbar-light .navbar-nav .navbar .active.dropdown-toggle,
+.navbar .navbar-light .navbar-nav .active.dropdown-toggle {
   color: rgba(0, 0, 0, 0.9); }
 
 .navbar-light .navbar-toggler {
@@ -2473,14 +2476,14 @@ tbody.collapse.show {
 
 .navbar-dark .navbar-nav .show > .nav-link, .navbar-dark .navbar-nav .navbar .show > .dropdown-toggle, .navbar .navbar-dark .navbar-nav .show > .dropdown-toggle,
 .navbar-dark .navbar-nav .active > .nav-link,
-.navbar-dark .navbar-nav .navbar .active > .dropdown-toggle, .navbar
-.navbar-dark .navbar-nav .active > .dropdown-toggle,
+.navbar-dark .navbar-nav .navbar .active > .dropdown-toggle,
+.navbar .navbar-dark .navbar-nav .active > .dropdown-toggle,
 .navbar-dark .navbar-nav .nav-link.show,
-.navbar-dark .navbar-nav .navbar .show.dropdown-toggle, .navbar
-.navbar-dark .navbar-nav .show.dropdown-toggle,
+.navbar-dark .navbar-nav .navbar .show.dropdown-toggle,
+.navbar .navbar-dark .navbar-nav .show.dropdown-toggle,
 .navbar-dark .navbar-nav .nav-link.active,
-.navbar-dark .navbar-nav .navbar .active.dropdown-toggle, .navbar
-.navbar-dark .navbar-nav .active.dropdown-toggle {
+.navbar-dark .navbar-nav .navbar .active.dropdown-toggle,
+.navbar .navbar-dark .navbar-nav .active.dropdown-toggle {
   color: white; }
 
 .navbar-dark .navbar-toggler {
@@ -3321,13 +3324,16 @@ button.close {
     .popover.bs-popover-top .arrow, .popover.bs-popover-auto[x-placement^="top"] .arrow {
       bottom: 0; }
     .popover.bs-popover-top .arrow::before, .popover.bs-popover-auto[x-placement^="top"] .arrow::before,
-    .popover.bs-popover-top .arrow::after, .popover.bs-popover-auto[x-placement^="top"] .arrow::after {
+    .popover.bs-popover-top .arrow::after,
+    .popover.bs-popover-auto[x-placement^="top"] .arrow::after {
       border-bottom-width: 0; }
     .popover.bs-popover-top .arrow::before, .popover.bs-popover-auto[x-placement^="top"] .arrow::before {
       bottom: -11px;
       margin-left: -6px;
       border-top-color: rgba(0, 0, 0, 0.25); }
-    .popover.bs-popover-top .arrow::after, .popover.bs-popover-auto[x-placement^="top"] .arrow::after {
+    
+    .popover.bs-popover-top .arrow::after,
+    .popover.bs-popover-auto[x-placement^="top"] .arrow::after {
       bottom: -10px;
       margin-left: -6px;
       border-top-color: #fff; }
@@ -3336,13 +3342,16 @@ button.close {
     .popover.bs-popover-right .arrow, .popover.bs-popover-auto[x-placement^="right"] .arrow {
       left: 0; }
     .popover.bs-popover-right .arrow::before, .popover.bs-popover-auto[x-placement^="right"] .arrow::before,
-    .popover.bs-popover-right .arrow::after, .popover.bs-popover-auto[x-placement^="right"] .arrow::after {
+    .popover.bs-popover-right .arrow::after,
+    .popover.bs-popover-auto[x-placement^="right"] .arrow::after {
       margin-top: -8px;
       border-left-width: 0; }
     .popover.bs-popover-right .arrow::before, .popover.bs-popover-auto[x-placement^="right"] .arrow::before {
       left: -11px;
       border-right-color: rgba(0, 0, 0, 0.25); }
-    .popover.bs-popover-right .arrow::after, .popover.bs-popover-auto[x-placement^="right"] .arrow::after {
+    
+    .popover.bs-popover-right .arrow::after,
+    .popover.bs-popover-auto[x-placement^="right"] .arrow::after {
       left: -10px;
       border-right-color: #fff; }
   .popover.bs-popover-bottom, .popover.bs-popover-auto[x-placement^="bottom"] {
@@ -3350,13 +3359,16 @@ button.close {
     .popover.bs-popover-bottom .arrow, .popover.bs-popover-auto[x-placement^="bottom"] .arrow {
       top: 0; }
     .popover.bs-popover-bottom .arrow::before, .popover.bs-popover-auto[x-placement^="bottom"] .arrow::before,
-    .popover.bs-popover-bottom .arrow::after, .popover.bs-popover-auto[x-placement^="bottom"] .arrow::after {
+    .popover.bs-popover-bottom .arrow::after,
+    .popover.bs-popover-auto[x-placement^="bottom"] .arrow::after {
       margin-left: -7px;
       border-top-width: 0; }
     .popover.bs-popover-bottom .arrow::before, .popover.bs-popover-auto[x-placement^="bottom"] .arrow::before {
       top: -11px;
       border-bottom-color: rgba(0, 0, 0, 0.25); }
-    .popover.bs-popover-bottom .arrow::after, .popover.bs-popover-auto[x-placement^="bottom"] .arrow::after {
+    
+    .popover.bs-popover-bottom .arrow::after,
+    .popover.bs-popover-auto[x-placement^="bottom"] .arrow::after {
       top: -10px;
       border-bottom-color: #fff; }
     .popover.bs-popover-bottom .popover-header::before, .popover.bs-popover-auto[x-placement^="bottom"] .popover-header::before {
@@ -3373,13 +3385,16 @@ button.close {
     .popover.bs-popover-left .arrow, .popover.bs-popover-auto[x-placement^="left"] .arrow {
       right: 0; }
     .popover.bs-popover-left .arrow::before, .popover.bs-popover-auto[x-placement^="left"] .arrow::before,
-    .popover.bs-popover-left .arrow::after, .popover.bs-popover-auto[x-placement^="left"] .arrow::after {
+    .popover.bs-popover-left .arrow::after,
+    .popover.bs-popover-auto[x-placement^="left"] .arrow::after {
       margin-top: -8px;
       border-right-width: 0; }
     .popover.bs-popover-left .arrow::before, .popover.bs-popover-auto[x-placement^="left"] .arrow::before {
       right: -11px;
       border-left-color: rgba(0, 0, 0, 0.25); }
-    .popover.bs-popover-left .arrow::after, .popover.bs-popover-auto[x-placement^="left"] .arrow::after {
+    
+    .popover.bs-popover-left .arrow::after,
+    .popover.bs-popover-auto[x-placement^="left"] .arrow::after {
       right: -10px;
       border-left-color: #fff; }
 
@@ -6131,30 +6146,54 @@ button {
       font-size: 1.25rem;
       line-height: 1.5; }
     .btn-facebook.btn-lg span, .btn-group-lg > .btn-facebook.btn span,
-    .btn-twitter.btn-lg span, .btn-group-lg > .btn-twitter.btn span,
-    .btn-linkedin.btn-lg span, .btn-group-lg > .btn-linkedin.btn span,
-    .btn-flickr.btn-lg span, .btn-group-lg > .btn-flickr.btn span,
-    .btn-tumblr.btn-lg span, .btn-group-lg > .btn-tumblr.btn span,
-    .btn-xing.btn-lg span, .btn-group-lg > .btn-xing.btn span,
-    .btn-github.btn-lg span, .btn-group-lg > .btn-github.btn span,
-    .btn-html5.btn-lg span, .btn-group-lg > .btn-html5.btn span,
-    .btn-openid.btn-lg span, .btn-group-lg > .btn-openid.btn span,
-    .btn-stack-overflow.btn-lg span, .btn-group-lg > .btn-stack-overflow.btn span,
-    .btn-youtube.btn-lg span, .btn-group-lg > .btn-youtube.btn span,
-    .btn-css3.btn-lg span, .btn-group-lg > .btn-css3.btn span,
-    .btn-dribbble.btn-lg span, .btn-group-lg > .btn-dribbble.btn span,
-    .btn-google-plus.btn-lg span, .btn-group-lg > .btn-google-plus.btn span,
-    .btn-instagram.btn-lg span, .btn-group-lg > .btn-instagram.btn span,
-    .btn-pinterest.btn-lg span, .btn-group-lg > .btn-pinterest.btn span,
-    .btn-vk.btn-lg span, .btn-group-lg > .btn-vk.btn span,
-    .btn-yahoo.btn-lg span, .btn-group-lg > .btn-yahoo.btn span,
-    .btn-behance.btn-lg span, .btn-group-lg > .btn-behance.btn span,
-    .btn-dropbox.btn-lg span, .btn-group-lg > .btn-dropbox.btn span,
-    .btn-reddit.btn-lg span, .btn-group-lg > .btn-reddit.btn span,
-    .btn-spotify.btn-lg span, .btn-group-lg > .btn-spotify.btn span,
-    .btn-vine.btn-lg span, .btn-group-lg > .btn-vine.btn span,
-    .btn-foursquare.btn-lg span, .btn-group-lg > .btn-foursquare.btn span,
-    .btn-vimeo.btn-lg span, .btn-group-lg > .btn-vimeo.btn span {
+    .btn-twitter.btn-lg span,
+    .btn-group-lg > .btn-twitter.btn span,
+    .btn-linkedin.btn-lg span,
+    .btn-group-lg > .btn-linkedin.btn span,
+    .btn-flickr.btn-lg span,
+    .btn-group-lg > .btn-flickr.btn span,
+    .btn-tumblr.btn-lg span,
+    .btn-group-lg > .btn-tumblr.btn span,
+    .btn-xing.btn-lg span,
+    .btn-group-lg > .btn-xing.btn span,
+    .btn-github.btn-lg span,
+    .btn-group-lg > .btn-github.btn span,
+    .btn-html5.btn-lg span,
+    .btn-group-lg > .btn-html5.btn span,
+    .btn-openid.btn-lg span,
+    .btn-group-lg > .btn-openid.btn span,
+    .btn-stack-overflow.btn-lg span,
+    .btn-group-lg > .btn-stack-overflow.btn span,
+    .btn-youtube.btn-lg span,
+    .btn-group-lg > .btn-youtube.btn span,
+    .btn-css3.btn-lg span,
+    .btn-group-lg > .btn-css3.btn span,
+    .btn-dribbble.btn-lg span,
+    .btn-group-lg > .btn-dribbble.btn span,
+    .btn-google-plus.btn-lg span,
+    .btn-group-lg > .btn-google-plus.btn span,
+    .btn-instagram.btn-lg span,
+    .btn-group-lg > .btn-instagram.btn span,
+    .btn-pinterest.btn-lg span,
+    .btn-group-lg > .btn-pinterest.btn span,
+    .btn-vk.btn-lg span,
+    .btn-group-lg > .btn-vk.btn span,
+    .btn-yahoo.btn-lg span,
+    .btn-group-lg > .btn-yahoo.btn span,
+    .btn-behance.btn-lg span,
+    .btn-group-lg > .btn-behance.btn span,
+    .btn-dropbox.btn-lg span,
+    .btn-group-lg > .btn-dropbox.btn span,
+    .btn-reddit.btn-lg span,
+    .btn-group-lg > .btn-reddit.btn span,
+    .btn-spotify.btn-lg span,
+    .btn-group-lg > .btn-spotify.btn span,
+    .btn-vine.btn-lg span,
+    .btn-group-lg > .btn-vine.btn span,
+    .btn-foursquare.btn-lg span,
+    .btn-group-lg > .btn-foursquare.btn span,
+    .btn-vimeo.btn-lg span,
+    .btn-group-lg > .btn-vimeo.btn span {
       margin-left: 2.875rem; }
     .btn-facebook.btn-lg.icon, .btn-group-lg > .btn-facebook.icon.btn,
     .btn-twitter.btn-lg.icon,
@@ -6315,30 +6354,54 @@ button {
       font-size: 0.875rem;
       line-height: 1.5; }
     .btn-facebook.btn-sm span, .btn-group-sm > .btn-facebook.btn span,
-    .btn-twitter.btn-sm span, .btn-group-sm > .btn-twitter.btn span,
-    .btn-linkedin.btn-sm span, .btn-group-sm > .btn-linkedin.btn span,
-    .btn-flickr.btn-sm span, .btn-group-sm > .btn-flickr.btn span,
-    .btn-tumblr.btn-sm span, .btn-group-sm > .btn-tumblr.btn span,
-    .btn-xing.btn-sm span, .btn-group-sm > .btn-xing.btn span,
-    .btn-github.btn-sm span, .btn-group-sm > .btn-github.btn span,
-    .btn-html5.btn-sm span, .btn-group-sm > .btn-html5.btn span,
-    .btn-openid.btn-sm span, .btn-group-sm > .btn-openid.btn span,
-    .btn-stack-overflow.btn-sm span, .btn-group-sm > .btn-stack-overflow.btn span,
-    .btn-youtube.btn-sm span, .btn-group-sm > .btn-youtube.btn span,
-    .btn-css3.btn-sm span, .btn-group-sm > .btn-css3.btn span,
-    .btn-dribbble.btn-sm span, .btn-group-sm > .btn-dribbble.btn span,
-    .btn-google-plus.btn-sm span, .btn-group-sm > .btn-google-plus.btn span,
-    .btn-instagram.btn-sm span, .btn-group-sm > .btn-instagram.btn span,
-    .btn-pinterest.btn-sm span, .btn-group-sm > .btn-pinterest.btn span,
-    .btn-vk.btn-sm span, .btn-group-sm > .btn-vk.btn span,
-    .btn-yahoo.btn-sm span, .btn-group-sm > .btn-yahoo.btn span,
-    .btn-behance.btn-sm span, .btn-group-sm > .btn-behance.btn span,
-    .btn-dropbox.btn-sm span, .btn-group-sm > .btn-dropbox.btn span,
-    .btn-reddit.btn-sm span, .btn-group-sm > .btn-reddit.btn span,
-    .btn-spotify.btn-sm span, .btn-group-sm > .btn-spotify.btn span,
-    .btn-vine.btn-sm span, .btn-group-sm > .btn-vine.btn span,
-    .btn-foursquare.btn-sm span, .btn-group-sm > .btn-foursquare.btn span,
-    .btn-vimeo.btn-sm span, .btn-group-sm > .btn-vimeo.btn span {
+    .btn-twitter.btn-sm span,
+    .btn-group-sm > .btn-twitter.btn span,
+    .btn-linkedin.btn-sm span,
+    .btn-group-sm > .btn-linkedin.btn span,
+    .btn-flickr.btn-sm span,
+    .btn-group-sm > .btn-flickr.btn span,
+    .btn-tumblr.btn-sm span,
+    .btn-group-sm > .btn-tumblr.btn span,
+    .btn-xing.btn-sm span,
+    .btn-group-sm > .btn-xing.btn span,
+    .btn-github.btn-sm span,
+    .btn-group-sm > .btn-github.btn span,
+    .btn-html5.btn-sm span,
+    .btn-group-sm > .btn-html5.btn span,
+    .btn-openid.btn-sm span,
+    .btn-group-sm > .btn-openid.btn span,
+    .btn-stack-overflow.btn-sm span,
+    .btn-group-sm > .btn-stack-overflow.btn span,
+    .btn-youtube.btn-sm span,
+    .btn-group-sm > .btn-youtube.btn span,
+    .btn-css3.btn-sm span,
+    .btn-group-sm > .btn-css3.btn span,
+    .btn-dribbble.btn-sm span,
+    .btn-group-sm > .btn-dribbble.btn span,
+    .btn-google-plus.btn-sm span,
+    .btn-group-sm > .btn-google-plus.btn span,
+    .btn-instagram.btn-sm span,
+    .btn-group-sm > .btn-instagram.btn span,
+    .btn-pinterest.btn-sm span,
+    .btn-group-sm > .btn-pinterest.btn span,
+    .btn-vk.btn-sm span,
+    .btn-group-sm > .btn-vk.btn span,
+    .btn-yahoo.btn-sm span,
+    .btn-group-sm > .btn-yahoo.btn span,
+    .btn-behance.btn-sm span,
+    .btn-group-sm > .btn-behance.btn span,
+    .btn-dropbox.btn-sm span,
+    .btn-group-sm > .btn-dropbox.btn span,
+    .btn-reddit.btn-sm span,
+    .btn-group-sm > .btn-reddit.btn span,
+    .btn-spotify.btn-sm span,
+    .btn-group-sm > .btn-spotify.btn span,
+    .btn-vine.btn-sm span,
+    .btn-group-sm > .btn-vine.btn span,
+    .btn-foursquare.btn-sm span,
+    .btn-group-sm > .btn-foursquare.btn span,
+    .btn-vimeo.btn-sm span,
+    .btn-group-sm > .btn-vimeo.btn span {
       margin-left: 1.8125rem; }
     .btn-facebook.btn-sm.icon, .btn-group-sm > .btn-facebook.icon.btn,
     .btn-twitter.btn-sm.icon,
@@ -7258,32 +7321,32 @@ base-chart.chart {
 
 .navbar-nav .open > .nav-link, .navbar-nav .navbar .open > .dropdown-toggle, .navbar .navbar-nav .open > .dropdown-toggle, .navbar-nav .open > .nav-link:focus, .navbar-nav .navbar .open > .dropdown-toggle:focus, .navbar .navbar-nav .open > .dropdown-toggle:focus, .navbar-nav .open > .nav-link:hover, .navbar-nav .navbar .open > .dropdown-toggle:hover, .navbar .navbar-nav .open > .dropdown-toggle:hover,
 .navbar-nav .active > .nav-link,
-.navbar-nav .navbar .active > .dropdown-toggle, .navbar
-.navbar-nav .active > .dropdown-toggle,
+.navbar-nav .navbar .active > .dropdown-toggle,
+.navbar .navbar-nav .active > .dropdown-toggle,
 .navbar-nav .active > .nav-link:focus,
-.navbar-nav .navbar .active > .dropdown-toggle:focus, .navbar
-.navbar-nav .active > .dropdown-toggle:focus,
+.navbar-nav .navbar .active > .dropdown-toggle:focus,
+.navbar .navbar-nav .active > .dropdown-toggle:focus,
 .navbar-nav .active > .nav-link:hover,
-.navbar-nav .navbar .active > .dropdown-toggle:hover, .navbar
-.navbar-nav .active > .dropdown-toggle:hover,
+.navbar-nav .navbar .active > .dropdown-toggle:hover,
+.navbar .navbar-nav .active > .dropdown-toggle:hover,
 .navbar-nav .nav-link.open,
-.navbar-nav .navbar .open.dropdown-toggle, .navbar
-.navbar-nav .open.dropdown-toggle,
+.navbar-nav .navbar .open.dropdown-toggle,
+.navbar .navbar-nav .open.dropdown-toggle,
 .navbar-nav .nav-link.open:focus,
-.navbar-nav .navbar .open.dropdown-toggle:focus, .navbar
-.navbar-nav .open.dropdown-toggle:focus,
+.navbar-nav .navbar .open.dropdown-toggle:focus,
+.navbar .navbar-nav .open.dropdown-toggle:focus,
 .navbar-nav .nav-link.open:hover,
-.navbar-nav .navbar .open.dropdown-toggle:hover, .navbar
-.navbar-nav .open.dropdown-toggle:hover,
+.navbar-nav .navbar .open.dropdown-toggle:hover,
+.navbar .navbar-nav .open.dropdown-toggle:hover,
 .navbar-nav .nav-link.active,
-.navbar-nav .navbar .active.dropdown-toggle, .navbar
-.navbar-nav .active.dropdown-toggle,
+.navbar-nav .navbar .active.dropdown-toggle,
+.navbar .navbar-nav .active.dropdown-toggle,
 .navbar-nav .nav-link.active:focus,
-.navbar-nav .navbar .active.dropdown-toggle:focus, .navbar
-.navbar-nav .active.dropdown-toggle:focus,
+.navbar-nav .navbar .active.dropdown-toggle:focus,
+.navbar .navbar-nav .active.dropdown-toggle:focus,
 .navbar-nav .nav-link.active:hover,
-.navbar-nav .navbar .active.dropdown-toggle:hover, .navbar
-.navbar-nav .active.dropdown-toggle:hover {
+.navbar-nav .navbar .active.dropdown-toggle:hover,
+.navbar .navbar-nav .active.dropdown-toggle:hover {
   color: #29363d; }
 
 .navbar-divider {
@@ -7965,7 +8028,8 @@ base-chart.chart {
       left: 8px; }
 
 .switch-pill .switch-label, .switch.switch-3d .switch-label,
-.switch-pill .switch-handle, .switch.switch-3d .switch-handle {
+.switch-pill .switch-handle,
+.switch.switch-3d .switch-handle {
   border-radius: 50em !important; }
 
 .switch-pill .switch-label::before, .switch.switch-3d .switch-label::before {
@@ -9062,6 +9126,14 @@ ul.wlist {
     padding: 10px;
     overflow: hidden;
     clear: both; }
+    ul.wlist li ul {
+      list-style-type: square; }
+      ul.wlist li ul li {
+        background: none;
+        overflow: initial;
+        border: none;
+        margin: 0;
+        padding: 0; }
     ul.wlist li div.preview {
       float: left;
       width: calc(100% - 60px);
