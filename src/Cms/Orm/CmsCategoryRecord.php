@@ -475,6 +475,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //wyszukuje maksymalny order
         $maxOrder = (new CmsCategoryQuery)
             ->whereParentId()->equals($this->parentId)
+            ->andFieldStatus()->equals(self::STATUS_ACTIVE)
             ->findMax('order');
         //będzie inkrementowany
         return $maxOrder === null ? -1 : $maxOrder;
