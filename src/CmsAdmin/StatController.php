@@ -24,7 +24,7 @@ class StatController extends Mvc\Controller
         $year = $this->year ? $this->year : date('Y');
         $month = $this->month ? $this->month : date('m');
         //form filtrujący
-        $form = new \CmsAdmin\Form\Stat\Object(null, ['object' => $this->object,
+        $form = new \CmsAdmin\Form\Stat\StatObject(null, ['object' => $this->object,
             'year' => $year,
             'month' => $month,
         ]);

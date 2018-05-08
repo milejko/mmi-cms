@@ -15,7 +15,7 @@ use Cms\Form\Element;
 /**
  * Obiekt wyboru statystyki do podglądu
  */
-class Object extends \Cms\Form\Form
+class StatObject extends \Cms\Form\Form
 {
 
     /**
