@@ -130,7 +130,7 @@ CMS.grid = function () {
 
     var initGridOperation = function () {
         //akcja na zmianie checkboxa
-        $('table.table-striped').on('change', 'td > div.control-checkbox > input.checkbox', function () {
+        $('table.table-striped').on('change', 'td > label.control-checkbox > input.checkbox', function () {
             var id = $(this).attr('id').split('-');
             $.ajax({
                 url: window.location,

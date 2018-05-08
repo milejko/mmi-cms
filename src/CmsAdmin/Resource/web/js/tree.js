@@ -172,6 +172,10 @@ $(document).ready(function () {
                         .done(function (d) {
                             if (d.status) {
                                 data.instance.set_id(data.node, d.id);
+                                data.instance.set_icon(data.node, d.icon);
+                                if (d.disabled) {
+                                    data.instance.disable_node(data.node);
+                                }
                                 $('#jstree').jstree('deselect_all');
                                 $('#jstree').jstree('select_node', d.id);
                             } else {
