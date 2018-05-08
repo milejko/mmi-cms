@@ -99,7 +99,7 @@ class CategoryController extends Mvc\Controller
      */
     public function treeAction()
     {
-        
+
     }
 
     /**
@@ -136,7 +136,26 @@ class CategoryController extends Mvc\Controller
         $cat->active = false;
         $cat->status = \Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE;
         if ($cat->save()) {
-            return json_encode(['status' => true, 'id' => $cat->id, 'message' => 'Strona została utworzona']);
+            $icon = '';
+            $disabled = false;
+            //ikona nieaktywnego wezla gdy nieaktywny
+            if (!$cat->active) {
+                $icon = $this->view->baseUrl . '/resource/cmsAdmin/images/folder-inactive.png';
+            }
+            //sprawdzenie uprawnień do węzła
+            $acl = (new \CmsAdmin\Model\CategoryAclModel)->getAcl();
+            if (!$acl->isAllowed(\App\Registry::$auth->getRoles(), $cat->id)) {
+                $disabled = true;
+                //ikona zablokowanego wezla gdy brak uprawnien
+                $icon = $this->view->baseUrl . '/resource/cmsAdmin/images/folder-disabled.png';
+            }
+            return json_encode([
+                'status' => true,
+                'id' => $cat->id,
+                'icon' => $icon,
+                'disabled' => $disabled,
+                'message' => 'Strona została utworzona'
+            ]);
         }
         return json_encode(['status' => false, 'error' => 'Nie udało się utworzyć strony']);
     }
