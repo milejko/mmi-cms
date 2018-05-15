@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -53,7 +53,8 @@ class Category extends \Cms\Form\AttributeForm
         //ustawienie bufora
         $this->addElement((new Element\Select('cacheLifetime'))
                 ->setLabel('odświeżanie')
-                ->setMultioptions([null => 'domyślne dla szablonu'] + \Cms\Orm\CmsCategoryRecord::CACHE_LIFETIMES));
+                ->setMultioptions([null => 'domyślne dla szablonu'] + \Cms\Orm\CmsCategoryRecord::CACHE_LIFETIMES))
+                ->addFilter(new Filter\EmptyStringToNull);
 
         //aktywna
         $this->addElement((new Element\Checkbox('active'))
