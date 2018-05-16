@@ -51,10 +51,12 @@ class Category extends \Cms\Form\AttributeForm
                 ->setDateMinField($this->getElement('dateStart')));
 
         //ustawienie bufora
-        $this->addElement((new Element\Select('cacheLifetime'))
+        $this->addElement(
+            (new Element\Select('cacheLifetime'))
                 ->setLabel('odświeżanie')
-                ->setMultioptions([null => 'domyślne dla szablonu'] + \Cms\Orm\CmsCategoryRecord::CACHE_LIFETIMES))
-                ->addFilter(new Filter\EmptyStringToNull);
+                ->setMultioptions([null => 'domyślne dla szablonu'] + \Cms\Orm\CmsCategoryRecord::CACHE_LIFETIMES)
+                ->addFilter(new Filter\EmptyStringToNull)
+        );
 
         //aktywna
         $this->addElement((new Element\Checkbox('active'))
