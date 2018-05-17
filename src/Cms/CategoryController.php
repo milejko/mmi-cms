@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -20,12 +20,22 @@ class CategoryController extends \Mmi\Mvc\Controller
     CONST REDACTOR_VERIFY_ACTION = 'cmsAdmin:category:index';
 
     /**
+     * Inicjalizacja
+     * @throws \Mmi\Mvc\MvcNotFoundException
+     */
+    public function init()
+    {
+        //pobranie kategorii
+        $this->view->category = $this->_getPublishedCategoryByUri($this->uri);
+    }
+
+    /**
      * Akcja dispatchera kategorii
      */
     public function dispatchAction()
     {
         //pobranie kategorii
-        $category = $this->_getPublishedCategoryByUri($this->uri);
+        $category = $this->view->category;
         //klucz bufora
         $cacheKey = 'category-html-' . $category->id;
         //buforowanie dozwolone
@@ -87,7 +97,7 @@ class CategoryController extends \Mmi\Mvc\Controller
      */
     public function articleAction()
     {
-        
+
     }
 
     /**

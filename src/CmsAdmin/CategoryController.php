@@ -121,6 +121,8 @@ class CategoryController extends Mvc\Controller
         $this->view->parentId = ($this->parentId > 0) ? $this->parentId : null;
         //pobranie drzewiastej struktury stron CMS
         $this->view->categoryTree = (new \Cms\Model\CategoryModel)->getCategoryTree($this->view->parentId);
+        return 'test';
+        return $this->view->render('cmsAdmin/category/node');
     }
 
     /**
