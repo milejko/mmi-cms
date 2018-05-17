@@ -9,6 +9,7 @@
  */
 
 namespace Cms;
+use Mmi\App\FrontController;
 
 /**
  * Kontroler kategorii
@@ -20,22 +21,14 @@ class CategoryController extends \Mmi\Mvc\Controller
     CONST REDACTOR_VERIFY_ACTION = 'cmsAdmin:category:index';
 
     /**
-     * Inicjalizacja
-     * @throws \Mmi\Mvc\MvcNotFoundException
-     */
-    public function init()
-    {
-        //pobranie kategorii
-        $this->view->category = $this->_getPublishedCategoryByUri($this->uri);
-    }
-
-    /**
      * Akcja dispatchera kategorii
      */
     public function dispatchAction()
     {
         //pobranie kategorii
-        $category = $this->view->category;
+        $category = $this->_getPublishedCategoryByUri($this->uri);
+        //wpięcie kategorii do głównego widoku aplikacji
+        FrontController::getInstance()->getView()->category = $category;
         //klucz bufora
         $cacheKey = 'category-html-' . $category->id;
         //buforowanie dozwolone
