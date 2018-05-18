@@ -67,10 +67,7 @@ class Mail
             if (!file_exists($filePath)) {
                 continue;
             }
-            $files[$fileName] = [
-                'content' => base64_encode(file_get_contents($filePath)),
-                'type' => \Mmi\FileSystem::mimeType($filePath)
-            ];
+            $files[$fileName] = ($filePath);
         }
         //serializacja załączników
         $mail->attachements = serialize($files);
@@ -164,10 +161,14 @@ class Mail
                 //dołączanie załączników
                 $attachments = unserialize($email->attachements);
                 if (!empty($attachments)) {
-                    foreach ($attachments as $fileName => $file) {
-                        if (!isset($file['content']) || !isset($file['type'])) {
+                    foreach ($attachments as $fileName => $filePath) {
+                        if (!file_exists($filePath)) {
                             continue;
                         }
+                        $file = [
+                            'content' => base64_encode(file_get_contents($filePath)),
+                            'type' => \Mmi\FileSystem::mimeType($filePath)
+                        ];
                         $mail->addStringAttachment(base64_decode($file['content']), $fileName, 'base64', $file['type'], 'attachment');
                     }
                 }
