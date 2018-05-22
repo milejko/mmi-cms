@@ -64,6 +64,9 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
         $attributeValueRelationModel->deleteAttributeValueRelations();
         //nadpisanie danych oryginału
         $this->_category->setFromArray($draft->toArray());
+        //reset rodzica i kolejności (gdyż draft może mieć nieaktualną)
+        $this->_category->parentId = $this->_category->getInitialStateValue('parentId');
+        $this->_category->order = $this->_category->getInitialStateValue('order');
         //id pozostaje niezmienione
         $this->_category->id = $this->_category->getInitialStateValue('id');
         //status active
