@@ -183,8 +183,6 @@ class Mail
             } catch (\Exception $e) {
                 //bład wysyłki
                 \Mmi\App\FrontController::getInstance()->getLogger()->warning($e->getMessage());
-                //jak nie da sie wysłac to usuwamy
-                $email->delete();
                 //podwyzszenie licznika nieudanych
                 $result['error'] ++;
             }
