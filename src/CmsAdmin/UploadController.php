@@ -174,8 +174,8 @@ class UploadController extends Mvc\Controller
             return $this->_jsonError(186);
         }
         //pobranie danych
-        $form = ['active' => 0, 'sticky' => null];
-        foreach ($form = $this->getPost()->form as $field) {
+        $form = array_merge(['active' => 0, 'sticky' => null], $this->getPost()->form);
+        foreach ($form as $field) {
             $form[$field['name']] = $field['value'];
             if ($field['name'] == 'active' || $field['name'] == 'sticky') {
                 continue;
