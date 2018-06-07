@@ -236,8 +236,8 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
         //iteracja po kategoriach
         foreach ($this
             ->withType()
-            ->searchByUri($uri)
             ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
+            ->andQuery((new CmsCategoryQuery())->searchByUri($uri))
             ->find() as $category) {
             //kategoria jest przekierowaniem
             if ($category->redirectUri) {
