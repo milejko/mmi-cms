@@ -265,16 +265,20 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                                 var fieldName = $(this).attr('name');
                                 if ($(this).attr('type') === 'checkbox') {
                                     $(this).prop('checked', (parseInt(data.data[fieldName])) > 0 ? 'checked' : '');
-                                } else {
-                                    $(this).val(data.data[fieldName]).change();
+                                    return true;
                                 }
+                                if($(this).context.classList.contains('tinymce')){
+                                    var editor = tinymce.get($(this).attr('id'));
+                                    if(editor){
+                                        editor.setContent(data.data[fieldName]);
+                                    }
+                                }
+                                $(this).val(data.data[fieldName]).change();
                             });
                             $(edit + ' input[name="original"]').val(data.record.original);
                             $(edit + ' input[name="active"]').prop('checked', (parseInt(data.record.active) > 0) ? 'checked' : '');
                             $(edit + ' input[name="sticky"]').prop('checked', (parseInt(data.record.sticky) > 0) ? 'checked' : '');
                             $(edit + ' .dialog-error').hide().find('p').text('');
-                            //inicjalizacja tinyMce
-                            PLUPLOADCONF.initTinyMce(args.up);
                             window.scrollTo(0, 0);
                             var editDialog = $(edit).dialog({
                                 resizable: false,
@@ -319,6 +323,8 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                                 },
                                 open: function (event, ui) {
                                     args.up.setOption('edit_dialog', $(this));
+                                    //inicjalizacja tinyMce
+                                    PLUPLOADCONF.initTinyMce(args.up);
                                 },
                                 close: function (event, ui) {
                                     args.up.setOption('replace_file', null);
