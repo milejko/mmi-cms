@@ -270,6 +270,9 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                                 if($(this).context.classList.contains('tinymce')){
                                     var editor = tinymce.get($(this).attr('id'));
                                     if(editor){
+                                        if(!(data.data[fieldName])){
+                                            data.data[fieldName] = '';
+                                        }
                                         editor.setContent(data.data[fieldName]);
                                     }
                                 }
