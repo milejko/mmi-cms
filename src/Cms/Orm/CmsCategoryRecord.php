@@ -394,7 +394,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //próba pobrania dzieci z cache
         if (null === $siblings = \App\Registry::$cache->load($cacheKey = 'category-siblings-' . $this->parentId)) {
             //pobieranie dzieci
-            \App\Registry::$cache->save($siblings = $this->_getChildren($this->parentId), $cacheKey);
+            \App\Registry::$cache->save($siblings = $this->_getChildren($this->parentId, true), $cacheKey);
         }
         return $siblings;
     }
@@ -452,17 +452,23 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     /**
      * Zwraca dzieci danego rodzica
      * @param integer $parentId id rodzica
+     * @param boolean $activeOnly tylko aktywne
      * @return \Cms\Orm\CmsCategoryRecord[]
      */
-    protected function _getChildren($parentId)
+    protected function _getChildren($parentId, $activeOnly = false)
     {
-        return (new CmsCategoryQuery)
-                ->whereParentId()->equals($parentId)
-                ->joinLeft('cms_category_type')->on('cms_category_type_id')
-                ->orderAscOrder()
-                ->orderAscId()
-                ->find()
-                ->toObjectArray();
+        //inicjalizacja zapytania
+        $query = (new CmsCategoryQuery)
+            ->whereParentId()->equals($parentId)
+            ->joinLeft('cms_category_type')->on('cms_category_type_id')
+            ->orderAscOrder()
+            ->orderAscId();
+        //tylko aktywne
+        if ($activeOnly) {
+            $query->whereStatus()->equals(self::STATUS_ACTIVE);
+        }
+        //zwrot w postaci tablicy rekordów
+        return $query->find()->toObjectArray();
     }
 
     /**
@@ -483,27 +489,27 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
 
     /**
      * Sortuje dzieci wybranego rodzica
-     * @param integer $parentId rodzic
+     * @param integer $order wstawiona kolejność
      */
     protected function _sortChildren()
     {
-        $children = $this->_getChildren($this->parentId);
-        //usuwanie bieżącej kategorii
-        foreach ($children as $key => $categoryRecord) {
-            if ($categoryRecord->id == $this->id) {
-                unset($children[$key]);
-            }
-        }
-        //sklejanie kategorii
-        $ordered = array_merge(array_slice($children, 0, $this->order, true), [$this->order => $this], array_slice($children, $this->order, count($children), true));
         $i = 0;
-        //ustawianie orderów
-        foreach ($ordered as $key => $categoryRecord) {
-            //wyznaczanie kolejności
+        //pobranie dzieci swojego rodzica
+        foreach ($this->_getChildren($this->parentId, true) as $categoryRecord) {
+            //ten rekord musi pozostać w niezmienionej pozycji (był sortowany)
+            if ($categoryRecord->id == $this->id) {
+                continue;
+            }
+            //ten sam order wskakuje za rekord
+            if ($this->order == $i) {
+                $i++;
+            }
+            //obliczanie nowej kolejności
             $categoryRecord->order = $i++;
-            $categoryRecord->setOption('block-ordering', true);
-            //zapis dziecka
-            $categoryRecord->save();
+            //blokada dalszego sortowania i zapis
+            $categoryRecord
+                ->setOption('block-ordering', true)
+                ->save();
         }
     }
 
