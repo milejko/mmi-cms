@@ -70,7 +70,7 @@ class FileController extends \Mmi\Mvc\Controller
                 case 'video':
                     $full = $file->getUrl();
                     $small = '';
-                    $poster = $file->data->poster ? $file->data->poster : null;
+                    $poster = $file->data->posterFileName ? (new FileSystemModel($file->data->posterFileName))->getPublicPath() : null;
                     break;
             }
 
