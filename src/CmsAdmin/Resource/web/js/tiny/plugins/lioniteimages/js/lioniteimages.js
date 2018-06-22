@@ -143,7 +143,7 @@
                                     var edit = 'div#dialog-edit';
 
                                     //video poster
-                                    if( data.data['urlFile'] != undefined ){                                        
+                                    if( data.data['urlFile'] != undefined ){
                                         $('#video').find('#urlVideo').attr('src', data.data['urlFile']);
                                         $(edit + ' input[name="poster"]').val(data.data['poster']);
                                         new VideoFrameExtractor().initialize({
@@ -185,9 +185,10 @@
                                                         }, 'json')
                                                         .done(function (data) {
                                                             if (data.result === 'OK') {
-                                                                editDialog.dialog('close');
-                                                                el.parent().find('a.insert').attr('data-poster', $("div#dialog-edit select[name='source']").val());
-                                                                
+                                                                var posterSource = $("div#dialog-edit select[name='source']").val()
+                                                                    || $("div#dialog-edit input[name='poster']").val();
+                                                                el.parent().find('a.insert').attr('data-poster', posterSource);
+
                                                                 //odswiezenie listy
                                                                 $.ajax({
                                                                     url: o.galleryUrl,
@@ -195,7 +196,7 @@
                                                                         $('#lionite-gallery').html(response);
                                                                     }
                                                                 });
-                                                                
+
                                                             } else {
                                                                 $(edit + ' .dialog-error p').text('Nie udało się zapisać zmian! Spróbuj ponownie!').parent().show();
                                                             }
