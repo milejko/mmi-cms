@@ -57,6 +57,7 @@ class CategoryController extends \Mmi\Mvc\Controller
     /**
      * Podgląd redaktora
      * @return string html
+     * @throws \Mmi\Mvc\MvcForbiddenException
      * @throws \Mmi\Mvc\MvcNotFoundException
      */
     public function redactorPreviewAction()
@@ -174,21 +175,6 @@ class CategoryController extends \Mmi\Mvc\Controller
         if (!(new Model\CategoryRole($category, \App\Registry::$auth->getRoles()))->isAllowed()) {
             //404
             throw new \Mmi\Mvc\MvcForbiddenException('Category: ' . $category->uri . ' forbidden for roles: ' . implode(', ', \App\Registry::$auth->getRoles()));
-        }
-        //kategoria manualnie wyłączona
-        if (!$category->active) {
-            //404
-            throw new \Mmi\Mvc\MvcNotFoundException('Category not active: ' . $category->uri);
-        }
-        //nie osiągnięto czasu publikacji
-        if (null !== $category->dateStart && $category->dateStart > date('Y-m-d H:i:s')) {
-            //404
-            throw new \Mmi\Mvc\MvcNotFoundException('Category not yet published: ' . $category->uri);
-        }
-        //przekroczono czas publikacji
-        if (null !== $category->dateEnd && $category->dateEnd < date('Y-m-d H:i:s')) {
-            //404
-            throw new \Mmi\Mvc\MvcNotFoundException('Category expired: ' . $category->uri);
         }
         //kategoria posiada customUri, a wejście jest na natywny uri
         if ($category->customUri && $this->uri == $category->uri) {
