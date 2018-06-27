@@ -191,7 +191,7 @@ class CategoryController extends Mvc\Controller
         if (null !== $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
             $cat->parentId = ($this->getPost()->parentId > 0) ? $this->getPost()->parentId : null;
             $cat->order = $this->getPost()->order;
-            if ($cat->save() !== false) {
+            if (false !== $cat->save()) {
                 return json_encode(['status' => true, 'id' => $cat->id, 'message' => 'Strona została przeniesiona']);
             }
         }
