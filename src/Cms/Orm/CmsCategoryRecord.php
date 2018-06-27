@@ -279,9 +279,12 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             //sortuje dzieci
             $this->_sortChildren();
         }
-        //przebudowa dzieci
-        if ($nameModified || $activeModified) {
+        //zmieniono parenta, nazwę, lub aktywność
+        if ($parentModified || $nameModified || $activeModified) {
+            //przebudowa dzieci
             $this->_rebuildChildren($this->id);
+            //synchronizacja pól w draftach
+            $this->_synchronizeDrafts();
         }
         return true;
     }
@@ -446,6 +449,29 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             $categoryRecord->save();
             //zejście rekurencyjne
             $this->_rebuildChildren($categoryRecord->id);
+        }
+    }
+
+    /**
+     * Synchronizuje drafty
+     */
+    protected function _synchronizeDrafts()
+    {
+        //iteracja po draftach bieżącego dokumentu
+        foreach ((new CmsCategoryQuery())->whereCmsCategoryOriginalId()->equals($this->id)
+            ->andFieldStatus()->equals(self::STATUS_DRAFT)
+            ->find()
+            as $draftRecord) {
+            //synchronizacja uri
+            $draftRecord->uri = $this->uri;
+            //synchronizacja parentId
+            $draftRecord->parentId = $this->parentId;
+            //synchronizacja kolejności
+            $draftRecord->order = $this->order;
+            //bez przebudowy kolejności
+            $draftRecord->setOption('block-ordering', true);
+            //zapis
+            $draftRecord->save();
         }
     }
 

@@ -81,7 +81,7 @@ class Category extends \Cms\Form\AttributeForm
         $this->addElement((new Element\Text('customUri'))
                 ->setLabel('własny adres strony')
                 //adres domyślny (bez baseUrl)
-                ->setDescription('domyślnie: ' . substr($view->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->getRecord()->uri], true), strlen($view->baseUrl) + 1))
+                ->setDescription('domyślnie: ' . $this->getRecord()->uri)
                 ->addFilter(new Filter\StringTrim)
                 ->addFilter(new Filter\EmptyToNull)
                 ->addValidator(new Validator\StringLength([1, 255])));
