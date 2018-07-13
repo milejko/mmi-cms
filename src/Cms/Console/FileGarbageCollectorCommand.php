@@ -41,6 +41,7 @@ class FileGarbageCollectorCommand extends CommandAbstract
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        die('Not working with the new version of filesystem storage');
         //dane (tylko podkatalogi jednoznakowe)
         $this->_scanDir(BASE_PATH . '/var/data', 1);
         //miniatury (podkatalogi do 12 znaków)

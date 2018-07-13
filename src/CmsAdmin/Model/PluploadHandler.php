@@ -563,7 +563,7 @@ class PluploadHandler
         if ($this->_cmsFileRecord === null) {
             $result = false;
         } else {
-            $result = ($this->_cmsFileRecord->replaceFile($requestFile) && $this->_cmsFileRecord->save());
+            $result = \Cms\Model\File::replace($this->_cmsFileRecord, $requestFile);
         }
         if ($result === false) {
             $this->_setError(PLUPLOAD_MOVE_ERR, "Błąd podczas nadpisywania pliku");

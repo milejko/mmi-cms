@@ -105,7 +105,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
     public function getRealPath()
     {
         //pobranie realnej ścieżki
-        return (new \Cms\Model\FileSystemModel($this->name))->getRealPath();
+        return (new \Cms\Model\FileSystemModel($this->name, $this->object, $this->mimeType))->getRealPath();
     }
 
     /**
@@ -135,7 +135,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
         //ścieżka CDN
         $cdnPath = rtrim(\Mmi\App\FrontController::getInstance()->getView()->cdn ? \Mmi\App\FrontController::getInstance()->getView()->cdn : \Mmi\App\FrontController::getInstance()->getView()->url([], true, $https), '/');
         //pobranie ścieżki z systemu plików
-        return $cdnPath . (new \Cms\Model\FileSystemModel($this->name))->getPublicPath($scaleType, $scale);
+        return $cdnPath . (new \Cms\Model\FileSystemModel($this->name, $this->object, $this->mimeType))->getPublicPath($scaleType, $scale);
     }
 
     /**
@@ -155,53 +155,6 @@ class CmsFileRecord extends \Mmi\Orm\Record
         $cdnPath = rtrim(\Mmi\App\FrontController::getInstance()->getView()->cdn ? \Mmi\App\FrontController::getInstance()->getView()->cdn : \Mmi\App\FrontController::getInstance()->getView()->url([], true, $https), '/');
         //pobranie ścieżki z systemu plików
         return $cdnPath . (new \Cms\Model\FileSystemModel($this->data->posterFileName))->getPublicPath($scaleType, $scale);
-    }
-
-    /**
-     * Zapisuje plik przesłany na serwer i aktualizuje pola w rekordzie
-     * Uwaga! Metoda nie zapisuje zmian w rekordzie (nie wywołuje save)!
-     * @param \Mmi\Http\RequestFile $file obiekt pliku
-     * @param array $allowedTypes dozwolone typy plików
-     * @return boolean
-     */
-    public function replaceFile(\Mmi\Http\RequestFile $file, $allowedTypes = [])
-    {
-        //jeśli brak danych pliku
-        if (empty($file->name) || empty($file->tmpName)) {
-            return false;
-        }
-        //plik nie jest dozwolony
-        if (!empty($allowedTypes) && !in_array($file->type, $allowedTypes)) {
-            return false;
-        }
-        //pozycja ostatniej kropki w nazwie - rozszerzenie pliku
-        $pointPosition = strrpos($file->name, '.');
-        //kalkulacja nazwy systemowej
-        $name = md5(microtime(true) . $file->tmpName) . (($pointPosition !== false) ? substr($file->name, $pointPosition) : '');
-        //określanie ścieżki
-        $dir = BASE_PATH . '/var/data/' . $name[0] . '/' . $name[1] . '/' . $name[2] . '/' . $name[3];
-        //tworzenie ścieżki
-        if (!file_exists($dir)) {
-            mkdir($dir, 0777, true);
-        }
-        //zmiana uprawnień
-        chmod($file->tmpName, 0664);
-        //kopiowanie pliku
-        if (!copy($file->tmpName, $dir . '/' . $name)) {
-            return false;
-        }
-        //ustawienie nazwy pliku
-        $this->name = $name;
-        //typ zasobu
-        $this->mimeType = $file->type;
-        //klasa zasobu
-        $class = explode('/', $file->type);
-        $this->class = $class[0];
-        //oryginalna nazwa pliku
-        $this->original = $file->name;
-        //rozmiar pliku
-        $this->size = $file->size;
-        return true;
     }
 
     /**
@@ -282,7 +235,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
             return true;
         }
         //kasowanie z systemu plików
-        (new \Cms\Model\FileSystemModel($this->name))->unlink();
+        (new \Cms\Model\FileSystemModel($this->name, $this->object, $this->mimeType))->unlink();
         //usuwanie rekordu
         return true;
     }
