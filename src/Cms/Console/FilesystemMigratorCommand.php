@@ -46,11 +46,12 @@ class FilesystemMigratorCommand extends CommandAbstract
         foreach ((new CmsFileQuery)->find() as $fileRecord) {
             $this->_found++;
             $fsm = new FileSystemModel($fileRecord->name);
-            if (file_exists($fsm->getRealPath())) {
-                continue;
-            }
             //sprawdzanie istnienia pliku w starej ścieżce
             if (!file_exists($oldPath = BASE_PATH . '/var/data/' . $fileRecord->name[0] . '/' . $fileRecord->name[1] . '/' . $fileRecord->name[2] . '/' . $fileRecord->name[3] . '/' . $fileRecord->name)) {
+                continue;
+            }
+            //sprawdzanie istnienia nowego pliku
+            if (file_exists($fsm->getRealPath())) {
                 continue;
             }
             $this->_count++;
