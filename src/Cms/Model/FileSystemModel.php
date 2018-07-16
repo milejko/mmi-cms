@@ -76,7 +76,7 @@ class FileSystemModel
     public static function calculatePath($fileName, $object, $mimeType)
     {
         //ścieżka składa się z obiektu, mimetype i serii katalogów
-        return strtolower($object) . substr($mimeType, 0, strpos($mimeType, '/')) . '/' . $fileName[0] . $fileName[1] . '/' . $fileName[2] . $fileName[3];
+        return strtolower($object) . str_replace('/', '', $mimeType) . '/' . $fileName[0] . $fileName[1] . '/' . $fileName[2] . $fileName[3];
     }
 
     /**
@@ -85,6 +85,10 @@ class FileSystemModel
      */
     public function getRealPath()
     {
+        //brak prawidłowej nazwy pliku
+        if (strlen($this->_name) < 4) {
+            return;
+        }
         //ścieżka na dysku
         return BASE_PATH . '/var/data/' . $this->_path . '/' . $this->_name;
     }
@@ -99,7 +103,7 @@ class FileSystemModel
     {
         //plik źródłowy
         $inputFile = $this->getRealPath();
-        $fileName = '/' . $this->_name[0] . '/' . $this->_name[1] . '/' . $this->_name[2] . '/' . $this->_name[3] . '/' . $scaleType . '/' . $scale . '/' . $this->_name;
+        $fileName = '/' . $this->_path . '/' . $scaleType . '/' . $scale . '/' . $this->_name;
         //inicjalizacja linku publicznego
         $publicUrl = '/data' . $fileName;
         //istnieje plik - wiadomość z bufora
