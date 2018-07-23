@@ -185,6 +185,7 @@
                                                         }, 'json')
                                                         .done(function (data) {
                                                             if (data.result === 'OK') {
+                                                                editDialog.dialog('close');
                                                                 var posterSource = $("div#dialog-edit select[name='source']").val()
                                                                     || $("div#dialog-edit input[name='poster']").val();
                                                                 el.parent().find('a.insert').attr('data-poster', posterSource);
