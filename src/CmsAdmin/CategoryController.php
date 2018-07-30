@@ -107,7 +107,7 @@ class CategoryController extends Mvc\Controller
      */
     public function widgetAction()
     {
-        return (new \Cms\CategoryController($this->getRequest()))->widgetAction();
+
     }
 
     /**

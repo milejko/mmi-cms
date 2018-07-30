@@ -98,16 +98,7 @@ class CategoryController extends \Mmi\Mvc\Controller
      */
     public function widgetAction()
     {
-        //brak kategorii
-        if (!$this->view->category) {
-            //pobranie kategorii
-            $this->view->category = new Orm\CmsCategoryRecord($this->id);
-        }
-        //wyszukiwanie widgeta
-        if (null === $this->view->widgetRelation = $this->view->category->getWidgetModel()->findWidgetRelationById($this->widgetId)) {
-            //brak - pusty zwrot
-            return '';
-        }
+
     }
 
     /**
