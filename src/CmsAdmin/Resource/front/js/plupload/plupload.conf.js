@@ -536,6 +536,7 @@ PLUPLOADCONF.initTinyMce = function (up) {
     var selector = 'div#' + up.getOption('form_element_id') + '-edit textarea.plupload-edit-tinymce';
     tinymce.init({
         selector: selector,
-        language: 'pl'
+        language: 'pl',
+        branding: false
     });
 };
