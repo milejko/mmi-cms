@@ -267,7 +267,7 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                                     $(this).prop('checked', (parseInt(data.data[fieldName])) > 0 ? 'checked' : '');
                                     return true;
                                 }
-                                if($(this).context.classList.contains('tinymce')){
+                                if($(this).hasClass('tinymce')){
                                     var editor = tinymce.get($(this).attr('id'));
                                     if(editor){
                                         if(!(data.data[fieldName])){
