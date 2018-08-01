@@ -161,18 +161,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public function save()
     {
-        //usunięcie uri
-        $this->uri = '';
-        //ustawiamy uri na podstawie rodzica
-        if ($this->parentId && (null !== $parent = (new CmsCategoryQuery)->findPk($this->parentId))) {
-            //nieaktywny rodzic -> nie wlicza się do ścieżki
-            if (!$parent->active) {
-                $parent->uri = substr($parent->uri, 0, strrpos($parent->uri, '/'));
-            }
-            $this->uri = ltrim($parent->uri . '/', '/');
-        }
-        //doklejanie do uri przefiltrowanej końcówki
-        $this->uri .= (new \Mmi\Filter\Url)->filter($this->name);
+        $this->_calculateUri();
         //domyślnie wstawienie na koniec
         if (null === $this->order) {
             $this->order = $this->_maxChildOrder() + 1;
@@ -189,7 +178,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     {
         //sprawdzenie czy posiada rodzica (oryginał)
         if (!$this->cmsCategoryOriginalId) {
-            return false;
+            return true;
         }
         //wyszukiwanie oryginału
         $originalRecord = (new CmsCategoryQuery)->findPk($this->cmsCategoryOriginalId);
@@ -223,6 +212,35 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             return false;
         }
         return true;
+    }
+
+    /**
+     * Kalkulacja uri
+     * @throws \Mmi\App\KernelException
+     * @throws \Mmi\Orm\OrmException
+     */
+    protected function _calculateUri()
+    {
+        //strona główna
+        if ($this->customUri == '/') {
+            //usunięcie uri
+            $this->uri = '';
+            return;
+        }
+        //usunięcie uri
+        $this->uri = '';
+        //ustawiamy uri na podstawie rodzica
+        if ($this->parentId && (null !== $parent = (new CmsCategoryQuery)->findPk($this->parentId))) {
+            //nieaktywny rodzic -> nie wlicza się do ścieżki
+            if (!$parent->active) {
+                $parent->uri = substr($parent->uri, 0, strrpos($parent->uri, '/'));
+            }
+            $this->uri = ltrim($parent->uri . '/', '/');
+        }
+        //doklejanie do uri przefiltrowanej końcówki
+        $this->uri .= (new \Mmi\Filter\Url)->filter($this->name);
+        //filtracja customUri
+        $this->customUri = ($this->customUri == '/') ? '/' : trim($this->customUri, '/');
     }
 
     /**
@@ -264,10 +282,10 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $parentModified = $this->isModified('parentId');
         //zmodyfikowany order
         $orderModified = $this->isModified('order');
-        //zmodyfikowana nazwa
-        $nameModified = $this->isModified('name');
         //zmodyfikowana aktywność
         $activeModified = $this->isModified('active');
+        //zmodyfikowane uri
+        $uriModified = $this->isModified('uri');
         //data modyfikacji
         $this->dateModify = date('Y-m-d H:i:s');
         //aktualizacja rekordu
@@ -280,9 +298,12 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             $this->_sortChildren();
         }
         //zmieniono parenta, nazwę, lub aktywność
-        if ($parentModified || $nameModified || $activeModified) {
+        if ($parentModified || $uriModified || $activeModified) {
             //przebudowa dzieci
             $this->_rebuildChildren($this->id);
+        }
+        //synchronizacja draftów
+        if ($parentModified || $uriModified || $activeModified || $orderModified) {
             //synchronizacja pól w draftach
             $this->_synchronizeDrafts();
         }

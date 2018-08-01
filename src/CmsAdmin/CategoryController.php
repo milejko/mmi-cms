@@ -188,14 +188,23 @@ class CategoryController extends Mvc\Controller
     public function moveAction()
     {
         $this->getResponse()->setTypeJson();
-        if (null !== $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
-            $cat->parentId = ($this->getPost()->parentId > 0) ? $this->getPost()->parentId : null;
-            $cat->order = $this->getPost()->order;
-            if (false !== $cat->save()) {
-                return json_encode(['status' => true, 'id' => $cat->id, 'message' => 'Strona została przeniesiona']);
-            }
+        //brak kategorii
+        if (null === $masterCategory = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
+            return json_encode(['status' => false, 'error' => 'Brak strony']);
         }
-        return json_encode(['status' => false, 'error' => 'Nie udało się przenieść strony']);
+        //domyślnie nie ma drafta - alias
+        $draft = $masterCategory;
+        //zmiana parenta tworzy draft
+        if ($this->getPost()->parentId != $masterCategory->parentId) {
+            //tworzenie draftu
+            $draft = (new \Cms\Model\CategoryDraft($masterCategory))->createAndGetDraftForUser(\App\Registry::$auth->getId(), true);
+        }
+        //zapis kolejności
+        $draft->parentId = ($this->getPost()->parentId > 0) ? $this->getPost()->parentId : null;
+        $draft->order = $this->getPost()->order;
+        //próba zapisu
+        return ($draft->save() && $draft->commitVersion()) ? json_encode(['status' => true, 'id' => $masterCategory->id, 'message' => 'Strona została przeniesiona']) :
+            json_encode(['status' => false, 'error' => 'Nie udało się przenieść strony']);
     }
 
     /**

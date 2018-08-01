@@ -83,8 +83,6 @@ class Category extends \Cms\Form\AttributeForm
                 //adres domyślny (bez baseUrl)
                 ->setDescription('domyślnie: ' . $this->getRecord()->uri)
                 ->addFilter(new Filter\StringTrim)
-                //trim "/"
-                ->addFilter((new Filter\StringTrim)->setExtras('/'))
                 ->addFilter(new Filter\EmptyToNull)
                 ->addValidator(new Validator\StringLength([1, 255])));
 
