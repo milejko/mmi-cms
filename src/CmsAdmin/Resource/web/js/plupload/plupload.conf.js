@@ -192,7 +192,6 @@ PLUPLOADCONF.settings.init = {
 };
 
 PLUPLOADCONF.settings.ready = function (event, args) {
-    args.up.setOption('that', $(this));
     //kliknięcie w górną belkę
     $('div#' + args.up.getOption('form_element_id')).on('click', 'div.plupload_logo,div.plupload_header_title', function () {
         $('div#' + args.up.getOption('form_element_id') + ' div.moxie-shim-html5 input[type=file]').trigger('click');
@@ -251,7 +250,7 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                             var edit = 'div#' + args.up.getOption('form_element_id') + '-edit';
                             $(edit + ' > fieldset > .imprint').each(function () {
                                 var fieldName = $(this).attr('name');
-                                if ($(this).attr('type') === 'checkbox') {
+                                if ($(this).attr('type') == 'checkbox') {
                                     $(this).prop('checked', (parseInt(data.data[fieldName])) > 0 ? 'checked' : '');
                                 } else {
                                     $(this).val(data.data[fieldName]).change();
@@ -292,7 +291,7 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                                     },
                                     'Zastąp plik': function () {
                                         args.up.setOption('replace_file', file);
-                                        args.up.getOption('that').plupload("enable");
+                                        $('div#' + args.up.getOption('form_element_id')).plupload("enable");
                                         setTimeout(function () {
                                             $('div#' + args.up.getOption('form_element_id') + ' div.moxie-shim-html5 input[type=file]').trigger('click');
                                         }, 500);
@@ -314,7 +313,7 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                                     var max = args.up.getOption('max_file_cnt');
                                     if (max > 0) {
                                         if (max - args.up.files.length <= 0) {
-                                            args.up.getOption('that').plupload("disable");
+                                            $('div#' + args.up.getOption('form_element_id')).plupload("disable");
                                         }
                                     }
                                 }

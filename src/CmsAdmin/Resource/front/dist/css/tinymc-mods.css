@@ -1,0 +1,35 @@
+#lionite-gallery li {
+  border: 1px solid #20a8d8; }
+  #lionite-gallery li:hover {
+    border: 2px solid #20a8d8 !important; }
+
+.ui-dialog.ui-draggable {
+  z-index: 1001; }
+
+.ui-dialog .ui-dialog-titlebar {
+  border-radius: 0;
+  padding: 12px; }
+  .ui-dialog .ui-dialog-titlebar .ui-button {
+    position: absolute;
+    right: 5px;
+    top: 7px;
+    padding: 4px; }
+
+.ui-dialog .ui-dialog-content p {
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center; }
+
+.ui-dialog .ui-dialog-content fieldset {
+  padding: 10px; }
+
+.ui-dialog .ui-dialog-buttonpane {
+  border-radius: 0;
+  padding: 8px;
+  text-align: center; }
+  .ui-dialog .ui-dialog-buttonpane .ui-button {
+    padding: 5px;
+    cursor: pointer;
+    min-width: 80px;
+    margin-right: 10px; }
