@@ -41,6 +41,14 @@ CMS.grid = function () {
             }, 500);
         });
 
+        $('table.grid').on('change', "th > div.range > input", function () {
+            let from = $(this).parent('div.range').children('input.from').val();
+            let to = $(this).parent('div').children('input.to').val();
+            let targetField = $(this).parent('div').parent('th').children('div.hidden').children('input');
+            targetField.val(from + ';' + to);
+            filter(targetField);
+        });
+
         $('table.grid').on('change', "th > div.field > select.field", function () {
             filter($(this));
         });
@@ -68,7 +76,11 @@ CMS.grid = function () {
                 },
                 success: function (data) {
                     $('#' + gridId).html(data);
-                    $('input[name=\'' + fieldName + '\']').putCursorAtEnd();
+                    let input = $('input[name=\'' + fieldName + '\']');
+                    if (input.hasClass('hidden')) {
+                        return;
+                    }
+                    input.putCursorAtEnd();
                 }
             });
         }
@@ -104,7 +116,6 @@ CMS.grid = function () {
             });
         });
     };
-
 
     initGridFilter();
     initGridOrder();
