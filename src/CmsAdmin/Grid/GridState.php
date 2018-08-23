@@ -207,18 +207,15 @@ class GridState extends \Mmi\OptionObject
                 $query->andField($filter->getField(), $filter->getTableName())->equals(null);
                 continue;
             }
-            //mniejszość
-            if ($filter->getMethod() == 'less') {
-                $query->andField($filter->getField(), $filter->getTableName())->lessOrEquals($filter->getValue());
-                continue;
-            }
             if ($filter->getMethod() == 'between') {
-                $range = json_decode($filter->getValue());
-                if ($range->from && !empty($range->from)) {
-                    $query->andField($filter->getField(), $filter->getTableName())->greaterOrEquals($range->from);
+                $range = explode(';', $filter->getValue());
+                //zdefiniowane od
+                if (!empty($range[0])) {
+                    $query->andField($filter->getField(), $filter->getTableName())->greaterOrEquals($range[0]);
                 }
-                if ($range->to && !empty($range->to)) {
-                    $query->andField($filter->getField(), $filter->getTableName())->lessOrEquals($range->to);
+                //zdefiniowane do
+                if (isset($range[1]) && !empty($range[1])) {
+                    $query->andField($filter->getField(), $filter->getTableName())->lessOrEquals($range[1]);
                 }
                 continue;
             }

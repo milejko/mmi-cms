@@ -36,6 +36,7 @@ class TextColumn extends ColumnAbstract
     /**
      * Renderuje pole tekstowe
      * @param \Mmi\Orm\RecordRo $record
+     * @throws \Mmi\App\KernelException
      * @return string
      */
     public function renderCell(\Mmi\Orm\RecordRo $record)
@@ -43,7 +44,7 @@ class TextColumn extends ColumnAbstract
         $view = FrontController::getInstance()->getView();
         $view->_value = (new \Mmi\Filter\Escape)->filter($this->getValueFromRecord($record));
         $view->_truncated = (new \Mmi\Filter\Truncate)->filter($view->_value);
-        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_CELL);
+        return FrontController::getInstance()->getView()->renderTemplate(static::TEMPLATE_CELL);
     }
 
 }

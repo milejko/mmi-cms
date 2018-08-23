@@ -38,7 +38,7 @@ class CronGrid extends \CmsAdmin\Grid\Grid
             ->setTemplateCode('{$record->minute} {$record->hour} {$record->dayOfMonth} {$record->month} {$record->dayOfWeek}'));
 
         //data dodania
-        $this->addColumn((new Column\TextColumn('dateAdd'))
+        $this->addColumn((new Column\RangeColumn('dateAdd'))
             ->setLabel('data dodania'));
 
         //ostatnie wywołanie

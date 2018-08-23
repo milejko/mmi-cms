@@ -20,6 +20,7 @@ use Mmi\App\FrontController;
  * @method self setLabel($label) ustawia labelkę
  * @method string getLabel() pobiera labelkę
  *
+ * @method self setFilterMethodBetween() ustawia metodę filtracji na "pomiędzy"
  * @method self setFilterMethodEquals() ustawia metodę filtracji na równość
  * @method self setFilterMethodLike() ustawia metodę filtracji na podobny
  * @method self setFilterMethodSearch() ustawia metodę filtracji na wyszukaj
