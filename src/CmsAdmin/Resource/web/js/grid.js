@@ -34,7 +34,9 @@ CMS.grid = function () {
                 }
                 var element = $('input[name=\'' + selectedInput + '\']');
                 element.focus();
-                element[0].setSelectionRange(selectedPosition, selectedPosition);
+                try {
+                    element[0].setSelectionRange(selectedPosition, selectedPosition);
+                } catch (e) {}
                 selectedInput = null;
                 filtering = false;
                 return true;
