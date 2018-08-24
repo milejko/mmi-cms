@@ -2,13 +2,14 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
 namespace Cms;
+use Mmi\App\FrontController;
 
 use Cms\Orm\CmsCategoryQuery;
 
@@ -28,6 +29,8 @@ class CategoryController extends \Mmi\Mvc\Controller
     {
         //pobranie kategorii
         $category = $this->_getPublishedCategoryByUri($this->uri);
+        //wpięcie kategorii do głównego widoku aplikacji
+        FrontController::getInstance()->getView()->category = $category;
         //klucz bufora
         $cacheKey = 'category-html-' . $category->id;
         //buforowanie dozwolone
@@ -90,7 +93,7 @@ class CategoryController extends \Mmi\Mvc\Controller
      */
     public function articleAction()
     {
-        
+
     }
 
     /**

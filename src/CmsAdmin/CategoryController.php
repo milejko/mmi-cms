@@ -10,6 +10,8 @@
 
 namespace CmsAdmin;
 
+use Mmi\App\FrontController;
+
 /**
  * Kontroler kategorii - stron CMS
  */
@@ -116,7 +118,7 @@ class CategoryController extends Mvc\Controller
     public function nodeAction()
     {
         //wyłączenie layout
-        $this->view->setLayoutDisabled();
+        FrontController::getInstance()->getView()->setLayoutDisabled();
         //id węzła rodzica
         $this->view->parentId = ($this->parentId > 0) ? $this->parentId : null;
         //pobranie drzewiastej struktury stron CMS
