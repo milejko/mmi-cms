@@ -19,5 +19,5 @@
                autocomplete="off"
                value="{php_isset($_value[1]) ? $_value[1] : ''}">
     </div>
-    <input type="hidden" class="form-control hidden" name="{$_column->getFormColumnName()}" data-method="{$_column->getOption('method')}" value="{$_column->getFilterValue()}">
+    <input type="hidden" class="hidden" name="{$_column->getFormColumnName()}" data-method="{$_column->getOption('method')}" value="{$_column->getFilterValue()}">
 {/if}

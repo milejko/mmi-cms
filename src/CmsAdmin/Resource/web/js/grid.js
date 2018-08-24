@@ -61,12 +61,12 @@ CMS.grid = function () {
     };
 
     var initGridFilter = function () {
-        $('table.table-striped').on('keyup', "th > div.form-group > .form-control", function (event) {
+        $('table.table-striped').on('keyup', ".grid-filter", function (event) {
             selectedPosition = $(this)[0].selectionStart;
             selectedInput = $(this).attr('name');
         });
 
-        $('table.table-striped').on('keydown', "th > div.form-group > .form-control", function (event) {
+        $('table.table-striped').on('keydown', ".grid-filter", function (event) {
             return event.which != 9;
         });
 
@@ -77,17 +77,19 @@ CMS.grid = function () {
             }
             var from = $(this).parent('div.input-group').children('input.from').val();
             var to = $(this).parent('div.input-group').children('input.to').val();
-            $(this).parent('div.input-group').parent('div.form-group').children('input.form-control').val(from + ';' + to);
-            $(this).parent('div.input-group').parent('div.form-group').children('input.form-control').change();
+            $(this).parent('div.input-group').parent('div.form-group').children('input.hidden').val(from + ';' + to);
+            if (!filtering) {
+                filter($(this).parent('div.input-group').parent('div.form-group').children('input.hidden'));
+            }
         });
 
-        $('table.table-striped').on('change', "th > div.form-group > .form-control", function () {
+        $('table.table-striped').on('change', ".grid-filter", function () {
             if (!filtering) {
                 filter($(this));
             }
         });
 
-        $('table.table-striped').on('focus', "th > div.form-group > .form-control", function () {
+        $('table.table-striped').on('focus', ".grid-filter", function () {
             selectedInput = $(this).attr('name');
         });
 
