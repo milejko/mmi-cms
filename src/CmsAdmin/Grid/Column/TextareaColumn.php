@@ -30,7 +30,7 @@ class TextareaColumn extends ColumnAbstract
     /**
      * Template filtra textarea
      */
-    const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/textarea';
+    const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/text';
 
     /**
      * Template komórki textarea

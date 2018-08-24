@@ -22,31 +22,12 @@ use Mmi\App\FrontController;
  *
  * @method self setFilterMethodBetween() ustawia metodę filtracji na pomiędzy
  */
-class DateTimeColumn extends TextColumn
+class DateTimeColumn extends RangeColumn
 {
 
     /**
      * Template filtra datetime
      */
     const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/datetime';
-
-    /**
-     * Domyślne opcje dla checkboxa
-     * @param string $name
-     */
-    public function __construct($name)
-    {
-        $this->setMethod('between');
-        parent::__construct($name);
-    }
-
-    /**
-     * @return string
-     */
-    public function renderFilter()
-    {
-        FrontController::getInstance()->getView()->_column = $this;
-        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_FILTER);
-    }
 
 }

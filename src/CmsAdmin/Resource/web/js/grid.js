@@ -1,6 +1,7 @@
 var CMS = CMS ? CMS : {};
-var selectionPosition = 0;
-var filtering = false;
+var selectedPosition = 0,
+    selectedInput = null,
+    filtering = false;
 
 CMS.grid = function () {
     "use strict";
@@ -9,36 +10,32 @@ CMS.grid = function () {
         $('.grid-anchor').html(data.body);
         $('.paginator-anchor').html(data.paginator);
         initPaginator();
+        initPicker();
     };
 
     var initPicker = function () {
-        if($('.gridDateTimePicker').length === 1){
-            $('.gridDateTimePicker').datetimepicker({format:'Y-m-d H:i'});
-        }
+        $('.grid-picker').datetimepicker({format:'Y-m-d H:i'});
     };
 
-    var filter = function(field, focus) {
+    var filter = function(field) {
         var filter = field.attr('name'),
             value = field.val(),
-            fieldName = field.attr('name'),
-            gridId = field.parent().parent().parent().parent().parent().parent().find('table').attr("id");
+            fieldName = field.attr('name');
         filtering = true;
         $.ajax({
             url: window.location,
             type: 'POST',
             data: {filter: filter, value: value},
-            beforeSend: function () {
-                field.addClass('grid-loader');
-            },
             success: function (data) {
                 quickSwitch(data);
-                if (!focus) {
+                if (!selectedInput) {
                     filtering = false;
                     return;
                 }
-                var element = $('input[name=\'' + fieldName + '\']');
+                var element = $('input[name=\'' + selectedInput + '\']');
                 element.focus();
-                element[0].setSelectionRange(selectionPosition, selectionPosition);
+                element[0].setSelectionRange(selectedPosition, selectedPosition);
+                selectedInput = null;
                 filtering = false;
                 return true;
             }
@@ -55,9 +52,6 @@ CMS.grid = function () {
                     url: window.location,
                     type: 'POST',
                     data: {filter: filter, value: value},
-                    beforeSend: function () {
-                        $(this).addClass('grid-loader');
-                    },
                     success: function (data) {
                         quickSwitch(data);
                     }
@@ -68,20 +62,33 @@ CMS.grid = function () {
 
     var initGridFilter = function () {
         $('table.table-striped').on('keyup', "th > div.form-group > .form-control", function (event) {
-            selectionPosition = $(this)[0].selectionStart;
-            if (event.which === 13 && !filtering) {
-                filter($(this), true);
+            selectedPosition = $(this)[0].selectionStart;
+            selectedInput = $(this).attr('name');
+        });
+
+        $('table.table-striped').on('keydown', "th > div.form-group > .form-control", function (event) {
+            return event.which != 9;
+        });
+
+        $('table.table-striped').on('change', "th > div.form-group > .input-group > input", function () {
+            if (!$(this).hasClass('no-focus')) {
+                selectedPosition = $(this)[0].selectionStart;
+                selectedInput = $(this).attr('name');
             }
+            var from = $(this).parent('div.input-group').children('input.from').val();
+            var to = $(this).parent('div.input-group').children('input.to').val();
+            $(this).parent('div.input-group').parent('div.form-group').children('input.form-control').val(from + ';' + to);
+            $(this).parent('div.input-group').parent('div.form-group').children('input.form-control').change();
         });
 
-        $('table.table-striped').on('change', "th > div.form-group > select.form-control", function () {
-            filter($(this), false);
-        });
-
-        $('table.table-striped').on('blur', "th > div.form-group > input.form-control", function () {
+        $('table.table-striped').on('change', "th > div.form-group > .form-control", function () {
             if (!filtering) {
-                filter($(this), false);
+                filter($(this));
             }
+        });
+
+        $('table.table-striped').on('focus', "th > div.form-group > .form-control", function () {
+            selectedInput = $(this).attr('name');
         });
 
     };
@@ -123,6 +130,7 @@ CMS.grid = function () {
     initGridOrder();
     initGridOperation();
     initPaginator();
+    initPicker();
 };
 
 $(document).ready(function () {
