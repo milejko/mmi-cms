@@ -1,15 +1,17 @@
 {if $_column->isFieldInRecord()}
     {$_value = php_explode(';', $_column->getFilterValue())}
-    <div class="input-group">
+    <div class="input-group grid-range">
         <span class="input-group-addon">od</span>
-        <input class="form-control grid-filter from" type="text"
+        <input class="form-control grid-filter from"
+               type="text"
                name="{$_column->getFormColumnName()}-from"
                class="text"
                data-method="{$_column->getMethod()}"
                autocomplete="off"
                value="{$_value[0]}">
         <span class="input-group-addon">do</span>
-        <input class="form-control grid-filter to" type="text"
+        <input class="form-control grid-filter to"
+               type="text"
                name="{$_column->getFormColumnName()}-to"
                class="text"
                data-method="{$_column->getMethod()}"

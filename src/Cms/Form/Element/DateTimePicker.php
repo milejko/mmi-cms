@@ -53,9 +53,9 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract
     {
         parent::__construct($name);
         $this->view = \Mmi\App\FrontController::getInstance()->getView();
-        $this->view->headLink()->appendStylesheet('/resource/cmsAdmin/css/datetimepicker.css');
         $this->view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
-        $this->view->headScript()->appendFile('/resource/cmsAdmin/js/jquery/datetimepicker.js');
+        $this->view->headScript()->appendFile('/resource/cmsAdmin/js/datetimepicker/jquery.datetimepicker.full.min.js');
+        $this->view->headLink()->appendStylesheet('/resource/cmsAdmin/js/datetimepicker/jquery.datetimepicker.min.css');
         $this->addFilter(new \Mmi\Filter\EmptyToNull)
             ->addClass('form-control')
             ->setStep(15)

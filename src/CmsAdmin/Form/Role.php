@@ -15,7 +15,7 @@ use Cms\Form\Element;
 /**
  * Formularz roli
  */
-class Role extends \Mmi\Form\Form
+class Role extends \Cms\Form\Form
 {
 
     /**

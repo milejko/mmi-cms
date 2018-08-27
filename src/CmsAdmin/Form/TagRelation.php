@@ -17,7 +17,7 @@ use Cms\Form\Element,
 /**
  * Klasa formularza relacji tagów
  */
-class TagRelation extends \Mmi\Form\Form
+class TagRelation extends \Cms\Form\Form
 {
 
     public function init()

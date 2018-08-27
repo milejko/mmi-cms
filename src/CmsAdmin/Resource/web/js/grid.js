@@ -14,13 +14,13 @@ CMS.grid = function () {
     };
 
     var initPicker = function () {
-        $('.grid-picker').datetimepicker({format:'Y-m-d H:i'});
+        $('.grid-picker').datetimepicker({format:'Y-m-d', allowBlank: true, scrollInput: false, scrollMonth: true, timepicker: false});
+        $.datetimepicker.setLocale('pl');
     };
 
     var filter = function(field) {
         var filter = field.attr('name'),
-            value = field.val(),
-            fieldName = field.attr('name');
+            value = field.val();
         filtering = true;
         $.ajax({
             url: window.location,
@@ -68,11 +68,7 @@ CMS.grid = function () {
             selectedInput = $(this).attr('name');
         });
 
-        $('table.table-striped').on('keydown', ".grid-filter", function (event) {
-            return event.which != 9;
-        });
-
-        $('table.table-striped').on('change', "th > div.form-group > .input-group > input", function () {
+        $('table.table-striped').on('change', ".grid-range > input", function () {
             if (!$(this).hasClass('no-focus')) {
                 selectedPosition = $(this)[0].selectionStart;
                 selectedInput = $(this).attr('name');
@@ -80,6 +76,7 @@ CMS.grid = function () {
             var from = $(this).parent('div.input-group').children('input.from').val();
             var to = $(this).parent('div.input-group').children('input.to').val();
             $(this).parent('div.input-group').parent('div.form-group').children('input.hidden').val(from + ';' + to);
+            $(this).parent('div.input-group').children('input').prop('disabled', true);
             if (!filtering) {
                 filter($(this).parent('div.input-group').parent('div.form-group').children('input.hidden'));
             }
@@ -93,6 +90,10 @@ CMS.grid = function () {
 
         $('table.table-striped').on('focus', ".grid-filter", function () {
             selectedInput = $(this).attr('name');
+        });
+
+        $('table.table-striped').on('focus', "a.order", function () {
+            selectedInput = null;
         });
 
     };

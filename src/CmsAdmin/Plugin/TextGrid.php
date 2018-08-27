@@ -38,7 +38,7 @@ class TextGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('treść'));
 
         //data modyfikacji
-        $this->addColumn((new Column\TextColumn('dateModify'))
+        $this->addColumn((new Column\DateTimeColumn('dateModify'))
             ->setLabel('data modyfikacji'));
 
         //operacje
