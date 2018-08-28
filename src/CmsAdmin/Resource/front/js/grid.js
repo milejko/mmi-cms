@@ -1,56 +1,45 @@
-/*jslint unparam: true */
-/*global $, document, window, request */
-
-jQuery.fn.putCursorAtEnd = function () {
-    return this.each(function () {
-        $(this).focus();
-        if (this.setSelectionRange) {
-            var len = $(this).val().length * 2;
-            //this.setSelectionRange(len, len);
-        } else {
-            $(this).val($(this).val());
-        }
-    });
-};
-
 var CMS = CMS ? CMS : {};
+var selectedPosition = 0,
+    selectedInput = null,
+    filtering = false;
 
 CMS.grid = function () {
     "use strict";
-    var stoptyping;
-    var doFilter = true;
 
-    var quickSwitch = function(data){
+    var quickSwitch = function(data) {
         $('.grid-anchor').html(data.body);
         $('.paginator-anchor').html(data.paginator);
-        initDt();
         initPaginator();
+        initPicker();
     };
 
-    var initDt = function () {
-        if($('.dtFrom').length === 1){
-            $('.dtFrom').datetimepicker({format:'Y-m-d H:i'});
-        }
-        if($('.dtTo').length === 1){
-            $('.dtTo').datetimepicker({format:'Y-m-d H:i'});
-        }
+    var initPicker = function () {
+        $('.grid-picker').datetimepicker({format:'Y-m-d H:i'});
     };
 
     var filter = function(field) {
         var filter = field.attr('name'),
             value = field.val(),
-            fieldName = field.attr('name'),
-            gridId = field.parent().parent().parent().parent().parent().parent().find('table').attr("id");
+            fieldName = field.attr('name');
+        filtering = true;
         $.ajax({
             url: window.location,
             type: 'POST',
             data: {filter: filter, value: value},
-            beforeSend: function () {
-                field.addClass('grid-loader');
-            },
             success: function (data) {
-                $('input[name=\'' + fieldName + '\']').putCursorAtEnd();
                 quickSwitch(data);
+                if (!selectedInput) {
+                    filtering = false;
+                    return;
+                }
+                var element = $('input[name=\'' + selectedInput + '\']');
+                element.focus();
+                try {
+                    element[0].setSelectionRange(selectedPosition, selectedPosition);
+                } catch (e) {}
+                selectedInput = null;
+                filtering = false;
+                return true;
             }
         });
     };
@@ -65,9 +54,6 @@ CMS.grid = function () {
                     url: window.location,
                     type: 'POST',
                     data: {filter: filter, value: value},
-                    beforeSend: function () {
-                        $(this).addClass('grid-loader');
-                    },
                     success: function (data) {
                         quickSwitch(data);
                     }
@@ -77,36 +63,37 @@ CMS.grid = function () {
     };
 
     var initGridFilter = function () {
-        $('table.table-striped').on('keyup', "th > div.form-group > .form-control", function (event) {
-            if (event.which === 27) {
-                return;
+        $('table.table-striped').on('keyup', ".grid-filter", function (event) {
+            selectedPosition = $(this)[0].selectionStart;
+            selectedInput = $(this).attr('name');
+        });
+
+        $('table.table-striped').on('keydown', ".grid-filter", function (event) {
+            return event.which != 9;
+        });
+
+        $('table.table-striped').on('change', "th > div.form-group > .input-group > input", function () {
+            if (!$(this).hasClass('no-focus')) {
+                selectedPosition = $(this)[0].selectionStart;
+                selectedInput = $(this).attr('name');
             }
-            var field = $(this);
-            clearTimeout(stoptyping);
-            stoptyping = setTimeout(function () {
-                if (field.val().length === 0 && !doFilter) {
-                    doFilter = true;
-                    return;
-                }
-                doFilter = true;
-                filter(field);
-            }, 500);
-        });
-
-        $('table.table-striped').on('change', "th > div.form-group > select.form-control", function () {
-            filter($(this));
-        });
-
-        $('table.table-striped').on('input', "th > div.form-group > input.form-control", function () {
-            if ($(this).val().length === 0) {
-                if (doFilter === true) {
-                    filter($(this));
-                    doFilter = false;
-                }
+            var from = $(this).parent('div.input-group').children('input.from').val();
+            var to = $(this).parent('div.input-group').children('input.to').val();
+            $(this).parent('div.input-group').parent('div.form-group').children('input.hidden').val(from + ';' + to);
+            if (!filtering) {
+                filter($(this).parent('div.input-group').parent('div.form-group').children('input.hidden'));
             }
         });
 
+        $('table.table-striped').on('change', ".grid-filter", function () {
+            if (!filtering) {
+                filter($(this));
+            }
+        });
 
+        $('table.table-striped').on('focus', ".grid-filter", function () {
+            selectedInput = $(this).attr('name');
+        });
 
     };
 
@@ -137,7 +124,7 @@ CMS.grid = function () {
                 type: 'POST',
                 data: {id: id[1], name: id[0], value: $(this).val(), checked: $(this).is(':checked')},
                 success: function() {
-                    initDt();
+
                 }
             });
         });
@@ -147,7 +134,7 @@ CMS.grid = function () {
     initGridOrder();
     initGridOperation();
     initPaginator();
-    initDt();
+    initPicker();
 };
 
 $(document).ready(function () {

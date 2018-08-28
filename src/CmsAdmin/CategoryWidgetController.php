@@ -73,7 +73,7 @@ class CategoryWidgetController extends Mvc\Controller
     public function deleteAttributeRelationAction()
     {
         //usuwanie relacji
-        (new AttributeController($this->getRequest()))->deleteAttributeRelationAction();
+        (new AttributeController($this->getRequest(), $this->view))->deleteAttributeRelationAction();
         $this->getResponse()->redirect('cmsAdmin', 'categoryWidget', 'edit', ['id' => $this->id]);
     }
 

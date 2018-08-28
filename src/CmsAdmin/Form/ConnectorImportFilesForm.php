@@ -15,7 +15,7 @@ use Cms\Form\Element;
 /**
  * Drugi krok - lista obiektów plików do importu
  */
-class ConnectorImportFilesForm extends \Mmi\Form\Form
+class ConnectorImportFilesForm extends \Cms\Form\Form
 {
 
     /**

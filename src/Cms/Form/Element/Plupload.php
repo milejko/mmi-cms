@@ -334,14 +334,12 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
         $view->headScript()->appendFile('/resource/cmsAdmin/vendors/js/bootstrap.min.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/tinymce.min.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/jquery/datetimepicker.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/plupload.full.min.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/plupload.conf.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/i18n/pl.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/jquery.ui.plupload.min.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/tinymce.min.js');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/video-frame-extractor/extractor.js');
-
 
         //przygotowanie danych dla pola
         $this->_beforeRender();

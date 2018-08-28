@@ -15,7 +15,7 @@ use Cms\Form\Element;
 /**
  * Formularz harmonogramu
  */
-class Cron extends \Mmi\Form\Form
+class Cron extends \Cms\Form\Form
 {
 
     public function init()

@@ -17,7 +17,7 @@ use Cms\Form\Element,
  * Formularz odpowiedzi na kontakt
  * @method \Cms\Orm\CmsContactRecord getRecord()
  */
-class Contact extends \Mmi\Form\Form
+class Contact extends \Cms\Form\Form
 {
 
     public function init()

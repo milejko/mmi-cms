@@ -9,7 +9,6 @@
         {headLink()->appendStyleSheet('/resource/cmsAdmin/vendors/css/simple-line-icons.min.css')}
         {headLink()->appendStyleSheet('/resource/cmsAdmin/css/chosen.min.css')}
         {headLink()->appendStyleSheet('/resource/cmsAdmin/css/style.css')}
-        {headLink()->appendStylesheet('/resource/cmsAdmin/css/datetimepicker.css')}
         {headLink()}
         <script>
             var request = {baseUrl:""};

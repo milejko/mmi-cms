@@ -72,7 +72,7 @@ class CategoryTypeController extends Mvc\Controller
     public function deleteAttributeRelationAction()
     {
         //usuwanie relacji
-        (new AttributeController($this->getRequest()))->deleteAttributeRelationAction();
+        (new AttributeController($this->getRequest(), $this->view))->deleteAttributeRelationAction();
         $this->getResponse()->redirect('cmsAdmin', 'categoryType', 'edit', ['id' => $this->id]);
     }
 

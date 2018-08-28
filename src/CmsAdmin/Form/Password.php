@@ -16,7 +16,7 @@ use Cms\Form\Element;
  * Formularz zmiany hasła w CMS
  * @method \Cms\Orm\CmsAuthRecord getRecord()
  */
-class Password extends \Mmi\Form\Form
+class Password extends \Cms\Form\Form
 {
 
     public function init()

@@ -34,15 +34,15 @@ class CronGrid extends \CmsAdmin\Grid\Grid
 
         //crontab
         $this->addColumn((new Column\CustomColumn('crontab'))
-            ->setLabel('crontab')
+            ->setLabel('harmonogram')
             ->setTemplateCode('{$record->minute} {$record->hour} {$record->dayOfMonth} {$record->month} {$record->dayOfWeek}'));
 
         //data dodania
-        $this->addColumn((new Column\TextColumn('dateAdd'))
+        $this->addColumn((new Column\DateTimeColumn('dateAdd'))
             ->setLabel('data dodania'));
 
         //ostatnie wywołanie
-        $this->addColumn((new Column\TextColumn('dateLastExecute'))
+        $this->addColumn((new Column\DateTimeColumn('dateLastExecute'))
             ->setLabel('ostatnie wywołanie'));
 
         //aktywny

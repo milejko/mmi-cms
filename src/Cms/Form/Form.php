@@ -22,7 +22,11 @@ abstract class Form extends \Mmi\Form\Form
      */
     protected $_fileObjectName;
 
+    //klucz-nazwa opcji przechowujący informację o edytowanym rekordzie (id)
     CONST EDITING_RECORD_OPTION_KEY = 'editingExistingRecord';
+
+    //szablon rozpoczynający formularz
+    CONST TEMPLATE_START = 'cmsAdmin/form/start';
 
     /**
      * Konstruktor

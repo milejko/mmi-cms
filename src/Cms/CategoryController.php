@@ -2,13 +2,16 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
 namespace Cms;
+use Mmi\App\FrontController;
+
+use Cms\Orm\CmsCategoryQuery;
 
 /**
  * Kontroler kategorii
@@ -26,6 +29,8 @@ class CategoryController extends \Mmi\Mvc\Controller
     {
         //pobranie kategorii
         $category = $this->_getPublishedCategoryByUri($this->uri);
+        //wpięcie kategorii do głównego widoku aplikacji
+        FrontController::getInstance()->getView()->category = $category;
         //klucz bufora
         $cacheKey = 'category-html-' . $category->id;
         //buforowanie dozwolone
@@ -88,7 +93,7 @@ class CategoryController extends \Mmi\Mvc\Controller
      */
     public function articleAction()
     {
-        
+
     }
 
     /**
@@ -96,18 +101,12 @@ class CategoryController extends \Mmi\Mvc\Controller
      */
     public function widgetAction()
     {
-        //brak kategorii
-        if (!$this->view->category) {
-            //pobranie kategorii
-            $this->view->category = new Orm\CmsCategoryRecord($this->id);
-        }
-        //wyszukiwanie widgeta
-        if (null === $this->view->widgetRelation = $this->view->category->getWidgetModel()->findWidgetRelationById($this->widgetId)) {
-            //brak - pusty zwrot
-            return '';
-        }
+
     }
 
+    /**
+     * Akcja renderująca guzik edycji
+     */
     public function editButtonAction()
     {
         $this->view->categoryId = $this->categoryId;
@@ -128,10 +127,10 @@ class CategoryController extends \Mmi\Mvc\Controller
         if (null === $categoryId = \App\Registry::$cache->load($cacheKey = 'category-id-' . md5($uri))) {
             //próba pobrania kategorii po URI
             if (null === $category = (new Orm\CmsCategoryQuery)->getCategoryByUri($uri)) {
-                //zapis informacji o braku kategorii w cache 
+                //zapis informacji o braku kategorii w cache
                 \App\Registry::$cache->save('-1', $cacheKey, 0);
-                //404
-                throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
+                //301 (o ile możliwe) lub 404
+                $this->_redirectOrNotFound($uri);
             }
             //id kategorii
             $categoryId = $category->id;
@@ -140,8 +139,8 @@ class CategoryController extends \Mmi\Mvc\Controller
         }
         //w buforze jest informacja o braku strony
         if ($categoryId == -1) {
-            //404
-            throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
+            //301 (o ile możliwe) lub 404
+            $this->_redirectOrNotFound($uri);
         }
         //kategoria
         if ($category) {
@@ -173,11 +172,11 @@ class CategoryController extends \Mmi\Mvc\Controller
         }
         //sprawdzenie dostępu dla roli
         if (!(new Model\CategoryRole($category, \App\Registry::$auth->getRoles()))->isAllowed()) {
-            //404
+            //403
             throw new \Mmi\Mvc\MvcForbiddenException('Category: ' . $category->uri . ' forbidden for roles: ' . implode(', ', \App\Registry::$auth->getRoles()));
         }
         //kategoria posiada customUri, a wejście jest na natywny uri
-        if ($category->customUri && $this->uri == $category->uri) {
+        if ($category->customUri && $this->uri != $category->customUri && $this->uri == $category->uri) {
             //przekierowanie na customUri
             $this->getResponse()->redirect('cms', 'category', 'dispatch', ['uri' => $category->customUri]);
         }
@@ -258,6 +257,40 @@ class CategoryController extends \Mmi\Mvc\Controller
         }
         //zwrot długości bufora
         return $cacheLifetime;
+    }
+
+    /**
+     * Przekierowanie 301 (poszukiwanie w historii), lub 404
+     * @param $uri
+     * @throws \Mmi\Mvc\MvcNotFoundException
+     */
+    protected function _redirectOrNotFound($uri)
+    {
+        //klucz bufora
+        $cacheKey = 'category-redirect-' . md5($uri);
+        //zbuforowany brak uri w historii
+        if (-1 === $redirectUri = \App\Registry::$cache->load($cacheKey)) {
+            //404
+            throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
+        }
+        //przekierowanie 301
+        if ($redirectUri) {
+            return $this->getResponse()->setCode(301)->redirect('cms', 'category', 'dispatch', ['uri' => $redirectUri]);
+        }
+        //wyszukiwanie kategorii
+        if (null === $category = (new CmsCategoryQuery)->whereUri()->equals($uri)
+            ->joinLeft('cms_category', 'cms_category', 'currentCategory')->on('cms_category_original_id', 'id')
+            ->orFieldCustomUri()->equals($uri)
+            ->findFirst()) {
+            //brak kategorii w historii - buforowanie informacji
+            \App\Registry::$cache->save('-1', $cacheKey, 0);
+            //404
+            throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
+        }
+        //zapis uri przekierowania do bufora
+        \App\Registry::$cache->save($category->getJoined('currentCategory')->uri, $cacheKey, 0);
+        //przekierowanie 301
+        return $this->getResponse()->setCode(301)->redirect('cms', 'category', 'dispatch', ['uri' => $category->getJoined('currentCategory')->uri]);
     }
 
     /**

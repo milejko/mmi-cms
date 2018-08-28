@@ -15,7 +15,7 @@ use Cms\Form\Element;
 /**
  * Formularz tagów
  */
-class Tag extends \Mmi\Form\Form
+class Tag extends \Cms\Form\Form
 {
 
     public function init()

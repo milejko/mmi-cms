@@ -224,6 +224,7 @@ class TinyMce extends Textarea
 				time: '$t',
 				baseUrl: '" . $view->baseUrl . "',
                 image_list: '" . $view->baseUrl . "' + '/?module=cms&controller=file&action=list&object=$object&objectId=$objectId&t=$t&hash=$hash',
+                branding: false,
                 image_class_list: [
 				    {title: 'Obrazek do lewej', value: 'image-left'},
                     {title: 'Obrazek do prawej', value: 'image-right'},

@@ -12,7 +12,7 @@ namespace CmsAdmin\Form;
 
 use Cms\Form\Element;
 
-class Login extends \Mmi\Form\Form
+class Login extends \Cms\Form\Form
 {
 
     public function init()

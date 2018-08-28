@@ -92,3 +92,17 @@ div.plupload-edit-container .dialog-error p {
 .ui-dialog {
     z-index: 1001 !important;
 }
+
+div.plupload_view_switch label span.ui-checkboxradio-icon {
+    display: none;
+}
+
+div.plupload_view_switch label.ui-state-active {
+    background: none;
+    border-color: #c5c5c5;
+}
+
+div.plupload_view_switch label.ui-state-active:hover {
+    background: #eee;
+    border-color: #c5c5c5;
+}

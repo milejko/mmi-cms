@@ -15,7 +15,7 @@ use Cms\Form\Element;
 /**
  * Formularz tekstów stałych
  */
-class Text extends \Mmi\Form\Form
+class Text extends \Cms\Form\Form
 {
     
     /**
