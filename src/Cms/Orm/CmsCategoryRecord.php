@@ -572,6 +572,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         \App\Registry::$cache->remove('category-html-' . $this->id);
         \App\Registry::$cache->remove('category-html-' . $this->cmsCategoryOriginalId);
         \App\Registry::$cache->remove('category-id-' . md5($this->uri));
+        \App\Registry::$cache->remove('category-redirect-' . md5($this->uri));
         \App\Registry::$cache->remove('category-id-' . md5($this->getInitialStateValue('uri')));
         \App\Registry::$cache->remove('category-id-' . md5($this->customUri));
         \App\Registry::$cache->remove('category-id-' . md5($this->getInitialStateValue('customUri')));
