@@ -19,13 +19,21 @@ class UploadController extends Mvc\Controller
 {
 
     /**
+     * Inicjalizacja - wyłączanie layoutu
+     */
+    public function init()
+    {
+        $this->view->setLayoutDisabled();
+        $this->getResponse()->setTypeJson();
+
+    }
+
+    /**
      * Odbieranie danych z plugina Plupload
      */
     public function pluploadAction()
     {
         set_time_limit(5 * 60);
-        $this->view->setLayoutDisabled();
-        $this->getResponse()->setTypeJson(true);
         //obiekt handlera plupload
         $pluploadHandler = new Model\PluploadHandler();
         //jeśli wystąpił błąd
@@ -44,8 +52,6 @@ class UploadController extends Mvc\Controller
      */
     public function currentAction()
     {
-        $this->view->setLayoutDisabled();
-        $this->getResponse()->setTypeJson(true);
         $objectId = !empty($this->getPost()->objectId) ? $this->getPost()->objectId : null;
         switch ($this->getPost()->fileTypes) {
             case 'images' :
@@ -78,8 +84,6 @@ class UploadController extends Mvc\Controller
      */
     public function deleteAction()
     {
-        $this->view->setLayoutDisabled();
-        $this->getResponse()->setTypeJson(true);
         //szukamy rekordu pliku
         if (!$this->getPost()->cmsFileId || null === $record = (new CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
             return $this->_jsonError(178);
@@ -103,8 +107,6 @@ class UploadController extends Mvc\Controller
      */
     public function thumbnailAction()
     {
-        $this->view->setLayoutDisabled();
-        $this->getResponse()->setTypeJson(true);
         if (!$this->getPost()->cmsFileId) {
             return $this->_jsonError(179);
         }
@@ -131,8 +133,6 @@ class UploadController extends Mvc\Controller
      */
     public function detailsAction()
     {
-        $this->view->setLayoutDisabled();
-        $this->getResponse()->setTypeJson(true);
         if (!$this->getPost()->cmsFileId) {
             return $this->_jsonError(185);
         }
@@ -163,8 +163,6 @@ class UploadController extends Mvc\Controller
      */
     public function describeAction()
     {
-        $this->view->setLayoutDisabled();
-        $this->getResponse()->setTypeJson(true);
         //sprawdzamy, czy jest id pliku i form
         if (!$this->getPost()->cmsFileId || !is_array($this->getPost()->form)) {
             return $this->_jsonError(186);
@@ -245,8 +243,6 @@ class UploadController extends Mvc\Controller
      */
     public function sortAction()
     {
-        $this->view->setLayoutDisabled();
-        $this->getResponse()->setTypeJson(true);
         $order = $this->getPost()->order;
         if (empty($order) || !is_array($order)) {
             return json_encode(['result' => 'OK']);
