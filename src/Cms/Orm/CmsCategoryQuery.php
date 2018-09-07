@@ -241,12 +241,12 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
             //data początku publikacji większa niż dziś
             ->andQuery((new CmsCategoryQuery())
                 ->whereDateStart()->equals(null)
-                ->orFieldDateStart()->greaterOrEquals(date('Y-m-d H:i:s'))
+                ->orFieldDateStart()->lessOrEquals(date('Y-m-d H:i:s'))
             )
             //data końca publikacji mniejsza niż dziś
             ->andQuery((new CmsCategoryQuery())
                 ->whereDateEnd()->equals(null)
-                ->orFieldDateEnd()->lessOrEquals(date('Y-m-d H:i:s'))
+                ->orFieldDateEnd()->greaterOrEquals(date('Y-m-d H:i:s'))
             )
             ->andQuery((new CmsCategoryQuery())->searchByUri($uri))
             ->find() as $category) {
