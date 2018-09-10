@@ -279,8 +279,8 @@ class CategoryController extends \Mmi\Mvc\Controller
         }
         //wyszukiwanie kategorii
         if (null === $category = (new CmsCategoryQuery)->whereUri()->equals($uri)
-            ->joinLeft('cms_category', 'cms_category', 'currentCategory')->on('cms_category_original_id', 'id')
             ->orFieldCustomUri()->equals($uri)
+            ->join('cms_category', 'cms_category', 'currentCategory')->on('cms_category_original_id', 'id')
             ->findFirst()) {
             //brak kategorii w historii - buforowanie informacji
             \App\Registry::$cache->save('-1', $cacheKey, 0);
