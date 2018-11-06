@@ -224,11 +224,7 @@ class TinyMce extends Textarea
 				time: '$t',
 				baseUrl: '" . $view->baseUrl . "',
                 image_list: '" . $view->baseUrl . "' + '/?module=cms&controller=file&action=list&object=$object&objectId=$objectId&t=$t&hash=$hash',
-                branding: false,
-                image_class_list: [
-				    {title: 'Obrazek do lewej', value: 'image-left'},
-                    {title: 'Obrazek do prawej', value: 'image-right'},
-                ]
+                branding: false
 			});
 		");
 
@@ -337,6 +333,10 @@ class TinyMce extends Textarea
 			paste_data_images: false,
 			plugin_preview_height: 700,
 			plugin_preview_width: 1100,
+            image_class_list: [
+                {title: 'Obrazek do lewej', value: 'image-left'},
+                {title: 'Obrazek do prawej', value: 'image-right'},
+            ],
 		";
     }
 
