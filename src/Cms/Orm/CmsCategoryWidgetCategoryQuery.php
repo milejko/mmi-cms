@@ -11,6 +11,8 @@ namespace Cms\Orm;
  * @method CmsCategoryWidgetCategoryQuery andQuery(\Mmi\Orm\Query $query)
  * @method CmsCategoryWidgetCategoryQuery whereQuery(\Mmi\Orm\Query $query)
  * @method CmsCategoryWidgetCategoryQuery orQuery(\Mmi\Orm\Query $query)
+ * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery like($value)
+ * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery ilike($value)
  * @method CmsCategoryWidgetCategoryQuery resetOrder()
  * @method CmsCategoryWidgetCategoryQuery resetWhere()
  * @method QueryHelper\CmsCategoryWidgetCategoryQueryField whereId()
