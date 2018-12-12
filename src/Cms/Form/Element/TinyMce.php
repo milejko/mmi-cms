@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -28,7 +28,7 @@ class TinyMce extends Textarea
     CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
     //klucz z losowym id uploadera
     CONST UPLOADER_ID_KEY = 'uploaderId';
-    
+
     /**
      * Ustawia form macierzysty
      * @param \Mmi\Form\Form $form
@@ -63,7 +63,7 @@ class TinyMce extends Textarea
     {
         return $this->getOption(self::UPLOADER_ID_KEY);
     }
-    
+
     /**
      * Ustawia objekt cms_
      * @param string $object
@@ -225,6 +225,7 @@ class TinyMce extends Textarea
 				baseUrl: '" . $view->baseUrl . "',
                 image_list: '" . $view->baseUrl . "' + '/?module=cms&controller=file&action=list&object=$object&objectId=$objectId&t=$t&hash=$hash',
                 image_class_list: [
+                    {title: '- - - - - - - - -', value: ''},
 				    {title: 'Obrazek do lewej', value: 'image-left'},
                     {title: 'Obrazek do prawej', value: 'image-right'},
                 ]
@@ -386,7 +387,7 @@ class TinyMce extends Textarea
             $this->setContextMenu('link image media inserttable | cell row column deletetable');
         }
     }
-    
+
     /**
      * Utorzenie kopii plików dla tego uploadera
      * @return boolean
@@ -407,7 +408,7 @@ class TinyMce extends Textarea
         \Cms\Model\File::link($this->getUploaderObject(), $objectId, 'tmp-' . $this->getUploaderObject(), $this->getUploaderId());
         return true;
     }
-    
+
     /**
      * Aktualizuje wartość pola - poprawia ścieżki do plików wewnątrz TinyMce
      * (zamienia je na ścieżki do plików tymczasowych)
