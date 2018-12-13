@@ -284,11 +284,11 @@ class PluploadHandler
     private function _setResponseHeaders()
     {
         $this->_response->setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT", true)
-            ->setHeader("Last-Modified", gmdate("D, d M Y H:i:s") . " GMT", true)
-            ->setHeader("Cache-Control", "no-store, no-cache, must-revalidate", true)
-            ->setHeader("Cache-Control", "post-check=0, pre-check=0", false)
-            ->setHeader("Pragma", "no-cache", true)
-            ->sendHeaders();
+                        ->setHeader("Last-Modified", gmdate("D, d M Y H:i:s") . " GMT", true)
+                        ->setHeader("Cache-Control", "no-store, no-cache, must-revalidate", true)
+                        ->setHeader("Cache-Control", "post-check=0, pre-check=0", false)
+                        ->setHeader("Pragma", "no-cache", true)
+                        ->sendHeaders();
     }
 
     /**
@@ -382,8 +382,8 @@ class PluploadHandler
         }
         $file = reset($files['file']);
         /* @var $file \Mmi\Http\RequestFile */
-        if ($file->tmpName && is_uploaded_file($file->tmpName)) {
-            if (!$this->_readWrite($file->tmpName, true)) {
+        if (reset($file)->tmpName && is_uploaded_file(reset($file)->tmpName)) {
+            if (!$this->_readWrite(reset($file)->tmpName, true)) {
                 return false;
             }
         } else {
