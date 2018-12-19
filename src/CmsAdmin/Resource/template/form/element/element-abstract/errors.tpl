@@ -3,7 +3,7 @@
     {if $_errors}
     <ul>
         {foreach $_errors as $_error}
-        <li><i class="fa fa-times" aria-hidden="true"></i>{$_error}</li>
+        <li><i class="fa fa-times" aria-hidden="true"></i>{_($_error)}</li>
         {/foreach}
     </ul>
     {/if}
