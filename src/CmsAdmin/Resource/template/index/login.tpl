@@ -4,8 +4,7 @@
             <div class="card-group mb-0">
                 <div class="card p-4">
                     <div class="card-body">
-                        <h1>{#Zaloguj się#}</h1>
-                        <p class="text-muted"><span>{$domain|replace:'www.':''}</span></p>
+                        <h1>{#template.index.login.header#}</h1>
                         {if($loginForm)}
                         {$loginForm}
                         {/if}

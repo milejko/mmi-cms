@@ -100,6 +100,9 @@ class Auth extends \Cms\Form\Form
     {
         //nadawanie uprawnień
         \Cms\Model\Role::grant($this->getRecord()->id, $this->getElement('cmsRoles')->getValue());
+        //usunięcie języka z sesji
+        $session = new \Mmi\Session\SessionSpace('cms-language');
+        $session->unsetAll();
         return true;
     }
 
