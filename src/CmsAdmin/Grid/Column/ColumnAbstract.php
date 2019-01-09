@@ -30,6 +30,7 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
 {
 
     const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/text';
+    const TEMPLATE_LABEL = 'cmsAdmin/grid/label';
 
     /**
      * Obiekt grida
@@ -81,24 +82,9 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
      */
     public function renderLabel()
     {
-        //brak property
-        if (!$this->isFieldInRecord()) {
-            return $this->getLabel() ? $this->getLabel() : $this->getName();
-        }
-        $html = '<a class="order" href="#' . $this->getFormColumnName() . '" data-method="' . $this->_getOrderMethod() . '">' . ($this->getLabel() ? $this->getLabel() : $this->getName());
-
-        //brak sortowania
-        if (!$this->_getOrderMethod()) {
-            return $html . '&nbsp;<i class="fa fa-sort" style="color:#20a8d8"></i></a>';
-        }
-
-        //ikona w dół
-        if ($this->_getOrderMethod() == 'orderDesc') {
-            return $html . '&nbsp;<i class="fa fa-sort-desc" style="color:#20a8d8"></i></a>';
-        }
-
-        //ikona w górę
-        return $html . '&nbsp;<i class="fa fa-sort-asc" style="color:#20a8d8"></i></a>';
+        //zwrot labelki
+        FrontController::getInstance()->getView()->_column = $this;
+        return FrontController::getInstance()->getView()->renderTemplate(static::TEMPLATE_LABEL);
     }
 
     /**
@@ -180,7 +166,7 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
      * Zwraca sortowanie dla pola
      * @return string
      */
-    protected function _getOrderMethod()
+    public function getOrderMethod()
     {
         //iteracja po sortowaniach w gridzie
         foreach ($this->_grid->getState()->getOrder() as $order) {

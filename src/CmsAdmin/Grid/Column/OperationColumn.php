@@ -27,13 +27,18 @@ class OperationColumn extends ColumnAbstract
 {
 
     /**
+     * Domyślny label
+     */
+    const LABEL = 'grid.shared.operation.label';
+
+    /**
      * Konstruktor ustawia domyślny label
      * pole bez nazwy
      */
     public function __construct()
     {
         //ustawia domyślne parametry
-        $this->setLabel('<div style="width: 100px;color: #20a8d8; text-align: center;"><i class="fa fa-2 fa-gears"></i></div>')
+        $this->setLabel(self::LABEL)
             ->setEditParams()
             ->setDeleteParams();
         //ustawia nazwę na _operation_
@@ -146,7 +151,7 @@ class OperationColumn extends ColumnAbstract
                 $html .= '<a class="operation-button" href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="fa fa-2 fa-trash-o "></i></a>';
             }
         }
-        $html .='</div>';
+        $html .= '</div>';
         return $html;
     }
 
