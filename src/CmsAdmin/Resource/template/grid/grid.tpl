@@ -4,7 +4,8 @@
 <div class="grid">
     <div class="row">
         <div class="col-12">
-            <table id="{$_grid->getClass()}" class="table table-striped grid-anchor">
+            <table id="{$_grid->getClass()}" class="table table-striped grid-anchor {if $_grid->getOption('sortableAction')}table-sort{/if}"
+                   {if $_grid->getOption('sortableAction')}data-sort-url="{$_grid->getOption('sortableAction')}"{/if}>
                 {$_renderer->renderHeader()}
                 {$_renderer->renderBody()}
             </table>

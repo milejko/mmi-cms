@@ -128,8 +128,27 @@ CMS.grid = function () {
         });
     };
 
+    var initGridSortable = function () {
+        if ($('table.table-sort').length > 0 && $('table.table-sort').attr('data-sort-url')) {
+            $('table.table-sort tbody').sortable({
+                items: "> tr",
+                handle: '.sort-row',
+                update: function (event, ui) {
+                    $.post(request.baseUrl + "/?" + $('table.table-sort').attr('data-sort-url'), {value:$(this).sortable('toArray')},
+                        function (result) {
+                            if (result) {
+                                alert(result);
+                            }
+                        });
+                }
+            });
+            $('table.table-sort tbody').disableSelection();
+        }
+    };
+
     initGridFilter();
     initGridOrder();
+    initGridSortable();
     initGridOperation();
     initPaginator();
     initPicker();
