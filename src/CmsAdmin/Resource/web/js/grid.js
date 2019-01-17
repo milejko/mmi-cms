@@ -110,6 +110,7 @@ CMS.grid = function () {
                 data: {order: field, method: method},
                 success: function (data) {
                     quickSwitch(data);
+                    initGridSortable();
                 }
             });
             return false;
@@ -128,8 +129,32 @@ CMS.grid = function () {
         });
     };
 
+    var initGridSortable = function () {
+        if ($('table.table-sort').length > 0 && $('table.table-sort').attr('data-sort-url')) {
+            $('table.table-sort tbody').sortable({
+                items: "> tr",
+                handle: '.sort-row',
+                axis: 'y',
+                update: function (event, ui) {
+                    var orderDirection = 'desc';
+                    if ($('table.table-sort a[href$="[order]"]').attr('data-method') === 'orderAsc') {
+                        orderDirection = 'asc';
+                    }
+                    $.post(request.baseUrl + "/?" + $('table.table-sort').attr('data-sort-url'), {order: orderDirection, value:$(this).sortable('toArray', {attribute: "data-id"})},
+                        function (result) {
+                            if (result) {
+                                alert(result);
+                            }
+                        });
+                }
+            });
+            $('table.table-sort tbody').disableSelection();
+        }
+    };
+
     initGridFilter();
     initGridOrder();
+    initGridSortable();
     initGridOperation();
     initPaginator();
     initPicker();
