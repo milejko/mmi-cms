@@ -1,6 +1,6 @@
 <tbody>
 {foreach $_grid->getDataCollection() as $record}
-    <tr id="{$record->id}">
+    <tr data-id="{$record->id}">
         {*iteracja po Columnach*}
         {foreach $_grid->getColumns() as $column}
             {*renderuje krotkę*}

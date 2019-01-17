@@ -110,6 +110,7 @@ CMS.grid = function () {
                 data: {order: field, method: method},
                 success: function (data) {
                     quickSwitch(data);
+                    initGridSortable();
                 }
             });
             return false;
@@ -133,8 +134,13 @@ CMS.grid = function () {
             $('table.table-sort tbody').sortable({
                 items: "> tr",
                 handle: '.sort-row',
+                axis: 'y',
                 update: function (event, ui) {
-                    $.post(request.baseUrl + "/?" + $('table.table-sort').attr('data-sort-url'), {value:$(this).sortable('toArray')},
+                    var orderDirection = 'desc';
+                    if ($('table.table-sort a[href$="[order]"]').attr('data-method') === 'orderAsc') {
+                        orderDirection = 'asc';
+                    }
+                    $.post(request.baseUrl + "/?" + $('table.table-sort').attr('data-sort-url'), {order: orderDirection, value:$(this).sortable('toArray', {attribute: "data-id"})},
                         function (result) {
                             if (result) {
                                 alert(result);
