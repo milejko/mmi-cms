@@ -4,9 +4,9 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
+                    <div id="categoryMessageContainer"></div>
                     <div class="card-header">
                         <strong>{#Zarządzanie treścią#}</strong>
-                        <div id="categoryMessageContainer" style="float: left; margin-left: 150px;"></div>
                     </div>
                     <div class="card-body">
                        <div id="categoryTreeContainer">
