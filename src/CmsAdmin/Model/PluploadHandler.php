@@ -382,8 +382,8 @@ class PluploadHandler
         }
         $file = reset($files['file']);
         /* @var $file \Mmi\Http\RequestFile */
-        if ($file->tmpName && is_uploaded_file($file->tmpName)) {
-            if (!$this->_readWrite($file->tmpName, true)) {
+        if (reset($file)->tmpName && is_uploaded_file(reset($file)->tmpName)) {
+            if (!$this->_readWrite(reset($file)->tmpName, true)) {
                 return false;
             }
         } else {
