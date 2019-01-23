@@ -33,7 +33,7 @@ class NotEmptyCmsFiles extends \Mmi\Validator\ValidatorAbstract
     /**
      * Komunikat błędnego kodu zabezpieczającego
      */
-    const INVALID = 'Proszę przesłać pliki';
+    const INVALID = 'validator.notEmptyCmsFiles.message';
 
     /**
      * Ustawia opcje
@@ -43,8 +43,8 @@ class NotEmptyCmsFiles extends \Mmi\Validator\ValidatorAbstract
     public function setOptions(array $options = [], $reset = false)
     {
         return $this->setObject(current($options))
-                ->setObjectId(next($options))
-                ->setMessage(next($options));
+            ->setObjectId(next($options))
+            ->setMessage(next($options));
     }
 
     /**

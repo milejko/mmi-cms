@@ -11,7 +11,7 @@ class LdapAccount extends \Mmi\Validator\ValidatorAbstract
     /**
      * Treść wiadomości
      */
-    const INVALID = 'Użytkownik nie istnieje w LDAP';
+    const INVALID = 'validator.ldapAccount.message';
 
     /**
      * Walidacja znaków alfanumerycznych
