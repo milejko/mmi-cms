@@ -11,6 +11,7 @@
 namespace CmsAdmin\Form;
 
 use Cms\Form\Element;
+use Mmi\App\FrontController;
 
 /**
  * Klasa formularza ACL
@@ -32,7 +33,7 @@ class Acl extends \Cms\Form\Form
             ->setMultioptions([
                 'allow' => 'dozwolone',
                 'deny' => 'zabronione'
-        ]));
+            ]));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))
