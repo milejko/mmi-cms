@@ -1,5 +1,6 @@
 {headLink()->appendStylesheet('/resource/cmsAdmin/js/datetimepicker/jquery.datetimepicker.min.css')}
 {headScript()->appendFile('/resource/cmsAdmin/js/datetimepicker/jquery.datetimepicker.full.min.js')}
+{headScript()->appendFile('/resource/cmsAdmin/js/chosen.jquery.min.js')}
 {headScript()->appendFile('/resource/cmsAdmin/js/grid.js')}
 <div class="grid">
     <div class="row">

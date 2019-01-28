@@ -1,4 +1,4 @@
-<select name="{$_column->getFormColumnName()}" class="form-control grid-filter">
+<select name="{$_column->getFormColumnName()}" class="form-control grid-filter" {if $_column->getOption('chosen')}data-chosen="true"{/if}>
     {foreach $_column->getMultioptions() as $key => $value}
         <option value="{$key}"{if (string)$key === $_column->getFilterValue()} selected{/if}>{$value}</option>
     {/foreach}

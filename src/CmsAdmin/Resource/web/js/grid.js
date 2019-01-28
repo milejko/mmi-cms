@@ -111,6 +111,7 @@ CMS.grid = function () {
                 success: function (data) {
                     quickSwitch(data);
                     initGridSortable();
+                    initGridSelect();
                 }
             });
             return false;
@@ -152,9 +153,14 @@ CMS.grid = function () {
         }
     };
 
+    var initGridSelect = function () {
+        $('div.grid select[data-chosen="true"]').chosen({disable_search_threshold: 10});
+    }
+
     initGridFilter();
     initGridOrder();
     initGridSortable();
+    initGridSelect();
     initGridOperation();
     initPaginator();
     initPicker();
