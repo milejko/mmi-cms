@@ -8,9 +8,14 @@ CMS.grid = function () {
         inputBuffer,
         filtering = false;
 
-    var quickSwitch = function(data) {
-        $('.grid-anchor').html(data.body);
-        $('.paginator-anchor').html(data.paginator);
+    var quickSwitch = function(data, parent = null) {
+        if (parent === null) {
+            $('.grid-anchor').html(data.body);
+            $('.paginator-anchor').html(data.paginator);
+        } else {
+            parent.find('.grid-anchor').html(data.body);
+            parent.find('.paginator-anchor').html(data.paginator);
+        }
         initPicker();
     };
 
@@ -35,7 +40,7 @@ CMS.grid = function () {
             type: 'POST',
             data: {filter: filter, value: value},
             success: function (data) {
-                quickSwitch(data);
+                quickSwitch(data, field.closest("table").parent());
                 if (!inputName) {
                     filtering = false;
                     return;
