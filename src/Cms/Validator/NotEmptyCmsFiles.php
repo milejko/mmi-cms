@@ -17,19 +17,18 @@ namespace Cms\Validator;
  * @method self setObjectId($objectId) ustawia ID obiektu
  * @method self setClass($class) ustawia klasę plików
  * @method self setActive($active) ustawia aktywność
- * @method self setRecord($record) ustawia rekord z formularza
+ * @method self setTemporary($tmp) ustawia, czy pliki tymczasowe
  * @method self setMessage($message) ustawia własną wiadomość walidatora
  * 
  * @method string getObject() pobiera obiekt
  * @method integer getObjectId() pobiera ID obiektu
  * @method string getClass() pobiera klasę plików
  * @method boolean getActive() pobiera aktywność
- * @method \Mmi\Orm\Record getRecord() pobiera rekord
- * @method string getMessage() pobiera wiadomość 
+ * @method boolean getTemporary() pobiera, czy pliki tymczasowe
+ * @method string getMessage() pobiera wiadomość
  */
 class NotEmptyCmsFiles extends \Mmi\Validator\ValidatorAbstract
 {
-
     /**
      * Komunikat błędnego kodu zabezpieczającego
      */
@@ -49,14 +48,13 @@ class NotEmptyCmsFiles extends \Mmi\Validator\ValidatorAbstract
 
     /**
      * Waliduje czy w cms_file znajdują się jakieś pliki dla danego rekordu
-     * @param string $value
+     * @param mixed $value
      * @return boolean
      */
     public function isValid($value)
     {
-        $this->_setFromRecord();
         $query = (new \Cms\Orm\CmsFileQuery)
-            ->byObject($this->getObject(), $this->getObjectId());
+            ->byObject($this->_getObjectName(), $this->getObjectId());
         if ($this->getClass()) {
             $query->andFieldClass()->equals($this->getClass());
         }
@@ -69,24 +67,16 @@ class NotEmptyCmsFiles extends \Mmi\Validator\ValidatorAbstract
         }
         return true;
     }
-
+    
     /**
-     * Ustawia object i objectId na podstawie przekazanego obiektu rekordu
-     * @return \Cms\Validator\NotEmptyCmsFiles
+     * Zwraca nazwę obiektu dla zapytania o pliki
+     * @return string
      */
-    protected function _setFromRecord()
+    protected function _getObjectName()
     {
-        //jeśli przekazano rekord z formularza
-        if ($this->getRecord()) {
-            //w zależności od stanu zapisu, ustawiamy object i objectId
-            if ($this->getRecord()->getPk()) {
-                $this->setObjectId($this->getRecord()->getPk());
-            } else {
-                $this->setObjectId(\Mmi\Session\Session::getNumericId());
-                $this->setObject('tmp-' . $this->getObject());
-            }
+        if ($this->getTemporary() === false) {
+            return $this->getObject();
         }
-        return $this;
+        return 'tmp-' . $this->getObject();
     }
-
 }
