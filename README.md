@@ -5,7 +5,7 @@ MMi CMS is a content management system written with MMi PHP Framework. It allows
 
 Requirements
 
-MMi CMS is only supported on PHP 5.4.0 and up.
+MMi CMS is only supported on PHP 7.1.0 and up.
 
 Installation
 
