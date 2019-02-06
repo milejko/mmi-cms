@@ -16,6 +16,7 @@ CMS.grid = function () {
             parent.find('.grid-anchor').html(data.body);
             parent.find('.paginator-anchor').html(data.paginator);
         }
+        initGridSelect();
         initPicker();
     };
 
