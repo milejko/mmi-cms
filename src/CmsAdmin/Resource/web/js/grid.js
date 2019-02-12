@@ -14,7 +14,11 @@ CMS.grid = function () {
             $('.paginator-anchor').html(data.paginator);
         } else {
             parent.find('.grid-anchor').html(data.body);
-            parent.find('.paginator-anchor').html(data.paginator);
+            if (parent.find('.paginator-anchor').length) {
+                parent.find('.paginator-anchor').html(data.paginator);
+            } else {
+                $('#' + parent.find('.grid-anchor')[0].id + '-paginator').html(data.paginator);
+            }
         }
         initGridSelect();
         initPicker();
