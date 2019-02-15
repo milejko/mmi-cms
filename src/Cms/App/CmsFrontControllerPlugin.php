@@ -107,6 +107,7 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
         $view->languages = \App\Registry::$config->languages;
         $jsRequest = $request->toArray();
         $jsRequest['baseUrl'] = $base;
+        $jsRequest['locale'] = \App\Registry::$translate->getLocale();
         unset($jsRequest['controller']);
         unset($jsRequest['action']);
         //umieszczenie tablicy w headScript()

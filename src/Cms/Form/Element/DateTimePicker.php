@@ -113,7 +113,7 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract
 						}
 					}
 					});
-				$.datetimepicker.setLocale('pl');
+				$.datetimepicker.setLocale(request.lang);
 			});
         ");
         //@TODO: get locale from view

@@ -10,7 +10,4 @@
         {headLink()->appendStyleSheet('/resource/cmsAdmin/css/chosen.min.css')}
         {headLink()->appendStyleSheet('/resource/cmsAdmin/css/style.css')}
         {headLink()}
-        <script>
-            var request = {baseUrl:""};
-        </script>
     </head>
