@@ -75,7 +75,7 @@ class Register extends \Mmi\Form\Form
         //opcja zmiany (w tym przypadku ustawienia nowego) hasłą
         $this->getRecord()->password = \Cms\Model\Auth::getSaltedPasswordHash($this->getElement('password')->getValue());
         //domyślny język
-        $this->getRecord()->lang = 'pl';
+        $this->getRecord()->lang = \App\Registry::$translate->getLocale();
         return true;
     }
 

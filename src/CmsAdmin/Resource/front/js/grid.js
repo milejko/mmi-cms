@@ -8,24 +8,24 @@ CMS.grid = function () {
         inputBuffer,
         filtering = false;
 
-    var quickSwitch = function(data) {
+    var quickSwitch = function (data) {
         $('.grid-anchor').html(data.body);
         $('.paginator-anchor').html(data.paginator);
         initPicker();
     };
 
-    var rememberCursor = function(object) {
+    var rememberCursor = function (object) {
         inputBuffer = object.val();
         inputCursorPosition = object[0].selectionStart;
         inputName = object.attr('name');
     };
 
     var initPicker = function () {
-        $('.grid-picker').datetimepicker({format:'Y-m-d', allowBlank: true, scrollInput: false, scrollMonth: true, timepicker: false});
-        $.datetimepicker.setLocale('pl');
+        $('.grid-picker').datetimepicker({ format: 'Y-m-d', allowBlank: true, scrollInput: false, scrollMonth: true, timepicker: false });
+        $.datetimepicker.setLocale(request.locale);
     };
 
-    var filter = function(field) {
+    var filter = function (field) {
         var filter = field.attr('name'),
             value = field.val();
         filtering = true;
@@ -33,7 +33,7 @@ CMS.grid = function () {
         $.ajax({
             url: window.location,
             type: 'POST',
-            data: {filter: filter, value: value},
+            data: { filter: filter, value: value },
             success: function (data) {
                 quickSwitch(data);
                 if (!inputName) {
@@ -45,7 +45,7 @@ CMS.grid = function () {
                 element.val(inputBuffer);
                 try {
                     element[0].setSelectionRange(inputCursorPosition, inputCursorPosition);
-                } catch (e) {}
+                } catch (e) { }
                 inputName = null;
                 inputBuffer = null;
                 filtering = false;
@@ -61,7 +61,7 @@ CMS.grid = function () {
             $.ajax({
                 url: window.location,
                 type: 'POST',
-                data: {filter: filter, value: value},
+                data: { filter: filter, value: value },
                 success: function (data) {
                     quickSwitch(data);
                 }
@@ -107,7 +107,7 @@ CMS.grid = function () {
             $.ajax({
                 url: window.location,
                 type: 'POST',
-                data: {order: field, method: method},
+                data: { order: field, method: method },
                 success: function (data) {
                     quickSwitch(data);
                 }
@@ -123,7 +123,7 @@ CMS.grid = function () {
             $.ajax({
                 url: window.location,
                 type: 'POST',
-                data: {id: id[1], name: id[0], value: $(this).val(), checked: $(this).is(':checked')}
+                data: { id: id[1], name: id[0], value: $(this).val(), checked: $(this).is(':checked') }
             });
         });
     };
