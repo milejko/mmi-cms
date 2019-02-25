@@ -23,22 +23,19 @@ class NavPartText extends \Mmi\Navigation\NavigationConfig
     public static function getMenu()
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
-                ->setLabel('Teksty stałe')
-                ->setIcon('fa-align-left')
-                ->setUri('#')
+            ->setLabel('menu.text.container')
+            ->setIcon('fa-align-left')
+            ->setUri('#')
+            ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                ->setLabel('menu.text.index')
+                ->setIcon('fa-table')
+                ->setModule('cmsAdmin')
+                ->setController('text'))
+            ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                ->setLabel('menu.text.edit')
+                ->setIcon('fa-plus')
                 ->setModule('cmsAdmin')
                 ->setController('text')
-                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
-                    ->setLabel('Lista tekstów')
-                    ->setIcon('fa-table')
-                    ->setModule('cmsAdmin')
-                    ->setController('text'))
-                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
-                    ->setLabel('Dodaj')
-                    ->setIcon('fa-plus')
-                    ->setModule('cmsAdmin')
-                    ->setController('text')
-                    ->setAction('edit'));
+                ->setAction('edit'));
     }
-
 }
