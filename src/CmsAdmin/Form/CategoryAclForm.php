@@ -22,26 +22,26 @@ class CategoryAclForm extends \Cms\Form\Form
     {
         //drzewo kategorii (dozwolone)
         $this->addElement((new Element\Tree('allow'))
-                ->setLabel('dozwolone kategorie')
-                ->setMultiple()
-                ->setValue(implode(';', (new \Cms\Orm\CmsCategoryAclQuery)
-                        ->whereCmsRoleId()->equals($this->getOption('roleId'))
-                        ->andFieldAccess()->equals('allow')
-                        ->findPairs('id', 'cms_category_id')))
-                ->setStructure(['children' => (new \Cms\Model\CategoryModel)->getCategoryTree()]));
+            ->setLabel('dozwolone kategorie')
+            ->setMultiple()
+            ->setValue(implode(';', (new \Cms\Orm\CmsCategoryAclQuery)
+                ->whereCmsRoleId()->equals($this->getOption('roleId'))
+                ->andFieldAccess()->equals('allow')
+                ->findPairs('id', 'cms_category_id')))
+            ->setStructure(['children' => (new \Cms\Model\CategoryModel)->getCategoryTree()]));
 
         //drzewo kategorii (zabronione)
         $this->addElement((new Element\Tree('deny'))
-                ->setLabel('zabronione kategorie')
-                ->setMultiple()
-                ->setValue(implode(';', (new \Cms\Orm\CmsCategoryAclQuery)
-                        ->whereCmsRoleId()->equals($this->getOption('roleId'))
-                        ->andFieldAccess()->equals('deny')
-                        ->findPairs('id', 'cms_category_id')))
-                ->setStructure(['children' => (new \Cms\Model\CategoryModel)->getCategoryTree()]));
+            ->setLabel('zabronione kategorie')
+            ->setMultiple()
+            ->setValue(implode(';', (new \Cms\Orm\CmsCategoryAclQuery)
+                ->whereCmsRoleId()->equals($this->getOption('roleId'))
+                ->andFieldAccess()->equals('deny')
+                ->findPairs('id', 'cms_category_id')))
+            ->setStructure(['children' => (new \Cms\Model\CategoryModel)->getCategoryTree()]));
 
         $this->addElement((new Element\Submit('submit'))
-                ->setLabel('zapisz'));
+            ->setLabel('zapisz'));
     }
 
     /**
@@ -83,5 +83,4 @@ class CategoryAclForm extends \Cms\Form\Form
         \App\Registry::$cache->remove('mmi-cms-category-acl');
         return true;
     }
-
 }

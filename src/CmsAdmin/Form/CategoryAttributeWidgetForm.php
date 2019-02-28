@@ -27,5 +27,4 @@ class CategoryAttributeWidgetForm extends \Cms\Form\AttributeForm
         $this->addElement((new Element\Submit('submit'))
             ->setLabel('zapisz'));
     }
-
 }

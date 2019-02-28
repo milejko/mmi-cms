@@ -16,32 +16,32 @@
                 <h5>{$categoryForm->getRecord()->name}</h5>
                 <div class="float-right" style="margin-top: -60px;">
                     <br />
-                    <button style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit-top" type="submit" class="btn btn-secondary" name="cmsadmin-form-category[submit]" value="preview" >podgląd</button>
-                    <button style="color: #fff;" id="cmsadmin-form-category-commit-top" type="submit" class="btn btn-primary" name="cmsadmin-form-category[commit]" value="submit" >zatwierdź</button>
+                    <button style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit-top" type="submit" class="btn btn-secondary" name="cmsadmin-form-category[submit]" value="preview" >{#template.category.edit.preview#}</button>
+                    <button style="color: #fff;" id="cmsadmin-form-category-commit-top" type="submit" class="btn btn-primary" name="cmsadmin-form-category[commit]" value="submit" >{#template.category.edit.commit#}</button>
                 </div>
                 <div class="clear"></div>
                 <ul class="nav nav-tabs" role="tablist" data-id="{$categoryForm->getRecord()->id}">
                     <li class="nav-item">
-                        <a title="{#Konfiguracja#}" class="nav-link" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-expanded="true"><i class="icon-pencil"></i></a>
+                        <a title="{#template.category.edit.tab.config#}" class="nav-link" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-expanded="true"><i class="icon-pencil"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a title="{#SEO#}" class="nav-link" data-toggle="tab" href="#seo" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-magnifier"></i></a>
+                        <a title="{#template.category.edit.tab.seo#}" class="nav-link" data-toggle="tab" href="#seo" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-magnifier"></i></a>
                     </li>
                     {if $attributeCount > 0}
                         <li class="nav-item">
-                            <a title="{#Atrybuty#}" class="nav-link" data-toggle="tab" href="#attributes" role="tab" aria-controls="messages" aria-expanded="false"><i class="icon-note"></i></a>
+                            <a title="{#template.category.edit.tab.attribute#}" class="nav-link" data-toggle="tab" href="#attributes" role="tab" aria-controls="messages" aria-expanded="false"><i class="icon-note"></i></a>
                         </li>
                     {/if}
                     {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
                         <li class="nav-item">
-                            <a title="{#Widgety#}" class="nav-link" data-toggle="tab" href="#widgets" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-layers"></i></a>
+                            <a title="{#template.category.edit.tab.widget#}" class="nav-link" data-toggle="tab" href="#widgets" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-layers"></i></a>
                         </li>
                     {/if}
                     <li class="nav-item">
-                        <a title="{#Historia#}" class="nav-link" data-toggle="tab" href="#history" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-clock"></i></a>
+                        <a title="{#template.category.edit.tab.history#}" class="nav-link" data-toggle="tab" href="#history" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-clock"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a title="{#Zaawansowane#}" class="nav-link" data-toggle="tab" href="#advanced" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-wrench"></i></a>
+                        <a title="{#template.category.edit.tab.advanced#}" class="nav-link" data-toggle="tab" href="#advanced" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-wrench"></i></a>
                     </li>
                 </ul>
                 <div class="tab-content">
@@ -72,7 +72,7 @@
                     {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
                         <div class="tab-pane" id="widgets" role="tabpanel" aria-expanded="false">
                             {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'add'])}
-                                <a href="javascript:void(0);" onclick="PopupCenter('{@module=cmsAdmin&controller=categoryWidgetRelation&action=add&id={$categoryId}@}'); return false;" class="button btn btn-primary btn-block new-window" target="_blank"><i class="icon-plus"></i> dodaj widget</a>
+                                <a href="javascript:void(0);" onclick="PopupCenter('{@module=cmsAdmin&controller=categoryWidgetRelation&action=add&id={$categoryId}@}'); return false;" class="button btn btn-primary btn-block new-window" target="_blank"><i class="icon-plus"></i> {#template.category.edit.widget.add#}</a>
                             {/if}
                             <div id="widget-list-container" data-category-id="{$categoryId}">
                                 {widget('cmsAdmin', 'categoryWidgetRelation', 'preview', ['categoryId' => $categoryId])}
@@ -93,8 +93,8 @@
                 </div>
                 <div class="float-right">
                     <br />
-                    <input style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit" type="submit" class="btn btn-secondary" name="cmsadmin-form-category[submit]" value="podgląd" >
-                    <input style="color: #fff;" id="cmsadmin-form-category-commit" type="submit" class="btn btn-primary" name="cmsadmin-form-category[commit]" value="zatwierdź" >
+                    <input style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit" type="submit" class="btn btn-secondary" name="cmsadmin-form-category[submit]" value="{#template.category.edit.preview#}" >
+                    <input style="color: #fff;" id="cmsadmin-form-category-commit" type="submit" class="btn btn-primary" name="cmsadmin-form-category[commit]" value="{#template.category.edit.commit#}" >
                 </div>
                 {$categoryForm->end()}
             {/if}
