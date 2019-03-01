@@ -115,17 +115,17 @@ class Category extends \Cms\Form\AttributeForm
 
                 //https
                 $this->addElement((new Element\Select('https'))
-                        ->setMultioptions([null => 'bez zmian', '0' => 'wymuś brak https', 1 => 'wymuś https'])
+                        ->setMultioptions([null => 'form.category.edit.https.option.default', '0' => 'form.category.edit.https.option.nossl', 1 => 'form.category.edit.https.option.ssl'])
                         ->addFilter(new Filter\EmptyToNull)
                         ->setLabel('https'));
 
                 //blank
                 $this->addElement((new Element\Checkbox('blank'))
-                        ->setLabel('otwieranie w nowym oknie'));
+                        ->setLabel('form.category.edit.blank.label'));
 
                 //role uprawnione do wyświetlenia kategorii/strony
                 $this->addElement((new Element\MultiCheckbox('roles'))
-                        ->setLabel('widoczne dla')
+                        ->setLabel('form.category.edit.roles.label')
                         ->setMultioptions((new \Cms\Orm\CmsRoleQuery)->orderAscName()->findPairs('id', 'name'))
                         ->setValue(
                                 $this->getRecord()->id ? (new \Cms\Orm\CmsCategoryRoleQuery)
@@ -135,11 +135,11 @@ class Category extends \Cms\Form\AttributeForm
 
                 //zapis
                 $this->addElement((new Element\Submit('commit'))
-                        ->setLabel('zapisz i zatwierdź'));
+                        ->setLabel('template.category.edit.commit'));
 
                 //zapis
                 $this->addElement((new Element\Submit('submit'))
-                        ->setLabel('zapisz kopię roboczą'));
+                        ->setLabel('template.category.edit.preview'));
         }
 
         /**
