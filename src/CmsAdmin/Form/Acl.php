@@ -31,13 +31,13 @@ class Acl extends \Cms\Form\Form
         //dozwolone/zabronione
         $this->addElement((new Element\Select('access'))
             ->setMultioptions([
-                'allow' => 'dozwolone',
-                'deny' => 'zabronione'
+                'allow' => 'form.acl.access.options.allow',
+                'deny' => 'form.acl.access.options.deny'
             ]));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('dodaj regułę'));
+            ->setLabel('form.acl.submit.label'));
     }
 
     /**

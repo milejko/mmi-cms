@@ -34,7 +34,7 @@ class CategoryAttributeRelationForm extends \Cms\Form\Form
                     ->findPairs('id', 'name'))
                 //unikalność atrybutu dla wybranego szablonu
                 ->addValidator(new Validator\RecordUnique([$query, 'cmsAttributeId', $this->getRecord()->id]))
-                ->setLabel('atrybut'));
+                ->setLabel('form.categoryAttributeRelationForm.cmsAttributeId.label'));
 
         //zablokowana edycja
         if ($this->getRecord()->id) {
@@ -43,49 +43,49 @@ class CategoryAttributeRelationForm extends \Cms\Form\Form
                 ->setDisabled();
         }
 
-        //rekord wartości domyślnej		
+        //rekord wartości domyślnej
         $defaultValueRecord = (new \Cms\Orm\CmsAttributeValueQuery)
             ->findPk($this->getRecord()->cmsAttributeValueId);
 
         //wartość domyślna
         $this->addElement((new Element\Text('defaultValue'))
-                ->setLabel('wartość domyślna')
+                ->setLabel('form.categoryAttributeRelationForm.defaultValue.label')
                 ->addFilter(new \Mmi\Filter\EmptyToNull)
                 //string odpowiadający wartości domyślnej
                 ->setValue($defaultValueRecord ? $defaultValueRecord->value : null));
 
         //filtry
         $this->addElement((new Element\Text('filterClasses'))
-                ->setLabel('filtry'));
+                ->setLabel('form.categoryAttributeRelationForm.filterClasses.label'));
 
         //walidatory
         $this->addElement((new Element\Text('validatorClasses'))
-                ->setLabel('walidatory'));
+                ->setLabel('form.categoryAttributeRelationForm.validatorClasses.label'));
 
         //wymagany
         $this->addElement((new Element\Checkbox('required'))
-                ->setLabel('wymagany'));
+                ->setLabel('form.categoryAttributeRelationForm.required.label'));
 
         //unikalny
         $this->addElement((new Element\Checkbox('unique'))
-                ->setLabel('unikalny'));
+                ->setLabel('form.categoryAttributeRelationForm.unique.label'));
 
         //zmaterializowany
         $this->addElement((new Element\Select('materialized'))
-                ->setMultioptions([0 => 'nie', 1 => 'tak', 2 => 'tak, odziedziczony'])
-                ->setLabel('zmaterializowany')
-                ->setDescription('opcja administracyjna, zmiana może uszkodzić formularze zawierające ten atrybut'));
+                ->setMultioptions([0 => 'form.categoryAttributeRelationForm.materialized.options.0', 1 => 'form.categoryAttributeRelationForm.materialized.options.1', 2 => 'form.categoryAttributeRelationForm.materialized.options.2'])
+                ->setLabel('form.categoryAttributeRelationForm.materialized.label')
+                ->setDescription('form.categoryAttributeRelationForm.materialized.description'));
 
         //kolejność
         $this->addElement((new Element\Text('order'))
                 ->setRequired()
-                ->setLabel('kolejność')
+                ->setLabel('form.categoryAttributeRelationForm.order.label')
                 ->addValidator(new Validator\NumberBetween([0, 10000000]))
                 ->setValue(0));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))
-                ->setLabel('zapisz wiązanie'));
+                ->setLabel('form.categoryAttributeRelationForm.submit.label'));
     }
 
     /**

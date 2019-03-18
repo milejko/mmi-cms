@@ -36,13 +36,13 @@ class ConnectorImportFilesForm extends \Cms\Form\Form
         if (!empty($data)) {
             //lista obiektów
             $this->addElement((new Element\MultiCheckbox('fileObjects'))
-                ->setLabel('klasy plików')
+                ->setLabel('form.connectorImportFilesForm.fileObjects.label')
                 ->setMultioptions($data)
                 ->setValue($data));
 
             //submit
             $this->addElement((new Element\Submit('submit'))
-                ->setLabel('importuj'));
+                ->setLabel('form.connectorImportFilesForm.submit.label'));
         }
     }
 
@@ -63,7 +63,7 @@ class ConnectorImportFilesForm extends \Cms\Form\Form
             $remoteFiles = (new \Cms\Model\ConnectorModel)->getData($session->url, 'exportFileList', ['fileObjects' => $this->getElement('fileObjects')->getValue()], $session->identity, $session->credential);
         } catch (\Cms\Exception\ConnectorException $e) {
             //brak plików
-            $this->getElement('fileObjects')->addError('Brak plików');
+            $this->getElement('fileObjects')->addError('form.connectorImportFilesForm.fileObjects.error.empty');
             return false;
         }
         $files = [];

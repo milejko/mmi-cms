@@ -25,29 +25,29 @@ class ConnectorImportContentForm extends \Cms\Form\Form
     {
         $this->addElement((new Element\Text('url'))
             ->addValidator(new \Mmi\Validator\Regex(['/^https?:\/\/[a-z0-9\.\/]+$/', 'link nie jest poprawnym adresem HTTPS']))
-            ->setDescription('wymagany HTTPS')
+            ->setDescription('form.connectorImportContentForm.url.description')
             ->setRequired()
-            ->setLabel('adres źródłowego CMS'));
+            ->setLabel('form.connectorImportContentForm.url.label'));
 
         $this->addElement((new Element\Text('identity'))
-            ->setLabel('login administratora źródłowego CMS')
+            ->setLabel('form.connectorImportContentForm.identity.label')
             ->setRequired());
 
         $this->addElement((new Element\Password('credential'))
-            ->setLabel('hasło administratora źródłowego CMS')
+            ->setLabel('form.connectorImportContentForm.credential.label')
             ->setRequired());
 
         $this->addElement((new Element\Checkbox('acl'))
-            ->setLabel('role i ich uprawnienia'));
+            ->setLabel('form.connectorImportContentForm.acl.label'));
 
         $this->addElement((new Element\Checkbox('content'))
-            ->setLabel('treści cms (bez plików)'));
+            ->setLabel('form.connectorImportContentForm.content.label'));
 
         $this->addElement((new Element\Checkbox('file'))
-            ->setLabel('pliki'));
+            ->setLabel('form.connectorImportContentForm.file.label'));
 
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('importuj'));
+            ->setLabel('form.connectorImportContentForm.submit.label'));
     }
 
     /**
@@ -72,13 +72,13 @@ class ConnectorImportContentForm extends \Cms\Form\Form
                 ], $session->identity, $session->credential);
         } catch (\Cms\Exception\ConnectorException $e) {
             //dane nie mogą być pobrane
-            $this->getElement('url')->addError('Połączenie z CMS niemożliwe');
+            $this->getElement('url')->addError('form.connectorImportContentForm.url.error.crm');
             return false;
         }
         //próba importu
         if (!$connector->importData($data)) {
             //dane są puste, lub nieprawidłowe
-            $this->getElement('url')->addError('Dane są nieprawidłowe');
+            $this->getElement('url')->addError('form.connectorImportContentForm.url.error.data');
             return false;
         }
         return true;
