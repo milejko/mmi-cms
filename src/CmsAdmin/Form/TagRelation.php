@@ -25,7 +25,7 @@ class TagRelation extends \Cms\Form\Form
 
         //tag
         $this->addElement((new Element\Text('tag'))
-            ->setLabel('tag')
+            ->setLabel('form.tagRelation.tag.label')
             ->setRequired()
             ->addFilter(new Filter\StringTrim)
             ->addValidator(new Validator\StringLength([2, 64])));
@@ -37,20 +37,20 @@ class TagRelation extends \Cms\Form\Form
 
         //obiekt
         $this->addElement((new Element\Text('object'))
-            ->setLabel('zasób')
+            ->setLabel('form.tagRelation.object.label')
             ->setRequired()
             ->addFilter(new Filter\StringTrim)
             ->addValidator(new Validator\StringLength([2, 64])));
 
         //id obiektu
         $this->addElement((new Element\Text('objectId'))
-            ->setLabel('ID zasobu')
+            ->setLabel('form.tagRelation.objectId.label')
             ->addFilter(new Filter\EmptyToNull)
             ->addValidator(new Validator\Integer([]))
             ->addValidator(new Validator\NumberBetween([0, 100000000])));
 
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('zapisz relację'));
+            ->setLabel('form.tagRelation.submit.label'));
     }
 
     /**

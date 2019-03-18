@@ -30,29 +30,29 @@ class Contact extends \Cms\Form\Form
                 ->setIgnore()
                 ->setValue($this->getOption('subjectId'))
                 ->setMultioptions(\Cms\Model\Contact::getMultioptions())
-                ->setLabel('temat zapytania'));
+                ->setLabel('form.contact.cmsContactOptionId.label'));
         }
 
         //mail
         $this->addElement((new Element\Text('email'))
             ->setDisabled()
-            ->setLabel('email')
+            ->setLabel('form.contact.email.label')
             ->setValue(\App\Registry::$auth->getEmail())
             ->addValidator(new Validator\EmailAddress));
 
         //tresc zapytania
         $this->addElement((new Element\Textarea('text'))
             ->setDisabled()
-            ->setLabel('treść zapytania'));
+            ->setLabel('form.contact.text.label'));
 
         //odpowiedz na zgloszenie
         $this->addElement((new Element\Textarea('reply'))
             ->setRequired()
             ->addValidator(new Validator\NotEmpty)
-            ->setLabel('odpowiedź'));
+            ->setLabel('form.contact.reply.label'));
 
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('odpowiedz'));
+            ->setLabel('form.contact.submit.label'));
     }
 
     /**

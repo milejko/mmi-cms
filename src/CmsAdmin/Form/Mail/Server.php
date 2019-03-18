@@ -26,18 +26,18 @@ class Server extends \Cms\Form\Form
 
         //adres
         $this->addElement((new Element\Text('address'))
-            ->setLabel('Adres serwera SMTP'));
+            ->setLabel('form.mail.server.address.label'));
 
         //ssl
         $this->addElement((new Element\Select('ssl'))
-            ->setLabel('Rodzaj połączenia')
+            ->setLabel('form.mail.server.ssl.label')
             ->setRequired()
             ->addValidator(new \Mmi\Validator\NotEmpty)
             ->setMultioptions(['plain' => 'plain', 'tls' => 'tls', 'ssl' => 'ssl']));
 
         //port
         $this->addElement((new Element\Text('port'))
-            ->setLabel('Port')
+            ->setLabel('form.mail.server.port.label')
             ->setRequired()
             ->addValidator(new \Mmi\Validator\Integer([true]))
             ->setValue(25)
@@ -45,19 +45,19 @@ class Server extends \Cms\Form\Form
 
         //użytkownik
         $this->addElement((new Element\Text('username'))
-            ->setLabel('Nazwa użytkownika'));
+            ->setLabel('form.mail.server.username.label'));
 
         //hasło
         $this->addElement((new Element\Text('password'))
-            ->setLabel('Hasło użytkownika'));
+            ->setLabel('form.mail.server.password.label'));
 
         //od
         $this->addElement((new Element\Text('from'))
-            ->setLabel('Domyślny adres od'));
+            ->setLabel('form.mail.server.from.label'));
 
         //submit
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('Zapisz'));
+            ->setLabel('form.mail.server.submit.label'));
     }
 
 }

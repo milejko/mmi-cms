@@ -23,7 +23,7 @@ class Definition extends \Cms\Form\Form
 
         //nazwa
         $this->addElement((new Element\Text('name'))
-            ->setLabel('unikalna nazwa')
+            ->setLabel('form.mail.definition.name.label')
             ->setRequired()
             ->addValidator(new \Mmi\Validator\StringLength([6, 25]))
             ->addValidator(new \Mmi\Validator\RecordUnique([(new \Cms\Orm\CmsMailDefinitionQuery), 'name', $this->getRecord()->id])));
@@ -37,46 +37,46 @@ class Definition extends \Cms\Form\Form
 
         //temat
         $this->addElement((new Element\Text('subject'))
-            ->setLabel('Tytuł')
+            ->setLabel('form.mail.definition.subject.label')
             ->setRequired()
             ->addValidator(new \Mmi\Validator\StringLength([2, 240])));
 
         //treść
         $this->addElement((new Element\Textarea('message'))
-            ->setLabel('treść')
+            ->setLabel('form.mail.definition.message.label')
             ->setRequired()
             ->addValidator(new \Mmi\Validator\NotEmpty));
 
         //treść html
         $this->addElement((new Element\Checkbox('html'))
-            ->setLabel('treść HTML')
+            ->setLabel('form.mail.definition.html.label')
             ->setRequired()
             ->addValidator(new \Mmi\Validator\NotEmpty));
 
         //od
         $this->addElement((new Element\Text('fromName'))
-            ->setLabel('wyświetlana nazwa (od kogo)')
-            ->setDescription('np. Pomoc serwisu xyz.pl')
+            ->setLabel('form.mail.definition.fromName.label')
+            ->setDescription('form.mail.definition.fromName.description')
             ->setRequired()
             ->addValidator(new \Mmi\Validator\StringLength([2, 240])));
 
         //odpowiedz na
         $this->addElement((new Element\Text('replyTo'))
-            ->setLabel('odpowiedz na')
-            ->setDescription('jeśli inny niż z którego wysłano wiadomość')
+            ->setLabel('form.mail.definition.replyTo.label')
+            ->setDescription('form.mail.definition.replyTo.description')
             ->setRequired(false)
             ->addValidator(new \Mmi\Validator\StringLength([2, 240])));
 
         //aktywny
         $this->addElement((new Element\Checkbox('active'))
-            ->setLabel('aktywny')
+            ->setLabel('form.mail.definition.active.label')
             ->setChecked()
             ->setRequired()
             ->addValidator(new \Mmi\Validator\NotEmpty));
 
         //submit
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('zapisz mail')
+            ->setLabel('form.mail.definition.submit.label')
             ->setIgnore());
     }
 

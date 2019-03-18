@@ -23,7 +23,7 @@ class Tag extends \Cms\Form\Form
 
         //tag
         $this->addElement((new Element\Text('tag'))
-            ->setLabel('tag')
+            ->setLabel('form.tag.tag.label')
             ->setRequired()
             ->addFilter(new \Mmi\Filter\StringTrim)
             ->addValidator(new \Mmi\Validator\StringLength([2, 64]))
@@ -31,7 +31,7 @@ class Tag extends \Cms\Form\Form
 
         //zapis
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('zapisz tag'));
+            ->setLabel('form.tag.submit.label'));
     }
 
 }

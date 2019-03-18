@@ -27,7 +27,7 @@ class Auth extends \Cms\Form\Form
 
         //nazwa użytkownika
         $this->addElement((new Element\Text('username'))
-            ->setLabel('nazwa użytkownika (login)')
+            ->setLabel('form.auth.username.label')
             ->setRequired()
             ->addFilter(new Filter\StringTrim)
             ->addValidator(new Validator\NotEmpty)
@@ -35,12 +35,12 @@ class Auth extends \Cms\Form\Form
 
         //imię i nazwisko użytkownika
         $this->addElement((new Element\Text('name'))
-            ->setLabel('pełna nazwa użytkownika (opcjonalna)')
+            ->setLabel('form.auth.name.label')
             ->addFilter(new Filter\StringTrim));
 
         //email
         $this->addElement((new Element\Text('email'))
-            ->setLabel('adres e-mail')
+            ->setLabel('form.auth.email.label')
             ->setRequired()
             ->addFilter(new Filter\StringTrim)
             ->addValidator(new Validator\EmailAddress)
@@ -48,11 +48,11 @@ class Auth extends \Cms\Form\Form
 
         //role
         $this->addElement((new Element\MultiCheckbox('cmsRoles'))
-            ->setLabel('role')
-            ->setDescription('Grupa uprawnień')
+            ->setLabel('form.auth.cmsRoles.label')
+            ->setDescription('form.auth.cmsRoles.description')
             ->setMultioptions((new \Cms\Orm\CmsRoleQuery)->findPairs('id', 'name'))
             ->setValue(\Cms\Orm\CmsAuthRoleQuery::byAuthId($this->_record->id)->findPairs('cms_role_id', 'cms_role_id'))
-            ->addValidator(new Validator\NotEmpty(['Wymagane jest wybranie roli'])));
+            ->addValidator(new Validator\NotEmpty(['form.auth.cmsRoles.validator'])));
 
         $languages = [];
         foreach (\App\Registry::$config->languages as $language) {
@@ -61,23 +61,23 @@ class Auth extends \Cms\Form\Form
 
         if (!empty($languages)) {
             $this->addElement((new Element\Select('lang'))
-                ->setLabel('język')
+                ->setLabel('form.auth.lang.label')
                 ->setMultioptions($languages)
-                ->setDescription('Preferowany przez użytkownika język interfejsu'));
+                ->setDescription('form.auth.lang.description'));
         }
 
         //aktywny
         $this->addElement((new Element\Checkbox('active'))
-            ->setLabel('Aktywny'));
+            ->setLabel('form.auth.active.label'));
 
         //zmiana hasła
         $this->addElement((new Element\Text('changePassword'))
-            ->setLabel('zmiana hasła')
-            ->setDescription('Jeśli nie chcesz zmienić hasła lub używać domenowego, nie wypełniaj tego pola')
+            ->setLabel('form.auth.changePassword.label')
+            ->setDescription('form.auth.changePassword.description')
             ->addValidator(new Validator\StringLength([4, 128])));
 
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('zapisz użytkownika'));
+            ->setLabel('form.auth.submit.label'));
     }
 
     /**

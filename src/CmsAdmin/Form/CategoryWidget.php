@@ -28,40 +28,40 @@ class CategoryWidget extends \Cms\Form\Form
 
         //nazwa
         $this->addElement((new Element\Text('name'))
-            ->setLabel('nazwa')
+            ->setLabel('form.categoryWidget.name.label')
             ->setRequired()
             ->addValidator(new Validator\StringLength([3, 64])));
 
         //parametry wyświetlania
         $this->addElement((new Element\Select('mvcParams'))
-            ->setLabel('adres modułu wyświetlania')
+            ->setLabel('form.categoryWidget.mvcParams.label')
             ->setMultioptions($widgets)
             ->setRequired()
             ->addValidator(new Validator\NotEmpty));
 
         //parametry podglądu
         $this->addElement((new Element\Select('mvcPreviewParams'))
-            ->setLabel('adres modułu podglądu')
+            ->setLabel('form.categoryWidget.mvcPreviewParams.label')
             ->setMultioptions($widgets)
             ->setRequired()
             ->addValidator(new Validator\NotEmpty));
 
         //klasa formularza (brak - domyślna)
         $this->addElement((new Element\Text('formClass'))
-            ->setLabel('klasa formularza')
-            ->setDescription('dane i konfiguracja')
+            ->setLabel('form.categoryWidget.formClass.label')
+            ->setDescription('form.categoryWidget.formClass.description')
             ->addFilter(new Filter\EmptyToNull)
             ->addValidator(new Validator\StringLength([3, 64])));
 
         //ustawienie bufora
         $this->addElement((new Element\Select('cacheLifetime'))
-            ->setLabel('odświeżanie')
+            ->setLabel('form.categoryWidget.cacheLifetime.label')
             ->setMultioptions(\Cms\Orm\CmsCategoryWidgetRecord::CACHE_LIFETIMES)
             ->setValue(\Cms\Orm\CmsCategoryWidgetRecord::DEFAULT_CACHE_LIFETIME));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('zapisz widget'));
+            ->setLabel('form.categoryWidget.submit.label'));
     }
 
 }
