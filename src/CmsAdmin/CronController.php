@@ -32,7 +32,7 @@ class CronController extends Mvc\Controller
     {
         $form = new \CmsAdmin\Form\Cron(new \Cms\Orm\CmsCronRecord($this->id));
         if ($form->isSaved()) {
-            $this->getMessenger()->addMessage('Zadanie zapisane poprawnie', true);
+            $this->getMessenger()->addMessage('messenger.cron.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'cron');
         }
         $this->view->cronForm = $form;
@@ -45,7 +45,7 @@ class CronController extends Mvc\Controller
     {
         $record = (new \Cms\Orm\CmsCronQuery)->findPk($this->id);
         if ($record && $record->delete()) {
-            $this->getMessenger()->addMessage('Zadanie CRON poprawnie usunięte', true);
+            $this->getMessenger()->addMessage('messenger.cron.deleted', true);
         }
         $this->getResponse()->redirect('cmsAdmin', 'cron');
     }

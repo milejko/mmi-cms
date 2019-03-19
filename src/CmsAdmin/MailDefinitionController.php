@@ -32,7 +32,7 @@ class MailDefinitionController extends Mvc\Controller
     {
         $form = new \CmsAdmin\Form\Mail\Definition(new \Cms\Orm\CmsMailDefinitionRecord($this->id));
         if ($form->isSaved()) {
-            $this->getMessenger()->addMessage('Poprawnie zapisano definicję maila', true);
+            $this->getMessenger()->addMessage('messenger.mailDefinition.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'mailDefinition');
         }
         $this->view->definitionForm = $form;
@@ -46,10 +46,10 @@ class MailDefinitionController extends Mvc\Controller
         $definition = (new \Cms\Orm\CmsMailDefinitionQuery)->findPk($this->id);
         try {
             if ($definition && $definition->delete()) {
-                $this->getMessenger()->addMessage('Poprawnie skasowano definicję maila');
+                $this->getMessenger()->addMessage('messenger.mailDefinition.deleted');
             }
         } catch (\Mmi\Db\Exception $e) {
-            $this->getMessenger()->addMessage('Nie można usunąć definicji maila, istnieją powiazane wiadomosci w kolejce', false);
+            $this->getMessenger()->addMessage('messenger.mailDefinition.delete.error', false);
         }
         $this->getResponse()->redirect('cmsAdmin', 'mailDefinition');
     }

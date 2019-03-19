@@ -31,7 +31,7 @@ class CategoryTypeAttributeController extends Mvc\Controller
     {
         $form = new \CmsAdmin\Form\CategoryType(new \Cms\Orm\CmsCategoryTypeRecord($this->id));
         if ($form->isSaved()) {
-            $this->getMessenger()->addMessage('Typ artykułu zapisany poprawnie', true);
+            $this->getMessenger()->addMessage('messenger.categoryTypeAttribute.categoryType.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'categoryType');
         }
         $this->view->categoryTypeForm = $form;
@@ -44,7 +44,7 @@ class CategoryTypeAttributeController extends Mvc\Controller
     {
         $record = (new \Cms\Orm\CmsCategoryTypeQuery)->findPk($this->id);
         if ($record && $record->delete()) {
-            $this->getMessenger()->addMessage('Poprawnie usunięto typ artykułu', true);
+            $this->getMessenger()->addMessage('messenger.categoryTypeAttribute.categoryType.deleted', true);
         }
         $this->getResponse()->redirect('cmsAdmin', 'categoryType');
     }

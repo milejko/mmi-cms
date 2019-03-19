@@ -27,27 +27,27 @@ class CategoryWidgetGrid extends \CmsAdmin\Grid\Grid
 
         //nazwa
         $this->addColumn((new Column\TextColumn('name'))
-            ->setLabel('nazwa'));
+            ->setLabel('grid.categoryWidget.name.label'));
 
         $widgets = [null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard(3, '/widget/');
 
         //klasa modułu wyświetlania
         $this->addColumn((new Column\SelectColumn('mvcParams'))
             ->setMultioptions($widgets)
-            ->setLabel('moduł wyświetlania'));
+            ->setLabel('grid.categoryWidget.mvcParams.label'));
 
         //klasa modułu wyświetlania
         $this->addColumn((new Column\SelectColumn('mvcPreviewParams'))
             ->setMultioptions($widgets)
-            ->setLabel('modułu podglądu'));
+            ->setLabel('grid.categoryWidget.mvcPreviewParams.label'));
 
         //klasa forma
         $this->addColumn((new Column\TextColumn('formClass'))
-            ->setLabel('klasa formularza konfiguracji'));
+            ->setLabel('grid.categoryWidget.formClass.label'));
 
         //długość bufora
         $this->addColumn((new Column\SelectColumn('cacheLifetime'))
-            ->setLabel('odświeżanie')
+            ->setLabel('grid.categoryWidget.cacheLifetime.label')
             ->setMultioptions(\Cms\Orm\CmsCategoryWidgetRecord::CACHE_LIFETIMES));
 
         //operacje

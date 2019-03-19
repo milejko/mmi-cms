@@ -22,7 +22,7 @@ class Contact extends \Mmi\Form\Form
 
         if (!$this->getOption('subjectId')) {
             $this->addElement((new Element\Select('cmsContactOptionId'))
-                ->setLabel('Wybierz temat')
+                ->setLabel('form.contact.cmsContactOptionId.label')
                 ->setMultioptions(\Cms\Model\Contact::getMultioptions())
                 ->addValidator(new Validator\Integer));
         }
@@ -30,13 +30,13 @@ class Contact extends \Mmi\Form\Form
         $auth = \App\Registry::$auth;
 
         $this->addElement((new Element\Text('email'))
-            ->setLabel('Twój adres email')
+            ->setLabel('form.contact.email.label')
             ->setValue($auth->getEmail())
             ->setRequired()
             ->addValidator(new Validator\EmailAddress));
 
         $this->addElement((new Element\Textarea('text'))
-            ->setLabel('Wiadomość')
+            ->setLabel('form.contact.text.label')
             ->setRequired()
             ->addValidator(new Validator\NotEmpty)
             ->addFilter(new Filter\StripTags));
@@ -44,11 +44,11 @@ class Contact extends \Mmi\Form\Form
         //captcha dla niezalogowanych
         if (!($auth->getId() > 0)) {
             $this->addElement((new Element\Captcha('regCaptcha'))
-                ->setLabel('Przepisz kod'));
+                ->setLabel('form.contact.regCaptcha.label'));
         }
 
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('Wyślij'));
+            ->setLabel('form.contact.submit.label'));
     }
 
     /**

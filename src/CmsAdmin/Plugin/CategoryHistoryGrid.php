@@ -34,23 +34,23 @@ class CategoryHistoryGrid extends \CmsAdmin\Grid\Grid
 
         //nazwa
         $this->addColumn((new Column\TextColumn('name'))
-                ->setLabel('nazwa'));
+                ->setLabel('grid.categoryHistory.name.label'));
 
         $this->addColumn((new Column\SelectColumn('cms_auth.username'))
                 ->setMultioptions((new \Cms\Orm\CmsCategoryQuery)->join('cms_auth')->on('cms_auth_id')->groupByCmsAuthId()->findPairs('cms_auth.username', 'cms_auth.username'))
-                ->setLabel('użytkownik'));
+                ->setLabel('grid.categoryHistory.cms_auth.username.label'));
 
         //data utworzenia wersji
         $this->addColumn((new Column\TextColumn('dateAdd'))
-                ->setLabel('data utworzenia'));
+                ->setLabel('grid.categoryHistory.dateAdd.label'));
 
         //status
         $this->addColumn((new Column\SelectColumn('status'))
-                ->setLabel('wersja')
+                ->setLabel('grid.categoryHistory.status.label')
                 ->setMultioptions([
-                    \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT => 'robocza',
-                    \Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE => 'bieżąca',
-                    \Cms\Orm\CmsCategoryRecord::STATUS_HISTORY => 'archiwalna',
+                    \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT => 'grid.categoryHistory.status.option.draft',
+                    \Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE => 'grid.categoryHistory.status.option.active',
+                    \Cms\Orm\CmsCategoryRecord::STATUS_HISTORY => 'grid.categoryHistory.status.option.history',
                 ])
         );
 

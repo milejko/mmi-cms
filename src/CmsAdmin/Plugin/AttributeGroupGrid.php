@@ -26,11 +26,11 @@ class AttributeGroupGrid extends \CmsAdmin\Grid\Grid
 
         //nazwa taga
         $this->addColumn((new Column\TextColumn('name'))
-            ->setLabel('nazwa'));
+            ->setLabel('grid.attributeGroup.name.label'));
 
         //klasa pola
         $this->addColumn((new Column\TextColumn('description'))
-            ->setLabel('opis'));
+            ->setLabel('grid.attributeGroup.description.label'));
 
         //operacje
         $this->addColumn(new Column\OperationColumn);

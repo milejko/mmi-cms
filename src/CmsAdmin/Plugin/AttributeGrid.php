@@ -26,19 +26,19 @@ class AttributeGrid extends \CmsAdmin\Grid\Grid
 
         //nazwa atrybutu
         $this->addColumn((new Column\TextColumn('name'))
-            ->setLabel('grid.attribute.label.name'));
+            ->setLabel('grid.attribute.name.label'));
 
         //klucz atrybutu
         $this->addColumn((new Column\TextColumn('key'))
-            ->setLabel('grid.attribute.label.key'));
+            ->setLabel('grid.attribute.key.label'));
 
         //opis
         $this->addColumn((new Column\TextColumn('description'))
-            ->setLabel('grid.attribute.label.description'));
+            ->setLabel('grid.attribute.description.label'));
 
         //klasa pola
         $this->addColumn((new Column\SelectColumn('cmsAttributeTypeId'))
-            ->setLabel('grid.attribute.label.type')
+            ->setLabel('grid.attribute.type.label')
             ->setMultioptions((new \Cms\Orm\CmsAttributeTypeQuery)
                 ->orderAscName()
                 ->findPairs('id', 'name')));

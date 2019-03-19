@@ -36,7 +36,7 @@ class Captcha extends \Mmi\Form\Element\ElementAbstract
     {
         parent::__construct($name);
         $this->setIgnore()
-            ->setPlaceholder('Wpisz zielony kod z obrazka')
+            ->setPlaceholder('form.element.captcha.placeholder')
             ->addClass('form-control')
             ->setRequired()
             ->addValidator(new \Cms\Validator\Captcha(['name' => $name]));

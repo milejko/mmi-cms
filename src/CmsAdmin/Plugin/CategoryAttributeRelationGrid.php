@@ -33,27 +33,28 @@ class CategoryAttributeRelationGrid extends \CmsAdmin\Grid\Grid
 
         //nazwa typu
         $this->addColumn((new Column\TextColumn('cms_attribute.name'))
-            ->setLabel('nazwa'));
+            ->setLabel('grid.categoryAttributeRelation.cms_attribute.name.label'));
 
         //kolejność
         $this->addColumn((new Column\TextColumn('order'))
-            ->setLabel('kolejność'));
+            ->setLabel('grid.categoryAttributeRelation.order.label'));
 
         //wartość domyślna
-        $this->addColumn((new Column\TextColumn('cms_attribute_value.value'))->setLabel('wartość domyślna'));
+        $this->addColumn((new Column\TextColumn('cms_attribute_value.value'))
+            ->setLabel('grid.categoryAttributeRelation.cms_attribute_value.value.label'));
 
         //wymagany
         $this->addColumn((new Column\CheckboxColumn('required'))
-            ->setLabel('wymagany'));
+            ->setLabel('grid.categoryAttributeRelation.required.label'));
 
         //unikalny
         $this->addColumn((new Column\CheckboxColumn('unique'))
-            ->setLabel('unikalny'));
+            ->setLabel('grid.categoryAttributeRelation.unique.label'));
 
         //zmaterializowany
         $this->addColumn((new Column\SelectColumn('materialized'))
-            ->setMultioptions([0 => 'nie', 1 => 'tak', 2 => 'tak, odziedziczony'])
-            ->setLabel('zmaterializowany'));
+            ->setMultioptions([0 => 'grid.categoryAttributeRelation.materialized.options.0', 1 => 'grid.categoryAttributeRelation.materialized.options.1', 2 => 'grid.categoryAttributeRelation.materialized.options.2'])
+            ->setLabel('grid.categoryAttributeRelation.materialized.label'));
 
         //operacje
         $this->addColumn((new Column\OperationColumn())
