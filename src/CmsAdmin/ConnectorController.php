@@ -25,12 +25,12 @@ class ConnectorController extends Mvc\Controller
         $form = new Form\ConnectorImportContentForm;
         //formularz zapisany + przejście do importu plików
         if ($form->isSaved() && $form->getElement('file')) {
-            $this->getMessenger()->addMessage('Treść zaimportowana poprawnie', true);
+            $this->getMessenger()->addMessage('messenger.connector.import.success', true);
             $this->getResponse()->redirect('cmsAdmin', 'connector', 'files');
         }
         //form zapisany bez importu plików
         if ($form->isSaved()) {
-            $this->getMessenger()->addMessage('Import zakończony', true);
+            $this->getMessenger()->addMessage('messenger.connector.import.ended', true);
             $this->getResponse()->redirect('cmsAdmin', 'index', 'index');
         }
         //form do widoku

@@ -32,7 +32,7 @@ class AttributeController extends Mvc\Controller
         $form = new \CmsAdmin\Form\Attribute(new \Cms\Orm\CmsAttributeRecord($this->id));
         //form zapisany
         if ($form->isSaved()) {
-            $this->getMessenger()->addMessage('Atrybut zapisany poprawnie', true);
+            $this->getMessenger()->addMessage('messenger.attribute.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'attribute', 'index');
         }
         //pobranie typu atrybutu
@@ -47,7 +47,7 @@ class AttributeController extends Mvc\Controller
             $valueForm = new Form\AttributeValue($valueRecord);
             //zapis wartości atrybutu
             if ($valueForm->isSaved()) {
-                $this->getMessenger()->addMessage('Wartość atrybutu zapisana poprawnie', true);
+                $this->getMessenger()->addMessage('messenger.attribute.attributeValue.saved', true);
                 $this->getResponse()->redirect('cmsAdmin', 'attribute', 'edit', ['id' => $form->getRecord()->id]);
             }
             //form wartości do widoku
@@ -64,7 +64,7 @@ class AttributeController extends Mvc\Controller
     {
         $attribute = (new \Cms\Orm\CmsAttributeQuery)->findPk($this->id);
         if ($attribute && $attribute->delete()) {
-            $this->getMessenger()->addMessage('Atrybut usunięty', true);
+            $this->getMessenger()->addMessage('messenger.attribute.deleted', true);
         }
         $this->getResponse()->redirect('cmsAdmin', 'attribute', 'index');
     }
@@ -88,7 +88,7 @@ class AttributeController extends Mvc\Controller
                 (new \Cms\Model\AttributeValueRelationModel('category', $categoryId))
                     ->deleteAttributeValueRelationsByAttributeId($record->cmsAttributeId);
             }
-            $this->getMessenger()->addMessage('Poprawnie relację atrybutu', true);
+            $this->getMessenger()->addMessage('messenger.attribute.attributeRelation.deleted', true);
         }
     }
 

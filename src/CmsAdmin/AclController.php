@@ -31,12 +31,12 @@ class AclController extends Mvc\Controller
         }
         $roleForm = new \CmsAdmin\Form\Role($roleRecord = new \Cms\Orm\CmsRoleRecord());
         if ($roleForm->isMine() && $roleForm->isSaved()) {
-            $this->getMessenger()->addMessage('Poprawnie zapisano rolę', true);
+            $this->getMessenger()->addMessage('messenger.acl.role.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'acl', 'index', ['roleId' => $roleRecord->id]);
         }
         $aclForm = new \CmsAdmin\Form\Acl(new \Cms\Orm\CmsAclRecord());
         if ($aclForm->isMine() && $aclForm->isSaved()) {
-            $this->getMessenger()->addMessage('Poprawnie zapisano regułę', true);
+            $this->getMessenger()->addMessage('messenger.acl.rule.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'acl', 'index', ['roleId' => $this->roleId]);
         }
         $this->view->roleForm = $roleForm;
@@ -50,7 +50,7 @@ class AclController extends Mvc\Controller
     {
         //wyszukiwanie i usuwanie roli
         if ((null !== $role = (new \Cms\Orm\CmsRoleQuery)->findPk($this->id))) {
-            $this->getMessenger()->addMessage(($deleteResult = (bool) $role->delete()) ? 'Poprawnie usunięto rolę' : 'Rola przypisana do użytkownika - usunięcie niemożliwe', $deleteResult);
+            $this->getMessenger()->addMessage(($deleteResult = (bool) $role->delete()) ? 'messenger.acl.role.deleted' : 'messenger.acl.role.delete.error', $deleteResult);
         }
         //redirect
         $this->getResponse()->redirect('cmsAdmin', 'acl', 'index', ['roleId' => $this->id]);

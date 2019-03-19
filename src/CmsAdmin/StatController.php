@@ -115,7 +115,7 @@ class StatController extends Mvc\Controller
         $form = new \CmsAdmin\Form\Stat\Label(new \Cms\Orm\CmsStatLabelRecord($this->id));
         //jeśli form zapisany
         if ($form->isSaved()) {
-            $this->getMessenger()->addMessage('Nazwa statystyki została zapisana', true);
+            $this->getMessenger()->addMessage('messenger.stat.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'stat', 'label');
         }
         $this->view->labelForm = $form;
@@ -128,7 +128,7 @@ class StatController extends Mvc\Controller
     {
         $label = (new \Cms\Orm\CmsStatLabelQuery)->findPk($this->id);
         if ($label && $label->delete()) {
-            $this->getMessenger()->addMessage('Nazwa statystyki została usunięta', true);
+            $this->getMessenger()->addMessage('messenger.stat.deleted', true);
         }
         $this->getResponse()->redirect('cmsAdmin', 'stat', 'label');
     }

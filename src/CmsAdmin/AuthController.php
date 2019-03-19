@@ -35,7 +35,7 @@ class AuthController extends Mvc\Controller
 
         $form = new \CmsAdmin\Form\Auth(new \Cms\Orm\CmsAuthRecord($this->id));
         if ($form->isSaved()) {
-            $this->getMessenger()->addMessage('Poprawnie zapisano użytkownika', true);
+            $this->getMessenger()->addMessage('messenger.auth.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'auth');
         }
         $this->view->authForm = $form;
@@ -48,7 +48,7 @@ class AuthController extends Mvc\Controller
     {
         $auth = (new \Cms\Orm\CmsAuthQuery)->findPk($this->id);
         if ($auth && $auth->delete()) {
-            $this->getMessenger()->addMessage('Poprawnie skasowano użytkownika', true);
+            $this->getMessenger()->addMessage('messenger.auth.deleted', true);
         }
         $this->getResponse()->redirect('cmsAdmin', 'auth');
     }

@@ -24,7 +24,7 @@ class AttributeValueController extends Mvc\Controller
         $value = (new \Cms\Orm\CmsAttributeValueQuery)->findPk($this->id);
         //usuwanie wartości
         if ($value && $value->delete()) {
-            $this->getMessenger()->addMessage('Wartości usunięta', true);
+            $this->getMessenger()->addMessage('messenger.attributeValue.deleted', true);
         }
         //przekierowanie na atrybut
         $this->getResponse()->redirect('cmsAdmin', 'attribute', 'edit', ['id' => $value->cmsAttributeId]);

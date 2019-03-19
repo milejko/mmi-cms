@@ -31,7 +31,7 @@ class MailController extends Mvc\Controller
     {
         $mail = (new \Cms\Orm\CmsMailQuery)->findPk($this->id);
         if ($mail && $mail->delete()) {
-            $this->getMessenger()->addMessage('Email został usunięty z kolejki', true);
+            $this->getMessenger()->addMessage('messenger.mail.queue.deleted', true);
         }
         $this->getResponse()->redirect('cmsAdmin', 'mail', 'index');
     }
@@ -55,13 +55,13 @@ class MailController extends Mvc\Controller
     {
         $result = \Cms\Model\Mail::send();
         if ($result['success'] > 0) {
-            $this->getMessenger()->addMessage('Maile z kolejki zostały wysłane', true);
+            $this->getMessenger()->addMessage('messenger.mail.queue.sent', true);
         }
         if ($result['error'] > 0) {
-            $this->getMessenger()->addMessage('Przy wysyłaniu wystąpiły błędy', false);
+            $this->getMessenger()->addMessage('messenger.mail.queue.error', false);
         }
         if ($result['success'] + $result['error'] == 0) {
-            $this->getMessenger()->addMessage('Brak maili do wysyłki');
+            $this->getMessenger()->addMessage('messenger.mail.queue.empty');
         }
         $this->getResponse()->redirect('cmsAdmin', 'mail', 'index');
     }

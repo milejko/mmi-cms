@@ -32,7 +32,7 @@ class CategoryWidgetController extends Mvc\Controller
     {
         $form = new \CmsAdmin\Form\CategoryWidget(new \Cms\Orm\CmsCategoryWidgetRecord($this->id));
         if ($form->isSaved()) {
-            $this->getMessenger()->addMessage('Zapisano konfigurację widgeta', true);
+            $this->getMessenger()->addMessage('messenger.categoryWidget.widgetConfig.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'categoryWidget');
         }
         $this->view->widgetForm = $form;
@@ -49,7 +49,7 @@ class CategoryWidgetController extends Mvc\Controller
         //formularz edycji
         $relationForm = new Form\CategoryAttributeRelationForm($relationRecord);
         if ($relationForm->isSaved()) {
-            $this->getMessenger()->addMessage('Wiązanie atrybutu zapisane poprawnie', true);
+            $this->getMessenger()->addMessage('messenger.categoryWidget.attributeRelation.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'categoryWidget', 'edit', ['id' => $this->id]);
         }
         $this->view->relationForm = $relationForm;
@@ -62,7 +62,7 @@ class CategoryWidgetController extends Mvc\Controller
     {
         $server = (new \Cms\Orm\CmsCategoryWidgetQuery)->findPk($this->id);
         if ($server && $server->delete()) {
-            $this->getMessenger()->addMessage('Usunięto konfigurację widgeta');
+            $this->getMessenger()->addMessage('messenger.categoryWidget.widgetConfig.deleted');
         }
         $this->getResponse()->redirect('cmsAdmin', 'categoryWidget');
     }
