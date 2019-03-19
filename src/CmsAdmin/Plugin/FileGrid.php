@@ -61,23 +61,23 @@ class FileGrid extends \CmsAdmin\Grid\Grid
 
         //rozmiar pliku
         $this->addColumn((new Column\TextColumn('size'))
-            ->setLabel('rozmiar'));
+            ->setLabel('grid.file.size.label'));
 
         //nazwa pliku
         $this->addColumn((new Column\TextColumn('original'))
-            ->setLabel('nazwa pliku'));
+            ->setLabel('grid.file.original.label'));
 
         //zasób
         $this->addColumn((new Column\TextColumn('object'))
-            ->setLabel('zasób'));
+            ->setLabel('grid.file.object.label'));
 
         //id zasobu
         $this->addColumn((new Column\TextColumn('objectId'))
-            ->setLabel('id zasobu'));
+            ->setLabel('grid.file.objectId.label'));
 
         //checkbox aktywności
         $this->addColumn((new Column\CheckboxColumn('active'))
-            ->setLabel('widoczny')
+            ->setLabel('grid.file.active.label')
             ->setDisabled());
 
         $this->addColumn((new Column\CustomColumn('download'))

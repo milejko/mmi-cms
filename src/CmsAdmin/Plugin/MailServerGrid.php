@@ -26,31 +26,31 @@ class MailServerGrid extends \CmsAdmin\Grid\Grid
 
         //adres serwera
         $this->addColumn((new Column\TextColumn('address'))
-            ->setLabel('adres serwera'));
+            ->setLabel('grid.mailServer.address.label'));
 
         //port
         $this->addColumn((new Column\TextColumn('port'))
-            ->setLabel('port'));
+            ->setLabel('grid.mailServer.port.label'));
 
         //ssl
         $this->addColumn((new Column\TextColumn('ssl'))
-            ->setLabel('szyfrowanie'));
+            ->setLabel('grid.mailServer.ssl.label'));
 
         //użytkownik
         $this->addColumn((new Column\TextColumn('username'))
-            ->setLabel('użytkownik'));
+            ->setLabel('grid.mailServer.username.label'));
 
         //nadawca
         $this->addColumn((new Column\TextColumn('from'))
-            ->setLabel('domyślny nadawca'));
+            ->setLabel('grid.mailServer.from.label'));
 
         //data dodania
         $this->addColumn((new Column\TextColumn('dateAdd'))
-            ->setLabel('data dodania'));
+            ->setLabel('grid.mailServer.dateAdd.label'));
 
         //data modyfikacji
         $this->addColumn((new Column\TextColumn('dateModify'))
-            ->setLabel('data modyfikacji'));
+            ->setLabel('grid.mailServer.dateModify.label'));
 
         //operacje
         $this->addColumn(new Column\OperationColumn);

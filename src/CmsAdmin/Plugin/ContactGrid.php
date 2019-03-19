@@ -30,27 +30,27 @@ class ContactGrid extends \CmsAdmin\Grid\Grid
 
         //data dodania
         $this->addColumn((new Column\TextColumn('dateAdd'))
-            ->setLabel('data dodania'));
+            ->setLabel('grid.contact.dateAdd.label'));
 
         //tekst
         $this->addColumn((new Column\TextColumn('text'))
-            ->setLabel('zapytanie'));
+            ->setLabel('grid.contact.text.label'));
 
         //email
         $this->addColumn((new Column\TextColumn('email'))
-            ->setLabel('e-mail'));
+            ->setLabel('grid.contact.email.label'));
 
         //strona wejściowa
         $this->addColumn((new Column\TextColumn('uri'))
-            ->setLabel('strona wejściowa'));
+            ->setLabel('grid.contact.uri.label'));
 
         //ip
         $this->addColumn((new Column\TextColumn('ip'))
-            ->setLabel('ip'));
+            ->setLabel('grid.contact.ip.label'));
 
         //aktywny
         $this->addColumn((new Column\CheckboxColumn('active'))
-            ->setLabel('czeka')
+            ->setLabel('grid.contact.active.label')
             ->setDisabled());
 
         //operacje

@@ -28,7 +28,7 @@ class TagGrid extends \CmsAdmin\Grid\Grid
 
         //nazwa taga
         $this->addColumn((new Column\TextColumn('tag'))
-            ->setLabel('tag'));
+            ->setLabel('grid.tag.tag.label'));
 
         //operacje
         $this->addColumn((new Column\OperationColumn)

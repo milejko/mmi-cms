@@ -28,31 +28,31 @@ class MailGrid extends \CmsAdmin\Grid\Grid
         //wysłany
         $this->addColumn((new Column\SelectColumn('active'))
             ->setMultioptions([
-                0 => 'do wysyłki',
-                1 => 'wysłany',
-                2 => 'w trakcie wysyłki',
+                0 => 'grid.mail.active.options.0',
+                1 => 'grid.mail.active.options.1',
+                2 => 'grid.mail.active.options.2',
             ])
-            ->setLabel('wysłany'));
+            ->setLabel('grid.mail.active.label'));
 
         //data dodania
         $this->addColumn((new Column\TextColumn('dateAdd'))
-            ->setLabel('data dodania'));
+            ->setLabel('grid.mail.dateAdd.label'));
 
         //data wysyłki
         $this->addColumn((new Column\TextColumn('dateSent'))
-            ->setLabel('data wysłania'));
+            ->setLabel('grid.mail.dateSent.label'));
 
         //do
         $this->addColumn((new Column\TextColumn('to'))
-            ->setLabel('do'));
+            ->setLabel('grid.mail.to.label'));
 
         //temat
         $this->addColumn((new Column\TextColumn('subject'))
-            ->setLabel('temat'));
+            ->setLabel('grid.mail.subject.label'));
 
         //nazwa od
         $this->addColumn((new Column\TextColumn('fromName'))
-            ->setLabel('od'));
+            ->setLabel('grid.mail.fromName.label'));
 
         //operacje
         $this->addColumn((new Column\OperationColumn)

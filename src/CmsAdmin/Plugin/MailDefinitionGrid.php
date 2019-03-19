@@ -26,44 +26,44 @@ class MailDefinitionGrid extends \CmsAdmin\Grid\Grid
 
         //język
         $this->addColumn((new Column\CustomColumn('lang'))
-            ->setLabel('język'));
+            ->setLabel('grid.mailDefinition.lang.label'));
 
         //nazwa
         $this->addColumn((new Column\TextColumn('name'))
-            ->setLabel('nazwa'));
+            ->setLabel('grid.mailDefinition.name.label'));
 
         //treść w html
         $this->addColumn((new Column\CheckboxColumn('html'))
-            ->setLabel('HTML'));
+            ->setLabel('grid.mailDefinition.html.label'));
 
         //temat
         $this->addColumn((new Column\TextColumn('subject'))
-            ->setLabel('temat'));
+            ->setLabel('grid.mailDefinition.subject.label'));
 
         //nazwa od
         $this->addColumn((new Column\TextColumn('fromName'))
-            ->setLabel('nazwa od'));
+            ->setLabel('grid.mailDefinition.fromName.label'));
 
         //odpowiedz
         $this->addColumn((new Column\TextColumn('replyTo'))
-            ->setLabel('odpowiedz'));
+            ->setLabel('grid.mailDefinition.replyTo.label'));
 
         //serwer
         $this->addColumn((new Column\SelectColumn('cmsMailServerId'))
             ->setMultioptions((new \Cms\Orm\CmsMailServerQuery)->findPairs('id', 'address'))
-            ->setLabel('serwer'));
+            ->setLabel('grid.mailDefinition.cmsMailServerId.label'));
 
         //data dodania
         $this->addColumn((new Column\TextColumn('dateAdd'))
-            ->setLabel('data dodania'));
+            ->setLabel('grid.mailDefinition.dateAdd.label'));
 
         //data modyfikacji
         $this->addColumn((new Column\TextColumn('dateModify'))
-            ->setLabel('data modyfikacji'));
+            ->setLabel('grid.mailDefinition.dateModify.label'));
 
         //aktywny
         $this->addColumn((new Column\CheckboxColumn('active'))
-            ->setLabel('aktywny'));
+            ->setLabel('grid.mailDefinition.active.label'));
 
         //operacje
         $this->addColumn(new Column\OperationColumn);

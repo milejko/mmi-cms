@@ -27,33 +27,33 @@ class LogGrid extends \CmsAdmin\Grid\Grid
 
         //data i czas
         $this->addColumn((new Column\DateTimeColumn('dateTime'))
-            ->setLabel('data i czas'));
+            ->setLabel('grid.log.dateTime.label'));
 
         //operacja
         $this->addColumn((new Column\TextColumn('operation'))
-            ->setLabel('operacja'));
+            ->setLabel('grid.log.operation.label'));
 
         //url
         $this->addColumn((new Column\TextColumn('url'))
-            ->setLabel('URL')
+            ->setLabel('grid.log.url.label')
             ->setFilterMethodLike());
 
         //dane
         $this->addColumn((new Column\JsonColumn('data'))
-            ->setLabel('dane')
+            ->setLabel('grid.log.data.label')
             ->setFilterMethodLike());
 
         //zasób
         $this->addColumn((new Column\TextColumn('object'))
-            ->setLabel('zasób'));
+            ->setLabel('grid.log.object.label'));
 
         //id
         $this->addColumn((new Column\TextColumn('objectId'))
-            ->setLabel('id zasobu'));
+            ->setLabel('grid.log.objectId.label'));
 
         //sukces
         $this->addColumn((new Column\CheckboxColumn('success'))
-            ->setLabel('sukces')
+            ->setLabel('grid.log.success.label')
             ->setDisabled());
     }
 

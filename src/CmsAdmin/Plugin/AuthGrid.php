@@ -26,40 +26,40 @@ class AuthGrid extends \CmsAdmin\Grid\Grid
 
         //nazwa
         $this->addColumn((new Column\TextColumn('username'))
-            ->setLabel('nazwa użytkownika'));
+            ->setLabel('grid.auth.username.label'));
 
         //email
         $this->addColumn((new Column\TextColumn('email'))
-            ->setLabel('e-mail'));
+            ->setLabel('grid.auth.email.label'));
 
         //imię
         $this->addColumn((new Column\TextColumn('name'))
-            ->setLabel('pełna nazwa użytkownika'));
+            ->setLabel('grid.auth.name.label'));
 
         //przypisane role użytkownika
         $this->addColumn((new Column\CustomColumn('roles'))
-            ->setLabel('role')
+            ->setLabel('grid.auth.roles.label')
             ->setTemplateCode('{$record->getRolesAsString()}'));
 
         //ostatnie logowanie
         $this->addColumn((new Column\TextColumn('lastLog'))
-            ->setLabel('ostatnio zalogowany'));
+            ->setLabel('grid.auth.lastLog.label'));
 
         //ostatnie IP
         $this->addColumn((new Column\TextColumn('lastIp'))
-            ->setLabel('ostatni IP'));
+            ->setLabel('grid.auth.lastIp.label'));
 
         //błędne logowanie
         $this->addColumn((new Column\TextColumn('lastFailLog'))
-            ->setLabel('błędne logowanie'));
+            ->setLabel('grid.auth.lastFailLog.label'));
 
         //ostatnie ip błędnego logowania
         $this->addColumn((new Column\TextColumn('lastFailIp'))
-            ->setLabel('IP błędnego logowania'));
+            ->setLabel('grid.auth.lastFailIp.label'));
 
         //aktywny
         $this->addColumn((new Column\CheckboxColumn('active'))
-            ->setLabel('aktywny'));
+            ->setLabel('grid.auth.active.label'));
 
         //operacje
         $this->addColumn(new Column\OperationColumn);

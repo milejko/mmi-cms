@@ -39,15 +39,15 @@ class AttributeValueGrid extends \CmsAdmin\Grid\Grid
 
         //wartość
         $this->addColumn((new Column\TextColumn('value'))
-            ->setLabel('wartość'));
+            ->setLabel('grid.attributeValue.value.label'));
 
         //etykieta
         $this->addColumn((new Column\TextColumn('label'))
-            ->setLabel('etykieta'));
+            ->setLabel('grid.attributeValue.label.label'));
         
         //kolejność
         $this->addColumn((new Column\TextColumn('order'))
-            ->setLabel('kolejność'));
+            ->setLabel('grid.attributeValue.order.label'));
 
         //operacje
         $this->addColumn((new Column\OperationColumn())->setEditParams(['module' => 'cmsAdmin', 'controller' => 'attribute', 'action' => 'edit', 'id' => '%cmsAttributeId%', 'valueId' => '%id%'])
