@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#Atrybut w szablonie#}</strong>
+                        <strong>{#template.categoryTypeAttribute.index.header#}</strong>
                     </div>
                     <div class="card-body">
                         {$grid}

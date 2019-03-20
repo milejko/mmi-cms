@@ -3,7 +3,7 @@
     <div class="col-md-12">
         <div class="card mt-4">
             <div class="card-header">
-                <strong>{if $widgetRecord}{$widgetRecord->name} - {/if}{#konfiguracja#}</strong>
+                <strong>{if $widgetRecord}{$widgetRecord->name} - {/if}{#template.categoryWidgetRelation.config.header#}</strong>
             </div>
             <div class="card-body">
                 {if $widgetRelationForm}

@@ -3,7 +3,7 @@
 <h1>{$category->name}</h1>
 
 {*listing atrybutów*}
-<h2>Atrybuty:</h2>
+<h2>{#template.category.article.attributes#}:</h2>
 {foreach $attributes as $attribute}
     {if $attribute instanceof \Mmi\Orm\RecordCollection}
         {foreach $attribute as $value}

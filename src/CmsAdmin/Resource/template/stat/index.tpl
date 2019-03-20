@@ -32,7 +32,7 @@
                                 {if $label}
                                 <p>{$label->description}</p>
                                 {else}
-                                <p>{#Ustaw parametry by przeglądać statystyki#}.</p>
+                                <p>{#template.stat.index.no.params#}.</p>
                                 {/if}
                             </div>
                         </div>
@@ -52,7 +52,7 @@
             <div class="col-6">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#Statystyki dzienne#}</strong>
+                        <strong>{#template.stat.index.header#}</strong>
                     </div>
                     <div class="card-body">
                         <div id="dailyChart" class="chart"></div>
@@ -68,7 +68,7 @@
             <div class="col-6">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#Statystyki miesięczne#} / {#roczne#}</strong>
+                        <strong>{#template.stat.index.stats#}</strong>
                     </div>
                     <div class="card-body">
                         <div id="monthlyChart" class="chart"></div>
@@ -85,7 +85,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#Rozkład godzinowy bieżący miesiąc#} / {#rozkład godzinowy od początku#}</strong>
+                        <strong>{#template.stat.index.charts#}</strong>
                     </div>
                     <div class="card-body">
                         <div id="avgHourlyChart" class="chart"></div>

@@ -48,7 +48,7 @@
                     <div class="tab-pane" id="settings" role="tabpanel" aria-expanded="true">
                         {$categoryForm->getElement('cmsCategoryTypeId')}
                         {$categoryForm->getElement('cmsCategoryTypeChanged')}
-                        {if $duplicateAlert}<span class="red">Nazwa jest zduplikowana, treść może nie wyświetlać się poprawnie</span>{/if}
+                        {if $duplicateAlert}<span class="red">{#template.category.edit.duplicate.alert#}</span>{/if}
                         {$categoryForm->getElement('name')}
                         {$categoryForm->getElement('dateStart')}
                         {$categoryForm->getElement('dateEnd')}

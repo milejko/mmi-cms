@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#Lista plików#}</strong>
+                        <strong>{#template.file.index.header#}</strong>
                     </div>
                     <div class="card-body">
                         {$grid}

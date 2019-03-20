@@ -8,7 +8,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#Uprawnienia ról#}</strong>
+                        <strong>{#template.acl.index.header#}</strong>
                     </div>
                     <div class="card-body">
 
@@ -23,10 +23,10 @@
                             {if $request->roleId}
                                 <table class="table table-striped">
                                     <tr>
-                                        <th>{#Lp#}.</th>
-                                        <th>{#zasób#}</th>
-                                        <th>{#polityka#}</th>
-                                        <th>{#operacje#}</th>
+                                        <th>{#template.acl.index.ordinal#}</th>
+                                        <th>{#template.acl.index.resource#}</th>
+                                        <th>{#template.acl.index.rule#}</th>
+                                        <th>{#template.acl.index.actions#}</th>
                                     </tr>
                                     {$i=1}
 
@@ -47,28 +47,28 @@
                                             <td>
                                               <div class="form-group">
                                                   <select class="rule-select form-control policy {if ($rule->access == 'allow')}allow{else}deny{/if}" id="rule-policy-{$rule->id}">
-                                                      <option value="allow"{if 'allow' == $rule->access} selected=""{/if}>{#dozwolone#}</option>
-                                                      <option value="deny"{if 'allow' != $rule->access} selected=""{/if}>{#zabronione#}</option>
+                                                      <option value="allow"{if 'allow' == $rule->access} selected=""{/if}>{#template.acl.index.rule.allow#}</option>
+                                                      <option value="deny"{if 'allow' != $rule->access} selected=""{/if}>{#template.acl.index.rule.deny#}</option>
                                                   </select>
                                               </div>
                                             </td>
                                             <td>
-                                                <a id="rule-remove-{$rule->id}" class="remove-rule confirm" title="{#Czy na pewno chcesz usunąć tę regułę#}" href="#"><i class="fa fa2 fa-trash-o"></i></a>
+                                                <a id="rule-remove-{$rule->id}" class="remove-rule confirm" title="{#template.acl.index.delete.confirm#}" href="#"><i class="fa fa2 fa-trash-o"></i></a>
                                             </td>
                                         </tr>
                                     {/foreach}
                                 </table>
                                 {if $chosenRole && $chosenRole->name != 'admin' && $chosenRole->name != 'guest'}
-                                    <br /><a class="button confirm" title="Usunąć rolę" href="{@module=cmsAdmin&controller=acl&action=deleteRole&id={$request->roleId}@}"><i class="fa fa2 fa-trash-o"></i> usuń rolę</a>
+                                    <br /><a class="button confirm" title="{#template.acl.index.delete.role#}" href="{@module=cmsAdmin&controller=acl&action=deleteRole&id={$request->roleId}@}"><i class="fa fa2 fa-trash-o"></i> {#template.acl.index.delete.role#}</a>
                                 {/if}
                                 <br /> <br />
-                                <h5>{#Nowa reguła#}:</h5>
+                                <h5>{#template.acl.index.rule.new#}:</h5>
                                 {$aclForm}
                             {/if}
                         </div>
                         <div class="clear"></div>
                         <div class="form-group">
-                          <h5>{#Nowa rola#}</h5>
+                          <h5>{#template.acl.index.role.new#}</h5>
                           {$roleForm}
                         </div>
                     </div>

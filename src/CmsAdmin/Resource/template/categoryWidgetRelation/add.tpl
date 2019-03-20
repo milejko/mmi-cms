@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="card mt-4">
             <div class="card-header">
-                <strong>{#Nowy widget#}</strong>
+                <strong>{#template.categoryWidgetRelation.add.header#}</strong>
             </div>
             <div class="card-body">
                 {$widgetForm}

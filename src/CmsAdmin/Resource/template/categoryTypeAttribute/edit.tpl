@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{if !$request->id}{#Dodawanie#}{else}{#Edycja#}{/if} {#atrybutu w szablonine#}</strong>
+                        <strong>{if !$request->id}{#template.categoryTypeAttribute.edit.header.new#}{else}{#template.categoryTypeAttribute.edit.header.edit#}{/if}</strong>
                     </div>
                     <div class="card-body">
                         {$categoryTypeAttributeForm}
