@@ -12,14 +12,14 @@
 <div id="uploaderEdit">
     <form id="uploaderEditForm" action="" accept-encoding="utf-8" enctype="multipart/form-data" method="post">
         <div>
-            <label>{#Tytuł#}:</label>
+            <label>{#template.file.uploader.title#}:</label>
             <input id="editTitle" name="title" type="text" />
-            <label>{#Źródło (link)#}:</label>
+            <label>{#template.file.uploader.source#}:</label>
             <input id="editSource" name="source" type="text" />
-            <label>{#Autor#}:</label>
+            <label>{#template.file.uploader.author#}:</label>
             <input id="editAuthor" name="author" type="text" />
-            <input id="editReset" name="reset" type="reset" value="{#Anuluj#}" />
-            <input id="editSubmit" name="submit" type="submit" value="{#Zapisz#}" />
+            <input id="editReset" name="reset" type="reset" value="{#template.file.uploader.cancel#}" />
+            <input id="editSubmit" name="submit" type="submit" value="{#template.file.uploader.save#}" />
         </div>
     </form>
 </div>
@@ -28,7 +28,7 @@
 <div id="fileWidget" class="{if $imgC}imageInside{/if}{if $fileC} fileInside{/if}">
     {if !$imgC && !$fileC}
         <div class="attachmentManage empty">
-            <div id="manageOther">Kliknij wgraj<br>aby dodać plik</div>
+            <div id="manageOther">{#template.file.uploader.click.to.add#}</div>
         </div>
     {/if}
     {if $imgC}
@@ -37,10 +37,10 @@
                 {foreach $images as $file}
                     <li id="item-file-{$file->id}" class="image item">
                         <img src="{thumb($file, 'scaley', '80')}" alt="" />
-                        <a href="#" id="edit-file-{$file->id}-{$file->getHashName()}" class="edit-file">{#edytuj#}</a> | 
-                        <a href="#" id="file-{$file->id}-{$file->getHashName()}" title="{#Czy chcesz usunąć ten plik#}" class="remove-file confirm">{#usuń#}</a>
+                        <a href="#" id="edit-file-{$file->id}-{$file->getHashName()}" class="edit-file">{#template.file.uploader.edit#}</a> | 
+                        <a href="#" id="file-{$file->id}-{$file->getHashName()}" title="{#template.file.uploader.delete.confirm#}" class="remove-file confirm">{#template.file.uploader.delete#}</a>
                         <div>
-                            <label for="file-sticky-{$file->id}-{$file->name}">{#przypnij#}</label>
+                            <label for="file-sticky-{$file->id}-{$file->name}">{#template.file.uploader.stick#}</label>
                             <input name="sticky" id="file-sticky-{$file->id}-{$file->name}" class="sticky" {if $file->sticky}checked="checked" {/if}type="radio" />
                             <div class="clear"></div>
                         </div>
@@ -85,8 +85,8 @@
                                 {/if}
                             </div>
                             {$file->original|truncate:32}<br />
-                            <a href="#" id="edit-file-{$file->id}-{$file->getHashName()}" class="edit-file">{#edytuj#}</a> | 
-                            <a href="#" id="file-{$file->id}-{$file->getHashName()}" title="{#Czy chcesz usunąć ten plik#}" class="remove-file confirm">{#usuń#}</a>
+                            <a href="#" id="edit-file-{$file->id}-{$file->getHashName()}" class="edit-file">{#template.file.uploader.edit#}</a> | 
+                            <a href="#" id="file-{$file->id}-{$file->getHashName()}" title="{#template.file.uploader.delete.confirm#}" class="remove-file confirm">{#template.file.uploader.delete#}</a>
                         </li>
                         {/foreach}
                         </ul>

@@ -4,7 +4,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{if !$request->id}{#Dodawanie#}{else}{#Edycja#}{/if} {#atrybutu#}</strong>
+                        <strong>{if !$request->id}{#template.attribute.edit.header.new#}{else}{#template.attribute.edit.header.edit#}{/if}</strong>
                     </div>
                     <div class="card-body">
                         {$attributeForm}
@@ -21,7 +21,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#Nowa wartość atrybutu#}</strong>
+                        <strong>{#template.attribute.edit.value.new#}</strong>
                     </div>
                     <div class="card-body">
                         {$valueForm}
@@ -39,7 +39,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#Wartości atrybutu#}</strong>
+                        <strong>{#template.attribute.edit.values#}</strong>
                     </div>
                     <div class="card-body">
                         {$valueGrid}

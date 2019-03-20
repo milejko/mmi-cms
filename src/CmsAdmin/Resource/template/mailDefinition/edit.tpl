@@ -4,7 +4,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{if $request->id > 0}{#Edycja#}{else}{#Dodawanie#}{/if} {#szablonu maila#}</strong>
+                        <strong>{if $request->id > 0}{#template.mailDefinition.edit.header.new#}{else}{#template.mailDefinition.edit.header.edit#}{/if}</strong>
                     </div>
                     <div class="card-body">
                         {$definitionForm}

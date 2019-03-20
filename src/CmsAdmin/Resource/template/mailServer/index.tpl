@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#Dostępne serwery#}</strong>
+                        <strong>{#template.mailServer.index.headery#}</strong>
                     </div>
                     <div class="card-body">
                         {$grid}

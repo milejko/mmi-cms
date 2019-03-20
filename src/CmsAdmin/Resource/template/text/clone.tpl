@@ -4,7 +4,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#Klonowanie tekstów stałych#}</strong>
+                        <strong>{#template.text.clone.header#}</strong>
                     </div>
                     <div class="card-body">
                         {$cloneForm}

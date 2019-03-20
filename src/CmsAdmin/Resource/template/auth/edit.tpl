@@ -7,7 +7,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{if !$request->id}{#Dodawanie#}{else}{#Edycja#}{/if} {#użytkownika CMS#}</strong>
+                        <strong>{if !$request->id}{#template.auth.edit.header.new#}{else}{#template.auth.edit.header.edit#}{/if}</strong>
                     </div>
                     <div class="card-body">
                         {$authForm}

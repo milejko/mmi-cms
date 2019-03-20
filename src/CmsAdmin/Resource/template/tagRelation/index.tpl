@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#Relacje tagów#}</strong>
+                        <strong>{#template.tagRelation.index.header#}</strong>
                     </div>
                     <div class="card-body">
                         {$grid}

@@ -4,7 +4,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{if !$request->id}{#Dodawanie#}{else}{#Edycja#}{/if} {#grupy atrybutów#}</strong>
+                        <strong>{if !$request->id}{#template.attributeGroup.edit.header.new#}{else}{#template.attributeGroup.edit.header.edit#}{/if}</strong>
                     </div>
                     <div class="card-body">
                         {$attributeGroupForm}
