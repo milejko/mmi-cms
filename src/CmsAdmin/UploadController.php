@@ -151,7 +151,7 @@ class UploadController extends Mvc\Controller
             //parametry
             $data = $record->data->toArray();
         }
-        $data['urlFile'] = ((\App\Registry::$config->cdn) ? : '//' . \App\Registry::$config->host) . $record->getUrl();
+        $data['urlFile'] = $record->getUrl();
         if ($record->data->posterFileName) {
             $data['poster'] = $record->getPosterUrl();
         }    
