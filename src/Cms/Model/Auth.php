@@ -61,13 +61,7 @@ class Auth implements \Mmi\Security\AuthInterface
      */
     public static function deauthenticate()
     {
-        //logowanie deautoryzacji
-        \Cms\Model\Log::add('logout', [
-            'object' => 'cms_auth',
-            'objectId' => \App\Registry::$auth->getId(),
-            'success' => true,
-            'message' => 'LOGGED OUT: ' . \App\Registry::$auth->getEmail()
-        ]);
+        \Mmi\App\FrontController::getInstance()->getLogger()->info('Logout: ' . \App\Registry::$auth->getEmail());
     }
 
     /**
@@ -115,9 +109,7 @@ class Auth implements \Mmi\Security\AuthInterface
     protected static function _authFailed($identity, $reason = '')
     {
         //logowanie błędnej próby autoryzacji
-        \Cms\Model\Log::add('login failed', [
-            'success' => false,
-            'message' => 'LOGIN FAILED: ' . $identity . ' ' . $reason]);
+        \Mmi\App\FrontController::getInstance()->getLogger()->notice('Login failed: ' . $identity . ' ' . $reason);
     }
 
     /**
@@ -133,13 +125,7 @@ class Auth implements \Mmi\Security\AuthInterface
         $record->lastLog = date('Y-m-d H:i:s');
         $record->save();
         //logowanie pozytywnej autoryzacji
-        \Cms\Model\Log::add('login', [
-            'object' => 'cms_auth',
-            'objectId' => $record->id,
-            'cmsAuthId' => $record->id,
-            'success' => true,
-            'message' => 'LOGGED: ' . $record->username
-        ]);
+        \Mmi\App\FrontController::getInstance()->getLogger()->info('Login: ' . $record->username);
         //nowy obiekt autoryzacji
         $authRecord = new \Mmi\Security\AuthRecord;
         //ustawianie pól rekordu
@@ -190,7 +176,7 @@ class Auth implements \Mmi\Security\AuthInterface
             return $ldapClient->authenticate($dn, $credential);
         } catch (\Mmi\Ldap\Exception $e) {
             //błąd LDAP'a
-            \Cms\Model\Log::add('LDAP failed', ['message' => $e->getMessage()]);
+            \Mmi\App\FrontController::getInstance()->getLogger()->error('LDAP error: ' . $e->getMessage());
             return false;
         }
     }
@@ -203,12 +189,12 @@ class Auth implements \Mmi\Security\AuthInterface
     protected static function _findUserByIdentity($identity)
     {
         return (new CmsAuthQuery)
-                ->whereActive()->equals(true)
-                ->andQuery((new CmsAuthQuery)
-                    ->whereUsername()->equals($identity)
-                    ->orFieldEmail()->equals($identity)
-                    ->orFieldId()->equals((integer) $identity))
-                ->findFirst();
+            ->whereActive()->equals(true)
+            ->andQuery((new CmsAuthQuery)
+                ->whereUsername()->equals($identity)
+                ->orFieldEmail()->equals($identity)
+                ->orFieldId()->equals((integer)$identity))
+            ->findFirst();
     }
 
     /**
@@ -223,5 +209,4 @@ class Auth implements \Mmi\Security\AuthInterface
         $record->failLogCount = $record->failLogCount + 1;
         $record->save();
     }
-
 }

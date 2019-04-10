@@ -21,26 +21,20 @@ class Cron
     public static function run()
     {
         foreach (Orm\CmsCronQuery::active()->find() as $cron) {
-            $logData = [];
-            $logData['name'] = $cron->name;
-            $logData['dateLastExecute'] = $cron->dateLastExecute;
-            $logData['message'] = $cron->name;
             if (!self::_getToExecute($cron)) {
                 continue;
             }
             $output = '';
+            $time = 0;
             try {
                 $start = microtime(true);
                 $output = \Mmi\Mvc\ActionHelper::getInstance()->action(new \Mmi\Http\Request(['module' => $cron->module, 'controller' => $cron->controller, 'action' => $cron->action]));
-                $logData['time'] = round(microtime(true) - $start, 4) . 's';
-                if ($output) {
-                    $logData['message'] = gethostname() . '@' . $cron->name . ': ' . $output;
-                }
-            } catch (Exception $e) {
-                $logData['message'] = $e->__toString();
+                $time = round(microtime(true) - $start, 4);
+            } catch (\Exception $e) {
                 //ponowne łączenie
                 \App\Registry::$db->connect();
-                Log::add('Cron exception', $logData);
+                //błąd LDAP'a
+                \Mmi\App\FrontController::getInstance()->getLogger()->error('CRON error: ' . $e->__toString());
             }
             //zmień datę ostatniego wywołania
             $cron->dateLastExecute = date('Y-m-d H:i:s');
@@ -48,10 +42,8 @@ class Cron
             \App\Registry::$db->connect();
             //zapis do bazy
             $cron->save();
-            if (!$output) {
-                continue;
-            }
-            Log::add('Cron done', $logData);
+            //log wykonania crona
+            \Mmi\App\FrontController::getInstance()->getLogger()->info('CRON: ' . $cron->name . ' ' . $output . ' in ' . $time . 's');
         }
     }
 
@@ -102,5 +94,4 @@ class Cron
         }
         return false;
     }
-
 }
