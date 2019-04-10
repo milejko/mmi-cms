@@ -16,20 +16,6 @@ class Mail
 {
 
     /**
-     * Czyści wysłane starsze niż tydzień
-     * @return integer ilość usuniętych
-     */
-    public static function clean()
-    {
-        return (new Orm\CmsMailQuery)
-                ->whereActive()->equals(1)
-                ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-1 week')))
-                ->find()
-                //kasowanie całej kolekcji
-                ->delete();
-    }
-
-    /**
      * Dodaje email do kolejki
      * @param string $name nazwa-klucz e-maila z definicji
      * @param string $to adres do lub adresy oddzielone ";"
@@ -174,17 +160,17 @@ class Mail
                 }
                 //wysyłka maila
                 $mail->send();
-                //ustawienie pol po wysłaniu
-                $email->active = 1;
-                $email->dateSent = date('Y-m-d H:i:s');
-                $email->save();
+                //logowanie wysyłki
+                \Mmi\App\FrontController::getInstance()->getLogger()->info('Sent: ' . $email->to . ' ' . $email->subject);
+                //usuwanie maila po wysłaniu
+                $email->delete();
                 //podwyzszenie licznika udanych
-                $result['success'] ++;
+                $result['success']++;
             } catch (\Exception $e) {
                 //bład wysyłki
                 \Mmi\App\FrontController::getInstance()->getLogger()->warning($e->getMessage());
                 //podwyzszenie licznika nieudanych
-                $result['error'] ++;
+                $result['error']++;
             }
         }
         return $result;
@@ -205,5 +191,4 @@ class Mail
         }
         return $pairs;
     }
-
 }
