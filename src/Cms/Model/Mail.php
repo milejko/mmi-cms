@@ -174,6 +174,8 @@ class Mail
                 }
                 //wysyłka maila
                 $mail->send();
+                //czyszczenie załączników
+                $email->attachements = null;
                 //ustawienie pol po wysłaniu
                 $email->active = 1;
                 $email->dateSent = date('Y-m-d H:i:s');
