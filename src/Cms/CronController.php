@@ -34,6 +34,7 @@ class CronController extends \Mmi\Mvc\Controller
         //cleanup
         if (50 == rand(0, 100)) {
             \Cms\Model\Mail::clean();
+            $this->view->cleared = \Cms\Model\Mail::clean();
         }
         $this->view->result = \Cms\Model\Mail::send();
     }
@@ -65,6 +66,17 @@ class CronController extends \Mmi\Mvc\Controller
     }
 
     /**
+     * Czyściciel logów
+     */
+    public function cleanAction()
+    {
+        $months = $this->months > 0 ? intval($this->months) : 12;
+        //czyszczenie logów
+        \Cms\Model\Log::clean($months);
+        return '';
+    }
+
+    /**
      * Usuwa pliki tymczasowe Cms File
      */
     public function deleteOrphansAction()
@@ -73,4 +85,5 @@ class CronController extends \Mmi\Mvc\Controller
         \Cms\Model\File::deleteOrphans();
         return '';
     }
+
 }

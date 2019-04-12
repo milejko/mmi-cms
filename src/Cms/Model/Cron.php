@@ -21,20 +21,26 @@ class Cron
     public static function run()
     {
         foreach (Orm\CmsCronQuery::active()->find() as $cron) {
+            $logData = [];
+            $logData['name'] = $cron->name;
+            $logData['dateLastExecute'] = $cron->dateLastExecute;
+            $logData['message'] = $cron->name;
             if (!self::_getToExecute($cron)) {
                 continue;
             }
             $output = '';
-            $time = 0;
             try {
                 $start = microtime(true);
                 $output = \Mmi\Mvc\ActionHelper::getInstance()->action(new \Mmi\Http\Request(['module' => $cron->module, 'controller' => $cron->controller, 'action' => $cron->action]));
-                $time = round(microtime(true) - $start, 4);
-            } catch (\Exception $e) {
+                $logData['time'] = round(microtime(true) - $start, 4) . 's';
+                if ($output) {
+                    $logData['message'] = gethostname() . '@' . $cron->name . ': ' . $output;
+                }
+            } catch (Exception $e) {
+                $logData['message'] = $e->__toString();
                 //ponowne łączenie
                 \App\Registry::$db->connect();
-                //błąd LDAP'a
-                \Mmi\App\FrontController::getInstance()->getLogger()->error('CRON error: ' . $e->__toString());
+                Log::add('Cron exception', $logData);
             }
             //zmień datę ostatniego wywołania
             $cron->dateLastExecute = date('Y-m-d H:i:s');
@@ -42,8 +48,10 @@ class Cron
             \App\Registry::$db->connect();
             //zapis do bazy
             $cron->save();
-            //log wykonania crona
-            \Mmi\App\FrontController::getInstance()->getLogger()->info('CRON: ' . $cron->name . ' ' . $output . ' in ' . $time . 's');
+            if (!$output) {
+                continue;
+            }
+            Log::add('Cron done', $logData);
         }
     }
 
@@ -94,4 +102,5 @@ class Cron
         }
         return false;
     }
+
 }
