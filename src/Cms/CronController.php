@@ -31,7 +31,8 @@ class CronController extends \Mmi\Mvc\Controller
      */
     public function sendMailAction()
     {
-        if (rand(0, 120) == 12) {
+        //cleanup
+        if (50 == rand(0, 100)) {
             $this->view->cleared = \Cms\Model\Mail::clean();
         }
         $this->view->result = \Cms\Model\Mail::send();

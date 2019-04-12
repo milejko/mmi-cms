@@ -22,11 +22,11 @@ class Mail
     public static function clean()
     {
         return (new Orm\CmsMailQuery)
-                ->whereActive()->equals(1)
-                ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-1 week')))
-                ->find()
-                //kasowanie całej kolekcji
-                ->delete();
+            ->whereActive()->equals(1)
+            ->andFieldDateSent()->less(date('Y-m-d H:i:s', strtotime('-1 week')))
+            ->find()
+            //kasowanie całej kolekcji
+            ->delete();
     }
 
     /**
@@ -174,6 +174,10 @@ class Mail
                 }
                 //wysyłka maila
                 $mail->send();
+                //logowanie wysyłki
+                \Mmi\App\FrontController::getInstance()->getLogger()->info('Sent: ' . $email->to . ' ' . $email->subject);
+                //czyszczenie załączników
+                $email->attachements = null;
                 //ustawienie pol po wysłaniu
                 $email->active = 1;
                 $email->dateSent = date('Y-m-d H:i:s');
