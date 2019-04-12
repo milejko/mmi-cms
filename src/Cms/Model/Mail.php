@@ -16,6 +16,20 @@ class Mail
 {
 
     /**
+     * Czyści wysłane starsze niż tydzień
+     * @return integer ilość usuniętych
+     */
+    public static function clean()
+    {
+        return (new Orm\CmsMailQuery)
+            ->whereActive()->equals(1)
+            ->andFieldDateSent()->less(date('Y-m-d H:i:s', strtotime('-1 week')))
+            ->find()
+            //kasowanie całej kolekcji
+            ->delete();
+    }
+
+    /**
      * Dodaje email do kolejki
      * @param string $name nazwa-klucz e-maila z definicji
      * @param string $to adres do lub adresy oddzielone ";"
