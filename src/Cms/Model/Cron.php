@@ -38,8 +38,8 @@ class Cron
             $cron->dateLastExecute = date('Y-m-d H:i:s');
             //ponowne łączenie
             \App\Registry::$db->connect();
-            //zapis do bazy
-            $cron->save();
+            //zapis do bazy bez modyfikowania daty ostatniej modyfikacji
+            $cron->saveWithoutLastDateModify();
             //logowanie uruchomienia
             \Mmi\App\FrontController::getInstance()->getLogger()->info('CRON done: @' . gethostname() . ' ' . $cron->name . ' ' . $output .  ' in ' . $elapsed . 's');
         }
