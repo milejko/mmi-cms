@@ -160,10 +160,10 @@ class Mail
                 }
                 //wysyłka maila
                 $mail->send();
-                //logowanie wysyłki
-                \Mmi\App\FrontController::getInstance()->getLogger()->info('Sent: ' . $email->to . ' ' . $email->subject);
-                //usuwanie maila po wysłaniu
-                $email->delete();
+                //ustawienie pol po wysłaniu
+                $email->active = 1;
+                $email->dateSent = date('Y-m-d H:i:s');
+                $email->save();
                 //podwyzszenie licznika udanych
                 $result['success']++;
             } catch (\Exception $e) {
