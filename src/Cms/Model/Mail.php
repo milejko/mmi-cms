@@ -174,6 +174,8 @@ class Mail
                 }
                 //wysyłka maila
                 $mail->send();
+                //logowanie wysyłki
+                \Mmi\App\FrontController::getInstance()->getLogger()->info('Sent: ' . $email->to . ' ' . $email->subject);
                 //czyszczenie załączników
                 $email->attachements = null;
                 //ustawienie pol po wysłaniu
