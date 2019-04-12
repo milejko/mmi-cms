@@ -12,6 +12,7 @@ namespace Cms\Model;
 
 /**
  * Model logu
+ * @TODO: usunąć ten model do końca 2019
  */
 class Log
 {
