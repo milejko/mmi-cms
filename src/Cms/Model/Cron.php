@@ -21,10 +21,6 @@ class Cron
     public static function run()
     {
         foreach (Orm\CmsCronQuery::active()->find() as $cron) {
-            $logData = [];
-            $logData['name'] = $cron->name;
-            $logData['dateLastExecute'] = $cron->dateLastExecute;
-            $logData['message'] = $cron->name;
             if (!self::_getToExecute($cron)) {
                 continue;
             }
@@ -32,15 +28,11 @@ class Cron
             try {
                 $start = microtime(true);
                 $output = \Mmi\Mvc\ActionHelper::getInstance()->action(new \Mmi\Http\Request(['module' => $cron->module, 'controller' => $cron->controller, 'action' => $cron->action]));
-                $logData['time'] = round(microtime(true) - $start, 4) . 's';
-                if ($output) {
-                    $logData['message'] = gethostname() . '@' . $cron->name . ': ' . $output;
-                }
-            } catch (Exception $e) {
-                $logData['message'] = $e->__toString();
-                //ponowne łączenie
-                \App\Registry::$db->connect();
-                Log::add('Cron exception', $logData);
+                $elapsed = round(microtime(true) - $start, 2);
+            } catch (\Exception $e) {
+                //error logging
+                \Mmi\App\FrontController::getInstance()->getLogger()->error('CRON failed: @' . gethostname() . $cron->name . ' ' . $e->getMessage());
+                return;
             }
             //zmień datę ostatniego wywołania
             $cron->dateLastExecute = date('Y-m-d H:i:s');
@@ -48,10 +40,8 @@ class Cron
             \App\Registry::$db->connect();
             //zapis do bazy
             $cron->save();
-            if (!$output) {
-                continue;
-            }
-            Log::add('Cron done', $logData);
+            //logowanie uruchomienia
+            \Mmi\App\FrontController::getInstance()->getLogger()->info('CRON done: @' . gethostname() . ' ' . $cron->name . ' ' . $output .  ' in ' . $elapsed . 's');
         }
     }
 
