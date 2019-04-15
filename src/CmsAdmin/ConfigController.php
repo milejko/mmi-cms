@@ -26,5 +26,6 @@ class ConfigController extends Mvc\Controller
         $config->navigation = '(...)';
         $config->router = '(...)';
         $this->view->config = \Mmi\Http\ResponseDebugger\Colorify::colorify(print_r($config, true));
+        $this->view->server = \Mmi\Http\ResponseDebugger\Colorify::colorify(print_r($_SERVER, true));
     }
 }

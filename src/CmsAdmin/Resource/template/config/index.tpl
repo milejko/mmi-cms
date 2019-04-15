@@ -10,6 +10,14 @@
                         <pre>{$config}</pre>
                     </div>
                 </div>
+                <div class="card">
+                    <div class="card-header">
+                        <strong>{#template.config.index.server.header#}</strong>
+                    </div>
+                    <div class="card-body">
+                        <pre>{$server}</pre>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
