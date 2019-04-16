@@ -16,15 +16,18 @@ namespace CmsAdmin;
 class ConfigController extends Mvc\Controller
 {
 
+    const THREE_DOTS = '(...)';
+
     /**
      * Widok konfiguracji
      */
     public function indexAction()
     {
         $config = clone (\App\Registry::$config);
+        1 / 0;
         //za długie dane do wyświetlenia
-        $config->navigation = '(...)';
-        $config->router = '(...)';
+        $config->navigation = self::THREE_DOTS;
+        $config->router = self::THREE_DOTS;
         $this->view->config = \Mmi\Http\ResponseDebugger\Colorify::colorify(print_r($config, true));
         $this->view->server = \Mmi\Http\ResponseDebugger\Colorify::colorify(print_r($_SERVER, true));
     }
