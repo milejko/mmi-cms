@@ -67,5 +67,4 @@ class AuthController extends Mvc\Controller
         //zwraca odpowiedz JSON
         return json_encode((new \Cms\Model\Auth)->ldapAutocomplete($this->term . '*'));
     }
-
 }

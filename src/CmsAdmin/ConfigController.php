@@ -24,7 +24,6 @@ class ConfigController extends Mvc\Controller
     public function indexAction()
     {
         $config = clone (\App\Registry::$config);
-        1 / 0;
         //za długie dane do wyświetlenia
         $config->navigation = self::THREE_DOTS;
         $config->router = self::THREE_DOTS;
