@@ -1,7 +1,11 @@
 {
     "name": "mmi/mmi-cms",
     "description": "The CMS written with MMi Framework",
-    "keywords": ["cms", "mmi", "framework"],
+    "keywords": [
+        "cms",
+        "mmi",
+        "framework"
+    ],
     "license": "MIT",
     "authors": [
         {
@@ -15,11 +19,15 @@
         {
             "name": "Maciej Pawłowski",
             "email": "mac@macu.eu"
+        },
+        {
+            "name": "Krystian Gapski",
+            "email": "k.gapski@nowaera.pl"
         }
     ],
     "require": {
         "php": ">=7.0.0",
-        "mmi/mmi": "^3.7.8",
+        "mmi/mmi": "^3.8.1",
         "phpmailer/phpmailer": "~5.2"
     },
     "autoload": {
@@ -32,7 +40,7 @@
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-            "dev-master": "2.6-dev"
+            "dev-master": "2.7-dev"
         }
     }
 }
