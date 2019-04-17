@@ -25,17 +25,17 @@ class Text extends \Cms\Form\Form
     {
         //klucz
         $this->addElement((new Element\Text('key'))
-                ->setLabel('klucz')
+                ->setLabel('form.text.key.label')
                 ->setRequired()
                 ->addValidator(new \Mmi\Validator\NotEmpty));
 
         //zawartość
         $this->addElement((new Element\Textarea('content'))
-                ->setLabel('zawartość'));
+                ->setLabel('form.text.content.label'));
 
         //submit
         $this->addElement((new Element\Submit('submit'))
-                ->setLabel('zapisz tekst'));
+                ->setLabel('form.text.submit.label'));
     }
 
 }

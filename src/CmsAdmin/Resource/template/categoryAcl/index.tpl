@@ -1,6 +1,4 @@
-
 {headScript()->appendFile('/resource/cmsAdmin/js/acl.js')}
-
 
 <div class="container-fluid">
     <div class="animated fadeIn">
@@ -8,7 +6,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#Uprawnienia edycji kategorii#}</strong>
+                        <strong>{#template.categoryAcl.index.header#}</strong>
                     </div>
                     <div class="card-body">
                         {if $roles|count}
@@ -22,7 +20,7 @@
                                     {$categoryAclForm}
                                 </div>
                             {else}
-                                <p>Brak zdefiniowanych ról.</p>
+                                <p>{#template.categoryAcl.index.empty#}</p>
                             </div>
                         {/if}
                         <div class="clear"></div>

@@ -29,25 +29,25 @@ class CategoryType extends \Cms\Form\Form
             ->addFilter(new Filter\StringTrim)
             ->addValidator(new Validator\NotEmpty)
             ->addValidator(new Validator\RecordUnique([new \Cms\Orm\CmsCategoryTypeQuery, 'name', $this->getRecord()->id]))
-            ->setLabel('nazwa'));
+            ->setLabel('form.categoryType.name.label'));
 
         //klasa modułu wyświetlania
         $this->addElement((new Element\Select('mvcParams'))
             ->setMultioptions([null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard(3))
             ->setRequired()
             ->addValidator(new Validator\NotEmpty)
-            ->setLabel('moduł wyświetlania'));
+            ->setLabel('form.categoryType.mvcParams.label'));
 
         //ustawienie bufora
         $this->addElement((new Element\Select('cacheLifetime'))
-            ->setLabel('odświeżanie')
+            ->setLabel('form.categoryType.cacheLifetime.label')
             ->setMultioptions(\Cms\Orm\CmsCategoryRecord::CACHE_LIFETIMES)
             ->setValue(\Cms\Orm\CmsCategoryRecord::DEFAULT_CACHE_LIFETIME)
             ->addFilter(new Filter\EmptyToNull));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('zapisz szablon'));
+            ->setLabel('form.categoryType.submit.label'));
     }
 
     /**

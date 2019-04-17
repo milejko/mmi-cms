@@ -27,19 +27,19 @@ class TextGrid extends \CmsAdmin\Grid\Grid
 
         //klucz
         $this->addColumn((new Column\TextColumn('key'))
-            ->setLabel('klucz'));
+            ->setLabel('grid.text.key.label'));
 
         //język
         $this->addColumn((new Column\TextColumn('lang'))
-            ->setLabel('język'));
+            ->setLabel('grid.text.lang.label'));
 
         //zawartość
         $this->addColumn((new Column\TextColumn('content'))
-            ->setLabel('treść'));
+            ->setLabel('grid.text.content.label'));
 
         //data modyfikacji
         $this->addColumn((new Column\DateTimeColumn('dateModify'))
-            ->setLabel('data modyfikacji'));
+            ->setLabel('grid.text.dateModify.label'));
 
         //operacje
         $this->addColumn(new Column\OperationColumn);

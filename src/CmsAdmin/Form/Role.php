@@ -25,12 +25,12 @@ class Role extends \Cms\Form\Form
     {
         //nazwa roli
         $this->addElement((new Element\Text('name'))
-            ->setLabel('nazwa roli')
+            ->setLabel('form.role.name.label')
             ->addValidator(new \Mmi\Validator\StringLength([3, 64])));
 
         //submit
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('utwórz nową rolę'));
+            ->setLabel('form.role.submit.label'));
     }
 
 }

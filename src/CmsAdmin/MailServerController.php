@@ -32,7 +32,7 @@ class MailServerController extends Mvc\Controller
     {
         $form = new \CmsAdmin\Form\Mail\Server(new \Cms\Orm\CmsMailServerRecord($this->id));
         if ($form->isSaved()) {
-            $this->getMessenger()->addMessage('Zapisano ustawienia serwera', true);
+            $this->getMessenger()->addMessage('messenger.mailServer.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'mailServer');
         }
         $this->view->serverForm = $form;
@@ -46,10 +46,10 @@ class MailServerController extends Mvc\Controller
         $server = (new \Cms\Orm\CmsMailServerQuery)->findPk($this->id);
         try {
             if ($server && $server->delete()) {
-                $this->getMessenger()->addMessage('Usunięto serwer');
+                $this->getMessenger()->addMessage('messenger.mailServer.deleted');
             }
         } catch (\Mmi\Db\Exception $e) {
-            $this->getMessenger()->addMessage('Nie można usunąć serwera, istnieją powiązane szablony', false);
+            $this->getMessenger()->addMessage('messenger.mailServer.delete.error', false);
         }
         $this->getResponse()->redirect('cmsAdmin', 'mailServer');
     }

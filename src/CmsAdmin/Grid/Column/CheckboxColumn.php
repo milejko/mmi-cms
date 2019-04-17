@@ -34,14 +34,20 @@ class CheckboxColumn extends SelectColumn
     const TEMPLATE_CELL = 'cmsAdmin/grid/cell/checkbox';
 
     /**
+     * Template filtra selecta
+     */
+    const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/checkbox';
+
+    /**
      * Domyślne opcje dla checkboxa
      * @param string $name
      */
     public function __construct($name)
     {
+        $view = FrontController::getInstance()->getView();
         $this->setMultioptions([
-            0 => 'odznaczone',
-            1 => 'zaznaczone'
+            0 => $view->_('grid.shared.checkbox.on'),
+            1 => $view->_('grid.shared.checkbox.off'),
         ]);
         parent::__construct($name);
     }

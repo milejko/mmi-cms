@@ -8,24 +8,24 @@ CMS.grid = function () {
         inputBuffer,
         filtering = false;
 
-    var quickSwitch = function(data) {
-        $('.grid-anchor').html(data.body);
-        $('.paginator-anchor').html(data.paginator);
+    var quickSwitch = function (data, gridId) {
+        $('#' + gridId).html(data.body);
+        $('#' + gridId + '-paginator').html(data.paginator);
         initPicker();
     };
 
-    var rememberCursor = function(object) {
+    var rememberCursor = function (object) {
         inputBuffer = object.val();
         inputCursorPosition = object[0].selectionStart;
         inputName = object.attr('name');
     };
 
     var initPicker = function () {
-        $('.grid-picker').datetimepicker({format:'Y-m-d', allowBlank: true, scrollInput: false, scrollMonth: true, timepicker: false});
-        $.datetimepicker.setLocale('pl');
+        $('.grid-picker').datetimepicker({ format: 'Y-m-d', allowBlank: true, scrollInput: false, scrollMonth: true, timepicker: false });
+        $.datetimepicker.setLocale(request.locale);
     };
 
-    var filter = function(field) {
+    var filter = function (field) {
         var filter = field.attr('name'),
             value = field.val();
         filtering = true;
@@ -33,9 +33,9 @@ CMS.grid = function () {
         $.ajax({
             url: window.location,
             type: 'POST',
-            data: {filter: filter, value: value},
+            data: { filter: filter, value: value },
             success: function (data) {
-                quickSwitch(data);
+                quickSwitch(data, field.closest('table').attr('id'));
                 if (!inputName) {
                     filtering = false;
                     return;
@@ -45,7 +45,7 @@ CMS.grid = function () {
                 element.val(inputBuffer);
                 try {
                     element[0].setSelectionRange(inputCursorPosition, inputCursorPosition);
-                } catch (e) {}
+                } catch (e) { }
                 inputName = null;
                 inputBuffer = null;
                 filtering = false;
@@ -57,13 +57,14 @@ CMS.grid = function () {
     var initPaginator = function () {
         $('div.grid').on('click', ".page-link", function (event) {
             var filter = $(this).parent('li').parent('ul').data('name'),
-                value = $(this).data('page');
+                value = $(this).data('page'),
+                gridId = $(this).parent('li').parent('ul').parent('div').parent('div.row').parent('div.grid').find('div.row > div > table.grid-anchor').attr('id');
             $.ajax({
                 url: window.location,
                 type: 'POST',
-                data: {filter: filter, value: value},
+                data: { filter: filter, value: value },
                 success: function (data) {
-                    quickSwitch(data);
+                    quickSwitch(data, gridId);
                 }
             });
         });
@@ -103,13 +104,14 @@ CMS.grid = function () {
         //sortowanie grida
         $('div.grid').on('click', 'th > div.form-group > a.order', function () {
             var field = $(this).attr('href'),
-                method = $(this).attr('data-method');
+                method = $(this).attr('data-method'),
+                gridId = $(this).parent('div').parent('th').parent('tr').parent('thead').parent('table').attr('id');
             $.ajax({
                 url: window.location,
                 type: 'POST',
-                data: {order: field, method: method},
+                data: { order: field, method: method },
                 success: function (data) {
-                    quickSwitch(data);
+                    quickSwitch(data, gridId);
                 }
             });
             return false;
@@ -123,7 +125,7 @@ CMS.grid = function () {
             $.ajax({
                 url: window.location,
                 type: 'POST',
-                data: {id: id[1], name: id[0], value: $(this).val(), checked: $(this).is(':checked')}
+                data: { id: id[1], name: id[0], value: $(this).val(), checked: $(this).is(':checked') }
             });
         });
     };

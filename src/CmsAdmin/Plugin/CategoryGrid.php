@@ -26,25 +26,25 @@ class CategoryGrid extends \CmsAdmin\Grid\Grid
 
         //nazwa
         $this->addColumn((new Column\TextColumn('name'))
-            ->setLabel('nazwa'));
+            ->setLabel('grid.category.name.label'));
 
         //uri
         $this->addColumn((new Column\SelectColumn('uri'))
             ->setMultioptions((new \Cms\Orm\CmsCategoryQuery)->orderAscUri()->findPairs('uri', 'uri'))
             ->setFilterMethodLike()
-            ->setLabel('okruszki'));
+            ->setLabel('grid.category.uri.label'));
         
         //uri
         $this->addColumn((new Column\TextColumn('customUri'))
-            ->setLabel('inny adres'));
+            ->setLabel('grid.category.customUri.label'));
 
         //title
         $this->addColumn((new Column\TextColumn('title'))
-            ->setLabel('meta tytuł'));
+            ->setLabel('grid.category.title.label'));
 
         //aktywności
         $this->addColumn((new Column\CheckboxColumn('active'))
-            ->setLabel('włączona'));
+            ->setLabel('grid.category.active.label'));
 
         //operacje
         $this->addColumn((new Column\CustomColumn('operation'))

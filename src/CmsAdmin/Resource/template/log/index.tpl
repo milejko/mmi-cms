@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#Logi systemowe#}</strong>
+                        <strong>{#template.log.index.header#}</strong>
                     </div>
                     <div class="card-body">
                         {$grid}

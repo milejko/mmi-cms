@@ -25,19 +25,19 @@ class StatObject extends \Cms\Form\Form
     {
         //obiekt
         $this->addElement((new Element\Select('object'))
-                ->setLabel('statystyka')
+                ->setLabel('form.stat.statObject.object.label')
                 ->setValue($this->getOption('object'))
                 ->setMultioptions([null => '---'] + (new \Cms\Orm\CmsStatLabelQuery)->orderAsc('label')->findPairs('object', 'label')));
 
         //rok
         $this->addElement((new Element\Select('year'))
-                ->setLabel('rok')
+                ->setLabel('form.stat.statObject.year.label')
                 ->setValue($this->getOption('year'))
                 ->setMultioptions([date('Y') - 1 => date('Y') - 1, date('Y') => date('Y')]));
 
         //miesiąc
         $this->addElement((new Element\Select('month'))
-                ->setLabel('miesiąc')
+                ->setLabel('form.stat.statObject.month.label')
                 ->setValue($this->getOption('month'))
                 ->setMultioptions($this->_getMonthMultioptions()));
     }

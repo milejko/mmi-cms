@@ -26,15 +26,15 @@ class StatLabelGrid extends \CmsAdmin\Grid\Grid
 
         //obiekt
         $this->addColumn((new Column\TextColumn('object'))
-            ->setLabel('klucz'));
+            ->setLabel('grid.statLabel.object.label'));
 
         //nazwa
         $this->addColumn((new Column\TextColumn('label'))
-            ->setLabel('nazwa statystyki'));
+            ->setLabel('grid.statLabel.label.label'));
 
         //opis
         $this->addColumn((new Column\TextColumn('description'))
-            ->setLabel('opis'));
+            ->setLabel('grid.statLabel.description.label'));
 
         //operacje bez usuwania
         $this->addColumn((new Column\OperationColumn)

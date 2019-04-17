@@ -24,10 +24,8 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
      */
     public function preDispatch(\Mmi\Http\Request $request)
     {
-        //niepoprawny język
-        if ($request->__get('lang') && !in_array($request->__get('lang'), \App\Registry::$config->languages)) {
-            throw new \Mmi\Mvc\MvcNotFoundException('Language not found');
-        }
+        //init translation
+        $this->_initTranslation($request);
         //konfiguracja autoryzacji
         $auth = new \Mmi\Security\Auth;
         $auth->setSalt(\App\Registry::$config->salt)
@@ -109,6 +107,7 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
         $view->languages = \App\Registry::$config->languages;
         $jsRequest = $request->toArray();
         $jsRequest['baseUrl'] = $base;
+        $jsRequest['locale'] = \App\Registry::$translate->getLocale();
         unset($jsRequest['controller']);
         unset($jsRequest['action']);
         //umieszczenie tablicy w headScript()
@@ -137,13 +136,40 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
         //logowanie bez preferencji admina, tylko gdy uprawniony
         if (false === $preferAdmin && \App\Registry::$acl->isRoleAllowed('guest', 'cms:user:login')) {
             return $request->setModuleName('cms')
-                    ->setControllerName('user')
-                    ->setActionName('login');
+                ->setControllerName('user')
+                ->setActionName('login');
         }
         //logowanie admina
         return $request->setModuleName('cmsAdmin')
-                ->setControllerName('index')
-                ->setActionName('login');
+            ->setControllerName('index')
+            ->setActionName('login');
+    }
+
+    /**
+     * Inicjalizacja tłumaczeń
+     */
+    protected function _initTranslation(\Mmi\Http\Request $request)
+    {
+        //języki nie zdefiniowane
+        if (empty(\App\Registry::$config->languages)) {
+            return;
+        }
+        //niepoprawny język
+        if ($request->__get('lang') && !in_array($request->__get('lang'), \App\Registry::$config->languages)) {
+            throw new \Mmi\Mvc\MvcNotFoundException('Language not found');
+        }
+        //ustawianie języka z requesta
+        if ($request->__get('lang')) {
+            return \App\Registry::$translate->setLocale($request->__get('lang'));
+        }
+        //ustawienie języka edycji
+        $session = new \Mmi\Session\SessionSpace('cms-language');
+        $lang = in_array($session->lang, \App\Registry::$config->languages) ? $session->lang : null;
+        //brak zdefiniowanego języka, przy czym istnieje język domyślny
+        if (null === $lang && isset(\App\Registry::$config->languages[0])) {
+            $lang = \App\Registry::$config->languages[0];
+        }
+        \App\Registry::$translate->setLocale($lang);
     }
 
 }

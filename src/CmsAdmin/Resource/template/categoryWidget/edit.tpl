@@ -4,7 +4,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{if $request->id > 0}{#Edycja#}{else}{#Dodawanie#}{/if} {#konfiguracji widgeta#}</strong>
+                        <strong>{if $request->id > 0}{#template.categoryWidget.edit.header.new#}{else}{#template.categoryWidget.edit.header.edit#}{/if}</strong>
                     </div>
                     <div class="card-body">
                         {$widgetForm}
@@ -22,7 +22,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{if !$request->relationId}{#Dodaj atrybut#}{else}{#Edytuj opcje atrybutu#}{/if}</strong>
+                        <strong>{if !$request->relationId}{#template.categoryWidget.edit.attribute.new#}{else}{#template.categoryWidget.edit.attribute.edit#}{/if}</strong>
                     </div>
                     <div class="card-body">
                         {$relationForm}
@@ -39,7 +39,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#Atrybuty#}</strong>
+                        <strong>{#template.categoryWidget.edit.attributes#}</strong>
                     </div>
                     <div class="card-body">
                         {$relationGrid}

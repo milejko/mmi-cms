@@ -57,7 +57,7 @@ class CategoryController extends Mvc\Controller
         $this->view->duplicateAlert = $this->_isCategoryDuplicate($originalId);
         //sprawdzenie uprawnień do edycji węzła kategorii
         if (!(new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed(\App\Registry::$auth->getRoles(), $originalId)) {
-            $this->getMessenger()->addMessage('Nie posiadasz uprawnień do edycji wybranej strony', false);
+            $this->getMessenger()->addMessage('messenger.category.permission.denied', false);
             $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
         }
         //konfiguracja kategorii
@@ -77,19 +77,19 @@ class CategoryController extends Mvc\Controller
         }
         //błędy zapisu
         if ($form->isMine() && !$form->isSaved()) {
-            $this->getMessenger()->addMessage('Zmiany nie zostały zapisane, formularz zawiera błędy', false);
+            $this->getMessenger()->addMessage('messenger.category.form.errors', false);
             $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id]);
         }
         //zatwierdzenie zmian - commit
         if ($form->isSaved() && $form->getElement('commit')->getValue()) {
             //zmiany zapisane
-            $this->getMessenger()->addMessage('Strona została zapisana', true);
+            $this->getMessenger()->addMessage('messenger.category.category.saved', true);
             $this->_redirectAfterEdit($category);
         }
         //zapisany form ze zmianą kategorii
         if ($form->isSaved() && 'type' == $form->getElement('submit')->getValue()) {
             //zmiany zapisane
-            $this->getMessenger()->addMessage('Szablon strony został zmieniony', true);
+            $this->getMessenger()->addMessage('messenger.category.categoryType.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id]);
         }
         //przekierowanie na podgląd
@@ -277,7 +277,7 @@ class CategoryController extends Mvc\Controller
         $force = $this->force || (\Cms\Orm\CmsCategoryRecord::STATUS_HISTORY == $category->status);
         //draft nie może być utworzony, ani wczytany
         if (null === $draft = (new \Cms\Model\CategoryDraft($category))->createAndGetDraftForUser(\App\Registry::$auth->getId(), $force)) {
-            $this->getMessenger()->addMessage('Nie udało się utworzyć wersji roboczej, spróbuj ponownie', false);
+            $this->getMessenger()->addMessage('messenger.category.draft.fail', false);
             $this->getResponse()->redirectToUrl($referer);
         }
         //ustawienie referera

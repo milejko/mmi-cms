@@ -1,8 +1,8 @@
 {foreach $files as $file}
     <li>
-        <a class="insert ui-icon ui-icon-circle-plus" {if php_isset($file['poster'])}data-poster="{$file['poster']}"{/if} data-typ="{$file['class']}" href="{$file['full']}" title="dodaj"></a>
-        <a class="delete ui-icon ui-icon-circle-minus" data-file="{$file['title']}" data-id="{$file['id']}" title="usuń"></a>
-        {if $file['class']=="video"}<a class="edit ui-icon ui-icon-pencil" data-name="{$file['title']}" data-id="{$file['id']}" title="edytuj"></a>{/if}
+        <a class="insert ui-icon ui-icon-circle-plus" {if php_isset($file['poster'])}data-poster="{$file['poster']}"{/if} data-typ="{$file['class']}" href="{$file['full']}" title="{#template.file.listLayout.add#}"></a>
+        <a class="delete ui-icon ui-icon-circle-minus" data-file="{$file['title']}" data-id="{$file['id']}" title="{#template.file.listLayout.delete#}"></a>
+        {if $file['class']=="video"}<a class="edit ui-icon ui-icon-pencil" data-name="{$file['title']}" data-id="{$file['id']}" title="{#template.file.listLayout.edit#}"></a>{/if}
 
         {if $file['class']=="image"}<div class="thumbbox image" style="background:url({$file['thumb']})"></div>{/if}
         {if $file['class']=="audio"}<a class="edit b_audio ico i_play" data-id="{$file['id']}" href="#play"></a><div class="thumbbox audio"><audio src="{$file['full']}"></audio></div>{/if}

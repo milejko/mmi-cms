@@ -42,13 +42,13 @@ class IndexController extends Mvc\Controller
         }
         //logowanie niepoprawne
         if (!$form->isSaved()) {
-            $this->getMessenger()->addMessage('Logowanie niepoprawne', false);
+            $this->getMessenger()->addMessage('messenger.index.login.fail', false);
             return;
         }
         //regeneracja ID sesji
         \Mmi\Session\Session::regenerateId();
         //zalogowano
-        $this->getMessenger()->addMessage('Zalogowano poprawnie', true);
+        $this->getMessenger()->addMessage('messenger.index.login.success', true);
         \Cms\Model\Stat::hit('admin-login');
         $referer = $this->getRequest()->getReferer();
         //przekierowanie na referer
@@ -64,33 +64,10 @@ class IndexController extends Mvc\Controller
     public function logoutAction()
     {
         \App\Registry::$auth->clearIdentity();
-        $this->getMessenger()->addMessage('Dziękujemy za skorzystanie z serwisu, wylogowano poprawnie', true);
+        $this->getMessenger()->addMessage('messenger.index.logout.success', true);
         //hit do statystyk
         \Cms\Model\Stat::hit('admin-logout');
         $this->getResponse()->redirect('cmsAdmin');
-    }
-
-    /**
-     * Akcja ustawiania języka (w sesji)
-     */
-    public function languageAction()
-    {
-        $session = new \Mmi\Session\SessionSpace('cms-language');
-        $session->lang = in_array($this->locale, \App\Registry::$config->languages) ? $this->locale : null;
-        $referer = \Mmi\App\FrontController::getInstance()->getRequest()->getReferer();
-        //przekierowanie na referer
-        if ($referer) {
-            $this->getResponse()->redirectToUrl($referer);
-        }
-        $this->getResponse()->redirect('cmsAdmin');
-    }
-
-    /**
-     * Widget języków
-     */
-    public function languageWidgetAction()
-    {
-        $this->view->languages = \App\Registry::$config->languages;
     }
 
     /**
@@ -110,7 +87,7 @@ class IndexController extends Mvc\Controller
         }
         //hit do statystyk
         \Cms\Model\Stat::hit('admin_password');
-        $this->getMessenger()->addMessage('Hasło zmienione poprawnie, zaloguj się ponownie');
+        $this->getMessenger()->addMessage('messenger.index.password.success');
         //wylogowanie
         \App\Registry::$auth->clearIdentity();
         \Cms\Model\Stat::hit('admin_logout');

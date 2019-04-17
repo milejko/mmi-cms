@@ -31,7 +31,7 @@ class CategoryTypeController extends Mvc\Controller
     {
         $form = new \CmsAdmin\Form\CategoryType(new \Cms\Orm\CmsCategoryTypeRecord($this->id));
         if ($form->isSaved()) {
-            $this->getMessenger()->addMessage('Szablon artykułu zapisany poprawnie', true);
+            $this->getMessenger()->addMessage('messenger.categoryType.categoryType.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'categoryType');
         }
         $this->view->categoryTypeForm = $form;
@@ -48,7 +48,7 @@ class CategoryTypeController extends Mvc\Controller
         //formularz edycji
         $relationForm = new Form\CategoryAttributeRelationForm($relationRecord);
         if ($relationForm->isSaved()) {
-            $this->getMessenger()->addMessage('Wiązanie atrybutu zapisane poprawnie', true);
+            $this->getMessenger()->addMessage('messenger.categoryType.attributeRelation.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'categoryType', 'edit', ['id' => $this->id]);
         }
         $this->view->relationForm = $relationForm;
@@ -61,7 +61,7 @@ class CategoryTypeController extends Mvc\Controller
     {
         $record = (new \Cms\Orm\CmsCategoryTypeQuery)->findPk($this->id);
         if ($record && $record->delete()) {
-            $this->getMessenger()->addMessage('Poprawnie usunięto typ artykułu', true);
+            $this->getMessenger()->addMessage('messenger.categoryType.categoryType.deleted', true);
         }
         $this->getResponse()->redirect('cmsAdmin', 'categoryType');
     }

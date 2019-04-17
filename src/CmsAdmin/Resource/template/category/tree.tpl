@@ -6,7 +6,7 @@
                 <div class="card">
                     <div id="categoryMessageContainer"></div>
                     <div class="card-header">
-                        <strong>{#Zarządzanie treścią#}</strong>
+                        <strong>{#template.category.tree.header#}</strong>
                     </div>
                     <div class="card-body">
                        <div id="categoryTreeContainer">

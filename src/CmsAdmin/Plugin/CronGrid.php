@@ -26,28 +26,28 @@ class CronGrid extends \CmsAdmin\Grid\Grid
 
         //nazwa
         $this->addColumn((new Column\TextColumn('name'))
-            ->setLabel('nazwa'));
+            ->setLabel('grid.cron.name.label'));
 
         //opis
         $this->addColumn((new Column\TextColumn('description'))
-            ->setLabel('opis'));
+            ->setLabel('grid.cron.description.label'));
 
         //crontab
         $this->addColumn((new Column\CustomColumn('crontab'))
-            ->setLabel('harmonogram')
+            ->setLabel('grid.cron.crontab.label')
             ->setTemplateCode('{$record->minute} {$record->hour} {$record->dayOfMonth} {$record->month} {$record->dayOfWeek}'));
 
         //data dodania
         $this->addColumn((new Column\DateTimeColumn('dateAdd'))
-            ->setLabel('data dodania'));
+            ->setLabel('grid.cron.dateAdd.label'));
 
         //ostatnie wywołanie
         $this->addColumn((new Column\DateTimeColumn('dateLastExecute'))
-            ->setLabel('ostatnie wywołanie'));
+            ->setLabel('grid.cron.dateLastExecute.label'));
 
         //aktywny
         $this->addColumn((new Column\CheckboxColumn('active'))
-            ->setLabel('włączony'));
+            ->setLabel('grid.cron.active.label'));
 
         //operacje
         $this->addColumn(new Column\OperationColumn);

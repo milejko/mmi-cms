@@ -69,6 +69,15 @@ class CmsCronRecord extends \Mmi\Orm\Record
     }
 
     /**
+     * Zapis rekordu bez modyfikacji daty modyfikacji
+     * @return boolean
+     */
+    public function saveWithoutLastDateModify()
+    {
+        return parent::save();
+    }
+
+    /**
      * Wstawienie rekordu
      * @return boolean
      */
@@ -77,5 +86,4 @@ class CmsCronRecord extends \Mmi\Orm\Record
         $this->dateAdd = date('Y-m-d H:i:s');
         return parent::_insert();
     }
-
 }

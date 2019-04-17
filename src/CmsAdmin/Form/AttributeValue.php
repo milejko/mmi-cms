@@ -25,14 +25,14 @@ class AttributeValue extends \Cms\Form\Form
 
         //wartość
         $this->addElement((new Element\Text('value'))
-            ->setLabel('wartość')
+            ->setLabel('form.attributeValue.value.label')
             ->setRequired()
             ->addFilter(new Filter\StringTrim)
             ->addValidator(new Validator\StringLength([1, 1024])));
 
         //labelka
         $this->addElement((new Element\Text('label'))
-            ->setLabel('etykieta')
+            ->setLabel('form.attributeValue.label.label')
             ->addFilter(new Filter\StringTrim)
             ->addFilter(new Filter\EmptyToNull)
             ->addValidator(new Validator\StringLength([1, 64])));
@@ -40,13 +40,13 @@ class AttributeValue extends \Cms\Form\Form
         //kolejność
         $this->addElement((new Element\Text('order'))
                 ->setRequired()
-                ->setLabel('kolejność')
+                ->setLabel('form.attributeValue.order.label')
                 ->addValidator(new Validator\NumberBetween([0, 10000000]))
                 ->setValue(0));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('zapisz wartość'));
+            ->setLabel('form.attributeValue.submit.label'));
     }
 
     /**

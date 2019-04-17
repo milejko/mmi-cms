@@ -17,15 +17,15 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract
 {
 
     //szablon początku pola
-    CONST TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
     //szablon opisu
-    CONST TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
     //szablon końca pola
-    CONST TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
     //szablon błędów
-    CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
-    CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
     /**
      * Ustawia format np. Y-m-d H:i
@@ -113,10 +113,10 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract
 						}
 					}
 					});
-				$.datetimepicker.setLocale('pl');
+				$.datetimepicker.setLocale(request.lang);
 			});
-		");
-
+        ");
+        //@TODO: get locale from view
         //czyszczenie niepotrzebnych opcji
         $this->unsetOption('dateMin')
             ->unsetOption('dateMax')

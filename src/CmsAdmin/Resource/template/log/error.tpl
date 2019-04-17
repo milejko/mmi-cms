@@ -4,7 +4,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#Log błędów#} ({#ostatnie wpisy#}</strong>
+                        <strong>{#template.log.error.header#}</strong>
                     </div>
                     <div class="card-body">
                         {$data}

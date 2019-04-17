@@ -23,7 +23,7 @@ class CacheController extends Mvc\Controller
     {
         if (\App\Registry::$cache) {
             \App\Registry::$cache->flush();
-            $this->getMessenger()->addMessage('Bufor wyczyszczony', true);
+            $this->getMessenger()->addMessage('messenger.cache.cleared', true);
         }
         if ($this->getRequest()->getReferer()) {
             $this->getResponse()->redirectToUrl(urldecode($this->getRequest()->getReferer()));

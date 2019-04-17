@@ -13,7 +13,7 @@ namespace CmsAdmin\Mvc;
 /**
  * Kontroler stron adminowych
  */
-abstract class Controller Extends \Mmi\Mvc\Controller
+abstract class Controller extends \Mmi\Mvc\Controller
 {
 
     /**
@@ -23,19 +23,18 @@ abstract class Controller Extends \Mmi\Mvc\Controller
     {
         //ustawienie języka edycji
         $session = new \Mmi\Session\SessionSpace('cms-language');
-        $lang = in_array($session->lang, \App\Registry::$config->languages) ? $session->lang : null;
-        //brak zdefiniowanego języka, przy czym istnieje język domyślny
-        if (null === $lang && isset(\App\Registry::$config->languages[0])) {
-            $lang = \App\Registry::$config->languages[0];
+        //session already set
+        if ($session->lang) {
+            return;
         }
-        //usunięcie języka z requestu
-        unset($this->getRequest()->lang);
-        unset(\Mmi\App\FrontController::getInstance()->getRequest()->lang);
-        //język istnieje
-        if (null !== $lang) {
-            \Mmi\App\FrontController::getInstance()->getRequest()->lang = $lang;
-            $this->getRequest()->lang = $lang;
+        //no identity
+        if (!\App\Registry::$auth->hasIdentity()) {
+            return;
         }
+        //setting session lang by logged user
+        $session->lang = (new \Cms\Orm\CmsAuthQuery)
+            ->findPk(\App\Registry::$auth->getId())
+            ->lang;
     }
 
 }

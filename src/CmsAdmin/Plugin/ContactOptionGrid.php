@@ -26,11 +26,11 @@ class ContactOptionGrid extends \CmsAdmin\Grid\Grid
 
         //temat
         $this->addColumn((new Column\TextColumn('name'))
-            ->setLabel('temat pytania'));
+            ->setLabel('grid.contactOption.name.label'));
 
         //forward
         $this->addColumn((new Column\TextColumn('sendTo'))
-            ->setLabel('prześlij na e-mail'));
+            ->setLabel('grid.contactOption.sendTo.label'));
 
         //operacje
         $this->addColumn((new Column\OperationColumn())->setEditParams([

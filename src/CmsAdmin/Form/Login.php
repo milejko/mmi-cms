@@ -19,16 +19,16 @@ class Login extends \Cms\Form\Form
     {
 
         $this->addElement((new Element\Text('username'))
-            ->setLabel('nazwa użytkownika')
-            ->setDescription('wpisz swój unikalny identyfikator')
+            ->setLabel('form.login.username.label')
+            ->setDescription('form.login.username.description')
             ->addFilter(new \Mmi\Filter\StringTrim));
 
         $this->addElement((new Element\Password('password'))
-            ->setLabel('hasło')
+            ->setLabel('form.login.password.label')
             ->addValidator(new \Mmi\Validator\StringLength([4, 128])));
 
         $this->addElement((new Element\Submit('login'))
-            ->setLabel('zaloguj się'));
+            ->setLabel('form.login.submit'));
     }
 
     /**

@@ -26,17 +26,17 @@ class Option extends \Cms\Form\Form
 
         //nazwa
         $this->addElement((new Element\Text('name'))
-            ->setLabel('nazwa'));
+            ->setLabel('form.contact.option.name.label'));
 
         //wyślij wiadomość
         $this->addElement((new Element\Text('sendTo'))
-            ->setLabel('prześlij na email')
-            ->setDescription('Wysyła kopię wiadomości od użytkownika bezpośrednio na podane adres\'y e-mail oddzielone ");"')
+            ->setLabel('form.contact.option.sendTo.label')
+            ->setDescription('form.contact.option.sendTo.description')
             ->addValidator(new \Mmi\Validator\EmailAddressList([])));
 
         //submit
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('dodaj/zmień temat'));
+            ->setLabel('form.contact.option.submit.label'));
     }
 
 }

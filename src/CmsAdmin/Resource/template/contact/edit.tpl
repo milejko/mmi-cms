@@ -4,7 +4,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#Odpowiedź na zapytanie#}</strong>
+                        <strong>{#template.contact.edit.header#}</strong>
                     </div>
                     <div class="card-body">
                         {$contactForm}

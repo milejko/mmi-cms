@@ -4,7 +4,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{if !$request->id}{#Dodawanie#}{else}{#Edycja#}{/if} {#tekstu stałego#}</strong>
+                        <strong>{if !$request->id}{#template.text.edit.header.new#}{else}{#template.text.edit.header.edit#}{/if}</strong>
                     </div>
                     <div class="card-body">
                         {$textForm}

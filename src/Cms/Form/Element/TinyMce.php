@@ -17,18 +17,18 @@ class TinyMce extends Textarea
 {
 
     //szablon początku pola
-    CONST TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
     //szablon opisu
-    CONST TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
     //szablon końca pola
-    CONST TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
     //szablon błędów
-    CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
-    CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
     //klucz z losowym id uploadera
-    CONST UPLOADER_ID_KEY = 'uploaderId';
-    
+    const UPLOADER_ID_KEY = 'uploaderId';
+
     /**
      * Ustawia form macierzysty
      * @param \Mmi\Form\Form $form
@@ -63,7 +63,7 @@ class TinyMce extends Textarea
     {
         return $this->getOption(self::UPLOADER_ID_KEY);
     }
-    
+
     /**
      * Ustawia objekt cms_
      * @param string $object
@@ -200,7 +200,7 @@ class TinyMce extends Textarea
         $view->headScript()->appendScript("
 			tinyMCE.init({
 				selector: '." . $class . "',
-				language: 'pl',
+				language: request.locale,
 				" . $this->_renderConfig('theme', 'theme', 'modern') . "
 				" . $this->_renderConfig('skin', 'skin', 'lightgray') . "
 				" . $this->_renderConfig('plugins', 'plugins') . "
@@ -387,7 +387,7 @@ class TinyMce extends Textarea
             $this->setContextMenu('link image media inserttable | cell row column deletetable');
         }
     }
-    
+
     /**
      * Utorzenie kopii plików dla tego uploadera
      * @return boolean
@@ -408,7 +408,7 @@ class TinyMce extends Textarea
         \Cms\Model\File::link($this->getUploaderObject(), $objectId, 'tmp-' . $this->getUploaderObject(), $this->getUploaderId());
         return true;
     }
-    
+
     /**
      * Aktualizuje wartość pola - poprawia ścieżki do plików wewnątrz TinyMce
      * (zamienia je na ścieżki do plików tymczasowych)
@@ -424,8 +424,11 @@ class TinyMce extends Textarea
             }
             $oName = $file->getJoined('original_file')->name;
             $tName = $file->name;
-            $value = preg_replace('@/data/'.$oName[0].'/'.$oName[1].'/'.$oName[2].'/'.$oName[3].'/(scalecrop|scalex|scaley|default)/([0-9x]{0,10})/'.$oName.'@',
-                '/data/'.$tName[0].'/'.$tName[1].'/'.$tName[2].'/'.$tName[3].'/$1/$2/'.$tName, $value);
+            $value = preg_replace(
+                '@/data/' . $oName[0] . '/' . $oName[1] . '/' . $oName[2] . '/' . $oName[3] . '/(scalecrop|scalex|scaley|default)/([0-9x]{0,10})/' . $oName . '@',
+                '/data/' . $tName[0] . '/' . $tName[1] . '/' . $tName[2] . '/' . $tName[3] . '/$1/$2/' . $tName,
+                $value
+            );
         }
         $this->setValue($value);
         return $value;

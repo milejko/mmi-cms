@@ -23,22 +23,23 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig
     public static function getMenu()
     {
         return (new \Mmi\Navigation\NavigationConfigElement)
-                ->setId('admin-menu')
-                ->setLabel('Panel administracyjny')
+            ->setId('admin-menu')
+            ->setLabel('menu.index.index')
+            ->setModule('cmsAdmin')
+            ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                 ->setModule('cmsAdmin')
-                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
-                    ->setModule('cmsAdmin')
-                    ->setDisabled()
-                    ->setAction('password')
-                    ->setLabel('Zmiana hasła'))
-                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
-                    ->setModule('cmsAdmin')
-                    ->setAction('login')
-                    ->setIcon('fa-unlock-alt')
-                    ->setLabel('Logowanie')
-                    ->setDisabled())
-                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
-                    ->setLabel('CMS')
+                ->setDisabled()
+                ->setAction('password')
+                ->setLabel('menu.index.password'))
+            ->addChild((new \Mmi\Navigation\NavigationConfigElement)
+                ->setModule('cmsAdmin')
+                ->setAction('login')
+                ->setIcon('fa-unlock-alt')
+                ->setLabel('menu.index.login')
+                ->setDisabled())
+            ->addChild(
+                (new \Mmi\Navigation\NavigationConfigElement)
+                    ->setLabel('menu.container')
                     ->setIcon('fa-cog')
                     ->setUri('#')
                     ->addChild(NavPart\NavPartCategory::getMenu())
@@ -48,7 +49,6 @@ class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig
                     ->addChild(NavPart\NavPartContact::getMenu())
                     ->addChild(NavPart\NavPartAuth::getMenu())
                     ->addChild(NavPart\NavPartSystem::getMenu())
-                    );
+            );
     }
-
 }

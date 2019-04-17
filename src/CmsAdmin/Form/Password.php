@@ -23,23 +23,23 @@ class Password extends \Cms\Form\Form
     {
 
         $this->addElement((new Element\Password('password'))
-            ->setLabel('obecne hasło')
+            ->setLabel('form.index.password.current.label')
             ->setRequired()
             ->addValidator(new \Mmi\Validator\NotEmpty));
 
         $this->addElement((new Element\Password('changePassword'))
-            ->setLabel('nowe hasło')
-            ->setDescription('wpisz nowe hasło, co najmniej 4 znaki')
+            ->setLabel('form.index.password.new.label')
+            ->setDescription('form.index.password.new.description')
             ->setRequired()
             ->addValidator(new \Mmi\Validator\StringLength([4, 128])));
 
         $this->addElement((new Element\Password('confirmPassword'))
-            ->setLabel('powtórz nowe hasło')
+            ->setLabel('form.index.password.repeat.label')
             ->setRequired()
             ->addValidator(new \Mmi\Validator\StringLength([4, 128])));
 
         $this->addElement((new Element\Submit('change'))
-            ->setLabel('zmień hasło'));
+            ->setLabel('form.index.password.submit'));
     }
 
     /**
@@ -52,12 +52,12 @@ class Password extends \Cms\Form\Form
         $record = $auth->authenticate(\App\Registry::$auth->getUsername(), $this->getElement('password')->getValue());
         //logowanie niepoprawne
         if (!$record) {
-            $this->getElement('password')->addError('Obecne hasło jest nieprawidłowe');
+            $this->getElement('password')->addError('form.index.password.current.invalid');
             return false;
         }
         //hasła niezgodne
         if ($this->getElement('changePassword')->getValue() != $this->getElement('confirmPassword')->getValue()) {
-            $this->getElement('confirmPassword')->addError('Hasła niezgodne');
+            $this->getElement('confirmPassword')->addError('form.index.password.repeat.invalid');
             return false;
         }
         //znajdowanie rekordu użytkownika

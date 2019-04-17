@@ -25,7 +25,6 @@ class CategoryAttributeWidgetForm extends \Cms\Form\AttributeForm
         $this->initAttributes('cmsCategoryWidget', $this->getOption('widgetId'), 'categoryWidgetRelation');
 
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('zapisz'));
+            ->setLabel('form.categoryAttributeWidgetForm.submit.label'));
     }
-
 }

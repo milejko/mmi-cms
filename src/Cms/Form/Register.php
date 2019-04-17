@@ -26,7 +26,7 @@ class Register extends \Mmi\Form\Form
 
         //nazwa użytkownika
         $this->addElement((new Element\Text('username'))
-            ->setLabel('nazwa użytkownika (nick)')
+            ->setLabel('form.register.username.label')
             ->setRequired()
             ->addValidator(new Validator\Alnum)
             ->addValidator(new Validator\RecordUnique([new CmsAuthQuery, 'username']))
@@ -35,7 +35,7 @@ class Register extends \Mmi\Form\Form
 
         //email
         $this->addElement((new Element\Text('email'))
-            ->setLabel('e-mail')
+            ->setLabel('form.register.email.label')
             ->setRequired()
             ->addValidator(new Validator\EmailAddress)
             ->addValidator(new Validator\RecordUnique([new CmsAuthQuery, 'email']))
@@ -44,22 +44,22 @@ class Register extends \Mmi\Form\Form
 
         //password
         $this->addElement((new Element\Password('password'))
-            ->setLabel('hasło')
+            ->setLabel('form.register.password.label')
             ->setRequired()
             ->addValidator(new Validator\StringLength([4, 64])));
 
         //potwierdzenie
         $this->addElement((new Element\Password('confirmPassword'))
-            ->setLabel('potwierdź hasło'));
+            ->setLabel('form.register.confirmPassword.label'));
 
         //regulamin
         $this->addElement((new Element\Checkbox('regulations'))
-            ->setLabel('Akceptuję regulamin')
+            ->setLabel('form.register.regulations.label')
             ->addValidator(new Validator\NotEmpty)
             ->setRequired());
 
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('Zarejestruj'));
+            ->setLabel('form.register.submit.label'));
     }
 
     /**
@@ -69,13 +69,13 @@ class Register extends \Mmi\Form\Form
     public function beforeSave()
     {
         if ($this->getElement('password')->getValue() != $this->getElement('confirmPassword')->getValue()) {
-            $this->getElement('confirmPassword')->addError('Hasła niezgodne');
+            $this->getElement('confirmPassword')->addError('form.register.confirmPassword.error');
             return false;
         }
         //opcja zmiany (w tym przypadku ustawienia nowego) hasłą
         $this->getRecord()->password = \Cms\Model\Auth::getSaltedPasswordHash($this->getElement('password')->getValue());
         //domyślny język
-        $this->getRecord()->lang = 'pl';
+        $this->getRecord()->lang = \App\Registry::$translate->getLocale();
         return true;
     }
 

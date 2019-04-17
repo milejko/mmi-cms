@@ -24,9 +24,9 @@
                         <div class="dropdown-header text-center">
                             <strong>{$auth->getUsername()}</strong>
                         </div>
-                        <a class="dropdown-item" href="{@module=cmsAdmin@}"><i class="fa fa-user"></i> Profil</a>
-                        <a class="dropdown-item" href="{@module=cmsAdmin&controller=index&action=password@}"><i class="fa fa-unlock-alt"></i> Zmiana hasła</a>
-                        <a class="dropdown-item" href="{@module=cmsAdmin&controller=index&action=logout@}"><i class="fa fa-lock"></i> Wyloguj</a>
+                        <a class="dropdown-item" href="{@module=cmsAdmin@}"><i class="fa fa-user"></i> {#template.layout.menu.profile#}</a>
+                        <a class="dropdown-item" href="{@module=cmsAdmin&controller=index&action=password@}"><i class="fa fa-unlock-alt"></i> {#template.layout.menu.password#}</a>
+                        <a class="dropdown-item" href="{@module=cmsAdmin&controller=index&action=logout@}"><i class="fa fa-lock"></i> {#template.layout.menu.logout#}</a>
                     </div>
                 </li>
             </ul>
@@ -54,7 +54,7 @@
     </div>
     {if $auth}
         <footer class="app-footer">
-            <a href="https://github.com/milejko/mmi-cms">{$domain}</a> &copy; {system_date('Y')}
+            <a href="{$baseUrl}/">{$domain}</a> &copy; {system_date('Y')}
             <span class="float-right">Powered by
                 <a href="https://github.com/milejko/mmi-cms">MMi CMS</a>
             </span>

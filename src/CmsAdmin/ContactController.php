@@ -39,7 +39,7 @@ class ContactController extends Mvc\Controller
     {
         $form = new \CmsAdmin\Form\Contact\Option(new \Cms\Orm\CmsContactOptionRecord($this->id));
         if ($form->isSaved()) {
-            $this->getMessenger()->addMessage('Poprawnie zapisano temat kontaktu', true);
+            $this->getMessenger()->addMessage('messenger.contact.subject.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'contact', 'subject');
         }
         $this->view->optionForm = $form;
@@ -52,7 +52,7 @@ class ContactController extends Mvc\Controller
     {
         $option = (new \Cms\Orm\CmsContactOptionQuery)->findPk($this->id);
         if ($option && $option->delete()) {
-            $this->getMessenger()->addMessage('Poprawnie usunięto temat', true);
+            $this->getMessenger()->addMessage('messenger.contact.subject.deleted', true);
         }
         $this->getResponse()->redirect('cmsAdmin', 'contact', 'subject');
     }
@@ -64,7 +64,7 @@ class ContactController extends Mvc\Controller
     {
         $contact = (new \Cms\Orm\CmsContactQuery)->findPk($this->id);
         if ($contact && $contact->delete()) {
-            $this->getMessenger()->addMessage('Poprawnie usunięto wiadomość', true);
+            $this->getMessenger()->addMessage('messenger.contact.message.deleted', true);
         }
         $this->getResponse()->redirect('cmsAdmin', 'contact');
     }
@@ -76,7 +76,7 @@ class ContactController extends Mvc\Controller
     {
         $form = new \CmsAdmin\Form\Contact(new \Cms\Orm\CmsContactRecord($this->id));
         if ($form->isSaved()) {
-            $this->getMessenger()->addMessage('Wysłano odpowiedź na wiadomość', true);
+            $this->getMessenger()->addMessage('messenger.contact.message.sent', true);
             $this->getResponse()->redirect('cmsAdmin', 'contact');
         }
         $this->view->contactForm = $form;

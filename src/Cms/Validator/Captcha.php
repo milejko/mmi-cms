@@ -23,7 +23,7 @@ class Captcha extends \Mmi\Validator\ValidatorAbstract
     /**
      * Komunikat błędnego kodu zabezpieczającego
      */
-    const INVALID = 'Przepisany kod jest niepoprawny';
+    const INVALID = 'validator.captcha.message';
 
     /**
      * Ustawia opcje

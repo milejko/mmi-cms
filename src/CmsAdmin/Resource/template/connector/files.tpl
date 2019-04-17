@@ -5,12 +5,11 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#Import plików#}</strong>
+                        <strong>{#template.connector.files.header#}</strong>
                     </div>
                     <div class="card-body">
                         {$form}
-                        {if $files}
-                        
+                        {if $files}                        
                         <div class="auto-download list-group" data-url="{$downloadUrl}">
                             {foreach $files as $name => $label}
                                 <a href="#" data-name="{$name}" class="list-group-item list-group-item-action">{$label}</a>

@@ -89,13 +89,13 @@ PLUPLOADCONF.settings.init = {
                     PLUPLOADCONF.editable(up, file);
                 }
             } else if (file.type.indexOf('image') >= 0) { //plik odtworzony z serwera - pobranie minaiturki
-                $.post(request.baseUrl + '/cmsAdmin/upload/thumbnail', {cmsFileId: file.cmsFileId}, 'json')
-                        .done(function (data) {
-                            if (data.result === 'OK' && data.url) {
-                                $('div#' + up.getOption('form_element_id') + ' li#' + file.id + ' div.plupload_file_dummy').html('<img src="' + data.url + '" alt="" />');
-                            }
-                        })
-                        .fail(function () {});
+                $.post(request.baseUrl + '/cmsAdmin/upload/thumbnail', { cmsFileId: file.cmsFileId }, 'json')
+                    .done(function (data) {
+                        if (data.result === 'OK' && data.url) {
+                            $('div#' + up.getOption('form_element_id') + ' li#' + file.id + ' div.plupload_file_dummy').html('<img src="' + data.url + '" alt="" />');
+                        }
+                    })
+                    .fail(function () { });
             }
         });
     },
@@ -130,18 +130,18 @@ PLUPLOADCONF.settings.init = {
                         title: 'Usunąć plik?',
                         buttons: {
                             'Usuń': function () {
-                                $.post(request.baseUrl + '/cmsAdmin/upload/delete', {cmsFileId: file.cmsFileId, object: up.getOption('form_object'), objectId: up.getOption('form_object_id'), afterDelete: up.getOption('after_delete')}, 'json')
-                                        .done(function (data) {
-                                            if (data.result === 'OK') {
-                                                $('div#' + up.getOption('form_element_id') + ' li#' + file.id).remove();
-                                                up.removeFile(file);
-                                            } else {
-                                                up.trigger("Error", {code: 178, message: 'Usunięcie pliku nie powiodło się'});
-                                            }
-                                        })
-                                        .fail(function () {
-                                            up.trigger("Error", {code: 178, message: 'Usunięcie pliku nie powiodło się'});
-                                        });
+                                $.post(request.baseUrl + '/cmsAdmin/upload/delete', { cmsFileId: file.cmsFileId, object: up.getOption('form_object'), objectId: up.getOption('form_object_id'), afterDelete: up.getOption('after_delete') }, 'json')
+                                    .done(function (data) {
+                                        if (data.result === 'OK') {
+                                            $('div#' + up.getOption('form_element_id') + ' li#' + file.id).remove();
+                                            up.removeFile(file);
+                                        } else {
+                                            up.trigger("Error", { code: 178, message: 'Usunięcie pliku nie powiodło się' });
+                                        }
+                                    })
+                                    .fail(function () {
+                                        up.trigger("Error", { code: 178, message: 'Usunięcie pliku nie powiodło się' });
+                                    });
                                 $(this).dialog('close');
                             },
                             'Anuluj': function () {
@@ -225,132 +225,132 @@ PLUPLOADCONF.settings.ready = function (event, args) {
             var editIcon = $(this);
             editIcon.removeClass('ui-icon-pencil').addClass('ui-icon-gear');
             //okienko edycji - pobieramy dane rekordu z bazy
-            $.post(request.baseUrl + '/cmsAdmin/upload/details', {cmsFileId: file.cmsFileId}, 'json')
-                    .done(function (data) {
-                        if (data.result === 'OK' && data.record) {
+            $.post(request.baseUrl + '/cmsAdmin/upload/details', { cmsFileId: file.cmsFileId }, 'json')
+                .done(function (data) {
+                    if (data.result === 'OK' && data.record) {
 
-                            //refresh background select
-                            if (args.up.getOption('preview')) {
-                                $.post(request.baseUrl + '/?module=commonAdmin&controller=widget&action=multimediaBackgroundJson', {idrecord: args.up.getOption('form_object_id')}, 'json')
-                                        .done(function (dane) {
-                                            var selBackground = $('#commonadmin-form-multimediaeditform-uploadMultimedia-background');
-                                            selBackground.empty();
-                                            $('<option>').val('').text('---').appendTo(selBackground);
-                                            $.each(dane.background, function (key, val) {
-                                                if (val.data) {
-                                                    $('<option>', {
-                                                        'data-image-url': val.data.data_image_url
-                                                    }).val(key).text(val.value).appendTo(selBackground);
-                                                }
-                                            });
-                                            selBackground.val(data.data['background']).change();
-                                        });
-                            }
-                            //przygotowujemy zawartość okienka edycji i pokazujemy go
-                            var edit = 'div#' + args.up.getOption('form_element_id') + '-edit';
-                            if (args.up.getOption('poster')) {
-                                $('#video').attr('src', data.data['urlFile']);
-                                $('#video').attr('poster', data.data['poster']);
-                                new VideoFrameExtractor().initialize({
-                                    input: '#poster',
-                                    video: '#video',
-                                    btn: '#frame-camera',
-                                    uploadInput:'#userPoster',
-                                    uploadBtn:'#frame-upload',
-                                    output: '#output',
-                                    dialog: '.ui-dialog'
+                        //refresh background select
+                        if (args.up.getOption('preview')) {
+                            $.post(request.baseUrl + '/?module=commonAdmin&controller=widget&action=multimediaBackgroundJson', { idrecord: args.up.getOption('form_object_id') }, 'json')
+                                .done(function (dane) {
+                                    var selBackground = $('#commonadmin-form-multimediaeditform-uploadMultimedia-background');
+                                    selBackground.empty();
+                                    $('<option>').val('').text('---').appendTo(selBackground);
+                                    $.each(dane.background, function (key, val) {
+                                        if (val.data) {
+                                            $('<option>', {
+                                                'data-image-url': val.data.data_image_url
+                                            }).val(key).text(val.value).appendTo(selBackground);
+                                        }
+                                    });
+                                    selBackground.val(data.data['background']).change();
                                 });
-                            }
-                            $(edit + ' > fieldset .imprint').each(function () {
-                                var fieldName = $(this).attr('name');
-                                if ($(this).attr('type') === 'checkbox') {
-                                    $(this).prop('checked', (parseInt(data.data[fieldName])) > 0 ? 'checked' : '');
-                                    return true;
-                                }
-                                if($(this).hasClass('tinymce')){
-                                    var editor = tinymce.get($(this).attr('id'));
-                                    if(editor){
-                                        if(!(data.data[fieldName])){
-                                            data.data[fieldName] = '';
-                                        }
-                                        editor.setContent(data.data[fieldName]);
-                                    }
-                                }
-                                $(this).val(data.data[fieldName]).change();
-                            });
-                            $(edit + ' input[name="original"]').val(data.record.original);
-                            $(edit + ' input[name="active"]').prop('checked', (parseInt(data.record.active) > 0) ? 'checked' : '');
-                            $(edit + ' input[name="sticky"]').prop('checked', (parseInt(data.record.sticky) > 0) ? 'checked' : '');
-                            $(edit + ' .dialog-error').hide().find('p').text('');
-                            window.scrollTo(0, 0);
-                            var editDialog = $(edit).dialog({
-                                resizable: false,
-                                width: 700,
-                                modal: true,
-                                closeText: 'Zamknij',
-                                title: 'Edycja opisu pliku: ' + file.name,
-                                dialogClass: 'ui-state-default',
-                                buttons: {
-                                    'Zapisz': function () {
-                                        //trigger odświeżający dane
-                                        tinymce.triggerSave();
-                                        $.post(request.baseUrl + '/cmsAdmin/upload/describe', {cmsFileId: file.cmsFileId, form: $(edit + ' input,' + edit + ' textarea,' + edit + ' select').serializeArray(), afterEdit: args.up.getOption('after_edit')}, 'json')
-                                                .done(function (data) {
-                                                    if (data.result === 'OK') {
-                                                        //pobranie i odtworzenie aktualnej listy z serwera
-                                                        args.up.setOption('refresh_current', true);
-                                                        PLUPLOADCONF.getCurrent(args.up);
-                                                        args.up.refresh();
-                                                        editDialog.dialog('close');
-                                                    } else {
-                                                        $(edit + ' .dialog-error p').text('Nie udało się zapisać zmian! Spróbuj ponownie!').parent().show();
-                                                    }
-                                                })
-                                                .fail(function () {
-                                                    $(edit + ' .dialog-error p').text('Nie udało się zapisać zmian! Spróbuj ponownie!').parent().show();
-                                                });
-                                    },
-                                    'Zastąp plik': function () {
-                                        args.up.setOption('replace_file', file);
-                                        args.up.getOption('that').plupload("enable");
-                                        setTimeout(function () {
-                                            $('div#' + args.up.getOption('form_element_id') + ' div.moxie-shim-html5 input[type=file]').trigger('click');
-                                        }, 500);
-                                    },
-                                    'Pobierz plik': function () {
-                                        window.open(request.baseUrl + '/cmsAdmin/upload/download?id=' + file.cmsFileId + '&object=' + args.up.getOption('form_object') + '&objectId=' + args.up.getOption('form_object_id'), '_blank');
-                                    },
-                                    'Anuluj': function () {
-                                        $(this).dialog('close');
-                                    }
-                                },
-                                open: function (event, ui) {
-                                    args.up.setOption('edit_dialog', $(this));
-                                    //inicjalizacja tinyMce
-                                    PLUPLOADCONF.initTinyMce(args.up);
-                                },
-                                close: function (event, ui) {
-                                    args.up.setOption('replace_file', null);
-                                    args.up.setOption('edit_dialog', null);
-                                    //maksymalna ilość plików możliwa do przesłania
-                                    var max = args.up.getOption('max_file_cnt');
-                                    if (max > 0) {
-                                        if (max - args.up.files.length <= 0) {
-                                            args.up.getOption('that').plupload("disable");
-                                        }
-                                    }
-                                }
-                            });
-                        } else {
-                            args.up.trigger("Error", {code: 185, message: 'Pobranie opisu pliku nie powiodło się! Spróbuj ponownie'});
                         }
-                    })
-                    .fail(function () {
-                        args.up.trigger("Error", {code: 185, message: 'Pobranie opisu pliku nie powiodło się! Spróbuj ponownie'});
-                    })
-                    .always(function () {
-                        editIcon.removeClass('ui-icon-gear').addClass('ui-icon-pencil');
-                    });
+                        //przygotowujemy zawartość okienka edycji i pokazujemy go
+                        var edit = 'div#' + args.up.getOption('form_element_id') + '-edit';
+                        if (args.up.getOption('poster')) {
+                            $('#video').attr('src', data.data['urlFile']);
+                            $('#video').attr('poster', data.data['poster']);
+                            new VideoFrameExtractor().initialize({
+                                input: '#poster',
+                                video: '#video',
+                                btn: '#frame-camera',
+                                uploadInput: '#userPoster',
+                                uploadBtn: '#frame-upload',
+                                output: '#output',
+                                dialog: '.ui-dialog'
+                            });
+                        }
+                        $(edit + ' > fieldset .imprint').each(function () {
+                            var fieldName = $(this).attr('name');
+                            if ($(this).attr('type') === 'checkbox') {
+                                $(this).prop('checked', (parseInt(data.data[fieldName])) > 0 ? 'checked' : '');
+                                return true;
+                            }
+                            if ($(this).hasClass('tinymce')) {
+                                var editor = tinymce.get($(this).attr('id'));
+                                if (editor) {
+                                    if (!(data.data[fieldName])) {
+                                        data.data[fieldName] = '';
+                                    }
+                                    editor.setContent(data.data[fieldName]);
+                                }
+                            }
+                            $(this).val(data.data[fieldName]).change();
+                        });
+                        $(edit + ' input[name="original"]').val(data.record.original);
+                        $(edit + ' input[name="active"]').prop('checked', (parseInt(data.record.active) > 0) ? 'checked' : '');
+                        $(edit + ' input[name="sticky"]').prop('checked', (parseInt(data.record.sticky) > 0) ? 'checked' : '');
+                        $(edit + ' .dialog-error').hide().find('p').text('');
+                        window.scrollTo(0, 0);
+                        var editDialog = $(edit).dialog({
+                            resizable: false,
+                            width: 700,
+                            modal: true,
+                            closeText: 'Zamknij',
+                            title: 'Edycja opisu pliku: ' + file.name,
+                            dialogClass: 'ui-state-default',
+                            buttons: {
+                                'Zapisz': function () {
+                                    //trigger odświeżający dane
+                                    tinymce.triggerSave();
+                                    $.post(request.baseUrl + '/cmsAdmin/upload/describe', { cmsFileId: file.cmsFileId, form: $(edit + ' input,' + edit + ' textarea,' + edit + ' select').serializeArray(), afterEdit: args.up.getOption('after_edit') }, 'json')
+                                        .done(function (data) {
+                                            if (data.result === 'OK') {
+                                                //pobranie i odtworzenie aktualnej listy z serwera
+                                                args.up.setOption('refresh_current', true);
+                                                PLUPLOADCONF.getCurrent(args.up);
+                                                args.up.refresh();
+                                                editDialog.dialog('close');
+                                            } else {
+                                                $(edit + ' .dialog-error p').text('Nie udało się zapisać zmian! Spróbuj ponownie!').parent().show();
+                                            }
+                                        })
+                                        .fail(function () {
+                                            $(edit + ' .dialog-error p').text('Nie udało się zapisać zmian! Spróbuj ponownie!').parent().show();
+                                        });
+                                },
+                                'Zastąp plik': function () {
+                                    args.up.setOption('replace_file', file);
+                                    args.up.getOption('that').plupload("enable");
+                                    setTimeout(function () {
+                                        $('div#' + args.up.getOption('form_element_id') + ' div.moxie-shim-html5 input[type=file]').trigger('click');
+                                    }, 500);
+                                },
+                                'Pobierz plik': function () {
+                                    window.open(request.baseUrl + '/cmsAdmin/upload/download?id=' + file.cmsFileId + '&object=' + args.up.getOption('form_object') + '&objectId=' + args.up.getOption('form_object_id'), '_blank');
+                                },
+                                'Anuluj': function () {
+                                    $(this).dialog('close');
+                                }
+                            },
+                            open: function (event, ui) {
+                                args.up.setOption('edit_dialog', $(this));
+                                //inicjalizacja tinyMce
+                                PLUPLOADCONF.initTinyMce(args.up);
+                            },
+                            close: function (event, ui) {
+                                args.up.setOption('replace_file', null);
+                                args.up.setOption('edit_dialog', null);
+                                //maksymalna ilość plików możliwa do przesłania
+                                var max = args.up.getOption('max_file_cnt');
+                                if (max > 0) {
+                                    if (max - args.up.files.length <= 0) {
+                                        args.up.getOption('that').plupload("disable");
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        args.up.trigger("Error", { code: 185, message: 'Pobranie opisu pliku nie powiodło się! Spróbuj ponownie' });
+                    }
+                })
+                .fail(function () {
+                    args.up.trigger("Error", { code: 185, message: 'Pobranie opisu pliku nie powiodło się! Spróbuj ponownie' });
+                })
+                .always(function () {
+                    editIcon.removeClass('ui-icon-gear').addClass('ui-icon-pencil');
+                });
         }
         return false;
     });
@@ -438,7 +438,7 @@ PLUPLOADCONF.parseResponse = function (up, file, info) {
         code = 111;
         message = "Wystąpił nieznany błąd";
     }
-    up.trigger("Error", {code: code, message: message, file: file});
+    up.trigger("Error", { code: code, message: message, file: file });
     return false;
 };
 
@@ -452,42 +452,42 @@ PLUPLOADCONF.getCurrent = function (up, pluploadObject) {
             return;
         }
     }
-    $.post(request.baseUrl + '/cmsAdmin/upload/current', {object: up.getOption('form_object'), objectId: up.getOption('form_object_id'), fileTypes: up.getOption('file_types')}, 'json')
-            .done(function (data) {
-                if (data.result === 'OK') {
-                    var i, cf;
-                    $.each(data.files, function (i, cf) {
-                        var file = new plupload.File({
-                            name: cf.original,
-                            size: parseInt(cf.size),
-                            origSize: parseInt(cf.size),
-                            type: cf.mimeType,
-                            loaded: 0,
-                            percent: 0,
-                            status: plupload.QUEUED
-                        });
-                        file.cmsFileId = cf.id;
-                        file.getSource = function () {
-                            return false;
-                        };
-                        up.addFile(file);
+    $.post(request.baseUrl + '/cmsAdmin/upload/current', { object: up.getOption('form_object'), objectId: up.getOption('form_object_id'), fileTypes: up.getOption('file_types') }, 'json')
+        .done(function (data) {
+            if (data.result === 'OK') {
+                var i, cf;
+                $.each(data.files, function (i, cf) {
+                    var file = new plupload.File({
+                        name: cf.original,
+                        size: parseInt(cf.size),
+                        origSize: parseInt(cf.size),
+                        type: cf.mimeType,
+                        loaded: 0,
+                        percent: 0,
+                        status: plupload.QUEUED
                     });
-                    plupload.each(up.files, function (file) {
-                        if (file.cmsFileId) {
-                            file.status = plupload.DONE;
-                            file.percent = 100;
-                            file.loaded = file.size;
-                            up.trigger("UploadProgress", {file: file});
-                        }
-                    });
-                    up.refresh();
-                } else {
-                    up.trigger("Error", {code: 177, message: 'Pobranie aktualnych plików nie powiodło się'});
-                }
-            })
-            .fail(function () {
-                up.trigger("Error", {code: 177, message: 'Pobranie aktualnych plików nie powiodło się'});
-            });
+                    file.cmsFileId = cf.id;
+                    file.getSource = function () {
+                        return false;
+                    };
+                    up.addFile(file);
+                });
+                plupload.each(up.files, function (file) {
+                    if (file.cmsFileId) {
+                        file.status = plupload.DONE;
+                        file.percent = 100;
+                        file.loaded = file.size;
+                        up.trigger("UploadProgress", { file: file });
+                    }
+                });
+                up.refresh();
+            } else {
+                up.trigger("Error", { code: 177, message: 'Pobranie aktualnych plików nie powiodło się' });
+            }
+        })
+        .fail(function () {
+            up.trigger("Error", { code: 177, message: 'Pobranie aktualnych plików nie powiodło się' });
+        });
 };
 
 PLUPLOADCONF.sortable = function (up) {
@@ -504,15 +504,15 @@ PLUPLOADCONF.sortable = function (up) {
                     files[files.length] = file.cmsFileId;
                 }
             });
-            $.post(request.baseUrl + '/cmsAdmin/upload/sort', {order: files}, 'json')
-                    .done(function (data) {
-                        if (data.result !== 'OK') {
-                            up.trigger("Error", {code: 180, message: 'Zapis kolejności plików nie powiódł się'});
-                        }
-                    })
-                    .fail(function () {
-                        up.trigger("Error", {code: 180, message: 'Zapis kolejności plików nie powiódł się'});
-                    });
+            $.post(request.baseUrl + '/cmsAdmin/upload/sort', { order: files }, 'json')
+                .done(function (data) {
+                    if (data.result !== 'OK') {
+                        up.trigger("Error", { code: 180, message: 'Zapis kolejności plików nie powiódł się' });
+                    }
+                })
+                .fail(function () {
+                    up.trigger("Error", { code: 180, message: 'Zapis kolejności plików nie powiódł się' });
+                });
         }
     });
     var enable = true;
@@ -536,7 +536,7 @@ PLUPLOADCONF.initTinyMce = function (up) {
     var selector = 'div#' + up.getOption('form_element_id') + '-edit textarea.plupload-edit-tinymce';
     tinymce.init({
         selector: selector,
-        language: 'pl',
+        language: request.locale,
         branding: false
     });
 };

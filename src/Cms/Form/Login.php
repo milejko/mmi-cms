@@ -21,15 +21,15 @@ class Login extends \Mmi\Form\Form
     public function init()
     {
         $this->addElement((new Element\Text('username'))
-            ->setLabel('Nazwa użytkownika')
+            ->setLabel('form.login.username.label')
             ->addFilter(new \Mmi\Filter\StringTrim));
 
         $this->addElement((new Element\Password('password'))
-            ->setLabel('Hasło')
+            ->setLabel('form.login.password.label')
             ->addFilter(new \Mmi\Filter\StringTrim));
 
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('Zaloguj się'));
+            ->setLabel('form.login.submit.label'));
     }
 
     /**

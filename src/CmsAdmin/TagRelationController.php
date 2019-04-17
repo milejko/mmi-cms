@@ -31,7 +31,7 @@ class TagRelationController extends Mvc\Controller
     {
         $form = new \CmsAdmin\Form\TagRelation(new \Cms\Orm\CmsTagRelationRecord($this->id));
         if ($form->isSaved()) {
-            $this->getMessenger()->addMessage('Powiązanie tagu zapisane poprawnie', true);
+            $this->getMessenger()->addMessage('messenger.tagRelation.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'tagRelation', 'index');
         }
         $this->view->tagRelationForm = $form;
@@ -44,7 +44,7 @@ class TagRelationController extends Mvc\Controller
     {
         $tagRel = (new \Cms\Orm\CmsTagRelationQuery)->findPk($this->id);
         if ($tagRel && $tagRel->delete()) {
-            $this->getMessenger()->addMessage('Powiązanie tagu usunięte', true);
+            $this->getMessenger()->addMessage('messenger.tagRelation.deleted', true);
         }
         $this->getResponse()->redirect('cmsAdmin', 'tagRelation', 'index');
     }

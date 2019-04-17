@@ -26,11 +26,11 @@ class CategoryTypeGrid extends \CmsAdmin\Grid\Grid
 
         //nazwa typu
         $this->addColumn((new Column\TextColumn('name'))
-            ->setLabel('nazwa'));
+            ->setLabel('grid.categoryType.name.label'));
 
         //klucz
         $this->addColumn((new Column\TextColumn('key'))
-            ->setLabel('klucz'));
+            ->setLabel('grid.categoryType.key.label'));
 
         //operacje
         $this->addColumn(new Column\OperationColumn);

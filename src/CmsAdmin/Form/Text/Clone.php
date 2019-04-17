@@ -30,12 +30,12 @@ class Copy extends \Mmi\Form\Form
 
         //źródło
         $this->addElement((new Element\Select('source'))
-            ->setLabel('Wybierz język źródłowy')
-            ->setDescription('Brakujące klucze w bieżącym języku zostaną utworzone, wartości zostaną uzupełnione wartościami z języka źródłowego')
+            ->setLabel('form.text.copy.source.label')
+            ->setDescription('form.text.copy.source.description')
             ->setMultioptions($langMultioptions));
 
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('klonuj teksty'));
+            ->setLabel('form.text.copy.submit.label'));
     }
 
     /**

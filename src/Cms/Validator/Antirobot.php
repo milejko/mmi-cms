@@ -21,7 +21,7 @@ class Antirobot extends \Mmi\Validator\ValidatorAbstract
     /**
      * Komunikat błędnego kodu zabezpieczającego
      */
-    const INVALID = 'Kod zabezpieczenia niepoprawny';
+    const INVALID = 'validator.antirobot.message';
 
     /**
      * Waliduje poprawność captcha

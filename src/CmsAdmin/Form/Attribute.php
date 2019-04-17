@@ -25,28 +25,28 @@ class Attribute extends \Cms\Form\Form
 
         //nazwa
         $this->addElement((new Element\Text('name'))
-            ->setLabel('nazwa')
+            ->setLabel('form.attribute.name.label')
             ->setRequired()
             ->addFilter(new Filter\StringTrim)
             ->addValidator(new Validator\StringLength([2, 128])));
 
         //klucz pola
         $this->addElement((new Element\Text('key'))
-            ->setLabel('klucz')
+            ->setLabel('form.attribute.key.label')
             ->addFilter(new Filter\Ascii([]))
             ->setRequired()
-            ->addValidator((new Validator\Alnum)->setMessage('klucz może zawierać wyłącznie litery i cyfry'))
+            ->addValidator((new Validator\Alnum)->setMessage('form.attribute.key.validator'))
             ->addValidator(new Validator\StringLength([2, 64]))
             ->addValidator(new Validator\RecordUnique([new \Cms\Orm\CmsAttributeQuery, 'key', $this->getRecord()->id])));
 
         //opis
         $this->addElement((new Element\Text('description'))
-            ->setLabel('opis')
+            ->setLabel('form.attribute.description.label')
             ->addFilter(new Filter\StringTrim));
 
         //pole formularza
         $this->addElement((new Element\Select('cmsAttributeTypeId'))
-            ->setLabel('pole formularza')
+            ->setLabel('form.attribute.cmsAttributeTypeId.label')
             ->setRequired()
             ->addValidator(new Validator\NotEmpty)
             ->setMultioptions((new \Cms\Orm\CmsAttributeTypeQuery)
@@ -55,11 +55,11 @@ class Attribute extends \Cms\Form\Form
 
         //opcje pola formularz
         $this->addElement((new Element\Textarea('fieldOptions'))
-            ->setLabel('opcje pola'));
+            ->setLabel('form.attribute.fieldOptions.label'));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('zapisz atrybut'));
+            ->setLabel('form.attribute.submit.label'));
     }
 
 }

@@ -4,7 +4,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{if !$request->id}{#Dodawanie#}{else}{#Edycja#}{/if} {#tematu kontaktu#}</strong>
+                        <strong>{if !$request->id}{#template.contact.editSubject.header.new#}{else}{#template.contact.editSubject.header.edit#}{/if}</strong>
                     </div>
                     <div class="card-body">
                         {$optionForm}

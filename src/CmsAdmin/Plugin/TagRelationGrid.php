@@ -28,15 +28,15 @@ class TagRelationGrid extends \CmsAdmin\Grid\Grid
 
         //nazwa taga
         $this->addColumn((new Column\TextColumn('cms_tag.tag'))
-            ->setLabel('tag'));
+            ->setLabel('grid.tagRelation.cms_tag.tag.label'));
 
         //obiekt
         $this->addColumn((new Column\TextColumn('object'))
-            ->setLabel('zasób'));
+            ->setLabel('grid.tagRelation.object.label'));
 
         //id obiektu
         $this->addColumn((new Column\TextColumn('objectId'))
-            ->setLabel('ID zasobu'));
+            ->setLabel('grid.tagRelation.objectId.label'));
 
         //operacje
         $this->addColumn(new Column\OperationColumn);

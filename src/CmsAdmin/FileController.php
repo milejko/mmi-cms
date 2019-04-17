@@ -33,7 +33,7 @@ class FileController extends Mvc\Controller
     {
         $file = (new CmsFileQuery)->findPk($this->id);
         if ($file && $file->delete()) {
-            $this->getMessenger()->addMessage('Poprawnie usunięto plik', true);
+            $this->getMessenger()->addMessage('messenger.file.deleted', true);
         }
         $this->getResponse()->redirect('cmsAdmin', 'file', 'index');
     }

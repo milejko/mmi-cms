@@ -26,11 +26,11 @@ class CategoryAddWidget extends \Cms\Form\Form
             ->setMultioptions((new \Cms\Orm\CmsCategoryWidgetQuery)
                 ->orderAscName()
                 ->findPairs('id', 'name'))
-            ->setLabel('dostępne widgety'));
+            ->setLabel('form.categoryAddWidget.cmsWidgetId.label'));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))
-            ->setLabel('dodaj widget'));
+            ->setLabel('form.categoryAddWidget.submit.label'));
     }
 
 }
