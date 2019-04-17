@@ -11,8 +11,6 @@ CMS.grid = function () {
     var quickSwitch = function (data, gridId) {
         $('#' + gridId).html(data.body);
         $('#' + gridId + '-paginator').html(data.paginator);
-        //$('.grid-anchor').html(data.body);
-        //$('.paginator-anchor').html(data.paginator);
         initPicker();
     };
 
