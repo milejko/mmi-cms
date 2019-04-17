@@ -8,15 +8,11 @@ CMS.grid = function () {
         inputBuffer,
         filtering = false;
 
-    var quickSwitch = function (data, parent = null) {
-        if (parent === null) {
-            $('.grid-anchor').html(data.body);
-            $('.paginator-anchor').html(data.paginator);
-        } else {
-            parent.find('.grid-anchor').html(data.body);
-            parent.find('.paginator-anchor').html(data.paginator);
-        }
-        initGridSelect();
+    var quickSwitch = function (data, gridId) {
+        $('#' + gridId).html(data.body);
+        $('#' + gridId + '-paginator').html(data.paginator);
+        //$('.grid-anchor').html(data.body);
+        //$('.paginator-anchor').html(data.paginator);
         initPicker();
     };
 
@@ -41,7 +37,7 @@ CMS.grid = function () {
             type: 'POST',
             data: { filter: filter, value: value },
             success: function (data) {
-                quickSwitch(data, field.closest("table").parent());
+                quickSwitch(data, field.closest('table').attr('id'));
                 if (!inputName) {
                     filtering = false;
                     return;
@@ -63,13 +59,14 @@ CMS.grid = function () {
     var initPaginator = function () {
         $('div.grid').on('click', ".page-link", function (event) {
             var filter = $(this).parent('li').parent('ul').data('name'),
-                value = $(this).data('page');
+                value = $(this).data('page'),
+                gridId = $(this).parent('li').parent('ul').parent('div').parent('div.row').parent('div.grid').find('div.row > div > table.grid-anchor').attr('id');
             $.ajax({
                 url: window.location,
                 type: 'POST',
                 data: { filter: filter, value: value },
                 success: function (data) {
-                    quickSwitch(data);
+                    quickSwitch(data, gridId);
                 }
             });
         });
@@ -109,15 +106,14 @@ CMS.grid = function () {
         //sortowanie grida
         $('div.grid').on('click', 'th > div.form-group > a.order', function () {
             var field = $(this).attr('href'),
-                method = $(this).attr('data-method');
+                method = $(this).attr('data-method'),
+                gridId = $(this).parent('div').parent('th').parent('tr').parent('thead').parent('table').attr('id');
             $.ajax({
                 url: window.location,
                 type: 'POST',
                 data: { order: field, method: method },
                 success: function (data) {
-                    quickSwitch(data);
-                    initGridSortable();
-                    initGridSelect();
+                    quickSwitch(data, gridId);
                 }
             });
             return false;
@@ -136,37 +132,8 @@ CMS.grid = function () {
         });
     };
 
-    var initGridSortable = function () {
-        if ($('table.table-sort').length > 0 && $('table.table-sort').attr('data-sort-url')) {
-            $('table.table-sort tbody').sortable({
-                items: "> tr",
-                handle: '.sort-row',
-                axis: 'y',
-                update: function (event, ui) {
-                    var orderDirection = 'desc';
-                    if ($('table.table-sort a[href$="[order]"]').attr('data-method') === 'orderAsc') {
-                        orderDirection = 'asc';
-                    }
-                    $.post(request.baseUrl + "/?" + $('table.table-sort').attr('data-sort-url'), { order: orderDirection, value: $(this).sortable('toArray', { attribute: "data-id" }) },
-                        function (result) {
-                            if (result) {
-                                alert(result);
-                            }
-                        });
-                }
-            });
-            $('table.table-sort tbody').disableSelection();
-        }
-    };
-
-    var initGridSelect = function () {
-        $('div.grid select[data-chosen="true"]').chosen({ disable_search_threshold: 10 });
-    }
-
     initGridFilter();
     initGridOrder();
-    initGridSortable();
-    initGridSelect();
     initGridOperation();
     initPaginator();
     initPicker();
