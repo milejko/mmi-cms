@@ -48,8 +48,8 @@
                     <div class="tab-pane" id="settings" role="tabpanel" aria-expanded="true">
                         {$categoryForm->getElement('cmsCategoryTypeId')}
                         {$categoryForm->getElement('cmsCategoryTypeChanged')}
-                        {if $duplicateAlert}<span class="red">{#template.category.edit.duplicate.alert#}</span>{/if}
                         {$categoryForm->getElement('name')}
+                        {if $duplicateAlert}<div class="em">{#template.category.edit.duplicate.alert#}<br /><br /></div>{/if}
                         {$categoryForm->getElement('dateStart')}
                         {$categoryForm->getElement('dateEnd')}
                         {$categoryForm->getElement('cacheLifetime')}

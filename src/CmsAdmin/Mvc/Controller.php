@@ -36,5 +36,4 @@ abstract class Controller extends \Mmi\Mvc\Controller
             ->findPk(\App\Registry::$auth->getId())
             ->lang;
     }
-
 }
