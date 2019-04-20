@@ -152,10 +152,10 @@ class CategoryController extends Mvc\Controller
                 'id' => $cat->id,
                 'icon' => $icon,
                 'disabled' => $disabled,
-                'message' => 'Strona została utworzona'
+                'message' => $this->view->_('controller.category.create.message')
             ]);
         }
-        return json_encode(['status' => false, 'error' => 'Nie udało się utworzyć strony']);
+        return json_encode(['status' => false, 'error' => $this->view->_('controller.category.create.error')]);
     }
 
     /**
@@ -166,18 +166,15 @@ class CategoryController extends Mvc\Controller
         $this->getResponse()->setTypeJson();
         if (null !== $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
             $name = trim($this->getPost()->name);
-            if (mb_strlen($name) < 2) {
-                return json_encode(['status' => false, 'error' => 'Nazwa strony jest zbyt krótka - wymagane minimum to 2 znaki']);
-            }
-            if (mb_strlen($name) > 64) {
-                return json_encode(['status' => false, 'error' => 'Nazwa strony jest zbyt długa - maksimum to 64 znaki']);
+            if (mb_strlen($name) < 2 || mb_strlen($name) > 64) {
+                return json_encode(['status' => false, 'error' => $this->view->_('controller.category.rename.validator')]);
             }
             $cat->name = $name;
-            if ($cat->save() !== false) {
-                return json_encode(['status' => true, 'id' => $cat->id, 'name' => $name, 'message' => 'Nazwa strony została zmieniona']);
+            if ($cat->save()) {
+                return json_encode(['status' => true, 'id' => $cat->id, 'name' => $name, 'message' => $this->view->_('controller.category.rename.message')]);
             }
         }
-        return json_encode(['status' => false, 'error' => 'Nie udało się zmienić nazwy strony']);
+        return json_encode(['status' => false, 'error' => $this->view->_('controller.category.rename.error')]);
     }
 
     /**
@@ -188,7 +185,7 @@ class CategoryController extends Mvc\Controller
         $this->getResponse()->setTypeJson();
         //brak kategorii
         if (null === $masterCategory = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
-            return json_encode(['status' => false, 'error' => 'Brak strony']);
+            return json_encode(['status' => false, 'error' => $this->view->_('controller.category.move.error.missing')]);
         }
         //domyślnie nie ma drafta - alias
         $draft = $masterCategory;
@@ -201,7 +198,7 @@ class CategoryController extends Mvc\Controller
         $draft->parentId = ($this->getPost()->parentId > 0) ? $this->getPost()->parentId : null;
         $draft->order = $this->getPost()->order;
         //próba zapisu
-        return ($draft->save() && $draft->commitVersion()) ? json_encode(['status' => true, 'id' => $masterCategory->id, 'message' => 'Strona została przeniesiona']) : json_encode(['status' => false, 'error' => 'Nie udało się przenieść strony']);
+        return ($draft->save() && $draft->commitVersion()) ? json_encode(['status' => true, 'id' => $masterCategory->id, 'message' => $this->view->_('controller.category.move.message')]) : json_encode(['status' => false, 'error' => $this->view->_('controller.category.move.error')]);
     }
 
     /**
@@ -213,16 +210,16 @@ class CategoryController extends Mvc\Controller
         $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id);
         //ma historię, nie możemy usunąć
         if ($cat->hasHistoricalEntries()) {
-            return json_encode(['status' => false, 'error' => 'Strona nie może być usunięta, gdyż posiada wersje archiwalne']);
+            return json_encode(['status' => false, 'error' => $this->view->_('controller.category.delete.error.history')]);
         }
         try {
             if ($cat && $cat->delete()) {
-                return json_encode(['status' => true, 'message' => 'Strona została usunięta']);
+                return json_encode(['status' => true, 'message' => $this->view->_('controller.category.delete.message')]);
             }
         } catch (\Cms\Exception\ChildrenExistException $e) {
-            return json_encode(['status' => false, 'error' => 'Nie można usunąć strony zawierającej strony podrzędne']);
+            return json_encode(['status' => false, 'error' => $this->view->_('controller.category.delete.error.children')]);
         }
-        return json_encode(['status' => false, 'error' => 'Nie udało się usunąć strony']);
+        return json_encode(['status' => false, 'error' => $this->view->_('controller.category.delete.error')]);
     }
 
     /**
