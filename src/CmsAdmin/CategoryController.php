@@ -235,9 +235,9 @@ class CategoryController extends Mvc\Controller
         $copyModel = new \Cms\Model\CategoryCopy($category);
         //kopiowanie z transakcją
         if ($copyModel->copyWithTransaction()) {
-            return json_encode(['status' => true, 'id' => $copyModel->getCopyRecord()->id, 'message' => 'Strona została skopiowana']);
+            return json_encode(['status' => true, 'id' => $copyModel->getCopyRecord()->id, 'message' => $this->view->_('controller.category.copy.message')]);
         }
-        return json_encode(['status' => false, 'error' => 'Nie udało się skopiować strony']);
+        return json_encode(['status' => false, 'error' => $this->view->_('controller.category.copy.error')]);
     }
 
     /**
