@@ -164,12 +164,7 @@ class CmsFrontControllerPlugin extends \Mmi\App\FrontControllerPluginAbstract
         }
         //ustawienie języka edycji
         $session = new \Mmi\Session\SessionSpace('cms-language');
-        $lang = in_array($session->lang, \App\Registry::$config->languages) ? $session->lang : null;
-        //brak zdefiniowanego języka, przy czym istnieje język domyślny
-        if (null === $lang && isset(\App\Registry::$config->languages[0])) {
-            $lang = \App\Registry::$config->languages[0];
-        }
+        $lang = in_array($session->lang, \App\Registry::$config->languages) ? $session->lang : \App\Registry::$config->languages[0];
         \App\Registry::$translate->setLocale($lang);
     }
-
 }

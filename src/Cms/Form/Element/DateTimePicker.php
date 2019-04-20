@@ -113,7 +113,7 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract
 						}
 					}
 					});
-				$.datetimepicker.setLocale(request.lang);
+				$.datetimepicker.setLocale(request.locale);
 			});
         ");
         //@TODO: get locale from view
@@ -139,5 +139,4 @@ class DateTimePicker extends \Mmi\Form\Element\ElementAbstract
         }
         return date($this->getFormat(), strtotime($clearDate));
     }
-
 }

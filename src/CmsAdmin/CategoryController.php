@@ -19,9 +19,9 @@ class CategoryController extends Mvc\Controller
 {
 
     //prefiks przestrzeni nazw w sesji
-    CONST SESSION_SPACE_PREFIX = 'category-edit-';
+    const SESSION_SPACE_PREFIX = 'category-edit-';
     //parametry edycja kategorii
-    CONST EDIT_MVC_PARAMS = 'cmsAdmin/category/edit';
+    const EDIT_MVC_PARAMS = 'cmsAdmin/category/edit';
 
     /**
      * Lista stron CMS - prezentacja w formie grida
@@ -100,17 +100,13 @@ class CategoryController extends Mvc\Controller
      * Akcja zarządzania drzewem
      */
     public function treeAction()
-    {
-
-    }
+    { }
 
     /**
      * Akcja podglądu widgeta
      */
     public function widgetAction()
-    {
-
-    }
+    { }
 
     /**
      * Renderowanie fragmentu drzewa stron na podstawie parentId
@@ -205,8 +201,7 @@ class CategoryController extends Mvc\Controller
         $draft->parentId = ($this->getPost()->parentId > 0) ? $this->getPost()->parentId : null;
         $draft->order = $this->getPost()->order;
         //próba zapisu
-        return ($draft->save() && $draft->commitVersion()) ? json_encode(['status' => true, 'id' => $masterCategory->id, 'message' => 'Strona została przeniesiona']) :
-            json_encode(['status' => false, 'error' => 'Nie udało się przenieść strony']);
+        return ($draft->save() && $draft->commitVersion()) ? json_encode(['status' => true, 'id' => $masterCategory->id, 'message' => 'Strona została przeniesiona']) : json_encode(['status' => false, 'error' => 'Nie udało się przenieść strony']);
     }
 
     /**
@@ -258,11 +253,11 @@ class CategoryController extends Mvc\Controller
         $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($originalId);
         //znaleziono kategorię o tym samym uri
         return (null !== (new \Cms\Orm\CmsCategoryQuery)
-                ->whereId()->notEquals($category->id)
-                ->andFieldRedirectUri()->equals(null)
-                ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
-                ->andQuery((new \Cms\Orm\CmsCategoryQuery)->searchByUri($category->uri))
-                ->findFirst()) && !$category->redirectUri;
+            ->whereId()->notEquals($category->id)
+            ->andFieldRedirectUri()->equals(null)
+            ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
+            ->andQuery((new \Cms\Orm\CmsCategoryQuery)->searchByUri($category->uri))
+            ->findFirst()) && !$category->redirectUri && !$category->customUri;
     }
 
     private function _prepareDraft(\Cms\Orm\CmsCategoryRecord $category, $originalId)
@@ -335,5 +330,4 @@ class CategoryController extends Mvc\Controller
         $space = new \Mmi\Session\SessionSpace(self::SESSION_SPACE_PREFIX . $id);
         $space->referer = $referer;
     }
-
 }
