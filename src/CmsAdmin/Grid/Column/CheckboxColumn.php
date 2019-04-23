@@ -46,8 +46,8 @@ class CheckboxColumn extends SelectColumn
     {
         $view = FrontController::getInstance()->getView();
         $this->setMultioptions([
-            0 => $view->_('grid.shared.checkbox.on'),
-            1 => $view->_('grid.shared.checkbox.off'),
+            1 => $view->_('grid.shared.checkbox.on'),
+            0 => $view->_('grid.shared.checkbox.off'),
         ]);
         parent::__construct($name);
     }
@@ -109,5 +109,4 @@ class CheckboxColumn extends SelectColumn
         }
         return $checked;
     }
-
 }

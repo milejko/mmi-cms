@@ -178,5 +178,4 @@ class OperationColumn extends ColumnAbstract
         }
         return $parsedParams;
     }
-
 }

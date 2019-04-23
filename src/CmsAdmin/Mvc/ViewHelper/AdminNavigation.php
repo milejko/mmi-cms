@@ -50,17 +50,13 @@ class AdminNavigation extends \Mmi\Mvc\ViewHelper\Navigation
             $i++;
             $breadcrumb['label'] = isset($breadcrumb['label']) ? \App\Registry::$translate->_($breadcrumb['label']) : '';
             //dodawanie breadcrumbów (ostatni nie ma linku)
-            $breadcrumbs[] = ('<li class="breadcrumb-item"><a href="' . $breadcrumb['uri'] . '">' . strip_tags(\App\Registry::$translate->_($breadcrumb['label'])) . '</a></li>');
+            $breadcrumbs[] = ('<li class="breadcrumb-item"><a href="' . $breadcrumb['uri'] . '">' . strip_tags($breadcrumb['label']) . '</a></li>');
             //liść wyłączony (poza ostatnim)
             if (($i != 1) && $breadcrumb['disabled']) {
                 continue;
             }
             //dodawanie tytułu
-            $title[] = isset($breadcrumb['title']) ? strip_tags(\App\Registry::$translate->_($breadcrumb['title'])) : strip_tags(\App\Registry::$translate->_($breadcrumb['label']));
-            //dodawanie opisów
-            if (isset($breadcrumb['description'])) {
-                $descriptions[] = strip_tags(\App\Registry::$translate->_($breadcrumb['description']));
-            }
+            $title[] = isset($breadcrumb['title']) ? strip_tags($breadcrumb['title']) : strip_tags($breadcrumb['label']);
             //ustawiony jest tytuł - nie łączymy z poprzednikami
             if (isset($breadcrumb['title'])) {
                 break;
@@ -68,7 +64,6 @@ class AdminNavigation extends \Mmi\Mvc\ViewHelper\Navigation
         }
         //ustawianie pól
         return $this->setTitle(trim(implode($this->_metaSeparator, $title)))
-            ->setDescription(trim(implode($this->_metaSeparator, $descriptions)))
             //breadcrumby muszą zostać odwrócone
             ->setBreadcrumbs(trim(implode($this->_separator, array_reverse($breadcrumbs))));
     }
