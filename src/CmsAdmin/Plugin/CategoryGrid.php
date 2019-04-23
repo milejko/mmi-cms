@@ -48,7 +48,7 @@ class CategoryGrid extends \CmsAdmin\Grid\Grid
 
         //operacje
         $this->addColumn((new Column\CustomColumn('operation'))
-            ->setLabel('<div style="width: 55px;color: #20a8d8; text-align: center;"><i class="fa fa-2 fa-gears"></i></div>')
+            ->setLabel('grid.shared.operation.label')
             ->setTemplateCode('{$id = $record->id}{if categoryAclAllowed($id)}<a href="{@module=cmsAdmin&controller=category&action=edit&id={$id}@}" id="category-edit-{$id}"><i class="fa fa-2 fa-edit"></i></a>{else}-{/if}')
         );
             

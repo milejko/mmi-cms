@@ -11,6 +11,7 @@
 namespace CmsAdmin\Plugin;
 
 use CmsAdmin\Grid\Column;
+use Cms\Model\CacheOptions;
 
 /**
  * Grid widgetów
@@ -48,7 +49,7 @@ class CategoryWidgetGrid extends \CmsAdmin\Grid\Grid
         //długość bufora
         $this->addColumn((new Column\SelectColumn('cacheLifetime'))
             ->setLabel('grid.categoryWidget.cacheLifetime.label')
-            ->setMultioptions(\Cms\Orm\CmsCategoryWidgetRecord::CACHE_LIFETIMES));
+            ->setMultioptions(CacheOptions::LIFETIMES));
 
         //operacje
         $this->addColumn(new Column\OperationColumn);

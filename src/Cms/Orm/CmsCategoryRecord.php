@@ -13,8 +13,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
 
     //domyślna długość bufora
     const DEFAULT_CACHE_LIFETIME = 2592000;
-    //interwały buforów
-    const CACHE_LIFETIMES = [2592000 => 'po zmianie', 0 => 'zawsze', 60 => 'co minutę', 300 => 'co 5 minut', 600 => 'co 10 minut', 3600 => 'co godzinę', 28800 => 'co 8 godzin', 86400 => 'raz na dobę'];
 
     /**
      * Identyfikator

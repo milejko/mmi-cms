@@ -13,6 +13,7 @@ namespace CmsAdmin\Form;
 use Cms\Form\Element;
 use Mmi\Validator;
 use Mmi\Filter;
+use Cms\Model\CacheOptions;
 
 /**
  * Formularz edycji szegółów kategorii
@@ -53,7 +54,7 @@ class Category extends \Cms\Form\AttributeForm
                 //ustawienie bufora
                 $this->addElement((new Element\Select('cacheLifetime'))
                         ->setLabel('form.category.cacheLifetime.label')
-                        ->setMultioptions([null => 'form.category.cacheLifetime.default'] + \Cms\Orm\CmsCategoryRecord::CACHE_LIFETIMES)
+                        ->setMultioptions([null => 'form.category.cacheLifetime.default'] + CacheOptions::LIFETIMES)
                         ->addFilter(new Filter\EmptyStringToNull));
 
                 //aktywna
@@ -117,7 +118,7 @@ class Category extends \Cms\Form\AttributeForm
                 $this->addElement((new Element\Select('https'))
                         ->setMultioptions([null => 'form.category.https.option.default', '0' => 'form.category.https.option.nossl', 1 => 'form.category.https.option.ssl'])
                         ->addFilter(new Filter\EmptyToNull)
-                        ->setLabel('https'));
+                        ->setLabel('form.category.https.label'));
 
                 //blank
                 $this->addElement((new Element\Checkbox('blank'))

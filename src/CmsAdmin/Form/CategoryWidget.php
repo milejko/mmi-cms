@@ -10,9 +10,10 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element,
-    Mmi\Validator,
-    Mmi\Filter;
+use Cms\Form\Element;
+use Mmi\Validator;
+use Mmi\Filter;
+use Cms\Model\CacheOptions;
 
 /**
  * Formularz edycji widgetu kategorii
@@ -56,7 +57,7 @@ class CategoryWidget extends \Cms\Form\Form
         //ustawienie bufora
         $this->addElement((new Element\Select('cacheLifetime'))
             ->setLabel('form.categoryWidget.cacheLifetime.label')
-            ->setMultioptions(\Cms\Orm\CmsCategoryWidgetRecord::CACHE_LIFETIMES)
+            ->setMultioptions(CacheOptions::LIFETIMES)
             ->setValue(\Cms\Orm\CmsCategoryWidgetRecord::DEFAULT_CACHE_LIFETIME));
 
         //zapis

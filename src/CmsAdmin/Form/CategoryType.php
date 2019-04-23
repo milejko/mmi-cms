@@ -10,9 +10,10 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element,
-    Mmi\Validator,
-    Mmi\Filter;
+use Cms\Form\Element;
+use Mmi\Validator;
+use Mmi\Filter;
+use Cms\Model\CacheOptions;
 
 /**
  * Formularz typu kategorii
@@ -41,7 +42,7 @@ class CategoryType extends \Cms\Form\Form
         //ustawienie bufora
         $this->addElement((new Element\Select('cacheLifetime'))
             ->setLabel('form.categoryType.cacheLifetime.label')
-            ->setMultioptions(\Cms\Orm\CmsCategoryRecord::CACHE_LIFETIMES)
+            ->setMultioptions(CacheOptions::LIFETIMES)
             ->setValue(\Cms\Orm\CmsCategoryRecord::DEFAULT_CACHE_LIFETIME)
             ->addFilter(new Filter\EmptyToNull));
 
