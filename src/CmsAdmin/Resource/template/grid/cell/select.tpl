@@ -1,5 +1,5 @@
 {if $_column->isFieldInRecord()}
-    {$_value}
+    {_($_value)}
 {else}
     ?
 {/if}
