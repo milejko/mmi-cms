@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#template.mailServer.index.headery#}</strong>
+                        <strong>{#template.mailServer.index.header#}</strong>
                     </div>
                     <div class="card-body">
                         {$grid}
