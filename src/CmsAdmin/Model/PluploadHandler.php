@@ -284,11 +284,11 @@ class PluploadHandler
     private function _setResponseHeaders()
     {
         $this->_response->setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT", true)
-                        ->setHeader("Last-Modified", gmdate("D, d M Y H:i:s") . " GMT", true)
-                        ->setHeader("Cache-Control", "no-store, no-cache, must-revalidate", true)
-                        ->setHeader("Cache-Control", "post-check=0, pre-check=0", false)
-                        ->setHeader("Pragma", "no-cache", true)
-                        ->sendHeaders();
+            ->setHeader("Last-Modified", gmdate("D, d M Y H:i:s") . " GMT", true)
+            ->setHeader("Cache-Control", "no-store, no-cache, must-revalidate", true)
+            ->setHeader("Cache-Control", "post-check=0, pre-check=0", false)
+            ->setHeader("Pragma", "no-cache", true)
+            ->sendHeaders();
     }
 
     /**
@@ -375,15 +375,16 @@ class PluploadHandler
      */
     private function _multipart()
     {
-        $files = $this->_request->getFiles()->toArray();
-        if (!isset($files['file']) || empty($files['file'])) {
+        $files = $this->_request->getFiles()->getAsArray();
+        //brak dodanego pliku (part'a)
+        if (!isset($files['file']) || !isset($files['file'][0])) {
             $this->_setError(PLUPLOAD_INPUT_ERR);
             return false;
         }
-        $file = reset($files['file']);
+        $file = $files['file'][0];
         /* @var $file \Mmi\Http\RequestFile */
-        if (reset($file)->tmpName && is_uploaded_file(reset($file)->tmpName)) {
-            if (!$this->_readWrite(reset($file)->tmpName, true)) {
+        if ($file->tmpName && is_uploaded_file($file->tmpName)) {
+            if (!$this->_readWrite($file->tmpName, true)) {
                 return false;
             }
         } else {
@@ -572,5 +573,4 @@ class PluploadHandler
         @unlink($this->_filePath);
         return $result;
     }
-
 }
