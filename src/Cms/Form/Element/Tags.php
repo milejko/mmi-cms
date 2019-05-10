@@ -19,15 +19,15 @@ class Tags extends Select
 {
 
     //szablon początku pola
-    CONST TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
     //szablon opisu
-    CONST TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
     //szablon końca pola
-    CONST TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
     //szablon błędów
-    CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
-    CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
     /**
      * Konstruktor
@@ -70,7 +70,7 @@ class Tags extends Select
         }
         //ustawianie wartości
         $this->setValue((new TagRelationModel($this->getOption('object') ? $this->getOption('object') : $this->_form->getFileObjectName(), $this->_form->getRecord()->getPk()))
-                ->getTagRelations());
+            ->getTagRelations());
         //zwrot obiektu
         return $this;
     }
@@ -96,7 +96,7 @@ class Tags extends Select
         //ustawianie wartości
         $this->setAutoTagValue();
         //pobranie czy mozna dodac tag
-        $addTags = $this->getOption('addTags') ? 'true' : 'false';
+        $addTags = !$this->getOption('addTags') ? 'true' : 'false';
         $view = \Mmi\App\FrontController::getInstance()->getView();
         $view->headLink()->appendStylesheet('/resource/cmsAdmin/css/chosen.min.css');
         $view->headScript()->appendFile('/resource/cmsAdmin/js/chosen.jquery.min.js');
@@ -207,11 +207,10 @@ class Tags extends Select
     public function getMultioptions()
     {
         $array = [];
-        foreach ((new \Cms\Orm\CmsTagQuery)->orderAscId()->findPairs('tag', 'tag') as $k => $t) {
+        foreach ((new \Cms\Orm\CmsTagQuery)->orderDescTag()->findPairs('tag', 'tag') as $k => $t) {
             $array[$k] = $k;
         }
 
         return array_merge($this->getValue(), $array);
     }
-
 }
