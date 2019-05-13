@@ -27,7 +27,7 @@
     ],
     "require": {
         "php": ">=7.0.0",
-        "mmi/mmi": "^3.8.1",
+        "mmi/mmi": "^3.9.1",
         "phpmailer/phpmailer": "~5.2"
     },
     "autoload": {
