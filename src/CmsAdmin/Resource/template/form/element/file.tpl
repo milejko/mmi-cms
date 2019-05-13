@@ -1,0 +1,1 @@
+<input multiple type="file" {$_htmlOptions} />
