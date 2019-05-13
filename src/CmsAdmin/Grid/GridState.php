@@ -155,7 +155,9 @@ class GridState extends \Mmi\OptionObject
         $offset = ($this->getPage() - 1) * $this->getRowsPerPage();
         //jeśli offset jest nieprawidłowy
         if ($offset > $this->_dataCount) {
-            throw new GridException('Invalid offset');
+            //strona 1 + offset od zera
+            $this->setPage(1);
+            $offset = 0;
         }
         //limitowanie
         $query->limit($this->getRowsPerPage())
@@ -249,5 +251,4 @@ class GridState extends \Mmi\OptionObject
         }
         return $this;
     }
-
 }
