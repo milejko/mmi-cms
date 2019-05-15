@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -68,9 +68,22 @@ class Tags extends Select
         if (!$this->_form->hasRecord()) {
             return $this;
         }
+
         //ustawianie wartości
-        $this->setValue((new TagRelationModel($this->getOption('object') ? $this->getOption('object') : $this->_form->getFileObjectName(), $this->_form->getRecord()->getPk()))
-            ->getTagRelations());
+        $tags = (new TagRelationModel($this->getOption('object') ? $this->getOption('object') : $this->_form->getFileObjectName(), $this->_form->getRecord()->getPk()))
+            ->getTagRelations();
+
+        //uzupelnienie o dane z posta, gdy zla walidacja innych pol, a user dodal tagi
+        if( isset($this->getOptions()['value'])) {
+            foreach ($this->getOptions()['value'] as $val) {
+                if (!in_array($val, $tags)) {
+                    $tags[] = $val;
+                }
+            }
+        }
+
+        $this->setValue($tags);
+
         //zwrot obiektu
         return $this;
     }
