@@ -59,6 +59,15 @@ class Tags extends Select
     }
 
     /**
+     * Ustawia rozwijanie do gory
+     * @return mixed
+     */
+    public function setDropUp()
+    {
+        return $this->setClass('dropUpchosen');
+    }
+
+    /**
      * Ustawianie tagów na podstawie formularza
      * @return \Cms\Form\Element\Tags
      */

@@ -9483,3 +9483,24 @@ div.grid .chosen-container .chosen-drop {
   width: 700px !important;
   margin-top: 0px !important;
 }
+.dropUpchosen + .chosen-container .chosen-drop {
+  border-bottom: 0;
+  border-top: 1px solid #aaa;
+  top: auto;
+  bottom: 40px;
+}
+.dropUpchosen + .chosen-container.chosen-with-drop .chosen-single {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background-image: none;
+}
+.dropUpchosen + .chosen-container.chosen-with-drop .chosen-drop {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  box-shadow: none;
+  margin-bottom: 0px;
+}
