@@ -12,7 +12,6 @@ namespace CmsAdmin\Grid\Column;
 
 use Mmi\App\FrontController;
 use Cms\Mvc\ViewHelper\AclAllowed;
-use function var_dump;
 
 /**
  * Obsługa requestu
