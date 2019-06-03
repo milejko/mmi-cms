@@ -12,6 +12,7 @@ namespace CmsAdmin\Grid\Column;
 
 use Mmi\App\FrontController;
 use Cms\Mvc\ViewHelper\AclAllowed;
+use function var_dump;
 
 /**
  * Obsługa requestu
@@ -66,7 +67,7 @@ class CheckboxRequestHandler
             return;
         }
         //brak id
-        if (!$post->id || !$post->value) {
+        if (!$post->id) {
             return;
         }
         //wybór rekordu
@@ -85,7 +86,7 @@ class CheckboxRequestHandler
             return;
         }
         //ustawianie property
-        $record->$fieldName = ($post->checked == 'true') ? $post->value : 0;
+        $record->$fieldName = ($post->checked == 'true') ? 1 : 0;
         return $record->save();
     }
 
