@@ -229,10 +229,9 @@ class Tags extends Select
     public function getMultioptions()
     {
         $array = [];
-        foreach ((new \Cms\Orm\CmsTagQuery)->orderDescTag()->findPairs('tag', 'tag') as $k => $t) {
+        foreach ((new \Cms\Orm\CmsTagQuery)->orderAscTag()->findPairs('tag', 'tag') as $k => $t) {
             $array[$k] = $k;
         }
-
-        return array_merge($this->getValue(), $array);
+        return $this->getValue() + $array;
     }
 }
