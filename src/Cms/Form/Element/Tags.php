@@ -78,9 +78,14 @@ class Tags extends Select
             return $this;
         }
 
-        //ustawianie wartości
-        $tags = (new TagRelationModel($this->getOption('object') ? $this->getOption('object') : $this->_form->getFileObjectName(), $this->_form->getRecord()->getPk()))
-            ->getTagRelations();
+        $tags = [];
+
+        //ustawianie wartości z rekordu/forma jezeli nie ma danych z posta
+        if (\Mmi\App\FrontController::getInstance()->getRequest()->getRequestMethod() != 'POST') {
+            $tags = (new TagRelationModel($this->getOption('object') ? $this->getOption('object') : $this->_form->getFileObjectName(),
+                $this->_form->getRecord()->getPk()))
+                ->getTagRelations();
+        }
 
         //uzupelnienie o dane z posta, gdy zla walidacja innych pol, a user dodal tagi
         if( isset($this->getOptions()['value'])) {
