@@ -52,7 +52,7 @@ class AdminNavigation extends \Mmi\Mvc\ViewHelper\Navigation
             //dodawanie breadcrumbów (ostatni nie ma linku)
             $breadcrumbs[] = ('<li class="breadcrumb-item"><a href="' . $breadcrumb['uri'] . '">' . strip_tags($breadcrumb['label']) . '</a></li>');
             //liść wyłączony (poza ostatnim)
-            if (($i != 1) && $breadcrumb['disabled']) {
+            if (isset($breadcrumb['disabled']) && ($i != 1) && $breadcrumb['disabled']) {
                 continue;
             }
             //dodawanie tytułu
