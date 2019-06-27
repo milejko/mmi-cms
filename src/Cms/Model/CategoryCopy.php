@@ -321,7 +321,7 @@ class CategoryCopy
                 //obiekt podobny do categoryWidgetRelation
                 ->whereObject()->like(self::CATEGORY_WIDGET_RELATION . '%')
                 //lub równy cmscategorywidgetcategory
-                ->orFieldObject()->equals(self::FILE_CATEGORY_WIDGET_OBJECT))
+                ->orFieldObject()->like(self::FILE_CATEGORY_WIDGET_OBJECT . '%'))
             ->findUnique('object')
         as $object) {
             \Cms\Model\File::link($object, $relationId, $object, $newRelation->id);
@@ -347,7 +347,7 @@ class CategoryCopy
                 //obiekt podobny do categoryWidgetRelation
                 ->whereObject()->like(self::CATEGORY_WIDGET_RELATION . '%')
                 //lub równy cmscategorywidgetcategory
-                ->orFieldObject()->equals(self::FILE_CATEGORY_WIDGET_OBJECT))
+                ->orFieldObject()->like(self::FILE_CATEGORY_WIDGET_OBJECT . '%'))
             //identyfikator równy ID relacji
             ->andFieldObjectId()->equals($relationId)
             ->find() as $tag) {
