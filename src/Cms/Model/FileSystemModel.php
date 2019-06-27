@@ -182,6 +182,8 @@ class FileSystemModel
             imagepng($imgRes, $outputFile, 9);
             return;
         }
+        //progressive jpeg
+        imageinterlace($imgRes, true);
         //domyślnie JPEG
         imagejpeg($imgRes, $outputFile, intval(\App\Registry::$config->thumbQuality));
     }
