@@ -4,7 +4,6 @@
 //konfiguracja ogólna pluploada
 var PLUPLOADCONF = PLUPLOADCONF || {};
 var plupload = plupload || {};
-var tinymce = tinymce || {};
 
 PLUPLOADCONF.settings = {
     runtimes: 'html5',
