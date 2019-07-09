@@ -339,6 +339,7 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
         $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/jquery.ui.plupload.min.js');
         //imprint zawiera tinymce
         if (strpos(print_r($this->getImprint(), true), 'tinymce')) {
+            $view->headScript()->appendScript("var tinymce = tinymce || {};");
             $view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/tinymce.min.js');
         }
         $view->headScript()->appendFile('/resource/cmsAdmin/js/video-frame-extractor/extractor.js');
