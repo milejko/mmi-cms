@@ -17,7 +17,7 @@ class Hidden extends \Mmi\Form\Element\Hidden
 {
 
     //szablon początku pola
-    CONST TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    CONST TEMPLATE_BEGIN = 'cmsAdmin/form/element/hidden/begin';
     //szablon opisu
     CONST TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
     //szablon końca pola
