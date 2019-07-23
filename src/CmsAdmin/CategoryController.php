@@ -208,8 +208,10 @@ class CategoryController extends Mvc\Controller
     {
         $this->getResponse()->setTypeJson();
         $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id);
+        //pozwala usuwać historyczne
+        $allowDeleteHistorical = \App\Registry::$config->category && \App\Registry::$config->category->allowDeleteWithVersions ? true : false;
         //ma historię, nie możemy usunąć
-        if ($cat->hasHistoricalEntries()) {
+        if ($cat->hasHistoricalEntries() && !$allowDeleteHistorical) {
             return json_encode(['status' => false, 'error' => $this->view->_('controller.category.delete.error.history')]);
         }
         try {
@@ -217,6 +219,7 @@ class CategoryController extends Mvc\Controller
                 return json_encode(['status' => true, 'message' => $this->view->_('controller.category.delete.message')]);
             }
         } catch (\Cms\Exception\ChildrenExistException $e) {
+
             return json_encode(['status' => false, 'error' => $this->view->_('controller.category.delete.error.children')]);
         }
         return json_encode(['status' => false, 'error' => $this->view->_('controller.category.delete.error')]);

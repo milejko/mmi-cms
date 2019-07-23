@@ -22,4 +22,10 @@ class CategoryConfig
      */
     public $bufferingAllowedClass;
 
+    /**
+     * Pozwala usuwać kategorie z wersjami archiwalnymi
+     * @var bool
+     */
+    public $allowDeleteWithVersions = true;
+
 }
