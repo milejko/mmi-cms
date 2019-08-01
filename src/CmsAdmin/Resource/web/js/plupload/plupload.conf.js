@@ -292,7 +292,9 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                             buttons: {
                                 'Zapisz': function () {
                                     //trigger odświeżający dane
-                                    tinymce.triggerSave();
+                                    if (typeof tinymce !== "undefined") {
+                                        tinymce.triggerSave();
+                                    }
                                     $.post(request.baseUrl + '/cmsAdmin/upload/describe', { cmsFileId: file.cmsFileId, form: $(edit + ' input,' + edit + ' textarea,' + edit + ' select').serializeArray(), afterEdit: args.up.getOption('after_edit') }, 'json')
                                         .done(function (data) {
                                             if (data.result === 'OK') {
@@ -532,6 +534,9 @@ PLUPLOADCONF.editable = function (up, file) {
 };
 
 PLUPLOADCONF.initTinyMce = function (up) {
+    if (typeof tinymce === "undefined") {
+        return;
+    }
     var selector = 'div#' + up.getOption('form_element_id') + '-edit textarea.plupload-edit-tinymce';
     tinymce.init({
         selector: selector,
