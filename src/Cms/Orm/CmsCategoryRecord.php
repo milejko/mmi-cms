@@ -236,7 +236,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             $this->uri = ltrim($parent->uri . '/', '/');
         }
         //doklejanie do uri przefiltrowanej końcówki
-        $this->uri .= (new \Mmi\Filter\Url)->filter($this->name);
+        $this->uri .= (new \Mmi\Filter\Url)->filter(strip_tags($this->name));
         //filtracja customUri
         $this->customUri = ($this->customUri == '/') ? '/' : trim($this->customUri, '/');
     }
