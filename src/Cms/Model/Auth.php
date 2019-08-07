@@ -202,13 +202,17 @@ class Auth implements \Mmi\Security\AuthInterface
      */
     protected static function _findUserByIdentity($identity)
     {
-        return (new CmsAuthQuery)
+        try {
+            return (new CmsAuthQuery)
                 ->whereActive()->equals(true)
                 ->andQuery((new CmsAuthQuery)
                     ->whereUsername()->equals($identity)
                     ->orFieldEmail()->equals($identity)
-                    ->orFieldId()->equals((integer) $identity))
+                    ->orFieldId()->equals((integer)$identity))
                 ->findFirst();
+        } catch (\Exception $e) {
+            FrontController::getInstance()->getLogger()->error($e->getMessage());
+        }
     }
 
     /**
