@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -173,7 +173,7 @@ class Auth implements \Mmi\Security\AuthInterface
 
             //zwrot autoryzacji LDAP
             return $ldapClient->authenticate($dn, $credential);
-        } catch (\Mmi\Ldap\Exception $e) {
+        } catch (\Exception $e) {
             //błąd LDAP'a
             \Mmi\App\FrontController::getInstance()->getLogger()->error('LDAP failed: ' . $e->getMessage());
             return false;
@@ -187,13 +187,17 @@ class Auth implements \Mmi\Security\AuthInterface
      */
     protected static function _findUserByIdentity($identity)
     {
-        return (new CmsAuthQuery)
-            ->whereActive()->equals(true)
-            ->andQuery((new CmsAuthQuery)
-                ->whereUsername()->equals($identity)
-                ->orFieldEmail()->equals($identity)
-                ->orFieldId()->equals((integer)$identity))
-            ->findFirst();
+        try {
+            return (new CmsAuthQuery)
+                ->whereActive()->equals(true)
+                ->andQuery((new CmsAuthQuery)
+                    ->whereUsername()->equals($identity)
+                    ->orFieldEmail()->equals($identity)
+                    ->orFieldId()->equals((integer)$identity))
+                ->findFirst();
+        } catch (\Exception $e) {
+            \Mmi\App\FrontController::getInstance()->getLogger()->error($e->getMessage());
+        }
     }
 
     /**
