@@ -12,6 +12,7 @@ namespace Cms\Model;
 
 use Cms\Orm\CmsAuthQuery;
 use Cms\Orm\CmsAuthRecord;
+use Mmi\App\FrontController;
 
 /**
  * Model autoryzacji
@@ -61,7 +62,7 @@ class Auth implements \Mmi\Security\AuthInterface
      */
     public static function deauthenticate()
     {
-        \Mmi\App\FrontController::getInstance()->getLogger()->info('Logout: ' . \App\Registry::$auth->getEmail());
+        FrontController::getInstance()->getLogger()->info('Logout: ' . \App\Registry::$auth->getEmail());
     }
 
     /**
@@ -86,9 +87,9 @@ class Auth implements \Mmi\Security\AuthInterface
         try {
             //wyszukiwanie w LDAPie
             $ldapResults = $ldapClient->findUser($query, 10, ['sAMAccountname']);
-        } catch (\Mmi\Ldap\LdapException $e) {
+        } catch (\Exception $e) {
             //błąd usługi
-            \Mmi\App\FrontController::getInstance()->getLogger()->error($e);
+            FrontController::getInstance()->getLogger()->error($e);
             return [];
         }
         //budowa tablicy z użytkownikami
@@ -109,7 +110,7 @@ class Auth implements \Mmi\Security\AuthInterface
     protected static function _authFailed($identity, $reason = '')
     {
         //logowanie błędnej próby autoryzacji
-        \Mmi\App\FrontController::getInstance()->getLogger()->notice('Login failed: ' . $identity . ' ' . $reason);
+        FrontController::getInstance()->getLogger()->notice('Login failed: ' . $identity . ' ' . $reason);
     }
 
     /**
@@ -121,10 +122,10 @@ class Auth implements \Mmi\Security\AuthInterface
     protected static function _authSuccess(CmsAuthRecord $record)
     {
         //zapis poprawnego logowania do rekordu
-        $record->lastIp = \Mmi\App\FrontController::getInstance()->getEnvironment()->remoteAddress;
+        $record->lastIp = FrontController::getInstance()->getEnvironment()->remoteAddress;
         $record->lastLog = date('Y-m-d H:i:s');
         $record->save();
-        \Mmi\App\FrontController::getInstance()->getLogger()->info('Logged in: ' . $record->username);
+        FrontController::getInstance()->getLogger()->info('Logged in: ' . $record->username);
         //nowy obiekt autoryzacji
         $authRecord = new \Mmi\Security\AuthRecord;
         //ustawianie pól rekordu
@@ -175,7 +176,7 @@ class Auth implements \Mmi\Security\AuthInterface
             return $ldapClient->authenticate($dn, $credential);
         } catch (\Exception $e) {
             //błąd LDAP'a
-            \Mmi\App\FrontController::getInstance()->getLogger()->error('LDAP failed: ' . $e->getMessage());
+            FrontController::getInstance()->getLogger()->error('LDAP failed: ' . $e->getMessage());
             return false;
         }
     }
@@ -207,7 +208,7 @@ class Auth implements \Mmi\Security\AuthInterface
     protected static function _updateUserFailedLogin($record)
     {
         //zapis danych błędnego logowania znanego użytkownika
-        $record->lastFailIp = \Mmi\App\FrontController::getInstance()->getEnvironment()->remoteAddress;
+        $record->lastFailIp = FrontController::getInstance()->getEnvironment()->remoteAddress;
         $record->lastFailLog = date('Y-m-d H:i:s');
         $record->failLogCount = $record->failLogCount + 1;
         $record->save();
