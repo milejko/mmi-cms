@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -12,7 +12,6 @@ namespace Cms\Model;
 
 use Cms\Orm\CmsAuthQuery;
 use Cms\Orm\CmsAuthRecord;
-use Mmi\App\FrontController;
 
 /**
  * Model autoryzacji
@@ -174,7 +173,7 @@ class Auth implements \Mmi\Security\AuthInterface
 
             //zwrot autoryzacji LDAP
             return $ldapClient->authenticate($dn, $credential);
-        } catch (\Mmi\Ldap\Exception $e) {
+        } catch (\Exception $e) {
             //błąd LDAP'a
             \Mmi\App\FrontController::getInstance()->getLogger()->error('LDAP failed: ' . $e->getMessage());
             return false;
