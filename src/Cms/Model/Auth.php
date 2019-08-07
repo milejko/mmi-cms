@@ -196,7 +196,7 @@ class Auth implements \Mmi\Security\AuthInterface
                     ->orFieldId()->equals((integer)$identity))
                 ->findFirst();
         } catch (\Exception $e) {
-            FrontController::getInstance()->getLogger()->error($e->getMessage());
+            \Mmi\App\FrontController::getInstance()->getLogger()->error($e->getMessage());
         }
     }
 
