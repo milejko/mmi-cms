@@ -12,6 +12,7 @@ namespace Cms\Model;
 
 use Cms\Orm\CmsAuthQuery;
 use Cms\Orm\CmsAuthRecord;
+use Mmi\App\FrontController;
 
 /**
  * Model autoryzacji
@@ -187,13 +188,17 @@ class Auth implements \Mmi\Security\AuthInterface
      */
     protected static function _findUserByIdentity($identity)
     {
-        return (new CmsAuthQuery)
-            ->whereActive()->equals(true)
-            ->andQuery((new CmsAuthQuery)
-                ->whereUsername()->equals($identity)
-                ->orFieldEmail()->equals($identity)
-                ->orFieldId()->equals((integer)$identity))
-            ->findFirst();
+        try {
+            return (new CmsAuthQuery)
+                ->whereActive()->equals(true)
+                ->andQuery((new CmsAuthQuery)
+                    ->whereUsername()->equals($identity)
+                    ->orFieldEmail()->equals($identity)
+                    ->orFieldId()->equals((integer)$identity))
+                ->findFirst();
+        } catch (\Exception $e) {
+            FrontController::getInstance()->getLogger()->error($e->getMessage());
+        }
     }
 
     /**
