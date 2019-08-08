@@ -83,7 +83,7 @@ class File
     protected static function _checkAndCopyFile(\Mmi\Http\RequestFile $file, $allowedTypes = [])
     {
         //pomijanie plików typu bmp (bitmapy windows - nieobsługiwane w PHP)
-        if ($file->type == 'image/x-ms-bmp' || $file->type == 'image/tiff') {
+        if ($file->type == 'image/x-ms-bmp' || $file->type == 'image/tiff' || $file->type == 'image/svg+xml') {
             $file->type = 'application/octet-stream';
         }
 
