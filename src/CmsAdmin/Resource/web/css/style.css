@@ -9504,3 +9504,7 @@ div.grid .chosen-container .chosen-drop {
   box-shadow: none;
   margin-bottom: 0px;
 }
+.form-group .control.control-checkbox {
+  display: inline-block;
+  margin-bottom: 0px;
+}

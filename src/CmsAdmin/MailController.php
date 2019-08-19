@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -61,7 +61,7 @@ class MailController extends Mvc\Controller
             $this->getMessenger()->addMessage('messenger.mail.queue.error', false);
         }
         if ($result['success'] + $result['error'] == 0) {
-            $this->getMessenger()->addMessage('messenger.mail.queue.empty');
+            $this->getMessenger()->addMessage('messenger.mail.queue.empty', true);
         }
         $this->getResponse()->redirect('cmsAdmin', 'mail', 'index');
     }
