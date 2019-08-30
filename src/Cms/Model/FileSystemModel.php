@@ -85,20 +85,19 @@ class FileSystemModel
             //nic
         }
         //wybrano skalowanie dla klasy obrazu
-        if ($scaleType != 'default') {
+        if ($scaleType == 'default') {
+            //kopiowanie pliku do web
+            return $this->_copyFileToWeb($inputFile, $thumbPath, $publicUrl);
+        }
+        //proba skalowania
+        try {
             //uruchomienie skalera
             $this->_scaler($inputFile, $thumbPath, $scaleType, $scale);
             return $publicUrl;
-        }
-        try {
-            //próba skopiowania pliku
-            copy($inputFile, $thumbPath);
         } catch (\Exception $e) {
-            FrontController::getInstance()->getLogger()->warning('Unable to copy CMS file to web: ' . $fileName);
-            return;
+            //kopiowanie do web
+            return $this->_copyFileToWeb($inputFile, $thumbPath, $publicUrl);
         }
-        //zwrot ścieżki publicznej
-        return $publicUrl;
     }
 
     public function unlink()
@@ -123,10 +122,6 @@ class FileSystemModel
     protected function _scaler($inputFile, $outputFile, $scaleType, $scale)
     {
         switch ($scaleType) {
-            //skalowanie domyślne
-            case 'default':
-                $imgRes = \Mmi\Image\Image::inputToResource($inputFile);
-                break;
             //skalowanie proporcjonalne do maksymalnego rozmiaru
             case 'scale':
                 $v = explode('x', $scale);
@@ -207,6 +202,24 @@ class FileSystemModel
                 unlink($file);
             }
         }
+    }
+
+    /**
+     * Kopiuje plik do web (bez zmian)
+     * @param $inputFile
+     * @param $thumbPath
+     * @param $publicPath
+     */
+    protected function _copyFileToWeb($inputFile, $thumbPath, $publicPath)
+    {
+        try {
+            //próba skopiowania pliku
+            copy($inputFile, $thumbPath);
+        } catch (\Exception $e) {
+            FrontController::getInstance()->getLogger()->warning('Unable to copy CMS file to web: ' . $publicPath);
+            return;
+        }
+        return $publicPath;
     }
 
 }
