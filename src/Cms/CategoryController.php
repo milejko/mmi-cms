@@ -262,6 +262,7 @@ class CategoryController extends \Mmi\Mvc\Controller
     /**
      * Przekierowanie 301 (poszukiwanie w historii), lub 404
      * @param $uri
+     * @throws \Exception
      * @throws \Mmi\Mvc\MvcNotFoundException
      */
     protected function _redirectOrNotFound($uri)
@@ -269,7 +270,7 @@ class CategoryController extends \Mmi\Mvc\Controller
         //klucz bufora
         $cacheKey = 'category-redirect-' . md5($uri);
         //zbuforowany brak uri w historii
-        if (-1 === $redirectUri = \App\Registry::$cache->load($cacheKey)) {
+        if ('-1' == ($redirectUri = \App\Registry::$cache->load($cacheKey))) {
             //404
             throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
         }
