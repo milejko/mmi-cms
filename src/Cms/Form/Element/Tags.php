@@ -88,7 +88,7 @@ class Tags extends Select
         }
 
         //uzupelnienie o dane z posta, gdy zla walidacja innych pol, a user dodal tagi
-        if( isset($this->getOptions()['value'])) {
+        if(isset($this->getOptions()['value']) && is_array($this->getOptions()['value'])) {
             foreach ($this->getOptions()['value'] as $val) {
                 if (!in_array($val, $tags)) {
                     $tags[] = $val;
