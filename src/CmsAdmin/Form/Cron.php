@@ -92,6 +92,13 @@ class Cron extends \Cms\Form\Form
             ->setOption('id', 'objectId')
             ->setValue($value));
 
+        //trwa wykonywanie
+        $this->addElement((new Element\Checkbox('lock'))
+            ->setLabel('form.cron.lock.label')
+            ->setDescription('form.cron.lock.description')
+            ->setRequired()
+            ->addValidator(new \Mmi\Validator\NotEmpty));
+
         //aktywny
         $this->addElement((new Element\Checkbox('active'))
             ->setLabel('form.cron.active.label')

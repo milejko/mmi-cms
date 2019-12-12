@@ -25,6 +25,18 @@ namespace Cms\Orm;
  * @method CmsCronQuery orderAscActive()
  * @method CmsCronQuery orderDescActive()
  * @method CmsCronQuery groupByActive()
+ * @method QueryHelper\CmsCronQueryField whereLock()
+ * @method QueryHelper\CmsCronQueryField andFieldLock()
+ * @method QueryHelper\CmsCronQueryField orFieldLock()
+ * @method CmsCronQuery orderAscLock()
+ * @method CmsCronQuery orderDescLock()
+ * @method CmsCronQuery groupByLock()
+ * @method QueryHelper\CmsCronQueryField whereMessage()
+ * @method QueryHelper\CmsCronQueryField andFieldMessage()
+ * @method QueryHelper\CmsCronQueryField orFieldMessage()
+ * @method CmsCronQuery orderAscMessage()
+ * @method CmsCronQuery orderDescMessage()
+ * @method CmsCronQuery groupByMessage()
  * @method QueryHelper\CmsCronQueryField whereMinute()
  * @method QueryHelper\CmsCronQueryField andFieldMinute()
  * @method QueryHelper\CmsCronQueryField orFieldMinute()
@@ -119,14 +131,15 @@ class CmsCronQuery extends \Mmi\Orm\Query
     protected $_tableName = 'cms_cron';
 
     /**
-     * Zapytanie o aktywne cron'y
+     * Zapytanie o aktywne, nie zablokowane crony
      * @return CmsCronQuery
      */
-    public static function active()
+    public function activeUnlocked()
     {
         return (new self)
-                ->whereActive()->equals(1)
-                ->orderAscId();
+            ->whereActive()->equals(1)
+            ->whereLock()->equals(0)
+            ->orderAscId();
     }
 
 }

@@ -10,38 +10,57 @@
 
 namespace Cms\Model;
 
-use \Cms\Orm;
+use Cms\Orm\CmsCronQuery;
 
 class Cron
 {
+    const MIN_EXECUTION_OFFSET = 200000;
+    const MAX_EXECUTION_OFFSET = 500000;
+    const SECONDS_PER_MINUTE = 60;
 
     /**
      * Pobiera zadania crona
      */
     public static function run()
     {
-        foreach (Orm\CmsCronQuery::active()->find() as $cron) {
-            if (!self::_getToExecute($cron)) {
+        //iteracja po liście zadań do wykonania
+        foreach ((new CmsCronQuery)->activeUnlocked()->find() as $listedCronRecord) {
+            //sprawdzanie warunku wykonania np. */3 * * * *
+            if (!self::_getToExecute($listedCronRecord)) {
                 continue;
             }
+            //opóźnienie 200ms - 500ms (dzięki temu mniej baza danych ma więcej czasu na załozenie blokady)
+            usleep(rand(self::MIN_EXECUTION_OFFSET, self::MAX_EXECUTION_OFFSET));
+            //ponowne łączenie - mogło upłynąć sporo czasu przy procesowaniu poprzedniego crona
+            \App\Registry::$db->connect();
+            //sprawdzenie czy rekord jest odblokowany
+            if (null === ($cronRecord = (new CmsCronQuery)->activeUnlocked()->findPk($listedCronRecord->id))) {
+                continue;
+            }
+            //wykonany juz w tej minucie
+            if (time() - strtotime($cronRecord->dateLastExecute) < self::SECONDS_PER_MINUTE) {
+                continue;
+            }
+            //blokuje rekord na czas wykonania
+            $cronRecord->lock();
             $output = '';
             try {
                 $start = microtime(true);
-                $output = \Mmi\Mvc\ActionHelper::getInstance()->action(new \Mmi\Http\Request(['module' => $cron->module, 'controller' => $cron->controller, 'action' => $cron->action]));
+                $output = \Mmi\Mvc\ActionHelper::getInstance()->action(new \Mmi\Http\Request(['module' => $cronRecord->module, 'controller' => $cronRecord->controller, 'action' => $cronRecord->action]));
                 $elapsed = round(microtime(true) - $start, 2);
             } catch (\Exception $e) {
                 //error logging
-                \Mmi\App\FrontController::getInstance()->getLogger()->error('CRON failed: @' . gethostname() . $cron->name . ' ' . $e->getMessage());
+                \Mmi\App\FrontController::getInstance()->getLogger()->error('CRON failed: @' . gethostname() . $cronRecord->name . ' ' . $e->getMessage());
                 return;
             }
-            //zmień datę ostatniego wywołania
-            $cron->dateLastExecute = date('Y-m-d H:i:s');
             //ponowne łączenie
             \App\Registry::$db->connect();
+            //zapisywanie wiadomości
+            $cronRecord->message = $output;
             //zapis do bazy bez modyfikowania daty ostatniej modyfikacji
-            $cron->saveWithoutLastDateModify();
+            $cronRecord->unlockAfterExecution();
             //logowanie uruchomienia
-            \Mmi\App\FrontController::getInstance()->getLogger()->info('CRON done: @' . gethostname() . ' ' . $cron->name . ' ' . $output .  ' in ' . $elapsed . 's');
+            \Mmi\App\FrontController::getInstance()->getLogger()->info('CRON done: @' . gethostname() . ' ' . $cronRecord->name . ' ' . $output .  ' in ' . $elapsed . 's');
         }
     }
 

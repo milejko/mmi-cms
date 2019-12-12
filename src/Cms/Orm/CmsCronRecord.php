@@ -14,6 +14,7 @@ class CmsCronRecord extends \Mmi\Orm\Record
      */
     public $id;
     public $active;
+    public $lock;
 
     /**
      * Minuta
@@ -49,6 +50,7 @@ class CmsCronRecord extends \Mmi\Orm\Record
     public $module;
     public $controller;
     public $action;
+    public $message;
     public $dateAdd;
     public $dateModified;
 
@@ -69,11 +71,23 @@ class CmsCronRecord extends \Mmi\Orm\Record
     }
 
     /**
-     * Zapis rekordu bez modyfikacji daty modyfikacji
+     * Blokuje rekord
      * @return boolean
      */
-    public function saveWithoutLastDateModify()
+    public function lock()
     {
+        $this->lock = 1;
+        $this->dateLastExecute = date('Y-m-d H:i:s');
+        return parent::save();
+    }
+
+    /**
+     * Odblokowuje rekord po wykonaniu
+     * @return boolean
+     */
+    public function unlockAfterExecution()
+    {
+        $this->lock = 0;
         return parent::save();
     }
 

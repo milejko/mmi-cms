@@ -37,13 +37,18 @@ class CronGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('grid.cron.crontab.label')
             ->setTemplateCode('{$record->minute} {$record->hour} {$record->dayOfMonth} {$record->month} {$record->dayOfWeek}'));
 
-        //data dodania
-        $this->addColumn((new Column\DateTimeColumn('dateAdd'))
-            ->setLabel('grid.cron.dateAdd.label'));
-
         //ostatnie wywołanie
         $this->addColumn((new Column\DateTimeColumn('dateLastExecute'))
             ->setLabel('grid.cron.dateLastExecute.label'));
+
+        //ostatnie wywołanie
+        $this->addColumn((new Column\TextColumn('message'))
+                ->setLabel('grid.cron.message.label'));
+
+        //blokada
+        $this->addColumn((new Column\SelectColumn('lock'))
+            ->setMultioptions([0 => 'nie', 1 => 'tak'])
+            ->setLabel('grid.cron.lock.label'));
 
         //aktywny
         $this->addColumn((new Column\CheckboxColumn('active'))
