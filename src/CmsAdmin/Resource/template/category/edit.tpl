@@ -16,8 +16,12 @@
                 <h5>{$categoryForm->getRecord()->name}</h5>
                 <div class="float-right" style="margin-top: -60px;">
                     <br />
-                    <button style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit-top" type="submit" class="btn btn-secondary" name="cmsadmin-form-category[submit]" value="preview" >{#template.category.edit.preview#}</button>
-                    <button style="color: #fff;" id="cmsadmin-form-category-commit-top" type="submit" class="btn btn-primary" name="cmsadmin-form-category[commit]" value="submit" >{#template.category.edit.commit#}</button>
+                    <button style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit-top" type="submit" class="btn btn-secondary" name="cmsadmin-form-category[submit]" value="1">
+                        {#template.category.edit.preview#}
+                    </button>
+                    <button style="color: #fff;" id="cmsadmin-form-category-commit-top" type="submit" class="btn btn-primary" name="cmsadmin-form-category[commit]" value="1">
+                        {#template.category.edit.commit#}
+                    </button>
                 </div>
                 <div class="clear"></div>
                 <ul class="nav nav-tabs" role="tablist" data-id="{$categoryForm->getRecord()->id}">
@@ -72,7 +76,9 @@
                     {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
                         <div class="tab-pane" id="widgets" role="tabpanel" aria-expanded="false">
                             {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'add'])}
-                                <a href="javascript:void(0);" onclick="PopupCenter('{@module=cmsAdmin&controller=categoryWidgetRelation&action=add&id={$categoryId}@}'); return false;" class="button btn btn-primary btn-block new-window" target="_blank"><i class="icon-plus"></i> {#template.category.edit.widget.add#}</a>
+                                <button id="cmsadmin-form-category-submit" type="submit" class="button btn btn-primary btn-block" name="cmsadmin-form-category[submit]" value="widget">
+                                    <i class="icon-plus"></i> {#template.category.edit.widget.add#}
+                                </button>
                             {/if}
                             <div id="widget-list-container" data-category-id="{$categoryId}">
                                 {widget('cmsAdmin', 'categoryWidgetRelation', 'preview', ['categoryId' => $categoryId])}
@@ -93,8 +99,12 @@
                 </div>
                 <div class="float-right">
                     <br />
-                    <input style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit" type="submit" class="btn btn-secondary" name="cmsadmin-form-category[submit]" value="{#template.category.edit.preview#}" >
-                    <input style="color: #fff;" id="cmsadmin-form-category-commit" type="submit" class="btn btn-primary" name="cmsadmin-form-category[commit]" value="{#template.category.edit.commit#}" >
+                    <button style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit" type="submit" class="btn btn-secondary" name="cmsadmin-form-category[submit]" value="1">
+                        {#template.category.edit.preview#}
+                    </button>
+                    <button style="color: #fff;" id="cmsadmin-form-category-commit" type="submit" class="btn btn-primary" name="cmsadmin-form-category[commit]" value="1">
+                        {#template.category.edit.commit#}
+                    </button>
                 </div>
                 {$categoryForm->end()}
             {/if}
