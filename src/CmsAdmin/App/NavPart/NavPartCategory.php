@@ -43,6 +43,22 @@ class NavPartCategory extends \Mmi\Navigation\NavigationConfig
                     ->setModule('cmsAdmin')
                     ->setController('category')
                     ->setAction('edit')
+                    ->addChild(
+                        (new \Mmi\Navigation\NavigationConfigElement)
+                            ->setLabel('menu.category.edit.widget')
+                            ->setDisabled()
+                            ->setModule('cmsAdmin')
+                            ->setController('categoryWidgetRelation')
+                            ->setAction('add')
+                    )
+                    ->addChild(
+                        (new \Mmi\Navigation\NavigationConfigElement)
+                            ->setLabel('menu.category.edit.widget')
+                            ->setDisabled()
+                            ->setModule('cmsAdmin')
+                            ->setController('categoryWidgetRelation')
+                            ->setAction('config')
+                    )
             )
             //lista treści
             ->addChild(
