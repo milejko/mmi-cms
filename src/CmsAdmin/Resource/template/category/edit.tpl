@@ -8,11 +8,11 @@
                     {$attributeCount = 0}
                     {* zliczanie atrybutów *}
                     {foreach $categoryForm->getElements() as $element}
-                    {if php_substr($element->getName(), 0 ,12) != 'cmsAttribute'}{continue}{/if}
+                    {if php_substr($element->getName(), 0, 12) != 'cmsAttribute'}{continue}{/if}
                     {$attributeCount++}
                 {/foreach}
                 {$categoryForm->start()}
-                {$categoryId = $categoryForm->getRecord()->id}
+                {$category = $categoryForm->getRecord()}
                 <h5>{$categoryForm->getRecord()->name}</h5>
                 <div class="float-right" style="margin-top: -60px;">
                     <br />
@@ -76,12 +76,12 @@
                     {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
                         <div class="tab-pane" id="widgets" role="tabpanel" aria-expanded="false">
                             {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'add'])}
-                                <button id="cmsadmin-form-category-submit" type="submit" class="button btn btn-primary btn-block" name="cmsadmin-form-category[submit]" value="widget">
+                                <button id="cmsadmin-form-category-submit" type="submit" class="button btn btn-primary btn-block" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&action=add&id={$category->id}&uploaderId={$request->uploaderId}&originalId={$category->cmsCategoryOriginalId}@}">
                                     <i class="icon-plus"></i> {#template.category.edit.widget.add#}
                                 </button>
                             {/if}
-                            <div id="widget-list-container" data-category-id="{$categoryId}">
-                                {widget('cmsAdmin', 'categoryWidgetRelation', 'preview', ['categoryId' => $categoryId])}
+                            <div id="widget-list-container" data-category-id="{$category->id}">
+                                {widget('cmsAdmin', 'categoryWidgetRelation', 'preview', ['categoryId' => $category->id])}
                             </div>
                         </div>
                     {/if}

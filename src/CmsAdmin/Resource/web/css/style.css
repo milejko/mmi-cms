@@ -9149,11 +9149,22 @@ ul.wlist {
         height: auto; }
     ul.wlist li div.operation {
       float: right; }
-      ul.wlist li div.operation a {
+      ul.wlist li div.operation a, ul.wlist li div.operation button {
+        background: none;
+        border: none;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
         height: 24px;
         width: 24px;
+        margin: 0 0 5px 0;
+        padding: 0;
         display: inherit;
-        margin-bottom: 5px; }
+        color: #20a8d8;
+        }
+        ul.wlist li div.operation a:hover, ul.wlist li div.operation button:hover {
+            color: #167495;
+        }
 
 .fa-2 {
   font-size: 1.7em !important; }
