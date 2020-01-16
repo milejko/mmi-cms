@@ -92,13 +92,12 @@ class CategoryController extends Mvc\Controller
             $this->getMessenger()->addMessage('messenger.category.categoryType.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id]);
         }
-        //dodawanie widgeta
+        //przekierowanie po zapisie kopii roboczej
+        //format redirect:url
         if ($form->isSaved() && 'redirect' == substr($form->getElement('submit')->getValue(), 0, 8)) {
             //zmiany zapisane
             $this->getResponse()->redirectToUrl(substr($form->getElement('submit')->getValue(), 9));
-            //$this->getResponse()->redirect('cmsAdmin', 'categoryWidgetRelation', 'add', ['id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id]);
         }
-        var_dump(substr($form->getElement('submit')->getValue(), 0, 8));exit;
         //przekierowanie na podgląd
         $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);
     }

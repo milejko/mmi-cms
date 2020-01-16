@@ -23,6 +23,14 @@ CMS.default = function () {
             $('button[type=submit]').addClass('disabled');
         });
     };
+
+    unlockSubmits = function () {
+        duringSend = false;
+        $('input[type=submit]').removeClass('disabled');
+        $('button[type=submit]').removeClass('disabled');        
+    };
+
+    unlockSubmits();
     initFormDoubleSendLock();
     initConfirms();
 };

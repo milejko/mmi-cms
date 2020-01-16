@@ -56,17 +56,6 @@ CMS.category = function () {
         }
     };
 
-    initNewWindowButtons = function () {
-        $('#categoryContentContainer').on('click', 'a.new-window', function () {
-            if (openedWindow.closed) {
-                openedWindow = window.open($(this).attr('href'), '', "width=" + ($(window).width() - 200) + ",height=" + ($(window).height() - 200) + ",left=150,top=150,toolbar=no,scrollbars=yes,resizable=no");
-                return false;
-            }
-            openedWindow.focus();
-            return false;
-        });
-    };
-
     initWidgetButtons = function () {
         $('#widget-list').on('click', '.delete-widget', function () {
             if (!window.confirm($(this).attr('title') + '?')) {
@@ -79,11 +68,9 @@ CMS.category = function () {
         $('#widget-list').on('click', '.toggle-widget', function () {
             var state = parseInt($(this).data('state'));
             state++;
-
             if (state > 1) {
                 state = 0;
             }
-
             $.get($(this).attr('href'), {'state': state});
             if (state === 1) {
                 $(this).children('i').attr('class', 'fa fa-2 fa-eye pull-right');
@@ -132,7 +119,6 @@ CMS.category = function () {
     };
     dataTabRestore();
     initSortableWidgets();
-    initNewWindowButtons();
     initWidgetButtons();
     initCategoryChange();
     return that;
