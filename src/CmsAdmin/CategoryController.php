@@ -10,6 +10,7 @@
 
 namespace CmsAdmin;
 
+use Cms\Orm\CmsCategoryWidgetQuery;
 use Mmi\App\FrontController;
 
 /**
@@ -62,6 +63,8 @@ class CategoryController extends Mvc\Controller
         }
         //konfiguracja kategorii
         $form = (new \CmsAdmin\Form\Category($category));
+        //dostępne widgety
+        $this->view->availableWidgets = (new CmsCategoryWidgetQuery)->find();
         //sprawdzenie czy kategoria nadal istnieje (form robi zapis - to trwa)
         if (!$form->isMine() && (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id))) {
             //przekierowanie na originalId (lub na tree według powyższego warunku)

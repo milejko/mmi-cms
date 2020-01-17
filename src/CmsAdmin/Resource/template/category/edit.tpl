@@ -76,9 +76,13 @@
                     {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
                         <div class="tab-pane" id="widgets" role="tabpanel" aria-expanded="false">
                             {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'add'])}
-                                <button id="cmsadmin-form-category-submit" type="submit" class="button btn btn-primary btn-block" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&action=add&id={$category->id}&uploaderId={$request->uploaderId}&originalId={$category->cmsCategoryOriginalId}@}">
-                                    <i class="icon-plus"></i> {#template.category.edit.widget.add#}
-                                </button>
+                                <div style="overflow-x: auto; white-space:nowrap;">
+                                    {foreach $availableWidgets as $availableWidget}
+                                        <button id="cmsadmin-form-category-submit" type="submit" class="button btn btn-primary btn-inline-block" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&widgetId={$availableWidget->id}&action=config&categoryId={$category->id}&uploaderId={$request->uploaderId}&originalId={$category->cmsCategoryOriginalId}@}">
+                                            <i class="icon-plus"></i> {$availableWidget->name}
+                                        </button>
+                                    {/foreach}
+                                </div>
                             {/if}
                             <div id="widget-list-container" data-category-id="{$category->id}">
                                 {widget('cmsAdmin', 'categoryWidgetRelation', 'preview', ['categoryId' => $category->id])}

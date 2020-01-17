@@ -17,42 +17,27 @@ class CategoryWidgetRelationController extends Mvc\Controller
 {
 
     /**
-     * Wybór widgeta do dodania
-     */
-    public function addAction()
-    {
-        //wyszukiwanie kategorii
-        if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
-            return;
-        }
-        //zakładka sekcje
-        $widgetForm = (new \CmsAdmin\Form\CategoryAddWidget($cat));
-        //zapisany form
-        if ($widgetForm->isSaved()) {
-            $this->getResponse()->redirect('cmsAdmin', 'categoryWidgetRelation', 'config', [
-                'categoryId' => $this->id,
-                'originalId' => $this->originalId,
-                'uploaderId' => $this->uploaderId,
-                'widgetId' => $widgetForm->getElement('cmsWidgetId')->getValue(),
-            ]);
-        }
-        //form do widoku
-        $this->view->widgetForm = $widgetForm;
-    }
-
-    /**
      * Konfiguracja widgeta
      */
     public function configAction()
     {
         //wyszukiwanie kategorii
         if ((null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->categoryId)) || $category->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
-            return;
+            //brak kategorii
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', [
+                'id' => $this->categoryId,
+                'originalId' => $this->originalId,
+                'uploaderId' => $this->uploaderId,
+            ]);
         }
         //wyszukiwanie widgeta
         if (null === $widgetRecord = (new \Cms\Orm\CmsCategoryWidgetQuery)->findPk($this->widgetId)) {
             //brak widgeta
-            return;
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', [
+                'id' => $this->categoryId,
+                'originalId' => $this->originalId,
+                'uploaderId' => $this->uploaderId,
+            ]);
         }
         //wyszukiwanie relacji do edycji
         if (null === $widgetRelationRecord = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
