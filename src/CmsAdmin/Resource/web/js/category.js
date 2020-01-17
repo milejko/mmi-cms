@@ -29,10 +29,8 @@ CMS.category = function () {
     "use strict";
     var that = {},
             initSortableWidgets,
-            initNewWindowButtons,
             initWidgetButtons,
-            initCategoryChange,
-            reloadWidgets;
+            initCategoryChange;
 
     initSortableWidgets = function () {
         if ($('#widget-list').length > 0) {
@@ -91,19 +89,6 @@ CMS.category = function () {
             return false;
         });
     };
-
-    reloadWidgets = function () {
-        $.get(request.baseUrl + "/?module=cmsAdmin&controller=categoryWidgetRelation&action=preview&categoryId=" + $('#widget-list-container').attr('data-category-id'), function (data) {
-            $('#widget-list-container').html(data);
-            initSortableWidgets();
-            initWidgetButtons();
-            if (window.MathJax !== undefined) {
-                window.MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-            }
-        });
-    };
-
-    that.reloadWidgets = reloadWidgets;
 
     var dataTabRestore = function () {
         var itemName = 'categoryActiveTab-' + $('ul.nav-tabs').attr('data-id');
