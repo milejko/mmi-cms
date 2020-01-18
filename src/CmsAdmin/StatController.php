@@ -65,36 +65,36 @@ class StatController extends Mvc\Controller
         $this->view->dailyChart = \Cms\Model\StatFlot::getCode('dailyChart', [
                 //bieżący miesiąc
                 ['object' => $label->object,
-                    'label' => $label->label . ': ' . $this->view->_('dni'),
+                    'label' => $label->label . ': ' . $this->view->_('controller.stat.index.days'),
                     'data' => \Cms\Model\Stat::toDate($object, null, $year, $month, $day)
                 ],
                 //poprzedni miesiąc
                 ['object' => $label->object,
-                    'label' => $this->view->_('Poprzedni miesiąc: dni'),
+                    'label' => $this->view->_('controller.stat.index.previosMonthDays'),
                     'data' => \Cms\Model\Stat::toDate($object, null, $prevYear, $prevMonth, $day)
                 ]], 'lines', true);
         //statystyki miesięczne
         $this->view->monthlyChart = \Cms\Model\StatFlot::getCode('monthlyChart', [
                 ['object' => $label->object,
-                    'label' => $label->label . ': ' . $this->view->_('miesiące'),
+                    'label' => $label->label . ': ' . $this->view->_('controller.stat.index.months'),
                     'data' => \Cms\Model\Stat::monthly($object, null, $year)
                 ]], 'bars');
         //statystyki roczne
         $this->view->yearlyChart = \Cms\Model\StatFlot::getCode('yearlyChart', [
                 ['object' => $label->object,
-                    'label' => $label->label . ': ' . $this->view->_('lata'),
+                    'label' => $label->label . ': ' . $this->view->_('controller.stat.index.years'),
                     'data' => \Cms\Model\Stat::yearly($object, null)
                 ]], 'bars');
         //rozkład godzinowy
         $this->view->avgHourlyChart = \Cms\Model\StatFlot::getCode('avgHourlyChart', [
                 ['object' => $label->object,
-                    'label' => $label->label . ': ' . $this->view->_('rozkład godzinowy'),
+                    'label' => $label->label . ': ' . $this->view->_('controller.stat.index.hourDistribution'),
                     'data' => \Cms\Model\Stat::avgHourly($object, null, $year, $month)
                 ]], 'bars');
         //rozkład godzinowy
         $this->view->avgHourlyAllChart = \Cms\Model\StatFlot::getCode('avgHourlyAllChart', [
                 ['object' => $label->object,
-                    'label' => $label->label . ': ' . $this->view->_('rozkład ogólny'),
+                    'label' => $label->label . ': ' . $this->view->_('controller.stat.index.generalDistribution'),
                     'data' => \Cms\Model\Stat::avgHourly($object, null, null, null)
                 ]], 'bars');
     }

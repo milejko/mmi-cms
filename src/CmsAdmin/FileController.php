@@ -51,7 +51,7 @@ class FileController extends Mvc\Controller
         }
         //brak pliku
         if (null === ($file = (new CmsFileQuery)->findPk($this->id)) || $this->hash != $file->name) {
-            return $this->view->getTranslate()->_('Przypinanie nie powiodło się');
+            return $this->view->_('controller.fileController.stick.error');
         }
         //przypina plik
         $file->setSticky();
@@ -65,7 +65,7 @@ class FileController extends Mvc\Controller
     public function editAction()
     {
         $this->getResponse()->setTypeJson();
-        $error = json_encode(['error' => 'Edycja nie powiodła się, brak pliku']);
+        $error = json_encode(['error' => 'controller.fileController.edit.error']);
         //brak id
         if (!$this->id) {
             return $error;
@@ -96,11 +96,11 @@ class FileController extends Mvc\Controller
     {
         $this->getResponse()->setTypePlain();
         if (!$this->id) {
-            return $this->view->getTranslate()->_('Usuwanie nie powiodło się, brak pliku');
+            return $this->view->_('controller.fileController.delete.error');
         }
         $file = (new CmsFileQuery)->findPk($this->id);
         if (!$file || $this->hash != $file->getHashName()) {
-            return $this->view->getTranslate()->_('Usuwanie nie powiodło się');
+            return $this->view->_('controller.fileController.delete.error');
         }
         $file->delete();
         return '';
@@ -114,7 +114,7 @@ class FileController extends Mvc\Controller
     {
         $this->getResponse()->setTypePlain();
         if (!$this->getPost()->__get('item-file')) {
-            return $this->view->getTranslate()->_('Przenoszenie nie powiodło się');
+            return $this->view->_('controller.fileController.sort.error');
         }
         \Cms\Model\File::sortBySerial($this->getPost()->__get('item-file'));
         return '';

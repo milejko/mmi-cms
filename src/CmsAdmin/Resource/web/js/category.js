@@ -1,5 +1,5 @@
 var CMS = CMS || {};
-var openedWindow = {closed: true};
+var openedWindow = { closed: true };
 var followScroll = false;
 
 var $elems = $("html, body");
@@ -28,9 +28,9 @@ $(document).on("mousemove", function (e) {
 CMS.category = function () {
     "use strict";
     var that = {},
-            initSortableWidgets,
-            initWidgetButtons,
-            initCategoryChange;
+        initSortableWidgets,
+        initWidgetButtons,
+        initCategoryChange;
 
     initSortableWidgets = function () {
         if ($('#widget-list').length > 0) {
@@ -44,11 +44,11 @@ CMS.category = function () {
                 handle: '.handle-widget',
                 update: function (event, ui) {
                     $.post(request.baseUrl + "/?module=cmsAdmin&controller=categoryWidgetRelation&action=sort&categoryId=" + $(this).attr('data-category-id'), $(this).sortable('serialize'),
-                            function (result) {
-                                if (result) {
-                                    alert(result);
-                                }
-                            });
+                        function (result) {
+                            if (result) {
+                                alert(result);
+                            }
+                        });
                 }
             });
         }
@@ -69,7 +69,7 @@ CMS.category = function () {
             if (state > 1) {
                 state = 0;
             }
-            $.get($(this).attr('href'), {'state': state});
+            $.get($(this).attr('href'), { 'state': state });
             if (state === 1) {
                 $(this).children('i').attr('class', 'fa fa-2 fa-eye pull-right');
                 $(this).attr('title', 'aktywny');

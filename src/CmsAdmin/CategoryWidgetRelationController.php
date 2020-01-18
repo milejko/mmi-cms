@@ -138,7 +138,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
         $this->getResponse()->setTypePlain();
         //brak pola
         if (null === $serial = $this->getPost()->__get('widget-item')) {
-            return $this->view->getTranslate()->_('Przenoszenie nie powiodło się');
+            return $this->view->_('controller.categoryWidgetRelation.move.error');
         }
         //sortowanie
         (new \Cms\Model\CategoryWidgetModel($this->categoryId))

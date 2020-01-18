@@ -80,17 +80,16 @@ class AclController extends Mvc\Controller
      */
     public function updateAction()
     {
-        $msg = $this->view->getTranslate()->_('Zmiana właściwości nie powiodła się.');
         $this->getResponse()->setTypePlain();
         $params = explode('-', $this->id);
 
         //błędne dane wejściowe
         if (!($this->getPost()->selected) || count($params) != 3) {
-            return $msg;
+            return $this->view->_('controller.acl.update.error');
         }
         $record = (new \Cms\Orm\CmsAclQuery)->findPk($params[2]);
         if (!$record) {
-            return $msg;
+            return $this->view->_('controller.acl.update.error');
         }
         //zmiana zasobu
         if ($params[1] == 'resource') {
