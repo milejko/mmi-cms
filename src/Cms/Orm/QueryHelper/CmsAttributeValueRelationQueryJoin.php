@@ -7,5 +7,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsAttributeValueRelationQueryJoin extends \Mmi\Orm\QueryHelper\QueryJoin
 {
-    
+
 }

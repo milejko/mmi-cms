@@ -10,7 +10,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryQuery greaterOrEquals($value)
  * @method \Cms\Orm\CmsCategoryQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsCategoryQuery like($value)
- * @method \Cms\Orm\CmsCategoryQuery ilike($value)
+ * @method \Cms\Orm\CmsCategoryQuery notLike($value)
  * @method \Cms\Orm\CmsCategoryQuery between($from, $to)
  * @method \Cms\Orm\CmsCategoryQuery equalsColumnId()
  * @method \Cms\Orm\CmsCategoryQuery notEqualsColumnId()
@@ -18,12 +18,30 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryQuery lessThanColumnId()
  * @method \Cms\Orm\CmsCategoryQuery greaterOrEqualsColumnId()
  * @method \Cms\Orm\CmsCategoryQuery lessOrEqualsColumnId()
+ * @method \Cms\Orm\CmsCategoryQuery equalsColumnCmsAuthId()
+ * @method \Cms\Orm\CmsCategoryQuery notEqualsColumnCmsAuthId()
+ * @method \Cms\Orm\CmsCategoryQuery greaterThanColumnCmsAuthId()
+ * @method \Cms\Orm\CmsCategoryQuery lessThanColumnCmsAuthId()
+ * @method \Cms\Orm\CmsCategoryQuery greaterOrEqualsColumnCmsAuthId()
+ * @method \Cms\Orm\CmsCategoryQuery lessOrEqualsColumnCmsAuthId()
  * @method \Cms\Orm\CmsCategoryQuery equalsColumnCmsCategoryTypeId()
  * @method \Cms\Orm\CmsCategoryQuery notEqualsColumnCmsCategoryTypeId()
  * @method \Cms\Orm\CmsCategoryQuery greaterThanColumnCmsCategoryTypeId()
  * @method \Cms\Orm\CmsCategoryQuery lessThanColumnCmsCategoryTypeId()
  * @method \Cms\Orm\CmsCategoryQuery greaterOrEqualsColumnCmsCategoryTypeId()
  * @method \Cms\Orm\CmsCategoryQuery lessOrEqualsColumnCmsCategoryTypeId()
+ * @method \Cms\Orm\CmsCategoryQuery equalsColumnCmsCategoryOriginalId()
+ * @method \Cms\Orm\CmsCategoryQuery notEqualsColumnCmsCategoryOriginalId()
+ * @method \Cms\Orm\CmsCategoryQuery greaterThanColumnCmsCategoryOriginalId()
+ * @method \Cms\Orm\CmsCategoryQuery lessThanColumnCmsCategoryOriginalId()
+ * @method \Cms\Orm\CmsCategoryQuery greaterOrEqualsColumnCmsCategoryOriginalId()
+ * @method \Cms\Orm\CmsCategoryQuery lessOrEqualsColumnCmsCategoryOriginalId()
+ * @method \Cms\Orm\CmsCategoryQuery equalsColumnStatus()
+ * @method \Cms\Orm\CmsCategoryQuery notEqualsColumnStatus()
+ * @method \Cms\Orm\CmsCategoryQuery greaterThanColumnStatus()
+ * @method \Cms\Orm\CmsCategoryQuery lessThanColumnStatus()
+ * @method \Cms\Orm\CmsCategoryQuery greaterOrEqualsColumnStatus()
+ * @method \Cms\Orm\CmsCategoryQuery lessOrEqualsColumnStatus()
  * @method \Cms\Orm\CmsCategoryQuery equalsColumnLang()
  * @method \Cms\Orm\CmsCategoryQuery notEqualsColumnLang()
  * @method \Cms\Orm\CmsCategoryQuery greaterThanColumnLang()
@@ -147,5 +165,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsCategoryQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-    
+
 }

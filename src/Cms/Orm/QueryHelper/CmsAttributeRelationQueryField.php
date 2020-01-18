@@ -10,7 +10,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsAttributeRelationQuery greaterOrEquals($value)
  * @method \Cms\Orm\CmsAttributeRelationQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsAttributeRelationQuery like($value)
- * @method \Cms\Orm\CmsAttributeRelationQuery ilike($value)
+ * @method \Cms\Orm\CmsAttributeRelationQuery notLike($value)
  * @method \Cms\Orm\CmsAttributeRelationQuery between($from, $to)
  * @method \Cms\Orm\CmsAttributeRelationQuery equalsColumnId()
  * @method \Cms\Orm\CmsAttributeRelationQuery notEqualsColumnId()
@@ -81,5 +81,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsAttributeRelationQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-    
+
 }

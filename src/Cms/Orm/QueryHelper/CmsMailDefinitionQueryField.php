@@ -10,7 +10,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsMailDefinitionQuery greaterOrEquals($value)
  * @method \Cms\Orm\CmsMailDefinitionQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsMailDefinitionQuery like($value)
- * @method \Cms\Orm\CmsMailDefinitionQuery ilike($value)
+ * @method \Cms\Orm\CmsMailDefinitionQuery notLike($value)
  * @method \Cms\Orm\CmsMailDefinitionQuery between($from, $to)
  * @method \Cms\Orm\CmsMailDefinitionQuery equalsColumnId()
  * @method \Cms\Orm\CmsMailDefinitionQuery notEqualsColumnId()
@@ -87,5 +87,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsMailDefinitionQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-    
+
 }

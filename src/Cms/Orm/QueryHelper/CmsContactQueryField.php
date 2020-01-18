@@ -10,7 +10,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsContactQuery greaterOrEquals($value)
  * @method \Cms\Orm\CmsContactQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsContactQuery like($value)
- * @method \Cms\Orm\CmsContactQuery ilike($value)
+ * @method \Cms\Orm\CmsContactQuery notLike($value)
  * @method \Cms\Orm\CmsContactQuery between($from, $to)
  * @method \Cms\Orm\CmsContactQuery equalsColumnId()
  * @method \Cms\Orm\CmsContactQuery notEqualsColumnId()
@@ -93,5 +93,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsContactQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-    
+
 }

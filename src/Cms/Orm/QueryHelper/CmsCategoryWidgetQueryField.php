@@ -10,7 +10,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryWidgetQuery greaterOrEquals($value)
  * @method \Cms\Orm\CmsCategoryWidgetQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsCategoryWidgetQuery like($value)
- * @method \Cms\Orm\CmsCategoryWidgetQuery ilike($value)
+ * @method \Cms\Orm\CmsCategoryWidgetQuery notLike($value)
  * @method \Cms\Orm\CmsCategoryWidgetQuery between($from, $to)
  * @method \Cms\Orm\CmsCategoryWidgetQuery equalsColumnId()
  * @method \Cms\Orm\CmsCategoryWidgetQuery notEqualsColumnId()
@@ -51,5 +51,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsCategoryWidgetQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-    
+
 }

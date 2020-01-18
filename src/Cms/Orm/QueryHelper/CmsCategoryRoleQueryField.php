@@ -10,7 +10,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryRoleQuery greaterOrEquals($value)
  * @method \Cms\Orm\CmsCategoryRoleQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsCategoryRoleQuery like($value)
- * @method \Cms\Orm\CmsCategoryRoleQuery ilike($value)
+ * @method \Cms\Orm\CmsCategoryRoleQuery notLike($value)
  * @method \Cms\Orm\CmsCategoryRoleQuery between($from, $to)
  * @method \Cms\Orm\CmsCategoryRoleQuery equalsColumnId()
  * @method \Cms\Orm\CmsCategoryRoleQuery notEqualsColumnId()
@@ -33,5 +33,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsCategoryRoleQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-    
+
 }

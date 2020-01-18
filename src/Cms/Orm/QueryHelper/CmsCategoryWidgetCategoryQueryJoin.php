@@ -7,5 +7,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsCategoryWidgetCategoryQueryJoin extends \Mmi\Orm\QueryHelper\QueryJoin
 {
-    
+
 }

@@ -7,5 +7,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsCronQueryJoin extends \Mmi\Orm\QueryHelper\QueryJoin
 {
-    
+
 }

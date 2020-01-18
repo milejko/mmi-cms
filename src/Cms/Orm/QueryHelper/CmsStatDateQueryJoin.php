@@ -7,5 +7,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsStatDateQueryJoin extends \Mmi\Orm\QueryHelper\QueryJoin
 {
-    
+
 }

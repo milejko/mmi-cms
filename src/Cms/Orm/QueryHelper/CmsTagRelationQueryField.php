@@ -10,7 +10,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsTagRelationQuery greaterOrEquals($value)
  * @method \Cms\Orm\CmsTagRelationQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsTagRelationQuery like($value)
- * @method \Cms\Orm\CmsTagRelationQuery ilike($value)
+ * @method \Cms\Orm\CmsTagRelationQuery notLike($value)
  * @method \Cms\Orm\CmsTagRelationQuery between($from, $to)
  * @method \Cms\Orm\CmsTagRelationQuery equalsColumnId()
  * @method \Cms\Orm\CmsTagRelationQuery notEqualsColumnId()
@@ -39,5 +39,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsTagRelationQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-    
+
 }

@@ -10,7 +10,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsTagQuery greaterOrEquals($value)
  * @method \Cms\Orm\CmsTagQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsTagQuery like($value)
- * @method \Cms\Orm\CmsTagQuery ilike($value)
+ * @method \Cms\Orm\CmsTagQuery notLike($value)
  * @method \Cms\Orm\CmsTagQuery between($from, $to)
  * @method \Cms\Orm\CmsTagQuery equalsColumnId()
  * @method \Cms\Orm\CmsTagQuery notEqualsColumnId()
@@ -27,5 +27,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsTagQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-    
+
 }

@@ -10,7 +10,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery greaterOrEquals($value)
  * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery like($value)
- * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery ilike($value)
+ * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery notLike($value)
  * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery between($from, $to)
  * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery equalsColumnId()
  * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery notEqualsColumnId()
@@ -18,6 +18,12 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery lessThanColumnId()
  * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery greaterOrEqualsColumnId()
  * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery lessOrEqualsColumnId()
+ * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery equalsColumnUuid()
+ * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery notEqualsColumnUuid()
+ * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery greaterThanColumnUuid()
+ * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery lessThanColumnUuid()
+ * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery greaterOrEqualsColumnUuid()
+ * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery lessOrEqualsColumnUuid()
  * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery equalsColumnCmsCategoryWidgetId()
  * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery notEqualsColumnCmsCategoryWidgetId()
  * @method \Cms\Orm\CmsCategoryWidgetCategoryQuery greaterThanColumnCmsCategoryWidgetId()
@@ -51,5 +57,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsCategoryWidgetCategoryQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-    
+
 }
