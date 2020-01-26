@@ -11,6 +11,7 @@
 namespace CmsAdmin\Plugin;
 
 use CmsAdmin\Grid\Column;
+use Mmi\App\FrontController;
 
 /**
  * Grid atrybutów w szablonie artykułu
@@ -51,15 +52,10 @@ class CategoryAttributeRelationGrid extends \CmsAdmin\Grid\Grid
         $this->addColumn((new Column\CheckboxColumn('unique'))
             ->setLabel('grid.categoryAttributeRelation.unique.label'));
 
-        //zmaterializowany
-        $this->addColumn((new Column\SelectColumn('materialized'))
-            ->setMultioptions([0 => 'grid.categoryAttributeRelation.materialized.options.0', 1 => 'grid.categoryAttributeRelation.materialized.options.1', 2 => 'grid.categoryAttributeRelation.materialized.options.2'])
-            ->setLabel('grid.categoryAttributeRelation.materialized.label'));
-
         //operacje
         $this->addColumn((new Column\OperationColumn())
-            ->setDeleteParams(['action' => 'deleteAttributeRelation', 'relationId' => '%id%'])
-            ->setEditParams(['action' => 'edit', 'relationId' => '%id%']));
+            ->setDeleteParams(['controller' => 'categoryTypeAttribute', 'action' => 'delete', 'id' => '%id%', 'categoryTypeId' => FrontController::getInstance()->getRequest()->id])
+            ->setEditParams(['controller' => 'categoryTypeAttribute', 'action' => 'edit', 'id' => '%id%', 'categoryTypeId' => FrontController::getInstance()->getRequest()->id]));
     }
 
 }
