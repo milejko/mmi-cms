@@ -61,6 +61,8 @@ class CategoryController extends Mvc\Controller
             $this->getMessenger()->addMessage('messenger.category.permission.denied', false);
             $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
         }
+        //modyfikacja breadcrumbów
+        $this->view->adminNavigation()->modifyLastBreadcrumb('menu.category.edit', '#');
         //konfiguracja kategorii
         $form = (new \CmsAdmin\Form\Category($category));
         //dostępne widgety

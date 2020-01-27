@@ -1,3 +1,6 @@
+{*foreach $sections as $section}
+    {'cmsAdmin/categoryWidgetRelation/partial/section'}
+{/foreach*}
 <ul class="wlist ui-sortable" id="widget-list" data-category-id="{$category->id}">
     {foreach $category->getWidgetModel()->getWidgetRelations() as $widgetRelation}
         <li id="widget-item-{$widgetRelation->id}" class="ui-sortable-handle">

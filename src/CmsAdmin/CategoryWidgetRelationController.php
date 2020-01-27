@@ -10,6 +10,8 @@
 
 namespace CmsAdmin;
 
+use Cms\Orm\CmsCategorySectionQuery;
+
 /**
  * Kontroler konfiguracji kategorii - stron CMS
  */
@@ -30,6 +32,8 @@ class CategoryWidgetRelationController extends Mvc\Controller
                 'uploaderId' => $this->uploaderId,
             ]);
         }
+        //kategoria do widoku
+        $this->view->category = $category;
         //wyszukiwanie widgeta
         if (null === $widgetRecord = (new \Cms\Orm\CmsCategoryWidgetQuery)->findPk($this->widgetId)) {
             //brak widgeta
@@ -61,6 +65,9 @@ class CategoryWidgetRelationController extends Mvc\Controller
         $record = $widgetRelationRecord;
         //domyślna klasa formularza
         $widgetRecord->formClass = $widgetRecord->formClass ? : '\CmsAdmin\Form\CategoryAttributeWidgetForm';
+        //modyfikacja breadcrumbów
+        $this->view->adminNavigation()->modifyBreadcrumb(4, 'menu.category.edit', $this->view->url(['controller' => 'category', 'action' => 'edit', 'id' => $this->categoryId, 'categoryId' => null, 'widgetId' => null]));
+        $this->view->adminNavigation()->modifyLastBreadcrumb('menu.categoryWidgetRelation.config', '#');
         //instancja formularza
         $form = new $widgetRecord->formClass($record, ['widgetId' => $widgetRecord->id]);
         //wartości z zapisanej konfiguracji
@@ -89,12 +96,16 @@ class CategoryWidgetRelationController extends Mvc\Controller
      */
     public function previewAction()
     {
-        //wyłączenie layout
-        $this->view->setLayoutDisabled();
         //wyszukiwanie kategorii
-        if (null === $this->view->category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->categoryId)) {
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
+        if (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->categoryId)) {
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
+        //kategoria do widoku
+        $this->view->category = $category;
+        //sekcje do widoku
+        $this->view->sections = (new CmsCategorySectionQuery)
+            ->whereCategoryTypeId()->equals($category->cmsCategoryTypeId)
+            ->find();
     }
 
     /**
