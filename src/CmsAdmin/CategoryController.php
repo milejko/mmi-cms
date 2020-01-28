@@ -65,8 +65,6 @@ class CategoryController extends Mvc\Controller
         $this->view->adminNavigation()->modifyLastBreadcrumb('menu.category.edit', '#');
         //konfiguracja kategorii
         $form = (new \CmsAdmin\Form\Category($category));
-        //dostępne widgety
-        $this->view->availableWidgets = (new CmsCategoryWidgetQuery)->find();
         //sprawdzenie czy kategoria nadal istnieje (form robi zapis - to trwa)
         if (!$form->isMine() && (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id))) {
             //przekierowanie na originalId (lub na tree według powyższego warunku)

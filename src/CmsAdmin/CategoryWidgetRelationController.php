@@ -11,6 +11,7 @@
 namespace CmsAdmin;
 
 use Cms\Orm\CmsCategorySectionQuery;
+use Cms\Orm\CmsCategoryWidgetQuery;
 
 /**
  * Kontroler konfiguracji kategorii - stron CMS
@@ -26,6 +27,11 @@ class CategoryWidgetRelationController extends Mvc\Controller
         //wyszukiwanie kategorii
         if ((null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->categoryId)) || $category->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
             //brak kategorii
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
+        }
+        //wyszukiwanie sekcji (opcjonalnej)
+        if ($this->sectionId && null === $section = (new CmsCategorySectionQuery())->findPk($this->sectionId)) {
+            //brak sekcji
             $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', [
                 'id' => $this->categoryId,
                 'originalId' => $this->originalId,
@@ -61,15 +67,15 @@ class CategoryWidgetRelationController extends Mvc\Controller
         }
         //rekord widgeta do widoku
         $this->view->widgetRecord = $widgetRecord;
-        //rekord do formularza to rekord wiązania
-        $record = $widgetRelationRecord;
         //domyślna klasa formularza
         $widgetRecord->formClass = $widgetRecord->formClass ? : '\CmsAdmin\Form\CategoryAttributeWidgetForm';
         //modyfikacja breadcrumbów
         $this->view->adminNavigation()->modifyBreadcrumb(4, 'menu.category.edit', $this->view->url(['controller' => 'category', 'action' => 'edit', 'id' => $this->categoryId, 'categoryId' => null, 'widgetId' => null]));
         $this->view->adminNavigation()->modifyLastBreadcrumb('menu.categoryWidgetRelation.config', '#');
+        //zapis sekcji (opcjonalnej)
+        $widgetRelationRecord->cmsCategorySectionId = $this->sectionId;
         //instancja formularza
-        $form = new $widgetRecord->formClass($record, ['widgetId' => $widgetRecord->id]);
+        $form = new $widgetRecord->formClass($widgetRelationRecord, ['widgetId' => $widgetRecord->id]);
         //wartości z zapisanej konfiguracji
         $formValues = $widgetRelationRecord->getConfig()->toArray();
         //nadpisanie wartościami z POSTA, jeśli zosały przesłane
@@ -80,7 +86,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
         //form zapisany
         if ($form->isSaved()) {
             //zapis konfiguracji
-            $widgetRelationRecord->setConfigFromArray($record->getOptions());
+            $widgetRelationRecord->setConfigFromArray($widgetRelationRecord->getOptions());
             $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', [
                 'id' => $this->categoryId,
                 'originalId' => $this->originalId,
@@ -102,6 +108,8 @@ class CategoryWidgetRelationController extends Mvc\Controller
         }
         //kategoria do widoku
         $this->view->category = $category;
+        //dostępne widgety
+        $this->view->availableWidgets = (new CmsCategoryWidgetQuery())->find();
         //sekcje do widoku
         $this->view->sections = (new CmsCategorySectionQuery)
             ->whereCategoryTypeId()->equals($category->cmsCategoryTypeId)

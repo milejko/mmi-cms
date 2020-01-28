@@ -1,12 +1,14 @@
-<div class="card boxSection" id="widget-section-4" data-id="{$section->id}" data-required="0">
+<div class="card boxSection" id="widget-section-4" data-id="{$section->id}" data-required="{$section->required}">
     <div class="card-header">
-        {$section->name}
-        <div class="float-right">
-            <a href="#" style="margin-top: -7px; margin-bottom: -7px;" class="button btn btn-primary new-window btn-add-widget" target="_blank" data-section="{$section->id}">
-                <i class="icon-plus"></i> {$section->name}
-            </a>
-        </div>
+        <strong>{$section->name}</strong>
     </div>
     <div class="card-body" id="widget-list-container" data-category-id="33107">
+            <div style="overflow-x: auto; white-space:nowrap;">
+                {foreach $section->getCompatibleWidgets() as $compatibleWidget}
+                    <button id="cmsadmin-form-category-submit" type="submit" class="button btn btn-primary btn-inline-block" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&widgetId={$compatibleWidget->id}&action=config&categoryId={$category->id}&uploaderId={$request->uploaderId}&originalId={$category->cmsCategoryOriginalId}&sectionId={$section->id}@}">
+                        <i class="icon-plus"></i> {$compatibleWidget->name}
+                    </button>
+                {/foreach}
+            </div>
     </div>
 </div>

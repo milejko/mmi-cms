@@ -21,7 +21,6 @@ class CategoryAttributeWidgetForm extends \Cms\Form\AttributeForm
 
     public function init()
     {
-
         $this->initAttributes('cmsCategoryWidget', $this->getOption('widgetId'), 'categoryWidgetRelation');
 
         $this->addElement((new Element\Submit('submit'))
