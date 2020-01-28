@@ -1,7 +1,12 @@
 {if $sections|count}
     {foreach $sections as $section}
+        {$sectionId = $section->id}
         {'cmsAdmin/categoryWidgetRelation/partial/section'}
     {/foreach}
+    {$widgetRelations = $category->getWidgetModel()->getWidgetRelationsBySectionId(null)}
+    {if $widgetRelations|count}
+        <p>Posiadasz {$widgetRelations|count} widgetów nie przypisanych do żadnej sekcji</p>
+    {/if}
 {else}
     {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'add'])}
         <div style="overflow-x: auto; white-space:nowrap;">
@@ -13,5 +18,6 @@
         </div>
     {/if}
     {$widgetRelations = $category->getWidgetModel()->getWidgetRelations()}
+    {$sectionId = null}
     {'cmsAdmin/categoryWidgetRelation/partial/widgets'}
 {/if}

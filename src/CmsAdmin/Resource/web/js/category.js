@@ -33,8 +33,8 @@ CMS.category = function () {
         initCategoryChange;
 
     initSortableWidgets = function () {
-        if ($('#widget-list').length > 0) {
-            $('#widget-list').sortable({
+        if ($('.widget-list').length > 0) {
+            $('.widget-list').sortable({
                 start: function () {
                     followScroll = true;
                 },
@@ -55,7 +55,7 @@ CMS.category = function () {
     };
 
     initWidgetButtons = function () {
-        $('#widget-list').on('click', '.delete-widget', function () {
+        $('.widget-list').on('click', '.delete-widget', function () {
             if (!window.confirm($(this).attr('title') + '?')) {
                 return false;
             }
@@ -63,7 +63,7 @@ CMS.category = function () {
             $(this).parent('div').parent('li').remove();
             return false;
         });
-        $('#widget-list').on('click', '.toggle-widget', function () {
+        $('.widget-list').on('click', '.toggle-widget', function () {
             var state = parseInt($(this).data('state'));
             state++;
             if (state > 1) {
