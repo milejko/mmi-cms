@@ -1,6 +1,6 @@
 {if $sections|count}
     {foreach $sections as $section}
-        {$sectionId = $section->id}
+        {$sectionId = $section->id} {* potrzebne w poniższym partialu *}
         {'cmsAdmin/categoryWidgetRelation/partial/section'}
     {/foreach}
     {$widgetRelations = $category->getWidgetModel()->getWidgetRelationsBySectionId(null)}
@@ -17,7 +17,7 @@
             {/foreach}
         </div>
     {/if}
-    {$widgetRelations = $category->getWidgetModel()->getWidgetRelations()}
-    {$sectionId = null}
+    {$widgetRelations = $category->getWidgetModel()->getWidgetRelations()} {* potrzebne w poniższym partialu *}
+    {$sectionId = null} {* potrzebne w poniższym partialu *}
     {'cmsAdmin/categoryWidgetRelation/partial/widgets'}
 {/if}

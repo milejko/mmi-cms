@@ -52,10 +52,12 @@ class CategoryAttributeRelationGrid extends \CmsAdmin\Grid\Grid
         $this->addColumn((new Column\CheckboxColumn('unique'))
             ->setLabel('grid.categoryAttributeRelation.unique.label'));
 
-        //operacje
+        $additionalRequestParams = is_array($this->getOption('requestParams')) ? $this->getOption('requestParams') : [];
+
+        //operacje (z id referencyjnym rodzica)
         $this->addColumn((new Column\OperationColumn())
-            ->setDeleteParams(['controller' => 'categoryTypeAttribute', 'action' => 'delete', 'id' => '%id%', 'categoryTypeId' => FrontController::getInstance()->getRequest()->id])
-            ->setEditParams(['controller' => 'categoryTypeAttribute', 'action' => 'edit', 'id' => '%id%', 'categoryTypeId' => FrontController::getInstance()->getRequest()->id]));
+            ->setDeleteParams($additionalRequestParams + ['action' => 'delete', 'id' => '%id%'])
+            ->setEditParams($additionalRequestParams + ['action' => 'edit', 'id' => '%id%']));
     }
 
 }

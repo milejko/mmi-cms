@@ -39,8 +39,15 @@ class CategoryTypeController extends Mvc\Controller
         }
         $this->view->categoryTypeForm = $form;
         //grid atrybutów
-        $this->view->relationGrid = new \CmsAdmin\Plugin\CategoryAttributeRelationGrid(['object' => 'cmsCategoryType', 'objectId' => $this->id]);
-        //grid atrybutów
+        $this->view->relationGrid = new \CmsAdmin\Plugin\CategoryAttributeRelationGrid([
+            'object' => 'cmsCategoryType',
+            'objectId' => $this->id,
+            'requestParams' => [
+                'controller' => 'categoryTypeAttribute',
+                'categoryTypeId' => $this->id,
+            ]
+        ]);
+        //grid sekcji
         $this->view->sectionGrid = new \CmsAdmin\Plugin\CategorySectionGrid(['typeId' => $this->id]);
     }
 
@@ -54,16 +61,6 @@ class CategoryTypeController extends Mvc\Controller
             $this->getMessenger()->addMessage('messenger.categoryType.categoryType.deleted', true);
         }
         $this->getResponse()->redirect('cmsAdmin', 'categoryType');
-    }
-
-    /**
-     * Usuwanie relacji szablon atrybut
-     */
-    public function deleteAttributeRelationAction()
-    {
-        //usuwanie relacji
-        (new AttributeController($this->getRequest(), $this->view))->deleteAttributeRelationAction();
-        $this->getResponse()->redirect('cmsAdmin', 'categoryType', 'edit', ['id' => $this->id]);
     }
 
 }
