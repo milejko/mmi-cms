@@ -7,7 +7,7 @@
             </div>
             <div class="operation">
                 {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'config'])}
-                    <button class="button edit" type="submit" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&action=config&widgetId={$widgetRelation->getWidgetRecord()->id}&id={$widgetRelation->id}&categoryId={$category->id}&uploaderId={$request->uploaderId}&originalId={$category->cmsCategoryOriginalId}&sectionId={$sectionId}@}">
+                    <button class="button edit" type="submit" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&action=config&widgetId={$widgetRelation->getWidgetRecord()->id}&id={$widgetRelation->id}&categoryId={$category->id}&originalUploaderId={$request->uploaderId}&uploaderId={$widgetRelation->id}&originalId={$category->cmsCategoryOriginalId}&sectionId={$sectionId}@}">
                         <i class="fa fa-pencil-square-o pull-right fa-2"></i>
                     </button>
                 {/if}

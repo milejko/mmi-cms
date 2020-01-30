@@ -12,6 +12,7 @@ namespace CmsAdmin;
 
 use Cms\Orm\CmsCategorySectionQuery;
 use Cms\Orm\CmsCategoryWidgetQuery;
+use Mmi\Filter\EmptyToNull;
 
 /**
  * Kontroler konfiguracji kategorii - stron CMS
@@ -73,7 +74,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
         $this->view->adminNavigation()->modifyBreadcrumb(4, 'menu.category.edit', $this->view->url(['controller' => 'category', 'action' => 'edit', 'id' => $this->categoryId, 'categoryId' => null, 'widgetId' => null]));
         $this->view->adminNavigation()->modifyLastBreadcrumb('menu.categoryWidgetRelation.config', '#');
         //zapis sekcji (opcjonalnej)
-        $widgetRelationRecord->cmsCategorySectionId = $this->sectionId;
+        $widgetRelationRecord->cmsCategorySectionId = (new EmptyToNull())->filter($this->sectionId);
         //instancja formularza
         $form = new $widgetRecord->formClass($widgetRelationRecord, ['widgetId' => $widgetRecord->id]);
         //wartości z zapisanej konfiguracji
@@ -90,7 +91,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
             $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', [
                 'id' => $this->categoryId,
                 'originalId' => $this->originalId,
-                'uploaderId' => $this->uploaderId,
+                'uploaderId' => $this->originalUploaderId,
             ]);
         }
         //form do widoku
