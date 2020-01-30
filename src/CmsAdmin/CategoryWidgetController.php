@@ -30,6 +30,9 @@ class CategoryWidgetController extends Mvc\Controller
      */
     public function editAction()
     {
+        //zmiana breadcrumbów
+        $this->view->adminNavigation()->modifyBreadcrumb(3, 'menu.categoryWidget.container', $this->view->url(['action' => 'index', 'id' => null]));
+        $this->view->adminNavigation()->modifyLastBreadcrumb('menu.categoryWidget.edit', '#');        
         $form = new \CmsAdmin\Form\CategoryWidget(new \Cms\Orm\CmsCategoryWidgetRecord($this->id));
         if ($form->isSaved()) {
             $this->getMessenger()->addMessage('messenger.categoryWidget.widgetConfig.saved', true);
@@ -45,17 +48,6 @@ class CategoryWidgetController extends Mvc\Controller
                 'categoryWidgetId' => $this->id,
             ]
         ]);
-        /*//rekord nowej, lub edytowanej relacji
-        $relationRecord = new \Cms\Orm\CmsAttributeRelationRecord($this->relationId);
-        $relationRecord->object = 'cmsCategoryWidget';
-        $relationRecord->objectId = $this->id;
-        //formularz edycji
-        $relationForm = new Form\CategoryAttributeRelationForm($relationRecord);
-        if ($relationForm->isSaved()) {
-            $this->getMessenger()->addMessage('messenger.categoryWidget.attributeRelation.saved', true);
-            $this->getResponse()->redirect('cmsAdmin', 'categoryWidget', 'edit', ['id' => $this->id]);
-        }
-        $this->view->relationForm = $relationForm;*/
     }
 
     /**

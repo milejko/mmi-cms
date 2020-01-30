@@ -39,12 +39,11 @@ class CategoryWidgetAttributeController extends Mvc\Controller
         $relationRecord->objectId = $this->categoryWidgetId;
         //formularz edycji atrybutów
         $relationForm = new Form\CategoryAttributeRelationForm($relationRecord);
-        var_dump($relationRecord);
         if ($relationForm->isSaved()) {
             $this->getMessenger()->addMessage('messenger.categoryWidgetAttribute.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'categoryWidget', 'edit', ['id' => $this->categoryWidgetId]);
         }
-        $this->view->form = $relationForm;
+        $this->view->relationForm = $relationForm;
     }
 
     /**

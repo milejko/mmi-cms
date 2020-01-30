@@ -14,7 +14,6 @@
         </div>
     </div>
 </div>
-{if $relationGrid}
 <div class="container-fluid">
     <div class="animated fadeIn">
         <div class="row">
@@ -34,7 +33,6 @@
         </div>
     </div>
 </div>
-{/if}
 <div class="container-fluid">
     <div class="animated fadeIn">
         <div class="row">

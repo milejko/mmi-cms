@@ -4,7 +4,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{if !$request->relationId}{#template.categoryWidget.edit.attribute.new#}{else}{#template.categoryWidget.edit.attribute.edit#}{/if}</strong>
+                        <strong>{if !$request->relationId}{#template.categoryWidgetAttribute.edit.header.new#}{else}{#template.categoryWidgetAttribute.edit.header.edit#}{/if}</strong>
                     </div>
                     <div class="card-body">
                         {$relationForm}
