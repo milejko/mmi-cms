@@ -35,14 +35,30 @@ class NavPartCategory extends \Mmi\Navigation\NavigationConfig
                     ->setModule('cmsAdmin')
                     ->setController('category')
                     ->setAction('tree')
-            )
-            ->addChild(
-                (new \Mmi\Navigation\NavigationConfigElement)
-                    ->setLabel('menu.category.edit')
-                    ->setDisabled()
-                    ->setModule('cmsAdmin')
-                    ->setController('category')
-                    ->setAction('edit')
+                    ->addChild(
+                        (new \Mmi\Navigation\NavigationConfigElement)
+                            ->setLabel('menu.category.edit')
+                            ->setDisabled()
+                            ->setModule('cmsAdmin')
+                            ->setController('category')
+                            ->setAction('edit')
+                            ->addChild(
+                                (new \Mmi\Navigation\NavigationConfigElement)
+                                    ->setLabel('menu.category.edit.widget')
+                                    ->setDisabled()
+                                    ->setModule('cmsAdmin')
+                                    ->setController('categoryWidgetRelation')
+                                    ->setAction('add')
+                            )
+                            ->addChild(
+                                (new \Mmi\Navigation\NavigationConfigElement)
+                                    ->setLabel('menu.category.edit.widget')
+                                    ->setDisabled()
+                                    ->setModule('cmsAdmin')
+                                    ->setController('categoryWidgetRelation')
+                                    ->setAction('config')
+                            )
+                    )
             )
             //lista treści
             ->addChild(
@@ -51,23 +67,6 @@ class NavPartCategory extends \Mmi\Navigation\NavigationConfig
                     ->setModule('cmsAdmin')
                     ->setIcon('fa-table')
                     ->setController('category')
-                    ->addChild(
-                        (new \Mmi\Navigation\NavigationConfigElement)
-                            ->setTitle('menu.categoryWidgetRelation.config')
-                            ->setModule('cmsAdmin')
-                            ->setController('categoryWidgetRelation')
-                            ->setAction('config')
-                            ->setDisabled()
-                    )
-                    ->addChild(
-                        (new \Mmi\Navigation\NavigationConfigElement)
-                            ->setTitle('menu.categoryWidgetRelation.add')
-                            ->setIcon('fa-plus')
-                            ->setModule('cmsAdmin')
-                            ->setController('categoryWidgetRelation')
-                            ->setAction('add')
-                            ->setDisabled()
-                    )
             )
             //uprawnienia
             ->addChild(

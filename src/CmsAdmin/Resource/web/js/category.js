@@ -1,5 +1,5 @@
 var CMS = CMS || {};
-var openedWindow = {closed: true};
+var openedWindow = { closed: true };
 var followScroll = false;
 
 var $elems = $("html, body");
@@ -28,15 +28,13 @@ $(document).on("mousemove", function (e) {
 CMS.category = function () {
     "use strict";
     var that = {},
-            initSortableWidgets,
-            initNewWindowButtons,
-            initWidgetButtons,
-            initCategoryChange,
-            reloadWidgets;
+        initSortableWidgets,
+        initWidgetButtons,
+        initCategoryChange;
 
     initSortableWidgets = function () {
-        if ($('#widget-list').length > 0) {
-            $('#widget-list').sortable({
+        if ($('.widget-list').length > 0) {
+            $('.widget-list').sortable({
                 start: function () {
                     followScroll = true;
                 },
@@ -46,29 +44,18 @@ CMS.category = function () {
                 handle: '.handle-widget',
                 update: function (event, ui) {
                     $.post(request.baseUrl + "/?module=cmsAdmin&controller=categoryWidgetRelation&action=sort&categoryId=" + $(this).attr('data-category-id'), $(this).sortable('serialize'),
-                            function (result) {
-                                if (result) {
-                                    alert(result);
-                                }
-                            });
+                        function (result) {
+                            if (result) {
+                                alert(result);
+                            }
+                        });
                 }
             });
         }
     };
 
-    initNewWindowButtons = function () {
-        $('#categoryContentContainer').on('click', 'a.new-window', function () {
-            if (openedWindow.closed) {
-                openedWindow = window.open($(this).attr('href'), '', "width=" + ($(window).width() - 200) + ",height=" + ($(window).height() - 200) + ",left=150,top=150,toolbar=no,scrollbars=yes,resizable=no");
-                return false;
-            }
-            openedWindow.focus();
-            return false;
-        });
-    };
-
     initWidgetButtons = function () {
-        $('#widget-list').on('click', '.delete-widget', function () {
+        $('.widget-list').on('click', '.delete-widget', function () {
             if (!window.confirm($(this).attr('title') + '?')) {
                 return false;
             }
@@ -76,15 +63,13 @@ CMS.category = function () {
             $(this).parent('div').parent('li').remove();
             return false;
         });
-        $('#widget-list').on('click', '.toggle-widget', function () {
+        $('.widget-list').on('click', '.toggle-widget', function () {
             var state = parseInt($(this).data('state'));
             state++;
-
             if (state > 1) {
                 state = 0;
             }
-
-            $.get($(this).attr('href'), {'state': state});
+            $.get($(this).attr('href'), { 'state': state });
             if (state === 1) {
                 $(this).children('i').attr('class', 'fa fa-2 fa-eye pull-right');
                 $(this).attr('title', 'aktywny');
@@ -105,19 +90,6 @@ CMS.category = function () {
         });
     };
 
-    reloadWidgets = function () {
-        $.get(request.baseUrl + "/?module=cmsAdmin&controller=categoryWidgetRelation&action=preview&categoryId=" + $('#widget-list-container').attr('data-category-id'), function (data) {
-            $('#widget-list-container').html(data);
-            initSortableWidgets();
-            initWidgetButtons();
-            if (window.MathJax !== undefined) {
-                window.MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-            }
-        });
-    };
-
-    that.reloadWidgets = reloadWidgets;
-
     var dataTabRestore = function () {
         var itemName = 'categoryActiveTab-' + $('ul.nav-tabs').attr('data-id');
         $('ul.nav-tabs > li').on('click', 'a', function (evt) {
@@ -132,7 +104,6 @@ CMS.category = function () {
     };
     dataTabRestore();
     initSortableWidgets();
-    initNewWindowButtons();
     initWidgetButtons();
     initCategoryChange();
     return that;

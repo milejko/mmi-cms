@@ -10,7 +10,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCronQuery greaterOrEquals($value)
  * @method \Cms\Orm\CmsCronQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsCronQuery like($value)
- * @method \Cms\Orm\CmsCronQuery ilike($value)
+ * @method \Cms\Orm\CmsCronQuery notLike($value)
  * @method \Cms\Orm\CmsCronQuery between($from, $to)
  * @method \Cms\Orm\CmsCronQuery equalsColumnId()
  * @method \Cms\Orm\CmsCronQuery notEqualsColumnId()
@@ -24,6 +24,12 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCronQuery lessThanColumnActive()
  * @method \Cms\Orm\CmsCronQuery greaterOrEqualsColumnActive()
  * @method \Cms\Orm\CmsCronQuery lessOrEqualsColumnActive()
+ * @method \Cms\Orm\CmsCronQuery equalsColumnLock()
+ * @method \Cms\Orm\CmsCronQuery notEqualsColumnLock()
+ * @method \Cms\Orm\CmsCronQuery greaterThanColumnLock()
+ * @method \Cms\Orm\CmsCronQuery lessThanColumnLock()
+ * @method \Cms\Orm\CmsCronQuery greaterOrEqualsColumnLock()
+ * @method \Cms\Orm\CmsCronQuery lessOrEqualsColumnLock()
  * @method \Cms\Orm\CmsCronQuery equalsColumnMinute()
  * @method \Cms\Orm\CmsCronQuery notEqualsColumnMinute()
  * @method \Cms\Orm\CmsCronQuery greaterThanColumnMinute()
@@ -84,6 +90,12 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCronQuery lessThanColumnAction()
  * @method \Cms\Orm\CmsCronQuery greaterOrEqualsColumnAction()
  * @method \Cms\Orm\CmsCronQuery lessOrEqualsColumnAction()
+ * @method \Cms\Orm\CmsCronQuery equalsColumnMessage()
+ * @method \Cms\Orm\CmsCronQuery notEqualsColumnMessage()
+ * @method \Cms\Orm\CmsCronQuery greaterThanColumnMessage()
+ * @method \Cms\Orm\CmsCronQuery lessThanColumnMessage()
+ * @method \Cms\Orm\CmsCronQuery greaterOrEqualsColumnMessage()
+ * @method \Cms\Orm\CmsCronQuery lessOrEqualsColumnMessage()
  * @method \Cms\Orm\CmsCronQuery equalsColumnDateAdd()
  * @method \Cms\Orm\CmsCronQuery notEqualsColumnDateAdd()
  * @method \Cms\Orm\CmsCronQuery greaterThanColumnDateAdd()
@@ -105,5 +117,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsCronQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-    
+
 }

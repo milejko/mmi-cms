@@ -10,7 +10,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsRoleQuery greaterOrEquals($value)
  * @method \Cms\Orm\CmsRoleQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsRoleQuery like($value)
- * @method \Cms\Orm\CmsRoleQuery ilike($value)
+ * @method \Cms\Orm\CmsRoleQuery notLike($value)
  * @method \Cms\Orm\CmsRoleQuery between($from, $to)
  * @method \Cms\Orm\CmsRoleQuery equalsColumnId()
  * @method \Cms\Orm\CmsRoleQuery notEqualsColumnId()
@@ -27,5 +27,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsRoleQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-    
+
 }

@@ -10,7 +10,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryAclQuery greaterOrEquals($value)
  * @method \Cms\Orm\CmsCategoryAclQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsCategoryAclQuery like($value)
- * @method \Cms\Orm\CmsCategoryAclQuery ilike($value)
+ * @method \Cms\Orm\CmsCategoryAclQuery notLike($value)
  * @method \Cms\Orm\CmsCategoryAclQuery between($from, $to)
  * @method \Cms\Orm\CmsCategoryAclQuery equalsColumnId()
  * @method \Cms\Orm\CmsCategoryAclQuery notEqualsColumnId()
@@ -39,5 +39,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsCategoryAclQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-    
+
 }

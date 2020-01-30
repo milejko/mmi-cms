@@ -7,5 +7,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsStatLabelQueryJoin extends \Mmi\Orm\QueryHelper\QueryJoin
 {
-    
+
 }

@@ -10,7 +10,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsStatDateQuery greaterOrEquals($value)
  * @method \Cms\Orm\CmsStatDateQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsStatDateQuery like($value)
- * @method \Cms\Orm\CmsStatDateQuery ilike($value)
+ * @method \Cms\Orm\CmsStatDateQuery notLike($value)
  * @method \Cms\Orm\CmsStatDateQuery between($from, $to)
  * @method \Cms\Orm\CmsStatDateQuery equalsColumnId()
  * @method \Cms\Orm\CmsStatDateQuery notEqualsColumnId()
@@ -63,5 +63,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsStatDateQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-    
+
 }

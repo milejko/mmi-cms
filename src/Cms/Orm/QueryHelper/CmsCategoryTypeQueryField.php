@@ -10,7 +10,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryTypeQuery greaterOrEquals($value)
  * @method \Cms\Orm\CmsCategoryTypeQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsCategoryTypeQuery like($value)
- * @method \Cms\Orm\CmsCategoryTypeQuery ilike($value)
+ * @method \Cms\Orm\CmsCategoryTypeQuery notLike($value)
  * @method \Cms\Orm\CmsCategoryTypeQuery between($from, $to)
  * @method \Cms\Orm\CmsCategoryTypeQuery equalsColumnId()
  * @method \Cms\Orm\CmsCategoryTypeQuery notEqualsColumnId()
@@ -36,8 +36,14 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryTypeQuery lessThanColumnMvcParams()
  * @method \Cms\Orm\CmsCategoryTypeQuery greaterOrEqualsColumnMvcParams()
  * @method \Cms\Orm\CmsCategoryTypeQuery lessOrEqualsColumnMvcParams()
+ * @method \Cms\Orm\CmsCategoryTypeQuery equalsColumnCacheLifetime()
+ * @method \Cms\Orm\CmsCategoryTypeQuery notEqualsColumnCacheLifetime()
+ * @method \Cms\Orm\CmsCategoryTypeQuery greaterThanColumnCacheLifetime()
+ * @method \Cms\Orm\CmsCategoryTypeQuery lessThanColumnCacheLifetime()
+ * @method \Cms\Orm\CmsCategoryTypeQuery greaterOrEqualsColumnCacheLifetime()
+ * @method \Cms\Orm\CmsCategoryTypeQuery lessOrEqualsColumnCacheLifetime()
  */
 class CmsCategoryTypeQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-    
+
 }

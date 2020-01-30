@@ -7,5 +7,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsFileQueryJoin extends \Mmi\Orm\QueryHelper\QueryJoin
 {
-    
+
 }

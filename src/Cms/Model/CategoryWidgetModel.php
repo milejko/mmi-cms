@@ -43,6 +43,7 @@ class CategoryWidgetModel
         if (null === $this->_widgetCollection = (new CmsCategoryWidgetCategoryQuery)
             ->join('cms_category')->on('cms_category_id')
             ->join('cms_category_widget')->on('cms_category_widget_id')
+            ->joinLeft('cms_category_section')->on('cms_category_section_id')
             ->whereCmsCategoryId()->equals($this->_categoryId)
             ->orderAscOrder()
             ->find()) {
@@ -74,7 +75,45 @@ class CategoryWidgetModel
     public function getWidgetRelations()
     {
         //zwrot kolekcji widgetów
-        return $this->_widgetCollection;
+        return $this->getWidgetRelationsBySectionId(null);
+    }
+
+    /**
+     * Pobiera rekordy relacji widget - kategoria po id sekcji
+     * @param int $sectionId
+     * @return \Cms\Orm\CmsCategoryWidgetCategoryRecord[]
+     */
+    public function getWidgetRelationsBySectionId($sectionId)
+    {
+        $filteredRelations = [];
+        //iteracja po relacjach
+        foreach ($this->_widgetCollection as $widgetRelation) {
+            //porównanie identyfikatora sekcji
+            if ($widgetRelation->cmsCategorySectionId != $sectionId) {
+                continue;
+            }
+            $filteredRelations[] = $widgetRelation;
+        }
+        return $filteredRelations;
+    }
+
+    /**
+     * Pobiera rekordy relacji widget - kategoria po kluczu sekcji
+     * @param string $sectionKey
+     * @return \Cms\Orm\CmsCategoryWidgetCategoryRecord[]
+     */
+    public function getWidgetRelationsBySectionKey($sectionKey)
+    {
+        $filteredRelations = [];
+        //iteracja po relacjach
+        foreach ($this->_widgetCollection as $widgetRelation) {
+            //porównanie klucza sekcji
+            if ($widgetRelation->getJoined('cms_category_section')->key != $sectionKey) {
+                continue;
+            }
+            $filteredRelations[] = $widgetRelation;
+        }
+        return $filteredRelations;
     }
 
     /**

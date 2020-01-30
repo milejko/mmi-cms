@@ -29,29 +29,26 @@ class CategoryTypeController extends Mvc\Controller
      */
     public function editAction()
     {
+        //zmiana breadcrumbów
+        $this->view->adminNavigation()->modifyBreadcrumb(3, 'menu.categoryType.container', $this->view->url(['action' => 'index', 'id' => null]));
+        $this->view->adminNavigation()->modifyLastBreadcrumb('menu.categoryType.edit', '#');
         $form = new \CmsAdmin\Form\CategoryType(new \Cms\Orm\CmsCategoryTypeRecord($this->id));
         if ($form->isSaved()) {
-            $this->getMessenger()->addMessage('messenger.categoryType.categoryType.saved', true);
+            $this->getMessenger()->addMessage('messenger.categoryType.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'categoryType');
         }
         $this->view->categoryTypeForm = $form;
-        //brak id (brak atrybutów)
-        if (!$this->id) {
-            return;
-        }
         //grid atrybutów
-        $this->view->relationGrid = new \CmsAdmin\Plugin\CategoryAttributeRelationGrid(['object' => 'cmsCategoryType', 'objectId' => $this->id]);
-        //rekord nowej, lub edytowanej relacji
-        $relationRecord = new \Cms\Orm\CmsAttributeRelationRecord($this->relationId);
-        $relationRecord->object = 'cmsCategoryType';
-        $relationRecord->objectId = $this->id;
-        //formularz edycji
-        $relationForm = new Form\CategoryAttributeRelationForm($relationRecord);
-        if ($relationForm->isSaved()) {
-            $this->getMessenger()->addMessage('messenger.categoryType.attributeRelation.saved', true);
-            $this->getResponse()->redirect('cmsAdmin', 'categoryType', 'edit', ['id' => $this->id]);
-        }
-        $this->view->relationForm = $relationForm;
+        $this->view->relationGrid = new \CmsAdmin\Plugin\CategoryAttributeRelationGrid([
+            'object' => 'cmsCategoryType',
+            'objectId' => $this->id,
+            'requestParams' => [
+                'controller' => 'categoryTypeAttribute',
+                'categoryTypeId' => $this->id,
+            ]
+        ]);
+        //grid sekcji
+        $this->view->sectionGrid = new \CmsAdmin\Plugin\CategorySectionGrid(['typeId' => $this->id]);
     }
 
     /**
@@ -64,16 +61,6 @@ class CategoryTypeController extends Mvc\Controller
             $this->getMessenger()->addMessage('messenger.categoryType.categoryType.deleted', true);
         }
         $this->getResponse()->redirect('cmsAdmin', 'categoryType');
-    }
-
-    /**
-     * Usuwanie relacji szablon atrybut
-     */
-    public function deleteAttributeRelationAction()
-    {
-        //usuwanie relacji
-        (new AttributeController($this->getRequest(), $this->view))->deleteAttributeRelationAction();
-        $this->getResponse()->redirect('cmsAdmin', 'categoryType', 'edit', ['id' => $this->id]);
     }
 
 }

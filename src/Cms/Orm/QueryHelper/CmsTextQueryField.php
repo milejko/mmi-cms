@@ -10,7 +10,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsTextQuery greaterOrEquals($value)
  * @method \Cms\Orm\CmsTextQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsTextQuery like($value)
- * @method \Cms\Orm\CmsTextQuery ilike($value)
+ * @method \Cms\Orm\CmsTextQuery notLike($value)
  * @method \Cms\Orm\CmsTextQuery between($from, $to)
  * @method \Cms\Orm\CmsTextQuery equalsColumnId()
  * @method \Cms\Orm\CmsTextQuery notEqualsColumnId()
@@ -45,5 +45,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsTextQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-    
+
 }

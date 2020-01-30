@@ -70,12 +70,6 @@ class CategoryAttributeRelationForm extends \Cms\Form\Form
         $this->addElement((new Element\Checkbox('unique'))
                 ->setLabel('form.categoryAttributeRelationForm.unique.label'));
 
-        //zmaterializowany
-        $this->addElement((new Element\Select('materialized'))
-                ->setMultioptions([0 => 'form.categoryAttributeRelationForm.materialized.options.0', 1 => 'form.categoryAttributeRelationForm.materialized.options.1', 2 => 'form.categoryAttributeRelationForm.materialized.options.2'])
-                ->setLabel('form.categoryAttributeRelationForm.materialized.label')
-                ->setDescription('form.categoryAttributeRelationForm.materialized.description'));
-
         //kolejność
         $this->addElement((new Element\Text('order'))
                 ->setRequired()

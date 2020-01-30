@@ -10,6 +10,7 @@
 
 namespace CmsAdmin;
 
+use Cms\Orm\CmsCategoryWidgetQuery;
 use Mmi\App\FrontController;
 
 /**
@@ -60,6 +61,8 @@ class CategoryController extends Mvc\Controller
             $this->getMessenger()->addMessage('messenger.category.permission.denied', false);
             $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
         }
+        //modyfikacja breadcrumbów
+        $this->view->adminNavigation()->modifyLastBreadcrumb('menu.category.edit', '#');
         //konfiguracja kategorii
         $form = (new \CmsAdmin\Form\Category($category));
         //sprawdzenie czy kategoria nadal istnieje (form robi zapis - to trwa)
@@ -91,6 +94,12 @@ class CategoryController extends Mvc\Controller
             //zmiany zapisane
             $this->getMessenger()->addMessage('messenger.category.categoryType.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id]);
+        }
+        //przekierowanie po zapisie kopii roboczej
+        //format redirect:url
+        if ($form->isSaved() && 'redirect' == substr($form->getElement('submit')->getValue(), 0, 8)) {
+            //zmiany zapisane
+            $this->getResponse()->redirectToUrl(substr($form->getElement('submit')->getValue(), 9));
         }
         //przekierowanie na podgląd
         $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);

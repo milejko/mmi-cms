@@ -10,7 +10,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsAuthQuery greaterOrEquals($value)
  * @method \Cms\Orm\CmsAuthQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsAuthQuery like($value)
- * @method \Cms\Orm\CmsAuthQuery ilike($value)
+ * @method \Cms\Orm\CmsAuthQuery notLike($value)
  * @method \Cms\Orm\CmsAuthQuery between($from, $to)
  * @method \Cms\Orm\CmsAuthQuery equalsColumnId()
  * @method \Cms\Orm\CmsAuthQuery notEqualsColumnId()
@@ -93,5 +93,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsAuthQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-    
+
 }

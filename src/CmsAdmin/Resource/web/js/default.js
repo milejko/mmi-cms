@@ -4,6 +4,7 @@ CMS.default = function () {
     "use strict";
     var initConfirms,
         initFormDoubleSendLock,
+        unlockSubmits,
         duringSend = false;
 
     initConfirms = function () {
@@ -21,8 +22,17 @@ CMS.default = function () {
             duringSend = true;
             $('input[type=submit]').addClass('disabled');
             $('button[type=submit]').addClass('disabled');
+            setTimeout(unlockSubmits, 1000);
         });
     };
+
+    unlockSubmits = function () {
+        duringSend = false;
+        $('input[type=submit]').removeClass('disabled');
+        $('button[type=submit]').removeClass('disabled');        
+    };
+
+    unlockSubmits();
     initFormDoubleSendLock();
     initConfirms();
 };

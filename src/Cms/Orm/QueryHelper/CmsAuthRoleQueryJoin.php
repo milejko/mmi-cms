@@ -7,5 +7,5 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsAuthRoleQueryJoin extends \Mmi\Orm\QueryHelper\QueryJoin
 {
-    
+
 }

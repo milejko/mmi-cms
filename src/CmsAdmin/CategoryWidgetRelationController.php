@@ -10,30 +10,15 @@
 
 namespace CmsAdmin;
 
+use Cms\Orm\CmsCategorySectionQuery;
+use Cms\Orm\CmsCategoryWidgetQuery;
+use Mmi\Filter\EmptyToNull;
+
 /**
  * Kontroler konfiguracji kategorii - stron CMS
  */
 class CategoryWidgetRelationController extends Mvc\Controller
 {
-
-    /**
-     * Wybór widgeta do dodania
-     */
-    public function addAction()
-    {
-        //wyszukiwanie kategorii
-        if (null === $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
-            return;
-        }
-        //zakładka sekcje
-        $widgetForm = (new \CmsAdmin\Form\CategoryAddWidget($cat));
-        //zapisany form
-        if ($widgetForm->isSaved()) {
-            $this->getResponse()->redirect('cmsAdmin', 'categoryWidgetRelation', 'config', ['categoryId' => $this->id, 'widgetId' => $widgetForm->getElement('cmsWidgetId')->getValue()]);
-        }
-        //form do widoku
-        $this->view->widgetForm = $widgetForm;
-    }
 
     /**
      * Konfiguracja widgeta
@@ -42,12 +27,28 @@ class CategoryWidgetRelationController extends Mvc\Controller
     {
         //wyszukiwanie kategorii
         if ((null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->categoryId)) || $category->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
-            return;
+            //brak kategorii
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
+        //wyszukiwanie sekcji (opcjonalnej)
+        if ($this->sectionId && null === $section = (new CmsCategorySectionQuery())->findPk($this->sectionId)) {
+            //brak sekcji
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', [
+                'id' => $this->categoryId,
+                'originalId' => $this->originalId,
+                'uploaderId' => $this->uploaderId,
+            ]);
+        }
+        //kategoria do widoku
+        $this->view->category = $category;
         //wyszukiwanie widgeta
         if (null === $widgetRecord = (new \Cms\Orm\CmsCategoryWidgetQuery)->findPk($this->widgetId)) {
             //brak widgeta
-            return;
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', [
+                'id' => $this->categoryId,
+                'originalId' => $this->originalId,
+                'uploaderId' => $this->uploaderId,
+            ]);
         }
         //wyszukiwanie relacji do edycji
         if (null === $widgetRelationRecord = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
@@ -67,12 +68,15 @@ class CategoryWidgetRelationController extends Mvc\Controller
         }
         //rekord widgeta do widoku
         $this->view->widgetRecord = $widgetRecord;
-        //rekord do formularza to rekord wiązania
-        $record = $widgetRelationRecord;
         //domyślna klasa formularza
         $widgetRecord->formClass = $widgetRecord->formClass ? : '\CmsAdmin\Form\CategoryAttributeWidgetForm';
+        //modyfikacja breadcrumbów
+        $this->view->adminNavigation()->modifyBreadcrumb(4, 'menu.category.edit', $this->view->url(['controller' => 'category', 'action' => 'edit', 'id' => $this->categoryId, 'categoryId' => null, 'widgetId' => null]));
+        $this->view->adminNavigation()->modifyLastBreadcrumb('menu.categoryWidgetRelation.config', '#');
+        //zapis sekcji (opcjonalnej)
+        $widgetRelationRecord->cmsCategorySectionId = (new EmptyToNull())->filter($this->sectionId);
         //instancja formularza
-        $form = new $widgetRecord->formClass($record, ['widgetId' => $widgetRecord->id]);
+        $form = new $widgetRecord->formClass($widgetRelationRecord, ['widgetId' => $widgetRecord->id]);
         //wartości z zapisanej konfiguracji
         $formValues = $widgetRelationRecord->getConfig()->toArray();
         //nadpisanie wartościami z POSTA, jeśli zosały przesłane
@@ -83,8 +87,12 @@ class CategoryWidgetRelationController extends Mvc\Controller
         //form zapisany
         if ($form->isSaved()) {
             //zapis konfiguracji
-            $widgetRelationRecord->setConfigFromArray($record->getOptions());
-            $this->getResponse()->redirect('cmsAdmin', 'categoryWidgetRelation', 'config');
+            $widgetRelationRecord->setConfigFromArray($widgetRelationRecord->getOptions());
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', [
+                'id' => $this->categoryId,
+                'originalId' => $this->originalId,
+                'uploaderId' => $this->originalUploaderId,
+            ]);
         }
         //form do widoku
         $this->view->widgetRelationForm = $form;
@@ -95,12 +103,18 @@ class CategoryWidgetRelationController extends Mvc\Controller
      */
     public function previewAction()
     {
-        //wyłączenie layout
-        $this->view->setLayoutDisabled();
         //wyszukiwanie kategorii
-        if (null === $this->view->category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->categoryId)) {
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
+        if (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->categoryId)) {
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
+        //kategoria do widoku
+        $this->view->category = $category;
+        //dostępne widgety
+        $this->view->availableWidgets = (new CmsCategoryWidgetQuery())->find();
+        //sekcje do widoku
+        $this->view->sections = (new CmsCategorySectionQuery)
+            ->whereCategoryTypeId()->equals($category->cmsCategoryTypeId)
+            ->find();
     }
 
     /**
@@ -144,7 +158,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
         $this->getResponse()->setTypePlain();
         //brak pola
         if (null === $serial = $this->getPost()->__get('widget-item')) {
-            return $this->view->getTranslate()->_('Przenoszenie nie powiodło się');
+            return $this->view->_('controller.categoryWidgetRelation.move.error');
         }
         //sortowanie
         (new \Cms\Model\CategoryWidgetModel($this->categoryId))

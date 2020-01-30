@@ -10,7 +10,7 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsAttributeValueQuery greaterOrEquals($value)
  * @method \Cms\Orm\CmsAttributeValueQuery lessOrEquals($value)
  * @method \Cms\Orm\CmsAttributeValueQuery like($value)
- * @method \Cms\Orm\CmsAttributeValueQuery ilike($value)
+ * @method \Cms\Orm\CmsAttributeValueQuery notLike($value)
  * @method \Cms\Orm\CmsAttributeValueQuery between($from, $to)
  * @method \Cms\Orm\CmsAttributeValueQuery equalsColumnId()
  * @method \Cms\Orm\CmsAttributeValueQuery notEqualsColumnId()
@@ -36,8 +36,14 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsAttributeValueQuery lessThanColumnLabel()
  * @method \Cms\Orm\CmsAttributeValueQuery greaterOrEqualsColumnLabel()
  * @method \Cms\Orm\CmsAttributeValueQuery lessOrEqualsColumnLabel()
+ * @method \Cms\Orm\CmsAttributeValueQuery equalsColumnOrder()
+ * @method \Cms\Orm\CmsAttributeValueQuery notEqualsColumnOrder()
+ * @method \Cms\Orm\CmsAttributeValueQuery greaterThanColumnOrder()
+ * @method \Cms\Orm\CmsAttributeValueQuery lessThanColumnOrder()
+ * @method \Cms\Orm\CmsAttributeValueQuery greaterOrEqualsColumnOrder()
+ * @method \Cms\Orm\CmsAttributeValueQuery lessOrEqualsColumnOrder()
  */
 class CmsAttributeValueQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-    
+
 }
