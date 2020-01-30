@@ -5,12 +5,6 @@
         <div class="row">
             <div class="col-12">
                 {if $categoryForm}
-                    {$attributeCount = 0}
-                    {* zliczanie atrybutów *}
-                    {foreach $categoryForm->getElements() as $element}
-                    {if php_substr($element->getName(), 0, 12) != 'cmsAttribute'}{continue}{/if}
-                    {$attributeCount++}
-                {/foreach}
                 {$categoryForm->start()}
                 {$category = $categoryForm->getRecord()}
                 <h5>{$categoryForm->getRecord()->name}</h5>
@@ -28,24 +22,16 @@
                     <li class="nav-item">
                         <a title="{#template.category.edit.tab.config#}" class="nav-link" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-expanded="true"><i class="icon-pencil"></i></a>
                     </li>
-                    <li class="nav-item">
-                        <a title="{#template.category.edit.tab.seo#}" class="nav-link" data-toggle="tab" href="#seo" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-magnifier"></i></a>
-                    </li>
-                    {if $attributeCount > 0}
-                        <li class="nav-item">
-                            <a title="{#template.category.edit.tab.attribute#}" class="nav-link" data-toggle="tab" href="#attributes" role="tab" aria-controls="messages" aria-expanded="false"><i class="icon-note"></i></a>
-                        </li>
-                    {/if}
                     {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
                         <li class="nav-item">
                             <a title="{#template.category.edit.tab.widget#}" class="nav-link" data-toggle="tab" href="#widgets" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-layers"></i></a>
                         </li>
                     {/if}
                     <li class="nav-item">
-                        <a title="{#template.category.edit.tab.history#}" class="nav-link" data-toggle="tab" href="#history" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-clock"></i></a>
+                        <a title="{#template.category.edit.tab.advanced#}" class="nav-link" data-toggle="tab" href="#advanced" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-wrench"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a title="{#template.category.edit.tab.advanced#}" class="nav-link" data-toggle="tab" href="#advanced" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-wrench"></i></a>
+                        <a title="{#template.category.edit.tab.history#}" class="nav-link" data-toggle="tab" href="#history" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-clock"></i></a>
                     </li>
                 </ul>
                 <div class="tab-content">
@@ -54,25 +40,15 @@
                         {$categoryForm->getElement('cmsCategoryTypeChanged')}
                         {$categoryForm->getElement('name')}
                         {if $duplicateAlert}<div class="em">{#template.category.edit.duplicate.alert#}<br /><br /></div>{/if}
-                        {$categoryForm->getElement('dateStart')}
-                        {$categoryForm->getElement('dateEnd')}
-                        {$categoryForm->getElement('cacheLifetime')}
                         {$categoryForm->getElement('active')}
-                    </div>
-                    <div class="tab-pane" id="seo" role="tabpanel" aria-expanded="false">
                         {$categoryForm->getElement('title')}
                         {$categoryForm->getElement('description')}
-                        {$categoryForm->getElement('customUri')}
-                        {$categoryForm->getElement('follow')}
-                    </div>
-                    {if $attributeCount > 0}
-                        <div class="tab-pane" id="attributes" role="tabpanel" aria-expanded="false">
-                            {foreach $categoryForm->getElements() as $element}
+                                                    {foreach $categoryForm->getElements() as $element}
                                 {if php_substr($element->getName(), 0 ,12) != 'cmsAttribute'}{continue}{/if}
                                 {$element}
                             {/foreach}
-                        </div>
-                    {/if}
+
+                    </div>
                     {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
                         <div class="tab-pane" id="widgets" role="tabpanel" aria-expanded="false">
                             <div id="widget-list-container" data-category-id="{$category->id}">
@@ -84,11 +60,16 @@
                         {$historyGrid}
                     </div>
                     <div class="tab-pane" id="advanced" role="tabpanel" aria-expanded="false">
+                        {$categoryForm->getElement('customUri')}
+                        {$categoryForm->getElement('follow')}
+                        {$categoryForm->getElement('cacheLifetime')}
                         {$categoryForm->getElement('redirectUri')}
                         {$categoryForm->getElement('mvcParams')}
                         {$categoryForm->getElement('configJson')}
                         {$categoryForm->getElement('https')}
                         {$categoryForm->getElement('blank')}
+                        {$categoryForm->getElement('dateStart')}
+                        {$categoryForm->getElement('dateEnd')}
                         {$categoryForm->getElement('roles')}
                     </div>
                 </div>

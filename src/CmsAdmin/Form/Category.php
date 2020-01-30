@@ -96,7 +96,6 @@ class Category extends \Cms\Form\AttributeForm
         //przekierowanie na link
         $this->addElement((new Element\Text('redirectUri'))
             ->setLabel('form.category.redirect.label')
-            ->setDescription('form.category.description.label')
             ->addFilter(new Filter\StringTrim));
 
         //przekierowanie na moduł
