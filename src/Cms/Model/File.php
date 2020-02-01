@@ -59,10 +59,6 @@ class File
      */
     public static function appendFile(\Mmi\Http\RequestFile $file, $object, $id = null, $allowedTypes = [])
     {
-        //pomijanie plików typu bmp (bitmapy windows - nieobsługiwane w PHP)
-        if ($file->type == 'image/x-ms-bmp') {
-            return null;
-        }
         //plik nie jest dozwolony
         if (!empty($allowedTypes) && !in_array($file->type, $allowedTypes)) {
             return null;
@@ -167,6 +163,10 @@ class File
         $record = new CmsFileRecord;
         //typ zasobu
         $record->mimeType = $file->type;
+        //pomijanie plików typu bmp (bitmapy windows - nieobsługiwane w PHP)
+        if ($file->type == 'image/x-ms-bmp' || $file->type == 'image/tiff' || $file->type == 'image/svg+xml') {
+            $record->type = 'application/octet-stream';
+        }
         //klasa zasobu
         $class = explode('/', $file->type);
         $record->class = $class[0];
