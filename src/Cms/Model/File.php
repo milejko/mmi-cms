@@ -165,7 +165,7 @@ class File
         $record->mimeType = $file->type;
         //pomijanie plików typu bmp (bitmapy windows - nieobsługiwane w PHP)
         if ($file->type == 'image/x-ms-bmp' || $file->type == 'image/tiff' || $file->type == 'image/svg+xml') {
-            $record->type = 'application/octet-stream';
+            $record->mimeType = 'application/octet-stream';
         }
         //klasa zasobu
         $class = explode('/', $file->type);
