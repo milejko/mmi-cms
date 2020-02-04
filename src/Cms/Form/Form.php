@@ -90,15 +90,6 @@ abstract class Form extends \Mmi\Form\Form
             }
             //dla każdego elementu TinyMce
             $value = $element->getValue();
-            foreach (\Cms\Orm\CmsFileQuery::byObjectJoinedOriginal('tmp-' . $element->getUploaderObject(), $element->getUploaderId())
-                ->find() as $file) {
-                if (!$file->getJoined('original_file') || !$file->getJoined('original_file')->name) {
-                    continue;
-                }
-                $oName = $file->getJoined('original_file')->name;
-                $tName = $file->name;
-                $value = preg_replace('@/data/' . $tName[0] . '/' . $tName[1] . '/' . $tName[2] . '/' . $tName[3] . '/(scalecrop|scalex|scaley|default)/([0-9x]{0,10})/' . $tName . '@', '/data/' . $oName[0] . '/' . $oName[1] . '/' . $oName[2] . '/' . $oName[3] . '/$1/$2/' . $oName, $value);
-            }
             $element->setValue($value);
             $this->_record->setFromArray([$element->getName() => $value]);
         }
