@@ -110,7 +110,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
         //kategoria do widoku
         $this->view->category = $category;
         //dostępne widgety
-        $this->view->availableWidgets = (new CmsCategoryWidgetQuery())->find();
+        $this->view->availableWidgets = (new CmsCategoryWidgetQuery())->orderAscName()->find();
         //sekcje do widoku
         $this->view->sections = (new CmsCategorySectionQuery)
             ->whereCategoryTypeId()->equals($category->cmsCategoryTypeId)
