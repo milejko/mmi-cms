@@ -275,13 +275,14 @@ class CategoryController extends \Mmi\Mvc\Controller
             throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
         }
         //przekierowanie 301
-        if ($redirectUri) {
+        if (null !== $redirectUri) {
             return $this->getResponse()->setCode(301)->redirect('cms', 'category', 'dispatch', ['uri' => $redirectUri]);
         }
-        //wyszukiwanie kategorii
-        if (null === $category = (new CmsCategoryQuery)->whereUri()->equals($uri)
-            ->orFieldCustomUri()->equals($uri)
+        //wyszukiwanie bieżącej kategorii (aktywnej)
+        if (null === $category = (new CmsCategoryQuery)
+            ->whereQuery((new CmsCategoryQuery())->whereUri()->equals($uri)->orFieldCustomUri()->equals($uri))
             ->join('cms_category', 'cms_category', 'currentCategory')->on('cms_category_original_id', 'id')
+            ->where('active', 'currentCategory')->equals(true)
             ->findFirst()) {
             //brak kategorii w historii - buforowanie informacji
             \App\Registry::$cache->save('-1', $cacheKey, 0);
