@@ -217,10 +217,8 @@ class CategoryController extends Mvc\Controller
     {
         $this->getResponse()->setTypeJson();
         $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id);
-        //pozwala usuwać historyczne
-        $allowDeleteHistorical = \App\Registry::$config->category && \App\Registry::$config->category->allowDeleteWithVersions ? true : false;
         //ma historię, nie możemy usunąć
-        if ($cat->hasHistoricalEntries() && !$allowDeleteHistorical) {
+        if ($cat->hasHistoricalEntries()) {
             return json_encode(['status' => false, 'error' => $this->view->_('controller.category.delete.error.history')]);
         }
         try {

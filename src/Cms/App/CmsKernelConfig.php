@@ -35,9 +35,9 @@ abstract class CmsKernelConfig extends \Mmi\App\KernelConfig
     public $thumbQuality = 90;
 
     /**
-     * Konfiguracja obsługi kategorii
-     * @var \Cms\Config\CategoryConfig
+     * Skórki CMSowe
+     * @var array
      */
-    public $category;
+    public $skins = [];
 
 }

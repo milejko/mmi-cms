@@ -301,15 +301,7 @@ class CategoryController extends \Mmi\Mvc\Controller
      */
     protected function _bufferingAllowed()
     {
-        //jeśli zdefiniowano własny obiekt sprawdzający, czy można buforować
-        if (\App\Registry::$config->category instanceof \Cms\Config\CategoryConfig && \App\Registry::$config->category->bufferingAllowedClass) {
-            $class = \App\Registry::$config->category->bufferingAllowedClass;
-            $buffering = new $class($this->_request);
-        } else {
-            //domyślny cmsowy obiekt sprawdzający, czy można buforować
-            $buffering = new \Cms\Model\CategoryBuffering($this->_request);
-        }
-        return $buffering->isAllowed();
+        return (new \Cms\Model\CategoryBuffering($this->_request))->isAllowed();
     }
 
     /**

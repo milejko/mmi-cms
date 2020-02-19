@@ -63,8 +63,7 @@ class CategoryBuffering
      */
     protected function _messengerTest()
     {
-        if (\Mmi\Message\MessengerHelper::getMessenger()
-                        ->hasMessages()) {
+        if (\Mmi\Message\MessengerHelper::getMessenger()->hasMessages()) {
             return false;
         }
         return true;
