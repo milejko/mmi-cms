@@ -10,6 +10,8 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
 
     public $id;
     public $uuid;
+    public $widget;
+    public $section;
     public $cmsCategoryWidgetId;
     public $cmsCategoryId;
     public $cmsCategorySectionId;
@@ -33,10 +35,12 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
      */
     public function save()
     {
+        //nadawanie uuid
         if (!$this->uuid) {
             $this->uuid = $this->_generateUuid();
         }
-
+        //zapis configJson
+        $this->setConfigFromArray($this->getOptions());
         //zapis z usunięciem cache
         return parent::save() && $this->clearCache();
     }
@@ -129,17 +133,9 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
      * @return bool
      */
     public function setConfigFromArray(array $data = []) {
-        //iteracja po danych
-        foreach ($data as $key => $value) {
-            //wyszukiwanie patternu (np. cmsAttribute123)
-            if (preg_match('/' . self::CMS_ATTRIBUTE_PREFIX . '[0-9]+/', $key)) {
-                //usuwanie danych, gdyż są zapisane w atrybucie
-                unset($data[$key]);
-            }
-        }
         //kodowanie konfiguracji
         $this->configJson = empty($data) ? null : \json_encode($data);
-        return $this->save();
+        return $this;
     }
 
     /**

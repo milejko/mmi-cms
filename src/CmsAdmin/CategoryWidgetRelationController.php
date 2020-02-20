@@ -10,9 +10,9 @@
 
 namespace CmsAdmin;
 
-use Cms\Orm\CmsCategorySectionQuery;
-use Cms\Orm\CmsCategoryWidgetQuery;
-use Mmi\Filter\EmptyToNull;
+use App\Registry;
+use Cms\Model\SkinModel;
+use Cms\WidgetController;
 
 /**
  * Kontroler konfiguracji kategorii - stron CMS
@@ -21,9 +21,89 @@ class CategoryWidgetRelationController extends Mvc\Controller
 {
 
     /**
+     * Edycja widgeta
+     */
+    public function editAction()
+    {
+        //wyszukiwanie kategorii
+        if ((null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->categoryId)) || $category->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
+            //brak kategorii
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
+        }
+        //kategoria do widoku
+        $this->view->category = $category;
+        //iteracja po dostępnych skórach
+        foreach (Registry::$config->skinset->getSkins() as $skin) {
+            $skinModel = new SkinModel($skin);
+            //w skórze nie ma tego szablonu
+            if (!$skinModel->templateExists($category->template)) {
+                continue;
+            }
+            //wyszukiwanie widgeta
+            $widget = $skinModel->getWidgetByKey($this->widget);
+        }
+        //widget niekompatybilny
+        if (!isset($widget)) {
+            //przekierowanie na stronę edycji
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', [
+                'id' => $this->categoryId,
+                'originalId' => $this->originalId,
+                'uploaderId' => $this->uploaderId,
+            ]);
+        }
+        //widget do widoku
+        $this->view->widget = $widget;
+        //wyszukiwanie relacji do edycji
+        if (null === $widgetRelationRecord = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
+            ->whereCmsCategoryId()->equals($this->categoryId)
+            ->whereWidget()->equals($this->widget)
+            ->findPk($this->id)) {
+            //nowy rekord relacji
+            $widgetRelationRecord = new \Cms\Orm\CmsCategoryWidgetCategoryRecord();
+            //parametry relacji
+            $widgetRelationRecord->widget = $this->widget;
+            $widgetRelationRecord->cmsCategoryId = $this->categoryId;
+            //maksymalna wartość posortowania
+            $maxOrder = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
+                ->whereCmsCategoryId()->equals($this->categoryId)
+                ->findMax('order');
+            $widgetRelationRecord->order = $maxOrder !== null ? $maxOrder + 1 : 0;
+        }
+        //modyfikacja breadcrumbów
+        $this->view->adminNavigation()->modifyBreadcrumb(4, 'menu.category.edit', $this->view->url(['controller' => 'category', 'action' => 'edit', 'id' => $this->categoryId, 'categoryId' => null, 'widgetId' => null]));
+        $this->view->adminNavigation()->modifyLastBreadcrumb('menu.categoryWidgetRelation.config', '#');
+        //odczytywanie nazwy kontrolera
+        $controllerClass = $widget->getControllerClassName();
+        //powołanie kontrolera z rekordem relacji
+        $targetController = new $controllerClass($this->getRequest(), $this->view, $widgetRelationRecord);
+        //kontroler nie jest poprawny
+        if (!($targetController instanceof WidgetController)) {
+            //przekierowanie na stronę edycji
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', [
+                'id' => $this->categoryId,
+                'originalId' => $this->originalId,
+                'uploaderId' => $this->uploaderId,
+            ]);
+        }
+        //wywołanie akcji
+        $targetController->editAction();
+        $explodedControllerClass = explode('\\', $widget->getControllerClassName());
+        //render szablonu
+        $this->view->output = $this->view->renderTemplate(lcfirst($explodedControllerClass[0]) . '/' . lcfirst(substr($explodedControllerClass[1], 0, -10)) . '/edit');
+        //kontroler zaraportował zapis
+        if ($targetController->isSaved()) {
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', [
+                'id' => $this->categoryId,
+                'originalId' => $this->originalId,
+                'uploaderId' => $this->originalUploaderId,
+            ]);
+        }
+    }
+
+    /**
      * Konfiguracja widgeta
      */
-    public function configAction()
+    /*public function configAction()
     {
         //wyszukiwanie kategorii
         if ((null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->categoryId)) || $category->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
@@ -96,7 +176,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
         }
         //form do widoku
         $this->view->widgetRelationForm = $form;
-    }
+    }*/
 
     /**
      * Lista podglądów widgetów
@@ -109,12 +189,22 @@ class CategoryWidgetRelationController extends Mvc\Controller
         }
         //kategoria do widoku
         $this->view->category = $category;
-        //dostępne widgety
-        $this->view->availableWidgets = (new CmsCategoryWidgetQuery())->orderAscName()->find();
-        //sekcje do widoku
-        $this->view->sections = (new CmsCategorySectionQuery)
-            ->whereCategoryTypeId()->equals($category->cmsCategoryTypeId)
-            ->find();
+        //brak skór
+        if (!Registry::$config->skinset) {
+            return;
+        }
+        //dostępne sekcje
+        $this->view->sections = [];
+        //iteracja po skórach
+        foreach (Registry::$config->skinset->getSkins() as $skin) {
+            $skinModel = new SkinModel($skin);
+            if (!$skinModel->templateExists($category->template)) {
+                continue;
+            }
+            //pobranie sekcji dla szablonu kategorii
+            $this->view->sections = (new SkinModel($skin))->getSectionsByTemplateKey($category->template);
+            break;
+        }
     }
 
     /**

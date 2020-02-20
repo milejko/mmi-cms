@@ -28,6 +28,12 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
 
     /**
      * Identyfikator szablonu
+     * @var string
+     */
+    public $template;
+
+    /**
+     * Identyfikator szablonu
      * @var integer
      */
     public $cmsCategoryTypeId;

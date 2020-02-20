@@ -5,10 +5,10 @@
                 <h5>{$category->name}</h5>
                 <div class="card mt-4">
                     <div class="card-header">
-                        <strong>{if $widgetRecord}{$widgetRecord->name} {/if}{#template.categoryWidgetRelation.config.header#}</strong>
+                        <strong>{if $widget}{$widget->getName()} {/if}{#template.categoryWidgetRelation.config.header#}</strong>
                     </div>
                     <div class="card-body">
-                        {$widgetRelationForm}
+                        {$output}
                     </div>
                 </div>
             </div>

@@ -28,38 +28,17 @@
                         </li>
                     {/if}
                     <li class="nav-item">
-                        <a title="{#template.category.edit.tab.advanced#}" class="nav-link" data-toggle="tab" href="#advanced" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-wrench"></i></a>
-                    </li>
-                    <li class="nav-item">
                         <a title="{#template.category.edit.tab.history#}" class="nav-link" data-toggle="tab" href="#history" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-clock"></i></a>
                     </li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane" id="settings" role="tabpanel" aria-expanded="true">
-                        {$categoryForm->getElement('cmsCategoryTypeId')}
-                        {$categoryForm->getElement('cmsCategoryTypeChanged')}
+                        {$categoryForm->getElement('template')}
                         {$categoryForm->getElement('name')}
                         {if $duplicateAlert}<div class="em">{#template.category.edit.duplicate.alert#}<br /><br /></div>{/if}
                         {$categoryForm->getElement('active')}
                         {$categoryForm->getElement('title')}
                         {$categoryForm->getElement('description')}
-                                                    {foreach $categoryForm->getElements() as $element}
-                                {if php_substr($element->getName(), 0 ,12) != 'cmsAttribute'}{continue}{/if}
-                                {$element}
-                            {/foreach}
-
-                    </div>
-                    {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
-                        <div class="tab-pane" id="widgets" role="tabpanel" aria-expanded="false">
-                            <div id="widget-list-container" data-category-id="{$category->id}">
-                                {widget('cmsAdmin', 'categoryWidgetRelation', 'preview', ['categoryId' => $category->id, 'uploaderId' => $request->uploaderId])}
-                            </div>
-                        </div>
-                    {/if}
-                    <div class="tab-pane" id="history" role="tabpanel" aria-expanded="false">
-                        {$historyGrid}
-                    </div>
-                    <div class="tab-pane" id="advanced" role="tabpanel" aria-expanded="false">
                         {$categoryForm->getElement('customUri')}
                         {$categoryForm->getElement('follow')}
                         {$categoryForm->getElement('cacheLifetime')}
@@ -71,6 +50,16 @@
                         {$categoryForm->getElement('dateStart')}
                         {$categoryForm->getElement('dateEnd')}
                         {$categoryForm->getElement('roles')}
+                    </div>
+                    {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
+                        <div class="tab-pane" id="widgets" role="tabpanel" aria-expanded="false">
+                            <div id="widget-list-container" data-category-id="{$category->id}">
+                                {widget('cmsAdmin', 'categoryWidgetRelation', 'preview', ['categoryId' => $category->id, 'uploaderId' => $request->uploaderId])}
+                            </div>
+                        </div>
+                    {/if}
+                    <div class="tab-pane" id="history" role="tabpanel" aria-expanded="false">
+                        {$historyGrid}
                     </div>
                 </div>
                 <div class="float-right">

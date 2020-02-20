@@ -83,7 +83,7 @@ CMS.category = function () {
     };
 
     initCategoryChange = function () {
-        $('form.cmsadmin-form-category').on('change', '#cmsadmin-form-category-cmsCategoryTypeId', function () {
+        $('form.cmsadmin-form-category').on('change', '#cmsadmin-form-category-template', function () {
             $('#cmsadmin-form-category-submit-top').val('type');
             $('#cmsadmin-form-category-submit-top').click();
             return false;

@@ -54,7 +54,7 @@ class CmsSectionConfig
 
     /**
      * Zwraca listę kompatybilnych widgetów
-     * @return array
+     * @return CmsWidgetConfig[]
      */
     public function getWidgets()
     {

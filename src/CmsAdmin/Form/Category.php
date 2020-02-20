@@ -10,23 +10,30 @@
 
 namespace CmsAdmin\Form;
 
+use App\Registry;
 use Cms\Form\Element;
+use Cms\Form\Form;
 use Mmi\Validator;
 use Mmi\Filter;
 use Cms\Model\CacheOptions;
+use Cms\Model\SkinModel;
 
 /**
  * Formularz edycji szegółów kategorii
  * @method \Cms\Orm\CmsCategoryRecord getRecord()
  */
-class Category extends \Cms\Form\AttributeForm
+class Category extends Form
 {
+
     public function init()
     {
-
         //szablony/typy (jeśli istnieją)
-        if ([] !== $types = (new \Cms\Orm\CmsCategoryTypeQuery)->orderAscName()->findPairs('id', 'name')) {
-            $this->addElement((new Element\Select('cmsCategoryTypeId'))
+        if (Registry::$config->skinset) {
+            $types = [];
+            foreach (Registry::$config->skinset->getSkins() as $skin) {
+                $types = array_merge($types, (new SkinModel($skin))->getTemplatesMultioptions());
+            }
+            $this->addElement((new Element\Select('template'))
                 ->setLabel('form.category.cmsCategoryTypeId.label')
                 ->addFilter(new Filter\EmptyToNull)
                 ->setMultioptions([null => 'form.category.cmsCategoryTypeId.default'] + $types));
@@ -87,10 +94,6 @@ class Category extends \Cms\Form\AttributeForm
         $this->addElement((new Element\Checkbox('follow'))
             ->setChecked()
             ->setLabel('form.category.visible.label'));
-
-        //Treść
-        //atrybuty
-        $this->initAttributes('cmsCategoryType', $this->getRecord()->cmsCategoryTypeId, 'category');
 
         //Zaawansowane
         //przekierowanie na link

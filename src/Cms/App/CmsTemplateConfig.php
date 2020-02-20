@@ -17,10 +17,10 @@ class CmsTemplateConfig
     private $_name;
 
     /**
-     * Nazwa szablonu .tpl
+     * Nazwa klasy kontrolera
      * @var string
      */
-    private $_displayTemplate;
+    private $_controllerClassName;
 
     /**
      * Czas bufora
@@ -35,7 +35,7 @@ class CmsTemplateConfig
     private $_sections = [];
 
     /**
-     * Ustawia nazwę szablonu
+     * Ustawia nazwę
      * @param string $name
      * @return CmsTemplateConfig
      */
@@ -46,32 +46,32 @@ class CmsTemplateConfig
     }
 
     /**
-     * Pobiera nazwę szablonu .tpl
-     * @return string
-     */
-    public function getDisplayTemplate()
-    {
-        return $this->_displayTemplate;
-    }
-
-    /**
-     * Ustawia nazwę szablonu .tpl
-     * @param string $displayTemplate
-     * @return CmsTemplateConfig
-     */
-    public function setDisplayTemplate($displayTemplate)
-    {
-        $this->_displayTemplate = $displayTemplate;
-        return $this;
-    }
-
-    /**
      * Pobiera nazwę
      * @return string
      */
     public function getName()
     {
         return $this->_name;
+    }
+
+    /**
+     * Ustawia nazwę klasy kontrolera
+     * @param string $controllerClassName
+     * @return CmsTemplateConfig
+     */
+    public function setControllerClassName($controllerClassName)
+    {
+        $this->_controllerClassName = $controllerClassName;
+        return $this;
+    }
+
+    /**
+     * Pobiera nazwę klasy kontrolera
+     * @return string
+     */
+    public function getControllerClassName()
+    {
+        return $this->_controllerClassName;
     }
 
     /**

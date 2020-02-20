@@ -56,7 +56,7 @@ class NavPartCategory extends \Mmi\Navigation\NavigationConfig
                                     ->setDisabled()
                                     ->setModule('cmsAdmin')
                                     ->setController('categoryWidgetRelation')
-                                    ->setAction('config')
+                                    ->setAction('edit')
                             )
                     )
             )
