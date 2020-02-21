@@ -11,6 +11,7 @@
 namespace Cms\Model;
 
 use Cms\Orm\CmsCategoryQuery;
+use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 
 /**
  * Model do kopiowania kategorii wraz z wszystkimi elementami zależnymi.
@@ -20,9 +21,7 @@ class CategoryCopy
 
     CONST OBJECT_TYPE = 'category';
     CONST CATEGORY_WIDGET_RELATION = 'categoryWidgetRelation';
-    CONST CMS_ATTRIBUTE_TYPE = 'cms_attribute_type';
     CONST FILE_CATEGORY_OBJECT = 'cmscategory';
-    CONST FILE_CATEGORY_WIDGET_OBJECT = 'cmscategorywidgetcategory';
 
     /**
      * Obiekt kategorii Cms do skopiowania
@@ -154,9 +153,6 @@ class CategoryCopy
             return false;
         }
         if (!$this->_copyWidgetRelations()) {
-            return false;
-        }
-        if (!$this->_copyAttributeValues()) {
             return false;
         }
         return true;
@@ -321,9 +317,8 @@ class CategoryCopy
                 //obiekt podobny do categoryWidgetRelation
                 ->whereObject()->like(self::CATEGORY_WIDGET_RELATION . '%')
                 //lub równy cmscategorywidgetcategory
-                ->orFieldObject()->like(self::FILE_CATEGORY_WIDGET_OBJECT . '%'))
-            ->findUnique('object')
-        as $object) {
+                ->orFieldObject()->like(CmsCategoryWidgetCategoryRecord::FILE_OBJECT_PREFIX . '%'))
+            ->findUnique('object') as $object) {
             \Cms\Model\File::link($object, $relationId, $object, $newRelation->id);
         }
         return true;
@@ -347,7 +342,7 @@ class CategoryCopy
                 //obiekt podobny do categoryWidgetRelation
                 ->whereObject()->like(self::CATEGORY_WIDGET_RELATION . '%')
                 //lub równy cmscategorywidgetcategory
-                ->orFieldObject()->like(self::FILE_CATEGORY_WIDGET_OBJECT . '%'))
+                ->orFieldObject()->like(CmsCategoryWidgetCategoryRecord::FILE_OBJECT_PREFIX . '%'))
             //identyfikator równy ID relacji
             ->andFieldObjectId()->equals($relationId)
             ->find() as $tag) {
@@ -367,61 +362,24 @@ class CategoryCopy
         //dla każdego widgetu
         foreach ($this->_category->getWidgetModel()->getWidgetRelations() as $widgetRelation) {
             //nowa relacja
-            $relation = new \Cms\Orm\CmsCategoryWidgetCategoryRecord();
-            $relation->setFromArray($widgetRelation->toArray());
-            $relation->id = null;
+            $relation = new \Cms\Orm\CmsCategoryWidgetCategoryRecord();            
+            $relation->uuid = $widgetRelation->uuid;
+            $relation->widget = $widgetRelation->widget;
+            $relation->configJson = $widgetRelation->configJson;
+            $relation->order = $widgetRelation->order;
+            $relation->active = $widgetRelation->active;
             $relation->cmsCategoryId = $this->_copy->id;
             if (!$relation->save()) {
                 return false;
             }
-
             //kopiowanie plików powiązanych w widgetem
             if (!$this->_copyWidgetRelationFiles($widgetRelation->id, $relation)) {
                 return false;
             }
-
             //kopiowanie tagów powiązanych w widgetem
             if (!$this->_copyWidgetRelationTags($widgetRelation->id, $relation)) {
                 return false;
             }
-
-            $relationAttributes = $widgetRelation->getAttributeValues();
-            foreach ($relationAttributes as $key => $value) {
-                $attribute = (new \Cms\Orm\CmsAttributeQuery)->withTypeByKey($key)->findFirst();
-                //obsługa uploaderów
-                if ($attribute->getJoined(self::CMS_ATTRIBUTE_TYPE)->uploader) {
-                    (new AttributeValueRelationModel(self::CATEGORY_WIDGET_RELATION, $relation->id))
-                        ->createAttributeValueRelationByValue($attribute->id, self::CATEGORY_WIDGET_RELATION . ucfirst($key));
-                    continue;
-                }
-                //obsługa wielokrotnych
-                if ($value instanceof \Mmi\Orm\RecordCollection) {
-                    foreach ($value as $val) {
-                        (new AttributeValueRelationModel(self::CATEGORY_WIDGET_RELATION, $relation->id))
-                            ->createAttributeValueRelationByValue($attribute->id, $val->value);
-                    }
-                    continue;
-                }
-                (new AttributeValueRelationModel(self::CATEGORY_WIDGET_RELATION, $relation->id))
-                    ->createAttributeValueRelationByValue($attribute->id, $value);
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Kopiuje atrybuty kategorii
-     * @return boolean
-     */
-    protected function _copyAttributeValues()
-    {
-        //zrodlowe wartosci atrybutów
-        $sourceAttributeValues = (new \Cms\Model\AttributeValueRelationModel(self::OBJECT_TYPE, $this->_category->id))->getAttributeValues();
-        //iteracja po atrybutach
-        foreach ($sourceAttributeValues as $record) {
-            //tworze relacje atrybutu dla nowej kategorii
-            (new \Cms\Model\AttributeValueRelationModel(self::OBJECT_TYPE, $this->_copy->id))
-                ->createAttributeValueRelationByValue($record->cmsAttributeId, $record->value);
         }
         return true;
     }

@@ -17,15 +17,26 @@ abstract class WidgetController extends Controller
      * Rekord relacji
      * @var CmsCategoryWidgetCategoryRecord
      */
-    private $_relationRecord;
+    private $_widgetRecord;
 
     /**
-     * Zwraca rekord relacji
+     * Konstruktor
+     */
+    public function __construct(Request $request, View $view, CmsCategoryWidgetCategoryRecord $widgetRecord)
+    {
+        //parent
+        parent::__construct($request, $view);
+        //przypisanie rekordu
+        $this->_widgetRecord = $widgetRecord;
+    }
+
+    /**
+     * Zwraca rekord relacji widgeta
      * @return CmsCategoryWidgetCategoryRecord
      */
-    public function getRelationRecord()
+    public function getWidgetRecord()
     {
-        return $this->_relationRecord;
+        return $this->_widgetRecord;
     }
 
     /**
@@ -40,17 +51,6 @@ abstract class WidgetController extends Controller
             'originalId' => $this->originalId,
             'uploaderId' => $this->originalUploaderId,
         ]);
-    }
-
-    /**
-     * Konstruktor
-     */
-    public function __construct(Request $request, View $view, CmsCategoryWidgetCategoryRecord $relationRecord)
-    {
-        //parent
-        parent::__construct($request, $view);
-        //przypisanie rekordu
-        $this->_relationRecord = $relationRecord;
     }
 
     //edycja widgeta

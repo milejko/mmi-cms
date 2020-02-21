@@ -116,8 +116,6 @@ class WidgetModel
         //wywołanie akcji usuwania
         $controller = $this->_createController($view);
         $controller->deleteAction();
-        //render szablonu
-        return;
     }
 
     /**

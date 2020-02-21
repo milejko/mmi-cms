@@ -27,7 +27,7 @@ class CategoryWidgetDisplay extends \Mmi\Mvc\ViewHelper\HelperAbstract
     public function categoryWidgetDisplay(CmsCategoryWidgetCategoryRecord $widgetRelationRecord)
     {
         //próba odczytu z bufora
-        if (null === $output = \App\Registry::$cache->load($cacheKey = CmsCategoryWidgetCategoryRecord::WIDGET_CACHE_PREFIX . $widgetRelationRecord->id)) {
+        if (null === $output = \App\Registry::$cache->load($cacheKey = CmsCategoryWidgetCategoryRecord::HTML_CACHE_PREFIX . $widgetRelationRecord->id)) {
             //model widgeta
             $widgetModel =  new WidgetModel($widgetRelationRecord);
             //render szablonu

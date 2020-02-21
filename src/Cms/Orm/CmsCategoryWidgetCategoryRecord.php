@@ -2,8 +2,6 @@
 
 namespace Cms\Orm;
 
-use Cms\Model\WidgetModel;
-
 /**
  * Rekord łączenia widget - kategoria
  */
@@ -31,7 +29,7 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     //prefiks atrybutów
     const CMS_ATTRIBUTE_PREFIX = 'cmsAttribute';
     //prefiks bufora widgetów
-    const WIDGET_CACHE_PREFIX = 'category-widget-html-';
+    const HTML_CACHE_PREFIX = 'category-widget-html-';
 
     /**
      * Zapis rekordu
@@ -44,7 +42,7 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
             $this->uuid = $this->_generateUuid();
         }
         //zapis configJson
-        $this->setConfigFromArray($this->getOptions());
+        $this->setConfigFromArray(array_merge($this->getConfig()->toArray(), $this->getOptions()));
         //zapis z usunięciem cache
         return parent::save() && $this->clearCache();
     }
@@ -165,8 +163,8 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     {
         //usuwanie cache
         \App\Registry::$cache->remove('category-widget-model-' . $this->cmsCategoryId);
-        \App\Registry::$cache->remove('category-html-' . $this->cmsCategoryId);
-        \App\Registry::$cache->remove(self::WIDGET_CACHE_PREFIX . $this->id);
+        \App\Registry::$cache->remove(CmsCategoryRecord::HTML_CACHE_PREFIX . $this->cmsCategoryId);
+        \App\Registry::$cache->remove(self::HTML_CACHE_PREFIX . $this->id);
         return true;
     }
 
@@ -179,19 +177,15 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
         return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
             // 32 bits for "time_low"
             mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
-
             // 16 bits for "time_mid"
             mt_rand( 0, 0xffff ),
-
             // 16 bits for "time_hi_and_version",
             // four most significant bits holds version number 4
             mt_rand( 0, 0x0fff ) | 0x4000,
-
             // 16 bits, 8 bits for "clk_seq_hi_res",
             // 8 bits for "clk_seq_low",
             // two most significant bits holds zero and one for variant DCE1.1
             mt_rand( 0, 0x3fff ) | 0x8000,
-
             // 48 bits for "node"
             mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
         );

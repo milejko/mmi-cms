@@ -13,7 +13,7 @@ use Cms\TemplateController;
 class TemplateModel
 {
     /**
-     * Dane widgeta
+     * Rekord kategorii
      * @var CmsCategoryRecord
      */
     private $_categoryRecord;
@@ -28,18 +28,18 @@ class TemplateModel
      * Konstruktor
      * @param CmsCategoryRecord $cmsCategoryRecord
      */
-    public function __construct(CmsCategoryRecord $cmsCategoryRecord)
+    public function __construct(CmsCategoryRecord $categoryRecord)
     {
-        $this->_cmsCategoryRecord = $cmsCategoryRecord;
+        $this->_categoryRecord = $categoryRecord;
         //brak zdefiniowanego szablonu
-        if (!$cmsCategoryRecord->template) {
+        if (!$categoryRecord->template) {
             throw new KernelException('Category template not specified');
         }
         //iteracja po dostępnych skórach
         foreach (Registry::$config->skinset->getSkins() as $skin) {
             $skinModel = new SkinModel($skin);
             //w skórze nie ma tego szablonu
-            if (null !== ($this->_templateConfig = $skinModel->getTemplateByKey($cmsCategoryRecord->template))) {
+            if (null !== ($this->_templateConfig = $skinModel->getTemplateByKey($categoryRecord->template))) {
                 break;
             }
         }
@@ -49,41 +49,12 @@ class TemplateModel
     }
 
     /**
-     * Pobranie konfiguracji widgeta
-     * @return CmsWidgetConfig
+     * Pobranie konfiguracji szablonu
+     * @return CmsTemplateConfig
      */
     public function getTemplateConfg()
     {
         return $this->_templateConfig;
-    }
-
-    /**
-     * Wywołanie akcji edycji
-     * @param View $view
-     * @return string
-     */
-    public function editAction(View $view)
-    {
-
-        //wywołanie akcji edycji
-        $controller = $this->_createController($view);
-        $controller->editAction();
-        //render szablonu
-        return $view->renderTemplate($this->_getTemplatePrefix() . '/edit');
-    }
-
-    /**
-     * Wywołanie akcji podglądu
-     * @param View $view
-     * @return string
-     */
-    public function previewAction(View $view)
-    {
-        //wywołanie akcji podglądu
-        $controller = $this->_createController($view);
-        $controller->previewAction();
-        //render szablonu
-        return $view->renderTemplate($this->_getTemplatePrefix() . '/preview');
     }
 
     /**
@@ -110,8 +81,6 @@ class TemplateModel
         //wywołanie akcji usuwania
         $controller = $this->_createController($view);
         $controller->deleteAction();
-        //render szablonu
-        return;
     }
 
     /**
@@ -121,9 +90,9 @@ class TemplateModel
     private function _createController(View $view)
     {
         //odczytywanie nazwy kontrolera
-        $controllerClass = $this->_widgetConfig->getControllerClassName();
+        $controllerClass = $this->_templateConfig->getControllerClassName();
         //powołanie kontrolera z rekordem relacji
-        $targetController = new $controllerClass($view->request, $view, $this->_cmsWidgetRecord);
+        $targetController = new $controllerClass($view->request, $view, $this->_categoryRecord);
         //kontroler nie jest poprawny
         if (!($targetController instanceof TemplateController)) {
             throw new KernelException('Not an instance of WidgetController');
@@ -138,7 +107,7 @@ class TemplateModel
      */
     private function _getTemplatePrefix()
     {
-        $explodedControllerClass = explode('\\', $this->_widgetConfig->getControllerClassName());
+        $explodedControllerClass = explode('\\', $this->_templateConfig->getControllerClassName());
         return lcfirst($explodedControllerClass[0]) . '/' . lcfirst(substr($explodedControllerClass[1], 0, -10));
     }
 

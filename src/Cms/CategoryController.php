@@ -9,9 +9,12 @@
  */
 
 namespace Cms;
-use Mmi\App\FrontController;
 
+use App\Registry;
+use Cms\Model\TemplateModel;
+use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryQuery;
+use Cms\Orm\CmsCategoryRecord;
 
 /**
  * Kontroler kategorii
@@ -29,14 +32,12 @@ class CategoryController extends \Mmi\Mvc\Controller
     {
         //pobranie kategorii
         $category = $this->_getPublishedCategoryByUri($this->uri);
-        //wpięcie kategorii do głównego widoku aplikacji
-        FrontController::getInstance()->getView()->category = $category;
         //klucz bufora
-        $cacheKey = 'category-html-' . $category->id;
+        $cacheKey = CmsCategoryRecord::HTML_CACHE_PREFIX . $category->id;
         //buforowanie dozwolone
         $bufferingAllowed = $this->_bufferingAllowed();
         //wczytanie zbuforowanej strony (dla niezalogowanych i z pustym requestem)
-        if ($bufferingAllowed && (null !== $html = \App\Registry::$cache->load($cacheKey))) {
+        if ($bufferingAllowed && (null !== $html = Registry::$cache->load($cacheKey))) {
             //wysyłanie nagłówka o buforowaniu strony
             $this->getResponse()->setHeader('X-Cache', 'HIT');
             //zwrot html
@@ -44,17 +45,15 @@ class CategoryController extends \Mmi\Mvc\Controller
         }
         //wysyłanie nagłówka o braku buforowaniu strony
         $this->getResponse()->setHeader('X-Cache', 'MISS');
-        //przekazanie rekordu kategorii do widoku
-        $this->view->category = $category;
         //renderowanie docelowej akcji
-        $html = \Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category));
+        $html = $this->_renderHtml($category);
         //buforowanie niedozwolone
         if (!$bufferingAllowed || 0 == $cacheLifetime = $this->_getCategoryCacheLifetime($category)) {
             //zwrot html
             return $this->_decorateHtmlWithEditButton($html, $category);
         }
         //zapis html kategorii do cache
-        \App\Registry::$cache->save($html, $cacheKey, $cacheLifetime);
+        Registry::$cache->save($html, $cacheKey, $cacheLifetime);
         //zwrot html
         return $this->_decorateHtmlWithEditButton($html, $category);
     }
@@ -85,7 +84,7 @@ class CategoryController extends \Mmi\Mvc\Controller
         $this->view->navigation()->setTitle($category->title)
             ->setDescription($category->description);
         //renderowanie docelowej akcji
-        return $this->_decorateHtmlWithEditButton(\Mmi\Mvc\ActionHelper::getInstance()->forward($this->_prepareForwardRequest($category)), $category);
+        return $this->_decorateHtmlWithEditButton($this->_renderHtml($category), $category);
     }
 
     /**
@@ -108,18 +107,18 @@ class CategoryController extends \Mmi\Mvc\Controller
         //inicjalizacja zmiennej
         $category = null;
         //próba mapowania uri na ID kategorii z cache
-        if (null === $categoryId = \App\Registry::$cache->load($cacheKey = 'category-id-' . md5($uri))) {
+        if (null === $categoryId = Registry::$cache->load($cacheKey = CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($uri))) {
             //próba pobrania kategorii po URI
             if (null === $category = (new Orm\CmsCategoryQuery)->getCategoryByUri($uri)) {
                 //zapis informacji o braku kategorii w cache
-                \App\Registry::$cache->save('-1', $cacheKey, 0);
+                Registry::$cache->save('-1', $cacheKey, 0);
                 //301 (o ile możliwe) lub 404
                 $this->_redirectOrNotFound($uri);
             }
             //id kategorii
             $categoryId = $category->id;
             //zapis id kategorii i kategorii w cache 
-            \App\Registry::$cache->save($categoryId, $cacheKey, 0) && \App\Registry::$cache->save($category, 'category-' . $categoryId, 0);
+            Registry::$cache->save($categoryId, $cacheKey, 0) && Registry::$cache->save($category, CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $categoryId, 0);
         }
         //w buforze jest informacja o braku strony
         if ($categoryId == -1) {
@@ -131,9 +130,9 @@ class CategoryController extends \Mmi\Mvc\Controller
             return $this->_checkCategory($category);
         }
         //pobranie kategorii z bufora
-        if (null === $category = \App\Registry::$cache->load($cacheKey = 'category-' . $categoryId)) {
+        if (null === $category = Registry::$cache->load($cacheKey = CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $categoryId)) {
             //zapis pobranej kategorii w cache
-            \App\Registry::$cache->save($category = (new Orm\CmsCategoryQuery)->withType()->findPk($categoryId), $cacheKey, 0);
+            Registry::$cache->save($category = (new Orm\CmsCategoryQuery)->withType()->findPk($categoryId), $cacheKey, 0);
         }
         //sprawdzanie kategorii
         return $this->_checkCategory($category);
@@ -171,33 +170,25 @@ class CategoryController extends \Mmi\Mvc\Controller
     /**
      * Pobiera request do przekierowania
      * @param \Cms\Orm\CmsCategoryRecord $category
-     * @return \Mmi\Http\Request
+     * @return string
      * @throws \Mmi\App\KernelException
      */
-    protected function _prepareForwardRequest(\Cms\Orm\CmsCategoryRecord $category)
+    protected function _renderHtml(\Cms\Orm\CmsCategoryRecord $category)
     {
         //tworzenie nowego requestu na podstawie obecnego
         $request = clone $this->getRequest();
-        $request->setModuleName('cms')
-            ->setControllerName('category')
-            ->setActionName('article');
         //przekierowanie MVC
         if ($category->mvcParams) {
             //tablica z tpl
             $mvcParams = [];
             //parsowanie parametrów mvc
             parse_str($category->mvcParams, $mvcParams);
-            return $request->setParams($mvcParams);
+            //zwrot html
+            return \Mmi\Mvc\ActionHelper::getInstance()->forward($request->setParams($mvcParams));
         }
-        //pobranie typu (szablonu) i jego parametrów mvc
-        if (!$category->getJoined('cms_category_type')->mvcParams) {
-            return $request;
-        }
-        //tablica z tpl
-        $mvcParams = [];
-        //parsowanie parametrów mvc
-        parse_str($category->getJoined('cms_category_type')->mvcParams, $mvcParams);
-        return $request->setParams($mvcParams);
+        //model szablonu
+        $templateModel = new TemplateModel($category);
+        return $templateModel->displayAction($this->view);
     }
 
     /**
@@ -222,8 +213,10 @@ class CategoryController extends \Mmi\Mvc\Controller
      */
     protected function _getCategoryCacheLifetime(\Cms\Orm\CmsCategoryRecord $category)
     {
+        //model szablonu
+        $templateModel = new TemplateModel($category);
         //czas buforowania (na podstawie typu kategorii i pojedynczej kategorii
-        $cacheLifetime = (null !== $category->cacheLifetime) ? $category->cacheLifetime : ((null !== $category->getJoined('cms_category_type')->cacheLifetime) ? $category->getJoined('cms_category_type')->cacheLifetime : Orm\CmsCategoryRecord::DEFAULT_CACHE_LIFETIME);
+        $cacheLifetime = (null !== $category->cacheLifetime) ? $category->cacheLifetime : $templateModel->getTemplateConfg()->getCacheLifeTime();
         //jeśli bufor wyłączony (na poziomie typu kategorii, lub pojedynczej kategorii)
         if (0 == $cacheLifetime) {
             //brak bufora
@@ -231,8 +224,10 @@ class CategoryController extends \Mmi\Mvc\Controller
         }
         //iteracja po widgetach
         foreach ($category->getWidgetModel()->getWidgetRelations() as $widgetRelation) {
+            //model widgeta
+            $widgetModel = new WidgetModel($widgetRelation);
             //bufor wyłączony przez widget
-            if (0 == $widgetCacheLifetime = $widgetRelation->getWidgetRecord()->cacheLifetime) {
+            if (0 == $widgetCacheLifetime = $widgetModel->getWidgetConfg()->getCacheLifeTime()) {
                 //brak bufora
                 return 0;
             }
@@ -252,7 +247,7 @@ class CategoryController extends \Mmi\Mvc\Controller
     protected function _redirectOrNotFound($uri)
     {
         //klucz bufora
-        $cacheKey = 'category-redirect-' . md5($uri);
+        $cacheKey = CmsCategoryRecord::REDIRECT_CACHE_PREFIX . md5($uri);
         //zbuforowany brak uri w historii
         if ('-1' == ($redirectUri = \App\Registry::$cache->load($cacheKey))) {
             //404

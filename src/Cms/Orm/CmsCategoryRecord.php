@@ -151,13 +151,21 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     public $active;
 
     //status draft
-    CONST STATUS_DRAFT = 0;
+    const STATUS_DRAFT = 0;
     //status artykuł aktywny
-    CONST STATUS_ACTIVE = 10;
+    const STATUS_ACTIVE = 10;
     //status historia
-    CONST STATUS_HISTORY = 20;
+    const STATUS_HISTORY = 20;
     //nazwa obiektu plików cms
-    CONST FILE_OBJECT = 'cmscategory';
+    const FILE_OBJECT = 'cmscategory';
+    //prefiks bufora html
+    const HTML_CACHE_PREFIX = 'category-html-';
+    //prefiks bufora url->id
+    const URI_ID_CACHE_PREFIX = 'category-uri-id-';
+    //prefiks bufora obiektu kategorii
+    const CATEGORY_CACHE_PREFIX = 'category-';
+    //prefiks bufora przekierowania
+    const REDIRECT_CACHE_PREFIX = 'category-redirect-';
 
     /**
      * Zapis rekordu
@@ -558,9 +566,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             //obliczanie nowej kolejności
             $categoryRecord->order = $i++;
             //blokada dalszego sortowania i zapis
-            $categoryRecord
-                ->setOption('block-ordering', true)
-                ->save();
+            $categoryRecord->setOption('block-ordering', true);
+            $categoryRecord->save();
         }
     }
 
@@ -571,15 +578,15 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     {
         //usuwanie cache
         \App\Registry::$cache->remove('mmi-cms-navigation-' . $this->lang);
-        \App\Registry::$cache->remove('category-' . $this->id);
-        \App\Registry::$cache->remove('category-' . $this->cmsCategoryOriginalId);
-        \App\Registry::$cache->remove('category-html-' . $this->id);
-        \App\Registry::$cache->remove('category-html-' . $this->cmsCategoryOriginalId);
-        \App\Registry::$cache->remove('category-id-' . md5($this->uri));
-        \App\Registry::$cache->remove('category-redirect-' . md5($this->uri));
-        \App\Registry::$cache->remove('category-id-' . md5($this->getInitialStateValue('uri')));
-        \App\Registry::$cache->remove('category-id-' . md5($this->customUri));
-        \App\Registry::$cache->remove('category-id-' . md5($this->getInitialStateValue('customUri')));
+        \App\Registry::$cache->remove(self::CATEGORY_CACHE_PREFIX . $this->id);
+        \App\Registry::$cache->remove(self::CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
+        \App\Registry::$cache->remove(self::HTML_CACHE_PREFIX . $this->id);
+        \App\Registry::$cache->remove(self::HTML_CACHE_PREFIX . $this->cmsCategoryOriginalId);
+        \App\Registry::$cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->uri));
+        \App\Registry::$cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->getInitialStateValue('uri')));
+        \App\Registry::$cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->customUri));
+        \App\Registry::$cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->getInitialStateValue('customUri')));
+        \App\Registry::$cache->remove(self::REDIRECT_CACHE_PREFIX . md5($this->uri));
         \App\Registry::$cache->remove('category-attributes-' . $this->id);
         \App\Registry::$cache->remove('category-attributes-' . $this->cmsCategoryOriginalId);
         \App\Registry::$cache->remove('category-widget-model-' . $this->id);
