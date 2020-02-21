@@ -22,7 +22,7 @@
                     <li class="nav-item">
                         <a title="{#template.category.edit.tab.config#}" class="nav-link" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-expanded="true"><i class="icon-pencil"></i></a>
                     </li>
-                    {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
+                    {if $category->template && aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
                         <li class="nav-item">
                             <a title="{#template.category.edit.tab.widget#}" class="nav-link" data-toggle="tab" href="#widgets" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-layers"></i></a>
                         </li>
@@ -44,7 +44,6 @@
                         {$categoryForm->getElement('cacheLifetime')}
                         {$categoryForm->getElement('redirectUri')}
                         {$categoryForm->getElement('mvcParams')}
-                        {$categoryForm->getElement('configJson')}
                         {$categoryForm->getElement('https')}
                         {$categoryForm->getElement('blank')}
                         {$categoryForm->getElement('dateStart')}

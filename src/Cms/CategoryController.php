@@ -15,6 +15,8 @@ use Cms\Model\TemplateModel;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
+use Mmi\App\KernelException;
+use Mmi\Mvc\MvcNotFoundException;
 
 /**
  * Kontroler kategorii
