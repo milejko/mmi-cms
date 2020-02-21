@@ -42,10 +42,6 @@ class CategoryGrid extends \CmsAdmin\Grid\Grid
         $this->addColumn((new Column\TextColumn('title'))
             ->setLabel('grid.category.title.label'));
 
-        //aktywności
-        $this->addColumn((new Column\CheckboxColumn('active'))
-            ->setLabel('grid.category.active.label'));
-
         //operacje
         $this->addColumn((new Column\CustomColumn('operation'))
             ->setLabel('grid.shared.operation.label')
