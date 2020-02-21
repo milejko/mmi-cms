@@ -12,6 +12,7 @@ namespace CmsAdmin;
 
 use App\Registry;
 use Cms\Model\SkinModel;
+use Cms\Model\WidgetModel;
 
 /**
  * Kontroler konfiguracji kategorii - stron CMS
@@ -75,7 +76,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
         //iteracja po skórach
         foreach (Registry::$config->skinset->getSkins() as $skin) {
             $skinModel = new SkinModel($skin);
-            if (!$skinModel->templateExists($category->template)) {
+            if (null === $skinModel->getTemplateByKey($category->template)) {
                 continue;
             }
             //pobranie sekcji dla szablonu kategorii
@@ -95,6 +96,9 @@ class CategoryWidgetRelationController extends Mvc\Controller
             ->findPk($this->id)) {
             return '';
         }
+        //akcja usuwania widgeta
+        $widgetModel = new WidgetModel($widgetRelation);
+        $widgetModel->deleteAction($this->view);
         //usuwanie relacji
         $widgetRelation->delete();
         return '';

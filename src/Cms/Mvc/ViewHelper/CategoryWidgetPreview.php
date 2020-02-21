@@ -12,7 +12,6 @@ namespace Cms\Mvc\ViewHelper;
 
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
-use Cms\WidgetController;
 
 /**
  * Widget podglądu widgeta
@@ -20,26 +19,14 @@ use Cms\WidgetController;
 class CategoryWidgetPreview extends \Mmi\Mvc\ViewHelper\HelperAbstract
 {
     /**
-     * Render edycji widgetu
+     * Render edycji widgeta
      * @param CmsCategoryWidgetCategoryRecord $widgetRelation
      * @return string
      */
     public function categoryWidgetPreview(CmsCategoryWidgetCategoryRecord $widgetRelationRecord)
     {
-        $widgetConfig = (new WidgetModel($widgetRelationRecord))->getWidgetConfg();
-        //odczytywanie nazwy kontrolera
-        $controllerClass = $widgetConfig->getControllerClassName();
-        //powołanie kontrolera z rekordem relacji
-        $targetController = new $controllerClass($this->view->request, $this->view, $widgetRelationRecord);
-        //kontroler nie jest poprawny
-        if (!($targetController instanceof WidgetController)) {
-            return 'Not a WidgetController';
-        }
-        //wywołanie akcji
-        $targetController->previewAction();
-        $explodedControllerClass = explode('\\', $controllerClass);
         //render szablonu
-        return $this->view->renderTemplate(lcfirst($explodedControllerClass[0]) . '/' . lcfirst(substr($explodedControllerClass[1], 0, -10)) . '/preview');
+        return (new WidgetModel($widgetRelationRecord))->previewAction($this->view);
     }
 
 }

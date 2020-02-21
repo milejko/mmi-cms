@@ -3,54 +3,48 @@
 namespace Cms\Model;
 
 use App\Registry;
-use Cms\Exception\CategoryWidgetException;
-use Cms\Orm\CmsCategoryWidgetCategoryRecord;
+use Cms\Orm\CmsCategoryRecord;
 use Cms\WidgetController;
 use Mmi\App\KernelException;
 use Mmi\Mvc\View;
-use Cms\App\CmsWidgetConfig;
+use Cms\App\CmsTemplateConfig;
+use Cms\TemplateController;
 
-class WidgetModel
+class TemplateModel
 {
     /**
      * Dane widgeta
-     * @var CmsCategoryWidgetCategoryRecord
+     * @var CmsCategoryRecord
      */
-    private $_cmsWidgetRecord;
+    private $_categoryRecord;
 
     /**
      * Konfiguracja widgetas
-     * @var CmsWidgetConfig
+     * @var CmsTemplateConfig
      */
-    private $_widgetConfig;
+    private $_templateConfig;
 
     /**
      * Konstruktor
-     * @param CmsCategoryWidgetCategoryRecord $cmsWidgetRecord
+     * @param CmsCategoryRecord $cmsCategoryRecord
      */
-    public function __construct(CmsCategoryWidgetCategoryRecord $cmsWidgetRecord)
+    public function __construct(CmsCategoryRecord $cmsCategoryRecord)
     {
-        $this->_cmsWidgetRecord = $cmsWidgetRecord;
-        //brak zdefiniowanego widgeta
-        if (!$cmsWidgetRecord->widget) {
-            throw new KernelException('Widget type not specified');
-        }
-        //wyszukiwanie szablonu
-        if (!($template = $cmsWidgetRecord->getCategoryRecord()->template)) {
+        $this->_cmsCategoryRecord = $cmsCategoryRecord;
+        //brak zdefiniowanego szablonu
+        if (!$cmsCategoryRecord->template) {
             throw new KernelException('Category template not specified');
         }
         //iteracja po dostępnych skórach
         foreach (Registry::$config->skinset->getSkins() as $skin) {
             $skinModel = new SkinModel($skin);
             //w skórze nie ma tego szablonu
-            if (null === $skinModel->getTemplateByKey($template)) {
-                continue;
+            if (null !== ($this->_templateConfig = $skinModel->getTemplateByKey($cmsCategoryRecord->template))) {
+                break;
             }
-            //wyszukiwanie widgeta
-            $this->_widgetConfig = $skinModel->getWidgetByKey($cmsWidgetRecord->widget);
         }
-        if (!isset($this->_widgetConfig)) {
-            throw new KernelException('Compatible widget not found');
+        if (!isset($this->_templateConfig)) {
+            throw new KernelException('Template not found');
         }
     }
 
@@ -58,9 +52,9 @@ class WidgetModel
      * Pobranie konfiguracji widgeta
      * @return CmsWidgetConfig
      */
-    public function getWidgetConfg()
+    public function getTemplateConfg()
     {
-        return $this->_widgetConfig;
+        return $this->_templateConfig;
     }
 
     /**
@@ -131,8 +125,8 @@ class WidgetModel
         //powołanie kontrolera z rekordem relacji
         $targetController = new $controllerClass($view->request, $view, $this->_cmsWidgetRecord);
         //kontroler nie jest poprawny
-        if (!($targetController instanceof WidgetController)) {
-            throw new CategoryWidgetException('Not an instance of WidgetController');
+        if (!($targetController instanceof TemplateController)) {
+            throw new KernelException('Not an instance of WidgetController');
         }
         //zwrot instancji kontrolera
         return $targetController;        

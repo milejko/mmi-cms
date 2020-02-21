@@ -19,17 +19,19 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     public $cmsCategorySectionId;
     public $configJson;
     public $active = 1;
-    
-    //prefiks obiektów plików dla widgetu
-    CONST FILE_OBJECT_PREFIX = 'categoryWidgetRelation';
-    //prefiks atrybutów
-    CONST CMS_ATTRIBUTE_PREFIX = 'cmsAttribute';
 
     /**
      * Kolejność
      * @var integer
      */
     public $order;
+    
+    //prefiks obiektów plików dla widgetu
+    const FILE_OBJECT_PREFIX = 'cmscategorywidgetcategory';
+    //prefiks atrybutów
+    const CMS_ATTRIBUTE_PREFIX = 'cmsAttribute';
+    //prefiks bufora widgetów
+    const WIDGET_CACHE_PREFIX = 'category-widget-html-';
 
     /**
      * Zapis rekordu
@@ -109,13 +111,8 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
      */
     public function getAttributeValues()
     {
-        //próba pobrania atrybutów z cache
-        if (null === $attributeValues = \App\Registry::$cache->load($cacheKey = 'category-widget-attributes-' . $this->id)) {
-            //pobieranie atrybutów
-            \App\Registry::$cache->save($attributeValues = (new \Cms\Model\AttributeValueRelationModel('categoryWidgetRelation', $this->id))->getGrouppedAttributeValues(), $cacheKey);
-        }
         //zwrot atrybutów
-        return $attributeValues;
+        return (new \Cms\Model\AttributeValueRelationModel('categoryWidgetRelation', $this->id))->getGrouppedAttributeValues();
     }
 
     /**
@@ -169,8 +166,7 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
         //usuwanie cache
         \App\Registry::$cache->remove('category-widget-model-' . $this->cmsCategoryId);
         \App\Registry::$cache->remove('category-html-' . $this->cmsCategoryId);
-        \App\Registry::$cache->remove('category-widget-attributes-' . $this->id);
-        \App\Registry::$cache->remove('category-widget-html-' . $this->id);
+        \App\Registry::$cache->remove(self::WIDGET_CACHE_PREFIX . $this->id);
         return true;
     }
 

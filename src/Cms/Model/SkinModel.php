@@ -24,7 +24,12 @@ class SkinModel
         return $templates;
     }
 
-    public function templateExists($templateKey)
+    /**
+     * Wybiera template po kluczu
+     * @param string $templateKey
+     * @return CmsTemplateConfig
+     */
+    public function getTemplateByKey($templateKey)
     {
         //iteracja po szablonach
         foreach ($this->_skin->getTemplates() as $template) {
@@ -32,14 +37,14 @@ class SkinModel
             if ($this->_getUniqueTemplateKey($template->getName()) != $templateKey) {
                 continue;
             }
-            return true;
+            //zwrot szablonu
+            return $template;
         }
-        return false;
     }
 
     /**
      * Zwraca sekcje po szablonie
-     * @param [type] $templateKey
+     * @param string $templateKey
      * @return SkinModelSection[]
      */
     public function getSectionsByTemplateKey($templateKey)

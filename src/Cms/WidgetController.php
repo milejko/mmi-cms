@@ -61,5 +61,8 @@ abstract class WidgetController extends Controller
 
     //wyświetlenie po stronie klienta
     abstract public function displayAction();
+
+    //usuwanie widgeta
+    abstract public function deleteAction();
     
 }
