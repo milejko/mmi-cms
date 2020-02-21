@@ -17,6 +17,12 @@ class CmsWidgetConfig
     private $_name;
 
     /**
+     * Klucz widgeta
+     * @var string
+     */
+    private $_key;
+
+    /**
      * Nazwa klasy kontrolera
      * @var string
      */
@@ -58,6 +64,26 @@ class CmsWidgetConfig
     public function getName()
     {
         return $this->_name;
+    }
+
+    /**
+     * Ustawia klucz
+     * @param string $name
+     * @return CmsWidgetConfig
+     */
+    public function setKey($key)
+    {
+        $this->_key = $key;
+        return $this;
+    }
+
+    /**
+     * Pobiera klucz
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->_key;
     }
 
     /**

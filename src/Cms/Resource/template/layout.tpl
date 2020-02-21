@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="pl">
     <head>
-        <title>{adminNavigation()->title()}</title>
-        {headMeta(['name' => 'description', 'content' => adminNavigation()->description()])}
+        <title>{navigation()->title()}</title>
+        {headMeta(['name' => 'description', 'content' => navigation()->description()])}
     </head>
     <body>
-        {adminMessenger()}
+        {messenger()}
         {content()}
     </body>
 </html>

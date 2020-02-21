@@ -41,6 +41,26 @@ class CmsSectionConfig
     }
 
     /**
+     * Ustawia klucz
+     * @param string $name
+     * @return CmsSectionConfig
+     */
+    public function setKey($key)
+    {
+        $this->_key = $key;
+        return $this;
+    }
+
+    /**
+     * Pobiera klucz
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->_key;
+    }
+
+    /**
      * Dodawanie sekcji
      * @param string $name
      * @param CmsWidgetConfig $widgetConfig

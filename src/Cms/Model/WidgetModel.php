@@ -50,7 +50,7 @@ class WidgetModel
             $this->_widgetConfig = $skinModel->getWidgetByKey($cmsWidgetRecord->widget);
         }
         if (!isset($this->_widgetConfig)) {
-            throw new KernelException('Compatible widget not found');
+            throw new KernelException('Compatible widget not found: ' . $cmsWidgetRecord->widget);
         }
     }
 

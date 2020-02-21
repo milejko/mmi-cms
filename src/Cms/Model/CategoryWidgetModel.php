@@ -10,7 +10,9 @@
 
 namespace Cms\Model;
 
+use App\Registry;
 use \Cms\Orm\CmsCategoryWidgetCategoryQuery;
+use Mmi\App\FrontController;
 
 /**
  * Model widgetów kategorii
@@ -43,25 +45,26 @@ class CategoryWidgetModel
         if (null === $this->_widgetCollection = (new CmsCategoryWidgetCategoryQuery)
             ->join('cms_category')->on('cms_category_id')
             ->whereCmsCategoryId()->equals($this->_categoryId)
+            ->andFieldWidget()->notEquals(null)
             ->orderAscOrder()
             ->find()) {
             //nie znaleziono relacji
             throw new \Cms\Exception\CategoryWidgetException('Category not found');
         }
-    }
-
-    /**
-     * Pobiera rekord konfiguracji widgeta
-     * @param integer $id
-     * @return \Cms\Orm\CmsCategoryWidgetCategoryRecord
-     */
-    public function findWidgetRelationById($id)
-    {
-        //iteracja po relacjach
-        foreach ($this->_widgetCollection as $widgetRelationRecord) {
-            //relacja odnaleziona
-            if ($widgetRelationRecord->id == $id) {
-                return $widgetRelationRecord;
+        //iteracja po widgetach
+        foreach ($this->_widgetCollection as $key => $widget) {
+            $widgetFound = false;
+            //iteracja po skórach
+            foreach (Registry::$config->skinset->getSkins() as $skin) {
+                if ((new SkinModel($skin))->getWidgetByKey($widget->widget)) {
+                    $widgetFound = true;
+                    break;
+                }
+            }
+            //widget nie może być już użyty
+            if (!$widgetFound) {
+                unset($this->_widgetCollection[$key]);
+                FrontController::getInstance()->getLogger()->warning('Widget not found: ' . $widget->widget);
             }
         }
     }

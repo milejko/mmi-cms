@@ -3,12 +3,14 @@
 namespace Cms\Model;
 
 use Cms\App\CmsSectionConfig;
-use Mmi\Filter\Url;
 
+/**
+ * Model sekcji w skórze
+ */
 class SkinModelSection
 {
-
-    CONST SEPARATOR = '/';
+    //separator
+    const SEPARATOR = '/';
 
     private $_section;
     private $_templateKey;
@@ -26,20 +28,18 @@ class SkinModelSection
 
     public function getKey()
     {
-        return $this->_templateKey . self::SEPARATOR . (new Url)->filter($this->_section->getName());
+        return $this->_templateKey . self::SEPARATOR . $this->_section->getKey();
     }
 
     /**
-     * Undocumented function
-     *
-     * @return void
+     * Pobiera dostępne widgety
+     * @return CmsWidgetConfig[]
      */
     public function getAvailableWidgets()
     {
         $availableWidges = [];
-        foreach ($this->_section->getWidgets() as $widget)
-        {
-            $availableWidges[$this->getKey() . self::SEPARATOR . (new Url)->filter($widget->getName())] = $widget;
+        foreach ($this->_section->getWidgets() as $widget) {
+            $availableWidges[$this->getKey() . self::SEPARATOR . $widget->getKey()] = $widget;
         }
         return $availableWidges;
     }

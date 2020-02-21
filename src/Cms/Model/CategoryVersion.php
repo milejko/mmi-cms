@@ -60,8 +60,6 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
             ->whereCmsCategoryId()->equals($this->_category->id)
             ->find()
             ->delete();
-        $attributeValueRelationModel = new AttributeValueRelationModel(self::OBJECT_TYPE, $this->_category->id);
-        $attributeValueRelationModel->deleteAttributeValueRelations();
         //nadpisanie danych oryginału
         $this->_category->setFromArray($draft->toArray());
         //id pozostaje niezmienione
@@ -79,15 +77,6 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
             //przepinanie id
             $widgetCategory->cmsCategoryId = $this->_category->id;
             $widgetCategory->save();
-        }
-        //przepinanie atrybutów
-        foreach ((new \Cms\Orm\CmsAttributeValueRelationQuery)
-            ->whereObject()->equals(self::OBJECT_TYPE)
-            ->whereObjectId()->equals($draft->id)
-            ->find() as $attributeRelation) {
-            //przepinanie id
-            $attributeRelation->objectId = $this->_category->id;
-            $attributeRelation->save();
         }
         //przepinanie plików
         foreach ((new \Cms\Orm\CmsFileQuery)

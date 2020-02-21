@@ -41,6 +41,26 @@ class CmsSkinConfig
     }
 
     /**
+     * Ustawia klucz
+     * @param string $name
+     * @return CmsSkinConfig
+     */
+    public function setKey($key)
+    {
+        $this->_key = $key;
+        return $this;
+    }
+
+    /**
+     * Pobiera klucz
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->_key;
+    }
+
+    /**
      * Dodaje szablon
      * @param CmsTemplateConfig $templateConfig
      * @return CmsSkinConfig

@@ -3,23 +3,38 @@
 namespace Cms\Model;
 
 use Cms\App\CmsSkinConfig;
-use Mmi\Filter\Url;
 
+/**
+ * Model skór
+ */
 class SkinModel
 {
-    CONST SEPARATOR = '/';
-    private $_skin;
+    //separator w kluczach
+    const SEPARATOR = '/';
+    //separator nazw
+    const NAME_SEPARATOR = ' / ';
 
+    /**
+     * Konfiguracja skóry
+     * @var CmsSkinConfig
+     */
+    private $_skinConfig;
+
+    /**
+     * Konstruktor
+     * @param CmsSkinConfig $cmsSkinConfig
+     */
     public function __construct(CmsSkinConfig $cmsSkinConfig)
     {
-        $this->_skin = $cmsSkinConfig;
+        $this->_skinConfig = $cmsSkinConfig;
     }
 
     public function getTemplatesMultioptions()
     {
         $templates = [];
-        foreach ($this->_skin->getTemplates() as $template) {
-            $templates[$this->_getUniqueTemplateKey($template->getName())] = $this->_skin->getName() . ' / ' . $template->getName();
+        //iteracja po szablonach
+        foreach ($this->_skinConfig->getTemplates() as $template) {
+            $templates[$this->_getUniqueTemplateKey($template->getKey())] = $this->_skinConfig->getName() . self::NAME_SEPARATOR . $template->getName();
         }
         return $templates;
     }
@@ -32,9 +47,9 @@ class SkinModel
     public function getTemplateByKey($templateKey)
     {
         //iteracja po szablonach
-        foreach ($this->_skin->getTemplates() as $template) {
+        foreach ($this->_skinConfig->getTemplates() as $template) {
             //szablon niezgodny
-            if ($this->_getUniqueTemplateKey($template->getName()) != $templateKey) {
+            if ($this->_getUniqueTemplateKey($template->getKey()) != $templateKey) {
                 continue;
             }
             //zwrot szablonu
@@ -50,12 +65,13 @@ class SkinModel
     public function getSectionsByTemplateKey($templateKey)
     {
         //iteracja po szablonach
-        foreach ($this->_skin->getTemplates() as $template) {
+        foreach ($this->_skinConfig->getTemplates() as $template) {
             //szablon niezgodny
-            if ($this->_getUniqueTemplateKey($template->getName()) != $templateKey) {
+            if ($this->_getUniqueTemplateKey($template->getKey()) != $templateKey) {
                 continue;
             }
             $sections = [];
+            //iteracja po sekcjach
             foreach ($template->getSections() as $section) {
                 $sections[] = new SkinModelSection($section, $templateKey);
             } 
@@ -71,10 +87,14 @@ class SkinModel
      */
     public function getWidgetByKey($widgetKey)
     {
-        foreach ($this->_skin->getTemplates() as $template) {
+        //iteracja po szablonach
+        foreach ($this->_skinConfig->getTemplates() as $template) {
+            //iteracja po sekcjach
             foreach ($template->getSections() as $section) {
+                //iteracja po widgetach
                 foreach ($section->getWidgets() as $widget) {
-                    if ($widgetKey == $this->_getUniqueWidgetKey($template->getName(), $section->getName(), $widget->getName())) {
+                    //widget odnaleziony
+                    if ($widgetKey == $this->_getUniqueWidgetKey($template->getKey(), $section->getKey(), $widget->getKey())) {
                         return $widget;
                     }
                 }
@@ -84,22 +104,24 @@ class SkinModel
 
     /**
      * Wyznacza klucz szablonu w skórce
-     * @param string $templateName
+     * @param string $templateKey
      * @return string
      */
-    private function _getUniqueTemplateKey($templateName)
+    private function _getUniqueTemplateKey($templateKey)
     {
-        return (new Url)->filter($this->_skin->getName()) . self::SEPARATOR . (new Url)->filter($templateName);
+        return $this->_skinConfig->getKey() . self::SEPARATOR . $templateKey;
     }
 
     /**
      * Wyznacza klucz szablonu w skórce
-     * @param string $templateName
+     * @param string $templateKey
+     * @param string $sectionKey
+     * @param string $widgetKey
      * @return string
      */
-    private function _getUniqueWidgetKey($templateName, $sectionName, $widgetName)
+    private function _getUniqueWidgetKey($templateKey, $sectionKey, $widgetKey)
     {
-        return $this->_getUniqueTemplateKey($templateName) . self::SEPARATOR . (new Url)->filter($sectionName) . self::SEPARATOR . (new Url)->filter($widgetName);
+        return $this->_getUniqueTemplateKey($templateKey) . self::SEPARATOR . $sectionKey . self::SEPARATOR . $widgetKey;
     }
 
 }

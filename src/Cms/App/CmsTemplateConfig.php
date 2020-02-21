@@ -55,6 +55,26 @@ class CmsTemplateConfig
     }
 
     /**
+     * Ustawia klucz
+     * @param string $name
+     * @return CmsTemplateConfig
+     */
+    public function setKey($key)
+    {
+        $this->_key = $key;
+        return $this;
+    }
+
+    /**
+     * Pobiera klucz
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->_key;
+    }
+
+    /**
      * Ustawia nazwę klasy kontrolera
      * @param string $controllerClassName
      * @return CmsTemplateConfig
