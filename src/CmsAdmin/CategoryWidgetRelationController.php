@@ -13,6 +13,8 @@ namespace CmsAdmin;
 use App\Registry;
 use Cms\Model\SkinModel;
 use Cms\Model\WidgetModel;
+use Cms\Orm\CmsCategoryWidgetCategoryRecord;
+use Cms\Orm\CmsFileQuery;
 
 /**
  * Kontroler konfiguracji kategorii - stron CMS
@@ -52,6 +54,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
         //modyfikacja breadcrumbów
         $this->view->adminNavigation()->modifyBreadcrumb(4, 'menu.category.edit', $this->view->url(['controller' => 'category', 'action' => 'edit', 'id' => $this->categoryId, 'categoryId' => null, 'widgetId' => null]));
         $this->view->adminNavigation()->modifyLastBreadcrumb('menu.categoryWidgetRelation.config', '#');
+        $this->view->widget = (new WidgetModel($widgetRelationRecord))->getWidgetConfg();
         //rendering, lub przekierowanie jeśli kontroler zgłosił zapis
         $this->view->output = $this->view->categoryWidgetEdit($widgetRelationRecord);
     }
@@ -96,9 +99,12 @@ class CategoryWidgetRelationController extends Mvc\Controller
             ->findPk($this->id)) {
             return '';
         }
-        //akcja usuwania widgeta
-        $widgetModel = new WidgetModel($widgetRelation);
-        $widgetModel->deleteAction($this->view);
+        //usuwanie obiektów
+        (new CmsFileQuery())
+            ->whereObject()->like(CmsCategoryWidgetCategoryRecord::FILE_OBJECT_PREFIX . '%')
+            ->andFieldObjectId()->equals($this->id)
+            ->find()
+            ->delete();
         //usuwanie relacji
         $widgetRelation->delete();
         return '';
