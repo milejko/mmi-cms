@@ -59,6 +59,11 @@ class SkinModel
         }
     }
 
+    /**
+     * Pobiera widget po skluczu
+     * @param string $widgetKey
+     * @return CmsWidgetConfig
+     */
     public function getWidgetByKey($widgetKey)
     {
         foreach ($this->_skin->getTemplates() as $template) {

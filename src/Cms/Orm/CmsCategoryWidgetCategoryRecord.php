@@ -2,6 +2,8 @@
 
 namespace Cms\Orm;
 
+use Cms\Model\WidgetModel;
+
 /**
  * Rekord łączenia widget - kategoria
  */
@@ -46,6 +48,16 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     }
 
     /**
+     * Zrzuca rekord do tabeli
+     * @return array
+     */
+    public function toArray()
+    {
+        //dołącza do danych z rekordu dane spakowane w json
+        return parent::toArray() + $this->getConfig()->toArray();
+    }
+
+    /**
      * Usunięcie rekordu
      * @return boolean
      */
@@ -71,8 +83,8 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
         if ($this->getJoined('cms_category')) {
             return $this->getJoined('cms_category');
         }
-        //brak dołączonej kategorii
-        throw new \Cms\Exception\CategoryWidgetException('Category not joined');
+        //wyszukiwanie kategorii
+        return (new CmsCategoryQuery())->findPk($this->cmsCategoryId);
     }
 
     /**

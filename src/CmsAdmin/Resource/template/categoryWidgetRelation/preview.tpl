@@ -6,7 +6,7 @@
         <div class="card-body" id="widget-list-container">
             <div style="overflow-x: auto; white-space:nowrap;">
                 {foreach $section->getAvailableWidgets() as $availableWidgetKey => $availableWidget}
-                    <button id="cmsadmin-form-category-submit" type="submit" class="button btn btn-primary btn-inline-block" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&widget={$availableWidgetKey}&action=edit&categoryId={$category->id}&uploaderId={$request->uploaderId}&originalId={$category->cmsCategoryOriginalId}@}">
+                    <button id="cmsadmin-form-category-submit" type="submit" class="button btn btn-primary btn-inline-block" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&widget={$availableWidgetKey}&action=edit&categoryId={$category->id}&originalUploaderId={$request->uploaderId}&originalId={$category->cmsCategoryOriginalId}@}">
                         <i class="icon-plus"></i> {$availableWidget->getName()}
                     </button>
                 {/foreach}
@@ -16,11 +16,11 @@
                 {foreach $widgetRelations as $widgetRelation}
                     <li id="widget-item-{$widgetRelation->id}" class="ui-sortable-handle">
                         <div class="preview">
-                            {*widget($widgetPreviewRequest->module, $widgetPreviewRequest->controller, $widgetPreviewRequest->action, $widgetPreviewRequest->toArray() + ['widgetId' => $widgetRelation->id])*}
+                            {categoryWidgetPreview($widgetRelation)}
                         </div>
                         <div class="operation">
                             {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'config'])}
-                                <button class="button edit" type="submit" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&action=edit&widget={$widgetRelation->widget}&id={$widgetRelation->id}&categoryId={$category->id}&originalUploaderId={$request->uploaderId}&uploaderId={$widgetRelation->id}&originalId={$category->cmsCategoryOriginalId}&section={$widgetRelation->section}@}">
+                                <button class="button edit" type="submit" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&action=edit&widget={$widgetRelation->widget}&id={$widgetRelation->id}&categoryId={$category->id}&originalUploaderId={$request->uploaderId}&uploaderId={$widgetRelation->id}&originalId={$category->cmsCategoryOriginalId}@}">
                                     <i class="fa fa-pencil-square-o pull-right fa-2"></i>
                                 </button>
                             {/if}

@@ -42,8 +42,6 @@ class CategoryWidgetModel
         //wyszukiwanie relacji
         if (null === $this->_widgetCollection = (new CmsCategoryWidgetCategoryQuery)
             ->join('cms_category')->on('cms_category_id')
-            ->joinLeft('cms_category_widget')->on('cms_category_widget_id')
-            ->joinLeft('cms_category_section')->on('cms_category_section_id')
             ->whereCmsCategoryId()->equals($this->_categoryId)
             ->orderAscOrder()
             ->find()) {

@@ -20,12 +20,6 @@ abstract class WidgetController extends Controller
     private $_relationRecord;
 
     /**
-     * Dane zapisane do rekordu relacji
-     * @var boolean
-     */
-    private $_saved = false;
-
-    /**
      * Zwraca rekord relacji
      * @return CmsCategoryWidgetCategoryRecord
      */
@@ -38,19 +32,14 @@ abstract class WidgetController extends Controller
      * Ustawia stan zapisany
      * @return void
      */
-    public function setSaved()
+    public function redirectToCategory()
     {
-        $this->_saved = true;
-        return $this;
-    }
-
-    /**
-     * Pobiera stan zapisany
-     * @return boolean
-     */
-    public function isSaved()
-    {
-        return $this->_saved;
+        //przekierowanie na stronę edycji
+        $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', [
+            'id' => $this->categoryId,
+            'originalId' => $this->originalId,
+            'uploaderId' => $this->originalUploaderId,
+        ]);
     }
 
     /**

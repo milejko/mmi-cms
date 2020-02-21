@@ -89,22 +89,6 @@ class CategoryController extends \Mmi\Mvc\Controller
     }
 
     /**
-     * Akcja artykułu
-     */
-    public function articleAction()
-    {
-
-    }
-
-    /**
-     * Akcja prostego widgetu z atrybutami
-     */
-    public function widgetAction()
-    {
-
-    }
-
-    /**
      * Akcja renderująca guzik edycji
      */
     public function editButtonAction()

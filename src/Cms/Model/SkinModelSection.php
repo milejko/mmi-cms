@@ -3,7 +3,6 @@
 namespace Cms\Model;
 
 use Cms\App\CmsSectionConfig;
-use Cms\App\CmsTemplateConfig;
 use Mmi\Filter\Url;
 
 class SkinModelSection
