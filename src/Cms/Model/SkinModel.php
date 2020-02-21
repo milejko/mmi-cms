@@ -2,7 +2,9 @@
 
 namespace Cms\Model;
 
+use App\Registry;
 use Cms\App\CmsSkinConfig;
+use Mmi\App\FrontController;
 
 /**
  * Model skór
@@ -11,8 +13,6 @@ class SkinModel
 {
     //separator w kluczach
     const SEPARATOR = '/';
-    //separator nazw
-    const NAME_SEPARATOR = ' / ';
 
     /**
      * Konfiguracja skóry
@@ -34,7 +34,7 @@ class SkinModel
         $templates = [];
         //iteracja po szablonach
         foreach ($this->_skinConfig->getTemplates() as $template) {
-            $templates[$this->_getUniqueTemplateKey($template->getKey())] = $this->_skinConfig->getName() . self::NAME_SEPARATOR . $template->getName();
+            $templates[$this->_getUniqueTemplateKey($template->getKey())] = $template->getName();
         }
         return $templates;
     }

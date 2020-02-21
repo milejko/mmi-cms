@@ -1,13 +1,13 @@
 {foreach $sections as $section}
     <div class="card boxSection">
         <div class="card-header">
-            <strong>{$section->getName()}</strong>
+            <strong>{_($section->getName())}</strong>
         </div>
         <div class="card-body" id="widget-list-container">
             <div style="overflow-x: auto; white-space:nowrap;">
                 {foreach $section->getAvailableWidgets() as $availableWidgetKey => $availableWidget}
                     <button id="cmsadmin-form-category-submit" type="submit" class="button btn btn-primary btn-inline-block" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&widget={$availableWidgetKey}&action=edit&categoryId={$category->id}&originalUploaderId={$request->uploaderId}&originalId={$category->cmsCategoryOriginalId}@}">
-                        <i class="icon-plus"></i> {$availableWidget->getName()}
+                        <i class="icon-plus"></i> {_($availableWidget->getName())}
                     </button>
                 {/foreach}
             </div>
