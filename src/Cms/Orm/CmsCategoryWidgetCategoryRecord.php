@@ -3,7 +3,7 @@
 namespace Cms\Orm;
 
 /**
- * Rekord łączenia widget - kategoria
+ * Rekord widgetu w kategoriach
  */
 class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
 {
@@ -11,10 +11,8 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     public $id;
     public $uuid;
     public $widget;
-    public $section;
     public $cmsCategoryWidgetId;
     public $cmsCategoryId;
-    public $cmsCategorySectionId;
     public $configJson;
     public $active = 1;
 
