@@ -76,7 +76,6 @@ class CategoryController extends Mvc\Controller
         //dekoracja formularza na bazie wybranego szablonu
         if ($category->template) {
             $this->view->template = (new SkinsetModel(Registry::$config->skinset))
-                ->getSkinModelByKey($category->template)
                 ->getTemplateConfigByKey($category->template);
         }
         //form do widoku

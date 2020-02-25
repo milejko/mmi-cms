@@ -26,9 +26,15 @@ class WidgetModel
 
     /**
      * Model skóry
-     * @var SkinModel
+     * @var SkinsetModel
      */
-    private $_skinModel;
+    private $_skinsetModel;
+
+    /**
+     * Konfiguracja widgeta
+     * @var CmsWidgetConfig
+     */
+    private $_widgetConfig;
 
     /**
      * Konstruktor
@@ -43,7 +49,10 @@ class WidgetModel
         if (!$cmsWidgetRecord->widget) {
             throw new KernelException('Widget type not specified');
         }
-        if (null === $this->_skinModel = (new SkinsetModel($skinsetConfig))->getSkinModelByKey($cmsWidgetRecord->widget)) {
+        //model zestawu skór
+        $this->_skinsetModel = new SkinsetModel($skinsetConfig);
+        //wyszukiwanie konfiguracji widgeta
+        if (null === $this->_widgetConfig = $this->_skinsetModel->getWidgetConfigByKey($cmsWidgetRecord->widget)) {
             throw new KernelException('Compatible widget not found: ' . $cmsWidgetRecord->widget);
         }
     }
@@ -54,7 +63,7 @@ class WidgetModel
      */
     public function getWidgetConfig()
     {
-        return $this->_skinModel->getWidgetConfigByKey($this->_cmsWidgetRecord->widget);
+        return $this->_widgetConfig;
     }
 
     /**
@@ -63,7 +72,7 @@ class WidgetModel
      */
     public function getSectionConfig()
     {
-        return $this->_skinModel->getSectionConfigByKey($this->_cmsWidgetRecord->widget);
+        return $this->_skinsetModel->getSectionConfigByKey($this->_cmsWidgetRecord->widget);
     }
 
     /**
@@ -72,7 +81,7 @@ class WidgetModel
      */
     public function getTemplateConfig()
     {
-        return $this->_skinModel->getTemplateConfigByKey($this->_cmsWidgetRecord->widget);
+        return $this->_skinsetModel->getTemplateConfigByKey($this->_cmsWidgetRecord->widget);
     }
 
     /**
@@ -125,7 +134,7 @@ class WidgetModel
     private function _createController(View $view)
     {
         //odczytywanie nazwy kontrolera
-        $controllerClass = $this->_skinModel->getWidgetConfigByKey($this->_cmsWidgetRecord->widget)->getControllerClassName();
+        $controllerClass = $this->_widgetConfig->getControllerClassName();
         //powołanie kontrolera z rekordem relacji
         $targetController = new $controllerClass($view->request, $view, $this->_cmsWidgetRecord);
         //kontroler nie jest poprawny
@@ -142,7 +151,7 @@ class WidgetModel
      */
     private function _getTemplatePrefix()
     {
-        $explodedControllerClass = explode('\\', $this->_skinModel->getWidgetConfigByKey($this->_cmsWidgetRecord->widget)->getControllerClassName());
+        $explodedControllerClass = explode('\\', $this->_widgetConfig->getControllerClassName());
         return lcfirst($explodedControllerClass[0]) . '/' . lcfirst(substr($explodedControllerClass[1], 0, -10));
     }
 

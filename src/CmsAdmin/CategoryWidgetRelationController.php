@@ -11,7 +11,7 @@
 namespace CmsAdmin;
 
 use App\Registry;
-use Cms\Model\SkinModel;
+use Cms\Model\SkinsetModel;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 use Cms\Orm\CmsFileQuery;
@@ -75,18 +75,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
         if (!Registry::$config->skinset) {
             return;
         }
-        //dostępne sekcje
-        $this->view->sections = [];
-        //iteracja po skórach
-        foreach (Registry::$config->skinset->getSkins() as $skin) {
-            $skinModel = new SkinModel($skin);
-            if (null === $skinModel->getTemplateConfigByKey($category->template)) {
-                continue;
-            }
-            //pobranie sekcji dla szablonu kategorii
-            $this->view->sections = $skinModel->getSectionsByTemplateKey($category->template);
-            break;
-        }
+        $this->view->sections = (new SkinsetModel(Registry::$config->skinset))->getSectionsByKey($category->template);
     }
 
     /**

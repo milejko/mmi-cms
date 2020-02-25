@@ -7,28 +7,28 @@ use Cms\App\CmsSectionConfig;
 /**
  * Model sekcji w skórze
  */
-class SkinModelSection
+class SectionModel
 {
     //separator
     const SEPARATOR = '/';
 
-    private $_section;
     private $_templateKey;
+    private $_sectionConfig;
 
-    public function __construct(CmsSectionConfig $section, $templateKey)
+    public function __construct(CmsSectionConfig $sectionConfig, $templateKey)
     {
-        $this->_section = $section;
+        $this->_sectionConfig = $sectionConfig;
         $this->_templateKey = $templateKey;
     }
 
     public function getName()
     {
-        return $this->_section->getName();
+        return $this->_sectionConfig->getName();
     }
 
     public function getKey()
     {
-        return $this->_templateKey . self::SEPARATOR . $this->_section->getKey();
+        return $this->_templateKey . self::SEPARATOR . $this->_sectionConfig->getKey();
     }
 
     /**
@@ -38,7 +38,7 @@ class SkinModelSection
     public function getAvailableWidgets()
     {
         $availableWidges = [];
-        foreach ($this->_section->getWidgets() as $widget) {
+        foreach ($this->_sectionConfig->getWidgets() as $widget) {
             $availableWidges[$this->getKey() . self::SEPARATOR . $widget->getKey()] = $widget;
         }
         return $availableWidges;

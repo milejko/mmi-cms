@@ -54,10 +54,8 @@ class CategoryWidgetModel
         }
         //iteracja po widgetach
         foreach ($this->_widgetCollection as $key => $widget) {
-            //powołanie modelu skóry odpowiedniej dla widgeta
-            $skinModel = (new SkinsetModel($skinsetConfig))->getSkinModelByKey($widget->widget);
             //brak skóry dla danego widgeta, lub brak widgeta
-            if ((null === $skinModel) || (null === $skinModel->getWidgetConfigByKey($widget->widget))) {
+            if (null === (new SkinsetModel($skinsetConfig))->getWidgetConfigByKey($widget->widget)) {
                 unset($this->_widgetCollection[$key]);
                 FrontController::getInstance()->getLogger()->warning('Widget not found: ' . $widget->widget);
             }
@@ -85,7 +83,7 @@ class CategoryWidgetModel
         //iteracja po relacjach
         foreach ($this->_widgetCollection as $widgetRelation) {
             //porównanie klucza sekcji
-            if (substr($widgetRelation->widget, 0, strlen($sectionKey)) != $sectionKey) {
+            if ($sectionKey != substr($widgetRelation->widget, 0, strlen($sectionKey))) {
                 continue;
             }
             $filteredRelations[] = $widgetRelation;

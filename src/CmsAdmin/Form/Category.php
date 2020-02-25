@@ -17,6 +17,7 @@ use Mmi\Validator;
 use Mmi\Filter;
 use Cms\Model\CacheOptions;
 use Cms\Model\SkinModel;
+use Cms\Model\SkinsetModel;
 
 /**
  * Formularz edycji szegółów kategorii
@@ -28,16 +29,10 @@ class Category extends Form
     public function init()
     {
         //szablony/typy (jeśli istnieją)
-        if (Registry::$config->skinset) {
-            $types = [];
-            foreach (Registry::$config->skinset->getSkins() as $skin) {
-                $types = array_merge($types, (new SkinModel($skin))->getTemplatesMultioptions());
-            }
-            $this->addElement((new Element\Select('template'))
-                ->setLabel('form.category.cmsCategoryTypeId.label')
-                ->addFilter(new Filter\EmptyToNull)
-                ->setMultioptions([null => 'form.category.cmsCategoryTypeId.default'] + $types));
-        }
+        $this->addElement((new Element\Select('template'))
+            ->setLabel('form.category.cmsCategoryTypeId.label')
+            ->addFilter(new Filter\EmptyToNull)
+            ->setMultioptions([null => 'form.category.cmsCategoryTypeId.default'] + (new SkinsetModel(Registry::$config->skinset))->getTemplatesMultioptions()));
 
         //nazwa kategorii
         $this->addElement((new Element\Text('name'))

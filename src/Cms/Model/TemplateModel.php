@@ -10,6 +10,9 @@ use Mmi\Mvc\View;
 use Cms\App\CmsTemplateConfig;
 use Cms\TemplateController;
 
+/**
+ * Model szablonu
+ */
 class TemplateModel
 {
     /**
@@ -32,12 +35,8 @@ class TemplateModel
     public function __construct(CmsCategoryRecord $categoryRecord, CmsSkinsetConfig $skinsetConfig)
     {
         $this->_categoryRecord = $categoryRecord;
-        //brak zdefiniowanego szablonu
-        if (!$categoryRecord->template) {
-            throw new KernelException('Category template not specified');
-        }
-        if (null === $this->_templateConfig = (new SkinsetModel($skinsetConfig))->getSkinModelByKey($categoryRecord->template)
-            ->getTemplateConfigByKey($categoryRecord->template)) {
+        //szablon nieodnaleziony
+        if (null === $this->_templateConfig = (new SkinsetModel($skinsetConfig))->getTemplateConfigByKey($categoryRecord->template)) {
             throw new KernelException('Template not found');
         }
     }

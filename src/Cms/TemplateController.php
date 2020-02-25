@@ -13,7 +13,6 @@ use Mmi\Mvc\View;
  */
 abstract class TemplateController extends Controller
 {
-
     /**
      * Rekord kategorii
      * @var CmsCategoryRecord
@@ -35,7 +34,7 @@ abstract class TemplateController extends Controller
      * Zwraca rekord kategorii
      * @return CmsCategoryRecord
      */
-    public function getCategoryRecord()
+    public final function getCategoryRecord()
     {
         return $this->_categoryRecord;
     }
@@ -57,6 +56,6 @@ abstract class TemplateController extends Controller
      * @param Category $categoryForm
      * @return void
      */
-    abstract public function decorateForm(Category $categoryForm);
+    abstract public function decorateEditForm(Category $categoryForm);
     
 }

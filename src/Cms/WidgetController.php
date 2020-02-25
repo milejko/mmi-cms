@@ -34,7 +34,7 @@ abstract class WidgetController extends Controller
      * Zwraca rekord relacji widgeta
      * @return CmsCategoryWidgetCategoryRecord
      */
-    public function getWidgetRecord()
+    public final function getWidgetRecord()
     {
         return $this->_widgetRecord;
     }
@@ -43,7 +43,7 @@ abstract class WidgetController extends Controller
      * Ustawia stan zapisany
      * @return void
      */
-    public function redirectToCategory()
+    public final function redirectToCategory()
     {
         //przekierowanie na stronę edycji
         $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', [
