@@ -50,12 +50,5 @@ abstract class TemplateController extends Controller
      * @return string
      */
     abstract public function renderJsonAction();
-
-    /**
-     * Modyfikacja formularza edycji kategorii
-     * @param Category $categoryForm
-     * @return void
-     */
-    abstract public function decorateEditForm(Category $categoryForm);
     
 }

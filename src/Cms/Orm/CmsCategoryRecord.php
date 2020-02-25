@@ -179,6 +179,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         if (null === $this->order) {
             $this->order = $this->_maxChildOrder() + 1;
         }
+        //zapis configJson
+        $this->setConfigFromArray(array_merge($this->getConfig()->toArray(), $this->getOptions()));
         //zapis
         return parent::save() && $this->clearCache();
     }
@@ -452,10 +454,20 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         if (!isset($configArr)) {
             $configArr = [];
         }
-        $config = (new \Mmi\DataObject())->setParams($configArr);
-        return $config;
+        return (new \Mmi\DataObject())->setParams($configArr);
     }
 
+    /**
+     * Ustawia configJson na podstawie danych
+     * z filtracją danych zapisanych w atrybutach
+     * @param array $data
+     * @return bool
+     */
+    public function setConfigFromArray(array $data = []) {
+        //kodowanie konfiguracji
+        $this->configJson = empty($data) ? null : \json_encode($data);
+        return $this;
+    }
 
     /**
      * Zwraca czy istnieją rekordy historyczne

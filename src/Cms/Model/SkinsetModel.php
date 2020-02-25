@@ -49,7 +49,7 @@ class SkinsetModel
     /**
      * Zwraca sekcje po szablonie
      * @param string $key
-     * @return SkinModelSection[]
+     * @return SectionModel[]
      */
     public function getSectionsByKey($key)
     {

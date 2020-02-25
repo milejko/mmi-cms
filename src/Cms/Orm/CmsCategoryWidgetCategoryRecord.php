@@ -127,8 +127,7 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
         if (!isset($configArr)) {
             $configArr = [];
         }
-        $config = (new \Mmi\DataObject())->setParams($configArr);
-        return $config;
+        return (new \Mmi\DataObject())->setParams($configArr);
     }
 
     /**

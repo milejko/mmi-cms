@@ -16,7 +16,6 @@ use Cms\Form\Form;
 use Mmi\Validator;
 use Mmi\Filter;
 use Cms\Model\CacheOptions;
-use Cms\Model\SkinModel;
 use Cms\Model\SkinsetModel;
 
 /**
@@ -40,23 +39,6 @@ class Category extends Form
             ->setRequired()
             ->addFilter(new Filter\StringTrim)
             ->addValidator(new Validator\StringLength([2, 128])));
-
-        //początek publikacji
-        $this->addElement((new Element\DateTimePicker('dateStart'))
-            ->setLabel('form.category.dateStart.label')
-            ->setDateMin(date('Y-m-d H:i')));
-
-        //zakończenie publikacji
-        $this->addElement((new Element\DateTimePicker('dateEnd'))
-            ->setLabel('form.category.dateEnd.label')
-            ->setDateMin(date('Y-m-d H:i'))
-            ->setDateMinField($this->getElement('dateStart')));
-
-        //ustawienie bufora
-        $this->addElement((new Element\Select('cacheLifetime'))
-            ->setLabel('form.category.cacheLifetime.label')
-            ->setMultioptions([null => 'form.category.cacheLifetime.default'] + CacheOptions::LIFETIMES)
-            ->addFilter(new Filter\EmptyStringToNull));
 
         //aktywna
         $this->addElement((new Element\Checkbox('active'))
@@ -85,10 +67,20 @@ class Category extends Form
             ->addFilter(new Filter\EmptyToNull)
             ->addValidator(new Validator\StringLength([1, 255])));
 
-        //blank
+        //follow
         $this->addElement((new Element\Checkbox('follow'))
             ->setChecked()
             ->setLabel('form.category.visible.label'));
+        
+        //blank
+            $this->addElement((new Element\Checkbox('blank'))
+            ->setLabel('form.category.blank.label'));
+        
+        //https
+        $this->addElement((new Element\Select('https'))
+            ->setMultioptions([null => 'form.category.https.option.default', '0' => 'form.category.https.option.nossl', 1 => 'form.category.https.option.ssl'])
+            ->addFilter(new Filter\EmptyToNull)
+            ->setLabel('form.category.https.label'));
 
         //Zaawansowane
         //przekierowanie na link
@@ -96,29 +88,29 @@ class Category extends Form
             ->setLabel('form.category.redirect.label')
             ->addFilter(new Filter\StringTrim));
 
+        //początek publikacji
+        /*$this->addElement((new Element\DateTimePicker('dateStart'))
+            ->setLabel('form.category.dateStart.label')
+            ->setDateMin(date('Y-m-d H:i')));
+
+        //zakończenie publikacji
+        $this->addElement((new Element\DateTimePicker('dateEnd'))
+            ->setLabel('form.category.dateEnd.label')
+            ->setDateMin(date('Y-m-d H:i'))
+            ->setDateMinField($this->getElement('dateStart')));*/
+
+        //ustawienie bufora
+        $this->addElement((new Element\Select('cacheLifetime'))
+            ->setLabel('form.category.cacheLifetime.label')
+            ->setMultioptions([null => 'form.category.cacheLifetime.default'] + CacheOptions::LIFETIMES)
+            ->addFilter(new Filter\EmptyStringToNull));
+
         //przekierowanie na moduł
         $this->addElement((new Element\Text('mvcParams'))
             ->setLabel('form.category.mvcParams.label')
             ->setDescription('form.category.mvcParams.description')
             ->addFilter(new Filter\StringTrim)
             ->addValidator(new Validator\Regex(['@module\=[a-zA-Z0-9\&\=]+@', 'form.category.mvcParams.validator'])));
-
-        //config JSON
-        $this->addElement((new Element\Text('configJson'))
-            ->setLabel('form.category.configJson.label')
-            ->setDescription('form.category.configJson.description')
-            ->addValidator(new Validator\Json([]))
-            ->addFilter(new Filter\StringTrim));
-
-        //https
-        $this->addElement((new Element\Select('https'))
-            ->setMultioptions([null => 'form.category.https.option.default', '0' => 'form.category.https.option.nossl', 1 => 'form.category.https.option.ssl'])
-            ->addFilter(new Filter\EmptyToNull)
-            ->setLabel('form.category.https.label'));
-
-        //blank
-        $this->addElement((new Element\Checkbox('blank'))
-            ->setLabel('form.category.blank.label'));
 
         //role uprawnione do wyświetlenia kategorii/strony
         $this->addElement((new Element\MultiCheckbox('roles'))

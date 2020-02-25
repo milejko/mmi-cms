@@ -4,7 +4,6 @@ namespace Cms\Model;
 
 use Cms\App\CmsSkinsetConfig;
 use Cms\Orm\CmsCategoryRecord;
-use Cms\WidgetController;
 use Mmi\App\KernelException;
 use Mmi\Mvc\View;
 use Cms\App\CmsTemplateConfig;
@@ -66,7 +65,7 @@ class TemplateModel
 
     /**
      * Tworzy instancję kontrolera
-     * @return WidgetController
+     * @return TemplateController
      */
     private function _createController(View $view)
     {

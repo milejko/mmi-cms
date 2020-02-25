@@ -11,9 +11,7 @@
 namespace CmsAdmin;
 
 use App\Registry;
-use Cms\Model\SkinModel;
-use Cms\Model\SkinsetModel;
-use Cms\Orm\CmsCategoryWidgetQuery;
+use Cms\Model\TemplateModel;
 use Mmi\App\FrontController;
 
 /**
@@ -68,15 +66,15 @@ class CategoryController extends Mvc\Controller
         $this->view->adminNavigation()->modifyLastBreadcrumb('menu.category.edit', '#');
         //konfiguracja kategorii
         $form = (new \CmsAdmin\Form\Category($category));
+        //dekoracja formularza na bazie wybranego szablonu
+        if ($category->template) {
+            $templateModel = new TemplateModel($category, Registry::$config->skinset);
+            $this->view->template = $templateModel->getTemplateConfg();
+        }
         //sprawdzenie czy kategoria nadal istnieje (form robi zapis - to trwa)
         if (!$form->isMine() && (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id))) {
             //przekierowanie na originalId (lub na tree według powyższego warunku)
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->originalId]);
-        }
-        //dekoracja formularza na bazie wybranego szablonu
-        if ($category->template) {
-            $this->view->template = (new SkinsetModel(Registry::$config->skinset))
-                ->getTemplateConfigByKey($category->template);
         }
         //form do widoku
         $this->view->categoryForm = $form;

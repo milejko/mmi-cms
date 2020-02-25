@@ -33,22 +33,11 @@
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane" id="settings" role="tabpanel" aria-expanded="true">
-                        {$categoryForm->getElement('template')}
-                        {$categoryForm->getElement('name')}
                         {if $duplicateAlert}<div class="em">{#template.category.edit.duplicate.alert#}<br /><br /></div>{/if}
-                        {$categoryForm->getElement('active')}
-                        {$categoryForm->getElement('title')}
-                        {$categoryForm->getElement('description')}
-                        {$categoryForm->getElement('customUri')}
-                        {$categoryForm->getElement('follow')}
-                        {$categoryForm->getElement('cacheLifetime')}
-                        {$categoryForm->getElement('redirectUri')}
-                        {$categoryForm->getElement('mvcParams')}
-                        {$categoryForm->getElement('https')}
-                        {$categoryForm->getElement('blank')}
-                        {$categoryForm->getElement('dateStart')}
-                        {$categoryForm->getElement('dateEnd')}
-                        {$categoryForm->getElement('roles')}
+                        {foreach $categoryForm->getElements() as $element}
+                            {if 'commit' == $element->getName() || 'submit' == $element->getName()}{continue}{/if}
+                            {$element}
+                        {/foreach}
                     </div>
                     {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
                         <div class="tab-pane" id="widgets" role="tabpanel" aria-expanded="false">
