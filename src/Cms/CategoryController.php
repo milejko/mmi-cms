@@ -15,8 +15,6 @@ use Cms\Model\TemplateModel;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
-use Mmi\App\KernelException;
-use Mmi\Mvc\MvcNotFoundException;
 
 /**
  * Kontroler kategorii
@@ -189,7 +187,7 @@ class CategoryController extends \Mmi\Mvc\Controller
             return \Mmi\Mvc\ActionHelper::getInstance()->forward($request->setParams($mvcParams));
         }
         //model szablonu
-        $templateModel = new TemplateModel($category);
+        $templateModel = new TemplateModel($category, Registry::$config->skinset);
         return $templateModel->displayAction($this->view);
     }
 
@@ -216,7 +214,7 @@ class CategoryController extends \Mmi\Mvc\Controller
     protected function _getCategoryCacheLifetime(\Cms\Orm\CmsCategoryRecord $category)
     {
         //model szablonu
-        $templateModel = new TemplateModel($category);
+        $templateModel = new TemplateModel($category, Registry::$config->skinset);
         //czas buforowania (na podstawie typu kategorii i pojedynczej kategorii
         $cacheLifetime = (null !== $category->cacheLifetime) ? $category->cacheLifetime : $templateModel->getTemplateConfg()->getCacheLifeTime();
         //jeśli bufor wyłączony (na poziomie typu kategorii, lub pojedynczej kategorii)
@@ -227,9 +225,9 @@ class CategoryController extends \Mmi\Mvc\Controller
         //iteracja po widgetach
         foreach ($category->getWidgetModel()->getWidgetRelations() as $widgetRelation) {
             //model widgeta
-            $widgetModel = new WidgetModel($widgetRelation);
+            $widgetModel = new WidgetModel($widgetRelation, Registry::$config->skinset);
             //bufor wyłączony przez widget
-            if (0 == $widgetCacheLifetime = $widgetModel->getWidgetConfg()->getCacheLifeTime()) {
+            if (0 == $widgetCacheLifetime = $widgetModel->getWidgetConfig()->getCacheLifeTime()) {
                 //brak bufora
                 return 0;
             }

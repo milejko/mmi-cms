@@ -10,8 +10,8 @@
 
 namespace Cms\Model;
 
-use App\Registry;
-use \Cms\Orm\CmsCategoryWidgetCategoryQuery;
+use Cms\App\CmsSkinsetConfig;
+use Cms\Orm\CmsCategoryWidgetCategoryQuery;
 use Mmi\App\FrontController;
 
 /**
@@ -35,9 +35,10 @@ class CategoryWidgetModel
     /**
      * Identyfikator relacji
      * @param integer $categoryId
+     * @param CmsSkinsetConfig $skinsetConfig
      * @throws \Cms\Exception\CategoryWidgetException
      */
-    public function __construct($categoryId)
+    public function __construct($categoryId, CmsSkinsetConfig $skinsetConfig)
     {
         //przypisanie kategorii opakowującej
         $this->_categoryId = $categoryId;
@@ -53,16 +54,10 @@ class CategoryWidgetModel
         }
         //iteracja po widgetach
         foreach ($this->_widgetCollection as $key => $widget) {
-            $widgetFound = false;
-            //iteracja po skórach
-            foreach (Registry::$config->skinset->getSkins() as $skin) {
-                if ((new SkinModel($skin))->getWidgetByKey($widget->widget)) {
-                    $widgetFound = true;
-                    break;
-                }
-            }
-            //widget nie może być już użyty
-            if (!$widgetFound) {
+            //powołanie modelu skóry odpowiedniej dla widgeta
+            $skinModel = (new SkinsetModel($skinsetConfig))->getSkinModelByKey($widget->widget);
+            //brak skóry dla danego widgeta, lub brak widgeta
+            if ((null === $skinModel) || (null === $skinModel->getWidgetConfigByKey($widget->widget))) {
                 unset($this->_widgetCollection[$key]);
                 FrontController::getInstance()->getLogger()->warning('Widget not found: ' . $widget->widget);
             }

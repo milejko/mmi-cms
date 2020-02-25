@@ -7,7 +7,7 @@
                 {if $categoryForm}
                 {$categoryForm->start()}
                 {$category = $categoryForm->getRecord()}
-                <h5>{$categoryForm->getRecord()->name}</h5>
+                <h5>{$categoryForm->getRecord()->name}{if $template} ({_($template->getName())}){/if}</h5>
                 <div class="float-right" style="margin-top: -60px;">
                     <br />
                     <button style="margin-right: 10px; color: #fff;" id="cmsadmin-form-category-submit-top" type="submit" class="btn btn-secondary" name="cmsadmin-form-category[submit]" value="1">

@@ -2,9 +2,7 @@
 
 namespace Cms\Model;
 
-use App\Registry;
 use Cms\App\CmsSkinConfig;
-use Mmi\App\FrontController;
 
 /**
  * Model skór
@@ -33,28 +31,10 @@ class SkinModel
     {
         $templates = [];
         //iteracja po szablonach
-        foreach ($this->_skinConfig->getTemplates() as $template) {
-            $templates[$this->_getUniqueTemplateKey($template->getKey())] = $template->getName();
+        foreach ($this->_skinConfig->getTemplates() as $templateConfig) {
+            $templates[$this->_getUniqueTemplateKey($templateConfig->getKey())] = $templateConfig->getName();
         }
         return $templates;
-    }
-
-    /**
-     * Wybiera template po kluczu
-     * @param string $templateKey
-     * @return CmsTemplateConfig
-     */
-    public function getTemplateByKey($templateKey)
-    {
-        //iteracja po szablonach
-        foreach ($this->_skinConfig->getTemplates() as $template) {
-            //szablon niezgodny
-            if ($this->_getUniqueTemplateKey($template->getKey()) != $templateKey) {
-                continue;
-            }
-            //zwrot szablonu
-            return $template;
-        }
     }
 
     /**
@@ -67,7 +47,7 @@ class SkinModel
         //iteracja po szablonach
         foreach ($this->_skinConfig->getTemplates() as $template) {
             //szablon niezgodny
-            if ($this->_getUniqueTemplateKey($template->getKey()) != $templateKey) {
+            if ($templateKey != $this->_getUniqueTemplateKey($template->getKey())) {
                 continue;
             }
             $sections = [];
@@ -81,21 +61,60 @@ class SkinModel
     }
 
     /**
-     * Pobiera widget po skluczu
-     * @param string $widgetKey
-     * @return CmsWidgetConfig
+     * Wybiera template po kluczu
+     * @param string $key
+     * @return CmsTemplateConfig
      */
-    public function getWidgetByKey($widgetKey)
+    public function getTemplateConfigByKey($key)
     {
         //iteracja po szablonach
-        foreach ($this->_skinConfig->getTemplates() as $template) {
+        foreach ($this->_skinConfig->getTemplates() as $templateConfig) {
+            //klucz szablonu
+            $templateKey = $this->_getUniqueTemplateKey($templateConfig->getKey());
+            //porównanie klucza szablonu z odpowiadającym fragmentem klucza
+            if ($templateKey == substr($key, 0, strlen($templateKey))) {
+                return $templateConfig;
+            }
+        }
+    }
+
+    /**
+     * Pobiera sekcję po kluczu
+     * @param string $key
+     * @return CmsSectionConfig
+     */
+    public function getSectionConfigByKey($key)
+    {
+        //iteracja po szablonach
+        foreach ($this->_skinConfig->getTemplates() as $templateConfig) {
             //iteracja po sekcjach
-            foreach ($template->getSections() as $section) {
+            foreach ($templateConfig->getSections() as $sectionConfig) {
+                //klucz sekcji
+                $sectionKey = $this->_getUniqueTemplateKey($templateConfig->getKey() . self::SEPARATOR . $sectionConfig->getKey());
+                //porównanie klucza sekcji z odpowiadającym fragmentem klucza
+                if ($sectionKey == substr($key, 0, strlen($sectionKey))) {
+                    return $sectionConfig;
+                }
+            }
+        }
+    }
+
+    /**
+     * Pobiera widget po kluczu
+     * @param string $key
+     * @return CmsWidgetConfig
+     */
+    public function getWidgetConfigByKey($key)
+    {
+        //iteracja po szablonach
+        foreach ($this->_skinConfig->getTemplates() as $templateConfig) {
+            //iteracja po sekcjach
+            foreach ($templateConfig->getSections() as $sectionConfig) {
                 //iteracja po widgetach
-                foreach ($section->getWidgets() as $widget) {
-                    //widget odnaleziony
-                    if ($widgetKey == $this->_getUniqueWidgetKey($template->getKey(), $section->getKey(), $widget->getKey())) {
-                        return $widget;
+                foreach ($sectionConfig->getWidgets() as $widgetConfig) {
+                    //porównanie kluczy
+                    if ($key == $this->_getUniqueTemplateKey($templateConfig->getKey()) . self::SEPARATOR . $sectionConfig->getKey() . self::SEPARATOR . $widgetConfig->getKey()) {
+                        return $widgetConfig;
                     }
                 }
             }
@@ -110,18 +129,6 @@ class SkinModel
     private function _getUniqueTemplateKey($templateKey)
     {
         return $this->_skinConfig->getKey() . self::SEPARATOR . $templateKey;
-    }
-
-    /**
-     * Wyznacza klucz szablonu w skórce
-     * @param string $templateKey
-     * @param string $sectionKey
-     * @param string $widgetKey
-     * @return string
-     */
-    private function _getUniqueWidgetKey($templateKey, $sectionKey, $widgetKey)
-    {
-        return $this->_getUniqueTemplateKey($templateKey) . self::SEPARATOR . $sectionKey . self::SEPARATOR . $widgetKey;
     }
 
 }

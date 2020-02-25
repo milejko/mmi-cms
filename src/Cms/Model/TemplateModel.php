@@ -2,7 +2,7 @@
 
 namespace Cms\Model;
 
-use App\Registry;
+use Cms\App\CmsSkinsetConfig;
 use Cms\Orm\CmsCategoryRecord;
 use Cms\WidgetController;
 use Mmi\App\KernelException;
@@ -27,23 +27,17 @@ class TemplateModel
     /**
      * Konstruktor
      * @param CmsCategoryRecord $cmsCategoryRecord
+     * @param CmsSkinsetConfig $skinsetConfig
      */
-    public function __construct(CmsCategoryRecord $categoryRecord)
+    public function __construct(CmsCategoryRecord $categoryRecord, CmsSkinsetConfig $skinsetConfig)
     {
         $this->_categoryRecord = $categoryRecord;
         //brak zdefiniowanego szablonu
         if (!$categoryRecord->template) {
             throw new KernelException('Category template not specified');
         }
-        //iteracja po dostępnych skórach
-        foreach (Registry::$config->skinset->getSkins() as $skin) {
-            $skinModel = new SkinModel($skin);
-            //w skórze nie ma tego szablonu
-            if (null !== ($this->_templateConfig = $skinModel->getTemplateByKey($categoryRecord->template))) {
-                break;
-            }
-        }
-        if (!isset($this->_templateConfig)) {
+        if (null === $this->_templateConfig = (new SkinsetModel($skinsetConfig))->getSkinModelByKey($categoryRecord->template)
+            ->getTemplateConfigByKey($categoryRecord->template)) {
             throw new KernelException('Template not found');
         }
     }

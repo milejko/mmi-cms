@@ -53,13 +53,28 @@ abstract class WidgetController extends Controller
         ]);
     }
 
-    //edycja widgeta
+    /**
+     * Wyświetlenie edytora widgeta (po stronie admina)
+     * @return string
+     */
     abstract public function editAction();
 
-    //podgląd w admin panelu
+    /**
+     * Wyświetlenie podglądu widgeta (po stronie admina)
+     * @return string
+     */
     abstract public function previewAction();
 
-    //wyświetlenie po stronie klienta
+    /**
+     * Wyświetlenie po stronie klienta (HTML)
+     * @return string
+     */
     abstract public function displayAction();
+    
+    /**
+     * Render obiektu JSON (na potrzeby API)
+     * @return string
+     */
+    abstract public function renderJsonAction();
     
 }

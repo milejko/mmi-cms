@@ -2,6 +2,7 @@
 
 namespace Cms\Orm;
 
+use App\Registry;
 use Cms\Model\AttributeRelationModel,
     Cms\Model\AttributeValueRelationModel;
 
@@ -394,7 +395,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //próba pobrania modelu widgetu z cache
         if (null === $widgetModel = \App\Registry::$cache->load($cacheKey = 'category-widget-model-' . $this->id)) {
             //pobieranie modelu widgetu
-            \App\Registry::$cache->save($widgetModel = new \Cms\Model\CategoryWidgetModel($this->id), $cacheKey, 0);
+            \App\Registry::$cache->save($widgetModel = new \Cms\Model\CategoryWidgetModel($this->id, Registry::$config->skinset), $cacheKey, 0);
         }
         //zwrot atrybutów
         return $widgetModel;

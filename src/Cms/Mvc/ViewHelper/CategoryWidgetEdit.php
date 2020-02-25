@@ -10,6 +10,7 @@
 
 namespace Cms\Mvc\ViewHelper;
 
+use App\Registry;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 
@@ -26,7 +27,7 @@ class CategoryWidgetEdit extends \Mmi\Mvc\ViewHelper\HelperAbstract
     public function categoryWidgetEdit(CmsCategoryWidgetCategoryRecord $widgetRelationRecord)
     {
         //render szablonu
-        return (new WidgetModel($widgetRelationRecord))->editAction($this->view);
+        return (new WidgetModel($widgetRelationRecord, Registry::$config->skinset))->editAction($this->view);
     }
 
 }

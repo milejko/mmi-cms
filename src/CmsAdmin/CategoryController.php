@@ -10,6 +10,9 @@
 
 namespace CmsAdmin;
 
+use App\Registry;
+use Cms\Model\SkinModel;
+use Cms\Model\SkinsetModel;
 use Cms\Orm\CmsCategoryWidgetQuery;
 use Mmi\App\FrontController;
 
@@ -69,6 +72,12 @@ class CategoryController extends Mvc\Controller
         if (!$form->isMine() && (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id))) {
             //przekierowanie na originalId (lub na tree według powyższego warunku)
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->originalId]);
+        }
+        //dekoracja formularza na bazie wybranego szablonu
+        if ($category->template) {
+            $this->view->template = (new SkinsetModel(Registry::$config->skinset))
+                ->getSkinModelByKey($category->template)
+                ->getTemplateConfigByKey($category->template);
         }
         //form do widoku
         $this->view->categoryForm = $form;

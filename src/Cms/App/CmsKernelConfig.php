@@ -10,6 +10,8 @@
 
 namespace Cms\App;
 
+use Cms\Model\SkinsetModel;
+
 /**
  * Klasa konfiguracji aplikacji CMS
  */

@@ -3,7 +3,7 @@
 namespace Cms;
 
 use Cms\Orm\CmsCategoryRecord;
-use Cms\Orm\CmsCategoryWidgetCategoryRecord;
+use CmsAdmin\Form\Category;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 use Mmi\Mvc\View;
@@ -32,7 +32,7 @@ abstract class TemplateController extends Controller
     }
 
     /**
-     * Zwraca rekord relacji
+     * Zwraca rekord kategorii
      * @return CmsCategoryRecord
      */
     public function getCategoryRecord()
@@ -40,7 +40,23 @@ abstract class TemplateController extends Controller
         return $this->_categoryRecord;
     }
 
-    //wyświetlenie po stronie klienta
+    /**
+     * Wyświetlenie szablonu po stronie klienta
+     * @return string
+     */
     abstract public function displayAction();
+
+    /**
+     * Render obiektu JSON (na potrzeby API)
+     * @return string
+     */
+    abstract public function renderJsonAction();
+
+    /**
+     * Modyfikacja formularza edycji kategorii
+     * @param Category $categoryForm
+     * @return void
+     */
+    abstract public function decorateForm(Category $categoryForm);
     
 }

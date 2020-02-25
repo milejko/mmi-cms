@@ -2,10 +2,10 @@
     <div class="animated fadeIn">
         <div class="row">
             <div class="col-md-12">
-                <h5>{$category->name}</h5>
+                <h5>{$category->name} ({_($widgetModel->getTemplateConfig()->getName())})</h5>
                 <div class="card mt-4">
                     <div class="card-header">
-                        <strong>{if $widget}{_($widget->getName())} {/if}{#template.categoryWidgetRelation.config.header#}</strong>
+                        <strong>{_($widgetModel->getWidgetConfig()->getName())} - {_($widgetModel->getSectionConfig()->getName())}</strong>
                     </div>
                     <div class="card-body">
                         {$output}

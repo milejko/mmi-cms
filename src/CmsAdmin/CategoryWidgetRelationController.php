@@ -54,7 +54,8 @@ class CategoryWidgetRelationController extends Mvc\Controller
         //modyfikacja breadcrumbów
         $this->view->adminNavigation()->modifyBreadcrumb(4, 'menu.category.edit', $this->view->url(['controller' => 'category', 'action' => 'edit', 'id' => $this->categoryId, 'categoryId' => null, 'widgetId' => null]));
         $this->view->adminNavigation()->modifyLastBreadcrumb('menu.categoryWidgetRelation.config', '#');
-        $this->view->widget = (new WidgetModel($widgetRelationRecord))->getWidgetConfg();
+        //model widgeta do widoku
+        $this->view->widgetModel = new WidgetModel($widgetRelationRecord, Registry::$config->skinset);
         //rendering, lub przekierowanie jeśli kontroler zgłosił zapis
         $this->view->output = $this->view->categoryWidgetEdit($widgetRelationRecord);
     }
@@ -79,7 +80,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
         //iteracja po skórach
         foreach (Registry::$config->skinset->getSkins() as $skin) {
             $skinModel = new SkinModel($skin);
-            if (null === $skinModel->getTemplateByKey($category->template)) {
+            if (null === $skinModel->getTemplateConfigByKey($category->template)) {
                 continue;
             }
             //pobranie sekcji dla szablonu kategorii
