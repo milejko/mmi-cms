@@ -16,6 +16,7 @@ use Cms\Form\Form;
 use Mmi\Validator;
 use Mmi\Filter;
 use Cms\Model\CacheOptions;
+use Cms\Model\CategoryValidationModel;
 use Cms\Model\SkinsetModel;
 
 /**

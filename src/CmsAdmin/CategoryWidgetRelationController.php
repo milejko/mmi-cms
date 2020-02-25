@@ -11,6 +11,7 @@
 namespace CmsAdmin;
 
 use App\Registry;
+use Cms\Model\CategoryValidationModel;
 use Cms\Model\SkinsetModel;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
@@ -76,6 +77,8 @@ class CategoryWidgetRelationController extends Mvc\Controller
             return;
         }
         $this->view->sections = (new SkinsetModel(Registry::$config->skinset))->getSectionsByKey($category->template);
+        $this->view->maxOccurenceWidgets = (new CategoryValidationModel($category, Registry::$config->skinset))->getMaxOccurenceWidgets();
+        $this->view->minOccurenceWidgets = (new CategoryValidationModel($category, Registry::$config->skinset))->getMinOccurenceWidgets();
     }
 
     /**
@@ -97,7 +100,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
             ->delete();
         //usuwanie relacji
         $widgetRelation->delete();
-        return '';
+        $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->categoryId, 'uploaderId' => $this->uploaderId, 'originalId' => $this->originalId]);
     }
 
     /**

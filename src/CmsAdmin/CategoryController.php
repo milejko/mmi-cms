@@ -11,6 +11,7 @@
 namespace CmsAdmin;
 
 use App\Registry;
+use Cms\Model\CategoryValidationModel;
 use Cms\Model\TemplateModel;
 use Mmi\App\FrontController;
 
@@ -64,6 +65,7 @@ class CategoryController extends Mvc\Controller
         }
         //modyfikacja breadcrumbów
         $this->view->adminNavigation()->modifyLastBreadcrumb('menu.category.edit', '#');
+        $minOccurrenceWidgets = (new CategoryValidationModel($category, Registry::$config->skinset))->getMinOccurenceWidgets();
         //konfiguracja kategorii
         $form = (new \CmsAdmin\Form\Category($category));
         //dekoracja formularza na bazie wybranego szablonu
@@ -83,6 +85,12 @@ class CategoryController extends Mvc\Controller
             //grid z listą wersji historycznych
             $this->view->historyGrid = new \CmsAdmin\Plugin\CategoryHistoryGrid(['originalId' => $category->cmsCategoryOriginalId]);
             return;
+        }
+        if ($form->isMine() && $form->getElement('commit')->getValue() && !empty($minOccurrenceWidgets)) {
+            foreach ($minOccurrenceWidgets as $widgetKey) {
+                $this->getMessenger()->addMessage($widgetKey, false);
+            }
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id]);
         }
         //błędy zapisu
         if ($form->isMine() && !$form->isSaved()) {

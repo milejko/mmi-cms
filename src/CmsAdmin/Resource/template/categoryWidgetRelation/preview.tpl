@@ -6,9 +6,13 @@
         <div class="card-body" id="widget-list-container">
             <div style="overflow-x: auto; white-space:nowrap;">
                 {foreach $section->getAvailableWidgets() as $availableWidgetKey => $availableWidget}
-                    <button id="cmsadmin-form-category-submit" type="submit" class="button btn btn-primary btn-inline-block" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&widget={$availableWidgetKey}&action=edit&categoryId={$category->id}&originalUploaderId={$request->uploaderId}&originalId={$category->cmsCategoryOriginalId}@}">
-                        <i class="icon-plus"></i> {_($availableWidget->getName())}
-                    </button>
+                    {$displayButton = true}
+                    {foreach $maxOccurenceWidgets as $key}{if $availableWidgetKey == $key}{$displayButton = false}{/if}{/foreach}
+                    {if $displayButton}
+                        <button id="cmsadmin-form-category-submit" type="submit" class="button btn btn-primary btn-inline-block" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&widget={$availableWidgetKey}&action=edit&categoryId={$category->id}&originalUploaderId={$request->uploaderId}&originalId={$category->cmsCategoryOriginalId}@}">
+                            <i class="icon-plus"></i> {_($availableWidget->getName())}
+                        </button>
+                    {/if}
                 {/foreach}
             </div>
             {$widgetRelations = $category->getWidgetModel()->getWidgetRelationsBySectionKey($section->getKey())}
@@ -38,7 +42,7 @@
                                 <a href="#" class="button handle-widget" title="sortuj"><i class="fa fa-2 mr-fix-6  pull-right fa-sort"></i></a>
                             {/if}
                             {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'delete'])}
-                                <a href="{@module=cmsAdmin&controller=categoryWidgetRelation&action=delete&categoryId={$category->id}&id={$widgetRelation->id}@}" class="button delete-widget" target="_blank" title="usuń widget"><i class="fa fa-trash-o mr-fix-3 pull-right fa-2"></i></a>
+                                <a href="{@module=cmsAdmin&controller=categoryWidgetRelation&action=delete&categoryId={$category->id}&uploaderId={$request->uploaderId}&originalId={$request->originalId}&id={$widgetRelation->id}@}" class="button confirm" title="usuń widget"><i class="fa fa-trash-o mr-fix-3 pull-right fa-2"></i></a>
                             {/if}
                         </div>
                     </li>

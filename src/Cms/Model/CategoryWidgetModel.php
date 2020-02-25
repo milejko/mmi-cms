@@ -91,6 +91,17 @@ class CategoryWidgetModel
         return $filteredRelations;
     }
 
+    public function countWidgetRelationsByWidgetKey($widgetKey)
+    {
+        $count = 0;
+        foreach ($this->getWidgetRelationsBySectionKey($widgetKey) as $widgetRelationRecord) {
+            if ($widgetKey == $widgetRelationRecord->widget) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
     /**
      * Sortuje po tabeli order => $id
      * @param array $serial

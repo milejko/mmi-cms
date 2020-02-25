@@ -32,13 +32,13 @@ class CmsWidgetConfig
      * Minimalna ilość wystąpień
      * @var integer
      */
-    private $_minOccurence = 0;
+    private $_minOccurrence = 0;
 
     /**
      * Maksymalna ilość wystąpień
      * @var integer
      */
-    private $_maxOccurence = 1000;
+    private $_maxOccurrence = 1000;
 
     /**
      * Długość bufora
@@ -88,16 +88,16 @@ class CmsWidgetConfig
 
     /**
      * Ustawia maksymalną ilość wystąpień
-     * @param integer $maxOccurence
+     * @param integer $maxOccurrence
      * @return CmsWidgetConfig
      */
-    public function setMaxOccurence($maxOccurence)
+    public function setMaxOccurrence($maxOccurrence)
     {
         //walidacja
-        if (!is_int($maxOccurence) || $maxOccurence < 1) {
-            throw new KernelException('Invalid max occurence');
+        if (!is_int($maxOccurrence) || $maxOccurrence < 0) {
+            throw new KernelException('Invalid max occurrence');
         }
-        $this->_maxOccurence = $maxOccurence;
+        $this->_maxOccurrence = $maxOccurrence;
         return $this;
     }
 
@@ -105,23 +105,23 @@ class CmsWidgetConfig
      * Pobiera maksymalną ilość wystąpień
      * @return integer
      */
-    public function getMaxOccurence()
+    public function getMaxOccurrence()
     {
-        return $this->_maxOccurence;
+        return $this->_maxOccurrence;
     }
 
     /**
      * Ustawia najmniejszą ilość wystąpień
-     * @param integer $maxOccurence
+     * @param integer $maxOccurrence
      * @return CmsWidgetConfig
      */
-    public function setMinOccurence($minOccurence)
+    public function setMinOccurrence($minOccurrence)
     {
         //walidacja
-        if (!is_int($minOccurence) || $minOccurence < 0) {
-            throw new KernelException('Invalid max occurence');
+        if (!is_int($minOccurrence) || $minOccurrence < 0) {
+            throw new KernelException('Invalid max occurrence');
         }
-        $this->_minOccurence = $minOccurence;
+        $this->_minOccurrence = $minOccurrence;
         return $this;
     }
 
@@ -129,9 +129,9 @@ class CmsWidgetConfig
      * Pobiera najmniejszą ilość wystąpień
      * @return integer
      */
-    public function getMinOccurence()
+    public function getMinOccurrence()
     {
-        return $this->_minOccurence;
+        return $this->_minOccurrence;
     }
 
     /**
