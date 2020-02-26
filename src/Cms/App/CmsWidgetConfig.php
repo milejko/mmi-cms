@@ -94,7 +94,7 @@ class CmsWidgetConfig
     public function setMaxOccurrence($maxOccurrence)
     {
         //walidacja
-        if (!is_int($maxOccurrence) || $maxOccurrence < 0) {
+        if (!is_int($maxOccurrence) || $maxOccurrence < 1) {
             throw new KernelException('Invalid max occurrence');
         }
         $this->_maxOccurrence = $maxOccurrence;

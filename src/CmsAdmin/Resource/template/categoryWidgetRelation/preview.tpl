@@ -1,5 +1,5 @@
 {foreach $sections as $section}
-    <div class="card boxSection">
+    <div class="card boxSection" style="margin-bottom: 15px">
         <div class="card-header">
             <strong>{_($section->getName())}</strong>
         </div>

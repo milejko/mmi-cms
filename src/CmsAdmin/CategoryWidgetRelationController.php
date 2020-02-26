@@ -53,8 +53,8 @@ class CategoryWidgetRelationController extends Mvc\Controller
             $widgetRelationRecord->order = $maxOrder !== null ? $maxOrder + 1 : 0;
         }
         //modyfikacja breadcrumbów
-        $this->view->adminNavigation()->modifyBreadcrumb(4, 'menu.category.edit', $this->view->url(['controller' => 'category', 'action' => 'edit', 'id' => $this->categoryId, 'categoryId' => null, 'widgetId' => null]));
-        $this->view->adminNavigation()->modifyLastBreadcrumb('menu.categoryWidgetRelation.config', '#');
+        $this->view->adminNavigation()->modifyBreadcrumb(4, 'menu.category.edit', $this->view->url(['controller' => 'category', 'action' => 'edit', 'id' => $this->categoryId, 'categoryId' => null, 'widgetId' => null]))
+            ->modifyLastBreadcrumb('menu.categoryWidgetRelation.config', '#');
         //model widgeta do widoku
         $this->view->widgetModel = new WidgetModel($widgetRelationRecord, Registry::$config->skinset);
         //rendering, lub przekierowanie jeśli kontroler zgłosił zapis
@@ -76,9 +76,10 @@ class CategoryWidgetRelationController extends Mvc\Controller
         if (!Registry::$config->skinset) {
             return;
         }
+        //sekcje do widoku
         $this->view->sections = (new SkinsetModel(Registry::$config->skinset))->getSectionsByKey($category->template);
+        //widgety których nie można już dodać
         $this->view->maxOccurenceWidgets = (new CategoryValidationModel($category, Registry::$config->skinset))->getMaxOccurenceWidgets();
-        $this->view->minOccurenceWidgets = (new CategoryValidationModel($category, Registry::$config->skinset))->getMinOccurenceWidgets();
     }
 
     /**

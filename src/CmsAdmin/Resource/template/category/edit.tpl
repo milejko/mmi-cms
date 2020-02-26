@@ -40,7 +40,7 @@
                         {/foreach}
                     </div>
                     {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
-                        <div class="tab-pane" id="widgets" role="tabpanel" aria-expanded="false">
+                        <div class="tab-pane" id="widgets" role="tabpanel" aria-expanded="false" style="padding-bottom: 0">
                             <div id="widget-list-container" data-category-id="{$category->id}">
                                 {widget('cmsAdmin', 'categoryWidgetRelation', 'preview', ['categoryId' => $category->id, 'uploaderId' => $request->uploaderId])}
                             </div>

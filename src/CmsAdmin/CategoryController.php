@@ -68,10 +68,9 @@ class CategoryController extends Mvc\Controller
         $minOccurrenceWidgets = (new CategoryValidationModel($category, Registry::$config->skinset))->getMinOccurenceWidgets();
         //konfiguracja kategorii
         $form = (new \CmsAdmin\Form\Category($category));
-        //dekoracja formularza na bazie wybranego szablonu
+        //szablon strony
         if ($category->template) {
-            $templateModel = new TemplateModel($category, Registry::$config->skinset);
-            $this->view->template = $templateModel->getTemplateConfg();
+            $this->view->template = (new TemplateModel($category, Registry::$config->skinset))->getTemplateConfg();
         }
         //sprawdzenie czy kategoria nadal istnieje (form robi zapis - to trwa)
         if (!$form->isMine() && (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id))) {
@@ -86,7 +85,9 @@ class CategoryController extends Mvc\Controller
             $this->view->historyGrid = new \CmsAdmin\Plugin\CategoryHistoryGrid(['originalId' => $category->cmsCategoryOriginalId]);
             return;
         }
+        //walidacja sekcji i ilości widgetów
         if ($form->isMine() && $form->getElement('commit')->getValue() && !empty($minOccurrenceWidgets)) {
+            //dodawanie komunikatów o niewypełnionych sekcjach
             foreach ($minOccurrenceWidgets as $widgetKey) {
                 $this->getMessenger()->addMessage($widgetKey, false);
             }
