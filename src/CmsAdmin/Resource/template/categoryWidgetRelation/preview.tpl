@@ -7,12 +7,12 @@
             <div style="overflow-x: auto; white-space:nowrap;">
                 {foreach $section->getAvailableWidgets() as $availableWidgetKey => $availableWidget}
                     {$displayButton = true}
-                    {foreach $maxOccurenceWidgets as $key}{if $availableWidgetKey == $key}{$displayButton = false}{/if}{/foreach}
-                    {if $displayButton}
-                        <button id="cmsadmin-form-category-submit" type="submit" class="button btn btn-primary btn-inline-block" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&widget={$availableWidgetKey}&action=edit&categoryId={$category->id}&originalUploaderId={$request->uploaderId}&originalId={$category->cmsCategoryOriginalId}@}">
-                            <i class="icon-plus"></i> {_($availableWidget->getName())}
-                        </button>
-                    {/if}
+                    {foreach $maxOccurenceWidgets as $key}
+                        {if $availableWidgetKey == $key}{$displayButton = false}{/if}
+                    {/foreach}
+                    <button id="cmsadmin-form-category-submit" class="button btn {if $displayButton}btn-primary{/if} btn-inline-block" {if $displayButton}type="submit" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&widget={$availableWidgetKey}&action=edit&categoryId={$category->id}&originalUploaderId={$request->uploaderId}&originalId={$category->cmsCategoryOriginalId}@}"{else}disabled{/if}>
+                        <i class="icon-plus"></i> {_($availableWidget->getName())}
+                    </button>
                 {/foreach}
             </div>
             {$widgetRelations = $category->getWidgetModel()->getWidgetRelationsBySectionKey($section->getKey())}
