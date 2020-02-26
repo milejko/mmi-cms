@@ -49,7 +49,7 @@ abstract class WidgetController extends Controller
         $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', [
             'id' => $this->categoryId,
             'originalId' => $this->originalId,
-            'uploaderId' => $this->originalUploaderId,
+            'uploaderId' => $this->categoryId,
         ]);
     }
 

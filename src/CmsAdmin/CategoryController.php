@@ -25,6 +25,8 @@ class CategoryController extends Mvc\Controller
     const SESSION_SPACE_PREFIX = 'category-edit-';
     //parametry edycja kategorii
     const EDIT_MVC_PARAMS = 'cmsAdmin/category/edit';
+    //przedrostek brakującego widgeta
+    const MISSING_WIDGET_MESSENGER_PREFIX = 'messenger.widget.missing.';
 
     /**
      * Lista stron CMS - prezentacja w formie grida
@@ -65,6 +67,7 @@ class CategoryController extends Mvc\Controller
         }
         //modyfikacja breadcrumbów
         $this->view->adminNavigation()->modifyLastBreadcrumb('menu.category.edit', '#');
+        //pobranie listy widgetów koniecznych do dodania przed zapisem
         $minOccurrenceWidgets = (new CategoryValidationModel($category, Registry::$config->skinset))->getMinOccurenceWidgets();
         //konfiguracja kategorii
         $form = (new \CmsAdmin\Form\Category($category));
@@ -89,7 +92,7 @@ class CategoryController extends Mvc\Controller
         if ($form->isMine() && $form->getElement('commit')->getValue() && !empty($minOccurrenceWidgets)) {
             //dodawanie komunikatów o niewypełnionych sekcjach
             foreach ($minOccurrenceWidgets as $widgetKey) {
-                $this->getMessenger()->addMessage($widgetKey, false);
+                $this->getMessenger()->addMessage(self::MISSING_WIDGET_MESSENGER_PREFIX . $widgetKey, false);
             }
             $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id]);
         }

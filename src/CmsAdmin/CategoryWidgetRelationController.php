@@ -35,6 +35,10 @@ class CategoryWidgetRelationController extends Mvc\Controller
         }
         //kategoria do widoku
         $this->view->category = $category;
+        //walidacja czy można dodać kolejny taki widget
+        if (!(new CategoryValidationModel($category, Registry::$config->skinset))->isWidgetAvailable($this->widget)) {
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->categoryId, 'uploaderId' => $category->id, 'originalId' => $this->originalId]);
+        }
         //wyszukiwanie relacji do edycji
         if (null === $widgetRelationRecord = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
             ->join('cms_category')->on('cms_category_id')
@@ -78,8 +82,8 @@ class CategoryWidgetRelationController extends Mvc\Controller
         }
         //sekcje do widoku
         $this->view->sections = (new SkinsetModel(Registry::$config->skinset))->getSectionsByKey($category->template);
-        //widgety których nie można już dodać
-        $this->view->maxOccurenceWidgets = (new CategoryValidationModel($category, Registry::$config->skinset))->getMaxOccurenceWidgets();
+        //walidator możliwości dodawania widgetów
+        $this->view->widgetValidator = new CategoryValidationModel($category, Registry::$config->skinset);
     }
 
     /**

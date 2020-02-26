@@ -45,21 +45,26 @@ class CategoryValidationModel
     }
 
     /**
-     *
-     * @return integer
-     */
-    public function getMaxOccurenceWidgets()
-    {
-        return $this->_maxOccurrenceKeys;
-    }
-
-    /**
-     *
+     * Pobiera klucze widgetów, które należy dodać do sekcji
      * @return integer
      */
     public function getMinOccurenceWidgets()
     {
         return $this->_minOccurrenceKeys;    
+    }
+
+    /**
+     * Czy widget może być dodany
+     * @param string $key
+     * @return boolean
+     */
+    public function isWidgetAvailable($key) {
+        foreach ($this->_maxOccurrenceKeys as $widgetKey) {
+            if ($key == $widgetKey) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

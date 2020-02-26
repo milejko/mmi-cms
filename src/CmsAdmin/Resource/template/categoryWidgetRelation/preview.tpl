@@ -6,13 +6,15 @@
         <div class="card-body" id="widget-list-container">
             <div style="overflow-x: auto; white-space:nowrap;">
                 {foreach $section->getAvailableWidgets() as $availableWidgetKey => $availableWidget}
-                    {$displayButton = true}
-                    {foreach $maxOccurenceWidgets as $key}
-                        {if $availableWidgetKey == $key}{$displayButton = false}{/if}
-                    {/foreach}
-                    <button id="cmsadmin-form-category-submit" class="button btn {if $displayButton}btn-primary{/if} btn-inline-block" {if $displayButton}type="submit" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&widget={$availableWidgetKey}&action=edit&categoryId={$category->id}&originalUploaderId={$request->uploaderId}&originalId={$category->cmsCategoryOriginalId}@}"{else}disabled{/if}>
-                        <i class="icon-plus"></i> {_($availableWidget->getName())}
-                    </button>
+                    {if $widgetValidator->isWidgetAvailable($availableWidgetKey)}
+                        <button id="cmsadmin-form-category-submit" class="button btn btn-primary btn-inline-block" type="submit" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&widget={$availableWidgetKey}&action=edit&categoryId={$category->id}&originalId={$category->cmsCategoryOriginalId}@}">
+                            <i class="icon-plus"></i> {_($availableWidget->getName())}
+                        </button>
+                    {else}
+                        <button class="button btn btn-inline-block" disabled>
+                            <i class="icon-plus"></i> {_($availableWidget->getName())}
+                        </button>
+                    {/if}
                 {/foreach}
             </div>
             {$widgetRelations = $category->getWidgetModel()->getWidgetRelationsBySectionKey($section->getKey())}
@@ -24,7 +26,7 @@
                         </div>
                         <div class="operation">
                             {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'config'])}
-                                <button class="button edit" type="submit" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&action=edit&widget={$widgetRelation->widget}&id={$widgetRelation->id}&categoryId={$category->id}&originalUploaderId={$request->uploaderId}&uploaderId={$widgetRelation->id}&originalId={$category->cmsCategoryOriginalId}@}">
+                                <button class="button edit" type="submit" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&action=edit&widget={$widgetRelation->widget}&id={$widgetRelation->id}&categoryId={$category->id}&uploaderId={$widgetRelation->id}&originalId={$category->cmsCategoryOriginalId}@}">
                                     <i class="fa fa-pencil-square-o pull-right fa-2"></i>
                                 </button>
                             {/if}
