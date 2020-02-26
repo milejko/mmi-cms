@@ -36,15 +36,11 @@ class CategoryWidgetRelationController extends Mvc\Controller
         //kategoria do widoku
         $this->view->category = $category;
         //walidacja czy można dodać kolejny taki widget
-        if (!(new CategoryValidationModel($category, Registry::$config->skinset))->isWidgetAvailable($this->widget)) {
+        if (!$this->id && !(new CategoryValidationModel($category, Registry::$config->skinset))->isWidgetAvailable($this->widget)) {
             $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->categoryId, 'uploaderId' => $category->id, 'originalId' => $this->originalId]);
         }
-        //wyszukiwanie relacji do edycji
-        if (null === $widgetRelationRecord = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
-            ->join('cms_category')->on('cms_category_id')
-            ->whereCmsCategoryId()->equals($this->categoryId)
-            ->whereWidget()->equals($this->widget)
-            ->findPk($this->id)) {
+        //brak ID - nowy rekord
+        if (!$this->id) {
             //nowy rekord relacji
             $widgetRelationRecord = new \Cms\Orm\CmsCategoryWidgetCategoryRecord();
             //parametry relacji
@@ -54,7 +50,16 @@ class CategoryWidgetRelationController extends Mvc\Controller
             $maxOrder = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
                 ->whereCmsCategoryId()->equals($this->categoryId)
                 ->findMax('order');
-            $widgetRelationRecord->order = $maxOrder !== null ? $maxOrder + 1 : 0;
+            $widgetRelationRecord->order = $maxOrder !== null ? $maxOrder + 1 : 0;            
+        }
+        //wyszukiwanie relacji do edycji
+        if ($this->id && null === $widgetRelationRecord = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
+            ->join('cms_category')->on('cms_category_id')
+            ->whereCmsCategoryId()->equals($this->categoryId)
+            ->whereWidget()->equals($this->widget)
+            ->findPk($this->id)) {
+            //brak relacja
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->categoryId, 'uploaderId' => $category->id, 'originalId' => $this->originalId]);
         }
         //modyfikacja breadcrumbów
         $this->view->adminNavigation()->modifyBreadcrumb(4, 'menu.category.edit', $this->view->url(['controller' => 'category', 'action' => 'edit', 'id' => $this->categoryId, 'categoryId' => null, 'widgetId' => null]))
