@@ -44,8 +44,6 @@ class CategoryForm extends Form
         //kalkulacja nazwy plików dla active record
         if ($record) {
             $this->_fileObjectName = $this->_classToFileObject(get_class($record));
-            //informacja o tym, że rekord jest edytowany (dla uploadera)
-            $this->setOption(self::EDITING_RECORD_OPTION_KEY, ($record->getPk() > 0));
         }
 
         //kalkulacja nazwy bazowej formularza
