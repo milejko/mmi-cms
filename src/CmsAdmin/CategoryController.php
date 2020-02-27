@@ -123,7 +123,7 @@ class CategoryController extends Mvc\Controller
         if ($form->isSaved() && $form->getElement('commit')->getValue()) {
             //zmiany zapisane
             $this->getMessenger()->addMessage('messenger.category.category.saved', true);
-            $this->_redirectAfterEdit($category);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
         }
         //zapisany form ze zmianą kategorii
         if ($form->isSaved() && 'type' == $form->getElement('submit')->getValue()) {
@@ -320,59 +320,8 @@ class CategoryController extends Mvc\Controller
             $this->getMessenger()->addMessage('messenger.category.draft.fail', false);
             $this->getResponse()->redirectToUrl($referer);
         }
-        //ustawienie referera
-        $this->_setReferrer($referer, $originalId);
         //przekierowanie do edycji DRAFTu - nowego ID
         $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draft->id, 'originalId' => $originalId, 'uploaderId' => $draft->id]);
     }
 
-    /**
-     * Przekierowanie po zakończeniu edycji
-     */
-    private function _redirectAfterEdit(\Cms\Orm\CmsCategoryRecord $category)
-    {
-        //referer
-        $referer = $this->_getReferrer();
-        //jeśli istnieje referer
-        if ($referer) {
-            $this->getResponse()->redirectToUrl($referer);
-        }
-        //przekierowanie na stronę frontową kategorii jeśli wskazana
-        if ($category) {
-            $this->getResponse()->redirectToUrl($category->getUrl());
-        }
-        $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
-    }
-
-    /**
-     * Pobranie referera
-     * @return string
-     */
-    private function _getReferrer()
-    {
-        //powoływanie przestrzeni nazw
-        $space = new \Mmi\Session\SessionSpace(self::SESSION_SPACE_PREFIX . $this->originalId);
-        //pobranie referera
-        $referer = $space->referer;
-        //usunięcie
-        $space->unsetAll();
-        return $referer;
-    }
-
-    /**
-     * Ustawianie referer'a do sesji
-     * @param string $referer
-     */
-    private function _setReferrer($referer, $id)
-    {
-        //brak referera lub referer kieruje na stronę edycji
-        if (!$referer || strpos($referer, self::EDIT_MVC_PARAMS)) {
-            return;
-        }
-        if (strpos($referer, 'cms-content-preview')) {
-            return;
-        }
-        $space = new \Mmi\Session\SessionSpace(self::SESSION_SPACE_PREFIX . $id);
-        $space->referer = $referer;
-    }
 }

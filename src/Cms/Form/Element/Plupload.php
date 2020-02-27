@@ -89,6 +89,15 @@ class Plupload extends \Mmi\Form\Element\ElementAbstract
     }
 
     /**
+     * Zwraca obiekt uploadera
+     * @return void
+     */
+    public function getUploaderObject()
+    {
+        return $this->getObject();
+    }
+
+    /**
      * Ustawia objekt cms_
      * @param string $object
      * @return \Cms\Form\Element\Plupload

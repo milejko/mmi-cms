@@ -85,7 +85,7 @@ abstract class Form extends \Mmi\Form\Form
         //dla każdego elementu formularza
         foreach ($this->getElements() as $element) {
             //pomijamy inne elementy niż TinyMce
-            if (!$element instanceof \Cms\Form\Element\TinyMce || !$element->getUploaderObject()) {
+            if (!$element instanceof \Cms\Form\Element\TinyMce) {
                 continue;
             }
             //dla każdego elementu TinyMce
@@ -110,23 +110,11 @@ abstract class Form extends \Mmi\Form\Form
         $tinyObjects = [];
         //dla każdego elementu formularza
         foreach ($this->getElements() as $element) {
-            //dla każdego elementu Plupload
-            if ($element instanceof \Cms\Form\Element\Plupload && $element->getObject()) {
+            //dla każdego elementu Plupload / TinyMce
+            if (($element instanceof \Cms\Form\Element\Plupload || $element instanceof \Cms\Form\Element\TinyMce) && $element->getUploaderObject()) {
                 //zastępowanie plików
                 \Cms\Model\File::deleteByObject($element->getObject(), $objectId);
                 \Cms\Model\File::move('tmp-' . $element->getObject(), $element->getUploaderId(), $element->getObject(), $objectId);
-                continue;
-            }
-            //dla każdego elementu TinyMce
-            if ($element instanceof \Cms\Form\Element\TinyMce && $element->getUploaderObject()) {
-                //jeśli już obsłużono klucz Cms File
-                if (in_array($element->getUploaderObject(), $tinyObjects)) {
-                    continue;
-                }
-                array_push($tinyObjects, $element->getUploaderObject());
-                //zastępowanie plików
-                \Cms\Model\File::deleteByObject($element->getUploaderObject(), $objectId);
-                \Cms\Model\File::move('tmp-' . $element->getUploaderObject(), $element->getUploaderId(), $element->getUploaderObject(), $objectId);
                 continue;
             }
         }
