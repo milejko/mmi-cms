@@ -2,8 +2,6 @@
 
 namespace Cms\Orm;
 
-use Cms\Model\CategoryCopy;
-
 /**
  * Rekord widgetu w kategoriach
  */
@@ -24,8 +22,9 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
      */
     public $order;
     
-    //prefiks atrybutów
-    const CMS_ATTRIBUTE_PREFIX = 'cmsAttribute';
+    //domyślny obiekt do dołączenia plików
+    const FILE_OBJECT = 'cmscategorywidgetcategory';
+    
     //prefiks bufora widgetów
     const HTML_CACHE_PREFIX = 'category-widget-html-';
 
@@ -64,7 +63,7 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
         //usuwanie plików
         (new CmsFileQuery)
             //obiekt podobny do categoryWidgetRelation
-            ->whereObject()->like(CategoryCopy::CATEGORY_WIDGET_RELATION . '%')
+            ->whereObject()->like(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
             ->andFieldObjectId()->equals($this->id)
             ->find()
             ->delete();
@@ -100,17 +99,6 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
         }
         //brak widgeta
         throw new \Cms\Exception\CategoryWidgetException('Widget not joined');
-    }
-
-    /**
-     * Pobiera rekordy wartości atrybutów w formie obiektu danych
-     * @see \Mmi\DataObiect
-     * @return \Mmi\DataObject
-     */
-    public function getAttributeValues()
-    {
-        //zwrot atrybutów
-        return (new \Cms\Model\AttributeValueRelationModel('categoryWidgetRelation', $this->id))->getGrouppedAttributeValues();
     }
 
     /**

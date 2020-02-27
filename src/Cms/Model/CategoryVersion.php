@@ -10,6 +10,9 @@
 
 namespace Cms\Model;
 
+use Cms\Orm\CmsCategoryRecord;
+use Cms\Orm\CmsCategoryWidgetCategoryRecord;
+
 /**
  * Model do zapisu wersji kategorii wraz z wszystkimi elementami zależnymi.
  */
@@ -44,15 +47,13 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
      */
     public function exchangeOriginal(\Cms\Orm\CmsCategoryRecord $draft)
     {
-        //usuwanie plików tinymce i z atrybutów
+        //usuwanie plików tinymce i uploaderów
         (new \Cms\Orm\CmsFileQuery)
-            //tinymce
-            ->orQuery((new \Cms\Orm\CmsFileQuery)->whereObject()->equals(self::FILE_CATEGORY_OBJECT)
-                ->andFieldObjectId()->equals($this->_category->id))
-            //atrybuty like 'category%' ale bez 'categoryWidgetRelation%'
-            ->orQuery((new \Cms\Orm\CmsFileQuery)->whereObject()->like(self::OBJECT_TYPE . '%')
-                ->andFieldObject()->notLike(self::CATEGORY_WIDGET_RELATION . '%')
-                ->andFieldObjectId()->equals($this->_category->id))
+            ->whereQuery((new \Cms\Orm\CmsFileQuery)
+                ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
+                ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
+            )
+            ->andFieldObjectId()->equals($this->_category->id)
             ->find()
             ->delete();
         //usuwanie widgetów
@@ -69,7 +70,7 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
         //czyszczenie id oryginału
         $this->_category->cmsCategoryOriginalId = null;
         //przenoszenie plików
-        \Cms\Model\File::move(self::FILE_CATEGORY_OBJECT, $draft->id, self::FILE_CATEGORY_OBJECT, $this->_category->id);
+        \Cms\Model\File::move(CmsCategoryRecord::FILE_OBJECT, $draft->id, CmsCategoryRecord::FILE_OBJECT, $this->_category->id);
         //przepinanie widgetów
         foreach ((new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
             ->whereCmsCategoryId()->equals($draft->id)
@@ -80,13 +81,12 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
         }
         //przepinanie plików
         foreach ((new \Cms\Orm\CmsFileQuery)
-            //tinymce
-            ->orQuery((new \Cms\Orm\CmsFileQuery)->whereObject()->equals(self::FILE_CATEGORY_OBJECT)
-                ->andFieldObjectId()->equals($draft->id))
-            //atrybuty like 'category%' ale bez 'categoryWidgetRelation%'
-            ->orQuery((new \Cms\Orm\CmsFileQuery)->whereObject()->like(self::OBJECT_TYPE . '%')
-                ->andFieldObject()->notLike(self::CATEGORY_WIDGET_RELATION . '%')
-                ->andFieldObjectId()->equals($draft->id))
+            //tinymce i uploadery
+            ->whereQuery((new \Cms\Orm\CmsFileQuery)
+                ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
+                ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
+            )
+            ->andFieldObjectId()->equals($draft->id)
             ->find() as $file) {
             //przepinanie id
             $file->objectId = $this->_category->id;
@@ -94,8 +94,6 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
         }
         //synchronizacja ról
         $this->_synchronizeRoles($draft);
-        //synchronizacja tagów
-        $this->_synchronizeTags($draft);
         //usuwanie draftu
         $draft->delete();
         $this->_category->dateAdd = date('Y-m-d H:i:s');
@@ -152,28 +150,6 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
             $record->cmsCategoryId = $this->_category->getPk();
             $record->cmsRoleId = $roleId;
             $record->save();
-        }
-        return true;
-    }
-
-    /**
-     * Synchronizuje powiązania kategorii i jej atrybutów z tagami
-     * @param \Cms\Orm\CmsCategoryRecord $draft
-     * @return bool
-     */
-    protected function _synchronizeTags(\Cms\Orm\CmsCategoryRecord $draft)
-    {
-        //usuwamy tagi przypisane do oryginału
-        $this->_getTagRelationQuery($this->_category->getPk())
-            ->find()
-            ->delete();
-        //przepisujemy tagi z draftu do oryginału
-        foreach ($this->_getTagRelationQuery($draft->id)
-            ->find() as $tag) {
-            $tag->objectId = $this->_category->getPk();
-            if (!$tag->save()) {
-                return false;
-            }
         }
         return true;
     }

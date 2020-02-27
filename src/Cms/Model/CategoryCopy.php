@@ -11,6 +11,7 @@
 namespace Cms\Model;
 
 use Cms\Orm\CmsCategoryQuery;
+use Cms\Orm\CmsCategoryRecord;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 
 /**
@@ -18,10 +19,6 @@ use Cms\Orm\CmsCategoryWidgetCategoryRecord;
  */
 class CategoryCopy
 {
-
-    CONST OBJECT_TYPE = 'category';
-    CONST CATEGORY_WIDGET_RELATION = 'categoryWidgetRelation';
-    CONST FILE_CATEGORY_OBJECT = 'cmscategory';
 
     /**
      * Obiekt kategorii Cms do skopiowania
@@ -146,9 +143,6 @@ class CategoryCopy
         if (!$this->_copyCategoryRoles()) {
             return false;
         }
-        if (!$this->_copyCategoryTags()) {
-            return false;
-        }
         if (!$this->_copyCategoryFiles()) {
             return false;
         }
@@ -226,68 +220,12 @@ class CategoryCopy
         }
         //dla każdego pliku powiązanego z kategorią
         foreach ((new \Cms\Orm\CmsFileQuery)
-            ->whereObject()->equals(self::FILE_CATEGORY_OBJECT)
-            ->findUnique('object')
-        as $object) {
+            ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
+            ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
+            ->findUnique('object') as $object) {
             \Cms\Model\File::link($object, $this->_category->id, $object, $this->_copy->getPk());
         }
         return true;
-    }
-
-    /**
-     * Kopiuje tagi powiązane z atrybutami kategorii
-     * @return boolean
-     */
-    protected function _copyCategoryTags()
-    {
-        //jeśli rekord kopii jest niezapisany
-        if (!$this->_copy->getPk()) {
-            return false;
-        }
-        //dla tagu powiązanego z kategorią lub jej atrybutem
-        foreach ($this->_getTagRelationQuery($this->_category->getPk())
-            ->find() as $tag) {
-            if (!$this->_saveTagRelation($tag->cmsTagId, $tag->object, $this->_copy->getPk())) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Zwraca zapytanie o tagi powiązane z atrybutami kategorii
-     * @param integer $categoryId
-     * @return \Cms\Orm\CmsTagRelationQuery
-     */
-    protected function _getTagRelationQuery($categoryId)
-    {
-        return (new \Cms\Orm\CmsTagRelationQuery)
-                ->whereQuery(
-                    (new \Cms\Orm\CmsTagRelationQuery)
-                    ->whereObject()->equals(self::FILE_CATEGORY_OBJECT)
-                    ->orQuery(
-                        (new \Cms\Orm\CmsTagRelationQuery)
-                        ->orFieldObject()->like(self::OBJECT_TYPE . '%')
-                        ->andFieldObject()->notLike(self::CATEGORY_WIDGET_RELATION . '%')
-                    )
-                )
-                ->whereObjectId()->equals($categoryId);
-    }
-
-    /**
-     * Zapisuje relację tagu z obiektem
-     * @param integer $cmsTagId
-     * @param string $object
-     * @param integer $objectId
-     * @return boolean
-     */
-    protected function _saveTagRelation($cmsTagId, $object, $objectId)
-    {
-        $relation = new \Cms\Orm\CmsTagRelationRecord();
-        $relation->cmsTagId = $cmsTagId;
-        $relation->object = $object;
-        $relation->objectId = $objectId;
-        return $relation->save();
     }
 
     /**
@@ -306,34 +244,9 @@ class CategoryCopy
         //kopiowanie plików ze starej relacji do nowej
         foreach ((new \Cms\Orm\CmsFileQuery)
             //obiekt podobny do categoryWidgetRelation
-            ->whereObject()->like(self::CATEGORY_WIDGET_RELATION . '%')
+            ->whereObject()->like(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
             ->findUnique('object') as $object) {
             \Cms\Model\File::link($object, $relationId, $object, $newRelation->id);
-        }
-        return true;
-    }
-
-    /**
-     * Kopiuje tagi powiązane z widgetem
-     * @param integer $relationId
-     * @param \Cms\Orm\CmsCategoryWidgetCategoryRecord $newRelation
-     * @return boolean
-     */
-    protected function _copyWidgetRelationTags($relationId, \Cms\Orm\CmsCategoryWidgetCategoryRecord $newRelation)
-    {
-        //jeśli rekord relacji jest niezapisany
-        if (!$newRelation->getPk()) {
-            return false;
-        }
-        //kopiowanie tagów ze starej relacji do nowej
-        foreach ((new \Cms\Orm\CmsTagRelationQuery)
-            ->whereObject()->like(self::CATEGORY_WIDGET_RELATION . '%')
-            //identyfikator równy ID relacji
-            ->andFieldObjectId()->equals($relationId)
-            ->find() as $tag) {
-            if (!$this->_saveTagRelation($tag->cmsTagId, $tag->object, $newRelation->getPk())) {
-                return false;
-            }
         }
         return true;
     }
@@ -359,10 +272,6 @@ class CategoryCopy
             }
             //kopiowanie plików powiązanych w widgetem
             if (!$this->_copyWidgetRelationFiles($widgetRelation->id, $relation)) {
-                return false;
-            }
-            //kopiowanie tagów powiązanych w widgetem
-            if (!$this->_copyWidgetRelationTags($widgetRelation->id, $relation)) {
                 return false;
             }
         }

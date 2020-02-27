@@ -78,19 +78,6 @@ class OperationColumn extends ColumnAbstract
     }
 
     /**
-     * Ustawia parametry linku usuwającego
-     * ['action' => 'delete', 'id' => '%id%']
-     * %pole% zastępowany jest przez $record->pole
-     *
-     * @param array $params
-     * @return OperationColumn
-     */
-    public function setDeleteTagParams(array $params = ['action' => 'delete', 'id' => '%id%'])
-    {
-        return $this->setOption('deleteTagParams', $params);
-    }
-
-    /**
      * Dodaje dowolny button
      * @param string $iconName
      * @param array $params parametry
@@ -118,8 +105,6 @@ class OperationColumn extends ColumnAbstract
         $editParams = $this->getOption('editParams');
         //pobieranie parametrów linku usuwania
         $deleteParams = $this->getOption('deleteParams');
-        //pobieranie parametrów linku usuwania
-        $deleteTagParams = $this->getOption('deleteTagParams');
         //przyciski dodatkowe
         $customButtons = $this->getOption('customButtons');
         //przyciski dodatkowe
@@ -141,15 +126,6 @@ class OperationColumn extends ColumnAbstract
         //link kasujący ze sprawdzeniem ACL
         if (!empty($deleteParams) && (new AclAllowed)->aclAllowed($params = $this->_parseParams($deleteParams, $record))) {
             $html .= '<a class="operation-button confirm" href="' . $view->url($params) . rtrim('#' . $this->getOption('deleteHashTarget'), '#') . '" title="' . $view->_('gird.shared.operation.delete.label') . '" class="confirm"><i class="fa fa-2 fa-trash-o "></i></a>';
-        }
-        //link kasujący tag
-        if (!empty($deleteTagParams)) {
-            if ($record->getJoined('cms_tag_relation')->id) {
-                $html .= '<a class="operation-button" href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Tag jest przypisany do zasobu. Jeżeli zostanie usunięty nie ma możliwości przywrócenia relacji. Czy na pewno usunąć" class="confirm red"><i class="fa fa-2 fa-trash-o "></i></a>';
-            }
-            if (!$record->getJoined('cms_tag_relation')->id) {
-                $html .= '<a class="operation-button" href="' . $view->url($this->_parseParams($deleteTagParams, $record)) . '" title="Czy na pewno usunąć" class="confirm"><i class="fa fa-2 fa-trash-o "></i></a>';
-            }
         }
         $html .= '</div>';
         return $html;
