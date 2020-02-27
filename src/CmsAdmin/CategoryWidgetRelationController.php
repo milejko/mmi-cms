@@ -108,9 +108,11 @@ class CategoryWidgetRelationController extends Mvc\Controller
             ->andFieldObjectId()->equals($this->id)
             ->find()
             ->delete();
+        //usuwanie w modelu widgeta
+        (new WidgetModel($widgetRelation, Registry::$config->skinset))->invokeDeleteAction($this->view);
         //usuwanie relacji
         $widgetRelation->delete();
-        $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->categoryId, 'uploaderId' => $this->uploaderId, 'originalId' => $this->originalId]);
+        $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->categoryId, 'uploaderId' => $this->categoryId, 'originalId' => $this->originalId]);
     }
 
     /**

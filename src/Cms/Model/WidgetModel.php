@@ -89,7 +89,7 @@ class WidgetModel
      * @param View $view
      * @return string
      */
-    public function editAction(View $view)
+    public function renderEditAction(View $view)
     {
 
         //wywołanie akcji edycji
@@ -104,7 +104,7 @@ class WidgetModel
      * @param View $view
      * @return string
      */
-    public function previewAction(View $view)
+    public function renderPreviewAction(View $view)
     {
         //wywołanie akcji podglądu
         $controller = $this->_createController($view);
@@ -118,13 +118,25 @@ class WidgetModel
      * @param View $view
      * @return string
      */
-    public function displayAction(View $view)
+    public function renderDisplayAction(View $view)
     {
         //wywołanie akcji wyświetlenia
         $controller = $this->_createController($view);
         $controller->displayAction();
         //render szablonu
         return $view->renderTemplate($this->_getTemplatePrefix() . '/display');
+    }
+
+    /**
+     * Wywołanie akcji wyświetlenia
+     * @param View $view
+     * @return void
+     */
+    public function invokeDeleteAction(View $view)
+    {
+        //wywołanie akcji wyświetlenia
+        $controller = $this->_createController($view);
+        $controller->deleteAction();
     }
 
     /**

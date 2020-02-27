@@ -234,20 +234,22 @@ class CategoryController extends Mvc\Controller
     public function deleteAction()
     {
         $this->getResponse()->setTypeJson();
-        $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id);
+        //brak kategorii
+        if (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
+            return json_encode(['status' => false, 'error' => $this->view->_('controller.category.delete.error')]);
+        }
         //ma historię, nie możemy usunąć
-        if ($cat->hasHistoricalEntries()) {
+        if ($category->hasHistoricalEntries()) {
             return json_encode(['status' => false, 'error' => $this->view->_('controller.category.delete.error.history')]);
         }
         try {
-            if ($cat && $cat->delete()) {
-                return json_encode(['status' => true, 'message' => $this->view->_('controller.category.delete.message')]);
-            }
-        } catch (\Cms\Exception\ChildrenExistException $e) {
-
-            return json_encode(['status' => false, 'error' => $this->view->_('controller.category.delete.error.children')]);
-        }
-        return json_encode(['status' => false, 'error' => $this->view->_('controller.category.delete.error')]);
+            //akcja usuwania z szablonu
+            (new TemplateModel($category, Registry::$config->skinset))->invokeDeleteAction($this->view);
+            //usuwanie rekordu
+            $category->delete();
+            return json_encode(['status' => true, 'message' => $this->view->_('controller.category.delete.message')]);
+        } catch (\Cms\Exception\ChildrenExistException $e) { }
+        return json_encode(['status' => false, 'error' => $this->view->_('controller.category.delete.error.children')]);
     }
 
     /**

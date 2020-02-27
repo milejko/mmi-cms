@@ -32,11 +32,11 @@ class CategoryWidgetDisplay extends \Mmi\Mvc\ViewHelper\HelperAbstract
             //model widgeta
             $widgetModel =  new WidgetModel($widgetRelationRecord, Registry::$config->skinset);
             //render szablonu
-            $output = $widgetModel->displayAction($this->view);
+            $output = $widgetModel->renderDisplayAction($this->view);
             //bufor wyłączony parametrem
             if ($widgetModel->getWidgetConfig()->getCacheLifeTime()) {
                 //zapis do bufora (czas określony parametrem)
-                \App\Registry::$cache->save($output, $cacheKey, $widgetModel->getWidgetConfig()->getCacheLifeTime());
+                Registry::$cache->save($output, $cacheKey, $widgetModel->getWidgetConfig()->getCacheLifeTime());
             }
         }
         //render szablonu

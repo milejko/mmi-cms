@@ -50,5 +50,11 @@ abstract class TemplateController extends Controller
      * @return string
      */
     abstract public function renderJsonAction();
+
+    /**
+     * Akcja wywoływana przy usuwaniu szablonu
+     * @return void
+     */
+    abstract public function deleteAction();
     
 }

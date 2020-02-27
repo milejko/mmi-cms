@@ -76,5 +76,11 @@ abstract class WidgetController extends Controller
      * @return string
      */
     abstract public function renderJsonAction();
+
+    /**
+     * Akcja wywoływana przy usuwaniu widgeta
+     * @return void
+     */
+    abstract public function deleteAction();
     
 }

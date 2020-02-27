@@ -186,9 +186,8 @@ class CategoryController extends \Mmi\Mvc\Controller
             //zwrot html
             return \Mmi\Mvc\ActionHelper::getInstance()->forward($request->setParams($mvcParams));
         }
-        //model szablonu
-        $templateModel = new TemplateModel($category, Registry::$config->skinset);
-        return $templateModel->displayAction($this->view);
+        //render szablonu
+        return (new TemplateModel($category, Registry::$config->skinset))->renderDisplayAction($this->view);
     }
 
     /**

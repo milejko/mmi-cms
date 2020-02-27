@@ -54,13 +54,25 @@ class TemplateModel
      * @param View $view
      * @return string
      */
-    public function displayAction(View $view)
+    public function renderDisplayAction(View $view)
     {
         //wywołanie akcji wyświetlenia
         $controller = $this->_createController($view);
         $controller->displayAction();
         //render szablonu
         return $view->renderTemplate($this->_getTemplatePrefix() . '/display');
+    }
+
+    /**
+     * Wywołanie akcji usuwania
+     * @param View $view
+     * @return void
+     */
+    public function invokeDeleteAction(View $view)
+    {
+        //wywołanie akcji wyświetlenia
+        $controller = $this->_createController($view);
+        $controller->deleteAction();
     }
 
     /**

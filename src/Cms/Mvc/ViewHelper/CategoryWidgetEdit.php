@@ -27,7 +27,7 @@ class CategoryWidgetEdit extends \Mmi\Mvc\ViewHelper\HelperAbstract
     public function categoryWidgetEdit(CmsCategoryWidgetCategoryRecord $widgetRelationRecord)
     {
         //render szablonu
-        return (new WidgetModel($widgetRelationRecord, Registry::$config->skinset))->editAction($this->view);
+        return (new WidgetModel($widgetRelationRecord, Registry::$config->skinset))->renderEditAction($this->view);
     }
 
 }
