@@ -7,7 +7,7 @@
             <div style="overflow-x: auto; white-space:nowrap;">
                 {foreach $section->getAvailableWidgets() as $availableWidgetKey => $availableWidget}
                     {if $widgetValidator->isWidgetAvailable($availableWidgetKey)}
-                        <button id="cmsadmin-form-category-submit" class="button btn btn-primary btn-inline-block" type="submit" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&widget={$availableWidgetKey}&action=edit&categoryId={$category->id}&originalId={$category->cmsCategoryOriginalId}@}">
+                        <button class="button btn btn-primary btn-inline-block" type="submit" name="cmsadmin-form-categoryform[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&widget={$availableWidgetKey}&action=edit&categoryId={$category->id}&originalId={$category->cmsCategoryOriginalId}@}">
                             <i class="icon-plus"></i> {_($availableWidget->getName())}
                         </button>
                     {else}
@@ -26,7 +26,7 @@
                         </div>
                         <div class="operation">
                             {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'config'])}
-                                <button class="button edit" type="submit" name="cmsadmin-form-category[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&action=edit&widget={$widgetRelation->widget}&id={$widgetRelation->id}&categoryId={$category->id}&uploaderId={$widgetRelation->id}&originalId={$category->cmsCategoryOriginalId}@}">
+                                <button class="button edit" type="submit" name="cmsadmin-form-categoryform[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&action=edit&widget={$widgetRelation->widget}&id={$widgetRelation->id}&categoryId={$category->id}&uploaderId={$widgetRelation->id}&originalId={$category->cmsCategoryOriginalId}@}">
                                     <i class="fa fa-pencil-square-o pull-right fa-2"></i>
                                 </button>
                             {/if}

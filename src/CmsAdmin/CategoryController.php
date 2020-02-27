@@ -13,6 +13,7 @@ namespace CmsAdmin;
 use App\Registry;
 use Cms\Model\CategoryValidationModel;
 use Cms\Model\TemplateModel;
+use CmsAdmin\Form\CategoryForm;
 use Mmi\App\FrontController;
 
 /**
@@ -70,10 +71,27 @@ class CategoryController extends Mvc\Controller
         //pobranie listy widgetów koniecznych do dodania przed zapisem
         $minOccurrenceWidgets = (new CategoryValidationModel($category, Registry::$config->skinset))->getMinOccurenceWidgets();
         //konfiguracja kategorii
-        $form = (new \CmsAdmin\Form\Category($category));
-        //szablon strony
+        $form = (new CategoryForm($category));
+        //szablon strony istnieje
         if ($category->template) {
-            $this->view->template = (new TemplateModel($category, Registry::$config->skinset))->getTemplateConfg();
+            $templateModel = new TemplateModel($category, Registry::$config->skinset);
+            $this->view->template = $templateModel->getTemplateConfg();
+            //dekoracja formularza
+            $templateModel->decorateEditForm($this->view, $form);
+            //ustawienie danych z rekordu (po dekoracji szablonem)
+            $form->setFromRecord($category);
+        }
+        //ustawianie z POST
+        if ($form->isMine()) {
+            $form->setFromPost($this->getRequest()->getPost());
+            //zapis formularza
+            $form->save();
+        }
+        //szablon nadal istnieje
+        if ($form->isSaved() && $category->template) {
+            $templateModel = new TemplateModel($category, Registry::$config->skinset);
+            //po zapisie forma
+            $templateModel->afterSaveEditForm($this->view, $form);
         }
         //sprawdzenie czy kategoria nadal istnieje (form robi zapis - to trwa)
         if (!$form->isMine() && (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id))) {

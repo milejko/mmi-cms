@@ -15,16 +15,6 @@ $(document).on("mousemove", function (e) {
     }
 });
 
-(function f() {
-    if (delta) {
-        $elems.scrollTop(function (i, v) {
-            return v + delta;
-        });
-    }
-    requestAnimationFrame(f);
-})();
-
-
 CMS.category = function () {
     "use strict";
     var that = {},
@@ -55,14 +45,6 @@ CMS.category = function () {
     };
 
     initWidgetButtons = function () {
-        $('.widget-list').on('click', '.delete-widget', function () {
-            if (!window.confirm($(this).attr('title') + '?')) {
-                return false;
-            }
-            $.get($(this).attr('href'));
-            $(this).parent('div').parent('li').remove();
-            return false;
-        });
         $('.widget-list').on('click', '.toggle-widget', function () {
             var state = parseInt($(this).data('state'));
             state++;
@@ -100,7 +82,7 @@ CMS.category = function () {
             $('ul.nav-tabs > li > a[href$="' + currentTab + '"]').click();
             return;
         }
-        $('ul.nav-tabs > li > a[href$="#settings"]').click();
+        $('ul.nav-tabs > li > a[href$="#basic"]').click();
     };
     dataTabRestore();
     initSortableWidgets();

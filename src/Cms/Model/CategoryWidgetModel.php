@@ -91,9 +91,15 @@ class CategoryWidgetModel
         return $filteredRelations;
     }
 
+    /**
+     * Zlicza widgety po kluczu
+     * @param string $widgetKey
+     * @return integer
+     */
     public function countWidgetRelationsByWidgetKey($widgetKey)
     {
         $count = 0;
+        //iteracja po widgetach w sekcji  
         foreach ($this->getWidgetRelationsBySectionKey($widgetKey) as $widgetRelationRecord) {
             if ($widgetKey == $widgetRelationRecord->widget) {
                 $count++;

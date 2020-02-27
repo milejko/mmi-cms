@@ -11,6 +11,7 @@
 namespace CmsAdmin;
 
 use App\Registry;
+use Cms\Model\CategoryCopy;
 use Cms\Model\CategoryValidationModel;
 use Cms\Model\SkinsetModel;
 use Cms\Model\WidgetModel;
@@ -102,14 +103,6 @@ class CategoryWidgetRelationController extends Mvc\Controller
             ->findPk($this->id)) {
             return '';
         }
-        //usuwanie obiektów
-        (new CmsFileQuery())
-            ->whereObject()->like(CmsCategoryWidgetCategoryRecord::FILE_OBJECT_PREFIX . '%')
-            ->andFieldObjectId()->equals($this->id)
-            ->find()
-            ->delete();
-        //usuwanie w modelu widgeta
-        (new WidgetModel($widgetRelation, Registry::$config->skinset))->invokeDeleteAction($this->view);
         //usuwanie relacji
         $widgetRelation->delete();
         $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->categoryId, 'uploaderId' => $this->categoryId, 'originalId' => $this->originalId]);

@@ -16,26 +16,69 @@ use Cms\Form\Form;
 use Mmi\Validator;
 use Mmi\Filter;
 use Cms\Model\CacheOptions;
-use Cms\Model\CategoryValidationModel;
 use Cms\Model\SkinsetModel;
 
 /**
  * Formularz edycji szegółów kategorii
  * @method \Cms\Orm\CmsCategoryRecord getRecord()
  */
-class Category extends Form
+class CategoryForm extends Form
 {
+    //klucz określający tab
+    const TAB_KEY = 'tab';
+    //klucze sekcji
+    const SECTION_BASIC = 'basic';
+    const SECTION_ADVANCED = 'advanced';
+    const SECTION_INVISIBLE = 'not-visible';
+
+    /**
+     * Konstruktor
+     * @param \Mmi\Orm\Record $record
+     * @param array $options
+     */
+    public function __construct(\Mmi\Orm\Record $record = null, array $options = [])
+    {
+        //podłączenie rekordu
+        $this->_record = $record;
+
+        //kalkulacja nazwy plików dla active record
+        if ($record) {
+            $this->_fileObjectName = $this->_classToFileObject(get_class($record));
+            //informacja o tym, że rekord jest edytowany (dla uploadera)
+            $this->setOption(self::EDITING_RECORD_OPTION_KEY, ($record->getPk() > 0));
+        }
+
+        //kalkulacja nazwy bazowej formularza
+        $this->_formBaseName = strtolower(str_replace('\\', '-', get_class($this)));
+
+        //domyślne opcje
+        $this->setClass($this->_formBaseName . ' vertical')
+            ->setOption('accept-charset', 'utf-8')
+            ->setMethod('post')
+            ->setOption('enctype', 'multipart/form-data');
+
+        //opcje przekazywane z konstruktora
+        $this->setOptions($options);
+
+        //inicjalizacja formularza
+        $this->init();
+
+        //dane z rekordu
+        $this->hasNotEmptyRecord() && $this->setFromRecord($this->_record);
+    }
 
     public function init()
     {
         //szablony/typy (jeśli istnieją)
         $this->addElement((new Element\Select('template'))
+            ->setOption(self::TAB_KEY, self::SECTION_BASIC)
             ->setLabel('form.category.cmsCategoryTypeId.label')
             ->addFilter(new Filter\EmptyToNull)
             ->setMultioptions([null => 'form.category.cmsCategoryTypeId.default'] + (new SkinsetModel(Registry::$config->skinset))->getTemplatesMultioptions()));
 
         //nazwa kategorii
         $this->addElement((new Element\Text('name'))
+            ->setOption(self::TAB_KEY, self::SECTION_BASIC)
             ->setLabel('form.category.name.label')
             ->setRequired()
             ->addFilter(new Filter\StringTrim)
@@ -43,12 +86,14 @@ class Category extends Form
 
         //aktywna
         $this->addElement((new Element\Checkbox('active'))
+            ->setOption(self::TAB_KEY, self::SECTION_BASIC)
             ->setChecked()
             ->setLabel('form.category.active.label'));
 
         //SEO
         //nazwa kategorii
         $this->addElement((new Element\Text('title'))
+            ->setOption(self::TAB_KEY, self::SECTION_BASIC)
             ->setLabel('form.category.title.label')
             ->setDescription('form.category.title.description')
             ->addFilter(new Filter\StringTrim)
@@ -56,12 +101,12 @@ class Category extends Form
 
         //meta description
         $this->addElement((new Element\Textarea('description'))
+            ->setOption(self::TAB_KEY, self::SECTION_BASIC)
             ->setLabel('form.category.description.label'));
-
-        $view = \Mmi\App\FrontController::getInstance()->getView();
 
         //własny uri
         $this->addElement((new Element\Text('customUri'))
+            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
             ->setLabel('form.category.customUri.label')
             //adres domyślny (bez baseUrl)
             ->addFilter(new Filter\StringTrim)
@@ -70,15 +115,18 @@ class Category extends Form
 
         //follow
         $this->addElement((new Element\Checkbox('follow'))
+            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
             ->setChecked()
             ->setLabel('form.category.visible.label'));
         
         //blank
             $this->addElement((new Element\Checkbox('blank'))
+            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
             ->setLabel('form.category.blank.label'));
         
         //https
         $this->addElement((new Element\Select('https'))
+            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
             ->setMultioptions([null => 'form.category.https.option.default', '0' => 'form.category.https.option.nossl', 1 => 'form.category.https.option.ssl'])
             ->addFilter(new Filter\EmptyToNull)
             ->setLabel('form.category.https.label'));
@@ -86,28 +134,20 @@ class Category extends Form
         //Zaawansowane
         //przekierowanie na link
         $this->addElement((new Element\Text('redirectUri'))
+            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
             ->setLabel('form.category.redirect.label')
             ->addFilter(new Filter\StringTrim));
 
-        //początek publikacji
-        /*$this->addElement((new Element\DateTimePicker('dateStart'))
-            ->setLabel('form.category.dateStart.label')
-            ->setDateMin(date('Y-m-d H:i')));
-
-        //zakończenie publikacji
-        $this->addElement((new Element\DateTimePicker('dateEnd'))
-            ->setLabel('form.category.dateEnd.label')
-            ->setDateMin(date('Y-m-d H:i'))
-            ->setDateMinField($this->getElement('dateStart')));*/
-
         //ustawienie bufora
         $this->addElement((new Element\Select('cacheLifetime'))
+            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
             ->setLabel('form.category.cacheLifetime.label')
             ->setMultioptions([null => 'form.category.cacheLifetime.default'] + CacheOptions::LIFETIMES)
             ->addFilter(new Filter\EmptyStringToNull));
 
         //przekierowanie na moduł
         $this->addElement((new Element\Text('mvcParams'))
+            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
             ->setLabel('form.category.mvcParams.label')
             ->setDescription('form.category.mvcParams.description')
             ->addFilter(new Filter\StringTrim)
@@ -115,6 +155,7 @@ class Category extends Form
 
         //role uprawnione do wyświetlenia kategorii/strony
         $this->addElement((new Element\MultiCheckbox('roles'))
+            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
             ->setLabel('form.category.roles.label')
             ->setMultioptions((new \Cms\Orm\CmsRoleQuery)->orderAscName()->findPairs('id', 'name'))
             ->setValue(
@@ -123,12 +164,27 @@ class Category extends Form
                     ->findPairs('cms_role_id', 'cms_role_id') : []
             ));
 
+        //początek publikacji
+        $this->addElement((new Element\DateTimePicker('dateStart'))
+            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
+            ->setLabel('form.category.dateStart.label')
+            ->setDateMin(date('Y-m-d H:i')));
+    
+        //zakończenie publikacji
+        $this->addElement((new Element\DateTimePicker('dateEnd'))
+            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
+            ->setLabel('form.category.dateEnd.label')
+            ->setDateMin(date('Y-m-d H:i'))
+            ->setDateMinField($this->getElement('dateStart')));
+
         //zapis
         $this->addElement((new Element\Submit('commit'))
+            ->setOption(self::TAB_KEY, self::SECTION_INVISIBLE)
             ->setLabel('template.category.edit.commit'));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))
+            ->setOption(self::TAB_KEY, self::SECTION_INVISIBLE)
             ->setLabel('template.category.edit.preview'));
     }
 

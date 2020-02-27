@@ -2,6 +2,8 @@
 
 namespace Cms\Orm;
 
+use Cms\Model\CategoryCopy;
+
 /**
  * Rekord widgetu w kategoriach
  */
@@ -22,8 +24,6 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
      */
     public $order;
     
-    //prefiks obiektów plików dla widgetu
-    const FILE_OBJECT_PREFIX = 'cmscategorywidgetcategory';
     //prefiks atrybutów
     const CMS_ATTRIBUTE_PREFIX = 'cmsAttribute';
     //prefiks bufora widgetów
@@ -62,8 +62,10 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     public function delete()
     {
         //usuwanie plików
-        (new CmsFileQuery)->whereObject()->like(self::FILE_OBJECT_PREFIX . '%')
-            ->andFieldObjectId()->equals($this->getPk())
+        (new CmsFileQuery)
+            //obiekt podobny do categoryWidgetRelation
+            ->whereObject()->like(CategoryCopy::CATEGORY_WIDGET_RELATION . '%')
+            ->andFieldObjectId()->equals($this->id)
             ->find()
             ->delete();
         //usunięcie z czyszczeniem bufora

@@ -8,6 +8,7 @@ use Mmi\App\KernelException;
 use Mmi\Mvc\View;
 use Cms\App\CmsTemplateConfig;
 use Cms\TemplateController;
+use CmsAdmin\Form\CategoryForm;
 
 /**
  * Model szablonu
@@ -73,6 +74,20 @@ class TemplateModel
         //wywołanie akcji wyświetlenia
         $controller = $this->_createController($view);
         $controller->deleteAction();
+    }
+
+    public function decorateEditForm(View $view, CategoryForm $categoryForm)
+    {
+        //wywołanie akcji wyświetlenia
+        $controller = $this->_createController($view);
+        $controller->decorateEditForm($categoryForm);
+    }
+
+    public function afterSaveEditForm(View $view, CategoryForm $categoryForm)
+    {
+        //wywołanie akcji wyświetlenia
+        $controller = $this->_createController($view);
+        $controller->afterSaveEditForm($categoryForm);
     }
 
     /**

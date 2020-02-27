@@ -226,15 +226,7 @@ class CategoryCopy
         }
         //dla każdego pliku powiązanego z kategorią
         foreach ((new \Cms\Orm\CmsFileQuery)
-            ->whereQuery(
-                (new \Cms\Orm\CmsFileQuery)
-                ->whereObject()->equals(self::FILE_CATEGORY_OBJECT)
-                ->orQuery(
-                    (new \Cms\Orm\CmsFileQuery)
-                    ->orFieldObject()->like(self::OBJECT_TYPE . '%')
-                    ->andFieldObject()->notLike(self::CATEGORY_WIDGET_RELATION . '%')
-                )
-            )
+            ->whereObject()->equals(self::FILE_CATEGORY_OBJECT)
             ->findUnique('object')
         as $object) {
             \Cms\Model\File::link($object, $this->_category->id, $object, $this->_copy->getPk());
@@ -313,11 +305,8 @@ class CategoryCopy
         }
         //kopiowanie plików ze starej relacji do nowej
         foreach ((new \Cms\Orm\CmsFileQuery)
-            ->whereQuery((new \Cms\Orm\CmsFileQuery)
-                //obiekt podobny do categoryWidgetRelation
-                ->whereObject()->like(self::CATEGORY_WIDGET_RELATION . '%')
-                //lub równy cmscategorywidgetcategory
-                ->orFieldObject()->like(CmsCategoryWidgetCategoryRecord::FILE_OBJECT_PREFIX . '%'))
+            //obiekt podobny do categoryWidgetRelation
+            ->whereObject()->like(self::CATEGORY_WIDGET_RELATION . '%')
             ->findUnique('object') as $object) {
             \Cms\Model\File::link($object, $relationId, $object, $newRelation->id);
         }
@@ -338,11 +327,7 @@ class CategoryCopy
         }
         //kopiowanie tagów ze starej relacji do nowej
         foreach ((new \Cms\Orm\CmsTagRelationQuery)
-            ->whereQuery((new \Cms\Orm\CmsTagRelationQuery)
-                //obiekt podobny do categoryWidgetRelation
-                ->whereObject()->like(self::CATEGORY_WIDGET_RELATION . '%')
-                //lub równy cmscategorywidgetcategory
-                ->orFieldObject()->like(CmsCategoryWidgetCategoryRecord::FILE_OBJECT_PREFIX . '%'))
+            ->whereObject()->like(self::CATEGORY_WIDGET_RELATION . '%')
             //identyfikator równy ID relacji
             ->andFieldObjectId()->equals($relationId)
             ->find() as $tag) {

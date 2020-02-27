@@ -186,6 +186,16 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     }
 
     /**
+     * Zrzuca rekord do tabeli
+     * @return array
+     */
+    public function toArray()
+    {
+        //dołącza do danych z rekordu dane spakowane w json
+        return parent::toArray() + $this->getConfig()->toArray();
+    }
+
+    /**
      * Zapisuje draft lub przywraca wersję
      * @return boolean
      */

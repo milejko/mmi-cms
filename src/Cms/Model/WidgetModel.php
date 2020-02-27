@@ -128,18 +128,6 @@ class WidgetModel
     }
 
     /**
-     * Wywołanie akcji wyświetlenia
-     * @param View $view
-     * @return void
-     */
-    public function invokeDeleteAction(View $view)
-    {
-        //wywołanie akcji wyświetlenia
-        $controller = $this->_createController($view);
-        $controller->deleteAction();
-    }
-
-    /**
      * Tworzy instancję kontrolera
      * @return WidgetController
      */

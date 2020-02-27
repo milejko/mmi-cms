@@ -3,7 +3,7 @@
 namespace Cms;
 
 use Cms\Orm\CmsCategoryRecord;
-use CmsAdmin\Form\Category;
+use CmsAdmin\Form\CategoryForm;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 use Mmi\Mvc\View;
@@ -46,15 +46,33 @@ abstract class TemplateController extends Controller
     abstract public function displayAction();
 
     /**
-     * Render obiektu JSON (na potrzeby API)
-     * @return string
-     */
-    abstract public function renderJsonAction();
-
-    /**
      * Akcja wywoływana przy usuwaniu szablonu
      * @return void
      */
-    abstract public function deleteAction();
+    public function deleteAction()
+    {}
+
+    /**
+     * Render obiektu JSON (na potrzeby API)
+     * @return string
+     */
+    public function renderJsonAction()
+    {}
+
+    /**
+     * Dekoracja formularza edycji
+     * @param CategoryForm $categoryForm
+     * @return void
+     */
+    public function decorateEditForm(CategoryForm $categoryForm)
+    {}
+
+    /**
+     * Metoda po zapisie formularza
+     * @param CategoryForm $categoryForm
+     * @return void
+     */
+    public function afterSaveEditForm(CategoryForm $categoryForm)
+    {}
     
 }
