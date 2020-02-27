@@ -49,7 +49,6 @@ class IndexController extends Mvc\Controller
         \Mmi\Session\Session::regenerateId();
         //zalogowano
         $this->getMessenger()->addMessage('messenger.index.login.success', true);
-        \Cms\Model\Stat::hit('admin-login');
         $referer = $this->getRequest()->getReferer();
         //przekierowanie na referer
         if ($referer && $referer != \Mmi\App\FrontController::getInstance()->getEnvironment()->requestUri) {
@@ -65,8 +64,6 @@ class IndexController extends Mvc\Controller
     {
         \App\Registry::$auth->clearIdentity();
         $this->getMessenger()->addMessage('messenger.index.logout.success', true);
-        //hit do statystyk
-        \Cms\Model\Stat::hit('admin-logout');
         $this->getResponse()->redirect('cmsAdmin');
     }
 
@@ -85,12 +82,9 @@ class IndexController extends Mvc\Controller
         if (!$form->isSaved()) {
             return;
         }
-        //hit do statystyk
-        \Cms\Model\Stat::hit('admin_password');
         $this->getMessenger()->addMessage('messenger.index.password.success');
         //wylogowanie
         \App\Registry::$auth->clearIdentity();
-        \Cms\Model\Stat::hit('admin_logout');
         $this->getResponse()->redirect('cmsAdmin');
     }
 
