@@ -34,6 +34,7 @@ abstract class UploaderElementAbstract extends ElementAbstract
 
     //przedrostek tymczasowego obiektu plików
     const TEMP_OBJECT_PREFIX = 'tmp-';
+    const FILES_MOVED_OPTION_PREFIX = 'move-files-handled-';
 
     /**
      * Ustawia form macierzysty
@@ -45,9 +46,9 @@ abstract class UploaderElementAbstract extends ElementAbstract
         //parent
         parent::setForm($form);
         //obiekt niezdefiniowany
-        if (!$this->getObject()) {
+        if (!$this->getObject() && $form->hasRecord()) {
             //ustawianie obiektu
-            $this->setObject($form->getFileObjectName());
+            $this->setObject($this->_getFileObjectByClassName(get_class($form->getRecord())));
         }
         //ustawienie ID
         if (!$this->getObjectId() && $form->hasRecord()) {
@@ -87,6 +88,12 @@ abstract class UploaderElementAbstract extends ElementAbstract
      */
     public function onFormSaved()
     {
+        //pliki już obsłużone (inny uploader z tym samym prefixem)
+        if ($this->_form->getOption(self::FILES_MOVED_OPTION_PREFIX . $this->getObject())) {
+            return parent::onFormSaved();
+        }
+        //ustawianie flagi na formie dla innych uploaderów
+        $this->_form->setOption(self::FILES_MOVED_OPTION_PREFIX . $this->getObject(), true);
         //usuwanie z docelowego "worka"
         File::deleteByObject($this->getObject(), $this->getObjectId());
         //przenoszenie plikow z tymczasowego "worka" do docelowego
@@ -109,6 +116,17 @@ abstract class UploaderElementAbstract extends ElementAbstract
         //tworzymy pliki tymczasowe - kopie oryginałów
         File::link($this->getObject(), $this->getObjectId(), self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId());
         return true;
+    }
+
+    /**
+     * Generuje automatyczny obiekt dla plików na podstawie nazwy klasy formularza
+     * @param string $name
+     * @return string
+     */
+    protected function _getFileObjectByClassName($name)
+    {
+        $parts = \explode('\\', strtolower($name));
+        return substr(end($parts), 0, -6);
     }
 
 }

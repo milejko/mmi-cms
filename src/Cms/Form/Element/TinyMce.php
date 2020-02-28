@@ -59,6 +59,16 @@ class TinyMce extends UploaderElementAbstract
     protected $_common;
 
     /**
+     * Alias na setObject()s
+     * @param string $object
+     * @return self
+     */
+    public function setUploaderObject($object)
+    {
+        return $this->setObject($object);
+    }
+
+    /**
      * Ustawia tryb zaawansowany
      * @return \Cms\Form\Element\TinyMce
      */

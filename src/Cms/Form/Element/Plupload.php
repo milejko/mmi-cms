@@ -12,7 +12,6 @@ namespace Cms\Form\Element;
 
 use Mmi\App\FrontController;
 use Mmi\Filter\Url;
-use Mmi\Form\Element\ElementAbstract;
 
 /**
  * Element Plupload

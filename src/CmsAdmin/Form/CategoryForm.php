@@ -17,6 +17,7 @@ use Mmi\Validator;
 use Mmi\Filter;
 use Cms\Model\CacheOptions;
 use Cms\Model\SkinsetModel;
+use Cms\Orm\CmsCategoryRecord;
 
 /**
  * Formularz edycji szegółów kategorii
@@ -33,18 +34,13 @@ class CategoryForm extends Form
 
     /**
      * Konstruktor
-     * @param \Mmi\Orm\Record $record
+     * @param CmsCategoryRecord $record
      * @param array $options
      */
-    public function __construct(\Mmi\Orm\Record $record = null, array $options = [])
+    public function __construct(CmsCategoryRecord $record = null, array $options = [])
     {
         //podłączenie rekordu
         $this->_record = $record;
-
-        //kalkulacja nazwy plików dla active record
-        if ($record) {
-            $this->_fileObjectName = $this->_classToFileObject(get_class($record));
-        }
 
         //kalkulacja nazwy bazowej formularza
         $this->_formBaseName = strtolower(str_replace('\\', '-', get_class($this)));
