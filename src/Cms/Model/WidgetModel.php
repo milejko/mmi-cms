@@ -85,13 +85,12 @@ class WidgetModel
     }
 
     /**
-     * Wywołanie akcji edycji
+     * Render akcji edycji
      * @param View $view
      * @return string
      */
     public function renderEditAction(View $view)
     {
-
         //wywołanie akcji edycji
         $controller = $this->_createController($view);
         $controller->editAction();
@@ -100,7 +99,7 @@ class WidgetModel
     }
 
     /**
-     * Wywołanie akcji podglądu
+     * Render akcji podglądu
      * @param View $view
      * @return string
      */
@@ -114,7 +113,7 @@ class WidgetModel
     }
 
     /**
-     * Wywołanie akcji wyświetlenia
+     * Render akcji wyświetlenia
      * @param View $view
      * @return string
      */
@@ -125,6 +124,18 @@ class WidgetModel
         $controller->displayAction();
         //render szablonu
         return $view->renderTemplate($this->_getTemplatePrefix() . '/display');
+    }
+
+    /**
+     * Wywołanie akcji usuwania
+     * @param View $view
+     * @return void
+     */
+    public function invokeDeleteAction(View $view)
+    {
+        //wywołanie akcji wyświetlenia
+        $controller = $this->_createController($view);
+        $controller->deleteAction();
     }
 
     /**

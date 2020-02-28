@@ -51,7 +51,7 @@ class TemplateModel
     }
 
     /**
-     * Wywołanie akcji wyświetlenia
+     * Render akcji wyświetlenia
      * @param View $view
      * @return string
      */
@@ -71,21 +71,33 @@ class TemplateModel
      */
     public function invokeDeleteAction(View $view)
     {
-        //wywołanie akcji wyświetlenia
+        //wywołanie akcji usuwania
         $controller = $this->_createController($view);
         $controller->deleteAction();
     }
 
-    public function decorateEditForm(View $view, CategoryForm $categoryForm)
+    /**
+     * Dekorowanie formularza edycji kategorii
+     * @param View $view
+     * @param CategoryForm $categoryForm
+     * @return void
+     */
+    public function invokeDecorateEditForm(View $view, CategoryForm $categoryForm)
     {
-        //wywołanie akcji wyświetlenia
+        //wywołanie akcji dekoracji
         $controller = $this->_createController($view);
         $controller->decorateEditForm($categoryForm);
     }
 
-    public function afterSaveEditForm(View $view, CategoryForm $categoryForm)
+    /**
+     * Wywołanie akcji po zapisie
+     * @param View $view
+     * @param CategoryForm $categoryForm
+     * @return void
+     */
+    public function invokeAfterSaveEditForm(View $view, CategoryForm $categoryForm)
     {
-        //wywołanie akcji wyświetlenia
+        //wywołanie akcji po zapisie
         $controller = $this->_createController($view);
         $controller->afterSaveEditForm($categoryForm);
     }

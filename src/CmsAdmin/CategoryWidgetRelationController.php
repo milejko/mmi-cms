@@ -103,6 +103,8 @@ class CategoryWidgetRelationController extends Mvc\Controller
             ->findPk($this->id)) {
             return '';
         }
+        //usuwanie - logika widgeta
+        (new WidgetModel($widgetRelation, Registry::$config->skinset))->invokeDeleteAction($this->view);
         //usuwanie relacji
         $widgetRelation->delete();
         $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->categoryId, 'uploaderId' => $this->categoryId, 'originalId' => $this->originalId]);

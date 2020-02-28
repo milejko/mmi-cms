@@ -70,6 +70,13 @@ abstract class WidgetController extends Controller
      * @return string
      */
     abstract public function displayAction();
+
+    /**
+     * Po usunięciu widgeta
+     * @return void
+     */
+    public function deleteAction()
+    {}
     
     /**
      * Render obiektu JSON (na potrzeby API)

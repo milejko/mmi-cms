@@ -77,7 +77,7 @@ class CategoryController extends Mvc\Controller
             $templateModel = new TemplateModel($category, Registry::$config->skinset);
             $this->view->template = $templateModel->getTemplateConfg();
             //dekoracja formularza
-            $templateModel->decorateEditForm($this->view, $form);
+            $templateModel->invokeDecorateEditForm($this->view, $form);
             //ustawienie danych z rekordu (po dekoracji szablonem)
             $form->setFromRecord($category);
         }
@@ -91,7 +91,7 @@ class CategoryController extends Mvc\Controller
         if ($form->isSaved() && $category->template) {
             $templateModel = new TemplateModel($category, Registry::$config->skinset);
             //po zapisie forma
-            $templateModel->afterSaveEditForm($this->view, $form);
+            $templateModel->invokeAfterSaveEditForm($this->view, $form);
         }
         //sprawdzenie czy kategoria nadal istnieje (form robi zapis - to trwa)
         if (!$form->isMine() && (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id))) {
@@ -261,7 +261,7 @@ class CategoryController extends Mvc\Controller
             return json_encode(['status' => false, 'error' => $this->view->_('controller.category.delete.error.history')]);
         }
         try {
-            //akcja usuwania z szablonu
+            //usuwanie - logika szablonu
             (new TemplateModel($category, Registry::$config->skinset))->invokeDeleteAction($this->view);
             //usuwanie rekordu
             $category->delete();
