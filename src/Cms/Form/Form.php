@@ -41,42 +41,6 @@ abstract class Form extends \Mmi\Form\Form
     }
 
     /**
-     * Po zapisie
-     * @return boolean
-     */
-    public function afterSave()
-    {
-        //po uploadzie
-        $this->afterUpload();
-        return true;
-    }
-
-    /**
-     * Wywołuje metodę po uploadzie
-     */
-    public function afterUpload()
-    {
-        //domyślnie objectId NULL dla elementów bez rekordu
-        $objectId = null;
-        //jeśli mamy rekord, to bierzemy z niego objectId
-        if ($this->hasRecord() && $this->getRecord()->getPk()) {
-            $objectId = $this->getRecord()->getPk();
-        }
-        //lista kluczy Cms File dla elementów TinyMce
-        $tinyObjects = [];
-        //dla każdego elementu formularza
-        foreach ($this->getElements() as $element) {
-            //dla każdego elementu Plupload / TinyMce
-            if (($element instanceof \Cms\Form\Element\Plupload || $element instanceof \Cms\Form\Element\TinyMce) && $element->getUploaderObject()) {
-                //zastępowanie plików
-                \Cms\Model\File::deleteByObject($element->getObject(), $objectId);
-                \Cms\Model\File::move('tmp-' . $element->getObject(), $element->getUploaderId(), $element->getObject(), $objectId);
-                continue;
-            }
-        }
-    }
-
-    /**
      * Zwraca nazwę obiektu do przypięcia plików
      * @return string
      */

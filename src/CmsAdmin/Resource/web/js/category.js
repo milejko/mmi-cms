@@ -65,9 +65,9 @@ CMS.category = function () {
     };
 
     initCategoryChange = function () {
-        $('form.cmsadmin-form-category').on('change', '#cmsadmin-form-category-template', function () {
-            $('#cmsadmin-form-category-submit-top').val('type');
-            $('#cmsadmin-form-category-submit-top').click();
+        $('form.cmsadmin-form-categoryform').on('change', '#cmsadmin-form-categoryform-template', function () {
+            $('#cmsadmin-form-categoryform-submit-top').val('type');
+            $('#cmsadmin-form-categoryform-submit-top').click();
             return false;
         });
     };
