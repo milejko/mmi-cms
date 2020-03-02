@@ -22,18 +22,14 @@ class TagGrid extends \CmsAdmin\Grid\Grid
     {
 
         //zapytanie
-        $this->setQuery((new \Cms\Orm\CmsTagQuery)
-                ->joinLeft('cms_tag_relation')->on('id', 'cms_tag_id')->groupById()->groupBy('cms_tag_id', 'cms_tag_relation')
-        );
+        $this->setQuery((new \Cms\Orm\CmsTagQuery));
 
         //nazwa taga
         $this->addColumn((new Column\TextColumn('tag'))
             ->setLabel('grid.tag.tag.label'));
 
         //operacje
-        $this->addColumn((new Column\OperationColumn)
-            ->setDeleteParams([])
-            ->setDeleteTagParams(['action' => 'delete', 'id' => '%id%']));
+        $this->addColumn((new Column\OperationColumn));
     }
 
 }
