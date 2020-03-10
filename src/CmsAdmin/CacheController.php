@@ -21,10 +21,15 @@ class CacheController extends Mvc\Controller
      */
     public function indexAction()
     {
+        //czyszczenie cache
         if (\App\Registry::$cache) {
             \App\Registry::$cache->flush();
-            $this->getMessenger()->addMessage('messenger.cache.cleared', true);
         }
+        //czyszczenie bufora systemowego
+        \Mmi\App\FrontController::getInstance()->getLocalCache()->flush();
+        //messenger
+        $this->getMessenger()->addMessage('messenger.cache.cleared', true);
+        //przekierowanie na referer
         if ($this->getRequest()->getReferer()) {
             $this->getResponse()->redirectToUrl(urldecode($this->getRequest()->getReferer()));
         }

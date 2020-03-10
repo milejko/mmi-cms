@@ -10,7 +10,9 @@
 
 namespace Cms\App;
 
-use Cms\Model\SkinsetModel;
+use Cms\App\CmsSkinsetConfig;
+use Mmi\Navigation\NavigationConfig;
+use Mmi\Ldap\LdapConfig;
 
 /**
  * Klasa konfiguracji aplikacji CMS
@@ -20,13 +22,13 @@ abstract class CmsKernelConfig extends \Mmi\App\KernelConfig
 
     /**
      * Konfiguracja autoryzacji CMS (LDAP)
-     * @var \Mmi\Ldap\LdapConfig
+     * @var LdapConfig
      */
     public $ldap;
 
     /**
      * Konfiguracja nawigatora
-     * @var \Mmi\Navigation\NavigationConfig
+     * @var NavigationConfig
      */
     public $navigation;
 

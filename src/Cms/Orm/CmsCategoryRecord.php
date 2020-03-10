@@ -3,8 +3,6 @@
 namespace Cms\Orm;
 
 use App\Registry;
-use Cms\Model\AttributeRelationModel,
-    Cms\Model\AttributeValueRelationModel;
 
 /**
  * Rekord kategorii CMSowych
@@ -161,6 +159,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     const FILE_OBJECT = 'cmscategory';
     //prefiks bufora html
     const HTML_CACHE_PREFIX = 'category-html-';
+    //prefiks bufora modelu widgetu
+    const WIDGET_MODEL_CACHE_PREFIX = 'category-widget-model-';
     //prefiks bufora url->id
     const URI_ID_CACHE_PREFIX = 'category-uri-id-';
     //prefiks bufora obiektu kategorii
@@ -288,21 +288,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     protected function _update()
     {
-        \App\Registry::$cache->remove('category-attributes-' . $this->id);
-        //zmodyfikowany szablon
-        if ($this->isModified('cmsCategoryTypeId')) {
-            //iteracja po różnicy międy obecnymi atrybutami a nowymi
-            foreach (array_diff(
-                //obecne id atrybutów
-                (new AttributeRelationModel('cmsCategoryType', $this->getInitialStateValue('cmsCategoryTypeId')))->getAttributeIds(),
-                //nowe id atrybutów
-                (new AttributeRelationModel('cmsCategoryType', $this->cmsCategoryTypeId))->getAttributeIds())
-            as $deletedAttributeId) {
-                //usuwanie wartości usuniętego atrybutu
-                (new AttributeValueRelationModel('category', $this->id))
-                    ->deleteAttributeValueRelationsByAttributeId($deletedAttributeId);
-            }
-        }
         //zmodyfikowany parent
         $parentModified = $this->isModified('parentId');
         //zmodyfikowany order
@@ -383,29 +368,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     }
 
     /**
-     * Pobiera rekordy wartości atrybutów w formie obiektu danych
-     * @see \Mmi\DataObiect
-     * @return \Mmi\DataObject
-     */
-    public function getAttributeValues()
-    {
-        //próba pobrania atrybutów z cache
-        if (null === $attributeValues = \App\Registry::$cache->load($cacheKey = 'category-attributes-' . $this->id)) {
-            //pobieranie atrybutów
-            \App\Registry::$cache->save($attributeValues = (new \Cms\Model\AttributeValueRelationModel('category', $this->id))->getGrouppedAttributeValues(), $cacheKey, 0);
-        }
-        //zwrot atrybutów
-        return $attributeValues;
-    }
-
-    /**
      * Pobiera model widgetów
      * @return \Cms\Model\CategoryWidgetModel
      */
     public function getWidgetModel()
     {
         //próba pobrania modelu widgetu z cache
-        if (null === $widgetModel = \App\Registry::$cache->load($cacheKey = 'category-widget-model-' . $this->id)) {
+        if (null === $widgetModel = \App\Registry::$cache->load($cacheKey = self::WIDGET_MODEL_CACHE_PREFIX . $this->id)) {
             //pobieranie modelu widgetu
             \App\Registry::$cache->save($widgetModel = new \Cms\Model\CategoryWidgetModel($this->id, Registry::$config->skinset), $cacheKey, 0);
         }
@@ -610,10 +579,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         \App\Registry::$cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->customUri));
         \App\Registry::$cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->getInitialStateValue('customUri')));
         \App\Registry::$cache->remove(self::REDIRECT_CACHE_PREFIX . md5($this->uri));
-        \App\Registry::$cache->remove('category-attributes-' . $this->id);
-        \App\Registry::$cache->remove('category-attributes-' . $this->cmsCategoryOriginalId);
-        \App\Registry::$cache->remove('category-widget-model-' . $this->id);
-        \App\Registry::$cache->remove('category-widget-model-' . $this->cmsCategoryOriginalId);
+        \App\Registry::$cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->id);
+        \App\Registry::$cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->cmsCategoryOriginalId);
         \App\Registry::$cache->remove('categories-roles');
         return true;
     }

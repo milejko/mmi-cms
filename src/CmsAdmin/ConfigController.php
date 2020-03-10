@@ -10,6 +10,8 @@
 
 namespace CmsAdmin;
 
+use App\Registry;
+
 /**
  * Kontroler podglądu konfiguracji
  */
@@ -17,6 +19,7 @@ class ConfigController extends Mvc\Controller
 {
 
     const THREE_DOTS = '(...)';
+    const ADMIN_ROLE = 'admin';
 
     /**
      * Widok konfiguracji
@@ -27,6 +30,17 @@ class ConfigController extends Mvc\Controller
         //za długie dane do wyświetlenia
         $config->navigation = self::THREE_DOTS;
         $config->router = self::THREE_DOTS;
+        //ukrycie hasła dla użytkowników pozbawionych roli admina
+        if (!Registry::$auth->hasRole(self::ADMIN_ROLE)) {
+            $config->db->password = self::THREE_DOTS;
+        }
+        if ($config->skinset) {
+            $skins = [];
+            foreach ($config->skinset->getSkins() as $skin) {
+                $skins[] = $skin->getKey();
+            }
+            $config->skinset = implode(', ', $skins);
+        }
         $this->view->config = \Mmi\Http\ResponseDebugger\Colorify::colorify(print_r($config, true));
         $this->view->server = \Mmi\Http\ResponseDebugger\Colorify::colorify(print_r($_SERVER, true));
     }
