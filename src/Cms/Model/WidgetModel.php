@@ -2,11 +2,9 @@
 
 namespace Cms\Model;
 
-use App\Registry;
 use Cms\Exception\CategoryWidgetException;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 use Cms\WidgetController;
-use Mmi\App\KernelException;
 use Mmi\Mvc\View;
 use Cms\App\CmsWidgetConfig;
 use Cms\App\CmsSectionConfig;
@@ -47,13 +45,13 @@ class WidgetModel
         $this->_cmsWidgetRecord = $cmsWidgetRecord;
         //brak zdefiniowanego widgeta
         if (!$cmsWidgetRecord->widget) {
-            throw new KernelException('Widget type not specified');
+            throw new CategoryWidgetException('Widget type not specified');
         }
         //model zestawu skór
         $this->_skinsetModel = new SkinsetModel($skinsetConfig);
         //wyszukiwanie konfiguracji widgeta
         if (null === $this->_widgetConfig = $this->_skinsetModel->getWidgetConfigByKey($cmsWidgetRecord->widget)) {
-            throw new KernelException('Compatible widget not found: ' . $cmsWidgetRecord->widget);
+            throw new CategoryWidgetException('Compatible widget not found: ' . $cmsWidgetRecord->widget);
         }
     }
 
@@ -146,6 +144,10 @@ class WidgetModel
     {
         //odczytywanie nazwy kontrolera
         $controllerClass = $this->_widgetConfig->getControllerClassName();
+        //brak klasy kontrolera
+        if (!$controllerClass) {
+            throw new CategoryWidgetException('Widget class not specified for widget: ' . $this->_widgetConfig->getKey());
+        }
         //powołanie kontrolera z rekordem relacji
         $targetController = new $controllerClass($view->request, $view, $this->_cmsWidgetRecord);
         //kontroler nie jest poprawny
