@@ -15,6 +15,7 @@ use Cms\Model\CategoryValidationModel;
 use Cms\Model\TemplateModel;
 use CmsAdmin\Form\CategoryForm;
 use Mmi\App\FrontController;
+use Mmi\Session\SessionSpace;
 
 /**
  * Kontroler kategorii - stron CMS
@@ -44,11 +45,11 @@ class CategoryController extends Mvc\Controller
     {
         //brak id przekierowanie na drzewo
         if (!$this->id) {
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
+            throw new \Mmi\Mvc\MvcNotFoundException('Category not found');
         }
         //wyszukiwanie kategorii
         if (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
-            //przekierowanie na originalId (lub na tree według powyższego warunku)
+            //przekierowanie na originalId
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->originalId]);
         }
         //zapisywanie oryginalnego id
@@ -64,7 +65,7 @@ class CategoryController extends Mvc\Controller
         //sprawdzenie uprawnień do edycji węzła kategorii
         if (!(new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed(\App\Registry::$auth->getRoles(), $originalId)) {
             $this->getMessenger()->addMessage('messenger.category.permission.denied', false);
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
+            return $this->_redirectToRefererOrTree($originalId);
         }
         //modyfikacja breadcrumbów
         $this->view->adminNavigation()->modifyLastBreadcrumb('menu.category.edit', '#');
@@ -123,7 +124,7 @@ class CategoryController extends Mvc\Controller
         if ($form->isSaved() && $form->getElement('commit')->getValue()) {
             //zmiany zapisane
             $this->getMessenger()->addMessage('messenger.category.category.saved', true);
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
+            return $this->_redirectToRefererOrTree($originalId);
         }
         //zapisany form ze zmianą kategorii
         if ($form->isSaved() && 'type' == $form->getElement('submit')->getValue()) {
@@ -293,7 +294,7 @@ class CategoryController extends Mvc\Controller
      * @param integer $originalId
      * @return boolean
      */
-    private function _isCategoryDuplicate($originalId)
+    protected function _isCategoryDuplicate($originalId)
     {
         $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($originalId);
         //znaleziono kategorię o tym samym uri
@@ -305,23 +306,48 @@ class CategoryController extends Mvc\Controller
             ->findFirst()) && !$category->redirectUri && !$category->customUri;
     }
 
-    private function _prepareDraft(\Cms\Orm\CmsCategoryRecord $category, $originalId)
+    /**
+     * Przygotowanie drafta
+     * @param \Cms\Orm\CmsCategoryRecord $category
+     * @param integer $originalId
+     */
+    protected function _prepareDraft(\Cms\Orm\CmsCategoryRecord $category, $originalId)
     {
         //jeśli to nie był DRAFT
         if (\Cms\Orm\CmsCategoryRecord::STATUS_DRAFT == $category->status) {
             return;
         }
+        //czyszczenie przestrzeni sesji
+        $sessionSpace = new SessionSpace(self::SESSION_SPACE_PREFIX . $originalId);
+        $sessionSpace->unsetAll();
         //sprawdzenie referera
-        $referer = $this->getRequest()->getReferer();
+        if ('' != $referer = $this->getRequest()->getReferer()) {
+            //zapis referera do sesji
+            $sessionSpace->referer = $referer;
+        }
         //wymuszony świeży draft jeśli informacja przyszła w url, lub kategoria jest z archiwum
         $force = $this->force || (\Cms\Orm\CmsCategoryRecord::STATUS_HISTORY == $category->status);
         //draft nie może być utworzony, ani wczytany
         if (null === $draft = (new \Cms\Model\CategoryDraft($category))->createAndGetDraftForUser(\App\Registry::$auth->getId(), $force)) {
             $this->getMessenger()->addMessage('messenger.category.draft.fail', false);
-            $this->getResponse()->redirectToUrl($referer);
+            return $this->_redirectToRefererOrTree($originalId);
         }
         //przekierowanie do edycji DRAFTu - nowego ID
         $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draft->id, 'originalId' => $originalId, 'uploaderId' => $draft->id]);
+    }
+
+    /**
+     * Przekierowaniena na referer lub tree
+     * @param integer $categoryId
+     */
+    protected function _redirectToRefererOrTree($categoryId)
+    {
+        $sessionSpace = new SessionSpace(self::SESSION_SPACE_PREFIX . $categoryId);
+        //posiada zapisany referer
+        if (null !== ($referer = $sessionSpace->referer)) {
+            $this->getResponse()->redirectToUrl($referer);
+        }
+        $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
     }
 
 }

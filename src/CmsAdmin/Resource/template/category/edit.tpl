@@ -23,6 +23,9 @@
                         <a title="{#template.category.edit.tab.config#}" class="nav-link" data-toggle="tab" href="#basic" role="tab" aria-controls="basic" aria-expanded="true"><i class="icon-pencil"></i></a>
                     </li>
                     {if $category->template && aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
+                        {$widgetData = widget('cmsAdmin', 'categoryWidgetRelation', 'preview', ['categoryId' => $category->id, 'uploaderId' => $request->uploaderId])}
+                    {/if}
+                    {if $widgetData}
                         <li class="nav-item">
                             <a title="{#template.category.edit.tab.widget#}" class="nav-link" data-toggle="tab" href="#widgets" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-layers"></i></a>
                         </li>
@@ -43,10 +46,10 @@
                             {/if}
                         {/foreach}
                     </div>
-                    {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
+                    {if $widgetData}
                         <div class="tab-pane" id="widgets" role="tabpanel" aria-expanded="false" style="padding-bottom: 0">
                             <div id="widget-list-container" data-category-id="{$category->id}">
-                                {widget('cmsAdmin', 'categoryWidgetRelation', 'preview', ['categoryId' => $category->id, 'uploaderId' => $request->uploaderId])}
+                                {$widgetData}
                             </div>
                         </div>
                     {/if}
