@@ -1,5 +1,4 @@
 {headScript()->appendFile('/resource/cmsAdmin/js/category.js')}
-
 <div class="container-fluid">
     <div class="animated fadeIn">
         <div class="row">
