@@ -87,7 +87,7 @@ class CategoryController extends Mvc\Controller
         if ($form->isMine()) {
             $form->setFromPost($this->getRequest()->getPost());
             //przed zapisem formularza
-            $templateModel->invokeBeforeSaveEditForm($this->view, $form);
+            $templateModel->invokeBeforeSaveEditForm($this->view, $form) &&
             //zapis formularza
             $form->save();
         }
@@ -120,7 +120,9 @@ class CategoryController extends Mvc\Controller
         //błędy zapisu
         if ($form->isMine() && !$form->isSaved()) {
             $this->getMessenger()->addMessage('messenger.category.form.errors', false);
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id]);
+            //grid z listą wersji historycznych
+            $this->view->historyGrid = new \CmsAdmin\Plugin\CategoryHistoryGrid(['originalId' => $category->cmsCategoryOriginalId]);
+            return;
         }
         //zatwierdzenie zmian - commit
         if ($form->isSaved() && $form->getElement('commit')->getValue()) {
