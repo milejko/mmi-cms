@@ -87,7 +87,7 @@ class CategoryController extends Mvc\Controller
         if ($form->isMine()) {
             $form->setFromPost($this->getRequest()->getPost());
             //przed zapisem formularza
-            $templateModel->invokeBeforeSaveEditForm($this->view, $form) &&
+            $templateModel->invokeBeforeSaveEditForm($this->view, $form);
             //zapis formularza
             $form->save();
         }
@@ -115,7 +115,7 @@ class CategoryController extends Mvc\Controller
             foreach ($minOccurrenceWidgets as $widgetKey) {
                 $this->getMessenger()->addMessage(self::MISSING_WIDGET_MESSENGER_PREFIX . $widgetKey, false);
             }
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id]);
+            return;
         }
         //błędy zapisu
         if ($form->isMine() && !$form->isSaved()) {
