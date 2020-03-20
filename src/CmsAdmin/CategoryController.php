@@ -325,7 +325,7 @@ class CategoryController extends Mvc\Controller
         $sessionSpace = new SessionSpace(self::SESSION_SPACE_PREFIX . $originalId);
         $sessionSpace->unsetAll();
         //sprawdzenie referera
-        if ('' != $referer = $this->getRequest()->getReferer()) {
+        if ('' != $referer = $this->getRequest()->getReferer() && $this->view->url() != $this->getRequest()->getReferer()) {
             //zapis referera do sesji
             $sessionSpace->referer = $referer;
         }
