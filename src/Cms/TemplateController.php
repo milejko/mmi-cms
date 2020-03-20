@@ -68,6 +68,14 @@ abstract class TemplateController extends Controller
     {}
 
     /**
+     * Metoda przed zapisem formularza
+     * @param CategoryForm $categoryForm
+     * @return void
+     */
+    public function beforeSaveEditForm(CategoryForm $categoryForm)
+    {}
+
+    /**
      * Metoda po zapisie formularza
      * @param CategoryForm $categoryForm
      * @return void

@@ -95,6 +95,19 @@ class TemplateModel
      * @param CategoryForm $categoryForm
      * @return void
      */
+    public function invokeBeforeSaveEditForm(View $view, CategoryForm $categoryForm)
+    {
+        //wywołanie akcji po zapisie
+        $controller = $this->_createController($view);
+        $controller->beforeSaveEditForm($categoryForm);
+    }
+
+    /**
+     * Wywołanie akcji po zapisie
+     * @param View $view
+     * @param CategoryForm $categoryForm
+     * @return void
+     */
     public function invokeAfterSaveEditForm(View $view, CategoryForm $categoryForm)
     {
         //wywołanie akcji po zapisie

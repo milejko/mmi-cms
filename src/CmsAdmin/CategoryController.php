@@ -73,9 +73,10 @@ class CategoryController extends Mvc\Controller
         $minOccurrenceWidgets = (new CategoryValidationModel($category, Registry::$config->skinset))->getMinOccurenceWidgets();
         //konfiguracja kategorii
         $form = (new CategoryForm($category));
+        //model szablonu
+        $templateModel = new TemplateModel($category, Registry::$config->skinset);
         //szablon strony istnieje
         if ($category->template) {
-            $templateModel = new TemplateModel($category, Registry::$config->skinset);
             $this->view->template = $templateModel->getTemplateConfg();
             //dekoracja formularza
             $templateModel->invokeDecorateEditForm($this->view, $form);
@@ -85,12 +86,13 @@ class CategoryController extends Mvc\Controller
         //ustawianie z POST
         if ($form->isMine()) {
             $form->setFromPost($this->getRequest()->getPost());
+            //przed zapisem formularza
+            $templateModel->invokeBeforeSaveEditForm($this->view, $form);
             //zapis formularza
             $form->save();
         }
         //szablon nadal istnieje
         if ($form->isSaved() && $category->template) {
-            $templateModel = new TemplateModel($category, Registry::$config->skinset);
             //po zapisie forma
             $templateModel->invokeAfterSaveEditForm($this->view, $form);
         }
