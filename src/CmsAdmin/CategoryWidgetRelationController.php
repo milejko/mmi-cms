@@ -11,12 +11,9 @@
 namespace CmsAdmin;
 
 use App\Registry;
-use Cms\Model\CategoryCopy;
 use Cms\Model\CategoryValidationModel;
 use Cms\Model\SkinsetModel;
 use Cms\Model\WidgetModel;
-use Cms\Orm\CmsCategoryWidgetCategoryRecord;
-use Cms\Orm\CmsFileQuery;
 
 /**
  * Kontroler konfiguracji kategorii - stron CMS

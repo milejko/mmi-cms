@@ -15,6 +15,7 @@ use Cms\Model\CategoryValidationModel;
 use Cms\Model\TemplateModel;
 use CmsAdmin\Form\CategoryForm;
 use Mmi\App\FrontController;
+use Mmi\Http\Request;
 use Mmi\Session\SessionSpace;
 
 /**
@@ -29,6 +30,8 @@ class CategoryController extends Mvc\Controller
     const EDIT_MVC_PARAMS = 'cmsAdmin/category/edit';
     //przedrostek brakującego widgeta
     const MISSING_WIDGET_MESSENGER_PREFIX = 'messenger.widget.missing.';
+    //suffix admina
+    const ADMIN_MODULE_SUFFIX = 'Admin';
 
     /**
      * Lista stron CMS - prezentacja w formie grida
@@ -321,14 +324,8 @@ class CategoryController extends Mvc\Controller
         if (\Cms\Orm\CmsCategoryRecord::STATUS_DRAFT == $category->status) {
             return;
         }
-        //czyszczenie przestrzeni sesji
-        $sessionSpace = new SessionSpace(self::SESSION_SPACE_PREFIX . $originalId);
-        $sessionSpace->unsetAll();
-        //sprawdzenie referera
-        if ('' != $referer = $this->getRequest()->getReferer() && $this->view->url() != $this->getRequest()->getReferer()) {
-            //zapis referera do sesji
-            $sessionSpace->referer = $referer;
-        }
+        //zapis referera
+        $this->_saveReferer($originalId);
         //wymuszony świeży draft jeśli informacja przyszła w url, lub kategoria jest z archiwum
         $force = $this->force || (\Cms\Orm\CmsCategoryRecord::STATUS_HISTORY == $category->status);
         //draft nie może być utworzony, ani wczytany
@@ -349,9 +346,40 @@ class CategoryController extends Mvc\Controller
         $sessionSpace = new SessionSpace(self::SESSION_SPACE_PREFIX . $categoryId);
         //posiada zapisany referer
         if (null !== ($referer = $sessionSpace->referer)) {
+            //czyszczenie sesji
+            $sessionSpace->unsetAll();
             $this->getResponse()->redirectToUrl($referer);
         }
+        //czyszczenie sesji
+        $sessionSpace->unsetAll();
         $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
+    }
+
+    protected function _saveReferer($originalId)
+    {
+        //czyszczenie przestrzeni sesji
+        $sessionSpace = new SessionSpace(self::SESSION_SPACE_PREFIX . $originalId);
+        $sessionSpace->unsetAll();
+        //brak refererea
+        if ('' == ($referer = $this->getRequest()->getReferer())) {
+            return;
+        }
+        //request referera
+        $refererRequest = new Request(FrontController::getInstance()->getRouter()->decodeUrl($referer));
+        //moduł nieadminowy - nie zapisujemy referera
+        if (false === strpos($refererRequest->getModuleName(), self::ADMIN_MODULE_SUFFIX)) {
+            return;
+        }
+        //zgodny moduł, kontroler, akcja - nie zapisujemy referera
+        if (
+            $refererRequest->getModuleName() == $this->getRequest()->getModuleName() &&
+            $refererRequest->getControllerName() == $this->getRequest()->getControllerName() &&
+            $refererRequest->getActionName() == $this->getRequest()->getActionName()
+        ) {
+            return;
+        }
+        //zapis referera do sesji
+        $sessionSpace->referer = $referer;
     }
 
 }
