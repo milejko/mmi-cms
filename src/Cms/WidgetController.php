@@ -69,7 +69,8 @@ abstract class WidgetController extends Controller
      * Wyświetlenie po stronie klienta (HTML)
      * @return string
      */
-    abstract public function displayAction();
+    public function displayAction()
+    {}
 
     /**
      * Po usunięciu widgeta

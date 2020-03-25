@@ -31,6 +31,8 @@ class CategoryHistoryGrid extends \CmsAdmin\Grid\Grid
                 ->orderDescDateAdd()
                 //kopia robocza na samą górę
                 ->orderDescId());
+        //limit
+        $this->getState()->setRowsPerPage(10);
 
         //nazwa
         $this->addColumn((new Column\TextColumn('name'))

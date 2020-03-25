@@ -43,7 +43,8 @@ abstract class TemplateController extends Controller
      * Wyświetlenie szablonu po stronie klienta
      * @return string
      */
-    abstract public function displayAction();
+    public function displayAction()
+    {}
 
     /**
      * Akcja wywoływana przy usuwaniu szablonu
