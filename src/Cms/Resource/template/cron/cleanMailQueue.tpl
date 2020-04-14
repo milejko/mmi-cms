@@ -1,0 +1,1 @@
+{if $cleared}CLEARED: {$cleared}{/if}
