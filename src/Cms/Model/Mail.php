@@ -100,7 +100,7 @@ class Mail
             ->whereActive()->equals(0)
             ->andFieldDateSendAfter()->lessOrEquals(date('Y-m-d H:i:s'))
             ->orderAscDateSendAfter()
-            ->limit(500)
+            ->limit(50)
             ->find();
         //brak maili do wysyłki
         if (count($emails) == 0) {
