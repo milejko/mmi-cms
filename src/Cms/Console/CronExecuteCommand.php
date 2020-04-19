@@ -19,11 +19,12 @@ class CronExecuteCommand extends CommandAbstract
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|null|void
+     * @return integer
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         \Cms\Model\Cron::run();
+        return 0;
     }
 
 }

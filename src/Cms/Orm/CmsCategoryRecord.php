@@ -3,6 +3,7 @@
 namespace Cms\Orm;
 
 use App\Registry;
+use CmsAdmin\Model\CategoryAclModel;
 
 /**
  * Rekord kategorii CMSowych
@@ -30,12 +31,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      * @var string
      */
     public $template;
-
-    /**
-     * Identyfikator szablonu
-     * @var integer
-     */
-    public $cmsCategoryTypeId;
 
     /**
      * Identyfikator głównego rekordu wersji
@@ -66,6 +61,12 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      * @var string
      */
     public $uri;
+
+    /**
+     * Ścieżka złożona z id
+     * @var string
+     */
+    public $path;
 
     /**
      * Opcjonalny adres strony
@@ -174,15 +175,26 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public function save()
     {
-        $this->_calculateUri();
-        //domyślnie wstawienie na koniec
+        //domyślnie wstawienie na koniec (znacznik time dba o to, później się przesortuje)
         if (null === $this->order) {
-            $this->order = $this->_maxChildOrder() + 1;
+            $this->order = time();
         }
         //zapis configJson
         $this->setConfigFromArray(array_merge($this->getConfig()->toArray(), $this->getOptions()));
+        //uzupełnia path i uri
+        $this->_calculatePathAndUri();
         //zapis
         return parent::save() && $this->clearCache();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function simpleUpdate()
+    {
+        return parent::_update() && $this->clearCache();
     }
 
     /**
@@ -225,7 +237,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             return false;
         }
         //jeśli status różny od aktywna (bieżąca)
-        if ($this->status != \Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE) {
+        if (self::STATUS_ACTIVE != $this->status) {
             return false;
         }
         //nie osiągnięto czasu publikacji
@@ -240,30 +252,25 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     }
 
     /**
-     * Kalkulacja uri
+     * Kalkulacja uri i path
+     * @param array $parentsCache
      * @throws \Mmi\App\KernelException
      * @throws \Mmi\Orm\OrmException
      */
-    protected function _calculateUri()
+    protected function _calculatePathAndUri()
     {
-        //strona główna
-        if ($this->customUri == '/') {
-            //usunięcie uri
-            $this->uri = '';
-            return;
-        }
-        //usunięcie uri
-        $this->uri = '';
+        //usunięcie uri i path
+        $this->uri = $this->path = '';
         //ustawiamy uri na podstawie rodzica
-        if ($this->parentId && (null !== $parent = (new CmsCategoryQuery)->findPk($this->parentId))) {
-            //nieaktywny rodzic -> nie wlicza się do ścieżki
-            if (!$parent->active) {
-                $parent->uri = substr($parent->uri, 0, strrpos($parent->uri, '/'));
-            }
-            $this->uri = ltrim($parent->uri . '/', '/');
+        if ($this->parentId && (null !== $parent = $this->getParentRecord())) {
+            $this->uri = $parent->uri;
+            $this->path = trim($parent->path . '/' . $parent->id, '/');
         }
-        //doklejanie do uri przefiltrowanej końcówki
-        $this->uri .= (new \Mmi\Filter\Url)->filter(strip_tags($this->name));
+        if ($this->active) {
+            //doklejanie do uri przefiltrowanej końcówki
+            $this->uri .= '/' . (new \Mmi\Filter\Url)->filter(strip_tags($this->name));
+        }
+        $this->uri = trim($this->uri, '/');
         //filtracja customUri
         $this->customUri = ($this->customUri == '/') ? '/' : trim($this->customUri, '/');
     }
@@ -275,7 +282,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     protected function _insert()
     {
         //usunięcie cache uprawnień
-        \App\Registry::$cache->remove('mmi-cms-category-acl');
+        \App\Registry::$cache->remove(CategoryAclModel::CACHE_KEY);
         //data aktualizacji
         $this->dateAdd = $this->dateAdd ? $this->dateAdd : date('Y-m-d H:i:s');
         //próba utworzenia rekordu
@@ -288,34 +295,30 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     protected function _update()
     {
+        //badanie modyfikacji przed update
         //zmodyfikowany parent
         $parentModified = $this->isModified('parentId');
         //zmodyfikowany order
         $orderModified = $this->isModified('order');
         //zmodyfikowana aktywność
         $activeModified = $this->isModified('active');
-        //zmodyfikowane uri
-        $uriModified = $this->isModified('uri');
+        //czy nazwa zmodyfikowana
+        $nameModified = $this->isModified('name');
         //data modyfikacji
         $this->dateModify = date('Y-m-d H:i:s');
-        //aktualizacja rekordu
+        //aktualizacja rekordu (czyści info o zmodyfikowanych)
         if (!parent::_update()) {
             return false;
         }
         //sortowanie dzieci po przestawieniu rodzica, lub kolejności
-        if (($parentModified || $orderModified) && !$this->getOption('block-ordering')) {
+        if ($parentModified || $orderModified) {
             //sortuje dzieci
             $this->_sortChildren();
         }
         //zmieniono parenta, nazwę, lub aktywność
-        if ($parentModified || $uriModified || $activeModified) {
+        if ($parentModified || $nameModified || $activeModified) {
             //przebudowa dzieci
             $this->_rebuildChildren($this->id);
-        }
-        //synchronizacja draftów
-        if ($parentModified || $uriModified || $activeModified || $orderModified) {
-            //synchronizacja pól w draftach
-            $this->_synchronizeDrafts();
         }
         return true;
     }
@@ -393,28 +396,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             return;
         }
         //próba pobrania rodzica z cache
-        if (null === $parent = \App\Registry::$cache->load($cacheKey = 'category-' . $this->parentId)) {
+        if (null === $parent = \App\Registry::$cache->load($cacheKey = self::CATEGORY_CACHE_PREFIX . $this->parentId)) {
             //pobieranie rodzica
             \App\Registry::$cache->save($parent = (new \Cms\Orm\CmsCategoryQuery)
-                ->withType()
                 ->findPk($this->parentId), $cacheKey, 0);
         }
         //zwrot rodzica
         return $parent;
-    }
-
-    /**
-     * Pobiera rodzeństwo elementu (wraz z nim samym)
-     * @return \Cms\Orm\CmsCategoryRecord[]
-     */
-    public function getSiblings()
-    {
-        //próba pobrania dzieci z cache
-        if (null === $siblings = \App\Registry::$cache->load($cacheKey = 'category-siblings-' . $this->parentId)) {
-            //pobieranie dzieci
-            \App\Registry::$cache->save($siblings = $this->_getChildren($this->parentId, true), $cacheKey);
-        }
-        return $siblings;
     }
 
     /**
@@ -466,37 +454,14 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     {
         $i = 0;
         //iteracja po dzieciach
-        foreach ($this->_getChildren($parentId) as $categoryRecord) {
+        foreach ($this->_getActiveChildren($parentId) as $categoryRecord) {
             //wyznaczanie kolejności
             $categoryRecord->order = $i++;
-            $categoryRecord->setOption('block-ordering', true);
-            //zapis dziecka
-            $categoryRecord->save();
+            $categoryRecord->_calculatePathAndUri(true);
+            //zapis rekordu
+            $categoryRecord->simpleUpdate();
             //zejście rekurencyjne
             $this->_rebuildChildren($categoryRecord->id);
-        }
-    }
-
-    /**
-     * Synchronizuje drafty
-     */
-    protected function _synchronizeDrafts()
-    {
-        //iteracja po draftach bieżącego dokumentu
-        foreach ((new CmsCategoryQuery())->whereCmsCategoryOriginalId()->equals($this->id)
-            ->andFieldStatus()->equals(self::STATUS_DRAFT)
-            ->find()
-            as $draftRecord) {
-            //synchronizacja uri
-            $draftRecord->uri = $this->uri;
-            //synchronizacja parentId
-            $draftRecord->parentId = $this->parentId;
-            //synchronizacja kolejności
-            $draftRecord->order = $this->order;
-            //bez przebudowy kolejności
-            $draftRecord->setOption('block-ordering', true);
-            //zapis
-            $draftRecord->save();
         }
     }
 
@@ -506,36 +471,15 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      * @param boolean $activeOnly tylko aktywne
      * @return \Cms\Orm\CmsCategoryRecord[]
      */
-    protected function _getChildren($parentId, $activeOnly = false)
+    protected function _getActiveChildren($parentId)
     {
-        //inicjalizacja zapytania
-        $query = (new CmsCategoryQuery)
+        //zwrot kolekcji rekordów
+        return (new CmsCategoryQuery)
             ->whereParentId()->equals($parentId)
-            ->joinLeft('cms_category_type')->on('cms_category_type_id')
+            ->whereStatus()->equals(self::STATUS_ACTIVE)
             ->orderAscOrder()
-            ->orderAscId();
-        //tylko aktywne
-        if ($activeOnly) {
-            $query->whereStatus()->equals(self::STATUS_ACTIVE);
-        }
-        //zwrot w postaci tablicy rekordów
-        return $query->find()->toObjectArray();
-    }
-
-    /**
-     * Wyszukuje maksymalną wartość kolejności w dzieciach wybranego rodzica
-     * @param integer $parentId id rodzica
-     * @return integer
-     */
-    protected function _maxChildOrder()
-    {
-        //wyszukuje maksymalny order
-        $maxOrder = (new CmsCategoryQuery)
-            ->whereParentId()->equals($this->parentId)
-            ->andFieldStatus()->equals(self::STATUS_ACTIVE)
-            ->findMax('order');
-        //będzie inkrementowany
-        return $maxOrder === null ? -1 : $maxOrder;
+            ->orderAscId()
+            ->find();
     }
 
     /**
@@ -546,7 +490,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     {
         $i = 0;
         //pobranie dzieci swojego rodzica
-        foreach ($this->_getChildren($this->parentId, true) as $categoryRecord) {
+        foreach ($this->_getActiveChildren($this->parentId) as $categoryRecord) {
             //ten rekord musi pozostać w niezmienionej pozycji (był sortowany)
             if ($categoryRecord->id == $this->id) {
                 continue;
@@ -557,9 +501,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             }
             //obliczanie nowej kolejności
             $categoryRecord->order = $i++;
-            //blokada dalszego sortowania i zapis
-            $categoryRecord->setOption('block-ordering', true);
-            $categoryRecord->save();
+            //prosty zapis
+            $categoryRecord->simpleUpdate();
         }
     }
 

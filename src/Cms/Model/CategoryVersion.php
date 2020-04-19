@@ -63,8 +63,11 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
             ->delete();
         //nadpisanie danych oryginału
         $this->_category->setFromArray($draft->toArray());
-        //id pozostaje niezmienione
+        //id, parent, order i path pozostają niezmienione
         $this->_category->id = $this->_category->getInitialStateValue('id');
+        $this->_category->parentId = $this->_category->getInitialStateValue('parentId');
+        $this->_category->path = $this->_category->getInitialStateValue('path');
+        $this->_category->order = $this->_category->getInitialStateValue('order');
         //status active
         $this->_category->status = \Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE;
         //czyszczenie id oryginału

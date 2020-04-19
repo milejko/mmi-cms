@@ -46,6 +46,7 @@ class FileGarbageCollectorCommand extends CommandAbstract
         //miniatury (podkatalogi do 12 znaków)
         $this->_scanDir(BASE_PATH . '/web/data', 12);
         echo "\n";
+        return 0;
     }
 
     /**

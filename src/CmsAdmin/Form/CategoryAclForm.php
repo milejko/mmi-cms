@@ -11,6 +11,7 @@
 namespace CmsAdmin\Form;
 
 use Cms\Form\Element;
+use CmsAdmin\Model\CategoryAclModel;
 
 /**
  * Formularz edycji ACL dla roli
@@ -80,7 +81,7 @@ class CategoryAclForm extends \Cms\Form\Form
             $aclRecord->save();
         }
         //usunięcie cache
-        \App\Registry::$cache->remove('mmi-cms-category-acl');
+        \App\Registry::$cache->remove(CategoryAclModel::CACHE_KEY);
         return true;
     }
 }

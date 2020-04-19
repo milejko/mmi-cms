@@ -8,6 +8,8 @@ namespace CmsAdmin\Model;
 class CategoryAclModel
 {
 
+    const CACHE_KEY = 'mmi-cms-category-acl';
+
     /**
      * Obiekt ACL
      * @var \Mmi\Security\Acl
@@ -20,7 +22,7 @@ class CategoryAclModel
     public function __construct()
     {
         //ładowanie ACL z bufora
-        if (null !== $this->_acl = \App\Registry::$cache->load($cacheKey = 'mmi-cms-category-acl')) {
+        if (null !== $this->_acl = \App\Registry::$cache->load($cacheKey = self::CACHE_KEY)) {
             return;
         }
         //uzupełnianie ACL

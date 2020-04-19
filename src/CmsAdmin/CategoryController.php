@@ -237,21 +237,13 @@ class CategoryController extends Mvc\Controller
     {
         $this->getResponse()->setTypeJson();
         //brak kategorii
-        if (null === $masterCategory = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
+        if (null === $categoryRecord = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
             return json_encode(['status' => false, 'error' => $this->view->_('controller.category.move.error.missing')]);
         }
-        //domyślnie nie ma drafta - alias
-        $draft = $masterCategory;
-        //zmiana parenta tworzy draft
-        if ($this->getPost()->parentId != $masterCategory->parentId) {
-            //tworzenie draftu
-            $draft = (new \Cms\Model\CategoryDraft($masterCategory))->createAndGetDraftForUser(\App\Registry::$auth->getId(), true);
-        }
-        //zapis kolejności
-        $draft->parentId = ($this->getPost()->parentId > 0) ? $this->getPost()->parentId : null;
-        $draft->order = $this->getPost()->order;
+        $categoryRecord->parentId = ($this->getPost()->parentId > 0) ? $this->getPost()->parentId : null;
+        $categoryRecord->order = $this->getPost()->order;
         //próba zapisu
-        return ($draft->save() && $draft->commitVersion()) ? json_encode(['status' => true, 'id' => $masterCategory->id, 'message' => $this->view->_('controller.category.move.message')]) : json_encode(['status' => false, 'error' => $this->view->_('controller.category.move.error')]);
+        return $categoryRecord->save() ? json_encode(['status' => true, 'id' => $categoryRecord->id, 'message' => $this->view->_('controller.category.move.message')]) : json_encode(['status' => false, 'error' => $this->view->_('controller.category.move.error')]);
     }
 
     /**
