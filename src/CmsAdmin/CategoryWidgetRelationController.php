@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -48,7 +48,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
             $maxOrder = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
                 ->whereCmsCategoryId()->equals($this->categoryId)
                 ->findMax('order');
-            $widgetRelationRecord->order = $maxOrder !== null ? $maxOrder + 1 : 0;            
+            $widgetRelationRecord->order = $maxOrder !== null ? $maxOrder + 1 : 0;
         }
         //wyszukiwanie relacji do edycji
         if ($this->id && null === $widgetRelationRecord = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
@@ -127,6 +127,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
     /**
      * Sortowanie ajax widgetów
      * @return string
+     * @throws \Cms\Exception\CategoryWidgetException
      */
     public function sortAction()
     {
@@ -136,7 +137,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
             return $this->view->_('controller.categoryWidgetRelation.move.error');
         }
         //sortowanie
-        (new \Cms\Model\CategoryWidgetModel($this->categoryId))
+        (new \Cms\Model\CategoryWidgetModel($this->categoryId, Registry::$config->skinset))
             ->sortBySerial($serial);
         //pusty zwrot
         return '';
