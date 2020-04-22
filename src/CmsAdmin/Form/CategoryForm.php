@@ -76,7 +76,7 @@ class CategoryForm extends Form
             ->setLabel('form.category.name.label')
             ->setRequired()
             ->addFilter(new Filter\StringTrim)
-            ->addValidator(new Validator\StringLength([2, 128])));
+            ->addValidator(new Validator\StringLength([0, 128])));
 
         //aktywna
         $this->addElement((new Element\Checkbox('active'))
