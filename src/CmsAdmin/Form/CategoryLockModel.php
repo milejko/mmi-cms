@@ -22,7 +22,7 @@ class CategoryLockModel
     //prefix w buforze
     const CACHE_PREFIX = 'category-lock';
     //czas blokady (na transakcję)
-    const LOCK_TIMEOUT = 30;
+    const LOCK_TIMEOUT = 10;
     //dodatkowa blokada po zapisie
     const RELEASE_TIMEOUT = 2;
 

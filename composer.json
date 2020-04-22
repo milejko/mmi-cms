@@ -30,6 +30,9 @@
         "mmi/mmi": "^3.10.7",
         "phpmailer/phpmailer": "~5.2"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^6.0"
+    },
     "autoload": {
         "psr-4": {
             "Cms\\": "src/Cms",

@@ -127,6 +127,8 @@ namespace Cms\Orm;
 //</editor-fold>
 class CmsCronQuery extends \Mmi\Orm\Query
 {
+    //maksymalna długość blokady uruchomieniowej
+    const MAX_TASK_DURATION = 1800;
 
     protected $_tableName = 'cms_cron';
 
@@ -139,6 +141,15 @@ class CmsCronQuery extends \Mmi\Orm\Query
         return (new self)
             ->whereActive()->equals(1)
             ->whereLock()->equals(0)
+            ->orderAscId();
+    }
+
+    public function activeLockExpired()
+    {
+        return (new self)
+            ->whereActive()->equals(1)
+            ->whereLock()->equals(1)
+            ->whereDateLastExecute()->less(date('Y-m-d h:i:s', time() - self::MAX_TASK_DURATION))
             ->orderAscId();
     }
 

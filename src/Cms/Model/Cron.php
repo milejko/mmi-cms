@@ -23,6 +23,12 @@ class Cron
      */
     public static function run()
     {
+        //czyszczenie zablokowanych rekordów
+        foreach ((new CmsCronQuery)
+            ->activeLockExpired()
+            ->find() as $lockedCronRecord) {
+            $lockedCronRecord->unlockAfterExecution();
+        }
         //iteracja po liście zadań do wykonania
         foreach ((new CmsCronQuery)->activeUnlocked()->find() as $listedCronRecord) {
             //sprawdzanie warunku wykonania np. */3 * * * *
