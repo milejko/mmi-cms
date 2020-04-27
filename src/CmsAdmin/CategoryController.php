@@ -76,6 +76,8 @@ class CategoryController extends Mvc\Controller
         $minOccurrenceWidgets = (new CategoryValidationModel($category, Registry::$config->skinset))->getMinOccurenceWidgets();
         //konfiguracja kategorii
         $form = (new CategoryForm($category));
+        //form do widoku
+        $this->view->categoryForm = $form;
         //model szablonu
         $templateModel = new TemplateModel($category, Registry::$config->skinset);
         //szablon strony istnieje
@@ -94,6 +96,14 @@ class CategoryController extends Mvc\Controller
             //zapis formularza
             $form->save();
         }
+        //walidacja sekcji i ilości widgetów
+        if ($form->isMine() && $form->getElement('commit')->getValue() && !empty($minOccurrenceWidgets)) {
+            //dodawanie komunikatów o niewypełnionych sekcjach
+            foreach ($minOccurrenceWidgets as $widgetKey) {
+                $this->getMessenger()->addMessage(self::MISSING_WIDGET_MESSENGER_PREFIX . $widgetKey, false);
+            }
+            return;
+        }
         //szablon nadal istnieje
         if ($form->isSaved() && $category->template) {
             //po zapisie forma
@@ -104,20 +114,10 @@ class CategoryController extends Mvc\Controller
             //przekierowanie na originalId (lub na tree według powyższego warunku)
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->originalId]);
         }
-        //form do widoku
-        $this->view->categoryForm = $form;
         //jeśli nie było posta
         if (!$form->isMine()) {
             //grid z listą wersji historycznych
             $this->view->historyGrid = new \CmsAdmin\Plugin\CategoryHistoryGrid(['originalId' => $category->cmsCategoryOriginalId]);
-            return;
-        }
-        //walidacja sekcji i ilości widgetów
-        if ($form->isMine() && $form->getElement('commit')->getValue() && !empty($minOccurrenceWidgets)) {
-            //dodawanie komunikatów o niewypełnionych sekcjach
-            foreach ($minOccurrenceWidgets as $widgetKey) {
-                $this->getMessenger()->addMessage(self::MISSING_WIDGET_MESSENGER_PREFIX . $widgetKey, false);
-            }
             return;
         }
         //błędy zapisu
