@@ -75,7 +75,7 @@ class CategoryController extends Mvc\Controller
         //pobranie listy widgetów koniecznych do dodania przed zapisem
         $minOccurrenceWidgets = (new CategoryValidationModel($category, Registry::$config->skinset))->getMinOccurenceWidgets();
         //konfiguracja kategorii
-        $form = (new CategoryForm($category));
+        $form = new CategoryForm($category);
         //form do widoku
         $this->view->categoryForm = $form;
         //model szablonu
@@ -88,21 +88,26 @@ class CategoryController extends Mvc\Controller
             //ustawienie danych z rekordu (po dekoracji szablonem)
             $form->setFromRecord($category);
         }
-        //ustawianie z POST
+        //ustawienie post
         if ($form->isMine()) {
             $form->setFromPost($this->getRequest()->getPost());
-            //przed zapisem formularza
-            $templateModel->invokeBeforeSaveEditForm($this->view, $form);
-            //zapis formularza
-            $form->save();
         }
         //walidacja sekcji i ilości widgetów
         if ($form->isMine() && $form->getElement('commit')->getValue() && !empty($minOccurrenceWidgets)) {
+            //ustawianie walidacji błędnej
+            $form->setValid(false);
             //dodawanie komunikatów o niewypełnionych sekcjach
             foreach ($minOccurrenceWidgets as $widgetKey) {
                 $this->getMessenger()->addMessage(self::MISSING_WIDGET_MESSENGER_PREFIX . $widgetKey, false);
             }
-            return;
+            return;// $this->getResponse()->redirect('cmsAdmin', 'category', 'test', ['id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id]);
+        }
+        //ustawianie z POST
+        if ($form->isMine()) {
+            //przed zapisem formularza
+            $templateModel->invokeBeforeSaveEditForm($this->view, $form);
+            //zapis formularza
+            $form->save();
         }
         //szablon nadal istnieje
         if ($form->isSaved() && $category->template) {
