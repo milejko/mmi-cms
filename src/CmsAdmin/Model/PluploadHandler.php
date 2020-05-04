@@ -524,7 +524,7 @@ class PluploadHandler
         }
         //sprawdzamy typy mime
         if (!in_array(strtolower($requestFile->type), $allowedTypes)) {
-            return true;
+            return false;
         }
         //sprawdzamy rozszerzenie
         if (strrpos($this->_fileName, '.') > 0) {
