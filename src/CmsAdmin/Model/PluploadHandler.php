@@ -523,7 +523,7 @@ class PluploadHandler
             }
         }
         //sprawdzamy typy mime
-        if (in_array(strtolower($requestFile->type), $allowedTypes)) {
+        if (!in_array(strtolower($requestFile->type), $allowedTypes)) {
             return true;
         }
         //sprawdzamy rozszerzenie
