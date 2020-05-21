@@ -100,7 +100,7 @@ class CategoryController extends Mvc\Controller
             foreach ($minOccurrenceWidgets as $widgetKey) {
                 $this->getMessenger()->addMessage(self::MISSING_WIDGET_MESSENGER_PREFIX . $widgetKey, false);
             }
-            return;// $this->getResponse()->redirect('cmsAdmin', 'category', 'test', ['id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id]);
+            return;
         }
         //ustawianie z POST
         if ($form->isMine()) {
