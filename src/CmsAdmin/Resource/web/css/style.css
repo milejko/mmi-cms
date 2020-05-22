@@ -11446,12 +11446,46 @@ ul.wlist {
 
 ul.wlist li {
     background: #fff;
-    border: 2px dashed #ccc;
+    border: 1px solid #ccc;
     border-radius: 5px;
     margin: 10px 0;
     padding: 10px;
     overflow: hidden;
     clear: both;
+}
+
+div.folded ul.wlist li {
+    background: #e4e5e6;
+    padding: 0;
+}
+
+div.boxSection a.fold {
+    display: inline;
+}
+
+div.boxSection a.unfold {
+    display: none;
+}
+
+div.boxSection.folded a.fold {
+    display: none;
+}
+
+div.boxSection.folded a.unfold {
+    display: inline;
+}
+
+div.sort-preview {
+    display: none;
+    padding: 10px;
+}
+
+div.folded ul.wlist li div.sort-preview {
+    display: block;
+}
+
+div.folded ul.wlist li div.preview, div.folded ul.wlist li div.operation, div.folded div.available-widgets {
+    display: none;
 }
 
 ul.wlist li ul {

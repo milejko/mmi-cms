@@ -7,16 +7,20 @@
                 {$categoryForm->start()}
                 {$category = $categoryForm->getRecord()}
                 <h5>{$categoryForm->getRecord()->name}{if $template} ({_($template->getName())}){/if}</h5>
-                <div class="float-right" style="margin-top: -60px;">
-                    <br />
-                    <button style="margin-right: 10px; color: #fff;" id="cmsadmin-form-categoryform-submit-top" type="submit" class="btn btn-secondary" name="cmsadmin-form-categoryform[submit]" value="1">
+                <div style="right: 30px; top: 54px; z-index: 9999999; position: fixed; border: 1px solid #ccc; background: #e4e5e6; padding: 10px;">
+                    <a style="color: #fff; margin: 5px;" href="{@module=cmsAdmin&controller=category&action=tree@}" class="btn btn-secondary">
+                        <i class="icon-close"></i>
+                        {#template.category.edit.cancel#}
+                    </a>
+                    <button style="color: #fff; margin: 5px;" id="cmsadmin-form-categoryform-submit-top" type="submit" class="btn btn-secondary" name="cmsadmin-form-categoryform[submit]" value="1">
+                        <i class="icon-eyeglass"></i>
                         {#template.category.edit.preview#}
                     </button>
-                    <button style="color: #fff;" id="cmsadmin-form-categoryform-commit-top" type="submit" class="btn btn-primary" name="cmsadmin-form-categoryform[commit]" value="1">
+                    <button style="color: #fff; margin: 5px;" id="cmsadmin-form-categoryform-commit-top" type="submit" class="btn btn-primary" name="cmsadmin-form-categoryform[commit]" value="1">
+                        <i class="icon-check"></i>
                         {#template.category.edit.commit#}
                     </button>
                 </div>
-                <div class="clear"></div>
                 <ul class="nav nav-tabs" role="tablist" data-id="{$categoryForm->getRecord()->id}">
                     <li class="nav-item">
                         <a title="{#template.category.edit.tab.config#}" class="nav-link" data-toggle="tab" href="#basic" role="tab" aria-controls="basic" aria-expanded="true"><i class="icon-pencil"></i></a>
@@ -61,15 +65,6 @@
                     <div class="tab-pane" id="history" role="tabpanel" aria-expanded="false">
                         {$historyGrid}
                     </div>
-                </div>
-                <div class="float-right">
-                    <br />
-                    <button style="margin-right: 10px; color: #fff;" id="cmsadmin-form-categoryform-submit" type="submit" class="btn btn-secondary" name="cmsadmin-form-categoryform[submit]" value="1">
-                        {#template.category.edit.preview#}
-                    </button>
-                    <button style="color: #fff;" id="cmsadmin-form-categoryform-commit" type="submit" class="btn btn-primary" name="cmsadmin-form-categoryform[commit]" value="1">
-                        {#template.category.edit.commit#}
-                    </button>
                 </div>
                 {$categoryForm->end()}
             {/if}

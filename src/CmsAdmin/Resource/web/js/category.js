@@ -18,9 +18,19 @@ $(document).on("mousemove", function (e) {
 CMS.category = function () {
     "use strict";
     var that = {},
+        initSectionFolding,
         initSortableWidgets,
         initWidgetButtons,
         initCategoryChange;
+
+    initSectionFolding = function () {
+        $('a.fold').click(function () {
+            $(this).parents('div.boxSection').addClass('folded');
+        });
+        $('a.unfold').click(function () {
+            $(this).parents('div.boxSection').removeClass('folded');
+        });
+    };
 
     initSortableWidgets = function () {
         if ($('.widget-list').length > 0) {
@@ -88,6 +98,7 @@ CMS.category = function () {
     initSortableWidgets();
     initWidgetButtons();
     initCategoryChange();
+    initSectionFolding();
     return that;
 };
 
