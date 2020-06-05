@@ -1,4 +1,4 @@
-{$value = $_element->getValue()}
-{* translate *}
-{$replacement = _($value)}
-<input class="btn btn-primary float-right" type="submit" {$_htmlOptions|replace:$value:$replacement} />
+<button class="btn btn-primary float-right" type="submit" {$_htmlOptions}>
+    <i class="icon-check"></i>
+    {_($_element->getLabel())}
+</button>

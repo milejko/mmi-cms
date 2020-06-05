@@ -11987,3 +11987,18 @@ div.grid .chosen-container .chosen-drop {
     display: inline-block;
     margin-bottom: 0px;
 }
+
+.floating-buttons {
+    right: 30px;
+    top: 54px;
+    z-index: 9999999;
+    position: fixed;
+    border: 1px solid #ccc;
+    background: #e4e5e6;
+    padding: 10px;
+}
+
+.floating-buttons a.btn, .floating-buttons button, .floating-buttons input {
+    display: inline-block;
+    margin: 2px;
+}
