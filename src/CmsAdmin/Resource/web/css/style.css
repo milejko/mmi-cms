@@ -11998,6 +11998,16 @@ div.grid .chosen-container .chosen-drop {
     padding: 10px;
 }
 
+.floating-buttons div.form-group {
+    display: inline-block;
+    margin: 2px;
+}
+
+.floating-buttons div.form-group button.btn {
+    float: none !important;
+    margin: 0 !important;
+}
+
 .floating-buttons a.btn, .floating-buttons button, .floating-buttons input {
     display: inline-block;
     margin: 2px;

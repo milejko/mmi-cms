@@ -56,12 +56,12 @@ class CategoryWidgetRelationController extends Mvc\Controller
             ->whereCmsCategoryId()->equals($this->categoryId)
             ->whereWidget()->equals($this->widget)
             ->findPk($this->id)) {
-            //brak relacja
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->categoryId, 'uploaderId' => $category->id, 'originalId' => $this->originalId]);
+            //brak relacji
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $category->id, 'uploaderId' => $category->id, 'originalId' => $category->cmsCategoryOriginalId]);
         }
         //modyfikacja breadcrumbów
         $this->view->adminNavigation()->removeLastBreadcrumb();
-        $this->view->adminNavigation()->modifyLastBreadcrumb('menu.category.edit', $this->view->url(['controller' => 'category', 'action' => 'edit', 'id' => $this->categoryId, 'categoryId' => null, 'widgetId' => null]));
+        $this->view->adminNavigation()->modifyLastBreadcrumb('menu.category.edit', $this->view->url(['controller' => 'category', 'action' => 'edit', 'id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id, 'categoryId' => null, 'widget' => null]));
         $this->view->adminNavigation()->appendBreadcrumb('menu.categoryWidgetRelation.config', '#');
         //model widgeta do widoku
         $this->view->widgetModel = new WidgetModel($widgetRelationRecord, Registry::$config->skinset);
