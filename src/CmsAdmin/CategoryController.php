@@ -245,6 +245,13 @@ class CategoryController extends Mvc\Controller
         if (null === $categoryRecord = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
             return json_encode(['status' => false, 'error' => $this->view->_('controller.category.move.error.missing')]);
         }
+        //draft nie może być utworzony, ani wczytany
+        if (null === $draft = (new \Cms\Model\CategoryDraft($categoryRecord))->createAndGetDraftForUser(\App\Registry::$auth->getId(), true)) {
+            return json_encode(['status' => false, 'error' => $this->view->_('controller.category.move.error.missing')]);
+        }
+        //zatwierdzenie draftu
+        $draft->commitVersion();
+        //zmiana położenia aktywnej kategorii
         $categoryRecord->parentId = ($this->getPost()->parentId > 0) ? $this->getPost()->parentId : null;
         $categoryRecord->order = $this->getPost()->order;
         //próba zapisu
