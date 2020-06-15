@@ -341,7 +341,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             ->find()
             ->delete();
         //pobranie dzieci
-        $children = (new \Cms\Model\CategoryModel)->getCategoryTree($this->getPk());
+        $children = (new \Cms\Model\CategoryModel(new CmsCategoryQuery))->getCategoryTree($this->getPk());
         if (!empty($children)) {
             throw new \Cms\Exception\ChildrenExistException();
         }

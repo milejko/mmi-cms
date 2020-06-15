@@ -34,12 +34,11 @@ class CategoryModel
     /**
      * Konstruktor pobiera kategorie i buduje drzewo
      */
-    public function __construct()
+    public function __construct(CmsCategoryQuery $query)
     {
         //pobieranie kategorii
-        $categories = (new CmsCategoryQuery)
-            ->withType()
-            ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
+        $categories = $query
+            ->activeWithType()
             ->orderAscOrder()
             ->find()
             ->toObjectArray();

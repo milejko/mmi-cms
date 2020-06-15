@@ -11,6 +11,7 @@
 namespace CmsAdmin\Form;
 
 use Cms\Form\Element;
+use Cms\Orm\CmsCategoryQuery;
 use CmsAdmin\Model\CategoryAclModel;
 
 /**
@@ -29,7 +30,7 @@ class CategoryAclForm extends \Cms\Form\Form
                 ->whereCmsRoleId()->equals($this->getOption('roleId'))
                 ->andFieldAccess()->equals('allow')
                 ->findPairs('id', 'cms_category_id')))
-            ->setStructure(['children' => (new \Cms\Model\CategoryModel)->getCategoryTree()]));
+            ->setStructure(['children' => (new \Cms\Model\CategoryModel(new CmsCategoryQuery()))->getCategoryTree()]));
 
         //drzewo kategorii (zabronione)
         $this->addElement((new Element\Tree('deny'))
@@ -39,7 +40,7 @@ class CategoryAclForm extends \Cms\Form\Form
                 ->whereCmsRoleId()->equals($this->getOption('roleId'))
                 ->andFieldAccess()->equals('deny')
                 ->findPairs('id', 'cms_category_id')))
-            ->setStructure(['children' => (new \Cms\Model\CategoryModel)->getCategoryTree()]));
+            ->setStructure(['children' => (new \Cms\Model\CategoryModel(new CmsCategoryQuery()))->getCategoryTree()]));
 
         $this->addElement((new Element\Submit('submit'))
             ->setLabel('form.categoryAcl.submit.label'));

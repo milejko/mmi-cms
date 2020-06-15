@@ -2,6 +2,8 @@
 
 namespace CmsAdmin\Model;
 
+use Cms\Orm\CmsCategoryQuery;
+
 /**
  * Model uprawnień edycji kategorii
  */
@@ -27,7 +29,7 @@ class CategoryAclModel
         }
         //uzupełnianie ACL
         $this->_acl = new \Mmi\Security\Acl;
-        $this->_flatTree = (new \Cms\Model\CategoryModel)->getCategoryFlatTree();
+        $this->_flatTree = (new \Cms\Model\CategoryModel(new CmsCategoryQuery()))->getCategoryFlatTree();
         //iteracja po kolekcji rekordów categoryAcl
         foreach ((new \Cms\Orm\CmsCategoryAclQuery)
             ->join('cms_role')->on('cms_role_id')

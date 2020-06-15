@@ -238,6 +238,15 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
     }
 
     /**
+     * Aktywne ze złączonym typem
+     * @return CmsCategoryQuery
+     */
+    public function activeWithType()
+    {
+        return $this->withType()->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE);
+    }
+
+    /**
      * Wyszukuje kategorię po uri z uwzględnieniem priorytetu
      * @param string $uri
      * @return \Cms\Orm\CmsCategoryRecord

@@ -13,6 +13,7 @@ namespace CmsAdmin;
 use App\Registry;
 use Cms\Model\CategoryValidationModel;
 use Cms\Model\TemplateModel;
+use Cms\Orm\CmsCategoryQuery;
 use CmsAdmin\Form\CategoryForm;
 use Mmi\App\FrontController;
 use Mmi\Http\Request;
@@ -176,7 +177,7 @@ class CategoryController extends Mvc\Controller
         //id węzła rodzica
         $this->view->parentId = ($this->parentId > 0) ? $this->parentId : null;
         //pobranie drzewiastej struktury stron CMS
-        $this->view->categoryTree = (new \Cms\Model\CategoryModel)->getCategoryTree($this->view->parentId);
+        $this->view->categoryTree = (new \Cms\Model\CategoryModel(new CmsCategoryQuery()))->getCategoryTree($this->view->parentId);
     }
 
     /**

@@ -59,7 +59,7 @@ $(document).ready(function () {
     $('#jstree').jstree({
         'core': {
             'data': {
-                'url': request.baseUrl + '/cmsAdmin/category/node',
+                'url': $('#jstree').attr('data-url'),
                 'data': function (node) {
                     return { 'parentId': node.id };
                 }
