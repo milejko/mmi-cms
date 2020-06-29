@@ -62,7 +62,9 @@ class TemplateModel
     public function renderDisplayAction(View $view)
     {
         //wywołanie akcji wyświetlenia
-        $controller = $this->_createController($view);
+        if (null === $controller = $this->_createController($view)) {
+            return;
+        }
         $controller->displayAction();
         //render szablonu
         return $view->renderTemplate($this->_getTemplatePrefix() . '/display');
@@ -76,7 +78,9 @@ class TemplateModel
     public function invokeDeleteAction(View $view)
     {
         //wywołanie akcji usuwania
-        $controller = $this->_createController($view);
+        if (null === $controller = $this->_createController($view)) {
+            return;
+        }
         $controller->deleteAction();
     }
 
@@ -89,7 +93,9 @@ class TemplateModel
     public function invokeDecorateEditForm(View $view, CategoryForm $categoryForm)
     {
         //wywołanie akcji dekoracji
-        $controller = $this->_createController($view);
+        if (null === $controller = $this->_createController($view)) {
+            return;
+        }
         $controller->decorateEditForm($categoryForm);
     }
 
@@ -102,7 +108,9 @@ class TemplateModel
     public function invokeBeforeSaveEditForm(View $view, CategoryForm $categoryForm)
     {
         //wywołanie akcji po zapisie
-        $controller = $this->_createController($view);
+        if (null === $controller = $this->_createController($view)) {
+            return;
+        }
         $controller->beforeSaveEditForm($categoryForm);
     }
 
@@ -115,7 +123,9 @@ class TemplateModel
     public function invokeAfterSaveEditForm(View $view, CategoryForm $categoryForm)
     {
         //wywołanie akcji po zapisie
-        $controller = $this->_createController($view);
+        if (null === $controller = $this->_createController($view)) {
+            return;
+        }
         $controller->afterSaveEditForm($categoryForm);
     }
 
@@ -125,6 +135,10 @@ class TemplateModel
      */
     private function _createController(View $view)
     {
+        //brak configa
+        if (null === $this->_templateConfig) {
+            return;
+        }
         //odczytywanie nazwy kontrolera
         $controllerClass = $this->_templateConfig->getControllerClassName();
         //powołanie kontrolera z rekordem relacji
