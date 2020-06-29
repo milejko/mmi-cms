@@ -35,6 +35,10 @@ class TemplateModel
     public function __construct(CmsCategoryRecord $categoryRecord, CmsSkinsetConfig $skinsetConfig)
     {
         $this->_categoryRecord = $categoryRecord;
+        //brak zdefiniowanego template w szablonie
+        if (null === $this->_categoryRecord->template) {
+            return;
+        }
         //szablon nieodnaleziony
         if (null === $this->_templateConfig = (new SkinsetModel($skinsetConfig))->getTemplateConfigByKey($categoryRecord->template)) {
             throw new KernelException('Template not found');
