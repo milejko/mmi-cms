@@ -263,13 +263,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $this->uri = $this->path = '';
         //ustawiamy uri na podstawie rodzica
         if ($this->parentId && (null !== $parent = $this->getParentRecord())) {
-            $this->uri = $parent->uri;
+            //nieaktywny nie jest ujawniony w uri
+            $this->uri = $parent->active ? $parent->uri : substr($parent->uri, 0, strrpos($parent->uri, '/'));
+            //bez względu na aktywność jest w ścieżce - path
             $this->path = trim($parent->path . '/' . $parent->id, '/');
         }
-        if ($this->active) {
-            //doklejanie do uri przefiltrowanej końcówki
-            $this->uri .= '/' . (new \Mmi\Filter\Url)->filter(strip_tags($this->name));
-        }
+        //doklejanie do uri przefiltrowanej końcówki
+        $this->uri .= '/' . (new \Mmi\Filter\Url)->filter(strip_tags($this->name));
         $this->uri = trim($this->uri, '/');
         //filtracja customUri
         $this->customUri = ($this->customUri == '/') ? '/' : trim($this->customUri, '/');
