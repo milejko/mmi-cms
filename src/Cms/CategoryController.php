@@ -111,7 +111,7 @@ class CategoryController extends \Mmi\Mvc\Controller
             //próba pobrania kategorii po URI
             if (null === $category = (new Orm\CmsCategoryQuery)->getCategoryByUri($uri)) {
                 //zapis informacji o braku kategorii w cache
-                Registry::$cache->save('-1', $cacheKey, 0);
+                Registry::$cache->save(false, $cacheKey, 0);
                 //301 (o ile możliwe) lub 404
                 $this->_redirectOrNotFound($uri);
             }
@@ -121,7 +121,7 @@ class CategoryController extends \Mmi\Mvc\Controller
             Registry::$cache->save($categoryId, $cacheKey, 0) && Registry::$cache->save($category, CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $categoryId, 0);
         }
         //w buforze jest informacja o braku strony
-        if ($categoryId == -1) {
+        if (false === $categoryId) {
             //301 (o ile możliwe) lub 404
             $this->_redirectOrNotFound($uri);
         }
@@ -248,7 +248,7 @@ class CategoryController extends \Mmi\Mvc\Controller
         //klucz bufora
         $cacheKey = CmsCategoryRecord::REDIRECT_CACHE_PREFIX . md5($uri);
         //zbuforowany brak uri w historii
-        if ('-1' == ($redirectUri = \App\Registry::$cache->load($cacheKey))) {
+        if (false === ($redirectUri = \App\Registry::$cache->load($cacheKey))) {
             //404
             throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
         }
@@ -257,20 +257,16 @@ class CategoryController extends \Mmi\Mvc\Controller
             return $this->getResponse()->setCode(301)->redirect('cms', 'category', 'dispatch', ['uri' => $redirectUri]);
         }
         //wyszukiwanie bieżącej kategorii (aktywnej)
-        if (null === $category = (new CmsCategoryQuery)
-            ->whereQuery((new CmsCategoryQuery())->whereUri()->equals($uri)->orFieldCustomUri()->equals($uri))
-            ->join('cms_category', 'cms_category', 'currentCategory')->on('cms_category_original_id', 'id')
-            ->where('active', 'currentCategory')->equals(true)
-            ->findFirst()) {
+        if (null === $category = (new CmsCategoryQuery)->byHistoryUri($uri)->findFirst()) {
             //brak kategorii w historii - buforowanie informacji
-            \App\Registry::$cache->save('-1', $cacheKey, 0);
+            \App\Registry::$cache->save(false, $cacheKey, 0);
             //404
             throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
         }
         //zapis uri przekierowania do bufora
-        \App\Registry::$cache->save($category->getJoined('currentCategory')->uri, $cacheKey, 0);
+        \App\Registry::$cache->save($category->uri, $cacheKey, 0);
         //przekierowanie 301
-        return $this->getResponse()->setCode(301)->redirect('cms', 'category', 'dispatch', ['uri' => $category->getJoined('currentCategory')->uri]);
+        return $this->getResponse()->setCode(301)->redirect('cms', 'category', 'dispatch', ['uri' => $category->uri]);
     }
 
     /**

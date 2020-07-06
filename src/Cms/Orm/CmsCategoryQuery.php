@@ -284,4 +284,17 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
         return $redirectCategory;
     }
 
+    /**
+     * Wyszukanie po historycznym uri
+     * @param string $uri
+     * @return self
+     */
+    public function byHistoryUri($uri)
+    {
+        //przeszukiwanie historii po uri
+        return (new self)->whereQuery((new self)->searchByUri($uri))
+            ->join('cms_category', 'cms_category', 'currentCategory')->on('cms_category_original_id', 'id')
+            ->where('active', 'currentCategory')->equals(true);
+    }
+
 }
