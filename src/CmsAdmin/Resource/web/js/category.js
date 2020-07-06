@@ -19,6 +19,7 @@ CMS.category = function () {
     "use strict";
     var that = {},
         initSectionFolding,
+        initScrollPositioning,
         initSortableWidgets,
         initWidgetButtons,
         initCategoryChange;
@@ -29,6 +30,16 @@ CMS.category = function () {
         });
         $('a.unfold').click(function () {
             $(this).parents('div.boxSection').removeClass('folded');
+        });
+    };
+
+    initScrollPositioning = function () {
+        var key = 'scrollPosition-' + window.location.href;
+        if (sessionStorage.getItem(key)) {
+            window.scroll(0, sessionStorage.getItem(key));
+        }
+        $(window).on('click', function () {
+            sessionStorage.setItem(key, window.scrollY);
         });
     };
 
@@ -99,6 +110,7 @@ CMS.category = function () {
     initWidgetButtons();
     initCategoryChange();
     initSectionFolding();
+    initScrollPositioning();
     return that;
 };
 
