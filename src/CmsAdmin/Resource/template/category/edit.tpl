@@ -8,7 +8,7 @@
                 {$category = $categoryForm->getRecord()}
                 <h5>{$categoryForm->getRecord()->name}{if $template} ({_($template->getName())}){/if}</h5>
                 <div class="floating-buttons">
-                    <a style="color: #fff;" href="{@module=cmsAdmin&controller=category&action=tree@}" class="btn btn-secondary">
+                    <a style="color: #fff;" href="{@module=cmsAdmin&controller=category&action=tree@}" class="btn btn-secondary confirm" title="{#template.category.edit.cancel.alert#}">
                         <i class="icon-close"></i>
                         {#template.category.edit.cancel#}
                     </a>
