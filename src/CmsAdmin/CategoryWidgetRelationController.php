@@ -35,7 +35,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
         $this->view->category = $category;
         //walidacja czy można dodać kolejny taki widget
         if (!$this->id && !(new CategoryValidationModel($category, Registry::$config->skinset))->isWidgetAvailable($this->widget)) {
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->categoryId, 'uploaderId' => $category->id, 'originalId' => $this->originalId]);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->categoryId, 'originalId' => $this->originalId, 'uploaderId' => $category->id]);
         }
         //brak ID - nowy rekord
         if (!$this->id) {
@@ -57,7 +57,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
             ->whereWidget()->equals($this->widget)
             ->findPk($this->id)) {
             //brak relacji
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $category->id, 'uploaderId' => $category->id, 'originalId' => $category->cmsCategoryOriginalId]);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id]);
         }
         //modyfikacja breadcrumbów
         $this->view->adminNavigation()->removeLastBreadcrumb();
@@ -66,7 +66,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
         //model widgeta do widoku
         $this->view->widgetModel = new WidgetModel($widgetRelationRecord, Registry::$config->skinset);
         //rendering, lub przekierowanie jeśli kontroler zgłosił zapis
-        $this->view->output = $this->view->categoryWidgetEdit($widgetRelationRecord);
+        //$this->view->output = $this->view->categoryWidgetEdit($widgetRelationRecord);
     }
 
     /**
