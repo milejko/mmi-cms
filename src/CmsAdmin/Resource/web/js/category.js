@@ -22,7 +22,17 @@ CMS.category = function () {
         initScrollPositioning,
         initSortableWidgets,
         initWidgetButtons,
+        initErrorHandler,
         initCategoryChange;
+
+    initErrorHandler = function () {
+        $('.ne-error-list').each(function () {
+            $(this).parents('div.tab-pane').each(function () {
+                window.scroll(0, $(this).position().top);
+                $('a[aria-controls="' + $(this).attr('id') + '"]').click();
+            });
+        });
+    };
 
     initSectionFolding = function () {
         $('a.fold').click(function () {
@@ -111,6 +121,7 @@ CMS.category = function () {
     initCategoryChange();
     initSectionFolding();
     initScrollPositioning();
+    initErrorHandler();
     return that;
 };
 
