@@ -10,8 +10,8 @@
 
 namespace Cms\Model;
 
-use Cms\Orm\CmsCategoryQuery,
-    Cms\Orm\CmsCategoryRecord;
+use Cms\Orm\CmsCategoryQuery;
+use Cms\Orm\CmsCategoryRecord;
 
 /**
  * Model kategorii
@@ -39,6 +39,7 @@ class CategoryModel
         //pobieranie kategorii
         $categories = $query
             ->whereActive()->equals(true)
+            ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
             ->orderAscOrder()
             ->find()
             ->toObjectArray();
