@@ -1,0 +1,1 @@
+DELETE FROM `cms_category_widget_category` WHERE `widget` = '' OR `widget` IS NULL;

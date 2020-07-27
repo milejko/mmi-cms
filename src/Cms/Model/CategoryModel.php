@@ -38,7 +38,7 @@ class CategoryModel
     {
         //pobieranie kategorii
         $categories = $query
-            ->activeWithType()
+            ->whereActive()->equals(true)
             ->orderAscOrder()
             ->find()
             ->toObjectArray();

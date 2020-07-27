@@ -228,25 +228,6 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
     }
 
     /**
-     * Zapytanie zezłączonym typem
-     * @return CmsCategoryQuery
-     */
-    public function withType()
-    {
-        return $this
-                ->joinLeft('cms_category_type')->on('cms_category_type_id');
-    }
-
-    /**
-     * Aktywne ze złączonym typem
-     * @return CmsCategoryQuery
-     */
-    public function activeWithType()
-    {
-        return $this->withType()->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE);
-    }
-
-    /**
      * Wyszukuje kategorię po uri z uwzględnieniem priorytetu
      * @param string $uri
      * @return \Cms\Orm\CmsCategoryRecord
