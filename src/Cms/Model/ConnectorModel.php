@@ -95,19 +95,11 @@ class ConnectorModel
         }
         //content
         if ($content) {
-            //atrybuty
-            $exportData['cms_attribute_type'] = \App\Registry::$db->select('*', 'cms_attribute_type');
-            $exportData['cms_attribute'] = \App\Registry::$db->select('*', 'cms_attribute');
-            $exportData['cms_attribute_relation'] = \App\Registry::$db->select('*', 'cms_attribute_relation');
-            $exportData['cms_attribute_value'] = \App\Registry::$db->select('*', 'cms_attribute_value');
-            $exportData['cms_attribute_value_relation'] = \App\Registry::$db->select('*', 'cms_attribute_value_relation');
             //kateogrie
             $exportData['cms_category_type'] = \App\Registry::$db->select('*', 'cms_category_type');
             $exportData['cms_category'] = \App\Registry::$db->select('*', 'cms_category');
             $exportData['cms_category_acl'] = \App\Registry::$db->select('*', 'cms_category_acl');
             $exportData['cms_category_relation'] = \App\Registry::$db->select('*', 'cms_category_relation');
-            $exportData['cms_category_widget'] = \App\Registry::$db->select('*', 'cms_category_widget');
-            $exportData['cms_category_widget_category'] = \App\Registry::$db->select('*', 'cms_category_widget_category');
             //mail-serwer
             $exportData['cms_mail_server'] = \App\Registry::$db->select('*', 'cms_mail_server');
             $exportData['cms_mail_definition'] = \App\Registry::$db->select('*', 'cms_mail_definition');

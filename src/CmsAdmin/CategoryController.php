@@ -162,12 +162,6 @@ class CategoryController extends Mvc\Controller
     { }
 
     /**
-     * Akcja podglądu widgeta
-     */
-    public function widgetAction()
-    { }
-
-    /**
      * Renderowanie fragmentu drzewa stron na podstawie parentId
      */
     public function nodeAction()
