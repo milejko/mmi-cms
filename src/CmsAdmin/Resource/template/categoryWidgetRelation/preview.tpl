@@ -1,7 +1,7 @@
 {foreach $sections as $section}
     {$widgetRelations = $category->getWidgetModel()->getWidgetRelationsBySectionKey($section->getKey())}
     {$widgetsCount = $widgetRelations|count}
-    <div class="card boxSection" style="margin-bottom: 15px">
+    <div id="{$section->getKey()}" class="card boxSection" style="margin-bottom: 15px">
         <div class="card-header">
             <strong>{_($section->getName())}</strong>
             {* zwija sekcje do sortowania *}
@@ -16,7 +16,7 @@
             <div class="available-widgets" style="overflow-x: auto; white-space:nowrap;">
                 {foreach $section->getAvailableWidgets() as $availableWidgetKey => $availableWidget}
                     {if $widgetValidator->isWidgetAvailable($availableWidgetKey)}
-                        <button class="button btn btn-primary btn-inline-block" type="submit" name="cmsadmin-form-categoryform[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&widget={$availableWidgetKey}&action=edit&categoryId={$category->id}&originalId={$category->cmsCategoryOriginalId}@}">
+                        <button id="{$section->getKey()}/{$availableWidget->getKey()}" class="button btn btn-primary btn-inline-block" type="submit" name="cmsadmin-form-categoryform[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&widget={$availableWidgetKey}&action=edit&categoryId={$category->id}&originalId={$category->cmsCategoryOriginalId}@}">
                             <i class="icon-plus"></i> {_($availableWidget->getName())}
                         </button>
                     {else}
