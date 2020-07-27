@@ -61,7 +61,7 @@ class CategoryWidgetRelationController extends Mvc\Controller
         }
         //modyfikacja breadcrumbów
         $this->view->adminNavigation()->removeLastBreadcrumb();
-        $this->view->adminNavigation()->modifyLastBreadcrumb('menu.category.edit', $this->view->url(['controller' => 'category', 'action' => 'edit', 'id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id], true));
+        $this->view->adminNavigation()->modifyLastBreadcrumb('menu.category.edit', $this->view->url(['module' => 'cmsAdmin', 'controller' => 'category', 'action' => 'edit', 'id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id], true));
         $this->view->adminNavigation()->appendBreadcrumb('menu.categoryWidgetRelation.config', '#');
         //model widgeta do widoku
         $this->view->widgetModel = new WidgetModel($widgetRelationRecord, Registry::$config->skinset);
