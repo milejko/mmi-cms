@@ -65,14 +65,13 @@ class CategoryModel
     /**
      * Pobiera listę kategorii w postaci płaskiej tabeli z odwzorowaniem drzewa
      * @param integer $parentCategoryId identyfikator kategorii (opcjonalny)
-     * @param string $categoryTypeKey filtrowanie po typie kategorii
      * @return array
      */
-    public function getCategoryFlatTree($parentCategoryId = null, $categoryTypeKey = null)
+    public function getCategoryFlatTree($parentCategoryId = null)
     {
         $flatTree = [];
         //budowanie płaskie drzewo
-        $this->_buildFlatTree('', $flatTree, $this->getCategoryTree($parentCategoryId), $categoryTypeKey);
+        $this->_buildFlatTree($flatTree, $this->getCategoryTree($parentCategoryId));
         return $flatTree;
     }
 
@@ -109,21 +108,15 @@ class CategoryModel
 
     /**
      * Buduje płaskie drzewo
-     * @param string $prefix
      * @param array $flatTree
      * @param array $categories
-     * @param string $categoryTypeKey filtrowanie po typie kategorii
      */
-    private function _buildFlatTree($prefix, array &$flatTree, array $categories, $categoryTypeKey)
+    private function _buildFlatTree(array &$flatTree, array $categories)
     {
         //iteracja po kategoriach
         foreach ($categories as $id => $leaf) {
-            if (null === $categoryTypeKey || $leaf['record']->getJoined('cms_category_type')->key === $categoryTypeKey) {
-                //dodanie rekordu z prefixem i nazwą
-                $flatTree[$id] = ltrim($prefix . ' > ' . $leaf['record']->name, ' >');
-            }
             //zejście rekurencyjne
-            $this->_buildFlatTree($prefix . ' > ' . $leaf['record']->name, $flatTree, $leaf['children'], $categoryTypeKey);
+            $this->_buildFlatTree($leaf['record']->name, $flatTree, $leaf['children']);
         }
     }
 
