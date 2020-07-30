@@ -115,8 +115,10 @@ class CategoryModel
     {
         //iteracja po kategoriach
         foreach ($categories as $id => $leaf) {
+            //dodanie rekordu z prefixem i nazwą
+            $flatTree[$id] = ltrim(' > ' . $leaf['record']->name, ' >');
             //zejście rekurencyjne
-            $this->_buildFlatTree($leaf['record']->name, $flatTree, $leaf['children']);
+            $this->_buildFlatTree($flatTree, $leaf['children']);
         }
     }
 
