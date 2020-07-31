@@ -19,6 +19,8 @@ use Cms\Orm\CmsCategoryRecord;
 class CategoryModel
 {
 
+    const BREADCRUMB_SEPARATOR = ' > ';
+
     /**
      * Drzewo kategorii
      * @var array
@@ -38,7 +40,6 @@ class CategoryModel
     {
         //pobieranie kategorii
         $categories = $query
-            ->whereActive()->equals(true)
             ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
             ->orderAscOrder()
             ->find()
@@ -111,14 +112,14 @@ class CategoryModel
      * @param array $flatTree
      * @param array $categories
      */
-    private function _buildFlatTree(array &$flatTree, array $categories)
+    private function _buildFlatTree(array &$flatTree, array $categories, $parentName = '')
     {
         //iteracja po kategoriach
         foreach ($categories as $id => $leaf) {
             //dodanie rekordu z prefixem i nazwą
-            $flatTree[$id] = ltrim(' > ' . $leaf['record']->name, ' >');
+            $flatTree[$id] = ltrim($parentName . self::BREADCRUMB_SEPARATOR . $leaf['record']->name, self::BREADCRUMB_SEPARATOR);
             //zejście rekurencyjne
-            $this->_buildFlatTree($flatTree, $leaf['children']);
+            $this->_buildFlatTree($flatTree, $leaf['children'], $flatTree[$id]);
         }
     }
 
