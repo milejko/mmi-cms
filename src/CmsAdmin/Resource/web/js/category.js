@@ -27,10 +27,12 @@ CMS.category = function () {
 
     initErrorHandler = function () {
         $('.ne-error-list').each(function () {
-            $(this).parents('div.tab-pane').each(function () {
-                window.scroll(0, $(this).position().top);
-                $('a[aria-controls="' + $(this).attr('id') + '"]').click();
-            });
+            if (($(this).html()).length > 20) {
+                $(this).parents('div.tab-pane').each(function () {
+                    window.scroll(0, $(this).position().top);
+                    $('a[aria-controls="' + $(this).attr('id') + '"]').click();
+                });
+            }
         });
     };
 
