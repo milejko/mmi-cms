@@ -96,7 +96,6 @@ class ConnectorModel
         //content
         if ($content) {
             //kateogrie
-            $exportData['cms_category_type'] = \App\Registry::$db->select('*', 'cms_category_type');
             $exportData['cms_category'] = \App\Registry::$db->select('*', 'cms_category');
             $exportData['cms_category_acl'] = \App\Registry::$db->select('*', 'cms_category_acl');
             $exportData['cms_category_relation'] = \App\Registry::$db->select('*', 'cms_category_relation');
