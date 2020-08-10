@@ -206,17 +206,6 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
     }
 
     /**
-     * Zapytanie wyszukujące kategorie po kluczu typu (szablonu)
-     * @param string $typeKey
-     * @return CmsCategoryQuery
-     */
-    public function searchByTypeKey($typeKey)
-    {
-        return $this->withType()
-                ->where('key', 'cms_category_type')->equals($typeKey);
-    }
-
-    /**
      * Zapytanie wyszukujące po uri
      * @param string $uri
      * @return CmsCategoryQuery
@@ -237,7 +226,6 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
         $redirectCategory = null;
         //iteracja po kategoriach
         foreach ((new CmsCategoryQuery())
-            ->withType()
             ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
             ->andFieldActive()->equals(true)
             //data początku publikacji większa niż dziś

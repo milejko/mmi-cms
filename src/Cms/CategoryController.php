@@ -72,7 +72,6 @@ class CategoryController extends \Mmi\Mvc\Controller
         }
         //wyszukiwanie kategorii
         if (null === $category = (new Orm\CmsCategoryQuery)
-            ->withType()
             ->whereCmsCategoryOriginalId()->equals($this->originalId ? $this->originalId : null)
             ->findPk($this->versionId)) {
             //404
@@ -132,7 +131,7 @@ class CategoryController extends \Mmi\Mvc\Controller
         //pobranie kategorii z bufora
         if (null === $category = Registry::$cache->load($cacheKey = CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $categoryId)) {
             //zapis pobranej kategorii w cache
-            Registry::$cache->save($category = (new Orm\CmsCategoryQuery)->withType()->findPk($categoryId), $cacheKey, 0);
+            Registry::$cache->save($category = (new Orm\CmsCategoryQuery)->findPk($categoryId), $cacheKey, 0);
         }
         //sprawdzanie kategorii
         return $this->_checkCategory($category);
