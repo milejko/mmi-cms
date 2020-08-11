@@ -1,6 +1,9 @@
+SET @schemaname = (SELECT DATABASE());
+
 SET @fkeyname = (SELECT CONSTRAINT_NAME 
 FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
 WHERE
+    TABLE_SCHEMA = @schemaname AND
     TABLE_NAME = 'cms_category' AND
     REFERENCED_TABLE_NAME = 'cms_category_type' AND
     COLUMN_NAME = 'cms_category_type_id' LIMIT 1);
@@ -12,6 +15,7 @@ EXECUTE qry;
 SET @anotherfkeyname = (SELECT CONSTRAINT_NAME 
 FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
 WHERE
+    TABLE_SCHEMA = @schemaname AND
     TABLE_NAME = 'cms_category_widget_category' AND
     REFERENCED_TABLE_NAME = 'cms_category_widget' AND
     COLUMN_NAME = 'cms_category_widget_id' LIMIT 1);
