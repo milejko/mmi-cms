@@ -55,17 +55,23 @@ class CronController extends \Mmi\Mvc\Controller
      */
     public function versionCleanupAction()
     {
-        //zapytanie wyszukujące drafty i wersje robocze
-        $query = (new \Cms\Orm\CmsCategoryQuery)
+        //dłuższy czas i więcej pamięci
+        ini_set('max_execution_time', 3600);
+        ini_set('memory_limit', '2G');
+        //usuwanie draftów starszych niz 3 dni
+        $drafts = (new \Cms\Orm\CmsCategoryQuery)
             ->whereCmsCategoryOriginalId()->notEquals(null)
-            ->andFieldStatus()->notEquals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE);
-        //obliczanie z ilu tygodni usunąć
-        $weeks = $this->weeks ? intval($this->weeks) : 53;
-        if ($weeks > 0) {
-            $query->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-' . $weeks . ' weeks')));
-        }
-        //usuwa wersje robocze
-        return 'Deleted: ' . $query->find()->delete() . ' archival versions';
+            ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_DRAFT)
+            ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-3 days')))
+            ->find();
+        //usuwanie wersji roboczych starszych niz 3 dni    
+        $versions = (new \Cms\Orm\CmsCategoryQuery)
+            ->whereCmsCategoryOriginalId()->notEquals(null)
+            ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_HISTORY)
+            ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-6 months')))
+            ->find();
+        //usuwa wersje robocze i archiwalne
+        return 'Deleted: ' . $drafts->delete() . ' drafts, ' . $versions->delete() . ' historical versions';
     }
 
     /**
