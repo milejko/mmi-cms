@@ -331,7 +331,11 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             throw new \Cms\Exception\ChildrenExistException();
         }
         //usuwanie plików
-        (new CmsFileQuery)->whereObject()->equals(self::FILE_OBJECT)
+        (new CmsFileQuery)
+            ->whereQuery((new CmsFileQuery)
+                ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
+                ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
+            )        
             ->andFieldObjectId()->equals($this->getPk())
             ->find()
             ->delete();
