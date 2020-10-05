@@ -10,11 +10,16 @@
 
 namespace Cms;
 
+use Cms\Orm\CmsCategoryQuery;
+use Cms\Orm\CmsCategoryRecord;
+
 /**
  * Kontroler harmonogramu zadań
  */
 class CronController extends \Mmi\Mvc\Controller
 {
+    //ilość historycznych wersji, która nie zostanie usunięta
+    const SAVE_HISTORICAL_VERSIONS = 3;
 
     /**
      * Uruchomienie crona
@@ -56,22 +61,44 @@ class CronController extends \Mmi\Mvc\Controller
     public function versionCleanupAction()
     {
         //dłuższy czas i więcej pamięci
-        ini_set('max_execution_time', 3600);
+        ini_set('max_execution_time', 12 * 3600);
         ini_set('memory_limit', '2G');
         //usuwanie draftów starszych niz 3 dni
-        $drafts = (new \Cms\Orm\CmsCategoryQuery)
+        $drafts = (new CmsCategoryQuery())
             ->whereCmsCategoryOriginalId()->notEquals(null)
-            ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_DRAFT)
+            ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_DRAFT)
             ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-3 days')))
             ->find();
-        //usuwanie wersji roboczych starszych niz 3 dni    
-        $versions = (new \Cms\Orm\CmsCategoryQuery)
-            ->whereCmsCategoryOriginalId()->notEquals(null)
-            ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_HISTORY)
-            ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-6 months')))
-            ->find();
-        //usuwa wersje robocze i archiwalne
-        return 'Deleted: ' . $drafts->delete() . ' drafts, ' . $versions->delete() . ' historical versions';
+        //usuwanie draftów
+        $drafts->delete();    
+        //pobranie identyfikatorów aktywnych kategorii
+        $activeCategoryRecordIds = (new CmsCategoryQuery())
+            ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
+            ->findPairs('id', 'id');
+        //iteracja po identyfikatorach kategorii
+        foreach ($activeCategoryRecordIds as $categoryRecordId) {
+            //wyszukiwanie wersji historycznych danego artykułu
+            $versions = (new CmsCategoryQuery())
+                ->whereCmsCategoryOriginalId()->equals($categoryRecordId)
+                ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_HISTORY)
+                ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-6 months')))
+                ->find();
+            //zliczanie wersji historycznych
+            $versionCount = count($versions);
+            $counter = 0;
+            //iteracja po wersjach
+            foreach ($versions as $versionRecord) {
+                //pozostało nie więcej wersji niz wymagana do pozostawienia
+                if ($versionCount - $counter <= self::SAVE_HISTORICAL_VERSIONS) {
+                    break;
+                }
+                //usuwanie wersji historycznej
+                $versionRecord->delete();
+                $counter++;
+            }
+        }
+        //komunikat o zakończeniu
+        return 'Deleted drafts & historical versions';
     }
 
     /**
