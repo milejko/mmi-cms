@@ -18,8 +18,7 @@ use Cms\Orm\CmsCategoryRecord;
  */
 class CronController extends \Mmi\Mvc\Controller
 {
-    //ilość historycznych wersji, która nie zostanie usunięta
-    const SAVE_HISTORICAL_VERSIONS = 3;
+    const MIN_HISTORICAL_VERSIONS = 1;
 
     /**
      * Uruchomienie crona
@@ -64,16 +63,16 @@ class CronController extends \Mmi\Mvc\Controller
         ini_set('max_execution_time', 12 * 3600);
         ini_set('memory_limit', '2G');
         //usuwanie draftów starszych niz 3 dni
-        $drafts = (new CmsCategoryQuery())
+        $deletedArticles = (new CmsCategoryQuery())
             ->whereCmsCategoryOriginalId()->notEquals(null)
             ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_DRAFT)
             ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-3 days')))
-            ->find();
-        //usuwanie draftów
-        $drafts->delete();    
+            ->find()
+            ->delete();
         //pobranie identyfikatorów aktywnych kategorii
         $activeCategoryRecordIds = (new CmsCategoryQuery())
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
+            ->orderAscId()
             ->findPairs('id', 'id');
         //iteracja po identyfikatorach kategorii
         foreach ($activeCategoryRecordIds as $categoryRecordId) {
@@ -81,7 +80,7 @@ class CronController extends \Mmi\Mvc\Controller
             $versions = (new CmsCategoryQuery())
                 ->whereCmsCategoryOriginalId()->equals($categoryRecordId)
                 ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_HISTORY)
-                ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-6 months')))
+                ->orderAscDateAdd()
                 ->find();
             //zliczanie wersji historycznych
             $versionCount = count($versions);
@@ -89,16 +88,21 @@ class CronController extends \Mmi\Mvc\Controller
             //iteracja po wersjach
             foreach ($versions as $versionRecord) {
                 //pozostało nie więcej wersji niz wymagana do pozostawienia
-                if ($versionCount - $counter <= self::SAVE_HISTORICAL_VERSIONS) {
+                if ($versionCount - $counter <= self::MIN_HISTORICAL_VERSIONS) {
                     break;
+                }
+                //zbyt nowa wersja
+                if ($versionRecord->dateAdd > date('Y-m-d H:i:s', strtotime('-6 months'))) {
+                    continue;
                 }
                 //usuwanie wersji historycznej
                 $versionRecord->delete();
                 $counter++;
             }
+            $deletedArticles += $counter;
         }
         //komunikat o zakończeniu
-        return 'Deleted drafts & historical versions';
+        return 'Deleted drafts & historical versions: ' . $deletedArticles;
     }
 
     /**
@@ -107,7 +111,6 @@ class CronController extends \Mmi\Mvc\Controller
     public function deleteOrphansAction()
     {
         //usuwanie plików tmp
-        \Cms\Model\File::deleteOrphans();
-        return '';
+        return 'Temporary files deleted: ' . \Cms\Model\File::deleteOrphans();
     }
 }
