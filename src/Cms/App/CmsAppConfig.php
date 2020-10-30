@@ -17,7 +17,7 @@ use Mmi\Ldap\LdapConfig;
 /**
  * Klasa konfiguracji aplikacji CMS
  */
-abstract class CmsKernelConfig extends \Mmi\App\KernelConfig
+abstract class CmsAppConfig extends \Mmi\App\AppConfig
 {
 
     /**
