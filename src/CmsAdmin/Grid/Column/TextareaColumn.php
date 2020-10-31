@@ -45,14 +45,14 @@ class TextareaColumn extends ColumnAbstract
     public function renderCell(\Mmi\Orm\RecordRo $record)
     {
         $value = (new \Mmi\Filter\Escape)->filter($this->getValueFromRecord($record));
-        FrontController::getInstance()->getView()->_value = $value;
+        $this->view->_value = $value;
         //obcinanie tekstu
         if ('' == $truncated = (new \Mmi\Filter\Truncate)->setLength(200)->filter($value)) {
             return;
         }
-        FrontController::getInstance()->getView()->_truncated = $truncated;
+        $this->view->_truncated = $truncated;
 
-        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_CELL);
+        return $this->view->renderTemplate(self::TEMPLATE_CELL);
     }
 
 }

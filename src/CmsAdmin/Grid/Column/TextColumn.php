@@ -41,10 +41,9 @@ class TextColumn extends ColumnAbstract
      */
     public function renderCell(\Mmi\Orm\RecordRo $record)
     {
-        $view = FrontController::getInstance()->getView();
-        $view->_value = (new \Mmi\Filter\Escape)->filter($this->getValueFromRecord($record));
-        $view->_truncated = (new \Mmi\Filter\Truncate)->filter($view->_value);
-        return FrontController::getInstance()->getView()->renderTemplate(static::TEMPLATE_CELL);
+        $this->view->_value = (new \Mmi\Filter\Escape)->filter($this->getValueFromRecord($record));
+        $this->view->_truncated = (new \Mmi\Filter\Truncate)->filter($this->view->_value);
+        return $this->view->renderTemplate(static::TEMPLATE_CELL);
     }
 
 }

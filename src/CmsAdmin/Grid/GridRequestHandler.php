@@ -10,7 +10,9 @@
 
 namespace CmsAdmin\Grid;
 
-use Mmi\App\FrontController;
+use Mmi\App\App;
+use Mmi\Http\Request;
+use Mmi\Http\Response;
 
 /**
  * Klasa obsługi zapytań do grida
@@ -39,9 +41,9 @@ class GridRequestHandler
     public function handleRequest()
     {
         //obsługa eksportera
-        $this->_handleCsvExporter(FrontController::getInstance()->getRequest());
+        $this->_handleCsvExporter(App::$di->get(Request::class));
         //obsługa danych z POST
-        $post = FrontController::getInstance()->getRequest()->getPost();
+        $post = App::$di->get(Request::class)->getPost();
         //brak posta
         if ($post->isEmpty()) {
             return;
@@ -64,7 +66,7 @@ class GridRequestHandler
             return;
         }
         //ustawia typ danych
-        FrontController::getInstance()->getResponse()
+        App::$di->get(Response::class)
             ->setHeader('Content-disposition', 'attachment; filename=' . $this->_grid->getClass() . '.csv')
             ->setTypePlain()
             ->sendHeaders();
@@ -192,7 +194,7 @@ class GridRequestHandler
     {
         $renderer = new GridRenderer($this->_grid);
         //ustawianie odpowiedzi
-        FrontController::getInstance()->getResponse()
+        App::$di->get(Response::class)
             ->setTypeJson()
             ->setContent(json_encode(['body' => $renderer->renderHeader() . $renderer->renderBody(), 'paginator' => $renderer->renderFooter()]));
         exit;

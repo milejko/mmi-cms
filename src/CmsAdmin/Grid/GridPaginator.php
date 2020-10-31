@@ -10,7 +10,9 @@
 
 namespace CmsAdmin\Grid;
 
-use Mmi\App\FrontController;
+use AppendIterator;
+use Mmi\App\App;
+use Mmi\Mvc\View;
 
 /**
  * Obiekt stronicowania grida
@@ -45,9 +47,10 @@ class GridPaginator
      */
     public function render()
     {
-        FrontController::getInstance()->getView()->_grid = $this->_grid;
-        FrontController::getInstance()->getView()->_paginator = $this;
-        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE);
+        $view = App::$di->get(View::class);
+        $view->_grid = $this->_grid;
+        $view->_paginator = $this;
+        return $view->renderTemplate(self::TEMPLATE);
     }
 
     /**
@@ -77,6 +80,6 @@ class GridPaginator
      */
     public function getExportCsvUrl()
     {
-        return \Mmi\App\FrontController::getInstance()->getView()->url([$this->_grid->getClass() => 'export']);
+        return App::$di->get(View::class)->url([$this->_grid->getClass() => 'export']);
     }
 }

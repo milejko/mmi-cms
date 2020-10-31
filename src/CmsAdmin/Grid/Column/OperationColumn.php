@@ -12,6 +12,8 @@ namespace CmsAdmin\Grid\Column;
 
 use Mmi\App\FrontController;
 use Cms\Mvc\ViewHelper\AclAllowed;
+use Mmi\App\App;
+use Mmi\Mvc\View;
 
 /**
  * Klasa Columnu indeksującego
@@ -98,8 +100,6 @@ class OperationColumn extends ColumnAbstract
      */
     public function renderCell(\Mmi\Orm\RecordRo $record)
     {
-
-        $view = FrontController::getInstance()->getView();
         $html = '<div class="operation-container">';
         //pobieranie parametrów linku edycji
         $editParams = $this->getOption('editParams');
@@ -112,20 +112,20 @@ class OperationColumn extends ColumnAbstract
             //iteracja po przyciskach
             foreach ($customButtons as $button) {
                 //brak uprawnień w ACL
-                if (!(new AclAllowed)->aclAllowed($params = $this->_parseParams($button['params'], $record))) {
+                if (!(new AclAllowed($this->view))->aclAllowed($params = $this->_parseParams($button['params'], $record))) {
                     continue;
                 }
                 //html przycisku
-                $html .= '<a class="operation-button" href="' . $view->url($params) . rtrim('#' . $button['hashTarget'], '#') . '"><i class="fa fa-' . $button['iconName'] . ' icon-' . $button['iconName'] . '"></i></a>';
+                $html .= '<a class="operation-button" href="' . $this->view->url($params) . rtrim('#' . $button['hashTarget'], '#') . '"><i class="fa fa-' . $button['iconName'] . ' icon-' . $button['iconName'] . '"></i></a>';
             }
         }
         //link edycyjny ze sprawdzeniem ACL
-        if (!empty($editParams) && (new AclAllowed)->aclAllowed($params = $this->_parseParams($editParams, $record))) {
-            $html .= '<a class="operation-button" href="' . $view->url($params) . rtrim('#' . $this->getOption('editHashTarget'), '#') . '"><i class="fa fa-2 fa-pencil "></i></a>';
+        if (!empty($editParams) && (new AclAllowed($this->view))->aclAllowed($params = $this->_parseParams($editParams, $record))) {
+            $html .= '<a class="operation-button" href="' . $this->view->url($params) . rtrim('#' . $this->getOption('editHashTarget'), '#') . '"><i class="fa fa-2 fa-pencil "></i></a>';
         }
         //link kasujący ze sprawdzeniem ACL
-        if (!empty($deleteParams) && (new AclAllowed)->aclAllowed($params = $this->_parseParams($deleteParams, $record))) {
-            $html .= '<a class="operation-button confirm" href="' . $view->url($params) . rtrim('#' . $this->getOption('deleteHashTarget'), '#') . '" title="' . $view->_('gird.shared.operation.delete.label') . '" class="confirm"><i class="fa fa-2 fa-trash-o "></i></a>';
+        if (!empty($deleteParams) && (new AclAllowed($this->view))->aclAllowed($params = $this->_parseParams($deleteParams, $record))) {
+            $html .= '<a class="operation-button confirm" href="' . $this->view->url($params) . rtrim('#' . $this->getOption('deleteHashTarget'), '#') . '" title="' . $this->view->_('gird.shared.operation.delete.label') . '" class="confirm"><i class="fa fa-2 fa-trash-o "></i></a>';
         }
         $html .= '</div>';
         return $html;

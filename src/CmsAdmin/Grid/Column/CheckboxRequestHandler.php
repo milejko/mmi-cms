@@ -10,8 +10,9 @@
 
 namespace CmsAdmin\Grid\Column;
 
-use Mmi\App\FrontController;
 use Cms\Mvc\ViewHelper\AclAllowed;
+use Mmi\App\App;
+use Mmi\Http\Request;
 
 /**
  * Obsługa requestu
@@ -40,13 +41,13 @@ class CheckboxRequestHandler
     public function handleRequest()
     {
         //obsługa danych z POST
-        $post = FrontController::getInstance()->getRequest()->getPost();
+        $post = App::$di->get(Request::class)->getPost();
         //brak posta
         if ($post->isEmpty()) {
             return;
         }
         //niedozwolone na ACL (w edycji na polu operacje)
-        if ($this->_checkbox->getGrid()->getColumn('_operation_') && !(new AclAllowed)->aclAllowed($this->_checkbox->getGrid()->getColumn('_operation_')->getOption('editParams'))) {
+        if ($this->_checkbox->getGrid()->getColumn('_operation_') && !(new AclAllowed($this->view))->aclAllowed($this->_checkbox->getGrid()->getColumn('_operation_')->getOption('editParams'))) {
             return;
         }
         if ($this->_changeRecord($post)) {

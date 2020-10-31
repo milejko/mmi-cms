@@ -56,9 +56,8 @@ class CustomColumn extends ColumnAbstract
      */
     public function renderCell(\Mmi\Orm\RecordRo $record)
     {
-        $view = FrontController::getInstance()->getView();
-        $view->record = $record;
-        return $view->renderDirectly($this->getTemplateCode());
+        $this->view->record = $record;
+        return $this->view->renderDirectly($this->getTemplateCode());
     }
 
 }

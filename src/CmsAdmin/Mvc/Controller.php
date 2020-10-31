@@ -22,6 +22,7 @@ abstract class Controller extends \Mmi\Mvc\Controller
     public function init()
     {
         //ustawienie języka edycji
+        /*
         $session = new \Mmi\Session\SessionSpace('cms-language');
         //session already set
         if ($session->lang) {
@@ -35,5 +36,6 @@ abstract class Controller extends \Mmi\Mvc\Controller
         $session->lang = (new \Cms\Orm\CmsAuthQuery)
             ->findPk(\App\Registry::$auth->getId())
             ->lang;
+        */
     }
 }
