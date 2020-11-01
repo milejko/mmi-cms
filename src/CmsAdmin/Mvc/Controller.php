@@ -10,6 +10,9 @@
 
 namespace CmsAdmin\Mvc;
 
+use Mmi\App\App;
+use Mmi\Security\Auth;
+
 /**
  * Kontroler stron adminowych
  */
@@ -22,20 +25,18 @@ abstract class Controller extends \Mmi\Mvc\Controller
     public function init()
     {
         //ustawienie języka edycji
-        /*
         $session = new \Mmi\Session\SessionSpace('cms-language');
         //session already set
         if ($session->lang) {
             return;
         }
         //no identity
-        if (!\App\Registry::$auth->hasIdentity()) {
+        if (!App::$di->get(Auth::class)->hasIdentity()) {
             return;
         }
         //setting session lang by logged user
         $session->lang = (new \Cms\Orm\CmsAuthQuery)
-            ->findPk(\App\Registry::$auth->getId())
+            ->findPk(App::$di->get(Auth::class)->getId())
             ->lang;
-        */
     }
 }

@@ -2,6 +2,9 @@
 
 namespace Cms\Orm;
 
+use Mmi\App\App;
+use Mmi\Http\Request;
+
 //<editor-fold defaultstate="collapsed" desc="CmsCategoryQuery">
 /**
  * @method CmsCategoryQuery limit($limit = null)
@@ -196,11 +199,11 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
      */
     public function lang()
     {
-        if (!\Mmi\App\FrontController::getInstance()->getRequest()->lang) {
+        if (!App::$di->get(Request::class)->lang) {
             return (new self);
         }
         return $this
-                ->whereLang()->equals(\Mmi\App\FrontController::getInstance()->getRequest()->lang)
+                ->whereLang()->equals(App::$di->get(Request::class)->lang)
                 ->orFieldLang()->equals(null)
                 ->orderDescLang();
     }
