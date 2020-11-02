@@ -49,8 +49,7 @@ class Captcha extends \Mmi\Form\Element\ElementAbstract
     public function fetchField()
     {
         $this->setValue('');
-        $view = \Mmi\App\FrontController::getInstance()->getView();
-        $html = '<div class="image"><img src="' . $view->url(['module' => 'cms', 'controller' => 'captcha', 'action' => 'index', 'name' => $this->_options['name']]) . '" alt="" /></div>';
+        $html = '<div class="image"><img src="' . $this->view->url(['module' => 'cms', 'controller' => 'captcha', 'action' => 'index', 'name' => $this->_options['name']]) . '" alt="" /></div>';
         $html .= '<div class="input"><input ';
         $html .= 'type="text"' . $this->_getHtmlOptions() . '/></div>';
         return $html;

@@ -12,7 +12,8 @@ namespace Cms\Model;
 
 use Cms\App\CmsSkinsetConfig;
 use Cms\Orm\CmsCategoryWidgetCategoryQuery;
-use Mmi\App\FrontController;
+use Mmi\App\App;
+use Psr\Log\LoggerInterface;
 
 /**
  * Model widgetów kategorii
@@ -57,7 +58,7 @@ class CategoryWidgetModel
             //brak skóry dla danego widgeta, lub brak widgeta
             if (null === (new SkinsetModel($skinsetConfig))->getWidgetConfigByKey($widget->widget)) {
                 unset($this->_widgetCollection[$key]);
-                FrontController::getInstance()->getLogger()->warning('Widget not found: ' . $widget->widget);
+                App::$di->get(LoggerInterface::class)->warning('Widget not found: ' . $widget->widget);
             }
         }
     }

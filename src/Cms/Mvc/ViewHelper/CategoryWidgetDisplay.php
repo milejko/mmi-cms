@@ -10,7 +10,7 @@
 
 namespace Cms\Mvc\ViewHelper;
 
-use App\Registry;
+
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 

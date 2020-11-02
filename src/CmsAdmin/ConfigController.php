@@ -10,7 +10,7 @@
 
 namespace CmsAdmin;
 
-use App\Registry;
+
 
 /**
  * Kontroler podglądu konfiguracji

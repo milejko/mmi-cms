@@ -10,12 +10,12 @@
 
 namespace CmsAdmin;
 
-use App\Registry;
+
 use Cms\Model\CategoryValidationModel;
 use Cms\Model\TemplateModel;
 use Cms\Orm\CmsCategoryQuery;
 use CmsAdmin\Form\CategoryForm;
-use Mmi\App\FrontController;
+
 use Mmi\Http\Request;
 use Mmi\Session\SessionSpace;
 

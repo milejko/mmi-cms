@@ -10,6 +10,8 @@
 
 namespace CmsAdmin;
 
+use Mmi\Http\Request;
+
 /**
  * Kontroler kontaktów
  */
@@ -19,20 +21,20 @@ class CategoryAclController extends Mvc\Controller
     /**
      * Akcja ustawiania uprawnień na kategoriach
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $this->view->roles = (new \Cms\Orm\CmsRoleQuery)->find();
         //jeśli niewybrana rola - przekierowanie na pierwszą istniejącą
-        if (!$this->roleId && count($this->view->roles)) {
+        if (!$request->roleId && count($this->view->roles)) {
             $this->getResponse()->redirect('cmsAdmin', 'categoryAcl', 'index', ['roleId' => $this->view->roles[0]->id]);
         }
         //formularz edycji uprawnień
-        $form = new Form\CategoryAclForm(null, ['roleId' => $this->roleId]);
+        $form = new Form\CategoryAclForm(null, ['roleId' => $request->roleId]);
         //po zapisie
         if ($form->isSaved()) {
             $this->getMessenger()->addMessage('messenger.categoryAcl.permissions.saved', true);
             //przekierowanie na zapisaną stronę
-            $this->getResponse()->redirect('cmsAdmin', 'categoryAcl', 'index', ['roleId' => $this->roleId]);
+            $this->getResponse()->redirect('cmsAdmin', 'categoryAcl', 'index', ['roleId' => $request->roleId]);
         }
         $this->view->categoryAclForm = $form;
     }

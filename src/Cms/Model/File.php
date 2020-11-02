@@ -12,6 +12,9 @@ namespace Cms\Model;
 
 use Cms\Orm\CmsFileQuery;
 use Cms\Orm\CmsFileRecord;
+use Mmi\App\App;
+use Mmi\Security\Auth;
+use Psr\Log\LoggerInterface;
 
 /**
  * Model pliku
@@ -152,7 +155,7 @@ class File
                     'size' => $file->size
                 ]);
             } catch (\Mmi\App\KernelException $e) {
-                \Mmi\App\FrontController::getInstance()->getLogger()->warning('Unable to copy file, file not found: ' . $file->getRealPath());
+                App::$di->get(LoggerInterface::class)->warning('Unable to copy file, file not found: ' . $file->getRealPath());
                 continue;
             }
             $newFile = clone $file;
@@ -228,7 +231,7 @@ class File
             ]);
             $newFile = self::appendFile($copy, $file->object, $destId);
         } catch (\Exception $e) {
-            \Mmi\App\FrontController::getInstance()->getLogger()->warning($e->getMessage());
+            App::$di->get(LoggerInterface::class)->warning($e->getMessage());
             return;
         }
         $newFile->data = $file->data;
@@ -280,7 +283,7 @@ class File
             $record->dateModify = date('Y-m-d H:i:s');
         }
         //właściciel pliku
-        $record->cmsAuthId = \App\Registry::$auth ? \App\Registry::$auth->getId() : null;
+        $record->cmsAuthId = App::$di->has(Auth::class) ? App::$di->get(Auth::class)->getId() : null;
         if ($record->active === null) {
             //domyślnie aktywny
             $record->active = 1;

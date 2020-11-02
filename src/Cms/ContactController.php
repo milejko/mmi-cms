@@ -10,11 +10,19 @@
 
 namespace Cms;
 
+use Mmi\Http\HttpServerEnv;
+
 /**
  * Strona kontaktowa
  */
 class ContactController extends \Mmi\Mvc\Controller
 {
+
+    /**
+     * @Inject
+     * @var HttpServerEnv
+     */
+    private $httpServerEnv;
 
     /**
      * Akcja kontaktu
@@ -39,8 +47,8 @@ class ContactController extends \Mmi\Mvc\Controller
             }
             $namespace->unsetAll();
             $this->getResponse()->redirectToUrl($link);
-        } elseif (\Mmi\App\FrontController::getInstance()->getEnvironment()->httpReferer) {
-            $namespace->referer = \Mmi\App\FrontController::getInstance()->getEnvironment()->httpReferer;
+        } elseif ($this->httpServerEnv->httpReferer) {
+            $namespace->referer = $this->httpServerEnv->httpReferer;
         }
     }
 

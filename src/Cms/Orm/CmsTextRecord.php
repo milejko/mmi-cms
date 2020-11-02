@@ -2,6 +2,10 @@
 
 namespace Cms\Orm;
 
+use Mmi\App\App;
+use Mmi\Cache\Cache;
+use Mmi\Http\Request;
+
 /**
  * Rekord tekstu
  */
@@ -22,7 +26,7 @@ class CmsTextRecord extends \Mmi\Orm\Record
     {
         //data modyfikacji
         $this->dateModify = date('Y-m-d H:i:s');
-        $this->lang = \Mmi\App\FrontController::getInstance()->getRequest()->lang;
+        $this->lang = App::$di->get(Request::class)->lang;
         //usunięcie kompilantów
         foreach (glob(BASE_PATH . '/var/compile/' . $this->lang . '_*.php') as $compilant) {
             unlink($compilant);
@@ -34,7 +38,7 @@ class CmsTextRecord extends \Mmi\Orm\Record
             return false;
         }
         //usunięcie cache
-        \App\Registry::$cache->remove('Cms-text');
+        App::$di->get(Cache::class)->remove('Cms-text');
         return $result;
     }
 

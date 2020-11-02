@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Model;
 
-use Mmi\App\FrontController;
+
 
 /**
  * Model list komponentów MVC

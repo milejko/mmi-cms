@@ -10,7 +10,7 @@
 
 namespace Cms;
 
-use App\Registry;
+
 use Cms\Model\TemplateModel;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryQuery;

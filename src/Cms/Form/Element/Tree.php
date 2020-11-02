@@ -64,11 +64,10 @@ class Tree extends \Mmi\Form\Element\ElementAbstract
     public function fetchField()
     {
         //powolanie widoku, CSS i JavaScriptow
-        $view = \Mmi\App\FrontController::getInstance()->getView();
-        $view->headLink()->appendStylesheet('/resource/cmsAdmin/css/tree.css');
-        $view->headLink()->appendStylesheet('/resource/cmsAdmin/js/jstree/themes/default/style.min.css');
-        $view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/jstree/jstree.min.js');
+        $this->view->headLink()->appendStylesheet('/resource/cmsAdmin/css/tree.css');
+        $this->view->headLink()->appendStylesheet('/resource/cmsAdmin/js/jstree/themes/default/style.min.css');
+        $this->view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
+        $this->view->headScript()->appendFile('/resource/cmsAdmin/js/jstree/jstree.min.js');
 
         //glowny kontener drzewa
         $html = '<div class="tree_container">';
@@ -156,8 +155,7 @@ class Tree extends \Mmi\Form\Element\ElementAbstract
     {
         $id = $this->getOption('id');
         $treeClearId = $treeId . '_clear';
-        $view = \Mmi\App\FrontController::getInstance()->getView();
-        $view->headScript()->appendScript("$(document).ready(function () {
+        $this->view->headScript()->appendScript("$(document).ready(function () {
 				$('#$treeId').jstree({
 					'core': {
 						'themes': {

@@ -11,7 +11,7 @@
 namespace Cms\Model;
 
 use Mmi\App\App;
-use Mmi\App\FrontController;
+
 use Mmi\Cache\PrivateCache;
 use Psr\Log\LoggerInterface;
 

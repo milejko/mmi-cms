@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Grid\Column;
 
-use Mmi\App\FrontController;
+
 use Cms\Mvc\ViewHelper\AclAllowed;
 use Mmi\App\App;
 use Mmi\Mvc\View;

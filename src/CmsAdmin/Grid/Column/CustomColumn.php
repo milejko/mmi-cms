@@ -10,8 +10,6 @@
 
 namespace CmsAdmin\Grid\Column;
 
-use Mmi\App\FrontController;
-
 /**
  * Klasa Columnu dowolnego
  *

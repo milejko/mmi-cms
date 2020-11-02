@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Form;
 
-use App\Registry;
+
 use Cms\Form\Element;
 use Cms\Form\Form;
 use Mmi\Validator;

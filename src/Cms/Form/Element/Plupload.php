@@ -10,7 +10,6 @@
 
 namespace Cms\Form\Element;
 
-use Mmi\App\FrontController;
 use Mmi\Filter\Url;
 
 /**
@@ -264,28 +263,27 @@ class Plupload extends UploaderElementAbstract
      */
     public function fetchField()
     {
-        $view = FrontController::getInstance()->getView();
-        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.css');
-        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.structure.min.css');
-        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.theme.min.css');
-        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/plupload/plupload.conf.css');
-        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/css/jquery.ui.plupload.css');
-        $view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/video-frame-extractor/extractor.css');
-        $view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/vendors/js/popper.min.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/vendors/js/pace.min.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/vendors/js/bootstrap.min.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/plupload.full.min.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/plupload.conf.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/i18n/pl.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/jquery.ui.plupload.min.js');
+        $this->view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.css');
+        $this->view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.structure.min.css');
+        $this->view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.theme.min.css');
+        $this->view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/plupload/plupload.conf.css');
+        $this->view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/css/jquery.ui.plupload.css');
+        $this->view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/video-frame-extractor/extractor.css');
+        $this->view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
+        $this->view->headScript()->appendFile('/resource/cmsAdmin/vendors/js/popper.min.js');
+        $this->view->headScript()->appendFile('/resource/cmsAdmin/vendors/js/pace.min.js');
+        $this->view->headScript()->appendFile('/resource/cmsAdmin/vendors/js/bootstrap.min.js');
+        $this->view->headScript()->appendFile('/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.js');
+        $this->view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/plupload.full.min.js');
+        $this->view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/plupload.conf.js');
+        $this->view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/i18n/pl.js');
+        $this->view->headScript()->appendFile('/resource/cmsAdmin/js/plupload/jquery.ui.plupload/jquery.ui.plupload.min.js');
         //imprint zawiera tinymce
         if (strpos(print_r($this->getImprint(), true), 'tinymce')) {
-            $view->headScript()->appendScript("var tinymce = tinymce || {};");
-            $view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/tinymce.min.js');
+            $this->view->headScript()->appendScript("var tinymce = tinymce || {};");
+            $this->view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/tinymce.min.js');
         }
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/video-frame-extractor/extractor.js');
+        $this->view->headScript()->appendFile('/resource/cmsAdmin/js/video-frame-extractor/extractor.js');
 
         $html = '<div id="' . $this->getId() . '">';
         $html .= '<p>Twoja przeglądarka nie posiada wsparcia dla HTML5.</p>';
@@ -313,7 +311,7 @@ class Plupload extends UploaderElementAbstract
         }
 
         //dołączanie skryptu
-        $view->headScript()->appendScript("
+        $this->view->headScript()->appendScript("
 			$(document).ready(function () {
 				'use strict';
 				var conf = $.extend(true, {}, PLUPLOADCONF.settings);

@@ -10,7 +10,7 @@
 
 namespace CmsAdmin;
 
-use App\Registry;
+
 use Cms\Model\CategoryValidationModel;
 use Cms\Model\SkinsetModel;
 use Cms\Model\WidgetModel;

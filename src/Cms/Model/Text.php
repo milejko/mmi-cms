@@ -11,6 +11,7 @@
 namespace Cms\Model;
 
 use \Cms\Orm;
+use Mmi\App\App;
 
 class Text
 {
@@ -49,7 +50,7 @@ class Text
      */
     protected static function _initDictionary()
     {
-        if (null === (self::$_texts = \App\Registry::$cache->load('Cms-text'))) {
+        if (null === (self::$_texts = App::$di->get(Cache::class)->load('Cms-text'))) {
             self::$_texts = [];
             foreach ((new Orm\CmsTextQuery)->find() as $text) {
                 if ($text->lang === null) {
@@ -58,7 +59,7 @@ class Text
                 }
                 self::$_texts[$text->lang][$text->key] = $text->content;
             }
-            \App\Registry::$cache->save(self::$_texts, 'Cms-text', 0);
+            App::$di->get(Cache::class)->save(self::$_texts, 'Cms-text', 0);
         }
     }
 

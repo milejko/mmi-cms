@@ -11,6 +11,9 @@
 namespace Cms\Model;
 
 use \Cms\Orm;
+use Mmi\App\App;
+use Mmi\Mvc\View;
+use Psr\Log\LoggerInterface;
 
 class Mail
 {
@@ -21,7 +24,7 @@ class Mail
      */
     public static function clean()
     {
-        return (new Orm\CmsMailQuery)
+        return (new Orm\CmsMailQuery())
             ->whereActive()->equals(1)
             ->andFieldDateSent()->less(date('Y-m-d H:i:s', strtotime('-1 week')))
             ->find()
@@ -72,7 +75,7 @@ class Mail
         //serializacja załączników
         $mail->attachements = serialize($files);
         //przepychanie zmiennych do widoku
-        $view = \Mmi\App\FrontController::getInstance()->getView();
+        $view = App::$di->get(View::class);
         foreach ($params as $key => $value) {
             $view->$key = $value;
         }
@@ -174,8 +177,6 @@ class Mail
                 }
                 //wysyłka maila
                 $mail->send();
-                //logowanie wysyłki
-                \Mmi\App\FrontController::getInstance()->getLogger()->info('Sent: ' . $email->to . ' ' . $email->subject);
                 //czyszczenie załączników
                 $email->attachements = null;
                 //ustawienie pol po wysłaniu
@@ -186,7 +187,7 @@ class Mail
                 $result['success'] ++;
             } catch (\Exception $e) {
                 //bład wysyłki
-                \Mmi\App\FrontController::getInstance()->getLogger()->warning($e->getMessage());
+                App::$di->get(LoggerInterface::class)->warning($e->getMessage());
                 //podwyzszenie licznika nieudanych
                 $result['error'] ++;
             }

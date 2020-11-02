@@ -21,7 +21,7 @@ class FileController extends \Mmi\Mvc\Controller
      */
     public function listAction()
     {
-        \Mmi\App\FrontController::getInstance()->getResponse()->setHeader('Content-type', 'application/json');
+        $this->getResponse()->setHeader('Content-type', 'application/json');
         if (!$this->object || !$this->objectId || !$this->hash || !$this->t) {
             return '';
         }
