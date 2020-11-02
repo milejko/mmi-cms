@@ -37,7 +37,7 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
         if (!isset($moduleStructure[$request->getModuleName()][$request->getControllerName()][$request->getActionName()])) {
             throw new \Mmi\Mvc\MvcNotFoundException('Component not found: ' . $actionLabel);
         }
-        //brak autoryzacji i kontroler admina - przekierowanie na logowanie
+        //brak autoryzacji
         if (!$auth->hasIdentity()) {
             $this->_setLoginRequest($request, strpos($request->getModuleName(), 'Admin'));
             //logowanie admina
@@ -96,11 +96,6 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
         //ustawianie języka z requesta
         if ($request->lang) {
             return $translate->setLocale($request->lang);
-        }
-        //ustawienie języka edycji
-        $session = new \Mmi\Session\SessionSpace('cms-language');
-        if ($session->lang && in_array($session->lang, $availableLanguages)) {
-            $translate->setLocale($session->lang);
         }
     }
 

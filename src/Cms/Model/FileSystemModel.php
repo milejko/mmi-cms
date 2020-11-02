@@ -10,7 +10,10 @@
 
 namespace Cms\Model;
 
+use Mmi\App\App;
 use Mmi\App\FrontController;
+use Mmi\Cache\PrivateCache;
+use Psr\Log\LoggerInterface;
 
 /**
  * Model
@@ -25,6 +28,11 @@ class FileSystemModel
     private $_name;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * Konstruktor
      * @param string $fileName
      * @throws \Mmi\App\KernelException
@@ -34,6 +42,7 @@ class FileSystemModel
         if (strlen($fileName) < 4) {
             throw new \Mmi\App\KernelException('File name invalid');
         }
+        $this->logger = App::$di->get(LoggerInterface::class);
         $this->_name = $fileName;
     }
 
@@ -65,17 +74,17 @@ class FileSystemModel
         //inicjalizacja linku publicznego
         $publicUrl = '/data' . $fileName;
         //istnieje plik - wiadomość z bufora
-        if (FrontController::getInstance()->getLocalCache()->load($cacheKey = 'cms-file-' . md5($fileName))) {
+        if (App::$di->get(PrivateCache::class)->load($cacheKey = 'cms-file-' . md5($fileName))) {
             return $publicUrl;
         }
         //brak pliku źródłowego
         if (!file_exists($inputFile)) {
-            FrontController::getInstance()->getLogger()->warning('CMS file not found: ' . $fileName);
+            $this->logger->warning('CMS file not found: ' . $fileName);
             return;
         }
         //istnieje plik - zwrot ścieżki publicznej
         if (file_exists($thumbPath = BASE_PATH . '/web/data' . $fileName) && filemtime($thumbPath) > filemtime($inputFile)) {
-            FrontController::getInstance()->getLocalCache()->save(true, $cacheKey);
+            App::$di->get(PrivateCache::class)->save(true, $cacheKey);
             return $publicUrl;
         }
         //próba tworzenia katalogów
@@ -149,7 +158,7 @@ class FileSystemModel
         }
         //brak obrazu
         if (!isset($imgRes)) {
-            FrontController::getInstance()->getLogger()->warning('Unable to resize CMS file: ' . $outputFile);
+            $this->logger->warning('Unable to resize CMS file: ' . $outputFile);
             return;
         }
         //plik istnieje
@@ -157,7 +166,7 @@ class FileSystemModel
             try {
                 mkdir(dirname($outputFile), 0777, true);
             } catch (\Mmi\App\KernelException $e) {
-                FrontController::getInstance()->getLogger()->warning('Unable to create directories: ' . $e->getMessage());
+                $this->logger->warning('Unable to create directories: ' . $e->getMessage());
                 return;
             }
         }
@@ -180,7 +189,7 @@ class FileSystemModel
         //progressive jpeg
         imageinterlace($imgRes, true);
         //domyślnie JPEG
-        imagejpeg($imgRes, $outputFile, intval(\App\Registry::$config->thumbQuality));
+        imagejpeg($imgRes, $outputFile, intval(App::$di->get('cms.thumb.quality')));
     }
 
     /**
@@ -216,7 +225,7 @@ class FileSystemModel
             //próba skopiowania pliku
             copy($inputFile, $thumbPath);
         } catch (\Exception $e) {
-            FrontController::getInstance()->getLogger()->warning('Unable to copy CMS file to web: ' . $publicPath);
+            $this->logger->warning('Unable to copy CMS file to web: ' . $publicPath);
             return;
         }
         return $publicPath;

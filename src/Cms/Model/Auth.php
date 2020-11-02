@@ -13,7 +13,6 @@ namespace Cms\Model;
 use Cms\Orm\CmsAuthQuery;
 use Cms\Orm\CmsAuthRecord;
 use Mmi\App\App;
-use Mmi\App\FrontController;
 
 /**
  * Model autoryzacji
