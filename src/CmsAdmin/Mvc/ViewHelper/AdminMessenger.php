@@ -25,7 +25,7 @@ class AdminMessenger extends \Mmi\Mvc\ViewHelper\Messenger
      */
     public function adminMessenger()
     {
-        return self::messenger();
+        return parent::messenger();
     }
 
 }

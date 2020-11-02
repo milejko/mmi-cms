@@ -2,16 +2,12 @@
 
 namespace Cms\App;
 
-use CmsAdmin\App\CmsNavigationConfig;
-use CmsAdmin\Mvc\ViewHelper\AdminNavigation;
 use Mmi\App\AppEventInterceptorAbstract;
-use Mmi\Cache\Cache;
 use Mmi\Http\HttpServerEnv;
 use Mmi\Http\Request;
 use Mmi\Http\Response;
-use Mmi\Mvc\ActionHelper;
 use Mmi\Mvc\View;
-use Mmi\Mvc\ViewHelper\Navigation;
+use Mmi\Security\Acl;
 use Mmi\Security\Auth;
 use Mmi\Session\Session;
 use Mmi\Translate;
@@ -20,50 +16,17 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
 {
 
     public function init(): void
-    {
-        $this->_initTranslation();
-    }
+    {}
 
     public function beforeDispatch(): void
     {
+        $this->_initTranslation();
         $request = $this->container->get(Request::class);
         $this->container->get(Session::class)->start();
-        //konfiguracja autoryzacji
-        $auth = new \Mmi\Security\Auth;
-        $auth->setSalt('@TODO: real salt')
-            ->setModelName('\Cms\Model\Auth');
 
-        //setup authorization
-        $this->container->set(Auth::class, $auth);
-        $this->container->get(ActionHelper::class)->setAuth($auth);
-        $this->container->get(View::class)->auth = $auth->hasIdentity() ? $auth : null;
-        Navigation::setAuth($auth);
-        AdminNavigation::setAuth($auth);
-
-        $cache = $this->container->get(Cache::class);
-        //ustawienie acl
-        if (null === ($acl = $cache->load('mmi-cms-acl'))) {
-            $acl = \Cms\Model\Acl::setupAcl();
-            $cache->save($acl, 'mmi-cms-acl', 0);
-        }
-        $this->container->set('cms.acl', $acl);
-        $this->container->get(ActionHelper::class)->setAcl($acl);
-        Navigation::setAcl($acl);
-        AdminNavigation::setAcl($acl);
-
-        //ustawienie nawigatora
-        if (null === ($navigation = $cache->load('mmi-cms-navigation-' . $request->lang))) {
-            $config = new CmsNavigationConfig;
-            (new \Cms\Model\Navigation)->decorateConfiguration($config);
-            $navigation = new \Mmi\Navigation\Navigation($config);
-            //zapis do cache
-            $cache->save($navigation, 'mmi-cms-navigation-' . $request->lang, 0);
-        }
-        $navigation->setup($request);
-        //przypinanie nawigatora do helpera widoku nawigacji
-        \Mmi\Mvc\ViewHelper\Navigation::setNavigation($navigation);
-        \CmsAdmin\Mvc\ViewHelper\AdminNavigation::setNavigation($navigation);
         //zablokowane na ACL
+        $acl = $this->container->get(Acl::class);
+        $auth = $this->container->get(Auth::class);
         $actionLabel = strtolower($request->getModuleName() . ':' . $request->getControllerName() . ':' . $request->getActionName());
         if ($acl->isAllowed($auth->getRoles(), $actionLabel)) {
             return;

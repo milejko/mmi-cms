@@ -24,8 +24,7 @@ class AclAllowed extends \Mmi\Mvc\ViewHelper\HelperAbstract
     public function aclAllowed(array $params)
     {
         //zwrot z ACL
-        //@TODO: integrate with ACL
-        return true;//\App\Registry::$acl->isAllowed(\App\Registry::$auth->getRoles(), strtolower($urlParams['module'] . ':' . $urlParams['controller'] . ':' . $urlParams['action']));
+        return $this->view->getAcl()->isAllowed($this->view->getAuth()->getRoles(), strtolower($params['module'] . ':' . $params['controller'] . ':' . $params['action']));
     }
 
 }
