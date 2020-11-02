@@ -13,6 +13,7 @@ namespace CmsAdmin\Grid\Column;
 use Cms\Mvc\ViewHelper\AclAllowed;
 use Mmi\App\App;
 use Mmi\Http\Request;
+use Mmi\Mvc\View;
 
 /**
  * Obsługa requestu
@@ -47,7 +48,7 @@ class CheckboxRequestHandler
             return;
         }
         //niedozwolone na ACL (w edycji na polu operacje)
-        if ($this->_checkbox->getGrid()->getColumn('_operation_') && !(new AclAllowed($this->view))->aclAllowed($this->_checkbox->getGrid()->getColumn('_operation_')->getOption('editParams'))) {
+        if ($this->_checkbox->getGrid()->getColumn('_operation_') && !(new AclAllowed(App::$di->get(View::class)))->aclAllowed($this->_checkbox->getGrid()->getColumn('_operation_')->getOption('editParams'))) {
             return;
         }
         if ($this->_changeRecord($post)) {

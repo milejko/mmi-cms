@@ -10,10 +10,12 @@
 
 namespace CmsAdmin\App\NavPart;
 
+use Mmi\Navigation\NavigationConfigAbstract;
+
 /**
  * Konfiguracja nawigatora kontaktu
  */
-class NavPartContact extends \Mmi\Navigation\NavigationConfig
+class NavPartContact extends NavigationConfigAbstract
 {
 
     /**

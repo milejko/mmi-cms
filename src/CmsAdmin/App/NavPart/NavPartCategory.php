@@ -10,10 +10,12 @@
 
 namespace CmsAdmin\App\NavPart;
 
+use Mmi\Navigation\NavigationConfigAbstract;
+
 /**
  * Konfiguracja nawigatora kategorii
  */
-class NavPartCategory extends \Mmi\Navigation\NavigationConfig
+class NavPartCategory extends NavigationConfigAbstract
 {
 
     /**

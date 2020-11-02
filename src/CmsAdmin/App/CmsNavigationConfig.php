@@ -10,10 +10,12 @@
 
 namespace CmsAdmin\App;
 
+use Mmi\Navigation\NavigationConfigAbstract;
+
 /**
  * Konfiguracja nawigatora
  */
-class CmsNavigationConfig extends \Mmi\Navigation\NavigationConfig
+class CmsNavigationConfig extends NavigationConfigAbstract
 {
 
     /**

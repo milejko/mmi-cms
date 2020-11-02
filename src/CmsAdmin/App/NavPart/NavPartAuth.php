@@ -10,10 +10,12 @@
 
 namespace CmsAdmin\App\NavPart;
 
+use Mmi\Navigation\NavigationConfigAbstract;
+
 /**
  * Konfiguracja nawigatora użytkowników
  */
-class NavPartAuth extends \Mmi\Navigation\NavigationConfig
+class NavPartAuth extends NavigationConfigAbstract
 {
 
     /**

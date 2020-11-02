@@ -12,6 +12,7 @@ namespace Cms\Model;
 
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
+use Mmi\Navigation\NavigationConfigAbstract;
 
 /**
  * Model nawigacji
@@ -42,7 +43,7 @@ class Navigation
      * Dodaje do konfiguracji dane z bazy danych
      * @param \Mmi\Navigation\NavigationConfig $config
      */
-    public function decorateConfiguration(\Mmi\Navigation\NavigationConfig $config)
+    public function decorateConfiguration(NavigationConfigAbstract $config)
     {
         $objectArray = (new CmsCategoryQuery)
             ->lang()

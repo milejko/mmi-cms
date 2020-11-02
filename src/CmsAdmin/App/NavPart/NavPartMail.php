@@ -10,10 +10,12 @@
 
 namespace CmsAdmin\App\NavPart;
 
+use Mmi\Navigation\NavigationConfigAbstract;
+
 /**
  * Konfiguracja nawigatora mail
  */
-class NavPartMail extends \Mmi\Navigation\NavigationConfig
+class NavPartMail extends NavigationConfigAbstract
 {
 
     /**

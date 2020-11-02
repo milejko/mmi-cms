@@ -10,10 +10,12 @@
 
 namespace CmsAdmin\App\NavPart;
 
+use Mmi\Navigation\NavigationConfigAbstract;
+
 /**
  * Konfiguracja nawigatora tekstów stałych
  */
-class NavPartSystem extends \Mmi\Navigation\NavigationConfig
+class NavPartSystem extends NavigationConfigAbstract
 {
 
     /**
