@@ -2,6 +2,10 @@
 
 namespace Cms\Orm;
 
+use Mmi\App\App;
+use Mmi\Cache\Cache;
+use Psr\Log\LoggerInterface;
+
 /**
  * Rekord widgetu w kategoriach
  */
@@ -65,7 +69,6 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
             //obiekt podobny do categoryWidgetRelation
             ->whereObject()->like(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
             ->andFieldObjectId()->equals($this->id)
-            ->find()
             ->delete();
         //usunięcie z czyszczeniem bufora
         return parent::delete() && $this->clearCache();
@@ -111,7 +114,7 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
         try {
             $configArr = \json_decode($this->configJson, true);
         } catch (\Exception $e) {
-            \Mmi\App\FrontController::getInstance()->getLogger()->warning('Unable to decode widget configJson #' . $this->id);
+            App::$di->get(LoggerInterface::class)->warning('Unable to decode widget configJson #' . $this->id);
         }
         //tworznie pustego configa
         if (!isset($configArr)) {
@@ -149,9 +152,9 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     public function clearCache()
     {
         //usuwanie cache
-        \App\Registry::$cache->remove('category-widget-model-' . $this->cmsCategoryId);
-        \App\Registry::$cache->remove(CmsCategoryRecord::HTML_CACHE_PREFIX . $this->cmsCategoryId);
-        \App\Registry::$cache->remove(self::HTML_CACHE_PREFIX . $this->id);
+        App::$di->get(Cache::class)->remove('category-widget-model-' . $this->cmsCategoryId);
+        App::$di->get(Cache::class)->remove(CmsCategoryRecord::HTML_CACHE_PREFIX . $this->cmsCategoryId);
+        App::$di->get(Cache::class)->remove(self::HTML_CACHE_PREFIX . $this->id);
         return true;
     }
 

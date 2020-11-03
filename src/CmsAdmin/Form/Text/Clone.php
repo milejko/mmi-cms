@@ -10,6 +10,9 @@
 
 namespace CmsAdmin\Form\Text;
 
+use Mmi\App\App;
+use Mmi\Http\Request;
+
 /**
  * Formularz kopiowania tekstów statycznych
  */
@@ -22,7 +25,7 @@ class Copy extends \Mmi\Form\Form
         $langMultioptions = [];
         //wybór z dostępnych języków
         foreach (\App\Registry::$config->languages as $lang) {
-            if ($lang == \Mmi\App\FrontController::getInstance()->getRequest()->lang) {
+            if ($lang == App::$di->get(Request::class)->lang) {
                 continue;
             }
             $langMultioptions[$lang] = $lang;
@@ -44,7 +47,7 @@ class Copy extends \Mmi\Form\Form
      */
     public function beforeSave()
     {
-        $lang = \Mmi\App\FrontController::getInstance()->getRequest()->lang;
+        $lang = App::$di->get(Request::class)->lang;
         foreach (\Cms\Orm\CmsTextQuery::byLang($this->source)->find() as $record) {
             /* @var $record \Cms\Orm\CmsTextRecord */
             if (\Cms\Orm\CmsTextQuery::byKeyLang($record->key, $lang)->findFirst() !== null) {

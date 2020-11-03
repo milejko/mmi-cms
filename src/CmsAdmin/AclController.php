@@ -10,23 +10,26 @@
 
 namespace CmsAdmin;
 
+use Mmi\Http\Request;
+use Mmi\Mvc\Controller;
+
 /**
  * Kontroler listy uprawnień do modułów
  */
-class AclController extends Mvc\Controller
+class AclController extends Controller
 {
 
     /**
      * Lista uprawnień
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $this->view->roles = (new \Cms\Orm\CmsRoleQuery)->find();
         if (!$this->roleId && count($this->view->roles)) {
             $this->getResponse()->redirect('cmsAdmin', 'acl', 'index', ['roleId' => $this->view->roles[0]->id]);
         }
-        if ($this->roleId) {
-            $this->view->rules = (new \Cms\Orm\CmsAclQuery)->whereCmsRoleId()->equals($this->roleId)->find();
+        if ($request->roleId) {
+            $this->view->rules = (new \Cms\Orm\CmsAclQuery)->whereCmsRoleId()->equals($request->roleId)->find();
             $this->view->options = [null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard();
         }
         $roleForm = new \CmsAdmin\Form\Role($roleRecord = new \Cms\Orm\CmsRoleRecord());
@@ -37,7 +40,7 @@ class AclController extends Mvc\Controller
         $aclForm = new \CmsAdmin\Form\Acl(new \Cms\Orm\CmsAclRecord());
         if ($aclForm->isMine() && $aclForm->isSaved()) {
             $this->getMessenger()->addMessage('messenger.acl.rule.saved', true);
-            $this->getResponse()->redirect('cmsAdmin', 'acl', 'index', ['roleId' => $this->roleId]);
+            $this->getResponse()->redirect('cmsAdmin', 'acl', 'index', ['roleId' => $request->roleId]);
         }
         $this->view->roleForm = $roleForm;
         $this->view->aclForm = $aclForm;
@@ -46,28 +49,28 @@ class AclController extends Mvc\Controller
     /**
      * Akcja usuwania roli
      */
-    public function deleteRoleAction()
+    public function deleteRoleAction(Request $request)
     {
         //wyszukiwanie i usuwanie roli
-        if ((null !== $role = (new \Cms\Orm\CmsRoleQuery)->findPk($this->id))) {
+        if ((null !== $role = (new \Cms\Orm\CmsRoleQuery)->findPk($request->id))) {
             $this->getMessenger()->addMessage(($deleteResult = (bool) $role->delete()) ? 'messenger.acl.role.deleted' : 'messenger.acl.role.delete.error', $deleteResult);
         }
         //redirect
-        $this->getResponse()->redirect('cmsAdmin', 'acl', 'index', ['roleId' => $this->id]);
+        $this->getResponse()->redirect('cmsAdmin', 'acl', 'index', ['roleId' => $request->id]);
     }
 
     /**
      * Kasowanie uprawnienia (do AJAXA)
      * @return int
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
         $this->getResponse()->setTypePlain();
         //nie można skasować
-        if (!($this->id > 0)) {
+        if (!($request->id > 0)) {
             return 0;
         }
-        $rule = (new \Cms\Orm\CmsAclQuery)->findPk($this->id);
+        $rule = (new \Cms\Orm\CmsAclQuery)->findPk($request->id);
         //skasowane
         if ($rule && $rule->delete()) {
             return 1;
@@ -78,13 +81,13 @@ class AclController extends Mvc\Controller
      * Aktualizacja uprawnień (do AJAXA)
      * @return int
      */
-    public function updateAction()
+    public function updateAction(Request $request)
     {
         $this->getResponse()->setTypePlain();
-        $params = explode('-', $this->id);
+        $params = explode('-', $request->id);
 
         //błędne dane wejściowe
-        if (!($this->getPost()->selected) || count($params) != 3) {
+        if (!($request->getPost()->selected) || count($params) != 3) {
             return $this->view->_('controller.acl.update.error');
         }
         $record = (new \Cms\Orm\CmsAclQuery)->findPk($params[2]);
@@ -94,13 +97,13 @@ class AclController extends Mvc\Controller
         //zmiana zasobu
         if ($params[1] == 'resource') {
             $resource = [];
-            parse_str($this->getPost()->selected, $resource);
+            parse_str($request->getPost()->selected, $resource);
             $record->module = strtolower($resource['module']);
             $record->controller = isset($resource['controller']) ? strtolower($resource['controller']) : null;
             $record->action = isset($resource['action']) ? strtolower($resource['action']) : null;
         } else {
             //zmiana uprawnienia z allow na deny lub odwrotnie
-            $record->access = $this->getPost()->selected == 'allow' ? 'allow' : 'deny';
+            $record->access = $request->getPost()->selected == 'allow' ? 'allow' : 'deny';
         }
         $record->save();
         return 1;

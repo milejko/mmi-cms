@@ -11,11 +11,12 @@
 namespace CmsAdmin;
 
 use Cms\Orm\CmsFileQuery;
+use Mmi\Mvc\Controller;
 
 /**
  * Kontroler pobierania plików
  */
-class UploadController extends Mvc\Controller
+class UploadController extends Controller
 {
 
     /**

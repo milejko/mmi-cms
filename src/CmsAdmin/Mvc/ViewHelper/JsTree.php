@@ -10,6 +10,10 @@
 
 namespace CmsAdmin\Mvc\ViewHelper;
 
+use Mmi\App\App;
+use Mmi\Security\Acl;
+use Mmi\Security\Auth;
+
 class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract
 {
 
@@ -27,19 +31,17 @@ class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract
      */
     public function jsTree($tree, $jsPath = '', $cssPath = '')
     {
-        //powołanie widoku
-        $view = \Mmi\App\FrontController::getInstance()->getView();
         //dołączenie CSS i JavaScriptów
-        $view->headLink()->appendStylesheet('/resource/cmsAdmin/js/jstree/themes/default/style.min.css');
-        $view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/jstree/jstree.min.js');
+        $this->view->headLink()->appendStylesheet('/resource/cmsAdmin/js/jstree/themes/default/style.min.css');
+        $this->view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
+        $this->view->headScript()->appendFile('/resource/cmsAdmin/js/jstree/jstree.min.js');
         //warunkowe dołączenie skryptu sterującego
         if (!empty($jsPath)) {
-            $view->headScript()->appendFile($jsPath);
+            $this->view->headScript()->appendFile($jsPath);
         }
         //warunkowe dołączenie dodatkowego CSS
         if (!empty($cssPath)) {
-            $view->headLink()->appendStylesheet($cssPath);
+            $this->view->headLink()->appendStylesheet($cssPath);
         }
         //generowanie HTML drzewka
         return $this->_getHtmlTree($tree);
@@ -71,7 +73,8 @@ class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract
         if (!isset($node['children']) || !is_array($node['children']) || count($node['children']) == 0) {
             return $html;
         }
-        $acl = (new \CmsAdmin\Model\CategoryAclModel)->getAcl();
+        $acl = App::$di->get(Acl::class);
+        $auth = App::$di->get(Auth::class);
         $html .= '<ul>';
         //iteracja po dzieciakach i budowa węzłów drzewa
         foreach ($node['children'] as $child) {
@@ -82,7 +85,7 @@ class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract
             $selected = 'false';
             $disabled = 'false';
             //sprawdzenie uprawnień do węzła
-            if (!$acl->isAllowed(\App\Registry::$auth->getRoles(), $child['record']->id)) {
+            if (!$acl->isAllowed($auth->getRoles(), $child['record']->id)) {
                 $disabled = 'true';
                 $icon = $this->view->baseUrl . '/resource/cmsAdmin/images/folder-disabled.png';
             }

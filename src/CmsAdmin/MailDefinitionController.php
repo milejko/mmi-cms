@@ -10,10 +10,12 @@
 
 namespace CmsAdmin;
 
+use Mmi\Mvc\Controller;
+
 /**
  * Definicje szablonów maili
  */
-class MailDefinitionController extends Mvc\Controller
+class MailDefinitionController extends Controller
 {
 
     /**

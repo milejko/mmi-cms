@@ -10,38 +10,37 @@
 
 namespace CmsAdmin;
 
-
+use Cms\App\CmsSkinsetConfig;
+use Mmi\Mvc\Controller;
+use Psr\Container\ContainerInterface;
 
 /**
  * Kontroler podglądu konfiguracji
  */
-class ConfigController extends Mvc\Controller
+class ConfigController extends Controller
 {
 
     const THREE_DOTS = '(...)';
-    const ADMIN_ROLE = 'admin';
 
+    /**
+     * @Inject
+     */
+    private ContainerInterface $container;
+    
     /**
      * Widok konfiguracji
      */
     public function indexAction()
     {
-        $config = clone (\App\Registry::$config);
-        //za długie dane do wyświetlenia
-        $config->navigation = self::THREE_DOTS;
-        $config->router = self::THREE_DOTS;
-        //ukrycie hasła dla użytkowników pozbawionych roli admina
-        if (!Registry::$auth->hasRole(self::ADMIN_ROLE)) {
-            $config->db->password = self::THREE_DOTS;
-        }
-        if ($config->skinset) {
-            $skins = [];
-            foreach ($config->skinset->getSkins() as $skin) {
-                $skins[] = $skin->getKey();
+        $containerEntries = [];
+        foreach ($this->container->getKnownEntryNames() as $entryName) {
+            if (!strpos($entryName, '.')) {
+                continue;
             }
-            $config->skinset = implode(', ', $skins);
+            $entry = $this->container->get($entryName);
+            $containerEntries[$entryName] = strlen(\json_encode($entry)) > 160 ? self::THREE_DOTS : $entry;
         }
-        $this->view->config = \Mmi\Http\ResponseDebugger\Colorify::colorify(print_r($config, true));
-        $this->view->server = \Mmi\Http\ResponseDebugger\Colorify::colorify(print_r($_SERVER, true));
+        $this->view->config = \Mmi\Http\ResponseDebugger\Colorify::colorify(print_r($containerEntries, true));
+        $this->view->server = \Mmi\Http\ResponseDebugger\Colorify::colorify(print_r(\getenv(), true));
     }
 }

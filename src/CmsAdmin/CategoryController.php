@@ -10,19 +10,22 @@
 
 namespace CmsAdmin;
 
-
+use Cms\App\CmsSkinsetConfig;
 use Cms\Model\CategoryValidationModel;
 use Cms\Model\TemplateModel;
 use Cms\Orm\CmsCategoryQuery;
 use CmsAdmin\Form\CategoryForm;
 
 use Mmi\Http\Request;
+use Mmi\Mvc\Controller;
+use Mmi\Mvc\Router;
+use Mmi\Security\Auth;
 use Mmi\Session\SessionSpace;
 
 /**
  * Kontroler kategorii - stron CMS
  */
-class CategoryController extends Mvc\Controller
+class CategoryController extends Controller
 {
 
     //prefiks przestrzeni nazw w sesji
@@ -35,6 +38,24 @@ class CategoryController extends Mvc\Controller
     const ADMIN_MODULE_SUFFIX = 'Admin';
 
     /**
+     * @Inject
+     * @var Auth
+     */
+    private $auth;
+
+    /**
+     * @Inject
+     * @var Router
+     */
+    private $router;
+
+    /**
+     * @Inject
+     * @var CmsSkinsetConfig
+     */
+    private $cmsSkinsetConfig;
+
+    /**
      * Lista stron CMS - prezentacja w formie grida
      */
     public function indexAction()
@@ -45,7 +66,7 @@ class CategoryController extends Mvc\Controller
     /**
      * Lista stron CMS - edycja w formie drzewa
      */
-    public function editAction()
+    public function editAction(Request $request)
     {
         //brak id przekierowanie na drzewo
         if (!$this->id) {
@@ -59,28 +80,28 @@ class CategoryController extends Mvc\Controller
         //zapisywanie oryginalnego id
         $originalId = $category->cmsCategoryOriginalId ? $category->cmsCategoryOriginalId : $category->id;
         //przygotowanie draftu (lub przekierowanie)
-        $this->_prepareDraft($category, $originalId);
+        $this->_prepareDraft($category, $request, $originalId);
         //draft ma obcego właściciela
-        if ($category->cmsAuthId != \App\Registry::$auth->getId()) {
+        if ($category->cmsAuthId != $this->auth->getId()) {
             throw new \Mmi\Mvc\MvcForbiddenException('Category not allowed');
         }
         //sprawdzanie czy nie duplikat
         $this->view->duplicateAlert = $this->_isCategoryDuplicate($originalId);
         //sprawdzenie uprawnień do edycji węzła kategorii
-        if (!(new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed(\App\Registry::$auth->getRoles(), $originalId)) {
+        if (!(new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed($this->auth->getRoles(), $originalId)) {
             $this->getMessenger()->addMessage('messenger.category.permission.denied', false);
             return $this->_redirectToRefererOrTree($originalId);
         }
         //modyfikacja breadcrumbów
         $this->view->adminNavigation()->modifyLastBreadcrumb('menu.category.edit', '#');
         //pobranie listy widgetów koniecznych do dodania przed zapisem
-        $minOccurrenceWidgets = (new CategoryValidationModel($category, Registry::$config->skinset))->getMinOccurenceWidgets();
+        $minOccurrenceWidgets = (new CategoryValidationModel($category, $this->cmsSkinsetConfig))->getMinOccurenceWidgets();
         //konfiguracja kategorii
         $form = new CategoryForm($category);
         //form do widoku
         $this->view->categoryForm = $form;
         //model szablonu
-        $templateModel = new TemplateModel($category, Registry::$config->skinset);
+        $templateModel = new TemplateModel($category, $this->cmsSkinsetConfig);
         //szablon strony istnieje
         if ($category->template) {
             $this->view->template = $templateModel->getTemplateConfg();
@@ -91,7 +112,7 @@ class CategoryController extends Mvc\Controller
         }
         //ustawienie post
         if ($form->isMine()) {
-            $form->setFromPost($this->getRequest()->getPost());
+            $form->setFromPost($request->getPost());
         }
         //walidacja sekcji i ilości widgetów
         if ($form->isMine() && $form->getElement('commit')->getValue() && !empty($minOccurrenceWidgets)) {
@@ -164,12 +185,12 @@ class CategoryController extends Mvc\Controller
     /**
      * Renderowanie fragmentu drzewa stron na podstawie parentId
      */
-    public function nodeAction()
+    public function nodeAction(Request $request)
     {
         //wyłączenie layout
-        FrontController::getInstance()->getView()->setLayoutDisabled();
+        $this->view->setLayoutDisabled();
         //id węzła rodzica
-        $this->view->parentId = ($this->parentId > 0) ? $this->parentId : null;
+        $this->view->parentId = ($request->parentId > 0) ? $request->parentId : null;
         //pobranie drzewiastej struktury stron CMS
         $this->view->categoryTree = (new \Cms\Model\CategoryModel(new CmsCategoryQuery()))->getCategoryTree($this->view->parentId);
     }
@@ -177,13 +198,13 @@ class CategoryController extends Mvc\Controller
     /**
      * Tworzenie nowej strony
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
         $this->getResponse()->setTypeJson();
         $cat = new \Cms\Orm\CmsCategoryRecord();
-        $cat->name = $this->getPost()->name;
-        $cat->parentId = ($this->getPost()->parentId > 0) ? $this->getPost()->parentId : null;
-        $cat->order = $this->getPost()->order;
+        $cat->name = $request->getPost()->name;
+        $cat->parentId = ($request->getPost()->parentId > 0) ? $request->getPost()->parentId : null;
+        $cat->order = $request->getPost()->order;
         $cat->active = false;
         $cat->status = \Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE;
         if ($cat->save()) {
@@ -195,7 +216,7 @@ class CategoryController extends Mvc\Controller
             }
             //sprawdzenie uprawnień do węzła
             $acl = (new \CmsAdmin\Model\CategoryAclModel)->getAcl();
-            if (!$acl->isAllowed(\App\Registry::$auth->getRoles(), $cat->id)) {
+            if (!$acl->isAllowed($this->auth->getRoles(), $cat->id)) {
                 $disabled = true;
                 //ikona zablokowanego wezla gdy brak uprawnien
                 $icon = $this->view->baseUrl . '/resource/cmsAdmin/images/folder-disabled.png';
@@ -214,11 +235,11 @@ class CategoryController extends Mvc\Controller
     /**
      * Zmiana nazwy strony
      */
-    public function renameAction()
+    public function renameAction(Request $request)
     {
         $this->getResponse()->setTypeJson();
-        if (null !== $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
-            $name = trim($this->getPost()->name);
+        if (null !== $cat = (new \Cms\Orm\CmsCategoryQuery)->findPk($request->getPost()->id)) {
+            $name = trim($request->getPost()->name);
             if (mb_strlen($name) < 2 || mb_strlen($name) > 64) {
                 return json_encode(['status' => false, 'error' => $this->view->_('controller.category.rename.validator')]);
             }
@@ -233,22 +254,22 @@ class CategoryController extends Mvc\Controller
     /**
      * Przenoszenie strony w drzewie
      */
-    public function moveAction()
+    public function moveAction(Request $request)
     {
         $this->getResponse()->setTypeJson();
         //brak kategorii
-        if (null === $categoryRecord = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
+        if (null === $categoryRecord = (new \Cms\Orm\CmsCategoryQuery)->findPk($request->getPost()->id)) {
             return json_encode(['status' => false, 'error' => $this->view->_('controller.category.move.error.missing')]);
         }
         //draft nie może być utworzony, ani wczytany
-        if (null === $draft = (new \Cms\Model\CategoryDraft($categoryRecord))->createAndGetDraftForUser(\App\Registry::$auth->getId(), true)) {
+        if (null === $draft = (new \Cms\Model\CategoryDraft($categoryRecord))->createAndGetDraftForUser($this->auth->getId(), true)) {
             return json_encode(['status' => false, 'error' => $this->view->_('controller.category.move.error.missing')]);
         }
         //zatwierdzenie draftu
         $draft->commitVersion();
         //zmiana położenia aktywnej kategorii
-        $categoryRecord->parentId = ($this->getPost()->parentId > 0) ? $this->getPost()->parentId : null;
-        $categoryRecord->order = $this->getPost()->order;
+        $categoryRecord->parentId = ($request->getPost()->parentId > 0) ? $request->getPost()->parentId : null;
+        $categoryRecord->order = $request->getPost()->order;
         //próba zapisu
         return $categoryRecord->save() ? json_encode(['status' => true, 'id' => $categoryRecord->id, 'message' => $this->view->_('controller.category.move.message')]) : json_encode(['status' => false, 'error' => $this->view->_('controller.category.move.error')]);
     }
@@ -256,11 +277,11 @@ class CategoryController extends Mvc\Controller
     /**
      * Usuwanie strony
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
         $this->getResponse()->setTypeJson();
         //brak kategorii
-        if (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
+        if (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($request->getPost()->id)) {
             return json_encode(['status' => false, 'error' => $this->view->_('controller.category.delete.error')]);
         }
         //ma historię, nie możemy usunąć
@@ -269,7 +290,7 @@ class CategoryController extends Mvc\Controller
         }
         try {
             //usuwanie - logika szablonu
-            (new TemplateModel($category, Registry::$config->skinset))->invokeDeleteAction($this->view);
+            (new TemplateModel($category, $this->cmsSkinsetConfig))->invokeDeleteAction($this->view);
             //usuwanie rekordu
             $category->delete();
             return json_encode(['status' => true, 'message' => $this->view->_('controller.category.delete.message')]);
@@ -280,10 +301,10 @@ class CategoryController extends Mvc\Controller
     /**
      * Kopiowanie strony - kategorii
      */
-    public function copyAction()
+    public function copyAction(Request $request)
     {
         $this->getResponse()->setTypeJson();
-        if (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->getPost()->id)) {
+        if (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($request->getPost()->id)) {
             return json_encode(['status' => false, 'error' => 'Strona nie istnieje']);
         }
         //model do kopiowania kategorii
@@ -317,18 +338,18 @@ class CategoryController extends Mvc\Controller
      * @param \Cms\Orm\CmsCategoryRecord $category
      * @param integer $originalId
      */
-    protected function _prepareDraft(\Cms\Orm\CmsCategoryRecord $category, $originalId)
+    protected function _prepareDraft(\Cms\Orm\CmsCategoryRecord $category, Request $request, $originalId)
     {
         //jeśli to nie był DRAFT
         if (\Cms\Orm\CmsCategoryRecord::STATUS_DRAFT == $category->status) {
             return;
         }
         //zapis referera
-        $this->_saveReferer($originalId);
+        $this->_saveReferer($request, $originalId);
         //wymuszony świeży draft jeśli informacja przyszła w url, lub kategoria jest z archiwum
         $force = $this->force || (\Cms\Orm\CmsCategoryRecord::STATUS_HISTORY == $category->status);
         //draft nie może być utworzony, ani wczytany
-        if (null === $draft = (new \Cms\Model\CategoryDraft($category))->createAndGetDraftForUser(\App\Registry::$auth->getId(), $force)) {
+        if (null === $draft = (new \Cms\Model\CategoryDraft($category))->createAndGetDraftForUser($this->auth->getId(), $force)) {
             $this->getMessenger()->addMessage('messenger.category.draft.fail', false);
             return $this->_redirectToRefererOrTree($originalId);
         }
@@ -354,26 +375,26 @@ class CategoryController extends Mvc\Controller
         $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
     }
 
-    protected function _saveReferer($originalId)
+    protected function _saveReferer(Request $request, $originalId)
     {
         //czyszczenie przestrzeni sesji
         $sessionSpace = new SessionSpace(self::SESSION_SPACE_PREFIX . $originalId);
         $sessionSpace->unsetAll();
         //brak refererea
-        if ('' == ($referer = $this->getRequest()->getReferer())) {
+        if ('' == ($referer = $request->getReferer())) {
             return;
         }
         //request referera
-        $refererRequest = new Request(FrontController::getInstance()->getRouter()->decodeUrl($referer));
+        $refererRequest = new Request($this->router->decodeUrl($referer));
         //moduł nieadminowy - nie zapisujemy referera
         if (false === strpos($refererRequest->getModuleName(), self::ADMIN_MODULE_SUFFIX)) {
             return;
         }
         //zgodny moduł, kontroler, akcja - nie zapisujemy referera
         if (
-            $refererRequest->getModuleName() == $this->getRequest()->getModuleName() &&
-            $refererRequest->getControllerName() == $this->getRequest()->getControllerName() &&
-            $refererRequest->getActionName() == $this->getRequest()->getActionName()
+            $refererRequest->getModuleName() == $request->getModuleName() &&
+            $refererRequest->getControllerName() == $request->getControllerName() &&
+            $refererRequest->getActionName() == $request->getActionName()
         ) {
             return;
         }

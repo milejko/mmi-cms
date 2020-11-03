@@ -10,10 +10,12 @@
 
 namespace CmsAdmin;
 
+use Mmi\Mvc\Controller;
+
 /**
  * Kontroler kontaktów
  */
-class ContactController extends Mvc\Controller
+class ContactController extends Controller
 {
 
     /**

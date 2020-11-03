@@ -10,10 +10,12 @@
 
 namespace CmsAdmin;
 
+use Mmi\Mvc\Controller;
+
 /**
  * Kontroler harmonogramu zadań
  */
-class CronController extends Mvc\Controller
+class CronController extends Controller
 {
 
     /**

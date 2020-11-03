@@ -10,10 +10,12 @@
 
 namespace CmsAdmin;
 
+use Mmi\Mvc\Controller;
+
 /**
  * Kontroler użytkowników
  */
-class AuthController extends Mvc\Controller
+class AuthController extends Controller
 {
 
     /**

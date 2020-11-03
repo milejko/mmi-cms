@@ -10,10 +10,12 @@
 
 namespace CmsAdmin;
 
+use Mmi\Mvc\Controller;
+
 /**
  * Kontroler poczty
  */
-class MailController extends Mvc\Controller
+class MailController extends Controller
 {
 
     /**

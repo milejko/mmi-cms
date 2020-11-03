@@ -22,7 +22,7 @@ abstract class WidgetController extends Controller
     /**
      * Konstruktor
      */
-    public function __construct(Request $request, View $view, CmsCategoryWidgetCategoryRecord $widgetRecord)
+    public function __construct(View $view, CmsCategoryWidgetCategoryRecord $widgetRecord)
     {
         //parent
         parent::__construct($request, $view);

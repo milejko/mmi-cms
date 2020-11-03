@@ -13,12 +13,13 @@ namespace CmsAdmin;
 use Mmi\Http\HttpServerEnv;
 use Mmi\Security\Auth;
 use Mmi\Http\Request;
+use Mmi\Mvc\Controller;
 use Mmi\Session\Session;
 
 /**
  * Kontroler główny panelu administracyjnego
  */
-class IndexController extends Mvc\Controller
+class IndexController extends Controller
 {
 
     /**

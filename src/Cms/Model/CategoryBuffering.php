@@ -10,6 +10,10 @@
 
 namespace Cms\Model;
 
+use Mmi\App\App;
+use Mmi\Mvc\Messenger;
+use Mmi\Security\Auth;
+
 class CategoryBuffering
 {
 
@@ -20,12 +24,25 @@ class CategoryBuffering
     protected $_request;
 
     /**
+     * @var Auth
+     */
+    protected $auth;
+
+    /**
+     * @var Messenger
+     */
+    protected $messenger;
+
+    /**
      * Konstruktor
      * @param \Mmi\Http\Request $request
      */
     public function __construct(\Mmi\Http\Request $request)
     {
         $this->_request = $request;
+        //@TODO: proper DI
+        $this->auth      = App::$di->get(Auth::class);
+        $this->messenger = App::$di->get(Messenger::class);
     }
 
     /**
@@ -51,7 +68,7 @@ class CategoryBuffering
      */
     protected function _identityTest()
     {
-        if (\App\Registry::$auth->hasIdentity()) {
+        if ($this->auth->hasIdentity()) {
             return false;
         }
         return true;
@@ -63,7 +80,7 @@ class CategoryBuffering
      */
     protected function _messengerTest()
     {
-        if (\Mmi\Message\MessengerHelper::getMessenger()->hasMessages()) {
+        if ($this->messenger->hasMessages()) {
             return false;
         }
         return true;

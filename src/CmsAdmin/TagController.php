@@ -10,10 +10,12 @@
 
 namespace CmsAdmin;
 
+use Mmi\Mvc\Controller;
+
 /**
  * Kontroler tagów
  */
-class TagController extends Mvc\Controller
+class TagController extends Controller
 {
 
     /**

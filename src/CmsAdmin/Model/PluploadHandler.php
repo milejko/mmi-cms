@@ -2,6 +2,10 @@
 
 namespace CmsAdmin\Model;
 
+use Mmi\App\App;
+use Mmi\Http\Request;
+use Mmi\Http\Response;
+
 define('PLUPLOAD_TMPDIR_ERR', 100);
 define('PLUPLOAD_INPUT_ERR', 101);
 define('PLUPLOAD_OUTPUT_ERR', 102);
@@ -230,16 +234,16 @@ class PluploadHandler
     }
 
     /**
-     * Ustawia obiekty żądania i odpowiedzi z FrontControllera, jeśli nie są ustawione
+     * Ustawia obiekty żądania i odpowiedzi, jeśli nie są ustawione
      * @return \CmsAdmin\Model\PluploadHandler
      */
     private function _setRequestAndResponse()
     {
         if (!is_object($this->_request)) {
-            $this->_request = \Mmi\App\FrontController::getInstance()->getRequest();
+            $this->_request = App::$di->get(Request::class);
         }
         if (!is_object($this->_response)) {
-            $this->_response = \Mmi\App\FrontController::getInstance()->getResponse();
+            $this->_response = App::$di->get(Response::class);
         }
         return $this;
     }

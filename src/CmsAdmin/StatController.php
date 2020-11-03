@@ -10,10 +10,12 @@
 
 namespace CmsAdmin;
 
+use Mmi\Mvc\Controller;
+
 /**
  * Kontroler statystyk
  */
-class StatController extends Mvc\Controller
+class StatController extends Controller
 {
 
     /**

@@ -11,11 +11,12 @@
 namespace CmsAdmin;
 
 use Mmi\Http\Request;
+use Mmi\Mvc\Controller;
 
 /**
  * Kontroler kontaktów
  */
-class CategoryAclController extends Mvc\Controller
+class CategoryAclController extends Controller
 {
 
     /**

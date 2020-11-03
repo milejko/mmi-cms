@@ -2,6 +2,10 @@
 
 namespace Cms\Orm;
 
+use Mmi\App\App;
+use Mmi\Db\Adapter\PdoAbstract;
+use Mmi\Db\DbException;
+
 /**
  * Rekord roli
  */
@@ -39,17 +43,18 @@ class CmsRoleRecord extends \Mmi\Orm\Record
         if ($this->name == 'admin' || $this->name == 'guest') {
             return false;
         }
-        \Mmi\Orm\DbConnector::getAdapter()->beginTransaction();
+        $db = App::$di->get(PdoAbstract::class);
+        $db->beginTransaction();
         //usuwanie uprawnień ról
         (new CmsAclQuery)->whereCmsRoleId()->equals($this->id)
-            ->find()->delete();
+            ->delete();
         try {
             $result = parent::delete();
-        } catch (Mmi\Db\DbException $e) {
-            \Mmi\Orm\DbConnector::getAdapter()->rollBack();
+        } catch (DbException $e) {
+            $db->rollBack();
             return false;
         }
-        \Mmi\Orm\DbConnector::getAdapter()->commit();
+        $db->commit();
         return $result;
     }
 

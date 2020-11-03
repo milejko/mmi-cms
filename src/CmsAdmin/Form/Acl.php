@@ -11,7 +11,8 @@
 namespace CmsAdmin\Form;
 
 use Cms\Form\Element;
-
+use Mmi\App\App;
+use Mmi\Http\Request;
 
 /**
  * Klasa formularza ACL
@@ -22,7 +23,7 @@ class Acl extends \Cms\Form\Form
     public function init()
     {
 
-        $this->_record->cmsRoleId = \Mmi\App\FrontController::getInstance()->getRequest()->roleId;
+        $this->_record->cmsRoleId = App::$di->get(Request::class)->roleId;
 
         //parametry MVC
         $this->addElement((new Element\Select('mvcParams'))

@@ -1,7 +1,11 @@
 <?php
 
 namespace Cms\Orm;
+
+use Mmi\App\App;
 use Mmi\DataObject;
+use Mmi\Mvc\View;
+use Mmi\Security\Auth;
 
 /**
  * Rekord pliku
@@ -95,7 +99,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
         if ($this->id === null) {
             return;
         }
-        return substr(md5($this->name . \App\Registry::$config->salt), 0, 8);
+        return substr(md5($this->name . App::$di->get('app.view.cdn')), 0, 8);
     }
 
     /**
@@ -133,7 +137,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
             return;
         }
         //ścieżka CDN
-        $cdnPath = rtrim(\Mmi\App\FrontController::getInstance()->getView()->cdn ? \Mmi\App\FrontController::getInstance()->getView()->cdn : \Mmi\App\FrontController::getInstance()->getView()->url([], true, $https), '/');
+        $cdnPath = rtrim(App::$di->get(View::class)->cdn ? App::$di->get(View::class)->cdn : App::$di->get(View::class)->url([], true), '/');
         //pobranie ścieżki z systemu plików
         return $cdnPath . (new \Cms\Model\FileSystemModel($this->name))->getPublicPath($scaleType, $scale);
     }
@@ -152,7 +156,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
             return;
         }
         //ścieżka CDN
-        $cdnPath = rtrim(\Mmi\App\FrontController::getInstance()->getView()->cdn ? \Mmi\App\FrontController::getInstance()->getView()->cdn : \Mmi\App\FrontController::getInstance()->getView()->url([], true, $https), '/');
+        $cdnPath = rtrim(App::$di->get(View::class)->cdn ? App::$di->get(View::class)->cdn : App::$di->get(View::class)->url([], true), '/');
         //pobranie ścieżki z systemu plików
         return $cdnPath . (new \Cms\Model\FileSystemModel($this->data->posterFileName))->getPublicPath($scaleType, $scale);
     }
@@ -251,7 +255,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
         }
         //właściciel pliku
         if (!$this->cmsAuthId) {
-            $this->cmsAuthId = \App\Registry::$auth ? \App\Registry::$auth->getId() : null;
+            $this->cmsAuthId = App::$di->get(Auth::class) ? App::$di->get(Auth::class)->getId() : null;
         }
         return parent::_insert();
     }

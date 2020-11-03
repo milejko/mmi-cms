@@ -3,6 +3,8 @@
 namespace CmsAdmin\Model;
 
 use Cms\Orm\CmsCategoryQuery;
+use Mmi\App\App;
+use Mmi\Cache\Cache;
 
 /**
  * Model uprawnień edycji kategorii
@@ -24,7 +26,7 @@ class CategoryAclModel
     public function __construct()
     {
         //ładowanie ACL z bufora
-        if (null !== $this->_acl = \App\Registry::$cache->load($cacheKey = self::CACHE_KEY)) {
+        if (null !== $this->_acl = App::$di->get(Cache::class)->load($cacheKey = self::CACHE_KEY)) {
             return;
         }
         //uzupełnianie ACL
@@ -37,7 +39,7 @@ class CategoryAclModel
             //aktualizacja acl
             $this->_updateAcl($aclRecord);
         }
-        \App\Registry::$cache->save($this->_acl, $cacheKey);
+        App::$di->get(Cache::class)->save($this->_acl, $cacheKey);
     }
 
     /**

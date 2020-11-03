@@ -13,6 +13,8 @@ namespace Cms\Model;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
+use Mmi\App\App;
+use Mmi\Db\Adapter\PdoAbstract;
 
 /**
  * Model do kopiowania kategorii wraz z wszystkimi elementami zależnymi.
@@ -107,14 +109,15 @@ class CategoryCopy
     public function copyWithTransaction()
     {
         //rozpoczęcie transakcji
-        \App\Registry::$db->beginTransaction();
+        $db = App::$di->get(PdoAbstract::class);
+        $db->beginTransaction();
         if ($this->_copyAll()) {
             //commit po transakcji
-            \App\Registry::$db->commit();
+            $db->commit();
             return true;
         }
         //rollback
-        \App\Registry::$db->rollBack();
+        $db->rollBack();
         return false;
     }
 

@@ -2,6 +2,10 @@
 
 namespace Cms\Orm;
 
+use Mmi\App\App;
+use Mmi\Http\HttpServerEnv;
+use Mmi\Security\Auth;
+
 /**
  * Rekord kontaktu
  */
@@ -55,11 +59,11 @@ class CmsContactRecord extends \Mmi\Orm\Record
         //data dodania
         $this->dateAdd = date('Y-m-d H:i:s');
         //adres IP
-        $this->ip = \Mmi\App\FrontController::getInstance()->getEnvironment()->remoteAddress;
+        $this->ip = App::$di->get(HttpServerEnv::class)->remoteAddress;
         $this->active = 1;
         //zapis znanego użytkownika
-        if (\App\Registry::$auth->hasIdentity()) {
-            $this->cmsAuthId = \App\Registry::$auth->getId();
+        if (App::$di->get(Auth::class)->hasIdentity()) {
+            $this->cmsAuthId = App::$di->get(Auth::class)->getId();
         }
         //namespace w sesji
         $namespace = new \Mmi\Session\SessionSpace('contact');

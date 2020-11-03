@@ -14,11 +14,12 @@ namespace CmsAdmin;
 use Cms\Model\CategoryValidationModel;
 use Cms\Model\SkinsetModel;
 use Cms\Model\WidgetModel;
+use Mmi\Mvc\Controller;
 
 /**
  * Kontroler konfiguracji kategorii - stron CMS
  */
-class CategoryWidgetRelationController extends Mvc\Controller
+class CategoryWidgetRelationController extends Controller
 {
 
     /**

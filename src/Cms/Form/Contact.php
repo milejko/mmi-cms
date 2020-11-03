@@ -10,9 +10,11 @@
 
 namespace Cms\Form;
 
+use Mmi\App\App;
 use Mmi\Form\Element,
     Mmi\Validator,
     Mmi\Filter;
+use Mmi\Security\Auth;
 
 class Contact extends \Mmi\Form\Form
 {
@@ -27,7 +29,7 @@ class Contact extends \Mmi\Form\Form
                 ->addValidator(new Validator\Integer));
         }
 
-        $auth = \App\Registry::$auth;
+        $auth = App::$di->get(Auth::class);
 
         $this->addElement((new Element\Text('email'))
             ->setLabel('form.contact.email.label')
