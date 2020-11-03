@@ -69,13 +69,13 @@ class CategoryController extends Controller
     public function editAction(Request $request)
     {
         //brak id przekierowanie na drzewo
-        if (!$this->id) {
+        if (!$request->id) {
             throw new \Mmi\Mvc\MvcNotFoundException('Category not found');
         }
         //wyszukiwanie kategorii
-        if (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id)) {
+        if (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($request->id)) {
             //przekierowanie na originalId
-            return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->originalId]);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $request->originalId]);
         }
         //zapisywanie oryginalnego id
         $originalId = $category->cmsCategoryOriginalId ? $category->cmsCategoryOriginalId : $category->id;
@@ -137,9 +137,9 @@ class CategoryController extends Controller
             $templateModel->invokeAfterSaveEditForm($this->view, $form);
         }
         //sprawdzenie czy kategoria nadal istnieje (form robi zapis - to trwa)
-        if (!$form->isMine() && (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($this->id))) {
+        if (!$form->isMine() && (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($request->id))) {
             //przekierowanie na originalId (lub na tree według powyższego warunku)
-            return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $this->originalId]);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $request->originalId]);
         }
         //jeśli nie było posta
         if (!$form->isMine()) {
@@ -347,7 +347,7 @@ class CategoryController extends Controller
         //zapis referera
         $this->_saveReferer($request, $originalId);
         //wymuszony świeży draft jeśli informacja przyszła w url, lub kategoria jest z archiwum
-        $force = $this->force || (\Cms\Orm\CmsCategoryRecord::STATUS_HISTORY == $category->status);
+        $force = $request->force || (\Cms\Orm\CmsCategoryRecord::STATUS_HISTORY == $category->status);
         //draft nie może być utworzony, ani wczytany
         if (null === $draft = (new \Cms\Model\CategoryDraft($category))->createAndGetDraftForUser($this->auth->getId(), $force)) {
             $this->getMessenger()->addMessage('messenger.category.draft.fail', false);

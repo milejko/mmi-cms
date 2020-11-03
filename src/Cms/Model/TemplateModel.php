@@ -9,6 +9,8 @@ use Mmi\Mvc\View;
 use Cms\App\CmsTemplateConfig;
 use Cms\TemplateController;
 use CmsAdmin\Form\CategoryForm;
+use Mmi\App\App;
+use Mmi\Http\Response;
 
 /**
  * Model szablonu
@@ -65,7 +67,7 @@ class TemplateModel
         if (null === $controller = $this->_createController($view)) {
             return;
         }
-        $controller->displayAction();
+        $controller->displayAction($view->request);
         //render szablonu
         return $view->renderTemplate($this->_getTemplatePrefix() . '/display');
     }
@@ -81,7 +83,7 @@ class TemplateModel
         if (null === $controller = $this->_createController($view)) {
             return;
         }
-        $controller->deleteAction();
+        $controller->deleteAction($view->request);
     }
 
     /**
@@ -142,7 +144,7 @@ class TemplateModel
         //odczytywanie nazwy kontrolera
         $controllerClass = $this->_templateConfig->getControllerClassName();
         //powołanie kontrolera z rekordem relacji
-        $targetController = new $controllerClass($view->request, $view, $this->_categoryRecord);
+        $targetController = new $controllerClass($view, App::$di->get(Response::class), $view->getMessenger(), $this->_categoryRecord);
         //kontroler nie jest poprawny
         if (!($targetController instanceof TemplateController)) {
             throw new KernelException('Not an instance of WidgetController');

@@ -10,6 +10,7 @@
 
 namespace CmsAdmin;
 
+use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 
 /**
@@ -37,9 +38,9 @@ class ContactController extends Controller
     /**
      * Edycja tematu
      */
-    public function editSubjectAction()
+    public function editSubjectAction(Request $request)
     {
-        $form = new \CmsAdmin\Form\Contact\Option(new \Cms\Orm\CmsContactOptionRecord($this->id));
+        $form = new \CmsAdmin\Form\Contact\Option(new \Cms\Orm\CmsContactOptionRecord($request->id));
         if ($form->isSaved()) {
             $this->getMessenger()->addMessage('messenger.contact.subject.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'contact', 'subject');
@@ -50,9 +51,9 @@ class ContactController extends Controller
     /**
      * Usuwanie tematu
      */
-    public function deleteSubjectAction()
+    public function deleteSubjectAction(Request $request)
     {
-        $option = (new \Cms\Orm\CmsContactOptionQuery)->findPk($this->id);
+        $option = (new \Cms\Orm\CmsContactOptionQuery)->findPk($request->id);
         if ($option && $option->delete()) {
             $this->getMessenger()->addMessage('messenger.contact.subject.deleted', true);
         }
@@ -62,9 +63,9 @@ class ContactController extends Controller
     /**
      * Usuwanie zgłoszenia
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        $contact = (new \Cms\Orm\CmsContactQuery)->findPk($this->id);
+        $contact = (new \Cms\Orm\CmsContactQuery)->findPk($request->id);
         if ($contact && $contact->delete()) {
             $this->getMessenger()->addMessage('messenger.contact.message.deleted', true);
         }
@@ -74,9 +75,9 @@ class ContactController extends Controller
     /**
      * Edycja/odpowiedź na zgłoszenie
      */
-    public function editAction()
+    public function editAction(Request $request)
     {
-        $form = new \CmsAdmin\Form\Contact(new \Cms\Orm\CmsContactRecord($this->id));
+        $form = new \CmsAdmin\Form\Contact(new \Cms\Orm\CmsContactRecord($request->id));
         if ($form->isSaved()) {
             $this->getMessenger()->addMessage('messenger.contact.message.sent', true);
             $this->getResponse()->redirect('cmsAdmin', 'contact');

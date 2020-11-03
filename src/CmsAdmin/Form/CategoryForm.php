@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Form;
 
-
+use Cms\App\CmsSkinsetConfig;
 use Cms\Form\Element;
 use Cms\Form\Form;
 use Mmi\Validator;
@@ -18,6 +18,7 @@ use Mmi\Filter;
 use Cms\Model\CacheOptions;
 use Cms\Model\SkinsetModel;
 use Cms\Orm\CmsCategoryRecord;
+use Mmi\App\App;
 
 /**
  * Formularz edycji szegółów kategorii
@@ -68,7 +69,7 @@ class CategoryForm extends Form
             ->setOption(self::TAB_KEY, self::SECTION_BASIC)
             ->setLabel('form.category.cmsCategoryTypeId.label')
             ->addFilter(new Filter\EmptyToNull)
-            ->setMultioptions([null => 'form.category.cmsCategoryTypeId.default'] + (new SkinsetModel(Registry::$config->skinset))->getTemplatesMultioptions()));
+            ->setMultioptions([null => 'form.category.cmsCategoryTypeId.default'] + (new SkinsetModel(App::$di->get(CmsSkinsetConfig::class)))->getTemplatesMultioptions()));
 
         //nazwa kategorii
         $this->addElement((new Element\Text('name'))

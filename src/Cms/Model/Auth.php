@@ -14,6 +14,7 @@ use Cms\Orm\CmsAuthQuery;
 use Cms\Orm\CmsAuthRecord;
 use Mmi\App\App;
 use Mmi\Http\HttpServerEnv;
+use Mmi\Ldap\LdapConfig;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -82,12 +83,14 @@ class Auth implements \Mmi\Security\AuthInterface
      */
     public function ldapAutocomplete($query = '*')
     {
-        return [];
         //tworzenie klienta
-        //$ldapClient = new \Mmi\Ldap\LdapClient(\App\Registry::$config->ldap);
+        if (!App::$di->has(LdapConfig::class)) {
+            return [];
+        }
+        $ldapClient = new \Mmi\Ldap\LdapClient(App::$di->get(LdapConfig::class));
         try {
             //wyszukiwanie w LDAPie
-            $ldapResults = [];//$ldapClient->findUser($query, 10, ['sAMAccountname']);
+            $ldapResults = $ldapClient->findUser($query, 10, ['sAMAccountname']);
         } catch (\Exception $e) {
             //błąd usługi
             App::$di->get(LoggerInterface::class)->error($e->getMessage());
@@ -163,15 +166,16 @@ class Auth implements \Mmi\Security\AuthInterface
     protected static function _ldapAuthenticate(CmsAuthRecord $identity, $credential)
     {
         //ldap wyłączony
-        //if (!isset(\App\Registry::$config->ldap) || !\App\Registry::$config->ldap->active) {
+        if (!App::$di->has(LdapConfig::class)) {
             return;
-        //}
-        /*try {
+        }
+        $config = App::$di->get(LdapConfig::class);
+        try {
             //tworzenie klienta
-            $ldapClient = new \Mmi\Ldap\LdapClient(\App\Registry::$config->ldap);
+            $ldapClient = new \Mmi\Ldap\LdapClient($config->ldap);
 
             //kalkulacja DN na podstawie patternu z konfiguracji
-            $dn = sprintf(\App\Registry::$config->ldap->dnPattern, str_replace('@' . \App\Registry::$config->ldap->domain, '', $identity->username));
+            $dn = sprintf($config->ldap->dnPattern, str_replace('@' . $config->ldap->domain, '', $identity->username));
 
             //zwrot autoryzacji LDAP
             return $ldapClient->authenticate($dn, $credential);
@@ -179,7 +183,7 @@ class Auth implements \Mmi\Security\AuthInterface
             //błąd LDAP'a
             App::$di->get(LoggerInterface::class)->error('LDAP failed: ' . $e->getMessage());
             return false;
-        }*/
+        }
     }
 
     /**

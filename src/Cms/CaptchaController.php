@@ -10,6 +10,8 @@
 
 namespace Cms;
 
+use Mmi\Http\Request;
+
 /**
  * Kontroler captcha
  */
@@ -20,9 +22,9 @@ class CaptchaController extends \Mmi\Mvc\Controller
      * Akcja generująca obrazek captcha
      * @return binary
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        if (!$this->name) {
+        if (!$request->name) {
             return '';
         }
         //lista dozwolonych znaków
@@ -74,7 +76,7 @@ class CaptchaController extends \Mmi\Mvc\Controller
         //zapis do sesji
         $formSession = new \Mmi\Session\SessionSpace('captcha');
         //filtracja nazwy pola z nazwy formularza + pola
-        $name = strpos($this->name, '[') === false ? $this->name : substr($this->name, strpos($this->name, '[') + 1, -1);
+        $name = strpos($request->name, '[') === false ? $request->name : substr($request->name, strpos($request->name, '[') + 1, -1);
         $formSession->$name = $word;
 
         //ustalenie nagłówka na niebuforowany

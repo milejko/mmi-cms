@@ -10,6 +10,8 @@
 
 namespace Cms;
 
+use Mmi\Http\Request;
+
 /**
  * Kontroler ajax formularzy
  */
@@ -20,7 +22,7 @@ class FormController extends \Mmi\Mvc\Controller
      * Walidacja formularza
      * @return string
      */
-    public function validateAction()
+    public function validateAction(Request $request)
     {
         //typ odpowiedzi: plain
         $this->getResponse()->setTypePlain();
@@ -28,24 +30,24 @@ class FormController extends \Mmi\Mvc\Controller
         $this->view->setLayoutDisabled();
 
         //sprawdzenie obecności obowiązkowych pól w poscie
-        if (!$this->getPost()->class || !$this->getPost()->field) {
+        if (!$request->getPost()->class || !$request->getPost()->field) {
             return '';
         }
         //nazwa klasy forma
-        $className = $this->getPost()->class;
+        $className = $request->getPost()->class;
         //klasa rekordu
-        $recordClassName = $this->getPost()->recordClass;
+        $recordClassName = $request->getPost()->recordClass;
         //powoływanie forma
-        $form = new $className($recordClassName ? new $recordClassName($this->getPost()->recordId ? $this->getPost()->recordId : null) : null);
+        $form = new $className($recordClassName ? new $recordClassName($request->getPost()->recordId ? $request->getPost()->recordId : null) : null);
         /* @var $form \Mmi\Form\Form */
         //pobieranie elementu do walidacji
-        $element = $form->getElement($this->getPost()->field);
+        $element = $form->getElement($request->getPost()->field);
         //jeśli brak elementu - wyjście
         if (!$element instanceof \Mmi\Form\Element\ElementAbstract) {
             return '';
         }
         //ustawienie wartości elementu
-        $element->setValue(urldecode($this->getPost()->value));
+        $element->setValue(urldecode($request->getPost()->value));
         //walidacja i zwrot wyniku
         if (!$element->isValid()) {
             $this->view->errors = $element->getErrors();

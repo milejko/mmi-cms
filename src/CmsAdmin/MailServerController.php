@@ -10,6 +10,8 @@
 
 namespace CmsAdmin;
 
+use Mmi\Db\DbException;
+use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 
 /**
@@ -30,9 +32,9 @@ class MailServerController extends Controller
     /**
      * Edycja serwera
      */
-    public function editAction()
+    public function editAction(Request $request)
     {
-        $form = new \CmsAdmin\Form\Mail\Server(new \Cms\Orm\CmsMailServerRecord($this->id));
+        $form = new \CmsAdmin\Form\Mail\Server(new \Cms\Orm\CmsMailServerRecord($request->id));
         if ($form->isSaved()) {
             $this->getMessenger()->addMessage('messenger.mailServer.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'mailServer');
@@ -43,14 +45,14 @@ class MailServerController extends Controller
     /**
      * Usuwanie serwera
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        $server = (new \Cms\Orm\CmsMailServerQuery)->findPk($this->id);
+        $server = (new \Cms\Orm\CmsMailServerQuery)->findPk($request->id);
         try {
             if ($server && $server->delete()) {
                 $this->getMessenger()->addMessage('messenger.mailServer.deleted');
             }
-        } catch (\Mmi\Db\Exception $e) {
+        } catch (DbException $e) {
             $this->getMessenger()->addMessage('messenger.mailServer.delete.error', false);
         }
         $this->getResponse()->redirect('cmsAdmin', 'mailServer');

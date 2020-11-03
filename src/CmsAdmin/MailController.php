@@ -10,6 +10,7 @@
 
 namespace CmsAdmin;
 
+use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 
 /**
@@ -29,9 +30,9 @@ class MailController extends Controller
     /**
      * Usuniecie maila
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        $mail = (new \Cms\Orm\CmsMailQuery)->findPk($this->id);
+        $mail = (new \Cms\Orm\CmsMailQuery)->findPk($request->id);
         if ($mail && $mail->delete()) {
             $this->getMessenger()->addMessage('messenger.mail.queue.deleted', true);
         }
@@ -41,10 +42,10 @@ class MailController extends Controller
     /**
      * Podglad treści maila
      */
-    public function previewAction()
+    public function previewAction(Request $request)
     {
         //wyszukiwanie wiadomości
-        if (null === $mail = (new \Cms\Orm\CmsMailQuery)->findPk($this->id)) {
+        if (null === $mail = (new \Cms\Orm\CmsMailQuery)->findPk($request->id)) {
             $this->getResponse()->redirect('cmsAdmin', 'mail', 'index');
         }
         $this->view->message = $mail->message;

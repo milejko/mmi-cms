@@ -2,7 +2,7 @@
 
 namespace Cms\Orm;
 
-
+use Cms\App\CmsSkinsetConfig;
 use CmsAdmin\Model\CategoryAclModel;
 use Mmi\App\App;
 use Mmi\Cache\Cache;
@@ -342,7 +342,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         (new CmsCategoryQuery)
             ->whereCmsCategoryOriginalId()->equals($this->id)
             ->orFieldParentId()->equals($this->id)
-            ->find()
             ->delete();
         //pobranie dzieci
         $children = (new \Cms\Model\CategoryModel(new CmsCategoryQuery))->getCategoryTree($this->getPk());
@@ -356,7 +355,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
                 ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
             )        
             ->andFieldObjectId()->equals($this->getPk())
-            ->find()
             ->delete();
         //usuwanie widgetów
         (new CmsCategoryWidgetCategoryQuery)
@@ -387,7 +385,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //próba pobrania modelu widgetu z cache
         if (null === $widgetModel = App::$di->get(Cache::class)->load($cacheKey = self::WIDGET_MODEL_CACHE_PREFIX . $this->id)) {
             //pobieranie modelu widgetu
-            App::$di->get(Cache::class)->save($widgetModel = new \Cms\Model\CategoryWidgetModel($this->id, Registry::$config->skinset), $cacheKey, 0);
+            App::$di->get(Cache::class)->save($widgetModel = new \Cms\Model\CategoryWidgetModel($this->id, App::$di->get(CmsSkinsetConfig::class)), $cacheKey, 0);
         }
         //zwrot atrybutów
         return $widgetModel;

@@ -10,9 +10,10 @@
 
 namespace Cms\Mvc\ViewHelper;
 
-
+use Cms\App\CmsSkinsetConfig;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
+use Mmi\App\App;
 
 /**
  * Buforowany widget kategorii CMS
@@ -30,7 +31,7 @@ class CategoryWidgetDisplay extends \Mmi\Mvc\ViewHelper\HelperAbstract
         //próba odczytu z bufora
         if (null === $output = $this->view->getCache()->load($cacheKey = CmsCategoryWidgetCategoryRecord::HTML_CACHE_PREFIX . $widgetRelationRecord->id)) {
             //model widgeta
-            $widgetModel =  new WidgetModel($widgetRelationRecord, Registry::$config->skinset);
+            $widgetModel =  new WidgetModel($widgetRelationRecord, App::$di->get(CmsSkinsetConfig::class));
             //render szablonu
             $output = $widgetModel->renderDisplayAction($this->view);
             //bufor wyłączony parametrem

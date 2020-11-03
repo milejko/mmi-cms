@@ -11,6 +11,7 @@
 namespace Cms;
 
 use Mmi\Http\HttpServerEnv;
+use Mmi\Http\Request;
 
 /**
  * Strona kontaktowa
@@ -27,13 +28,13 @@ class ContactController extends \Mmi\Mvc\Controller
     /**
      * Akcja kontaktu
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         //ciasteczko sesyjne - zapamietanie sciezki
         $namespace = new \Mmi\Session\SessionSpace('contact');
         //formularz kontaktowy z rekordem kontaktu
         $form = new \Cms\Form\Contact(new \Cms\Orm\CmsContactRecord(), [
-            'subjectId' => $this->subjectId
+            'subjectId' => $request->subjectId
         ]);
         //do widoku
         $this->view->contactForm = $form;

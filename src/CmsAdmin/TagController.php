@@ -10,6 +10,7 @@
 
 namespace CmsAdmin;
 
+use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 
 /**
@@ -29,9 +30,9 @@ class TagController extends Controller
     /**
      * Edycja tagów
      */
-    public function editAction()
+    public function editAction(Request $request)
     {
-        $form = new \CmsAdmin\Form\Tag(new \Cms\Orm\CmsTagRecord($this->id));
+        $form = new \CmsAdmin\Form\Tag(new \Cms\Orm\CmsTagRecord($request->id));
         if ($form->isSaved()) {
             $this->getMessenger()->addMessage('messenger.tag.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'tag', 'index');
@@ -42,9 +43,9 @@ class TagController extends Controller
     /**
      * Usuwanie tagu
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        $tag = (new \Cms\Orm\CmsTagQuery)->findPk($this->id);
+        $tag = (new \Cms\Orm\CmsTagQuery)->findPk($request->id);
         if ($tag && $tag->delete()) {
             $this->getMessenger()->addMessage('messenger.tag.deleted', true);
         }

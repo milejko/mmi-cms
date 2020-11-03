@@ -10,6 +10,7 @@
 
 namespace CmsAdmin;
 
+use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 
 /**
@@ -30,9 +31,9 @@ class CronController extends Controller
     /**
      * Edycja zadania
      */
-    public function editAction()
+    public function editAction(Request $request)
     {
-        $form = new \CmsAdmin\Form\Cron(new \Cms\Orm\CmsCronRecord($this->id));
+        $form = new \CmsAdmin\Form\Cron(new \Cms\Orm\CmsCronRecord($request->id));
         if ($form->isSaved()) {
             $this->getMessenger()->addMessage('messenger.cron.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'cron');
@@ -43,9 +44,9 @@ class CronController extends Controller
     /**
      * Usuwanie zadania
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        $record = (new \Cms\Orm\CmsCronQuery)->findPk($this->id);
+        $record = (new \Cms\Orm\CmsCronQuery)->findPk($request->id);
         if ($record && $record->delete()) {
             $this->getMessenger()->addMessage('messenger.cron.deleted', true);
         }

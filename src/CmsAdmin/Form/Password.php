@@ -11,6 +11,8 @@
 namespace CmsAdmin\Form;
 
 use Cms\Form\Element;
+use Mmi\App\App;
+use Mmi\Security\Auth;
 
 /**
  * Formularz zmiany hasła w CMS
@@ -49,7 +51,7 @@ class Password extends \Cms\Form\Form
     public function beforeSave()
     {
         $auth = new \Cms\Model\Auth;
-        $record = $auth->authenticate(\App\Registry::$auth->getUsername(), $this->getElement('password')->getValue());
+        $record = $auth->authenticate(App::$di->get(Auth::class)->getUsername(), $this->getElement('password')->getValue());
         //logowanie niepoprawne
         if (!$record) {
             $this->getElement('password')->addError('form.index.password.current.invalid');
@@ -61,7 +63,7 @@ class Password extends \Cms\Form\Form
             return false;
         }
         //znajdowanie rekordu użytkownika
-        $authRecord = (new \Cms\Orm\CmsAuthQuery)->findPk(\App\Registry::$auth->getId());
+        $authRecord = (new \Cms\Orm\CmsAuthQuery)->findPk(App::$di->get(Auth::class)->getId());
         if (null === $authRecord) {
             return false;
         }

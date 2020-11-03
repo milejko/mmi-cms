@@ -10,6 +10,9 @@
 
 namespace Cms;
 
+use Cms\Model\FileSystemModel;
+use Mmi\Http\Request;
+
 /**
  * Kontroler plików
  */
@@ -19,17 +22,17 @@ class FileController extends \Mmi\Mvc\Controller
      * Lista obrazów json (na potrzeby tinymce)
      * @return string
      */
-    public function listAction()
+    public function listAction(Request $request)
     {
         $this->getResponse()->setHeader('Content-type', 'application/json');
-        if (!$this->object || !$this->objectId || !$this->hash || !$this->t) {
+        if (!$request->object || !$request->objectId || !$request->hash || !$request->t) {
             return '';
         }
-        if ($this->hash != md5(\Mmi\Session\Session::getId() . '+' . $this->t . '+' . $this->objectId)) {
+        if ($request->hash != md5(\Mmi\Session\Session::getId() . '+' . $request->t . '+' . $request->objectId)) {
             return '';
         }
         $files = [];
-        foreach (\Cms\Orm\CmsFileQuery::imagesByObject($this->object, $this->objectId)->find() as $file) {
+        foreach (\Cms\Orm\CmsFileQuery::imagesByObject($request->object, $request->objectId)->find() as $file) {
             $files[] = ['title' => $file->original, 'value' => $file->getUrl('default', '')];
         }
         return json_encode($files);
@@ -39,18 +42,18 @@ class FileController extends \Mmi\Mvc\Controller
      * Lista obrazów (na potrzeby tinymce)
      * @return view layout
      */
-    public function listLayoutAction()
+    public function listLayoutAction(Request $request)
     {
         $this->view->setLayoutDisabled();
-        if (!$this->object || !$this->objectId || !$this->hash || !$this->t) {
+        if (!$request->object || !$request->objectId || !$request->hash || !$request->t) {
             return '';
         }
-        if ($this->hash != md5(\Mmi\Session\Session::getId() . '+' . $this->t . '+' . $this->objectId)) {
+        if ($request->hash != md5(\Mmi\Session\Session::getId() . '+' . $request->t . '+' . $request->objectId)) {
             return '';
         }
         $files = [];
-        $thumb = new \Cms\Mvc\ViewHelper\Thumb();
-        foreach (\Cms\Orm\CmsFileQuery::byObjectAndClass($this->object, $this->objectId, $this->class)->find() as $file) {
+        $thumb = new \Cms\Mvc\ViewHelper\Thumb($this->view);
+        foreach (\Cms\Orm\CmsFileQuery::byObjectAndClass($request->object, $request->objectId, $request->class)->find() as $file) {
             switch ($file->class) {
                 case 'image':
                     $full = $thumb->thumb($file, 'default');

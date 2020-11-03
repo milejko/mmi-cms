@@ -32,7 +32,6 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
             return;
         }
         $moduleStructure = $this->container->get('app.structure')['module'];
-
         //brak w strukturze
         if (!isset($moduleStructure[$request->getModuleName()][$request->getControllerName()][$request->getActionName()])) {
             throw new \Mmi\Mvc\MvcNotFoundException('Component not found: ' . $actionLabel);
@@ -63,6 +62,7 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
         unset($jsRequest['action']);
         //umieszczenie tablicy w headScript()
         $view->headScript()->prependScript('var request = ' . json_encode($jsRequest));
+        
     }
 
     public function beforeSend(): void

@@ -11,6 +11,8 @@
 namespace CmsAdmin;
 
 use Cms\Orm\CmsFileQuery;
+use Mmi\Http\Request;
+use Mmi\Mvc\ActionHelper;
 use Mmi\Mvc\Controller;
 
 /**
@@ -18,6 +20,12 @@ use Mmi\Mvc\Controller;
  */
 class UploadController extends Controller
 {
+
+    /**
+     * @Inject
+     * @var ActionHelper
+     */
+    private $actionHelper;
 
     /**
      * Inicjalizacja - wyłączanie layoutu
@@ -32,7 +40,7 @@ class UploadController extends Controller
     /**
      * Odbieranie danych z plugina Plupload
      */
-    public function pluploadAction()
+    public function pluploadAction(Request $request)
     {
         set_time_limit(5 * 60);
         //obiekt handlera plupload
@@ -42,8 +50,8 @@ class UploadController extends Controller
             return $this->_jsonError($pluploadHandler->getErrorCode(), $pluploadHandler->getErrorMessage());
         }
         //jeśli wykonać operację po przesłaniu całego pliku i zapisaniu rekordu
-        if ($this->getPost()->afterUpload && null !== $record = $pluploadHandler->getSavedCmsFileRecord()) {
-            $this->_operationAfter($this->getPost()->afterUpload, $record);
+        if ($request->getPost()->afterUpload && null !== $record = $pluploadHandler->getSavedCmsFileRecord()) {
+            $this->_operationAfter($request->getPost()->afterUpload, $record);
         }
         return json_encode(['result' => 'OK', 'cmsFileId' => $pluploadHandler->getSavedCmsFileId()]);
     }
@@ -51,21 +59,21 @@ class UploadController extends Controller
     /**
      * Zwraca listę aktualnych plików przypiętych do obiektu formularza
      */
-    public function currentAction()
+    public function currentAction(Request $request)
     {
-        $objectId = !empty($this->getPost()->objectId) ? $this->getPost()->objectId : null;
-        switch ($this->getPost()->fileTypes) {
+        $objectId = !empty($request->getPost()->objectId) ? $request->getPost()->objectId : null;
+        switch ($request->getPost()->fileTypes) {
             case 'images' :
                 //zapytanie o obrazki
-                $query = CmsFileQuery::imagesByObject($this->getPost()->object, $objectId);
+                $query = CmsFileQuery::imagesByObject($request->getPost()->object, $objectId);
                 break;
             case 'notImages' :
                 //wszystkie pliki bez obrazków
-                $query = CmsFileQuery::notImagesByObject($this->getPost()->object, $objectId);
+                $query = CmsFileQuery::notImagesByObject($request->getPost()->object, $objectId);
                 break;
             default :
                 //domyślne zapytanie o wszystkie pliki
-                $query = CmsFileQuery::byObject($this->getPost()->object, $objectId);
+                $query = CmsFileQuery::byObject($request->getPost()->object, $objectId);
         }
 
         $records = $query->find();
@@ -83,19 +91,19 @@ class UploadController extends Controller
     /**
      * Usuwa wybrany rekord pliku
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
         //szukamy rekordu pliku
-        if (!$this->getPost()->cmsFileId || null === $record = (new CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
+        if (!$request->getPost()->cmsFileId || null === $record = (new CmsFileQuery)->findPk($request->getPost()->cmsFileId)) {
             return $this->_jsonError(178);
         }
         //sprawdzenie zgodności z obiektem formularza
-        if ($record->object === $this->getPost()->object && $record->objectId == $this->getPost()->objectId) {
+        if ($record->object === $request->getPost()->object && $record->objectId == $request->getPost()->objectId) {
             //usuwanie
             if ($record->delete()) {
                 //jeśli wykonać operację po usunięciu
-                if ($this->getPost()->afterDelete) {
-                    $this->_operationAfter($this->getPost()->afterDelete, $record);
+                if ($request->getPost()->afterDelete) {
+                    $this->_operationAfter($request->getPost()->afterDelete, $record);
                 }
                 return json_encode(['result' => 'OK']);
             }
@@ -106,17 +114,17 @@ class UploadController extends Controller
     /**
      * Zwraca minaturę wybranego rekord pliku
      */
-    public function thumbnailAction()
+    public function thumbnailAction(Request $request)
     {
-        if (!$this->getPost()->cmsFileId) {
+        if (!$request->getPost()->cmsFileId) {
             return $this->_jsonError(179);
         }
         //szukamy rekordu pliku
-        if (null !== $record = (new CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
+        if (null !== $record = (new CmsFileQuery)->findPk($request->getPost()->cmsFileId)) {
             //sprawdzenie czy obrazek
             if ($record->class === 'image') {
                 try {
-                    $thumb = new \Cms\Mvc\ViewHelper\Thumb();
+                    $thumb = new \Cms\Mvc\ViewHelper\Thumb($this->view);
                     $url = $thumb->thumb($record, 'scaley', '60');
                     if (!empty($url)) {
                         return json_encode(['result' => 'OK', 'url' => $url]);
@@ -132,13 +140,13 @@ class UploadController extends Controller
     /**
      * Zwraca dane opisujące rekord pliku
      */
-    public function detailsAction()
+    public function detailsAction(Request $request)
     {
-        if (!$this->getPost()->cmsFileId) {
+        if (!$request->getPost()->cmsFileId) {
             return $this->_jsonError(185);
         }
         //szukamy rekordu pliku
-        if (null == $record = (new CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
+        if (null == $record = (new CmsFileQuery)->findPk($request->getPost()->cmsFileId)) {
             return $this->_jsonError(185);
         }
         //wycinamy rozszerzenie z nazwy oryginalnego pliku do edycji
@@ -152,7 +160,7 @@ class UploadController extends Controller
             //parametry
             $data = $record->data->toArray();
         }
-        $data['urlFile'] = ((\App\Registry::$config->cdn) ? : $record->getUrl());
+        $data['urlFile'] = $record->getUrl();
         if ($record->data->posterFileName) {
             $data['poster'] = $record->getPosterUrl();
         }    
@@ -162,18 +170,18 @@ class UploadController extends Controller
     /**
      * Aktualizuje dane opisujące rekord pliku: tytuł, autora, źródło
      */
-    public function describeAction()
+    public function describeAction(Request $request)
     {
         //sprawdzamy, czy jest id pliku i form
-        if (!$this->getPost()->cmsFileId || !is_array($this->getPost()->form)) {
+        if (!$request->getPost()->cmsFileId || !is_array($request->getPost()->form)) {
             return $this->_jsonError(186);
         }
         //szukamy rekordu pliku
-        if (null === $record = (new CmsFileQuery)->findPk($this->getPost()->cmsFileId)) {
+        if (null === $record = (new CmsFileQuery)->findPk($request->getPost()->cmsFileId)) {
             return $this->_jsonError(186);
         }
         //pobranie danych
-        $form = array_merge(['active' => 0, 'sticky' => null], $this->getPost()->form);
+        $form = array_merge(['active' => 0, 'sticky' => null], $request->getPost()->form);
         foreach ($form as $field) {
             $form[$field['name']] = $field['value'];
             if ($field['name'] == 'active' || $field['name'] == 'sticky') {
@@ -218,8 +226,8 @@ class UploadController extends Controller
         }
         if ($result) {
             //jeśli wykonać operację po edycji
-            if ($this->getPost()->afterEdit) {
-                $this->_operationAfter($this->getPost()->afterEdit, $record);
+            if ($request->getPost()->afterEdit) {
+                $this->_operationAfter($request->getPost()->afterEdit, $record);
             }
             return json_encode(['result' => 'OK']);
         }
@@ -230,10 +238,10 @@ class UploadController extends Controller
      * Przekierowanie na plik
      * @return string
      */
-    public function downloadAction()
+    public function downloadAction(Request $request)
     {
-        if (null === $file = (new CmsFileQuery)->byObject($this->object, $this->objectId)
-            ->findPk($this->id)) {
+        if (null === $file = (new CmsFileQuery)->byObject($request->object, $request->objectId)
+            ->findPk($request->id)) {
             return '';
         }
         $this->getResponse()->redirectToUrl($file->getUrl());
@@ -242,9 +250,9 @@ class UploadController extends Controller
     /**
      * Zapisuje kolejność plików
      */
-    public function sortAction()
+    public function sortAction(Request $request)
     {
-        $order = $this->getPost()->order;
+        $order = $request->getPost()->order;
         if (empty($order) || !is_array($order)) {
             return json_encode(['result' => 'OK']);
         }
@@ -281,7 +289,7 @@ class UploadController extends Controller
      */
     protected function _operationAfter($action, \Cms\Orm\CmsFileRecord $record)
     {
-        return \Mmi\Mvc\ActionHelper::getInstance()->action(new \Mmi\Http\Request(array_merge($record->toArray(), $action)));
+        return $this->actionHelper->action(new \Mmi\Http\Request(array_merge($record->toArray(), $action)));
     }
 
     /**

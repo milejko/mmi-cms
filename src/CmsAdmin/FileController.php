@@ -11,6 +11,7 @@
 namespace CmsAdmin;
 
 use Cms\Orm\CmsFileQuery;
+use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 
 /**
@@ -30,9 +31,9 @@ class FileController extends Controller
     /**
      * Usuwanie pliku (z listy)
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        $file = (new CmsFileQuery)->findPk($this->id);
+        $file = (new CmsFileQuery)->findPk($request->id);
         if ($file && $file->delete()) {
             $this->getMessenger()->addMessage('messenger.file.deleted', true);
         }
@@ -43,7 +44,7 @@ class FileController extends Controller
      * Akcja ajaxowa - przypinanie pliku
      * @return string
      */
-    public function stickAction()
+    public function stickAction(Request $request)
     {
         $this->getResponse()->setTypePlain();
         //brak id
@@ -51,7 +52,7 @@ class FileController extends Controller
             return '';
         }
         //brak pliku
-        if (null === ($file = (new CmsFileQuery)->findPk($this->id)) || $this->hash != $file->name) {
+        if (null === ($file = (new CmsFileQuery)->findPk($request->id)) || $request->hash != $file->name) {
             return $this->view->_('controller.fileController.stick.error');
         }
         //przypina plik
@@ -63,7 +64,7 @@ class FileController extends Controller
      * Akcja ajaxowa - edycja pliku
      * @return string
      */
-    public function editAction()
+    public function editAction(Request $request)
     {
         $this->getResponse()->setTypeJson();
         $error = json_encode(['error' => 'controller.fileController.edit.error']);
@@ -72,7 +73,7 @@ class FileController extends Controller
             return $error;
         }
         //brak pliku
-        if (null === ($file = (new CmsFileQuery)->findPk($this->id))) {
+        if (null === ($file = (new CmsFileQuery)->findPk($request->id))) {
             return $error;
         }
         //błędny plik
@@ -80,7 +81,7 @@ class FileController extends Controller
             return $error;
         }
         //zapis
-        $postData = $this->getPost()->toArray();
+        $postData = $request->getPost()->toArray();
         if (!empty($postData)) {
             $file->setFromArray($postData)
                 ->save();
@@ -93,13 +94,13 @@ class FileController extends Controller
      * Akcja ajaxowa - usuwanie pliku
      * @return string
      */
-    public function removeAction()
+    public function removeAction(Request $request)
     {
         $this->getResponse()->setTypePlain();
-        if (!$this->id) {
+        if (!$request->id) {
             return $this->view->_('controller.fileController.delete.error');
         }
-        $file = (new CmsFileQuery)->findPk($this->id);
+        $file = (new CmsFileQuery)->findPk($request->id);
         if (!$file || $this->hash != $file->getHashName()) {
             return $this->view->_('controller.fileController.delete.error');
         }
@@ -111,13 +112,13 @@ class FileController extends Controller
      * Akcja ajaxowa - sortowanie
      * @return string
      */
-    public function sortAction()
+    public function sortAction(Request $request)
     {
         $this->getResponse()->setTypePlain();
-        if (!$this->getPost()->__get('item-file')) {
+        if (!$request->getPost()->__get('item-file')) {
             return $this->view->_('controller.fileController.sort.error');
         }
-        \Cms\Model\File::sortBySerial($this->getPost()->__get('item-file'));
+        \Cms\Model\File::sortBySerial($request->getPost()->__get('item-file'));
         return '';
     }
 

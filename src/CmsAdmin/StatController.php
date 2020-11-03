@@ -10,6 +10,7 @@
 
 namespace CmsAdmin;
 
+use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 
 /**
@@ -21,12 +22,12 @@ class StatController extends Controller
     /**
      * Filtracja i wyświetlanie statystyk
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $year = $this->year ? $this->year : date('Y');
-        $month = $this->month ? $this->month : date('m');
+        $year = $request->year ? $request->year : date('Y');
+        $month = $request->month ? $request->month : date('m');
         //form filtrujący
-        $form = new \CmsAdmin\Form\Stat\StatObject(null, ['object' => $this->object,
+        $form = new \CmsAdmin\Form\Stat\StatObject(null, ['object' => $request->object,
             'year' => $year,
             'month' => $month,
         ]);
@@ -45,10 +46,10 @@ class StatController extends Controller
                 'month' => $form->getValue('month'),
             ]);
         }
-        if (!$this->object || !$this->year || !$this->month) {
+        if (!$request->object || !$request->year || !$request->month) {
             return;
         }
-        $object = $this->object;
+        $object = $request->object;
         $year = intval($year);
         $month = intval($month);
         $label = \Cms\Orm\CmsStatLabelQuery::byObject($object)
@@ -112,9 +113,9 @@ class StatController extends Controller
     /**
      * Edycja labelki
      */
-    public function editAction()
+    public function editAction(Request $request)
     {
-        $form = new \CmsAdmin\Form\Stat\Label(new \Cms\Orm\CmsStatLabelRecord($this->id));
+        $form = new \CmsAdmin\Form\Stat\Label(new \Cms\Orm\CmsStatLabelRecord($request->id));
         //jeśli form zapisany
         if ($form->isSaved()) {
             $this->getMessenger()->addMessage('messenger.stat.saved', true);
@@ -126,9 +127,9 @@ class StatController extends Controller
     /**
      * Usuwanie statystyki
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        $label = (new \Cms\Orm\CmsStatLabelQuery)->findPk($this->id);
+        $label = (new \Cms\Orm\CmsStatLabelQuery)->findPk($request->id);
         if ($label && $label->delete()) {
             $this->getMessenger()->addMessage('messenger.stat.deleted', true);
         }

@@ -10,8 +10,10 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\Form\Element,
-    Mmi\Validator;
+use Cms\Form\Element;
+use Mmi\Validator;
+use Mmi\App\App;
+use Mmi\Security\Auth;
 
 /**
  * Formularz odpowiedzi na kontakt
@@ -37,7 +39,7 @@ class Contact extends \Cms\Form\Form
         $this->addElement((new Element\Text('email'))
             ->setDisabled()
             ->setLabel('form.contact.email.label')
-            ->setValue(\App\Registry::$auth->getEmail())
+            ->setValue(App::$di->get(Auth::class)->getEmail())
             ->addValidator(new Validator\EmailAddress));
 
         //tresc zapytania
@@ -62,7 +64,7 @@ class Contact extends \Cms\Form\Form
     public function beforeSave()
     {
         $this->getRecord()->active = 0;
-        $this->getRecord()->cmsAuthIdReply = \App\Registry::$auth->getId();
+        $this->getRecord()->cmsAuthIdReply = App::$di->get(Auth::class)->getId();
         return true;
     }
 

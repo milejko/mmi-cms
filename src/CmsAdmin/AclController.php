@@ -25,7 +25,7 @@ class AclController extends Controller
     public function indexAction(Request $request)
     {
         $this->view->roles = (new \Cms\Orm\CmsRoleQuery)->find();
-        if (!$this->roleId && count($this->view->roles)) {
+        if (!$request->roleId && count($this->view->roles)) {
             $this->getResponse()->redirect('cmsAdmin', 'acl', 'index', ['roleId' => $this->view->roles[0]->id]);
         }
         if ($request->roleId) {

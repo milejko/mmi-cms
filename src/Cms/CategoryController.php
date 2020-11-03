@@ -66,11 +66,11 @@ class CategoryController extends \Mmi\Mvc\Controller
     public function dispatchAction(Request $request)
     {
         //pobranie kategorii
-        $category = $this->_getPublishedCategoryByUri($this->uri);
+        $category = $this->_getPublishedCategoryByUri($request->uri);
         //klucz bufora
         $cacheKey = CmsCategoryRecord::HTML_CACHE_PREFIX . $category->id;
         //buforowanie dozwolone
-        $bufferingAllowed = $this->_bufferingAllowed();
+        $bufferingAllowed = (new \Cms\Model\CategoryBuffering($request))->isAllowed();
         //wczytanie zbuforowanej strony (dla niezalogowanych i z pustym requestem)
         if ($bufferingAllowed && (null !== $html = $this->cache->load($cacheKey))) {
             //wysyłanie nagłówka o buforowaniu strony
@@ -99,7 +99,7 @@ class CategoryController extends \Mmi\Mvc\Controller
      * @throws \Mmi\Mvc\MvcForbiddenException
      * @throws \Mmi\Mvc\MvcNotFoundException
      */
-    public function redactorPreviewAction()
+    public function redactorPreviewAction(Request $request)
     {
         //żądanie o wersję artykułu (rola redaktora)
         if (!$this->_hasRedactorRole()) {
@@ -107,8 +107,8 @@ class CategoryController extends \Mmi\Mvc\Controller
         }
         //wyszukiwanie kategorii
         if (null === $category = (new Orm\CmsCategoryQuery)
-            ->whereCmsCategoryOriginalId()->equals($this->originalId ? $this->originalId : null)
-            ->findPk($this->versionId)) {
+            ->whereCmsCategoryOriginalId()->equals($request->originalId ? $request->originalId : null)
+            ->findPk($request->versionId)) {
             //404
             throw new \Mmi\Mvc\MvcNotFoundException('Version not found');
         }
@@ -118,16 +118,16 @@ class CategoryController extends \Mmi\Mvc\Controller
         $this->view->navigation()->setTitle($category->title)
             ->setDescription($category->description);
         //renderowanie docelowej akcji
-        return $this->_decorateHtmlWithEditButton($this->_renderHtml($category), $category);
+        return $this->_decorateHtmlWithEditButton($this->_renderHtml($category, $request), $category);
     }
 
     /**
      * Akcja renderująca guzik edycji
      */
-    public function editButtonAction()
+    public function editButtonAction(Request $request)
     {
-        $this->view->categoryId = $this->categoryId;
-        $this->view->originalId = $this->originalId;
+        $this->view->categoryId = $request->categoryId;
+        $this->view->originalId = $request->originalId;
     }
 
     /**
@@ -301,15 +301,6 @@ class CategoryController extends \Mmi\Mvc\Controller
         $this->cache->save($category->uri, $cacheKey, 0);
         //przekierowanie 301
         return $this->getResponse()->setCode(301)->redirect('cms', 'category', 'dispatch', ['uri' => $category->uri]);
-    }
-
-    /**
-     * Czy buforowanie dozwolone
-     * @return boolean
-     */
-    protected function _bufferingAllowed()
-    {
-        return (new \Cms\Model\CategoryBuffering($this->_request))->isAllowed();
     }
 
     /**
