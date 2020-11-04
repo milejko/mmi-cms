@@ -144,7 +144,7 @@ class TemplateModel
         //odczytywanie nazwy kontrolera
         $controllerClass = $this->_templateConfig->getControllerClassName();
         //powołanie kontrolera z rekordem relacji
-        $targetController = new $controllerClass($view, App::$di->get(Response::class), $view->getMessenger(), $this->_categoryRecord);
+        $targetController = new $controllerClass($view, App::$di->get(Response::class), $this->_categoryRecord);
         //kontroler nie jest poprawny
         if (!($targetController instanceof TemplateController)) {
             throw new KernelException('Not an instance of WidgetController');

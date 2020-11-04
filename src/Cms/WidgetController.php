@@ -27,12 +27,11 @@ abstract class WidgetController extends Controller
     public function __construct(
         View $view,
         Response $response, 
-        Messenger $messenger,
         CmsCategoryWidgetCategoryRecord $widgetRecord
     )
     {
         //parent
-        parent::__construct($view, $response, $messenger);
+        parent::__construct($view, $response);
         //przypisanie rekordu
         $this->_widgetRecord = $widgetRecord;
     }

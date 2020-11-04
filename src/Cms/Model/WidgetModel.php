@@ -10,6 +10,8 @@ use Cms\App\CmsWidgetConfig;
 use Cms\App\CmsSectionConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\App\CmsTemplateConfig;
+use Mmi\App\App;
+use Mmi\Http\Request;
 
 /**
  * Model widgeta
@@ -91,7 +93,7 @@ class WidgetModel
     {
         //wywołanie akcji edycji
         $controller = $this->_createController($view);
-        $controller->editAction();
+        $controller->editAction($view->request);
         //render szablonu
         return $view->renderTemplate($this->_getTemplatePrefix() . '/edit');
     }
@@ -105,7 +107,7 @@ class WidgetModel
     {
         //wywołanie akcji podglądu
         $controller = $this->_createController($view);
-        $controller->previewAction();
+        $controller->previewAction($view->request);
         //render szablonu
         return $view->renderTemplate($this->_getTemplatePrefix() . '/preview');
     }
@@ -119,7 +121,7 @@ class WidgetModel
     {
         //wywołanie akcji wyświetlenia
         $controller = $this->_createController($view);
-        $controller->displayAction();
+        $controller->displayAction($view->request);
         //render szablonu
         return $view->renderTemplate($this->_getTemplatePrefix() . '/display');
     }
@@ -133,7 +135,7 @@ class WidgetModel
     {
         //wywołanie akcji wyświetlenia
         $controller = $this->_createController($view);
-        $controller->deleteAction();
+        $controller->deleteAction($view->request);
     }
 
     /**
@@ -149,7 +151,7 @@ class WidgetModel
             throw new CategoryWidgetException('Widget class not specified for widget: ' . $this->_widgetConfig->getKey());
         }
         //powołanie kontrolera z rekordem relacji
-        $targetController = new $controllerClass($view->request, $view, $this->_cmsWidgetRecord);
+        $targetController = new $controllerClass($view, App::$di->get(Response::class), $this->_cmsWidgetRecord);
         //kontroler nie jest poprawny
         if (!($targetController instanceof WidgetController)) {
             throw new CategoryWidgetException('Not an instance of WidgetController');

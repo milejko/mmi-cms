@@ -27,11 +27,10 @@ abstract class TemplateController extends Controller
     public function __construct(
         View $view,
         Response $response, 
-        Messenger $messenger,
         CmsCategoryRecord $categoryRecord)
     {
         //parent
-        parent::__construct($view, $response, $messenger);
+        parent::__construct($view, $response);
         //przypisanie rekordu
         $this->_categoryRecord = $categoryRecord;
     }
