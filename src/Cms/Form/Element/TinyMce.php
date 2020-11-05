@@ -10,6 +10,9 @@
 
 namespace Cms\Form\Element;
 
+use Mmi\App\App;
+use Mmi\Session\Session;
+
 /**
  * Element tinymce
  * 
@@ -166,7 +169,7 @@ class TinyMce extends UploaderElementAbstract
         $object = self::TEMP_OBJECT_PREFIX . $this->getObject();
         $objectId = $this->getUploaderId();
         $t = round(microtime(true));
-        $hash = md5(\Mmi\Session\Session::getId() . '+' . $t . '+' . $objectId);
+        $hash = md5(App::$di->get(Session::class)->getId() . '+' . $t . '+' . $objectId);
         //tworzenie kopii plików załadowanych do TinyMce
         $this->_createTempFiles();
         //dołączanie skryptu

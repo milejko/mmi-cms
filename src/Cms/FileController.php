@@ -12,12 +12,19 @@ namespace Cms;
 
 use Cms\Model\FileSystemModel;
 use Mmi\Http\Request;
+use Mmi\Session\Session;
 
 /**
  * Kontroler plików
  */
 class FileController extends \Mmi\Mvc\Controller
 {
+    /**
+     * @Inject
+     * @var Session
+     */
+    private Session $session;
+
     /**
      * Lista obrazów json (na potrzeby tinymce)
      * @return string
@@ -28,7 +35,7 @@ class FileController extends \Mmi\Mvc\Controller
         if (!$request->object || !$request->objectId || !$request->hash || !$request->t) {
             return '';
         }
-        if ($request->hash != md5(\Mmi\Session\Session::getId() . '+' . $request->t . '+' . $request->objectId)) {
+        if ($request->hash != md5($this->session->getId() . '+' . $request->t . '+' . $request->objectId)) {
             return '';
         }
         $files = [];
@@ -48,7 +55,7 @@ class FileController extends \Mmi\Mvc\Controller
         if (!$request->object || !$request->objectId || !$request->hash || !$request->t) {
             return '';
         }
-        if ($request->hash != md5(\Mmi\Session\Session::getId() . '+' . $request->t . '+' . $request->objectId)) {
+        if ($request->hash != md5($this->session->getId() . '+' . $request->t . '+' . $request->objectId)) {
             return '';
         }
         $files = [];

@@ -10,7 +10,7 @@
 
 namespace CmsAdmin\Model;
 
-use Mmi\App\App;
+use Mmi\Mvc\Structure;
 
 /**
  * Model list komponentów MVC
@@ -26,7 +26,8 @@ class Reflection
     {
         $structure = [];
         //iteracja po modułach
-        foreach (App::$di->get('app.structure')['module'] as $moduleName => $module) {
+        foreach (Structure::getStructure('module') as $moduleName => $module) {
+            throw new Exception('@TODO: implement reflecting actions');
             if ($minDepth <= 1) {
                 $structure['module=' . $moduleName] = $moduleName;
             }

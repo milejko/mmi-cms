@@ -24,7 +24,7 @@ class AdminNavigation extends \Mmi\Mvc\ViewHelper\Navigation
     //szablon menu
     const TEMPLATE = 'cmsAdmin/mvc/view-helper/adminNavigation/menu-item';
 
-        /**
+    /**
      * Buduje breadcrumbs
      * @return \Mmi\Mvc\ViewHelper\Navigation
      */

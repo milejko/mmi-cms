@@ -31,11 +31,6 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
         if ($acl->isAllowed($auth->getRoles(), $actionLabel)) {
             return;
         }
-        $moduleStructure = $this->container->get('app.structure')['module'];
-        //brak w strukturze
-        if (!isset($moduleStructure[$request->getModuleName()][$request->getControllerName()][$request->getActionName()])) {
-            throw new \Mmi\Mvc\MvcNotFoundException('Component not found: ' . $actionLabel);
-        }
         //brak autoryzacji
         if (!$auth->hasIdentity()) {
             $this->_setLoginRequest($request, strpos($request->getModuleName(), 'Admin'));
