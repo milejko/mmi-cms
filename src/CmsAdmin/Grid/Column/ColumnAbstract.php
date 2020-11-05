@@ -10,7 +10,8 @@
 
 namespace CmsAdmin\Grid\Column;
 
-use Mmi\App\FrontController;
+use Mmi\App\App;
+use Mmi\Mvc\View;
 
 /**
  * Abstrakcyjna klasa Columnu
@@ -39,12 +40,18 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
     protected $_grid;
 
     /**
+     * @var View
+     */
+    protected $view;
+
+    /**
      * Konstruktor ustawia nazwę
      * @param string $name
      */
     public function __construct($name)
     {
         $this->setName($name);
+        $this->view = App::$di->get(View::class);
     }
 
     /**
@@ -83,8 +90,8 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
     public function renderLabel()
     {
         //zwrot labelki
-        FrontController::getInstance()->getView()->_column = $this;
-        return FrontController::getInstance()->getView()->renderTemplate(static::TEMPLATE_LABEL);
+        $this->view->_column = $this;
+        return $this->view->renderTemplate(static::TEMPLATE_LABEL);
     }
 
     /**
@@ -94,8 +101,8 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
     public function renderFilter()
     {
         //zwrot filtra
-        FrontController::getInstance()->getView()->_column = $this;
-        return FrontController::getInstance()->getView()->renderTemplate(static::TEMPLATE_FILTER);
+        $this->view->_column = $this;
+        return $this->view->renderTemplate(static::TEMPLATE_FILTER);
     }
 
     /**

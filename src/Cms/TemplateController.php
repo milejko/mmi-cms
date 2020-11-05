@@ -5,7 +5,9 @@ namespace Cms;
 use Cms\Orm\CmsCategoryRecord;
 use CmsAdmin\Form\CategoryForm;
 use Mmi\Http\Request;
+use Mmi\Http\Response;
 use Mmi\Mvc\Controller;
+use Mmi\Mvc\Messenger;
 use Mmi\Mvc\View;
 
 /**
@@ -22,10 +24,13 @@ abstract class TemplateController extends Controller
     /**
      * Konstruktor
      */
-    public function __construct(Request $request, View $view, CmsCategoryRecord $categoryRecord)
+    public function __construct(
+        View $view,
+        Response $response, 
+        CmsCategoryRecord $categoryRecord)
     {
         //parent
-        parent::__construct($request, $view);
+        parent::__construct($view, $response);
         //przypisanie rekordu
         $this->_categoryRecord = $categoryRecord;
     }

@@ -1,6 +1,6 @@
 {'cmsAdmin/header'}
 {adminMessenger()}
-{if !$auth}
+{if !$auth->hasIdentity()}
     <body class="app flex-row align-items-center login-screen-bg">
     {else}
     <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
@@ -33,7 +33,7 @@
         </header>
     {/if}
     <div class="app-body">
-        {if $auth}
+        {if $auth->hasIdentity()}
             <div class="sidebar">
                 <nav class="sidebar-nav">
                     <ul class="nav">
@@ -44,7 +44,7 @@
             </div>
         {/if}
         <main class="main">
-            {if $auth}
+            {if $auth->hasIdentity()}
                 <ol class="breadcrumb">
                     {adminNavigation()->breadcrumbs()}
                 </ol>
@@ -52,7 +52,7 @@
             {content()}
         </main>
     </div>
-    {if $auth}
+    {if $auth->hasIdentity()}
         <footer class="app-footer">
             <a href="{$baseUrl}/">{$domain}</a> &copy; {system_date('Y')}
             <span class="float-right">Powered by

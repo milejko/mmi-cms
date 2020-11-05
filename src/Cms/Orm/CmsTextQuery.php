@@ -2,6 +2,9 @@
 
 namespace Cms\Orm;
 
+use Mmi\App\App;
+use Mmi\Http\Request;
+
 //<editor-fold defaultstate="collapsed" desc="CmsTextQuery">
 /**
  * @method CmsTextQuery limit($limit = null)
@@ -64,11 +67,11 @@ class CmsTextQuery extends \Mmi\Orm\Query
      */
     public static function lang()
     {
-        if (!\Mmi\App\FrontController::getInstance()->getRequest()->lang) {
+        if (!App::$di->get(Request::class)->lang) {
             return new self;
         }
         return (new self)
-                ->whereLang()->equals(\Mmi\App\FrontController::getInstance()->getRequest()->lang)
+                ->whereLang()->equals(App::$di->get(Request::class)->lang)
                 ->orFieldLang()->equals(null)
                 ->orderDescLang();
     }

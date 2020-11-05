@@ -10,6 +10,9 @@
 
 namespace CmsAdmin\Mvc\ViewHelper;
 
+use Mmi\App\App;
+use Mmi\Security\Auth;
+
 class JsTreeNode extends \Mmi\Mvc\ViewHelper\HelperAbstract
 {
 
@@ -60,7 +63,7 @@ class JsTreeNode extends \Mmi\Mvc\ViewHelper\HelperAbstract
             $selected = 'false';
             $disabled = 'false';
             //sprawdzenie uprawnień do węzła
-            if (!$acl->isAllowed(\App\Registry::$auth->getRoles(), $child['record']->id)) {
+            if (!$acl->isAllowed(App::$di->get(Auth::class)->getRoles(), $child['record']->id)) {
                 $disabled = 'true';
                 $icon = $this->view->baseUrl . '/resource/cmsAdmin/images/folder-disabled.png';
             }

@@ -10,10 +10,8 @@
 
 namespace Cms\Form\Element;
 
-use Cms\Model\File;
-use Cms\Orm\CmsFileQuery;
-use Mmi\App\FrontController;
-use Mmi\Form\Element\ElementAbstract;
+use Mmi\App\App;
+use Mmi\Session\Session;
 
 /**
  * Element tinymce
@@ -142,10 +140,10 @@ class TinyMce extends UploaderElementAbstract
      */
     public function __construct($name)
     {
-        //wyłączenie CDN
-        \Mmi\App\FrontController::getInstance()->getView()->setCdn(null);
         $this->addClass('form-control');
         parent::__construct($name);
+        //wyłączenie CDN
+        $this->view->setCdn(null);
     }
 
     /**
@@ -154,11 +152,10 @@ class TinyMce extends UploaderElementAbstract
      */
     public function fetchField()
     {
-        $view = \Mmi\App\FrontController::getInstance()->getView();
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/tinymce.min.js');
+        $this->view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/tinymce.min.js');
 
         //bazowa wspólna konfiguracja
-        $this->_baseConfig($view);
+        $this->_baseConfig($this->view);
         //tryb edytora
         $mode = $this->getMode() ? $this->getMode() : 'default';
         //metoda konfiguracji edytora
@@ -172,11 +169,11 @@ class TinyMce extends UploaderElementAbstract
         $object = self::TEMP_OBJECT_PREFIX . $this->getObject();
         $objectId = $this->getUploaderId();
         $t = round(microtime(true));
-        $hash = md5(\Mmi\Session\Session::getId() . '+' . $t . '+' . $objectId);
+        $hash = md5(App::$di->get(Session::class)->getId() . '+' . $t . '+' . $objectId);
         //tworzenie kopii plików załadowanych do TinyMce
         $this->_createTempFiles();
         //dołączanie skryptu
-        $view->headScript()->appendScript("
+        $this->view->headScript()->appendScript("
 			tinyMCE.init({
 				selector: '." . $class . "',
 				language: request.locale,
@@ -201,8 +198,8 @@ class TinyMce extends UploaderElementAbstract
 				object: '$object',
 				objectId: '$objectId',
 				time: '$t',
-				baseUrl: '" . $view->baseUrl . "',
-                image_list: '" . $view->baseUrl . "' + '/?module=cms&controller=file&action=list&object=$object&objectId=$objectId&t=$t&hash=$hash',
+				baseUrl: '" . $this->view->baseUrl . "',
+                image_list: '" . $this->view->baseUrl . "' + '/?module=cms&controller=file&action=list&object=$object&objectId=$objectId&t=$t&hash=$hash',
                 branding: false
 			});
 		");

@@ -33,16 +33,15 @@ class ColorPicker extends Text
      */
     public function fetchField()
     {
-        $view = \Mmi\App\FrontController::getInstance()->getView();
-        $view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
-        $view->headScript()->appendFile('/resource/cmsAdmin/js/jquery/farbtastic.js');
-        $view->headScript()->appendScript('
+        $this->view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
+        $this->view->headScript()->appendFile('/resource/cmsAdmin/js/jquery/farbtastic.js');
+        $this->view->headScript()->appendScript('
 			$(document).ready(function() {
 				$(\'#' . $this->getOption('id') . 'Picker\').farbtastic(\'#' . $this->getOption('id') . '\');
 			});
 		');
         $this->readonly = 'readonly';
-        $view->headLink()->appendStylesheet('/resource/cms/css/farbtastic.css');
+        $this->view->headLink()->appendStylesheet('/resource/cms/css/farbtastic.css');
         if (!$this->value) {
             $this->value = '#ffffff';
         }

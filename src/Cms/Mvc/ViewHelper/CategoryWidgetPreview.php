@@ -10,9 +10,10 @@
 
 namespace Cms\Mvc\ViewHelper;
 
-use App\Registry;
+use Cms\App\CmsSkinsetConfig;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
+use Mmi\App\App;
 
 /**
  * Widget podglądu widgeta
@@ -27,7 +28,7 @@ class CategoryWidgetPreview extends \Mmi\Mvc\ViewHelper\HelperAbstract
     public function categoryWidgetPreview(CmsCategoryWidgetCategoryRecord $widgetRelationRecord)
     {
         //render szablonu
-        return (new WidgetModel($widgetRelationRecord, Registry::$config->skinset))->renderPreviewAction($this->view);
+        return (new WidgetModel($widgetRelationRecord, App::$di->get(CmsSkinsetConfig::class)))->renderPreviewAction($this->view);
     }
 
 }

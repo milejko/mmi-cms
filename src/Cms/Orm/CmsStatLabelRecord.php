@@ -2,6 +2,8 @@
 
 namespace Cms\Orm;
 
+use Mmi\App\App;
+
 /**
  * Rekord opisu statystyki
  */
@@ -20,7 +22,7 @@ class CmsStatLabelRecord extends \Mmi\Orm\Record
      */
     protected function _insert()
     {
-        $this->lang = \Mmi\App\FrontController::getInstance()->getRequest()->lang;
+        $this->lang = App::$di->get(Request::class)->lang;
         return parent::_insert();
     }
 

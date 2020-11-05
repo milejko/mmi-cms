@@ -1,5 +1,5 @@
 <ul id="messenger" class="messenger animation-show">
-    {foreach $_messenger->getMessages() as $message}
+    {foreach getMessenger()->getMessages() as $message}
         {$class = 'warning'}
         {$icon = 'warning-sign'}
         {if $message.type}
@@ -26,7 +26,7 @@
         <li class="notice">
             <div class="alert {$class} {$message.type}" role="alert">
                 <i class="fa {$icon}"></i>
-                <span>{$_messenger->prepareTranslatedMessage($message)}</span>
+                <span>{getMessenger()->prepareTranslatedMessage($message)}</span>
                 <a class="close-alert" href="#"></a>
             </div>
         </li>

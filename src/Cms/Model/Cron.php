@@ -11,6 +11,10 @@
 namespace Cms\Model;
 
 use Cms\Orm\CmsCronQuery;
+use Mmi\App\App;
+use Mmi\Db\Adapter\PdoAbstract;
+use Mmi\Mvc\ActionHelper;
+use Psr\Log\LoggerInterface;
 
 class Cron
 {
@@ -38,7 +42,7 @@ class Cron
             //opóźnienie 200ms - 500ms (dzięki temu mniej baza danych ma więcej czasu na załozenie blokady)
             usleep(rand(self::MIN_EXECUTION_OFFSET, self::MAX_EXECUTION_OFFSET));
             //ponowne łączenie - mogło upłynąć sporo czasu przy procesowaniu poprzedniego crona
-            \App\Registry::$db->connect();
+            App::$di->get(PdoAbstract::class)->connect();
             //sprawdzenie czy rekord jest odblokowany
             if (null === ($cronRecord = (new CmsCronQuery)->activeUnlocked()->findPk($listedCronRecord->id))) {
                 continue;
@@ -52,21 +56,21 @@ class Cron
             $output = '';
             try {
                 $start = microtime(true);
-                $output = \Mmi\Mvc\ActionHelper::getInstance()->action(new \Mmi\Http\Request(['module' => $cronRecord->module, 'controller' => $cronRecord->controller, 'action' => $cronRecord->action]));
+                $output = App::$di->get(ActionHelper::class)->action(new \Mmi\Http\Request(['module' => $cronRecord->module, 'controller' => $cronRecord->controller, 'action' => $cronRecord->action]));
                 $elapsed = round(microtime(true) - $start, 2);
             } catch (\Exception $e) {
                 //error logging
-                \Mmi\App\FrontController::getInstance()->getLogger()->error('CRON failed: @' . gethostname() . $cronRecord->name . ' ' . $e->getMessage());
+                App::$di->get(LoggerInterface::class)->error('CRON failed: @' . gethostname() . $cronRecord->name . ' ' . $e->getMessage());
                 return;
             }
             //ponowne łączenie
-            \App\Registry::$db->connect();
+            App::$di->get(PdoAbstract::class)->connect();
             //zapisywanie wiadomości
             $cronRecord->message = $output;
             //zapis do bazy bez modyfikowania daty ostatniej modyfikacji
             $cronRecord->unlockAfterExecution();
             //logowanie uruchomienia
-            \Mmi\App\FrontController::getInstance()->getLogger()->info('CRON done: @' . gethostname() . ' ' . $cronRecord->name . ' ' . $output .  ' in ' . $elapsed . 's');
+            App::$di->get(LoggerInterface::class)->info('CRON done: @' . gethostname() . ' ' . $cronRecord->name . ' ' . $output .  ' in ' . $elapsed . 's');
         }
     }
 

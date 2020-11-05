@@ -13,6 +13,8 @@ namespace CmsAdmin\Form;
 use Cms\Form\Element;
 use Cms\Orm\CmsCategoryQuery;
 use CmsAdmin\Model\CategoryAclModel;
+use Mmi\App\App;
+use Mmi\Cache\Cache;
 
 /**
  * Formularz edycji ACL dla roli
@@ -55,7 +57,6 @@ class CategoryAclForm extends \Cms\Form\Form
         //czyszczenie uprawnień dla roli
         (new \Cms\Orm\CmsCategoryAclQuery)
             ->whereCmsRoleId()->equals($this->getOption('roleId'))
-            ->find()
             ->delete();
         //zapis uprawnień "dozwól"
         foreach (explode(';', $this->getElement('allow')->getValue()) as $categoryId) {
@@ -82,7 +83,7 @@ class CategoryAclForm extends \Cms\Form\Form
             $aclRecord->save();
         }
         //usunięcie cache
-        \App\Registry::$cache->remove(CategoryAclModel::CACHE_KEY);
+        App::$di->get(Cache::class)->remove(CategoryAclModel::CACHE_KEY);
         return true;
     }
 }

@@ -10,8 +10,6 @@
 
 namespace CmsAdmin\Grid\Column;
 
-use Mmi\App\FrontController;
-
 /**
  * Klasa Columnu select
  *
@@ -67,11 +65,11 @@ class SelectColumn extends ColumnAbstract
      */
     public function renderFilter()
     {
-        FrontController::getInstance()->getView()->_column = $this;
+        $this->view->_column = $this;
         //pusta opcja
         $this->setMultioptions([null => '---'] + $this->getMultioptions());
         //tworzy selecta z template'u
-        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_FILTER);
+        return $this->view->renderTemplate(self::TEMPLATE_FILTER);
     }
 
     /**
@@ -81,10 +79,10 @@ class SelectColumn extends ColumnAbstract
      */
     public function renderCell(\Mmi\Orm\RecordRo $record)
     {
-        FrontController::getInstance()->getView()->_column = $this;
+        $this->view->_column = $this;
         //zwrot z mapy opcji
-        FrontController::getInstance()->getView()->_value = $this->getMultioptionByKey($this->getValueFromRecord($record));
-        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_CELL);
+        $this->view->_value = $this->getMultioptionByKey($this->getValueFromRecord($record));
+        return $this->view->renderTemplate(self::TEMPLATE_CELL);
     }
 
 }

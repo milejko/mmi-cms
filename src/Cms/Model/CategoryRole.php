@@ -10,6 +10,9 @@
 
 namespace Cms\Model;
 
+use Mmi\App\App;
+use Mmi\Cache\Cache;
+
 /**
  * Model do sprawdzania dostępu do kategorii Cms przez użytkowników z rolami
  */
@@ -92,8 +95,9 @@ class CategoryRole
 	 */
 	protected function _prepareData()
 	{
+		$cache = App::$di->get(Cache::class);
         //próba pobrania struktury uprawnień z cache
-        if (null !== $this->_acl = \App\Registry::$cache->load($cacheKey = 'categories-roles')) {
+        if (null !== $this->_acl = $cache->load($cacheKey = 'categories-roles')) {
 			return;
         }
 		$this->_acl = [];
@@ -108,7 +112,7 @@ class CategoryRole
 			$this->_acl[$record->cmsCategoryId][] = $record->getJoined('cms_role')->name;
 		}
         //zapis struktury uprawnień do cache
-        \App\Registry::$cache->save($this->_acl, $cacheKey, 0);
+        $cache->save($this->_acl, $cacheKey, 0);
 	}
 	
 	/**

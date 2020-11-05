@@ -31,7 +31,7 @@ class AdminNavigation extends \Mmi\Mvc\ViewHelper\Navigation
     protected function _buildBreadcrumbs()
     {
         //obiekt nawigatora niezdefiniowany
-        if (null === self::$_navigation) {
+        if (null === parent::_getNavigation()) {
             return $this;
         }
         //pobieranie breadcrumbów
@@ -48,7 +48,7 @@ class AdminNavigation extends \Mmi\Mvc\ViewHelper\Navigation
         //iteracja po odwróconej tablicy breadcrumbów
         foreach (array_reverse($data) as $breadcrumb) {
             $i++;
-            $breadcrumb['label'] = isset($breadcrumb['label']) ? \App\Registry::$translate->_($breadcrumb['label']) : '';
+            $breadcrumb['label'] = isset($breadcrumb['label']) ? $this->view->_($breadcrumb['label']) : '';
             //dodawanie breadcrumbów (ostatni nie ma linku)
             $breadcrumbs[] = ('<li class="breadcrumb-item"><a href="' . $breadcrumb['uri'] . '">' . strip_tags($breadcrumb['label']) . '</a></li>');
             //liść wyłączony (poza ostatnim)

@@ -2,6 +2,9 @@
 
 namespace Cms\Orm;
 
+use Mmi\App\App;
+use Mmi\Cache\Cache;
+
 /**
  * Rekord uprawnień
  */
@@ -57,9 +60,8 @@ class CmsAclRecord extends \Mmi\Orm\Record
      */
     public function clearCache()
     {
-        \App\Registry::$cache->remove('mmi-cms-navigation-');
-        \App\Registry::$cache->remove('mmi-cms-navigation-' . \Mmi\App\FrontController::getInstance()->getRequest()->lang);
-        \App\Registry::$cache->remove('mmi-cms-acl');
+        App::$di->get(Cache::class)->remove('mmi-cms-navigation-');
+        App::$di->get(Cache::class)->remove('mmi-cms-acl');
         return true;
     }
 

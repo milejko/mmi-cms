@@ -54,18 +54,6 @@ class Auth extends \Cms\Form\Form
             ->setValue(\Cms\Orm\CmsAuthRoleQuery::byAuthId($this->_record->id)->findPairs('cms_role_id', 'cms_role_id'))
             ->addValidator(new Validator\NotEmpty(['form.auth.cmsRoles.validator'])));
 
-        $languages = [];
-        foreach (\App\Registry::$config->languages as $language) {
-            $languages[$language] = $language;
-        }
-
-        if (!empty($languages)) {
-            $this->addElement((new Element\Select('lang'))
-                ->setLabel('form.auth.lang.label')
-                ->setMultioptions($languages)
-                ->setDescription('form.auth.lang.description'));
-        }
-
         //aktywny
         $this->addElement((new Element\Checkbox('active'))
             ->setLabel('form.auth.active.label'));

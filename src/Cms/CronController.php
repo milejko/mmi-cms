@@ -67,7 +67,6 @@ class CronController extends \Mmi\Mvc\Controller
             ->whereCmsCategoryOriginalId()->notEquals(null)
             ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_DRAFT)
             ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-3 days')))
-            ->find()
             ->delete();
         //pobranie identyfikatorów aktywnych kategorii
         $activeCategoryRecordIds = (new CmsCategoryQuery())

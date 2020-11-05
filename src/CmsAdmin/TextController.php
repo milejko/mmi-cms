@@ -10,10 +10,13 @@
 
 namespace CmsAdmin;
 
+use Mmi\Http\Request;
+use Mmi\Mvc\Controller;
+
 /**
  * Zarządzanie tekstami statycznymi
  */
-class TextController extends Mvc\Controller
+class TextController extends Controller
 {
 
     /**
@@ -27,9 +30,9 @@ class TextController extends Mvc\Controller
     /**
      * Akcja edycji tekstu
      */
-    public function editAction()
+    public function editAction(Request $request)
     {
-        $form = new \CmsAdmin\Form\Text(new \Cms\Orm\CmsTextRecord($this->id));
+        $form = new \CmsAdmin\Form\Text(new \Cms\Orm\CmsTextRecord($request->id));
         $this->view->textForm = $form;
         //brak wysłanych danych
         if (!$form->isMine()) {
@@ -65,9 +68,9 @@ class TextController extends Mvc\Controller
     /**
      * Usuwanie tekstu
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        $text = (new \Cms\Orm\CmsTextQuery)->findPk($this->id);
+        $text = (new \Cms\Orm\CmsTextQuery)->findPk($request->id);
         //jeśli znaleziono tekst i udało się usunąć
         if ($text && $text->delete()) {
             $this->getMessenger()->addMessage('messenger.text.text.deleted', true);

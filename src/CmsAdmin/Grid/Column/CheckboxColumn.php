@@ -11,7 +11,6 @@
 namespace CmsAdmin\Grid\Column;
 
 use Cms\Mvc\ViewHelper\AclAllowed;
-use Mmi\App\FrontController;
 
 /**
  * Klasa Columnu checkbox
@@ -44,12 +43,11 @@ class CheckboxColumn extends SelectColumn
      */
     public function __construct($name)
     {
-        $view = FrontController::getInstance()->getView();
-        $this->setMultioptions([
-            1 => $view->_('grid.shared.checkbox.on'),
-            0 => $view->_('grid.shared.checkbox.off'),
-        ]);
         parent::__construct($name);
+        $this->setMultioptions([
+            1 => $this->view->_('grid.shared.checkbox.on'),
+            0 => $this->view->_('grid.shared.checkbox.off'),
+        ]);
     }
 
     /**
@@ -81,19 +79,19 @@ class CheckboxColumn extends SelectColumn
      */
     public function renderCell(\Mmi\Orm\RecordRo $record)
     {
-        FrontController::getInstance()->getView()->_column = $this;
-        FrontController::getInstance()->getView()->_record = $record;
-        FrontController::getInstance()->getView()->_value = $this->getValueFromRecord($record);
+        $this->view->_column = $this;
+        $this->view->_record = $record;
+        $this->view->_value = $this->getValueFromRecord($record);
 
         //wyłączanie edycji jeśli acl w operacjach (edycji) zabrania
-        if ($this->getGrid()->getColumn('_operation_') && !(new AclAllowed)->aclAllowed($this->getGrid()->getColumn('_operation_')->getOption('editParams'))) {
+        if ($this->getGrid()->getColumn('_operation_') && !(new AclAllowed($this->view))->aclAllowed($this->getGrid()->getColumn('_operation_')->getOption('editParams'))) {
             $this->setDisabled();
         }
         //obsługa zapisu rekordu
         (new CheckboxRequestHandler($this))->handleRequest();
         //nowy Column select
 
-        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_CELL);
+        return $this->view->renderTemplate(self::TEMPLATE_CELL);
     }
 
     /**

@@ -10,10 +10,12 @@
 
 namespace CmsAdmin\App\NavPart;
 
+use Mmi\Navigation\NavigationConfigAbstract;
+
 /**
  * Konfiguracja nawigatora statystyk
  */
-class NavPartStat extends \Mmi\Navigation\NavigationConfig
+class NavPartStat extends NavigationConfigAbstract
 {
 
     /**

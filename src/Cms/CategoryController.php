@@ -10,11 +10,16 @@
 
 namespace Cms;
 
-use App\Registry;
+use Cms\App\CmsSkinsetConfig;
 use Cms\Model\TemplateModel;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
+use Mmi\Cache\Cache;
+use Mmi\Http\Request;
+use Mmi\Mvc\ActionHelper;
+use Mmi\Security\Acl;
+use Mmi\Security\Auth;
 
 /**
  * Kontroler kategorii
@@ -26,18 +31,48 @@ class CategoryController extends \Mmi\Mvc\Controller
     CONST REDACTOR_VERIFY_ACTION = 'cmsAdmin:category:index';
 
     /**
+     * @Inject
+     * @var Cache
+     */
+    private $cache;
+
+    /**
+     * @Inject
+     * @var Auth
+     */
+    private $auth;
+
+    /**
+     * @Inject
+     * @var Acl
+     */
+    private $acl;
+
+    /**
+     * @Inject
+     * @var CmsSkinsetConfig
+     */
+    private $cmsSkinsetConfig;
+
+    /**
+     * @Inject
+     * @var ActionHelper
+     */
+    private $actionHelper;
+
+    /**
      * Akcja dispatchera kategorii
      */
-    public function dispatchAction()
+    public function dispatchAction(Request $request)
     {
         //pobranie kategorii
-        $category = $this->_getPublishedCategoryByUri($this->uri);
+        $category = $this->_getPublishedCategoryByUri($request->uri);
         //klucz bufora
         $cacheKey = CmsCategoryRecord::HTML_CACHE_PREFIX . $category->id;
         //buforowanie dozwolone
-        $bufferingAllowed = $this->_bufferingAllowed();
+        $bufferingAllowed = (new \Cms\Model\CategoryBuffering($request))->isAllowed();
         //wczytanie zbuforowanej strony (dla niezalogowanych i z pustym requestem)
-        if ($bufferingAllowed && (null !== $html = Registry::$cache->load($cacheKey))) {
+        if ($bufferingAllowed && (null !== $html = $this->cache->load($cacheKey))) {
             //wysyłanie nagłówka o buforowaniu strony
             $this->getResponse()->setHeader('X-Cache', 'HIT');
             //zwrot html
@@ -46,14 +81,14 @@ class CategoryController extends \Mmi\Mvc\Controller
         //wysyłanie nagłówka o braku buforowaniu strony
         $this->getResponse()->setHeader('X-Cache', 'MISS');
         //renderowanie docelowej akcji
-        $html = $this->_renderHtml($category);
+        $html = $this->_renderHtml($category, $request);
         //buforowanie niedozwolone
         if (!$bufferingAllowed || 0 == $cacheLifetime = $this->_getCategoryCacheLifetime($category)) {
             //zwrot html
             return $this->_decorateHtmlWithEditButton($html, $category);
         }
         //zapis html kategorii do cache
-        Registry::$cache->save($html, $cacheKey, $cacheLifetime);
+        $this->cache->save($html, $cacheKey, $cacheLifetime);
         //zwrot html
         return $this->_decorateHtmlWithEditButton($html, $category);
     }
@@ -64,7 +99,7 @@ class CategoryController extends \Mmi\Mvc\Controller
      * @throws \Mmi\Mvc\MvcForbiddenException
      * @throws \Mmi\Mvc\MvcNotFoundException
      */
-    public function redactorPreviewAction()
+    public function redactorPreviewAction(Request $request)
     {
         //żądanie o wersję artykułu (rola redaktora)
         if (!$this->_hasRedactorRole()) {
@@ -72,8 +107,8 @@ class CategoryController extends \Mmi\Mvc\Controller
         }
         //wyszukiwanie kategorii
         if (null === $category = (new Orm\CmsCategoryQuery)
-            ->whereCmsCategoryOriginalId()->equals($this->originalId ? $this->originalId : null)
-            ->findPk($this->versionId)) {
+            ->whereCmsCategoryOriginalId()->equals($request->originalId ? $request->originalId : null)
+            ->findPk($request->versionId)) {
             //404
             throw new \Mmi\Mvc\MvcNotFoundException('Version not found');
         }
@@ -83,16 +118,16 @@ class CategoryController extends \Mmi\Mvc\Controller
         $this->view->navigation()->setTitle($category->title)
             ->setDescription($category->description);
         //renderowanie docelowej akcji
-        return $this->_decorateHtmlWithEditButton($this->_renderHtml($category), $category);
+        return $this->_decorateHtmlWithEditButton($this->_renderHtml($category, $request), $category);
     }
 
     /**
      * Akcja renderująca guzik edycji
      */
-    public function editButtonAction()
+    public function editButtonAction(Request $request)
     {
-        $this->view->categoryId = $this->categoryId;
-        $this->view->originalId = $this->originalId;
+        $this->view->categoryId = $request->categoryId;
+        $this->view->originalId = $request->originalId;
     }
 
     /**
@@ -106,18 +141,18 @@ class CategoryController extends \Mmi\Mvc\Controller
         //inicjalizacja zmiennej
         $category = null;
         //próba mapowania uri na ID kategorii z cache
-        if (null === $categoryId = Registry::$cache->load($cacheKey = CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($uri))) {
+        if (null === $categoryId = $this->cache->load($cacheKey = CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($uri))) {
             //próba pobrania kategorii po URI
             if (null === $category = (new Orm\CmsCategoryQuery)->getCategoryByUri($uri)) {
                 //zapis informacji o braku kategorii w cache
-                Registry::$cache->save(false, $cacheKey, 0);
+                $this->cache->save(false, $cacheKey, 0);
                 //301 (o ile możliwe) lub 404
                 $this->_redirectOrNotFound($uri);
             }
             //id kategorii
             $categoryId = $category->id;
             //zapis id kategorii i kategorii w cache 
-            Registry::$cache->save($categoryId, $cacheKey, 0) && Registry::$cache->save($category, CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $categoryId, 0);
+            $this->cache->save($categoryId, $cacheKey, 0) && $this->cache->save($category, CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $categoryId, 0);
         }
         //w buforze jest informacja o braku strony
         if (false === $categoryId) {
@@ -129,9 +164,9 @@ class CategoryController extends \Mmi\Mvc\Controller
             return $this->_checkCategory($category);
         }
         //pobranie kategorii z bufora
-        if (null === $category = Registry::$cache->load($cacheKey = CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $categoryId)) {
+        if (null === $category = $this->cache->load($cacheKey = CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $categoryId)) {
             //zapis pobranej kategorii w cache
-            Registry::$cache->save($category = (new Orm\CmsCategoryQuery)->findPk($categoryId), $cacheKey, 0);
+            $this->cache->save($category = (new Orm\CmsCategoryQuery)->findPk($categoryId), $cacheKey, 0);
         }
         //sprawdzanie kategorii
         return $this->_checkCategory($category);
@@ -153,9 +188,9 @@ class CategoryController extends \Mmi\Mvc\Controller
             $this->getResponse()->redirectToUrl($category->redirectUri);
         }
         //sprawdzenie dostępu dla roli
-        if (!(new Model\CategoryRole($category, \App\Registry::$auth->getRoles()))->isAllowed()) {
+        if (!(new Model\CategoryRole($category, $this->auth->getRoles()))->isAllowed()) {
             //403
-            throw new \Mmi\Mvc\MvcForbiddenException('Category: ' . $category->uri . ' forbidden for roles: ' . implode(', ', \App\Registry::$auth->getRoles()));
+            throw new \Mmi\Mvc\MvcForbiddenException('Category: ' . $category->uri . ' forbidden for roles: ' . implode(', ', $this->auth->getRoles()));
         }
         //kategoria posiada customUri, a wejście jest na natywny uri
         if ($category->customUri && $this->uri != $category->customUri && $this->uri == $category->uri) {
@@ -172,10 +207,10 @@ class CategoryController extends \Mmi\Mvc\Controller
      * @return string
      * @throws \Mmi\App\KernelException
      */
-    protected function _renderHtml(\Cms\Orm\CmsCategoryRecord $category)
+    protected function _renderHtml(\Cms\Orm\CmsCategoryRecord $category, Request $request)
     {
         //tworzenie nowego requestu na podstawie obecnego
-        $request = clone $this->getRequest();
+        $request = clone $request;
         //przekierowanie MVC
         if ($category->mvcParams) {
             //tablica z tpl
@@ -183,10 +218,10 @@ class CategoryController extends \Mmi\Mvc\Controller
             //parsowanie parametrów mvc
             parse_str($category->mvcParams, $mvcParams);
             //zwrot html
-            return \Mmi\Mvc\ActionHelper::getInstance()->forward($request->setParams($mvcParams));
+            return $this->actionHelper->forward($request->setParams($mvcParams));
         }
         //render szablonu
-        return (new TemplateModel($category, Registry::$config->skinset))->renderDisplayAction($this->view);
+        return (new TemplateModel($category, $this->cmsSkinsetConfig))->renderDisplayAction($this->view);
     }
 
     /**
@@ -202,7 +237,7 @@ class CategoryController extends \Mmi\Mvc\Controller
             return $html;
         }
         //zwraca wyrenderowany HTML
-        return str_replace('</body>', \Mmi\Mvc\ActionHelper::getInstance()->action(new \Mmi\Http\Request(['module' => 'cms', 'controller' => 'category', 'action' => 'editButton', 'originalId' => $category->cmsCategoryOriginalId, 'categoryId' => $category->id])) . '</body>', $html);
+        return str_replace('</body>', $this->actionHelper->action(new \Mmi\Http\Request(['module' => 'cms', 'controller' => 'category', 'action' => 'editButton', 'originalId' => $category->cmsCategoryOriginalId, 'categoryId' => $category->id])) . '</body>', $html);
     }
 
     /**
@@ -212,7 +247,7 @@ class CategoryController extends \Mmi\Mvc\Controller
     protected function _getCategoryCacheLifetime(\Cms\Orm\CmsCategoryRecord $category)
     {
         //model szablonu
-        $templateModel = new TemplateModel($category, Registry::$config->skinset);
+        $templateModel = new TemplateModel($category, $this->cmsSkinsetConfig);
         //czas buforowania (na podstawie typu kategorii i pojedynczej kategorii
         $cacheLifetime = (null !== $category->cacheLifetime) ? $category->cacheLifetime : $templateModel->getTemplateConfg()->getCacheLifeTime();
         //jeśli bufor wyłączony (na poziomie typu kategorii, lub pojedynczej kategorii)
@@ -223,7 +258,7 @@ class CategoryController extends \Mmi\Mvc\Controller
         //iteracja po widgetach
         foreach ($category->getWidgetModel()->getWidgetRelations() as $widgetRelation) {
             //model widgeta
-            $widgetModel = new WidgetModel($widgetRelation, Registry::$config->skinset);
+            $widgetModel = new WidgetModel($widgetRelation, $this->cmsSkinsetConfig);
             //bufor wyłączony przez widget
             if (0 == $widgetCacheLifetime = $widgetModel->getWidgetConfig()->getCacheLifeTime()) {
                 //brak bufora
@@ -247,7 +282,7 @@ class CategoryController extends \Mmi\Mvc\Controller
         //klucz bufora
         $cacheKey = CmsCategoryRecord::REDIRECT_CACHE_PREFIX . md5($uri);
         //zbuforowany brak uri w historii
-        if (false === ($redirectUri = \App\Registry::$cache->load($cacheKey))) {
+        if (false === ($redirectUri = $this->cache->load($cacheKey))) {
             //404
             throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
         }
@@ -258,23 +293,14 @@ class CategoryController extends \Mmi\Mvc\Controller
         //wyszukiwanie bieżącej kategorii (aktywnej)
         if (null === $category = (new CmsCategoryQuery)->byHistoryUri($uri)->findFirst()) {
             //brak kategorii w historii - buforowanie informacji
-            \App\Registry::$cache->save(false, $cacheKey, 0);
+            $this->cache->save(false, $cacheKey, 0);
             //404
             throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
         }
         //zapis uri przekierowania do bufora
-        \App\Registry::$cache->save($category->uri, $cacheKey, 0);
+        $this->cache->save($category->uri, $cacheKey, 0);
         //przekierowanie 301
         return $this->getResponse()->setCode(301)->redirect('cms', 'category', 'dispatch', ['uri' => $category->uri]);
-    }
-
-    /**
-     * Czy buforowanie dozwolone
-     * @return boolean
-     */
-    protected function _bufferingAllowed()
-    {
-        return (new \Cms\Model\CategoryBuffering($this->_request))->isAllowed();
     }
 
     /**
@@ -283,7 +309,7 @@ class CategoryController extends \Mmi\Mvc\Controller
      */
     protected function _hasRedactorRole()
     {
-        return \App\Registry::$acl->isAllowed(\App\Registry::$auth->getRoles(), 'cmsAdmin:category:index');
+        return $this->acl->isAllowed($this->auth->getRoles(), 'cmsAdmin:category:index');
     }
 
 }

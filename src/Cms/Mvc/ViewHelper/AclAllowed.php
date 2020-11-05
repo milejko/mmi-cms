@@ -23,10 +23,8 @@ class AclAllowed extends \Mmi\Mvc\ViewHelper\HelperAbstract
      */
     public function aclAllowed(array $params)
     {
-        //łączenie parametrów z requestem Front Controllera
-        $urlParams = array_merge(\Mmi\App\FrontController::getInstance()->getRequest()->toArray(), $params);
         //zwrot z ACL
-        return \App\Registry::$acl->isAllowed(\App\Registry::$auth->getRoles(), strtolower($urlParams['module'] . ':' . $urlParams['controller'] . ':' . $urlParams['action']));
+        return true;//$this->view->getAcl()->isAllowed($this->view->getAuth()->getRoles(), strtolower($params['module'] . ':' . $params['controller'] . ':' . $params['action']));
     }
 
 }

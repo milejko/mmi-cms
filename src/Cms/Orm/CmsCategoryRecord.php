@@ -2,8 +2,12 @@
 
 namespace Cms\Orm;
 
-use App\Registry;
+use Cms\App\CmsSkinsetConfig;
 use CmsAdmin\Model\CategoryAclModel;
+use Mmi\App\App;
+use Mmi\Cache\Cache;
+use Mmi\Mvc\View;
+use Psr\Log\LoggerInterface;
 
 /**
  * Rekord kategorii CMSowych
@@ -282,7 +286,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     protected function _insert()
     {
         //usunięcie cache uprawnień
-        \App\Registry::$cache->remove(CategoryAclModel::CACHE_KEY);
+        App::$di->get(Cache::class)->remove(CategoryAclModel::CACHE_KEY);
         //data aktualizacji
         $this->dateAdd = $this->dateAdd ? $this->dateAdd : date('Y-m-d H:i:s');
         //próba utworzenia rekordu
@@ -338,7 +342,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         (new CmsCategoryQuery)
             ->whereCmsCategoryOriginalId()->equals($this->id)
             ->orFieldParentId()->equals($this->id)
-            ->find()
             ->delete();
         //pobranie dzieci
         $children = (new \Cms\Model\CategoryModel(new CmsCategoryQuery))->getCategoryTree($this->getPk());
@@ -352,7 +355,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
                 ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
             )        
             ->andFieldObjectId()->equals($this->getPk())
-            ->find()
             ->delete();
         //usuwanie widgetów
         (new CmsCategoryWidgetCategoryQuery)
@@ -371,7 +373,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     public function getUrl($https = null)
     {
         //pobranie linku z widoku
-        return \Mmi\App\FrontController::getInstance()->getView()->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->customUri ? $this->customUri : $this->uri], true, $https);
+        return App::$di->get(View::class)->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->customUri ? $this->customUri : $this->uri], true, $https);
     }
 
     /**
@@ -381,9 +383,9 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     public function getWidgetModel()
     {
         //próba pobrania modelu widgetu z cache
-        if (null === $widgetModel = \App\Registry::$cache->load($cacheKey = self::WIDGET_MODEL_CACHE_PREFIX . $this->id)) {
+        if (null === $widgetModel = App::$di->get(Cache::class)->load($cacheKey = self::WIDGET_MODEL_CACHE_PREFIX . $this->id)) {
             //pobieranie modelu widgetu
-            \App\Registry::$cache->save($widgetModel = new \Cms\Model\CategoryWidgetModel($this->id, Registry::$config->skinset), $cacheKey, 0);
+            App::$di->get(Cache::class)->save($widgetModel = new \Cms\Model\CategoryWidgetModel($this->id, App::$di->get(CmsSkinsetConfig::class)), $cacheKey, 0);
         }
         //zwrot atrybutów
         return $widgetModel;
@@ -400,9 +402,9 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             return;
         }
         //próba pobrania rodzica z cache
-        if (null === $parent = \App\Registry::$cache->load($cacheKey = self::CATEGORY_CACHE_PREFIX . $this->parentId)) {
+        if (null === $parent = App::$di->get(Cache::class)->load($cacheKey = self::CATEGORY_CACHE_PREFIX . $this->parentId)) {
             //pobieranie rodzica
-            \App\Registry::$cache->save($parent = (new \Cms\Orm\CmsCategoryQuery)
+            App::$di->get(Cache::class)->save($parent = (new \Cms\Orm\CmsCategoryQuery)
                 ->findPk($this->parentId), $cacheKey, 0);
         }
         //zwrot rodzica
@@ -419,7 +421,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         try {
             $configArr = \json_decode($this->configJson, true);
         } catch (\Exception $e) {
-            \Mmi\App\FrontController::getInstance()->getLogger()->warning('Unable to decode category configJson #' . $this->id);
+            App::$di->get(LoggerInterface::class)->warning('Unable to decode category configJson #' . $this->id);
         }
         //tworznie pustego configa
         if (!isset($configArr)) {
@@ -516,19 +518,20 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     public function clearCache()
     {
         //usuwanie cache
-        \App\Registry::$cache->remove('mmi-cms-navigation-' . $this->lang);
-        \App\Registry::$cache->remove(self::CATEGORY_CACHE_PREFIX . $this->id);
-        \App\Registry::$cache->remove(self::CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
-        \App\Registry::$cache->remove(self::HTML_CACHE_PREFIX . $this->id);
-        \App\Registry::$cache->remove(self::HTML_CACHE_PREFIX . $this->cmsCategoryOriginalId);
-        \App\Registry::$cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->uri));
-        \App\Registry::$cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->getInitialStateValue('uri')));
-        \App\Registry::$cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->customUri));
-        \App\Registry::$cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->getInitialStateValue('customUri')));
-        \App\Registry::$cache->remove(self::REDIRECT_CACHE_PREFIX . md5($this->uri));
-        \App\Registry::$cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->id);
-        \App\Registry::$cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->cmsCategoryOriginalId);
-        \App\Registry::$cache->remove('categories-roles');
+        $cache = App::$di->get(Cache::class);
+        $cache->remove('mmi-cms-navigation-' . $this->lang);
+        $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->id);
+        $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
+        $cache->remove(self::HTML_CACHE_PREFIX . $this->id);
+        $cache->remove(self::HTML_CACHE_PREFIX . $this->cmsCategoryOriginalId);
+        $cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->uri));
+        $cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->getInitialStateValue('uri')));
+        $cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->customUri));
+        $cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->getInitialStateValue('customUri')));
+        $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($this->uri));
+        $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->id);
+        $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->cmsCategoryOriginalId);
+        $cache->remove('categories-roles');
         return true;
     }
 

@@ -4,7 +4,9 @@ namespace Cms;
 
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 use Mmi\Http\Request;
+use Mmi\Http\Response;
 use Mmi\Mvc\Controller;
+use Mmi\Mvc\Messenger;
 use Mmi\Mvc\View;
 
 /**
@@ -22,10 +24,14 @@ abstract class WidgetController extends Controller
     /**
      * Konstruktor
      */
-    public function __construct(Request $request, View $view, CmsCategoryWidgetCategoryRecord $widgetRecord)
+    public function __construct(
+        View $view,
+        Response $response, 
+        CmsCategoryWidgetCategoryRecord $widgetRecord
+    )
     {
         //parent
-        parent::__construct($request, $view);
+        parent::__construct($view, $response);
         //przypisanie rekordu
         $this->_widgetRecord = $widgetRecord;
     }

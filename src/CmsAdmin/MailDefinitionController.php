@@ -10,10 +10,14 @@
 
 namespace CmsAdmin;
 
+use Mmi\Db\DbException;
+use Mmi\Http\Request;
+use Mmi\Mvc\Controller;
+
 /**
  * Definicje szablonów maili
  */
-class MailDefinitionController extends Mvc\Controller
+class MailDefinitionController extends Controller
 {
 
     /**
@@ -28,9 +32,9 @@ class MailDefinitionController extends Mvc\Controller
     /**
      * Edycja szablonu
      */
-    public function editAction()
+    public function editAction(Request $request)
     {
-        $form = new \CmsAdmin\Form\Mail\Definition(new \Cms\Orm\CmsMailDefinitionRecord($this->id));
+        $form = new \CmsAdmin\Form\Mail\Definition(new \Cms\Orm\CmsMailDefinitionRecord($request->id));
         if ($form->isSaved()) {
             $this->getMessenger()->addMessage('messenger.mailDefinition.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'mailDefinition');
@@ -41,14 +45,14 @@ class MailDefinitionController extends Mvc\Controller
     /**
      * Usuwanie szablonu
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        $definition = (new \Cms\Orm\CmsMailDefinitionQuery)->findPk($this->id);
+        $definition = (new \Cms\Orm\CmsMailDefinitionQuery)->findPk($request->id);
         try {
             if ($definition && $definition->delete()) {
                 $this->getMessenger()->addMessage('messenger.mailDefinition.deleted');
             }
-        } catch (\Mmi\Db\Exception $e) {
+        } catch (DbException $e) {
             $this->getMessenger()->addMessage('messenger.mailDefinition.delete.error', false);
         }
         $this->getResponse()->redirect('cmsAdmin', 'mailDefinition');

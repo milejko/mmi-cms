@@ -12,9 +12,11 @@ namespace Cms\Form\Element;
 
 use Cms\Model\File;
 use Cms\Orm\CmsFileQuery;
-use Mmi\App\FrontController;
+use Mmi\App\App;
 use Mmi\Form\Element\ElementAbstract;
 use Mmi\Form\Form;
+use Mmi\Http\Request;
+use Mmi\Http\Response;
 
 /**
  * Abstrakcyjna klasa uploadera
@@ -56,17 +58,18 @@ abstract class UploaderElementAbstract extends ElementAbstract
             $this->setObjectId($form->getRecord()->id);
         }
         //instancja front controllera
-        $frontController = FrontController::getInstance();
+        $request = App::$di->get(Request::class);
+        $response = App::$di->get(Response::class);
         //uploaderId znajduje się w requescie
-        if ($frontController->getRequest()->uploaderId) {
+        if ($request->uploaderId) {
             //ustawianie id uploadera
-            $this->setUploaderId($frontController->getRequest()->uploaderId);
+            $this->setUploaderId($request->uploaderId);
             //tworzenie plików tymczasowych
             $this->_createTempFiles();
             return $this;
         }
         //przekierowanie na url zawierający nowowygenerowany uploaderId
-        $frontController->getResponse()->redirectToUrl($frontController->getView()->url($frontController->getRequest()->toArray() + ['uploaderId' => mt_rand(1000000, 9999999)]));
+        $response->redirectToUrl($this->view->url($request->toArray() + ['uploaderId' => mt_rand(1000000, 9999999)]));
         return $this;
     }
 

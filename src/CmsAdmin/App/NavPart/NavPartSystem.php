@@ -10,10 +10,12 @@
 
 namespace CmsAdmin\App\NavPart;
 
+use Mmi\Navigation\NavigationConfigAbstract;
+
 /**
  * Konfiguracja nawigatora tekstów stałych
  */
-class NavPartSystem extends \Mmi\Navigation\NavigationConfig
+class NavPartSystem extends NavigationConfigAbstract
 {
 
     /**
@@ -49,19 +51,6 @@ class NavPartSystem extends \Mmi\Navigation\NavigationConfig
                 ->setIcon('fa-file')
                 ->setModule('cmsAdmin')
                 ->setController('file')
-            )
-            ->addChild((new \Mmi\Navigation\NavigationConfigElement)
-                ->setLabel('menu.connector.index')
-                ->setIcon('fa-cloud-download')
-                ->setModule('cmsAdmin')
-                ->setController('connector')
-                ->addChild((new \Mmi\Navigation\NavigationConfigElement)
-                    ->setLabel('menu.connector.files')
-                    ->setModule('cmsAdmin')
-                    ->setController('connector')
-                    ->setAction('files')
-                    ->setDisabled()
-                )
             )
             ->addChild((new \Mmi\Navigation\NavigationConfigElement)
                 ->setLabel('menu.config')

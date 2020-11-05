@@ -10,6 +10,9 @@
 
 namespace Cms;
 
+use Mmi\Http\HttpServerEnv;
+use Mmi\Http\Request;
+
 /**
  * Strona kontaktowa
  */
@@ -17,15 +20,21 @@ class ContactController extends \Mmi\Mvc\Controller
 {
 
     /**
+     * @Inject
+     * @var HttpServerEnv
+     */
+    private $httpServerEnv;
+
+    /**
      * Akcja kontaktu
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         //ciasteczko sesyjne - zapamietanie sciezki
         $namespace = new \Mmi\Session\SessionSpace('contact');
         //formularz kontaktowy z rekordem kontaktu
         $form = new \Cms\Form\Contact(new \Cms\Orm\CmsContactRecord(), [
-            'subjectId' => $this->subjectId
+            'subjectId' => $request->subjectId
         ]);
         //do widoku
         $this->view->contactForm = $form;
@@ -39,8 +48,8 @@ class ContactController extends \Mmi\Mvc\Controller
             }
             $namespace->unsetAll();
             $this->getResponse()->redirectToUrl($link);
-        } elseif (\Mmi\App\FrontController::getInstance()->getEnvironment()->httpReferer) {
-            $namespace->referer = \Mmi\App\FrontController::getInstance()->getEnvironment()->httpReferer;
+        } elseif ($this->httpServerEnv->httpReferer) {
+            $namespace->referer = $this->httpServerEnv->httpReferer;
         }
     }
 

@@ -10,27 +10,51 @@
 
 namespace CmsAdmin;
 
+use Mmi\Http\HttpServerEnv;
+use Mmi\Security\Auth;
+use Mmi\Http\Request;
+use Mmi\Mvc\Controller;
+use Mmi\Session\Session;
+
 /**
  * Kontroler główny panelu administracyjnego
  */
-class IndexController extends Mvc\Controller
+class IndexController extends Controller
 {
+
+    /**
+     * @Inject
+     * @var Auth
+     */
+    private $auth;
+
+    /**
+     * @Inject
+     * @var HttpServerEnv
+     */
+    private $httpServerEnv;
+
+    /**
+     * @Inject
+     * @var Session
+     */
+    private $session;
 
     /**
      * Strona główna admina
      */
     public function indexAction()
     {
-        $this->view->user = (new \Cms\Orm\CmsAuthQuery)->findPk(\App\Registry::$auth->getId());
+        $this->view->user = (new \Cms\Orm\CmsAuthQuery)->findPk($this->auth->getId());
     }
 
     /**
      * Logowanie
      */
-    public function loginAction()
+    public function loginAction(Request $request)
     {
         //jesli zalogowany
-        if (\App\Registry::$auth->hasIdentity()) {
+        if ($this->auth->hasIdentity()) {
             return $this->getResponse()->redirect('cmsAdmin');
         }
         //formularz logowania
@@ -46,12 +70,12 @@ class IndexController extends Mvc\Controller
             return;
         }
         //regeneracja ID sesji
-        \Mmi\Session\Session::regenerateId();
+        $this->session->regenerateId();
         //zalogowano
         $this->getMessenger()->addMessage('messenger.index.login.success', true);
-        $referer = $this->getRequest()->getReferer();
+        $referer = $request->getReferer();
         //przekierowanie na referer
-        if ($referer && $referer != \Mmi\App\FrontController::getInstance()->getEnvironment()->requestUri) {
+        if ($referer && $referer != $this->httpServerEnv->requestUri) {
             return $this->getResponse()->redirectToUrl($referer);
         }
         $this->getResponse()->redirect('cmsAdmin');
@@ -62,7 +86,7 @@ class IndexController extends Mvc\Controller
      */
     public function logoutAction()
     {
-        \App\Registry::$auth->clearIdentity();
+        $this->auth->clearIdentity();
         $this->getMessenger()->addMessage('messenger.index.logout.success', true);
         $this->getResponse()->redirect('cmsAdmin');
     }
@@ -84,7 +108,7 @@ class IndexController extends Mvc\Controller
         }
         $this->getMessenger()->addMessage('messenger.index.password.success');
         //wylogowanie
-        \App\Registry::$auth->clearIdentity();
+        $this->auth->clearIdentity();
         $this->getResponse()->redirect('cmsAdmin');
     }
 

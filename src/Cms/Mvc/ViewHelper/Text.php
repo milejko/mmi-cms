@@ -10,6 +10,9 @@
 
 namespace Cms\Mvc\ViewHelper;
 
+use Mmi\App\App;
+use Mmi\Http\Request;
+
 /**
  * Helper tekstów statycznych
  */
@@ -23,7 +26,7 @@ class Text extends \Mmi\Mvc\ViewHelper\HelperAbstract
      */
     public function text($key)
     {
-        return nl2br(\Cms\Model\Text::textByKeyLang($key, \Mmi\App\FrontController::getInstance()->getView()->request->lang));
+        return nl2br(\Cms\Model\Text::textByKeyLang($key, App::$di->get(Request::class)->lang));
     }
 
 }

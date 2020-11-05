@@ -2,6 +2,9 @@
 
 namespace Cms\Orm;
 
+use Mmi\App\App;
+use Mmi\Cache\Cache;
+
 /**
  * Rekord widgetu kategorii
  */
@@ -79,9 +82,9 @@ class CmsCategoryWidgetRecord extends \Mmi\Orm\Record
             ->equals($this->id)
             ->findPairs('cms_category_widget_category.id', 'cms_category.id') as $id => $categoryId) {
             //usuwanie bufora
-            \App\Registry::$cache->remove('category-widget-html-' . $id);
-            \App\Registry::$cache->remove('category-widget-model-' . $categoryId);
-            \App\Registry::$cache->remove('category-html-' . $categoryId);
+            App::$di->get(Cache::class)->remove('category-widget-html-' . $id);
+            App::$di->get(Cache::class)->remove('category-widget-model-' . $categoryId);
+            App::$di->get(Cache::class)->remove('category-html-' . $categoryId);
         }
         return true;
     }

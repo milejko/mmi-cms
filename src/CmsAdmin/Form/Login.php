@@ -11,6 +11,8 @@
 namespace CmsAdmin\Form;
 
 use Cms\Form\Element;
+use Mmi\App\App;
+use Mmi\Security\Auth;
 
 class Login extends \Cms\Form\Form
 {
@@ -42,10 +44,10 @@ class Login extends \Cms\Form\Form
             return false;
         }
         //autoryzacja
-        $auth = \App\Registry::$auth;
-        \App\Registry::$auth->setIdentity($this->getElement('username')->getValue());
-        \App\Registry::$auth->setCredential($this->getElement('password')->getValue());
-        return \App\Registry::$auth->authenticate();
+        $auth = App::$di->get(Auth::class);
+        $auth->setIdentity($this->getElement('username')->getValue());
+        $auth->setCredential($this->getElement('password')->getValue());
+        return $auth->authenticate();
     }
 
 }

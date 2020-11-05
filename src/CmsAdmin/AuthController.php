@@ -10,11 +10,21 @@
 
 namespace CmsAdmin;
 
+use Mmi\Http\Request;
+use Mmi\Ldap\LdapConfig;
+use Mmi\Mvc\Controller;
+
 /**
  * Kontroler użytkowników
  */
-class AuthController extends Mvc\Controller
+class AuthController extends Controller
 {
+
+    /**
+     * @Inject
+     * @var LdapConfig
+     */
+    private $ldapConfig;
 
     /**
      * Lista użytkowników
@@ -27,13 +37,11 @@ class AuthController extends Mvc\Controller
     /**
      * Edycja użytkownika
      */
-    public function editAction()
+    public function editAction(Request $request)
     {
-        if (\App\Registry::$config->ldap) {
-            $this->view->ldap = \App\Registry::$config->ldap->active;
-        }
+        $this->view->ldap = $this->ldapConfig;
 
-        $form = new \CmsAdmin\Form\Auth(new \Cms\Orm\CmsAuthRecord($this->id));
+        $form = new \CmsAdmin\Form\Auth(new \Cms\Orm\CmsAuthRecord($request->id));
         if ($form->isSaved()) {
             $this->getMessenger()->addMessage('messenger.auth.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'auth');
@@ -44,9 +52,9 @@ class AuthController extends Mvc\Controller
     /**
      * Kasowanie użytkownika
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        $auth = (new \Cms\Orm\CmsAuthQuery)->findPk($this->id);
+        $auth = (new \Cms\Orm\CmsAuthQuery)->findPk($request->id);
         if ($auth && $auth->delete()) {
             $this->getMessenger()->addMessage('messenger.auth.deleted', true);
         }
@@ -56,15 +64,15 @@ class AuthController extends Mvc\Controller
     /**
      * Akcja jsonowa wyszukująca użytkowników w LDAP
      */
-    public function autocompleteAction()
+    public function autocompleteAction(Request $request)
     {
         //typ odpowiedzi
         $this->getResponse()->setTypeJson();
         //za krótki ciąg
-        if (strlen(trim($this->term)) < 3) {
+        if (strlen(trim($request->term)) < 3) {
             return json_encode([]);
         }
         //zwraca odpowiedz JSON
-        return json_encode((new \Cms\Model\Auth)->ldapAutocomplete($this->term . '*'));
+        return json_encode((new \Cms\Model\Auth)->ldapAutocomplete($request->term . '*'));
     }
 }

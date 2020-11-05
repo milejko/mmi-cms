@@ -10,7 +10,8 @@
 
 namespace CmsAdmin\Grid;
 
-use Mmi\App\FrontController;
+use Mmi\App\App;
+use Mmi\Mvc\View;
 
 /**
  * Renderer HTML grida
@@ -42,9 +43,9 @@ class GridRenderer
         //podpięcie grida
         $this->_grid = $grid;
         //grid do widoku
-        FrontController::getInstance()->getView()->_grid = $grid;
+        App::$di->get(View::class)->_grid = $grid;
         //renderer do widoku
-        FrontController::getInstance()->getView()->_renderer = $this;
+        App::$di->get(View::class)->_renderer = $this;
     }
 
     /**
@@ -54,7 +55,7 @@ class GridRenderer
     public function renderHeader()
     {
         //render szablonu
-        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_HEADER);
+        return App::$di->get(View::class)->renderTemplate(self::TEMPLATE_HEADER);
     }
 
     /**
@@ -64,7 +65,7 @@ class GridRenderer
     public function renderBody()
     {
         //render szablonu
-        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_BODY);
+        return App::$di->get(View::class)->renderTemplate(self::TEMPLATE_BODY);
     }
 
     /**
@@ -84,7 +85,7 @@ class GridRenderer
     public function render()
     {
         //render nagłówka, ciała i stopki
-        return FrontController::getInstance()->getView()->renderTemplate(self::TEMPLATE_GRID);
+        return App::$di->get(View::class)->renderTemplate(self::TEMPLATE_GRID);
     }
 
 }
