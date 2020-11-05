@@ -1,8 +1,8 @@
 <?php
 
-namespace Cms\Console;
+namespace Cms\Command;
 
-use Mmi\Console\CommandAbstract;
+use Mmi\Command\CommandAbstract;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
