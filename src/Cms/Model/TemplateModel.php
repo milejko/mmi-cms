@@ -136,10 +136,13 @@ class TemplateModel
      */
     private function _createController()
     {
+        if (null === $this->_templateConfig) {
+            return;
+        }
         //getting the controller name
         $controllerName = $this->_templateConfig->getControllerClassName();
         //missing controller
-        if (!App::$di->has($this->_templateConfig->getControllerClassName())) {
+        if (!App::$di->has($controllerName)) {
             throw new KernelException('Missing controller: ' . $controllerName);
         }
         //getting controller from the DI
