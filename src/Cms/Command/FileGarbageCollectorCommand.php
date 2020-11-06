@@ -27,25 +27,16 @@ class FileGarbageCollectorCommand extends CommandAbstract
      */
     protected $_found = 0;
 
-    public function configure()
-    {
-        $this->setName('cms:file:gc');
-        $this->setDescription('Files garbage collector');
-        parent::configure();
-    }
-
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int|null|void
+     * Execute
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         //dane (tylko podkatalogi jednoznakowe)
         $this->_scanDir(BASE_PATH . '/var/data', 1);
         //miniatury (podkatalogi do 12 znaków)
         $this->_scanDir(BASE_PATH . '/web/data', 12);
-        echo "\n";
+        $output->writeln('Garbage collection completed.');
         return 0;
     }
 

@@ -11,19 +11,10 @@ class CategoryRebuildCommand extends CommandAbstract
 {
     const TEMP_NAME_SUFFIX = '#suffix#';
 
-    public function configure()
-    {
-        $this->setName('cms:category:rebuild');
-        $this->setDescription('Rebuilds category paths, uris and orders');
-        parent::configure();
-    }
-
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int|null|void
+     * Execute
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         //doklejanie suffixa
         foreach ((new CmsCategoryQuery)
@@ -33,7 +24,7 @@ class CategoryRebuildCommand extends CommandAbstract
             $mainCategory->name = str_replace(self::TEMP_NAME_SUFFIX, '', $mainCategory->name);
             $mainCategory->save();
         }
-        $output->writeln('Category uris and paths rebuilt successfully');
+        $output->writeln('Category uris and paths rebuilt successfully.');
         return 0;
     }
 

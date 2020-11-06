@@ -11,6 +11,7 @@
 namespace CmsAdmin\Form;
 
 use Cms\Form\Element;
+use CmsAdmin\Model\Reflection;
 
 /**
  * Formularz harmonogramu
@@ -74,7 +75,7 @@ class Cron extends \Cms\Form\Form
             '&action=' . $this->getRecord()->action) : null;
 
         $options = [null => '---'];
-        foreach (\CmsAdmin\Model\Reflection::getOptionsWildcard(3) as $paramString => $label) {
+        foreach ((new Reflection)->getOptionsWildcard(3) as $paramString => $label) {
             $mvcParams = [];
             parse_str($paramString, $mvcParams);
             if ($mvcParams['controller'] == 'cron') {

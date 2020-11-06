@@ -9,19 +9,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CronExecuteCommand extends CommandAbstract
 {
 
-    public function configure()
-    {
-        $this->setName('cms:cron:execute');
-        $this->setDescription('Execute cron jobs');
-        parent::configure();
-    }
-
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return integer
+     * Execute
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         \Cms\Model\Cron::run();
         return 0;

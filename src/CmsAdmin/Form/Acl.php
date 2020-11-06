@@ -11,6 +11,7 @@
 namespace CmsAdmin\Form;
 
 use Cms\Form\Element;
+use CmsAdmin\Model\Reflection;
 use Mmi\App\App;
 use Mmi\Http\Request;
 
@@ -27,7 +28,7 @@ class Acl extends \Cms\Form\Form
 
         //parametry MVC
         $this->addElement((new Element\Select('mvcParams'))
-            ->setMultioptions(array_merge([null => '---'], \CmsAdmin\Model\Reflection::getOptionsWildcard())));
+            ->setMultioptions(array_merge([null => '---'], (new Reflection)->getOptionsWildcard())));
 
         //dozwolone/zabronione
         $this->addElement((new Element\Select('access'))

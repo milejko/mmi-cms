@@ -10,6 +10,7 @@
 
 namespace CmsAdmin;
 
+use CmsAdmin\Model\Reflection;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 
@@ -30,7 +31,7 @@ class AclController extends Controller
         }
         if ($request->roleId) {
             $this->view->rules = (new \Cms\Orm\CmsAclQuery)->whereCmsRoleId()->equals($request->roleId)->find();
-            $this->view->options = [null => '---'] + \CmsAdmin\Model\Reflection::getOptionsWildcard();
+            $this->view->options = [null => '---'] + (new Reflection)->getOptionsWildcard();
         }
         $roleForm = new \CmsAdmin\Form\Role($roleRecord = new \Cms\Orm\CmsRoleRecord());
         if ($roleForm->isMine() && $roleForm->isSaved()) {
