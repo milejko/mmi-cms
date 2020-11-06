@@ -12,6 +12,7 @@ namespace Cms\Model;
 
 use \Cms\Orm;
 use Mmi\App\App;
+use Mmi\Cache\Cache;
 
 class Text
 {

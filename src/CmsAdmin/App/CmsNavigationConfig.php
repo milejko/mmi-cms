@@ -22,9 +22,10 @@ class CmsNavigationConfig extends NavigationConfigAbstract
      * Pobiera menu
      * @return \Mmi\Navigation\NavigationConfigElement
      */
-    public static function getMenu()
+    public function __construct()
     {
-        return (new \Mmi\Navigation\NavigationConfigElement)
+        
+        $this->addElement((new \Mmi\Navigation\NavigationConfigElement)
             ->setId('admin-menu')
             ->setLabel('menu.index.index')
             ->setModule('cmsAdmin')
@@ -51,6 +52,6 @@ class CmsNavigationConfig extends NavigationConfigAbstract
                     ->addChild(NavPart\NavPartContact::getMenu())
                     ->addChild(NavPart\NavPartAuth::getMenu())
                     ->addChild(NavPart\NavPartSystem::getMenu())
-            );
+            ));
     }
 }

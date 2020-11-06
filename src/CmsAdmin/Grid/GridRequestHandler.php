@@ -196,7 +196,8 @@ class GridRequestHandler
         //ustawianie odpowiedzi
         App::$di->get(Response::class)
             ->setTypeJson()
-            ->setContent(json_encode(['body' => $renderer->renderHeader() . $renderer->renderBody(), 'paginator' => $renderer->renderFooter()]));
+            ->setContent(json_encode(['body' => $renderer->renderHeader() . $renderer->renderBody(), 'paginator' => $renderer->renderFooter()]))
+            ->send();
         exit;
     }
 

@@ -12,6 +12,7 @@ use Cms\App\CmsSkinsetConfig;
 use Cms\App\CmsTemplateConfig;
 use Mmi\App\App;
 use Mmi\Http\Request;
+use Mmi\Http\Response;
 
 /**
  * Model widgeta

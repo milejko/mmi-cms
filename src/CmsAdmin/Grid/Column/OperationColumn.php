@@ -116,16 +116,16 @@ class OperationColumn extends ColumnAbstract
                     continue;
                 }
                 //html przycisku
-                $html .= '<a class="operation-button" href="' . $this->view->url($params) . rtrim('#' . $button['hashTarget'], '#') . '"><i class="fa fa-' . $button['iconName'] . ' icon-' . $button['iconName'] . '"></i></a>';
+                $html .= '<a class="operation-button" href="' . $this->view->url($params, false) . rtrim('#' . $button['hashTarget'], '#') . '"><i class="fa fa-' . $button['iconName'] . ' icon-' . $button['iconName'] . '"></i></a>';
             }
         }
         //link edycyjny ze sprawdzeniem ACL
         if (!empty($editParams) && (new AclAllowed($this->view))->aclAllowed($params = $this->_parseParams($editParams, $record))) {
-            $html .= '<a class="operation-button" href="' . $this->view->url($params) . rtrim('#' . $this->getOption('editHashTarget'), '#') . '"><i class="fa fa-2 fa-pencil "></i></a>';
+            $html .= '<a class="operation-button" href="' . $this->view->url($params, false) . rtrim('#' . $this->getOption('editHashTarget'), '#') . '"><i class="fa fa-2 fa-pencil "></i></a>';
         }
         //link kasujący ze sprawdzeniem ACL
         if (!empty($deleteParams) && (new AclAllowed($this->view))->aclAllowed($params = $this->_parseParams($deleteParams, $record))) {
-            $html .= '<a class="operation-button confirm" href="' . $this->view->url($params) . rtrim('#' . $this->getOption('deleteHashTarget'), '#') . '" title="' . $this->view->_('gird.shared.operation.delete.label') . '" class="confirm"><i class="fa fa-2 fa-trash-o "></i></a>';
+            $html .= '<a class="operation-button confirm" href="' . $this->view->url($params, false) . rtrim('#' . $this->getOption('deleteHashTarget'), '#') . '" title="' . $this->view->_('gird.shared.operation.delete.label') . '" class="confirm"><i class="fa fa-2 fa-trash-o "></i></a>';
         }
         $html .= '</div>';
         return $html;

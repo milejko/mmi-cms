@@ -80,6 +80,6 @@ class GridPaginator
      */
     public function getExportCsvUrl()
     {
-        return App::$di->get(View::class)->url([$this->_grid->getClass() => 'export']);
+        return App::$di->get(View::class)->url([$this->_grid->getClass() => 'export'], false);
     }
 }

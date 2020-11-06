@@ -66,6 +66,6 @@
         <li class="page-item next"><a class="page-link" data-page="{$_page + 1}" href="#">{$_nextLabel}</a></li>
     {/if}
     {if $auth && $auth->hasRole('admin')}
-        <li class="page-item"><a class="btn btn-primary" target="_blank" href="{url([$_grid->getClass() => 'export'])}">CSV</a></li>
+        <li class="page-item"><a class="btn btn-primary" target="_blank" href="{url([$_grid->getClass() => 'export'], false)}">CSV</a></li>
     {/if}
 </ul>
