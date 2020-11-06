@@ -26,8 +26,8 @@
         }
     ],
     "require": {
-        "php": ">=7.2.0",
-        "mmi/mmi": "^3.11.1",
+        "php": ">=7.3.0",
+        "mmi/mmi": "^4.0",
         "phpmailer/phpmailer": "~5.2"
     },
     "require-dev": {
