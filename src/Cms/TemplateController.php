@@ -16,32 +16,26 @@ use Mmi\Mvc\View;
 abstract class TemplateController extends Controller
 {
     /**
-     * Rekord kategorii
+     * CMS category record
      * @var CmsCategoryRecord
      */
-    private $_categoryRecord;
+    private $cmsCategoryRecord;
 
     /**
-     * Konstruktor
+     * Sets the CMS category record
      */
-    public function __construct(
-        View $view,
-        Response $response, 
-        CmsCategoryRecord $categoryRecord)
+    public function setCategoryRecord(CmsCategoryRecord $cmsCategoryRecord): self
     {
-        //parent
-        parent::__construct($view, $response);
-        //przypisanie rekordu
-        $this->_categoryRecord = $categoryRecord;
+        $this->cmsCategoryRecord = $cmsCategoryRecord;
+        return $this;
     }
 
     /**
-     * Zwraca rekord kategorii
-     * @return CmsCategoryRecord
+     * Gets the CMS category record
      */
-    public final function getCategoryRecord()
+    public final function getCategoryRecord(): CmsCategoryRecord
     {
-        return $this->_categoryRecord;
+        return $this->cmsCategoryRecord;
     }
 
     /**

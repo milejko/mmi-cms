@@ -106,7 +106,7 @@ class CategoryController extends Controller
         if ($category->template) {
             $this->view->template = $templateModel->getTemplateConfg();
             //dekoracja formularza
-            $templateModel->invokeDecorateEditForm($this->view, $form);
+            $templateModel->invokeDecorateEditForm($form);
             //ustawienie danych z rekordu (po dekoracji szablonem)
             $form->setFromRecord($category);
         }
@@ -127,14 +127,14 @@ class CategoryController extends Controller
         //ustawianie z POST
         if ($form->isMine()) {
             //przed zapisem formularza
-            $templateModel->invokeBeforeSaveEditForm($this->view, $form);
+            $templateModel->invokeBeforeSaveEditForm($form);
             //zapis formularza
             $form->save();
         }
         //szablon nadal istnieje
         if ($form->isSaved() && $category->template) {
             //po zapisie forma
-            $templateModel->invokeAfterSaveEditForm($this->view, $form);
+            $templateModel->invokeAfterSaveEditForm($form);
         }
         //sprawdzenie czy kategoria nadal istnieje (form robi zapis - to trwa)
         if (!$form->isMine() && (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($request->id))) {

@@ -10,7 +10,6 @@ use Cms\App\CmsTemplateConfig;
 use Cms\TemplateController;
 use CmsAdmin\Form\CategoryForm;
 use Mmi\App\App;
-use Mmi\Http\Response;
 
 /**
  * Model szablonu
@@ -64,7 +63,7 @@ class TemplateModel
     public function renderDisplayAction(View $view)
     {
         //wywołanie akcji wyświetlenia
-        if (null === $controller = $this->_createController($view)) {
+        if (null === $controller = $this->_createController()) {
             return;
         }
         $controller->displayAction($view->request);
@@ -80,7 +79,7 @@ class TemplateModel
     public function invokeDeleteAction(View $view)
     {
         //wywołanie akcji usuwania
-        if (null === $controller = $this->_createController($view)) {
+        if (null === $controller = $this->_createController()) {
             return;
         }
         $controller->deleteAction($view->request);
@@ -92,10 +91,10 @@ class TemplateModel
      * @param CategoryForm $categoryForm
      * @return void
      */
-    public function invokeDecorateEditForm(View $view, CategoryForm $categoryForm)
+    public function invokeDecorateEditForm(CategoryForm $categoryForm)
     {
         //wywołanie akcji dekoracji
-        if (null === $controller = $this->_createController($view)) {
+        if (null === $controller = $this->_createController()) {
             return;
         }
         $controller->decorateEditForm($categoryForm);
@@ -107,10 +106,10 @@ class TemplateModel
      * @param CategoryForm $categoryForm
      * @return void
      */
-    public function invokeBeforeSaveEditForm(View $view, CategoryForm $categoryForm)
+    public function invokeBeforeSaveEditForm(CategoryForm $categoryForm)
     {
         //wywołanie akcji po zapisie
-        if (null === $controller = $this->_createController($view)) {
+        if (null === $controller = $this->_createController()) {
             return;
         }
         $controller->beforeSaveEditForm($categoryForm);
@@ -122,10 +121,10 @@ class TemplateModel
      * @param CategoryForm $categoryForm
      * @return void
      */
-    public function invokeAfterSaveEditForm(View $view, CategoryForm $categoryForm)
+    public function invokeAfterSaveEditForm(CategoryForm $categoryForm)
     {
         //wywołanie akcji po zapisie
-        if (null === $controller = $this->_createController($view)) {
+        if (null === $controller = $this->_createController()) {
             return;
         }
         $controller->afterSaveEditForm($categoryForm);
@@ -135,20 +134,22 @@ class TemplateModel
      * Tworzy instancję kontrolera
      * @return TemplateController
      */
-    private function _createController(View $view)
+    private function _createController()
     {
-        //brak configa
-        if (null === $this->_templateConfig) {
-            return;
+        //getting the controller name
+        $controllerName = $this->_templateConfig->getControllerClassName();
+        //missing controller
+        if (!App::$di->has($this->_templateConfig->getControllerClassName())) {
+            throw new KernelException('Missing controller: ' . $controllerName);
         }
-        //odczytywanie nazwy kontrolera
-        $controllerClass = $this->_templateConfig->getControllerClassName();
-        //powołanie kontrolera z rekordem relacji
-        $targetController = new $controllerClass($view, App::$di->get(Response::class), $this->_categoryRecord);
-        //kontroler nie jest poprawny
+        //getting controller from the DI
+        $targetController = App::$di->get($controllerName);
+        //controller invalid
         if (!($targetController instanceof TemplateController)) {
-            throw new KernelException('Not an instance of WidgetController');
+            throw new KernelException($controllerName . ' should extend \Cms\TemplateController');
         }
+        //injecting category record
+        $targetController->setCategoryRecord($this->_categoryRecord);
         //zwrot instancji kontrolera
         return $targetController;        
     }

@@ -16,24 +16,18 @@ abstract class WidgetController extends Controller
 {
 
     /**
-     * Rekord relacji
+     * Widget relation record
      * @var CmsCategoryWidgetCategoryRecord
      */
-    private $_widgetRecord;
+    private $widgetRecord;
 
     /**
-     * Konstruktor
+     * Sets the CMS category record
      */
-    public function __construct(
-        View $view,
-        Response $response, 
-        CmsCategoryWidgetCategoryRecord $widgetRecord
-    )
+    public function setWidgetRecord(CmsCategoryWidgetCategoryRecord $widgetRecord): self
     {
-        //parent
-        parent::__construct($view, $response);
-        //przypisanie rekordu
-        $this->_widgetRecord = $widgetRecord;
+        $this->widgetRecord = $widgetRecord;
+        return $this;
     }
 
     /**
@@ -42,7 +36,7 @@ abstract class WidgetController extends Controller
      */
     public final function getWidgetRecord()
     {
-        return $this->_widgetRecord;
+        return $this->widgetRecord;
     }
 
     /**

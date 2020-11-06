@@ -145,18 +145,20 @@ class WidgetModel
      */
     private function _createController(View $view)
     {
-        //odczytywanie nazwy kontrolera
-        $controllerClass = $this->_widgetConfig->getControllerClassName();
-        //brak klasy kontrolera
-        if (!$controllerClass) {
-            throw new CategoryWidgetException('Widget class not specified for widget: ' . $this->_widgetConfig->getKey());
+        //getting the controller name
+        $controllerName = $this->_widgetConfig->getControllerClassName();
+        //missing controller
+        if (!App::$di->has($controllerName)) {
+            throw new CategoryWidgetException('Missing controller: ' . $controllerName);
         }
-        //powołanie kontrolera z rekordem relacji
-        $targetController = new $controllerClass($view, App::$di->get(Response::class), $this->_cmsWidgetRecord);
-        //kontroler nie jest poprawny
+        //getting controller from the DI
+        $targetController = App::$di->get($controllerName);
+        //controller invalid
         if (!($targetController instanceof WidgetController)) {
-            throw new CategoryWidgetException('Not an instance of WidgetController');
+            throw new CategoryWidgetException($controllerName . ' should extend \Cms\WidgetController');
         }
+        //injecting category record
+        $targetController->setWidgetRecord($this->_cmsWidgetRecord);
         //zwrot instancji kontrolera
         return $targetController;        
     }
