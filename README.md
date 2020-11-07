@@ -1,14 +1,14 @@
-#README
-What is MMi CMS?
+# README
+## What is MMi CMS?
 
-##MMi CMS is a content management system written with MMi PHP Framework. It allows developers to build CMS solutions easily.
+* MMi CMS is a content management system written with MMi PHP Framework. It allows developers to build CMS solutions easily.
 
-##Requirements
-MMi CMS is only supported on PHP 7.3.0 and up.
+## Requirements
+* MMi CMS is only supported on PHP 7.3.0 and up.
 
-##Installation
+## Installation
 
-###The best way to install MMi CMS is to use composer:
+### The best way to install MMi CMS is to use composer:
 
 1. composer require mmi/mmi-cms
 2. configure Your environment in .env (.env.sample can be found in this repository)
