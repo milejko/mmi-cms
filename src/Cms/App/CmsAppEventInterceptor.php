@@ -49,7 +49,7 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
         $view = $this->container->get(View::class);
         $base = $view->baseUrl;
         $view->domain = $this->container->get(HttpServerEnv::class)->httpHost;
-        $view->languages = explode(',', $this->container->get('cms.lang.available'));
+        $view->languages = explode(',', $this->container->get('cms.language.list'));
         $jsRequest = $request->toArray();
         $jsRequest['baseUrl'] = $base;
         $jsRequest['locale'] = $this->container->get(Translate::class)->getLocale();
@@ -78,8 +78,8 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
          */
         $translate = $this->container->get(Translate::class);
         $request   = $this->container->get(Request::class);
-        $translate->setLocale($this->container->get('cms.lang.default'));
-        $availableLanguages = explode(',', $this->container->get('cms.lang.available'));
+        $translate->setLocale($this->container->get('cms.language.default'));
+        $availableLanguages = explode(',', $this->container->get('cms.language.list'));
         //języki nie zdefiniowane
         if (empty($availableLanguages)) {
             return;

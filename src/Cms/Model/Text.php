@@ -16,6 +16,8 @@ use Mmi\Cache\Cache;
 
 class Text
 {
+    const CACHE_PREFIX      = 'cms-text';
+    const UNKNOWN_LANGUAGE  = 'unknown';
 
     /**
      * Teksty w roznych jezykach
@@ -35,13 +37,13 @@ class Text
             self::_initDictionary();
         }
         if ($lang === null) {
-            $lang = 'none';
+            $lang = self::UNKNOWN_LANGUAGE;
         }
         if (isset(self::$_texts[$lang][$key])) {
             return self::$_texts[$lang][$key];
         }
-        if (isset(self::$_texts['none'][$key])) {
-            return self::$_texts['none'][$key];
+        if (isset(self::$_texts[self::UNKNOWN_LANGUAGE][$key])) {
+            return self::$_texts[self::UNKNOWN_LANGUAGE][$key];
         }
         return null;
     }
@@ -51,16 +53,16 @@ class Text
      */
     protected static function _initDictionary()
     {
-        if (null === (self::$_texts = App::$di->get(Cache::class)->load('Cms-text'))) {
+        if (null === (self::$_texts = App::$di->get(Cache::class)->load(self::CACHE_PREFIX))) {
             self::$_texts = [];
             foreach ((new Orm\CmsTextQuery)->find() as $text) {
                 if ($text->lang === null) {
-                    self::$_texts['none'][$text->key] = $text->content;
+                    self::$_texts[self::UNKNOWN_LANGUAGE][$text->key] = $text->content;
                     continue;
                 }
                 self::$_texts[$text->lang][$text->key] = $text->content;
             }
-            App::$di->get(Cache::class)->save(self::$_texts, 'Cms-text', 0);
+            App::$di->get(Cache::class)->save(self::$_texts, self::CACHE_PREFIX, 0);
         }
     }
 

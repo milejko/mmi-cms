@@ -88,7 +88,7 @@ class CategoryController extends \Mmi\Mvc\Controller
             return $this->_decorateHtmlWithEditButton($html, $category);
         }
         //zapis html kategorii do cache
-        $this->cache->save($html, $cacheKey, $cacheLifetime);
+        //$this->cache->save($html, $cacheKey, $cacheLifetime);
         //zwrot html
         return $this->_decorateHtmlWithEditButton($html, $category);
     }

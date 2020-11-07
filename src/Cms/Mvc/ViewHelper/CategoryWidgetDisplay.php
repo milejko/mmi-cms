@@ -13,13 +13,35 @@ namespace Cms\Mvc\ViewHelper;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
-use Mmi\App\App;
+use Mmi\Cache\Cache;
+use Mmi\Mvc\View;
 
 /**
  * Buforowany widget kategorii CMS
  */
 class CategoryWidgetDisplay extends \Mmi\Mvc\ViewHelper\HelperAbstract
 {
+
+    /**
+     * @var Cache
+     */
+    private $cache;
+
+    /**
+     * @var CmsSkinsetConfig
+     */
+    private $cmsSkinsetConfig;
+
+    public function __construct(
+        View $view,
+        Cache $cache,
+        CmsSkinsetConfig $cmsSkinsetConfig
+    )
+    {
+        $this->cache            = $cache;
+        $this->cmsSkinsetConfig = $cmsSkinsetConfig;
+        parent::__construct($view);
+    }
 
     /**
      * Render widgetu (front)
@@ -29,15 +51,15 @@ class CategoryWidgetDisplay extends \Mmi\Mvc\ViewHelper\HelperAbstract
     public function categoryWidgetDisplay(CmsCategoryWidgetCategoryRecord $widgetRelationRecord)
     {
         //próba odczytu z bufora
-        if (null === $output = $this->view->getCache()->load($cacheKey = CmsCategoryWidgetCategoryRecord::HTML_CACHE_PREFIX . $widgetRelationRecord->id)) {
+        if (null === $output = $this->cache->load($cacheKey = CmsCategoryWidgetCategoryRecord::HTML_CACHE_PREFIX . $widgetRelationRecord->id)) {
             //model widgeta
-            $widgetModel =  new WidgetModel($widgetRelationRecord, App::$di->get(CmsSkinsetConfig::class));
+            $widgetModel =  new WidgetModel($widgetRelationRecord, $this->cmsSkinsetConfig);
             //render szablonu
             $output = $widgetModel->renderDisplayAction($this->view);
             //bufor wyłączony parametrem
             if ($widgetModel->getWidgetConfig()->getCacheLifeTime()) {
                 //zapis do bufora (czas określony parametrem)
-                $this->view->getCache()->save($output, $cacheKey, $widgetModel->getWidgetConfig()->getCacheLifeTime());
+                $this->cache->save($output, $cacheKey, $widgetModel->getWidgetConfig()->getCacheLifeTime());
             }
         }
         //render szablonu

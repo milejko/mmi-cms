@@ -519,7 +519,11 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     {
         //usuwanie cache
         $cache = App::$di->get(Cache::class);
-        $cache->remove('mmi-cms-navigation-' . $this->lang);
+        //drop navigation cache
+        foreach (explode(',', App::$di->get('cms.language.list')) as $lang) {
+            $cache->remove('mmi-cms-navigation-' . $lang);
+        }
+        $cache->remove('mmi-cms-navigation-');
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->id);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
         $cache->remove(self::HTML_CACHE_PREFIX . $this->id);
