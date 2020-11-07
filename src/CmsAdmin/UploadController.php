@@ -180,11 +180,11 @@ class UploadController extends Controller
         if (null === $record = (new CmsFileQuery)->findPk($request->getPost()->cmsFileId)) {
             return $this->_jsonError(186);
         }
+        $formData = [];
         //pobranie danych
-        $form = array_merge(['active' => 0, 'sticky' => null], $request->getPost()->form);
-        foreach ($form as $field) {
-            $form[$field['name']] = $field['value'];
-            if ($field['name'] == 'active' || $field['name'] == 'sticky') {
+        foreach ($request->getPost()->form as $field) {
+            $formData[$field['name']] = $field['value'];
+            if ($field['name'] == 'active') {
                 continue;
             }
             if ($field['name'] == 'original') {
@@ -192,18 +192,17 @@ class UploadController extends Controller
                 //pozycja ostatniej kropki w nazwie - rozszerzenie pliku
                 $pointPosition = strrpos($record->name, '.');
                 if ($pointPosition !== false) {
-                    $form['original'] .= substr($record->name, $pointPosition);
+                    $formData['original'] .= substr($record->name, $pointPosition);
                 }
-                $record->data->original = $form['original'];
+                $record->data->original = $formData['original'];
                 continue;
             }
             $record->data->{$field['name']} = $field['value'];
         }
         //próba zapisu postera
-        if (isset($form['poster']) && $form['poster']) {
-            $form['posterFileName'] = $this->_savePoster($form['poster'], $record);
+        if (isset($request->getPost()->form['poster']) && $request->getPost()->form['poster']) {
+            $formData['posterFileName'] = $this->_savePoster($request->getPost()->form['poster'], $record);
         }
-        unset($form['poster']);
         if ($record->data instanceof \Mmi\DataObject) {
             //czyszczenie nieprzesłanych checkboxów
             foreach (array_keys($record->data->toArray()) as $name) {
@@ -211,27 +210,21 @@ class UploadController extends Controller
                 if ($name == 'posterFileName') {
                     continue;
                 }
-                if (!isset($form[$name])) {
+                if (!isset($formData[$name])) {
                     $record->data->{$name} = null;
                 }
             }
         }
-        $record->active = isset($form['active']) ? $form['active'] : $record->active;
-        $record->sticky = isset($form['sticky']) ? $form['sticky'] : $record->sticky;
-        $record->original = isset($form['original']) ? $form['original'] : $record->original;
-        if ($record->sticky) {
-            $result = $record->setSticky();
-        } else {
-            $result = $record->save();
+        $record->active = \array_key_exists('active', $formData);
+        $record->original = isset($formData['original']) ? $formData['original'] : $record->original;
+        if (!$record->save()) {
+            return $this->_jsonError(186);
         }
-        if ($result) {
-            //jeśli wykonać operację po edycji
-            if ($request->getPost()->afterEdit) {
-                $this->_operationAfter($request->getPost()->afterEdit, $record);
-            }
-            return json_encode(['result' => 'OK']);
+        //jeśli wykonać operację po edycji
+        if ($request->getPost()->afterEdit) {
+            $this->_operationAfter($request->getPost()->afterEdit, $record);
         }
-        return $this->_jsonError(186);
+        return json_encode(['result' => 'OK']);
     }
 
     /**

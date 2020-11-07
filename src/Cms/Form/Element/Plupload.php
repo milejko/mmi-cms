@@ -299,7 +299,6 @@ class Plupload extends UploaderElementAbstract
         $html .= '<input type="text" class="text imprint" name="original" id="' . $this->getId() . '-edit-userFileName">';
         $html .= '<div id="' . $this->getId() . '-edit-buttons" class="plupload-edit-buttons">';
         $html .= '<input type="checkbox" name="active" id="' . $this->getId() . '-edit-active" value="1"><label for="' . $this->getId() . '-edit-active">aktywny</label>';
-        $html .= '<input type="checkbox" name="sticky" id="' . $this->getId() . '-edit-sticky" value="1"><label for="' . $this->getId() . '-edit-sticky">wyróżniony</label>';
         $html .= '</div>';
         $html .= '</fieldset>';
         $html .= '<div class="dialog-error"><p></p><span class="ui-icon ui-icon-alert"></span></div>';
