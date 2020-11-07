@@ -57,13 +57,13 @@ class Mail
             return false;
         }
         //nowy rekord maila
-        $mail = new Orm\CmsMailRecord;
-        $mail->cmsMailDefinitionId = $def->id;
-        $mail->to = $to;
-        $mail->fromName = $fromName ? $fromName : $def->fromName;
-        $mail->replyTo = $replyTo ? $replyTo : $def->replyTo;
-        $mail->subject = $subject ? $subject : $def->subject;
-        $mail->dateSendAfter = $sendAfter ? $sendAfter : date('Y-m-d H:i:s');
+        $mailRecord = new Orm\CmsMailRecord;
+        $mailRecord->cmsMailDefinitionId = $def->id;
+        $mailRecord->to = $to;
+        $mailRecord->fromName = $fromName ? $fromName : $def->fromName;
+        $mailRecord->replyTo = $replyTo ? $replyTo : $def->replyTo;
+        $mailRecord->subject = $subject ? $subject : $def->subject;
+        $mailRecord->dateSendAfter = $sendAfter ? $sendAfter : date('Y-m-d H:i:s');
         $files = [];
         //załączniki
         foreach ($attachments as $fileName => $filePath) {
@@ -73,19 +73,19 @@ class Mail
             $files[$fileName] = ($filePath);
         }
         //serializacja załączników
-        $mail->attachements = serialize($files);
+        $mailRecord->attachements = serialize($files);
         //przepychanie zmiennych do widoku
         $view = App::$di->get(View::class);
         foreach ($params as $key => $value) {
             $view->$key = $value;
         }
         //rendering wiadomości
-        $mail->message = $view->renderDirectly($def->message);
+        $mailRecord->message = $view->renderDirectly($def->message);
         //rendering tematu
-        $mail->subject = $view->renderDirectly($mail->subject);
-        $mail->dateAdd = date('Y-m-d H:i:s');
+        $mailRecord->subject = $view->renderDirectly($mailRecord->subject);
+        $mailRecord->dateAdd = date('Y-m-d H:i:s');
         //zapis maila
-        return $mail->save();
+        return $mailRecord->save();
     }
 
     /**
@@ -117,50 +117,50 @@ class Mail
         //wysyłka pojedynczego maila
         foreach ($emails as $email) {
             //instancja PHPMailer'a
-            $mail = new \PHPMailer(true);
+            $mailer = new \PHPMailer(true);
             try {
-                $mail->CharSet = 'utf-8';
+                $mailer->CharSet = 'utf-8';
                 //ustawiam SMTP
-                $mail->isSMTP();
+                $mailer->isSMTP();
                 //ustawianie hosta
-                $mail->Host = $email->getJoined('cms_mail_server')->address;
+                $mailer->Host = $email->getJoined('cms_mail_server')->address;
                 //ustawianie portu
-                $mail->Port = $email->getJoined('cms_mail_server')->port;
+                $mailer->Port = $email->getJoined('cms_mail_server')->port;
                 //jezeli podana nazwa uzytkownika i haslo to wlaczamy uwierzytelnienie
                 if ($email->getJoined('cms_mail_server')->username && $email->getJoined('cms_mail_server')->password) {
                     //uwierzytelnianie serwera
-                    $mail->SMTPAuth = true;
+                    $mailer->SMTPAuth = true;
                     //typ uwierzytelniania
-                    $mail->AuthType = 'LOGIN';
+                    $mailer->AuthType = 'LOGIN';
                     //uzytkownik SMTP
-                    $mail->Username = $email->getJoined('cms_mail_server')->username;
+                    $mailer->Username = $email->getJoined('cms_mail_server')->username;
                     //haslo SMTP
-                    $mail->Password = $email->getJoined('cms_mail_server')->password;
+                    $mailer->Password = $email->getJoined('cms_mail_server')->password;
                 }
                 if ($email->getJoined('cms_mail_server')->ssl != 'plain') {
                     //szyfrowanie polaczenia
-                    $mail->SMTPSecure = $email->getJoined('cms_mail_server')->ssl;
+                    $mailer->SMTPSecure = $email->getJoined('cms_mail_server')->ssl;
                 }
                 //ustawianie treści wiadomości
-                $mail->Body = strip_tags($email->message);
+                $mailer->Body = strip_tags($email->message);
                 //jezeli HTML to ustawiam typ wiadomości na HTML
                 if ($email->getJoined('cms_mail_definition')->html) {
-                    $mail->isHTML(true);
-                    $mail->Body = $email->message;
+                    $mailer->isHTML(true);
+                    $mailer->Body = $email->message;
                 }
                 //ustawianie "from"
-                $mail->setFrom($email->getJoined('cms_mail_server')->from, $email->fromName);
+                $mailer->setFrom($email->getJoined('cms_mail_server')->from, $email->fromName);
                 //ustawianie "do"
                 $recipients = explode(';', $email->to);
                 foreach ($recipients as $recipient) {
-                    $mail->addAddress(trim($recipient));
+                    $mailer->addAddress(trim($recipient));
                 }
                 //ustawianie reply
                 if ($email->replyTo) {
-                    $mail->addReplyTo($email->replyTo);
+                    $mailer->addReplyTo($email->replyTo);
                 }
                 //ustawianie tematu
-                $mail->Subject = $email->subject;
+                $mailer->Subject = $email->subject;
                 //dołączanie załączników
                 $attachments = unserialize($email->attachements);
                 if (!empty($attachments)) {
@@ -172,11 +172,11 @@ class Mail
                             'content' => base64_encode(file_get_contents($filePath)),
                             'type' => \Mmi\FileSystem::mimeType($filePath)
                         ];
-                        $mail->addStringAttachment(base64_decode($file['content']), $fileName, 'base64', $file['type'], 'attachment');
+                        $mailer->addStringAttachment(base64_decode($file['content']), $fileName, 'base64', $file['type'], 'attachment');
                     }
                 }
                 //wysyłka maila
-                $mail->send();
+                $mailer->send();
                 //czyszczenie załączników
                 $email->attachements = null;
                 //ustawienie pol po wysłaniu
