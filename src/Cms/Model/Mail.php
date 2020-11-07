@@ -10,9 +10,10 @@
 
 namespace Cms\Model;
 
-use \Cms\Orm;
+use Cms\Orm;
 use Mmi\App\App;
 use Mmi\Mvc\View;
+use PHPMailer\PHPMailer\PHPMailer;
 use Psr\Log\LoggerInterface;
 
 class Mail
@@ -27,8 +28,6 @@ class Mail
         return (new Orm\CmsMailQuery())
             ->whereActive()->equals(1)
             ->andFieldDateSent()->less(date('Y-m-d H:i:s', strtotime('-1 week')))
-            ->find()
-            //kasowanie całej kolekcji
             ->delete();
     }
 
@@ -117,7 +116,7 @@ class Mail
         //wysyłka pojedynczego maila
         foreach ($emails as $email) {
             //instancja PHPMailer'a
-            $mailer = new \PHPMailer(true);
+            $mailer = new PHPMailer(true);
             try {
                 $mailer->CharSet = 'utf-8';
                 //ustawiam SMTP
