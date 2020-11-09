@@ -9,8 +9,8 @@ use Mmi\Http\Response;
 use Mmi\Mvc\View;
 use Mmi\Security\Acl;
 use Mmi\Security\Auth;
-use Mmi\Session\Session;
-use Mmi\Translate;
+use Mmi\Session\SessionInterface;
+use Mmi\Translate\TranslateInterface;
 
 class CmsAppEventInterceptor extends AppEventInterceptorAbstract
 {
@@ -22,7 +22,7 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
     {
         $this->_initTranslation();
         $request = $this->container->get(Request::class);
-        $this->container->get(Session::class)->start();
+        $this->container->get(SessionInterface::class)->start();
 
         //zablokowane na ACL
         $acl = $this->container->get(Acl::class);
@@ -52,7 +52,7 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
         $view->languages = explode(',', $this->container->get('cms.language.list'));
         $jsRequest = $request->toArray();
         $jsRequest['baseUrl'] = $base;
-        $jsRequest['locale'] = $this->container->get(Translate::class)->getLocale();
+        $jsRequest['locale'] = $this->container->get(TranslateInterface::class)->getLocale();
         unset($jsRequest['controller']);
         unset($jsRequest['action']);
         //umieszczenie tablicy w headScript()
@@ -74,9 +74,9 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
     protected function _initTranslation()
     {
         /**
-         * @var Translate $translate 
+         * @var TranslateInterface $translate 
          */
-        $translate = $this->container->get(Translate::class);
+        $translate = $this->container->get(TranslateInterface::class);
         $request   = $this->container->get(Request::class);
         $translate->setLocale($this->container->get('cms.language.default'));
         $availableLanguages = explode(',', $this->container->get('cms.language.list'));
