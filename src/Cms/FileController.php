@@ -12,7 +12,7 @@ namespace Cms;
 
 use Cms\Model\FileSystemModel;
 use Mmi\Http\Request;
-use Mmi\Session\Session;
+use Mmi\Session\SessionInterface;
 
 /**
  * Kontroler plików
@@ -21,9 +21,9 @@ class FileController extends \Mmi\Mvc\Controller
 {
     /**
      * @Inject
-     * @var Session
+     * @var SessionInterface
      */
-    private Session $session;
+    private $session;
 
     /**
      * Lista obrazów json (na potrzeby tinymce)

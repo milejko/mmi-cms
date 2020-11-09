@@ -3,7 +3,6 @@
 namespace Cms\App;
 
 use Mmi\App\AppEventInterceptorAbstract;
-use Mmi\Http\HttpServerEnv;
 use Mmi\Http\Request;
 use Mmi\Http\Response;
 use Mmi\Mvc\View;
@@ -23,7 +22,6 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
         $this->_initTranslation();
         $request = $this->container->get(Request::class);
         $this->container->get(SessionInterface::class)->start();
-
         //zablokowane na ACL
         $acl = $this->container->get(Acl::class);
         $auth = $this->container->get(Auth::class);
@@ -48,7 +46,7 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
         //ustawienie widoku
         $view = $this->container->get(View::class);
         $base = $view->baseUrl;
-        $view->domain = $this->container->get(HttpServerEnv::class)->httpHost;
+        $view->domain = $request->getServer()->httpHost;
         $view->languages = explode(',', $this->container->get('cms.language.list'));
         $jsRequest = $request->toArray();
         $jsRequest['baseUrl'] = $base;

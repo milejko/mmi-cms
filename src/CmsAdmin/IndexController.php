@@ -10,11 +10,10 @@
 
 namespace CmsAdmin;
 
-use Mmi\Http\HttpServerEnv;
 use Mmi\Security\Auth;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
-use Mmi\Session\Session;
+use Mmi\Session\SessionInterface;
 
 /**
  * Kontroler główny panelu administracyjnego
@@ -30,13 +29,7 @@ class IndexController extends Controller
 
     /**
      * @Inject
-     * @var HttpServerEnv
-     */
-    private $httpServerEnv;
-
-    /**
-     * @Inject
-     * @var Session
+     * @var SessionInterface
      */
     private $session;
 
@@ -75,7 +68,7 @@ class IndexController extends Controller
         $this->getMessenger()->addMessage('messenger.index.login.success', true);
         $referer = $request->getReferer();
         //przekierowanie na referer
-        if ($referer && $referer != $this->httpServerEnv->requestUri) {
+        if ($referer && $referer != $this->getRequest()->getServer()->requestUri) {
             return $this->getResponse()->redirectToUrl($referer);
         }
         $this->getResponse()->redirect('cmsAdmin');

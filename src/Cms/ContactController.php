@@ -20,12 +20,6 @@ class ContactController extends \Mmi\Mvc\Controller
 {
 
     /**
-     * @Inject
-     * @var HttpServerEnv
-     */
-    private $httpServerEnv;
-
-    /**
      * Akcja kontaktu
      */
     public function indexAction(Request $request)
@@ -48,8 +42,8 @@ class ContactController extends \Mmi\Mvc\Controller
             }
             $namespace->unsetAll();
             $this->getResponse()->redirectToUrl($link);
-        } elseif ($this->httpServerEnv->httpReferer) {
-            $namespace->referer = $this->httpServerEnv->httpReferer;
+        } elseif ($this->getRequest()->getServer()->httpReferer) {
+            $namespace->referer = $this->getRequest()->getServer()->httpReferer;
         }
     }
 

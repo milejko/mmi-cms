@@ -3,7 +3,7 @@
 namespace Cms\Orm;
 
 use Mmi\App\App;
-use Mmi\Http\HttpServerEnv;
+use Mmi\Http\Request;
 use Mmi\Security\Auth;
 
 /**
@@ -59,7 +59,7 @@ class CmsContactRecord extends \Mmi\Orm\Record
         //data dodania
         $this->dateAdd = date('Y-m-d H:i:s');
         //adres IP
-        $this->ip = App::$di->get(HttpServerEnv::class)->remoteAddress;
+        $this->ip = App::$di->get(Request::class)->getServer()->remoteAddress;
         $this->active = 1;
         //zapis znanego użytkownika
         if (App::$di->get(Auth::class)->hasIdentity()) {

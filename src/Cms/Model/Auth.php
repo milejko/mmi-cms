@@ -13,7 +13,7 @@ namespace Cms\Model;
 use Cms\Orm\CmsAuthQuery;
 use Cms\Orm\CmsAuthRecord;
 use Mmi\App\App;
-use Mmi\Http\HttpServerEnv;
+use Mmi\Http\Request;
 use Mmi\Ldap\LdapConfig;
 use Psr\Log\LoggerInterface;
 
@@ -126,7 +126,7 @@ class Auth implements \Mmi\Security\AuthInterface
     protected static function _authSuccess(CmsAuthRecord $record)
     {
         //zapis poprawnego logowania do rekordu
-        $record->lastIp = App::$di->get(HttpServerEnv::class)->remoteAddress;
+        $record->lastIp = App::$di->get(Request::class)->getServer()->remoteAddress;
         $record->lastLog = date('Y-m-d H:i:s');
         $record->save();
         App::$di->get(LoggerInterface::class)->info('Logged in: ' . $record->username);
@@ -213,7 +213,7 @@ class Auth implements \Mmi\Security\AuthInterface
     protected static function _updateUserFailedLogin($record)
     {
         //zapis danych błędnego logowania znanego użytkownika
-        $record->lastFailIp = App::$di->get(HttpServerEnv::class)->remoteAddress;
+        $record->lastFailIp = App::$di->get(Request::class)->getServer()->remoteAddress;
         $record->lastFailLog = date('Y-m-d H:i:s');
         $record->failLogCount = $record->failLogCount + 1;
         $record->save();
