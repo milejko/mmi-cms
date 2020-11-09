@@ -12,7 +12,7 @@ namespace Cms\Model;
 
 use \Cms\Orm;
 use Mmi\App\App;
-use Mmi\Cache\Cache;
+use Mmi\Cache\CacheInterface;
 
 class Text
 {
@@ -53,7 +53,7 @@ class Text
      */
     protected static function _initDictionary()
     {
-        if (null === (self::$_texts = App::$di->get(Cache::class)->load(self::CACHE_PREFIX))) {
+        if (null === (self::$_texts = App::$di->get(CacheInterface::class)->load(self::CACHE_PREFIX))) {
             self::$_texts = [];
             foreach ((new Orm\CmsTextQuery)->find() as $text) {
                 if ($text->lang === null) {
@@ -62,7 +62,7 @@ class Text
                 }
                 self::$_texts[$text->lang][$text->key] = $text->content;
             }
-            App::$di->get(Cache::class)->save(self::$_texts, self::CACHE_PREFIX, 0);
+            App::$di->get(CacheInterface::class)->save(self::$_texts, self::CACHE_PREFIX, 0);
         }
     }
 

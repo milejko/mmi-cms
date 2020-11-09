@@ -5,7 +5,7 @@ namespace Cms\Orm;
 use Cms\App\CmsSkinsetConfig;
 use CmsAdmin\Model\CategoryAclModel;
 use Mmi\App\App;
-use Mmi\Cache\Cache;
+use Mmi\Cache\CacheInterface;
 use Mmi\Mvc\View;
 use Psr\Log\LoggerInterface;
 
@@ -286,7 +286,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     protected function _insert()
     {
         //usunięcie cache uprawnień
-        App::$di->get(Cache::class)->remove(CategoryAclModel::CACHE_KEY);
+        App::$di->get(CacheInterface::class)->remove(CategoryAclModel::CACHE_KEY);
         //data aktualizacji
         $this->dateAdd = $this->dateAdd ? $this->dateAdd : date('Y-m-d H:i:s');
         //próba utworzenia rekordu
@@ -383,9 +383,9 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     public function getWidgetModel()
     {
         //próba pobrania modelu widgetu z cache
-        if (null === $widgetModel = App::$di->get(Cache::class)->load($cacheKey = self::WIDGET_MODEL_CACHE_PREFIX . $this->id)) {
+        if (null === $widgetModel = App::$di->get(CacheInterface::class)->load($cacheKey = self::WIDGET_MODEL_CACHE_PREFIX . $this->id)) {
             //pobieranie modelu widgetu
-            App::$di->get(Cache::class)->save($widgetModel = new \Cms\Model\CategoryWidgetModel($this->id, App::$di->get(CmsSkinsetConfig::class)), $cacheKey, 0);
+            App::$di->get(CacheInterface::class)->save($widgetModel = new \Cms\Model\CategoryWidgetModel($this->id, App::$di->get(CmsSkinsetConfig::class)), $cacheKey, 0);
         }
         //zwrot atrybutów
         return $widgetModel;
@@ -402,9 +402,9 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             return;
         }
         //próba pobrania rodzica z cache
-        if (null === $parent = App::$di->get(Cache::class)->load($cacheKey = self::CATEGORY_CACHE_PREFIX . $this->parentId)) {
+        if (null === $parent = App::$di->get(CacheInterface::class)->load($cacheKey = self::CATEGORY_CACHE_PREFIX . $this->parentId)) {
             //pobieranie rodzica
-            App::$di->get(Cache::class)->save($parent = (new \Cms\Orm\CmsCategoryQuery)
+            App::$di->get(CacheInterface::class)->save($parent = (new \Cms\Orm\CmsCategoryQuery)
                 ->findPk($this->parentId), $cacheKey, 0);
         }
         //zwrot rodzica
@@ -518,7 +518,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     public function clearCache()
     {
         //usuwanie cache
-        $cache = App::$di->get(Cache::class);
+        $cache = App::$di->get(CacheInterface::class);
         //drop navigation cache
         foreach (explode(',', App::$di->get('cms.language.list')) as $lang) {
             $cache->remove('mmi-cms-navigation-' . $lang);

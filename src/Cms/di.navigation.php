@@ -1,7 +1,7 @@
 <?php
 
 use DI\Definition\Exception\InvalidDefinition;
-use Mmi\Cache\Cache;
+use Mmi\Cache\CacheInterface;
 use Mmi\Http\Request;
 use Mmi\Navigation\Navigation;
 use Mmi\Navigation\NavigationConfig;
@@ -19,11 +19,11 @@ return [
             throw new InvalidDefinition('Navigation config implementing ' . NavigationConfig::class . ' cannot be injected. To fix this, add definition of ' . NavigationConfig::class . ' with suitable object in your application\'s DI configuration.');
         }
         $request = $container->get(Request::class);
-        if (null === ($navigation = $container->get(Cache::class)->load($cacheKey = 'mmi-cms-navigation-' . $request->lang))) {
+        if (null === ($navigation = $container->get(CacheInterface::class)->load($cacheKey = 'mmi-cms-navigation-' . $request->lang))) {
             $container->get('cms.navigation.categories.enabled') && (new \Cms\Model\Navigation)->decorateConfiguration($container->get(NavigationConfig::class));
             $navigation = new Navigation($container->get(NavigationConfig::class));
             //zapis do cache
-            $container->get(Cache::class)->save($navigation, $cacheKey, 0);
+            $container->get(CacheInterface::class)->save($navigation, $cacheKey, 0);
         }
         $navigation->setup($request);
         return $navigation;

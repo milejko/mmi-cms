@@ -12,7 +12,7 @@ namespace Cms\Model;
 
 use Cms\Orm\CmsCronQuery;
 use Mmi\App\App;
-use Mmi\Db\Adapter\PdoAbstract;
+use Mmi\Db\DbInterface;
 use Mmi\Mvc\ActionHelper;
 use Psr\Log\LoggerInterface;
 
@@ -42,7 +42,7 @@ class Cron
             //opóźnienie 200ms - 500ms (dzięki temu mniej baza danych ma więcej czasu na załozenie blokady)
             usleep(rand(self::MIN_EXECUTION_OFFSET, self::MAX_EXECUTION_OFFSET));
             //ponowne łączenie - mogło upłynąć sporo czasu przy procesowaniu poprzedniego crona
-            App::$di->get(PdoAbstract::class)->connect();
+            App::$di->get(DbInterface::class)->connect();
             //sprawdzenie czy rekord jest odblokowany
             if (null === ($cronRecord = (new CmsCronQuery)->activeUnlocked()->findPk($listedCronRecord->id))) {
                 continue;
@@ -64,7 +64,7 @@ class Cron
                 return;
             }
             //ponowne łączenie
-            App::$di->get(PdoAbstract::class)->connect();
+            App::$di->get(DbInterface::class)->connect();
             //zapisywanie wiadomości
             $cronRecord->message = $output;
             //zapis do bazy bez modyfikowania daty ostatniej modyfikacji

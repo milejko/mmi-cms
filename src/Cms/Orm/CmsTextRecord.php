@@ -3,7 +3,7 @@
 namespace Cms\Orm;
 
 use Mmi\App\App;
-use Mmi\Cache\Cache;
+use Mmi\Cache\CacheInterface;
 use Mmi\Http\Request;
 
 /**
@@ -38,7 +38,7 @@ class CmsTextRecord extends \Mmi\Orm\Record
             return false;
         }
         //usunięcie cache
-        App::$di->get(Cache::class)->remove('Cms-text');
+        App::$di->get(CacheInterface::class)->remove('Cms-text');
         return $result;
     }
 

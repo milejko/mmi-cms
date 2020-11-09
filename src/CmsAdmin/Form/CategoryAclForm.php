@@ -14,7 +14,7 @@ use Cms\Form\Element;
 use Cms\Orm\CmsCategoryQuery;
 use CmsAdmin\Model\CategoryAclModel;
 use Mmi\App\App;
-use Mmi\Cache\Cache;
+use Mmi\Cache\CacheInterface;
 
 /**
  * Formularz edycji ACL dla roli
@@ -83,7 +83,7 @@ class CategoryAclForm extends \Cms\Form\Form
             $aclRecord->save();
         }
         //usunięcie cache
-        App::$di->get(Cache::class)->remove(CategoryAclModel::CACHE_KEY);
+        App::$di->get(CacheInterface::class)->remove(CategoryAclModel::CACHE_KEY);
         return true;
     }
 }

@@ -12,7 +12,7 @@ namespace Cms\Model;
 
 use Mmi\App\App;
 
-use Mmi\Cache\PrivateCache;
+use Mmi\Cache\SystemCacheInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -74,7 +74,7 @@ class FileSystemModel
         //inicjalizacja linku publicznego
         $publicUrl = '/data' . $fileName;
         //istnieje plik - wiadomość z bufora
-        if (App::$di->get(PrivateCache::class)->load($cacheKey = 'cms-file-' . md5($fileName))) {
+        if (App::$di->get(SystemCacheInterface::class)->load($cacheKey = 'cms-file-' . md5($fileName))) {
             return $publicUrl;
         }
         //brak pliku źródłowego
@@ -84,7 +84,7 @@ class FileSystemModel
         }
         //istnieje plik - zwrot ścieżki publicznej
         if (file_exists($thumbPath = BASE_PATH . '/web/data' . $fileName) && filemtime($thumbPath) > filemtime($inputFile)) {
-            App::$di->get(PrivateCache::class)->save(true, $cacheKey);
+            App::$di->get(SystemCacheInterface::class)->save(true, $cacheKey);
             return $publicUrl;
         }
         //próba tworzenia katalogów

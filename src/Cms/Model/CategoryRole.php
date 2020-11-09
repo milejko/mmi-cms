@@ -11,7 +11,7 @@
 namespace Cms\Model;
 
 use Mmi\App\App;
-use Mmi\Cache\Cache;
+use Mmi\Cache\CacheInterface;
 
 /**
  * Model do sprawdzania dostępu do kategorii Cms przez użytkowników z rolami
@@ -95,7 +95,7 @@ class CategoryRole
 	 */
 	protected function _prepareData()
 	{
-		$cache = App::$di->get(Cache::class);
+		$cache = App::$di->get(CacheInterface::class);
         //próba pobrania struktury uprawnień z cache
         if (null !== $this->_acl = $cache->load($cacheKey = 'categories-roles')) {
 			return;

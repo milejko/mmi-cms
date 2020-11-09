@@ -3,7 +3,7 @@
 namespace Cms\Orm;
 
 use Mmi\App\App;
-use Mmi\Cache\Cache;
+use Mmi\Cache\CacheInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -152,9 +152,9 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     public function clearCache()
     {
         //usuwanie cache
-        App::$di->get(Cache::class)->remove('category-widget-model-' . $this->cmsCategoryId);
-        App::$di->get(Cache::class)->remove(CmsCategoryRecord::HTML_CACHE_PREFIX . $this->cmsCategoryId);
-        App::$di->get(Cache::class)->remove(self::HTML_CACHE_PREFIX . $this->id);
+        App::$di->get(CacheInterface::class)->remove('category-widget-model-' . $this->cmsCategoryId);
+        App::$di->get(CacheInterface::class)->remove(CmsCategoryRecord::HTML_CACHE_PREFIX . $this->cmsCategoryId);
+        App::$di->get(CacheInterface::class)->remove(self::HTML_CACHE_PREFIX . $this->id);
         return true;
     }
 

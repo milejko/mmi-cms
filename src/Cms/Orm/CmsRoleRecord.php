@@ -3,7 +3,7 @@
 namespace Cms\Orm;
 
 use Mmi\App\App;
-use Mmi\Db\Adapter\PdoAbstract;
+use Mmi\Db\DbInterface;
 use Mmi\Db\DbException;
 
 /**
@@ -43,7 +43,7 @@ class CmsRoleRecord extends \Mmi\Orm\Record
         if ($this->name == 'admin' || $this->name == 'guest') {
             return false;
         }
-        $db = App::$di->get(PdoAbstract::class);
+        $db = App::$di->get(DbInterface::class);
         $db->beginTransaction();
         //usuwanie uprawnień ról
         (new CmsAclQuery)->whereCmsRoleId()->equals($this->id)
