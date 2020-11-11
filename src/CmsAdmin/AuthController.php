@@ -10,9 +10,11 @@
 
 namespace CmsAdmin;
 
+use Mmi\App\App;
 use Mmi\Http\Request;
 use Mmi\Ldap\LdapConfig;
 use Mmi\Mvc\Controller;
+use Mmi\Security\AuthProviderInterface;
 
 /**
  * Kontroler użytkowników
@@ -73,6 +75,6 @@ class AuthController extends Controller
             return json_encode([]);
         }
         //zwraca odpowiedz JSON
-        return json_encode((new \Cms\Model\Auth)->ldapAutocomplete($request->term . '*'));
+        return json_encode(App::$di->get(AuthProviderInterface::class)->ldapAutocomplete($request->term . '*'));
     }
 }

@@ -10,7 +10,7 @@
 
 namespace CmsAdmin;
 
-use Mmi\Security\Auth;
+use Mmi\Security\AuthInterface;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 use Mmi\Session\SessionInterface;
@@ -23,7 +23,7 @@ class IndexController extends Controller
 
     /**
      * @Inject
-     * @var Auth
+     * @var AuthInterface
      */
     private $auth;
 

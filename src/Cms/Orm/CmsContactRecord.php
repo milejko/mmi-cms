@@ -4,7 +4,7 @@ namespace Cms\Orm;
 
 use Mmi\App\App;
 use Mmi\Http\Request;
-use Mmi\Security\Auth;
+use Mmi\Security\AuthInterface;
 
 /**
  * Rekord kontaktu
@@ -62,8 +62,8 @@ class CmsContactRecord extends \Mmi\Orm\Record
         $this->ip = App::$di->get(Request::class)->getServer()->remoteAddress;
         $this->active = 1;
         //zapis znanego użytkownika
-        if (App::$di->get(Auth::class)->hasIdentity()) {
-            $this->cmsAuthId = App::$di->get(Auth::class)->getId();
+        if (App::$di->get(AuthInterface::class)->hasIdentity()) {
+            $this->cmsAuthId = App::$di->get(AuthInterface::class)->getId();
         }
         //namespace w sesji
         $namespace = new \Mmi\Session\SessionSpace('contact');

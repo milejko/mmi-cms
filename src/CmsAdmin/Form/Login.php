@@ -12,7 +12,7 @@ namespace CmsAdmin\Form;
 
 use Cms\Form\Element;
 use Mmi\App\App;
-use Mmi\Security\Auth;
+use Mmi\Security\AuthInterface;
 
 class Login extends \Cms\Form\Form
 {
@@ -44,7 +44,7 @@ class Login extends \Cms\Form\Form
             return false;
         }
         //autoryzacja
-        $auth = App::$di->get(Auth::class);
+        $auth = App::$di->get(AuthInterface::class);
         $auth->setIdentity($this->getElement('username')->getValue());
         $auth->setCredential($this->getElement('password')->getValue());
         return $auth->authenticate();

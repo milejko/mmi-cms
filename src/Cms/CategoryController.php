@@ -18,8 +18,8 @@ use Cms\Orm\CmsCategoryRecord;
 use Mmi\Cache\Cache;
 use Mmi\Http\Request;
 use Mmi\Mvc\ActionHelper;
-use Mmi\Security\Acl;
-use Mmi\Security\Auth;
+use Mmi\Security\AclInterface;
+use Mmi\Security\AuthInterface;
 
 /**
  * Kontroler kategorii
@@ -38,13 +38,13 @@ class CategoryController extends \Mmi\Mvc\Controller
 
     /**
      * @Inject
-     * @var Auth
+     * @var AuthInterface
      */
     private $auth;
 
     /**
      * @Inject
-     * @var Acl
+     * @var AclInterface
      */
     private $acl;
 

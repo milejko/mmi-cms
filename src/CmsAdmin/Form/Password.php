@@ -12,7 +12,8 @@ namespace CmsAdmin\Form;
 
 use Cms\Form\Element;
 use Mmi\App\App;
-use Mmi\Security\Auth;
+use Mmi\Security\AuthInterface;
+use Mmi\Security\AuthProviderInterface;
 
 /**
  * Formularz zmiany hasła w CMS
@@ -50,8 +51,8 @@ class Password extends \Cms\Form\Form
      */
     public function beforeSave()
     {
-        $auth = new \Cms\Model\Auth;
-        $record = $auth->authenticate(App::$di->get(Auth::class)->getUsername(), $this->getElement('password')->getValue());
+        $auth = App::$di->get(AuthProviderInterface::class);
+        $record = $auth->authenticate(App::$di->get(AuthInterface::class)->getUsername(), $this->getElement('password')->getValue());
         //logowanie niepoprawne
         if (!$record) {
             $this->getElement('password')->addError('form.index.password.current.invalid');
@@ -63,11 +64,11 @@ class Password extends \Cms\Form\Form
             return false;
         }
         //znajdowanie rekordu użytkownika
-        $authRecord = (new \Cms\Orm\CmsAuthQuery)->findPk(App::$di->get(Auth::class)->getId());
+        $authRecord = (new \Cms\Orm\CmsAuthQuery)->findPk(App::$di->get(AuthInterface::class)->getId());
         if (null === $authRecord) {
             return false;
         }
-        $authRecord->password = \Cms\Model\Auth::getSaltedPasswordHash($this->getElement('changePassword')->getValue());
+        $authRecord->password = App::$di->get(AuthProviderInterface::class)->getSaltedPasswordHash($this->getElement('changePassword')->getValue());
         return $authRecord->save();
     }
 

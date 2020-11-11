@@ -2,16 +2,11 @@
 
 namespace App;
 
-use Cms\App\CmsAppEventInterceptor;
 use Cms\App\CmsSkinsetConfig;
-use Cms\Model\Auth;
 use CmsAdmin\App\CmsNavigationConfig;
-use Mmi\App\AppEventInterceptorInterface;
 use Mmi\Mvc\RouterConfig;
 use Mmi\Navigation\NavigationConfig;
-use Mmi\Security\AuthInterface;
 
-use function DI\autowire;
 use function DI\create;
 
 return [
@@ -19,7 +14,4 @@ return [
     CmsSkinsetConfig::class => create(AppSkinsetConfig::class),
     NavigationConfig::class => create(CmsNavigationConfig::class),
     RouterConfig::class     => create(AppRouterConfig::class),
-    //auth & cms interceptor
-    AuthInterface::class                    => autowire(Auth::class),
-    AppEventInterceptorInterface::class     => autowire(CmsAppEventInterceptor::class),
 ];

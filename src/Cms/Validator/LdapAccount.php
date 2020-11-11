@@ -2,6 +2,9 @@
 
 namespace Cms\Validator;
 
+use Mmi\App\App;
+use Mmi\Security\AuthProviderInterface;
+
 /**
  * Walidator konta w katalogu LDAP
  */
@@ -21,7 +24,7 @@ class LdapAccount extends \Mmi\Validator\ValidatorAbstract
     public function isValid($value)
     {
         //sprawdzanie istnienia pojedynczego użytkownika o podanej nazwie
-        if (count((new \Cms\Model\Auth())->ldapAutocomplete($value)) != 1) {
+        if (count(App::$di->get(AuthProviderInterface::class)->ldapAutocomplete($value)) != 1) {
             $this->_error(self::INVALID);
             return false;
         }

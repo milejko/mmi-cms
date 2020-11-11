@@ -14,6 +14,8 @@ use Cms\Form\Element,
     Cms\Orm\CmsAuthQuery,
     Mmi\Validator,
     Mmi\Filter;
+use Mmi\App\App;
+use Mmi\Security\AuthProviderInterface;
 
 /**
  * Formularz dodawania i edycji użytkowników CMS
@@ -75,7 +77,7 @@ class Auth extends \Cms\Form\Form
     public function beforeSave()
     {
         if ('' !== $password = $this->getElement('changePassword')->getValue()) {
-            $this->getRecord()->password = \Cms\Model\Auth::getSaltedPasswordHash($password);
+            $this->getRecord()->password = App::$di->get(AuthProviderInterface::class)->getSaltedPasswordHash($password);
         }
         return true;
     }

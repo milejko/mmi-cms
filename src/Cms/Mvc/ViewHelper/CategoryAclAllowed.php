@@ -10,8 +10,7 @@
 
 namespace Cms\Mvc\ViewHelper;
 
-use Mmi\App\App;
-use Mmi\Security\Auth;
+use Mmi\Security\AuthInterface;
 
 /**
  * Helper ACL kategorii (uprawnień)
@@ -20,14 +19,22 @@ class CategoryAclAllowed extends \Mmi\Mvc\ViewHelper\HelperAbstract
 {
 
     /**
-     * Zwraca czy dozwolone na ACL
-     * @param array $categoryId
-     * @return boolean
+     * @var AuthInterface
      */
-    public function categoryAclAllowed($categoryId)
+    private $auth;
+
+    public function __construct(AuthInterface $auth)
+    {
+        $this->auth = $auth;
+    }
+
+    /**
+     * Zwraca czy dozwolone na ACL
+     */
+    public function categoryAclAllowed(string $categoryId): bool
     {
         //zwrot z ACL kategorii
-        return (new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed(App::$di->get(Auth::class)->getRoles(), $categoryId);
+        return (new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed($this->auth->getRoles(), $categoryId);
     }
 
 }

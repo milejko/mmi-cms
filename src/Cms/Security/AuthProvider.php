@@ -8,72 +8,101 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace Cms\Model;
+namespace Cms\Security;
 
 use Cms\Orm\CmsAuthQuery;
 use Cms\Orm\CmsAuthRecord;
 use Mmi\App\App;
 use Mmi\Http\Request;
+use Mmi\Ldap\LdapClient;
 use Mmi\Ldap\LdapConfig;
+use Mmi\Security\AuthProviderInterface;
+use Mmi\Security\AuthRecord;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Model autoryzacji
+ * Default CMS Auth provider
  */
-class Auth implements \Mmi\Security\AuthInterface
+class AuthProvider implements AuthProviderInterface
 {
 
     /**
-     * Autoryzacja do CMS
-     * @param string $identity
-     * @param string $credential
-     * @return \Mmi\Security\AuthRecord
+     * @var LoggerInterface
      */
-    public static function authenticate($identity, $credential)
+    private $logger;
+
+    /**
+     * @var Request
+     */
+    private $request;
+
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    public function __construct(
+        LoggerInterface $logger,
+        Request $request,
+        ContainerInterface $container
+    )
+    {
+        $this->logger       = $logger;
+        $this->request      = $request;
+        $this->container    = $container;
+    }
+
+    /**
+     * Autoryzacja do CMS
+     */
+    public function authenticate(string $identity, string $credential): ?AuthRecord
     {
         //błędna autoryzacja (brak aktywnego użytkownika)
-        if (null === $record = self::_findUserByIdentity($identity)) {
-            return;
+        if (null === $record = $this->_findUserByIdentity($identity)) {
+            return null;
         }
 
         //próby logowania lokalnie i ldap
-        if (!self::_localAuthenticate($record, $credential) && !self::_ldapAuthenticate($record, $credential)) {
-            self::_updateUserFailedLogin($record);
-            return self::_authFailed($identity, 'Invalid password.');
+        if (
+            !$this->_localAuthenticate($record, $credential) && 
+            !$this->_ldapAuthenticate($record, $credential)
+        ) {
+            $this->_updateUserFailedLogin($record);
+            return $this->_authFailed($identity, 'Invalid password.');
         }
 
         //poprawna autoryzacja
-        return self::_authSuccess($record);
+        return $this->_authSuccess($record);
     }
 
     /**
      * Autoryzacja po ID
-     * @param integer $id
-     * @return boolean
      */
-    public static function idAuthenticate($id)
+    public function idAuthenticate(string $id): ?AuthRecord
     {
         //wyszukiwanie aktywnego użytkownika
-        if (null === $record = self::_findUserByIdentity($id)) {
-            return;
+        if (null === $record = $this->_findUserByIdentity($id)) {
+            return null;
         }
-        return self::_authSuccess($record);
+        return $this->_authSuccess($record);
     }
 
     /**
      * Wylogowanie
      */
-    public static function deauthenticate()
+    public function deauthenticate(): void
     {}
 
     /**
      * Zwraca hash hasła zakodowany z "solą"
+     * //@TODO: refactor this
      * @param string $password
      * @return string
      */
-    public static function getSaltedPasswordHash($password)
+    public function getSaltedPasswordHash($password)
     {
-        return hash('sha512', App::$di->get('cms.auth.salt') . md5($password) . $password . 'sltd');
+        return hash('sha512', $this->container->get('cms.auth.salt') . md5($password) . $password . 'sltd');
     }
 
     /**
@@ -84,16 +113,16 @@ class Auth implements \Mmi\Security\AuthInterface
     public function ldapAutocomplete($query = '*')
     {
         //tworzenie klienta
-        if (!App::$di->has(LdapConfig::class)) {
+        if (!$this->container->has(LdapConfig::class)) {
             return [];
         }
-        $ldapClient = new \Mmi\Ldap\LdapClient(App::$di->get(LdapConfig::class));
+        $ldapClient = new LdapClient($this->container->get(LdapConfig::class));
         try {
             //wyszukiwanie w LDAPie
             $ldapResults = $ldapClient->findUser($query, 10, ['sAMAccountname']);
         } catch (\Exception $e) {
             //błąd usługi
-            App::$di->get(LoggerInterface::class)->error($e->getMessage());
+            $this->logger->error($e->getMessage());
             return [];
         }
         //budowa tablicy z użytkownikami
@@ -111,10 +140,10 @@ class Auth implements \Mmi\Security\AuthInterface
      * Obsługa błędnego logowania znanego użytkownika
      * @param string $identity
      */
-    protected static function _authFailed($identity, $reason = '')
+    protected function _authFailed($identity, $reason = '')
     {
         //logowanie błędnej próby autoryzacji
-        App::$di->get(LoggerInterface::class)->notice('Login failed: ' . $identity . ' ' . $reason);
+        $this->logger->notice('Login failed: ' . $identity . ' ' . $reason);
     }
 
     /**
@@ -123,13 +152,13 @@ class Auth implements \Mmi\Security\AuthInterface
      * @param CmsAuthRecord $record
      * @return \Mmi\Security\AuthRecord
      */
-    protected static function _authSuccess(CmsAuthRecord $record)
+    protected function _authSuccess(CmsAuthRecord $record)
     {
         //zapis poprawnego logowania do rekordu
-        $record->lastIp = App::$di->get(Request::class)->getServer()->remoteAddress;
+        $record->lastIp = $this->request->getServer()->remoteAddress;
         $record->lastLog = date('Y-m-d H:i:s');
         $record->save();
-        App::$di->get(LoggerInterface::class)->info('Logged in: ' . $record->username);
+        $this->logger->info('Logged in: ' . $record->username);
         //nowy obiekt autoryzacji
         $authRecord = new \Mmi\Security\AuthRecord;
         //ustawianie pól rekordu
@@ -148,10 +177,10 @@ class Auth implements \Mmi\Security\AuthInterface
      * @param string $credential
      * @return boolean
      */
-    protected static function _localAuthenticate(CmsAuthRecord $identity, $credential)
+    protected function _localAuthenticate(CmsAuthRecord $identity, $credential)
     {
         //rekord aktywny i hasło zgodne
-        if ($identity->password == self::getSaltedPasswordHash($credential) || $identity->password == sha1($credential)) {
+        if ($identity->password == $this->getSaltedPasswordHash($credential) || $identity->password == sha1($credential)) {
             return true;
         }
         return false;
@@ -163,13 +192,13 @@ class Auth implements \Mmi\Security\AuthInterface
      * @param string $credential
      * @return boolean
      */
-    protected static function _ldapAuthenticate(CmsAuthRecord $identity, $credential)
+    protected function _ldapAuthenticate(CmsAuthRecord $identity, $credential)
     {
         //ldap wyłączony
-        if (!App::$di->has(LdapConfig::class)) {
+        if (!$this->container->has(LdapConfig::class)) {
             return;
         }
-        $config = App::$di->get(LdapConfig::class);
+        $config = $this->container->get(LdapConfig::class);
         try {
             //tworzenie klienta
             $ldapClient = new \Mmi\Ldap\LdapClient($config->ldap);
@@ -181,7 +210,7 @@ class Auth implements \Mmi\Security\AuthInterface
             return $ldapClient->authenticate($dn, $credential);
         } catch (\Exception $e) {
             //błąd LDAP'a
-            App::$di->get(LoggerInterface::class)->error('LDAP failed: ' . $e->getMessage());
+            $this->logger->error('LDAP failed: ' . $e->getMessage());
             return false;
         }
     }
@@ -191,7 +220,7 @@ class Auth implements \Mmi\Security\AuthInterface
      * @param string $identity
      * @return CmsAuthRecord
      */
-    protected static function _findUserByIdentity($identity)
+    protected function _findUserByIdentity($identity)
     {
         try {
             return (new CmsAuthQuery)
@@ -202,7 +231,7 @@ class Auth implements \Mmi\Security\AuthInterface
                     ->orFieldId()->equals((integer)$identity))
                 ->findFirst();
         } catch (\Exception $e) {
-            App::$di->get(LoggerInterface::class)->error($e->getMessage());
+            $this->logger->error($e->getMessage());
         }
     }
 
@@ -210,10 +239,10 @@ class Auth implements \Mmi\Security\AuthInterface
      * Aktualizuje rekord użytkownika o błędne logowanie
      * @param CmsAuthRecord $record
      */
-    protected static function _updateUserFailedLogin($record)
+    protected function _updateUserFailedLogin($record)
     {
         //zapis danych błędnego logowania znanego użytkownika
-        $record->lastFailIp = App::$di->get(Request::class)->getServer()->remoteAddress;
+        $record->lastFailIp = $this->request->getServer()->remoteAddress;
         $record->lastFailLog = date('Y-m-d H:i:s');
         $record->failLogCount = $record->failLogCount + 1;
         $record->save();

@@ -12,7 +12,7 @@ namespace Cms\Model;
 
 use Mmi\App\App;
 use Mmi\Mvc\Messenger;
-use Mmi\Security\Auth;
+use Mmi\Security\AuthInterface;
 
 class CategoryBuffering
 {
@@ -24,7 +24,7 @@ class CategoryBuffering
     protected $_request;
 
     /**
-     * @var Auth
+     * @var AuthInterface
      */
     protected $auth;
 
@@ -41,7 +41,7 @@ class CategoryBuffering
     {
         $this->_request = $request;
         //@TODO: proper DI
-        $this->auth      = App::$di->get(Auth::class);
+        $this->auth      = App::$di->get(AuthInterface::class);
         $this->messenger = App::$di->get(Messenger::class);
     }
 

@@ -17,5 +17,12 @@
     - RouterConfig::class pointing to your router configuration class
     - NavigationConfig::class pointing to the Navigation config (ie. CmsNavigationConfig::class)
     - CmsSkinsetConfig::class pointing to the Skinset config
-    - AuthInterface::class pointing to the Authentication model (ie. Cms\Model\Auth)
+    - AuthInterface::class pointing to the Authentication model (ie. Cms\Security\AuthProvider)
     - AppEventInterceptorInterface::class pointing to CmsAppEventInterceptor::class or a subclass ot this
+    - Optionally you can inject AuthProviderInterface::class to manage user authentication process
+
+### .env configuration:
+* CMS_AUTH_SALT=some-random-salt (should be random)
+* CMS_LANG_DEFAULT=en (default admin panel language)
+* CMS_THUMB_QUALITY=85 (JPEG quality in %)
+* CMS_NAVIGATION_CATEGORIES_ENABLED=0 (if enabled navigator builds CMS categories, otherwise just admin panel)

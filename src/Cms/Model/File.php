@@ -13,7 +13,7 @@ namespace Cms\Model;
 use Cms\Orm\CmsFileQuery;
 use Cms\Orm\CmsFileRecord;
 use Mmi\App\App;
-use Mmi\Security\Auth;
+use Mmi\Security\AuthInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -283,7 +283,7 @@ class File
             $record->dateModify = date('Y-m-d H:i:s');
         }
         //właściciel pliku
-        $record->cmsAuthId = App::$di->has(Auth::class) ? App::$di->get(Auth::class)->getId() : null;
+        $record->cmsAuthId = App::$di->has(AuthInterface::class) ? App::$di->get(AuthInterface::class)->getId() : null;
         if ($record->active === null) {
             //domyślnie aktywny
             $record->active = 1;

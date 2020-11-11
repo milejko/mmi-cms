@@ -19,7 +19,7 @@ use CmsAdmin\Form\CategoryForm;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 use Mmi\Mvc\Router;
-use Mmi\Security\Auth;
+use Mmi\Security\AuthInterface;
 use Mmi\Session\SessionSpace;
 
 /**
@@ -39,7 +39,7 @@ class CategoryController extends Controller
 
     /**
      * @Inject
-     * @var Auth
+     * @var AuthInterface
      */
     private $auth;
 

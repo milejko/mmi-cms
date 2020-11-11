@@ -12,7 +12,9 @@ namespace CmsAdmin\Mvc\ViewHelper;
 
 use Mmi\App\App;
 use Mmi\Security\Acl;
+use Mmi\Security\AclInterface;
 use Mmi\Security\Auth;
+use Mmi\Security\AuthInterface;
 
 class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract
 {
@@ -73,8 +75,8 @@ class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract
         if (!isset($node['children']) || !is_array($node['children']) || count($node['children']) == 0) {
             return $html;
         }
-        $acl = App::$di->get(Acl::class);
-        $auth = App::$di->get(Auth::class);
+        $acl = App::$di->get(AclInterface::class);
+        $auth = App::$di->get(AuthInterface::class);
         $html .= '<ul>';
         //iteracja po dzieciakach i budowa węzłów drzewa
         foreach ($node['children'] as $child) {

@@ -7,7 +7,9 @@ use Mmi\Http\Request;
 use Mmi\Http\Response;
 use Mmi\Mvc\View;
 use Mmi\Security\Acl;
+use Mmi\Security\AclInterface;
 use Mmi\Security\Auth;
+use Mmi\Security\AuthInterface;
 use Mmi\Session\SessionInterface;
 use Mmi\Translate\TranslateInterface;
 
@@ -23,8 +25,8 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
         $request = $this->container->get(Request::class);
         $this->container->get(SessionInterface::class)->start();
         //zablokowane na ACL
-        $acl = $this->container->get(Acl::class);
-        $auth = $this->container->get(Auth::class);
+        $acl = $this->container->get(AclInterface::class);
+        $auth = $this->container->get(AuthInterface::class);
         $actionLabel = strtolower($request->getModuleName() . ':' . $request->getControllerName() . ':' . $request->getActionName());
         if ($acl->isAllowed($auth->getRoles(), $actionLabel)) {
             return;

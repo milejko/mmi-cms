@@ -5,7 +5,7 @@ namespace Cms\Orm;
 use Mmi\App\App;
 use Mmi\DataObject;
 use Mmi\Mvc\View;
-use Mmi\Security\Auth;
+use Mmi\Security\AuthInterface;
 
 /**
  * Rekord pliku
@@ -255,7 +255,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
         }
         //właściciel pliku
         if (!$this->cmsAuthId) {
-            $this->cmsAuthId = App::$di->get(Auth::class) ? App::$di->get(Auth::class)->getId() : null;
+            $this->cmsAuthId = App::$di->get(AuthInterface::class) ? App::$di->get(AuthInterface::class)->getId() : null;
         }
         return parent::_insert();
     }
