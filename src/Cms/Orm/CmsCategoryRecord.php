@@ -334,7 +334,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         (new CmsFileQuery)
             ->whereQuery((new CmsFileQuery)
                 ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
-                ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
+                ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT_PREFIX . '%')
             )        
             ->andFieldObjectId()->equals($this->getPk())
             ->find()
