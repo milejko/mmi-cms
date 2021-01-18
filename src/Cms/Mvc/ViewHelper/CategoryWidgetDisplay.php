@@ -13,7 +13,7 @@ namespace Cms\Mvc\ViewHelper;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
-use Mmi\Cache\Cache;
+use Mmi\Cache\CacheInterface;
 use Mmi\Mvc\View;
 
 /**
@@ -34,7 +34,7 @@ class CategoryWidgetDisplay extends \Mmi\Mvc\ViewHelper\HelperAbstract
 
     public function __construct(
         View $view,
-        Cache $cache,
+        CacheInterface $cache,
         CmsSkinsetConfig $cmsSkinsetConfig
     )
     {
