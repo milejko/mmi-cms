@@ -15,7 +15,7 @@ use Cms\Model\TemplateModel;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
-use Mmi\Cache\Cache;
+use Mmi\Cache\CacheInterface;
 use Mmi\Http\Request;
 use Mmi\Mvc\ActionHelper;
 use Mmi\Security\AclInterface;
@@ -32,7 +32,7 @@ class CategoryController extends \Mmi\Mvc\Controller
 
     /**
      * @Inject
-     * @var Cache
+     * @var CacheInterface
      */
     private $cache;
 
