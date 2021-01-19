@@ -127,10 +127,9 @@ class CmsFileRecord extends \Mmi\Orm\Record
      * Pobiera adres pliku
      * @param string $scaleType scale, scalex, scaley, scalecrop
      * @param int|string $scale 320, 320x240
-     * @param boolean $https null - bez zmian, true - tak, false - nie
      * @return string adres publiczny pliku
      */
-    public function getUrl($scaleType = 'default', $scale = null, $https = null)
+    public function getUrl($scaleType = 'default', $scale = null)
     {
         //brak pliku
         if ($this->id === null) {
@@ -146,10 +145,9 @@ class CmsFileRecord extends \Mmi\Orm\Record
      * Pobiera adres postera pliku
      * @param string $scaleType scale, scalex, scaley, scalecrop
      * @param int|string $scale 320, 320x240
-     * @param boolean $https null - bez zmian, true - tak, false - nie
      * @return string adres publiczny postera pliku
      */
-    public function getPosterUrl($scaleType = 'default', $scale = null, $https = null)
+    public function getPosterUrl($scaleType = 'default', $scale = null)
     {
         //brak pliku
         if (null === $this->id || !$this->data->posterFileName) {

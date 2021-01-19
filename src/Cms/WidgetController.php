@@ -3,11 +3,7 @@
 namespace Cms;
 
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
-use Mmi\Http\Request;
-use Mmi\Http\Response;
 use Mmi\Mvc\Controller;
-use Mmi\Mvc\Messenger;
-use Mmi\Mvc\View;
 
 /**
  * Abstrakcyjna klasa kontrolera widgetów

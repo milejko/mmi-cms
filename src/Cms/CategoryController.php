@@ -67,28 +67,8 @@ class CategoryController extends \Mmi\Mvc\Controller
     {
         //pobranie kategorii
         $category = $this->_getPublishedCategoryByUri($request->uri);
-        //klucz bufora
-        $cacheKey = CmsCategoryRecord::HTML_CACHE_PREFIX . $category->id;
-        //buforowanie dozwolone
-        $bufferingAllowed = (new \Cms\Model\CategoryBuffering($request))->isAllowed();
-        //wczytanie zbuforowanej strony (dla niezalogowanych i z pustym requestem)
-        if ($bufferingAllowed && (null !== $html = $this->cache->load($cacheKey))) {
-            //wysyłanie nagłówka o buforowaniu strony
-            $this->getResponse()->setHeader('X-Cache', 'HIT');
-            //zwrot html
-            return $this->_decorateHtmlWithEditButton($html, $category);
-        }
-        //wysyłanie nagłówka o braku buforowaniu strony
-        $this->getResponse()->setHeader('X-Cache', 'MISS');
         //renderowanie docelowej akcji
         $html = $this->_renderHtml($category, $request);
-        //buforowanie niedozwolone
-        if (!$bufferingAllowed || 0 == $cacheLifetime = $this->_getCategoryCacheLifetime($category)) {
-            //zwrot html
-            return $this->_decorateHtmlWithEditButton($html, $category);
-        }
-        //zapis html kategorii do cache
-        //$this->cache->save($html, $cacheKey, $cacheLifetime);
         //zwrot html
         return $this->_decorateHtmlWithEditButton($html, $category);
     }
@@ -133,7 +113,7 @@ class CategoryController extends \Mmi\Mvc\Controller
     /**
      * Pobiera opublikowaną kategorię po uri
      * @param string $uri
-     * @return \Cms\Orm\CmsCategoryRecord
+     * @return CmsCategoryRecord
      * @throws \Mmi\Mvc\MvcNotFoundException
      */
     protected function _getPublishedCategoryByUri($uri)
@@ -175,12 +155,12 @@ class CategoryController extends \Mmi\Mvc\Controller
     /**
      * Sprawdza aktywność kategorii do wyświetlenia
      * przekierowuje na 404 i na inne strony (zgodnie z redirectUri)
-     * @param \Cms\Orm\CmsCategoryRecord $category
+     * @param CmsCategoryRecord $category
      * @return Orm\CmsCategoryRecord
      * @throws \Mmi\Mvc\MvcForbiddenException
      * @throws \Mmi\Mvc\MvcNotFoundException
      */
-    protected function _checkCategory(\Cms\Orm\CmsCategoryRecord $category)
+    protected function _checkCategory(CmsCategoryRecord $category)
     {
         //kategoria to przekierowanie
         if ($category->redirectUri) {
@@ -203,11 +183,11 @@ class CategoryController extends \Mmi\Mvc\Controller
 
     /**
      * Pobiera request do przekierowania
-     * @param \Cms\Orm\CmsCategoryRecord $category
+     * @param CmsCategoryRecord $category
      * @return string
      * @throws \Mmi\App\KernelException
      */
-    protected function _renderHtml(\Cms\Orm\CmsCategoryRecord $category, Request $request)
+    protected function _renderHtml(CmsCategoryRecord $category, Request $request)
     {
         //tworzenie nowego requestu na podstawie obecnego
         $request = clone $request;
@@ -226,11 +206,11 @@ class CategoryController extends \Mmi\Mvc\Controller
 
     /**
      * Pobiera request do renderowania akcji
-     * @param \Cms\Orm\CmsCategoryRecord $category
+     * @param CmsCategoryRecord $category
      * @return string
      * @throws \Mmi\App\KernelException
      */
-    protected function _decorateHtmlWithEditButton($html, \Cms\Orm\CmsCategoryRecord $category)
+    protected function _decorateHtmlWithEditButton($html, CmsCategoryRecord $category)
     {
         //brak roli redaktora
         if (!$this->_hasRedactorRole()) {
@@ -244,7 +224,7 @@ class CategoryController extends \Mmi\Mvc\Controller
      * Zwraca czas buforowania kategorii
      * @return integer
      */
-    protected function _getCategoryCacheLifetime(\Cms\Orm\CmsCategoryRecord $category)
+    protected function _getCategoryCacheLifetime(CmsCategoryRecord $category)
     {
         //model szablonu
         $templateModel = new TemplateModel($category, $this->cmsSkinsetConfig);
