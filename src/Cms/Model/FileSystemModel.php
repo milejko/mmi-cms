@@ -83,7 +83,7 @@ class FileSystemModel
             return;
         }
         //istnieje plik - zwrot ścieżki publicznej
-        if (file_exists($thumbPath = BASE_PATH . '/web/data' . $fileName) && filemtime($thumbPath) > filemtime($inputFile)) {
+        if (file_exists($thumbPath = BASE_PATH . '/web/data' . $fileName)) {
             App::$di->get(SystemCacheInterface::class)->save(true, $cacheKey);
             return $publicUrl;
         }
@@ -98,15 +98,9 @@ class FileSystemModel
             //kopiowanie pliku do web
             return $this->_copyFileToWeb($inputFile, $thumbPath, $publicUrl);
         }
-        //proba skalowania
-        try {
-            //uruchomienie skalera
-            $this->_scaler($inputFile, $thumbPath, $scaleType, $scale);
-            return $publicUrl;
-        } catch (\Exception $e) {
-            //kopiowanie do web
-            return $this->_copyFileToWeb($inputFile, $thumbPath, $publicUrl);
-        }
+        //uruchomienie skalera
+        $this->_scaler($inputFile, $thumbPath, $scaleType, $scale);
+        return $publicUrl;
     }
 
     public function unlink()
@@ -174,15 +168,16 @@ class FileSystemModel
         $mimeType = \Mmi\FileSystem::mimeType($inputFile);
         //GIF
         if ($mimeType == 'image/gif') {
-            imagealphablending($imgRes, false);
-            imagesavealpha($imgRes, true);
             imagegif($imgRes, $outputFile);
             return;
         }
-        //PNG (nieprzeźroczysty)
+        //PNG
         if ($mimeType == 'image/png') {
-            imagealphablending($imgRes, false);
-            imagesavealpha($imgRes, true);
+            //nieprzeźroczysty
+            if (!((imagecolorat($imgRes, 0, 0) & 0x7F000000) >> 24)) {
+                //redukcja palety do 256 + dithering
+                imagetruecolortopalette($imgRes, true, 256);
+            }
             imagepng($imgRes, $outputFile, 9);
             return;
         }
