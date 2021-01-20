@@ -93,8 +93,8 @@ class FileSystemModel
         } catch (\Mmi\App\KernelException $e) {
             //nic
         }
-        //wybrano skalowanie dla klasy obrazu
-        if ($scaleType == 'default') {
+        //brak skalowania, lub GIF - pomijamy operacje skalowania
+        if ('default' == $scaleType || 'image/gif' == \Mmi\FileSystem::mimeType($inputFile)) {
             //kopiowanie pliku do web
             return $this->_copyFileToWeb($inputFile, $thumbPath, $publicUrl);
         }
@@ -164,20 +164,10 @@ class FileSystemModel
                 return;
             }
         }
-        //określanie typu wyjścia
-        $mimeType = \Mmi\FileSystem::mimeType($inputFile);
-        //GIF
-        if ($mimeType == 'image/gif') {
-            imagegif($imgRes, $outputFile);
-            return;
-        }
-        //PNG
-        if ($mimeType == 'image/png') {
-            //nieprzeźroczysty
-            if (!((imagecolorat($imgRes, 0, 0) & 0x7F000000) >> 24)) {
-                //redukcja palety do 256 + dithering
-                imagetruecolortopalette($imgRes, true, 256);
-            }
+        //dla typu PNG zapisujemy PNG - bo przeźroczystość
+        if (\Mmi\FileSystem::mimeType($inputFile) == 'image/png') {
+            //optymalizacja palety - 256 kolorów
+            \Mmi\Image\Image::optimizePalette($imgRes);
             imagepng($imgRes, $outputFile, 9);
             return;
         }
