@@ -6,6 +6,7 @@ use Cms\App\CmsSkinsetConfig;
 use Cms\Orm\CmsCategoryRecord;
 use Mmi\App\KernelException;
 use Mmi\Mvc\View;
+use Mmi\Http\Request;
 use Cms\App\CmsTemplateConfig;
 use Cms\TemplateController;
 use CmsAdmin\Form\CategoryForm;
@@ -29,6 +30,12 @@ class TemplateModel
     private $_templateConfig;
 
     /**
+     * Konfiguracja skóry
+     * @var CmsSkinsetConfig
+     */
+    private $_skinsetConfig;
+
+    /**
      * Konstruktor
      * @param CmsCategoryRecord $cmsCategoryRecord
      * @param CmsSkinsetConfig $skinsetConfig
@@ -36,6 +43,7 @@ class TemplateModel
     public function __construct(CmsCategoryRecord $categoryRecord, CmsSkinsetConfig $skinsetConfig)
     {
         $this->_categoryRecord = $categoryRecord;
+        $this->_skinsetConfig = $skinsetConfig;
         //brak zdefiniowanego template w szablonie
         if (null === $this->_categoryRecord->template) {
             return;
@@ -72,17 +80,29 @@ class TemplateModel
     }
 
     /**
+     * Render akcji json
+     */
+    public function getJson(Request $request): string
+    {
+        //pobranie jsona
+        if (null === $controller = $this->_createController()) {
+            return json_encode('@todo: error');
+        }
+        return json_encode($controller->getJson($request));
+    }
+
+    /**
      * Wywołanie akcji usuwania
      * @param View $view
      * @return void
      */
-    public function invokeDeleteAction(View $view)
+    public function invokeDeleteAction()
     {
         //wywołanie akcji usuwania
         if (null === $controller = $this->_createController()) {
             return;
         }
-        $controller->deleteAction($view->request);
+        $controller->deleteAction();
     }
 
     /**
@@ -151,8 +171,9 @@ class TemplateModel
         if (!($targetController instanceof TemplateController)) {
             throw new KernelException($controllerName . ' should extend \Cms\TemplateController');
         }
-        //injecting category record
+        //injecting category record & skinset config
         $targetController->setCategoryRecord($this->_categoryRecord);
+        $targetController->setSkinsetConfig($this->_skinsetConfig);
         //zwrot instancji kontrolera
         return $targetController;        
     }

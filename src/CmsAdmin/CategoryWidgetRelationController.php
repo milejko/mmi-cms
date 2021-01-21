@@ -110,7 +110,7 @@ class CategoryWidgetRelationController extends Controller
             return '';
         }
         //usuwanie - logika widgeta
-        (new WidgetModel($widgetRelation, $this->cmsSkinsetConfig))->invokeDeleteAction($this->view);
+        (new WidgetModel($widgetRelation, $this->cmsSkinsetConfig))->invokeDeleteAction();
         //usuwanie relacji
         $widgetRelation->delete();
         $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $request->categoryId, 'uploaderId' => $request->categoryId, 'originalId' => $request->originalId]);

@@ -3,7 +3,9 @@
 namespace Cms;
 
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
+use Cms\Model\WidgetJson;
 use Mmi\Mvc\Controller;
+use Mmi\Http\Request;
 
 /**
  * Abstrakcyjna klasa kontrolera widgetów
@@ -28,9 +30,8 @@ abstract class WidgetController extends Controller
 
     /**
      * Zwraca rekord relacji widgeta
-     * @return CmsCategoryWidgetCategoryRecord
      */
-    public final function getWidgetRecord()
+    public final function getWidgetRecord(): CmsCategoryWidgetCategoryRecord
     {
         return $this->widgetRecord;
     }
@@ -39,7 +40,7 @@ abstract class WidgetController extends Controller
      * Ustawia stan zapisany
      * @return void
      */
-    public final function redirectToCategory()
+    public final function redirectToCategory(): void
     {
         //przekierowanie na stronę edycji
         $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', [
@@ -51,35 +52,35 @@ abstract class WidgetController extends Controller
 
     /**
      * Wyświetlenie edytora widgeta (po stronie admina)
-     * @return string
      */
     abstract public function editAction();
 
     /**
      * Wyświetlenie podglądu widgeta (po stronie admina)
-     * @return string
      */
     abstract public function previewAction();
 
     /**
-     * Wyświetlenie po stronie klienta (HTML)
-     * @return string
+     * Po usunięciu widgeta
      */
-    public function displayAction()
+    public function deleteAction(): void
     {}
 
     /**
-     * Po usunięciu widgeta
-     * @return void
+     * Wyświetlenie po stronie klienta (HTML)
      */
-    public function deleteAction()
+    public function displayAction(Request $request)
     {}
     
     /**
      * Render obiektu JSON (na potrzeby API)
-     * @return string
+     * @return WidgetJson
      */
-    public function renderJsonAction()
-    {}
+    public function getJson(Request $request): WidgetJson
+    {
+        $widgetJson = new WidgetJson();
+        $widgetJson->data = $this->widgetRecord;
+        return $widgetJson;
+    }
 
 }

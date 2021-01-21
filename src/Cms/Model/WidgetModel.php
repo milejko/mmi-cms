@@ -12,7 +12,6 @@ use Cms\App\CmsSkinsetConfig;
 use Cms\App\CmsTemplateConfig;
 use Mmi\App\App;
 use Mmi\Http\Request;
-use Mmi\Http\Response;
 
 /**
  * Model widgeta
@@ -93,8 +92,7 @@ class WidgetModel
     public function renderEditAction(View $view)
     {
         //wywołanie akcji edycji
-        $controller = $this->_createController($view);
-        $controller->editAction($view->request);
+        $this->_createController()->editAction();
         //render szablonu
         return $view->renderTemplate($this->_getTemplatePrefix() . '/edit');
     }
@@ -107,8 +105,7 @@ class WidgetModel
     public function renderPreviewAction(View $view)
     {
         //wywołanie akcji podglądu
-        $controller = $this->_createController($view);
-        $controller->previewAction($view->request);
+        $this->_createController()->previewAction();
         //render szablonu
         return $view->renderTemplate($this->_getTemplatePrefix() . '/preview');
     }
@@ -121,10 +118,18 @@ class WidgetModel
     public function renderDisplayAction(View $view)
     {
         //wywołanie akcji wyświetlenia
-        $controller = $this->_createController($view);
-        $controller->displayAction($view->request);
+        $this->_createController()->displayAction($view->request);
         //render szablonu
         return $view->renderTemplate($this->_getTemplatePrefix() . '/display');
+    }
+
+    /**
+     * Pobiera obiekt WidgetJson z kontrolera
+     */
+    public function getJson(Request $request): WidgetJson
+    {
+        //pobranie jsona z kontrolera
+        return $this->_createController()->getJson($request);
     }
 
     /**
@@ -132,18 +137,17 @@ class WidgetModel
      * @param View $view
      * @return void
      */
-    public function invokeDeleteAction(View $view)
+    public function invokeDeleteAction()
     {
         //wywołanie akcji wyświetlenia
-        $controller = $this->_createController($view);
-        $controller->deleteAction($view->request);
+        $this->_createController()->deleteAction();
     }
 
     /**
      * Tworzy instancję kontrolera
      * @return WidgetController
      */
-    private function _createController(View $view)
+    private function _createController()
     {
         //getting the controller name
         $controllerName = $this->_widgetConfig->getControllerClassName();
