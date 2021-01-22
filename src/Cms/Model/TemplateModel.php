@@ -9,7 +9,10 @@ use Mmi\Mvc\View;
 use Mmi\Http\Request;
 use Cms\App\CmsTemplateConfig;
 use Cms\TemplateController;
+use Cms\Transport\ErrorTransport;
+use Cms\Transport\TransportInterface;
 use CmsAdmin\Form\CategoryForm;
+use Error;
 use Mmi\App\App;
 
 /**
@@ -80,15 +83,15 @@ class TemplateModel
     }
 
     /**
-     * Render akcji json
+     * Pobiera obiekt transportowy
      */
-    public function getJson(Request $request): string
+    public function getTransportObject(Request $request): TransportInterface
     {
-        //pobranie jsona
+        //pobranie obiektu transportowego szablonu
         if (null === $controller = $this->_createController()) {
-            return json_encode('@todo: error');
+            return new ErrorTransport('Controller not found');
         }
-        return json_encode($controller->getJson($request));
+        return $controller->getTransportObject($request);
     }
 
     /**

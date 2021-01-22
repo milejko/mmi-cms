@@ -10,6 +10,7 @@ use Cms\App\CmsWidgetConfig;
 use Cms\App\CmsSectionConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\App\CmsTemplateConfig;
+use Cms\Transport\WidgetTransport;
 use Mmi\App\App;
 use Mmi\Http\Request;
 
@@ -124,12 +125,12 @@ class WidgetModel
     }
 
     /**
-     * Pobiera obiekt WidgetJson z kontrolera
+     * Pobiera obiekt transportowy z kontrolera (na potrzeby API)
      */
-    public function getJson(Request $request): WidgetJson
+    public function getTransportObject(Request $request): WidgetTransport
     {
-        //pobranie jsona z kontrolera
-        return $this->_createController()->getJson($request);
+        //pobranie obiektu z kontrolera
+        return $this->_createController()->getTransportObject($request);
     }
 
     /**

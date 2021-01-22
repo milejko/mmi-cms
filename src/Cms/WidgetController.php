@@ -3,7 +3,8 @@
 namespace Cms;
 
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
-use Cms\Model\WidgetJson;
+use Cms\Orm\CmsFileQuery;
+use Cms\Transport\WidgetTransport;
 use Mmi\Mvc\Controller;
 use Mmi\Http\Request;
 
@@ -74,13 +75,34 @@ abstract class WidgetController extends Controller
     
     /**
      * Render obiektu JSON (na potrzeby API)
-     * @return WidgetJson
      */
-    public function getJson(Request $request): WidgetJson
+    public function getTransportObject(Request $request): WidgetTransport
     {
-        $widgetJson = new WidgetJson();
-        $widgetJson->data = $this->widgetRecord;
-        return $widgetJson;
+        $to         = new WidgetTransport();
+        $to->id     = $this->widgetRecord->uuid;
+        $to->widget = substr($this->widgetRecord->widget, strrpos($this->widgetRecord->widget, '/') + 1);
+        $to->config = json_decode($this->widgetRecord->configJson, true);
+        $to->order  = $this->widgetRecord->order;
+        $to->attachments  = $this->getAttachments($request);
+        return $to;
+    }
+
+    /**
+     * Pobiera załączniki
+     */
+    protected function getAttachments(Request $request): array
+    {
+        $files = [];
+        foreach ((new CmsFileQuery)
+            ->whereObject()->like(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
+            ->andFieldObjectId()->equals($this->widgetRecord->id)
+            ->orderAscOrder()
+            ->orderAscId()
+            ->find() as $file) {
+            $sectionName = substr($file->object, strlen(CmsCategoryWidgetCategoryRecord::FILE_OBJECT));
+            $files[$sectionName][] = $file;
+        }
+        return $files;
     }
 
 }

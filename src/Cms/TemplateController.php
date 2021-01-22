@@ -4,12 +4,11 @@ namespace Cms;
 
 use Cms\App\CmsSkinsetConfig;
 use Cms\Orm\CmsCategoryRecord;
-use Cms\Model\TemplateJson;
 use Cms\Model\WidgetModel;
+use Cms\Transport\TemplateTransport;
 use CmsAdmin\Form\CategoryForm;
 use Mmi\Mvc\Controller;
 use Mmi\Http\Request;
-use Mmi\App\App;
 
 /**
  * Abstrakcyjna klasa kontrolera widgetów
@@ -72,46 +71,53 @@ abstract class TemplateController extends Controller
     {}
 
     /**
-     * Zwraca obiekt JSON (na potrzeby API)
+     * Zwraca obiekt transportowy (na potrzeby API)
      */
-    public function getJson(Request $request): TemplateJson
+    public function getTransportObject(Request $request): TemplateTransport
     {
-        $templateJson = new TemplateJson;
-        $templateJson->widgets = $this->getWidgetJsons($request);
-        $templateJson->attributes = $this->cmsCategoryRecord;
-        return $templateJson;
+        $to             = new TemplateTransport;
+        $to->sections   = $this->getSections($request);
+        $to->id         = $this->cmsCategoryRecord->id;
+        $to->template   = $this->cmsCategoryRecord->template;
+        $to->uri        = $this->cmsCategoryRecord->uri;
+        $to->customUri  = $this->cmsCategoryRecord->customUri;
+        $to->dateAdd    = $this->cmsCategoryRecord->dateAdd;
+        $to->dateModify = $this->cmsCategoryRecord->dateModify;
+        $to->attributes = json_decode($this->cmsCategoryRecord->configJson, true);
+        return $to;
     }
 
     /**
      * Dekoracja formularza edycji
-     * @param CategoryForm $categoryForm
      */
     public function decorateEditForm(CategoryForm $categoryForm): void
     {}
 
     /**
      * Metoda przed zapisem formularza
-     * @param CategoryForm $categoryForm
      */
     public function beforeSaveEditForm(CategoryForm $categoryForm): void
     {}
 
     /**
      * Metoda po zapisie formularza
-     * @param CategoryForm $categoryForm
      */
     public function afterSaveEditForm(CategoryForm $categoryForm): void
     {}
 
     /**
-     * Pobiera JSONy widgetów
+     * Pobiera obiekty transportowe widgetów (podzielone na sekcje)
      */
-    protected function getWidgetJsons(Request $request): array
+    protected function getSections(Request $request): array
     {
         $widgets = [];
         //getting section skinsets
         foreach ($this->cmsCategoryRecord->getWidgetModel()->getWidgetRelations() as $widgetRelationRecord) {
-            $widgets[substr($widgetRelationRecord->widget, 0, strrpos($widgetRelationRecord->widget, '/'))][] = (new WidgetModel($widgetRelationRecord, $this->getSkinsetConfig()))->getJson($request);
+            //calculating section name by full section path
+            $fullSectionPath = substr($widgetRelationRecord->widget, 0, strrpos($widgetRelationRecord->widget, '/'));
+            $sectionName = substr($fullSectionPath, strrpos($fullSectionPath, '/') + 1);
+            //adding widgets to section
+            $widgets[$sectionName][] = (new WidgetModel($widgetRelationRecord, $this->getSkinsetConfig()))->getTransportObject($request);
         }
         return $widgets;
     }

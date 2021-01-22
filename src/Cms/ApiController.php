@@ -41,8 +41,8 @@ class ApiController extends \Mmi\Mvc\Controller
     {
         //pobranie kategorii
         $category = (new Orm\CmsCategoryQuery)->getCategoryByUri($request->uri);
-        //render szablonu
-        return (new TemplateModel($category, $this->cmsSkinsetConfig))->getJson($request);
+        $this->getResponse()->setTypeJson();
+        return json_encode((new TemplateModel($category, $this->cmsSkinsetConfig))->getTransportObject($request));
     }
 
 }
