@@ -4,6 +4,7 @@ namespace Cms;
 
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 use Cms\Orm\CmsFileQuery;
+use Cms\Transport\AttachmentTransport;
 use Cms\Transport\WidgetTransport;
 use Mmi\Mvc\Controller;
 use Mmi\Http\Request;
@@ -16,9 +17,8 @@ abstract class WidgetController extends Controller
 
     /**
      * Widget relation record
-     * @var CmsCategoryWidgetCategoryRecord
      */
-    private $widgetRecord;
+    private CmsCategoryWidgetCategoryRecord $widgetRecord;
 
     /**
      * Sets the CMS category record
@@ -74,16 +74,16 @@ abstract class WidgetController extends Controller
     {}
     
     /**
-     * Render obiektu JSON (na potrzeby API)
+     * Pobiera obiekt transportowy (na potrzeby API)
      */
     public function getTransportObject(Request $request): WidgetTransport
     {
-        $to         = new WidgetTransport();
-        $to->id     = $this->widgetRecord->uuid;
-        $to->widget = substr($this->widgetRecord->widget, strrpos($this->widgetRecord->widget, '/') + 1);
-        $to->config = json_decode($this->widgetRecord->configJson, true);
-        $to->order  = $this->widgetRecord->order;
-        $to->attachments  = $this->getAttachments($request);
+        $to                 = new WidgetTransport();
+        $to->id             = $this->widgetRecord->uuid;
+        $to->widget         = substr($this->widgetRecord->widget, strrpos($this->widgetRecord->widget, '/') + 1);
+        $to->config         = json_decode($this->widgetRecord->configJson, true);
+        $to->order          = $this->widgetRecord->order;
+        $to->attachments    = $this->getAttachments($request);
         return $to;
     }
 
@@ -92,17 +92,24 @@ abstract class WidgetController extends Controller
      */
     protected function getAttachments(Request $request): array
     {
-        $files = [];
+        $attachments = [];
         foreach ((new CmsFileQuery)
             ->whereObject()->like(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
             ->andFieldObjectId()->equals($this->widgetRecord->id)
             ->orderAscOrder()
             ->orderAscId()
             ->find() as $file) {
-            $sectionName = substr($file->object, strlen(CmsCategoryWidgetCategoryRecord::FILE_OBJECT));
-            $files[$sectionName][] = $file;
+            $sectionName    = substr($file->object, strlen(CmsCategoryWidgetCategoryRecord::FILE_OBJECT));
+            $to             = new AttachmentTransport;
+            $to->meta       = $file->data->toArray();
+            $to->size       = $file->size;
+            $to->name       = $file->original;
+            $to->mimeType   = $file->mimeType;
+            $to->order      = $file->order ? : 0;
+            //$to->url        = $file->getUrl('scalex', '100');
+            $attachments[$sectionName][] = $to;
         }
-        return $files;
+        return $attachments;
     }
 
 }
