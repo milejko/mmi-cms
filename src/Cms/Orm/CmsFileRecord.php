@@ -138,8 +138,8 @@ class CmsFileRecord extends \Mmi\Orm\Record
         //ścieżka CDN
         $cdnPath = rtrim(App::$di->get(View::class)->cdn ? App::$di->get(View::class)->cdn : App::$di->get(View::class)->url([], true), '/');
         $extension = substr($this->name, strrpos($this->name, '.') + 1);
-        $hash = crc32($scaleType . $scale . $this->name . $this->class);
-        $filePath = $cdnPath . '/data/' . $this->class . '/' . trim($scaleType . '-' . $scale, '-') . '/' . substr($this->name, 0, strrpos($this->name, '.')) . $hash;
+        $hash = md5($scaleType . $scale . $this->name . $this->class);
+        $filePath = $cdnPath . '/data/' . $this->class . '/' . trim($scaleType . '-' . $scale, '-') . '/' . $this->name . '-' . $hash;
         switch ($this->mimeType) {
             case 'image/jpeg':
             case 'image/png':

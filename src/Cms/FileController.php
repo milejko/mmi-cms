@@ -12,6 +12,7 @@ namespace Cms;
 
 use Cms\Model\FileSystemModel;
 use Mmi\Http\Request;
+use Mmi\Mvc\MvcForbiddenException;
 use Mmi\Session\SessionInterface;
 
 /**
@@ -30,9 +31,40 @@ class FileController extends \Mmi\Mvc\Controller
      */
     public function scalerAction(Request $request)
     {
-        $this->getResponse()->setType('image/webp');
-        $im = \imagecreatetruecolor(100, 100);
-        return imagewebp($im);
+        $sourcePath = BASE_PATH . '/var/data/' . $request->name[0] . '/' . $request->name[1] . '/' . $request->name[2] . '/' . $request->name[3] . '/' . $request->name;
+        $targetDirPath = BASE_PATH . '/web/data/' . $request->class . '/' . $request->operation . '-' . trim($request->x . 'x' . $request->y, 'x') . '/';
+        $targetFilePath = $targetDirPath . '/' . $request->name . '-' . $request->hash . '.' . $request->extension;
+        try {
+            mkdir($targetDirPath, 0777, true);
+        } catch (\Exception $e) {}
+        //kopiowanie nieobrazów
+        if ('image' != $request->class || 'gif' == $request->extension) {
+            $this->getResponse()->setType($request->extension)->sendHeaders();
+            copy($sourcePath, $targetFilePath);
+            readfile($sourcePath);
+            exit;
+        }
+        switch ($request->operation) {
+            case 'scalex':
+                $resource = \Mmi\Image\Image::scalex($sourcePath, $request->x);
+                break;
+            case 'scaley':
+                $resource = \Mmi\Image\Image::scaley($sourcePath, $request->x);
+                break;
+            case 'scalecrop':
+                $resource = \Mmi\Image\Image::scaleCrop($sourcePath, $request->x, $request->y ? $request->y : $request->x);
+                break;
+            case 'default':
+                $resource = \Mmi\Image\Image::inputToResource($sourcePath);
+                break;
+            default:
+                throw new MvcForbiddenException('Scaler invalid');
+        }
+        $this->getResponse()->setTypeWebp()->sendHeaders();
+        
+        imagewebp($resource, $targetFilePath, 80);
+        readfile($targetFilePath);
+        exit;
     }
 
     /**
