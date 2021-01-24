@@ -77,8 +77,7 @@ abstract class TemplateController extends Controller
         $to->sections   = $this->getSections($request);
         $to->id         = $this->cmsCategoryRecord->id;
         $to->template   = $this->cmsCategoryRecord->template;
-        $to->uri        = $this->cmsCategoryRecord->uri;
-        $to->customUri  = $this->cmsCategoryRecord->customUri;
+        $to->url        = $this->cmsCategoryRecord->customUri ? $this->cmsCategoryRecord->customUri : $this->cmsCategoryRecord->uri;
         $to->dateAdd    = $this->cmsCategoryRecord->dateAdd;
         $to->dateModify = $this->cmsCategoryRecord->dateModify;
         $to->attributes = json_decode($this->cmsCategoryRecord->configJson, true);

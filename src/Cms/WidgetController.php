@@ -78,19 +78,19 @@ abstract class WidgetController extends Controller
      */
     public function getTransportObject(Request $request): WidgetTransport
     {
-        $to                 = new WidgetTransport();
-        $to->id             = $this->widgetRecord->uuid;
-        $to->widget         = substr($this->widgetRecord->widget, strrpos($this->widgetRecord->widget, '/') + 1);
-        $to->config         = json_decode($this->widgetRecord->configJson, true);
-        $to->order          = $this->widgetRecord->order;
-        $to->attachments    = $this->getAttachments($request);
+        $to             = new WidgetTransport();
+        $to->id         = $this->widgetRecord->uuid;
+        $to->widget     = substr($this->widgetRecord->widget, strrpos($this->widgetRecord->widget, '/') + 1);
+        $to->attributes = json_decode($this->widgetRecord->configJson, true);
+        $to->order      = $this->widgetRecord->order;
+        $to->files      = $this->getCmsFiles($request);
         return $to;
     }
 
     /**
      * Pobiera załączniki
      */
-    protected function getAttachments(Request $request): array
+    protected function getCmsFiles(Request $request): array
     {
         $attachments = [];
         foreach ((new CmsFileQuery)
@@ -101,12 +101,11 @@ abstract class WidgetController extends Controller
             ->find() as $file) {
             $sectionName    = substr($file->object, strlen(CmsCategoryWidgetCategoryRecord::FILE_OBJECT));
             $to             = new AttachmentTransport;
-            $to->meta       = $file->data->toArray();
+            $to->attributes = $file->data->toArray();
             $to->size       = $file->size;
             $to->name       = $file->original;
             $to->mimeType   = $file->mimeType;
             $to->order      = $file->order ? : 0;
-            //$to->url        = $file->getUrl('scalex', '100');
             $attachments[$sectionName][] = $to;
         }
         return $attachments;

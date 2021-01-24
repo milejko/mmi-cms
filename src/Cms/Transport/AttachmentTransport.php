@@ -7,9 +7,9 @@ namespace Cms\Transport;
  */
 class AttachmentTransport implements TransportInterface
 {
-    public string $name;
-    public string $size;
-    public string $mimeType;
-    public int $order;
-    public array $meta;
+    public string   $name;
+    public string   $size;
+    public string   $mimeType;
+    public int      $order;
+    public array    $attributes;
 }
