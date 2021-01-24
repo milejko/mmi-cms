@@ -15,7 +15,6 @@ use Cms\Model\CategoryValidationModel;
 use Cms\Model\TemplateModel;
 use Cms\Orm\CmsCategoryQuery;
 use CmsAdmin\Form\CategoryForm;
-
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 use Mmi\Mvc\Router;
@@ -290,7 +289,7 @@ class CategoryController extends Controller
         }
         try {
             //usuwanie - logika szablonu
-            (new TemplateModel($category, $this->cmsSkinsetConfig))->invokeDeleteAction($this->view);
+            (new TemplateModel($category, $this->cmsSkinsetConfig))->invokeDeleteAction();
             //usuwanie rekordu
             $category->delete();
             return json_encode(['status' => true, 'message' => $this->view->_('controller.category.delete.message')]);

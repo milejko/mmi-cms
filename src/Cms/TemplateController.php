@@ -2,9 +2,13 @@
 
 namespace Cms;
 
+use Cms\App\CmsSkinsetConfig;
 use Cms\Orm\CmsCategoryRecord;
+use Cms\Model\WidgetModel;
+use Cms\Transport\TemplateTransport;
 use CmsAdmin\Form\CategoryForm;
 use Mmi\Mvc\Controller;
+use Mmi\Http\Request;
 
 /**
  * Abstrakcyjna klasa kontrolera widgetów
@@ -13,9 +17,13 @@ abstract class TemplateController extends Controller
 {
     /**
      * CMS category record
-     * @var CmsCategoryRecord
      */
-    private $cmsCategoryRecord;
+    private CmsCategoryRecord $cmsCategoryRecord;
+
+    /**
+     * CMS skinset config
+     */
+    private CmsSkinsetConfig $cmsSkinsetConfig;
 
     /**
      * Sets the CMS category record
@@ -23,6 +31,12 @@ abstract class TemplateController extends Controller
     public function setCategoryRecord(CmsCategoryRecord $cmsCategoryRecord): self
     {
         $this->cmsCategoryRecord = $cmsCategoryRecord;
+        return $this;
+    }
+
+    public function setSkinsetConfig(CmsSkinsetConfig $cmsSkinsetConfig): self
+    {
+        $this->cmsSkinsetConfig = $cmsSkinsetConfig;
         return $this;
     }
 
@@ -35,48 +49,74 @@ abstract class TemplateController extends Controller
     }
 
     /**
-     * Wyświetlenie szablonu po stronie klienta
-     * @return string
+     * Gets the CMS category record
      */
-    public function displayAction()
+    public final function getSkinsetConfig(): CmsSkinsetConfig
+    {
+        return $this->cmsSkinsetConfig;
+    }
+
+    /**
+     * Wyświetlenie szablonu po stronie klienta
+     */
+    public function displayAction(Request $request)
     {}
 
     /**
      * Akcja wywoływana przy usuwaniu szablonu
-     * @return void
      */
-    public function deleteAction()
+    public function deleteAction(): void
     {}
 
     /**
-     * Render obiektu JSON (na potrzeby API)
-     * @return string
+     * Zwraca obiekt transportowy (na potrzeby API)
      */
-    public function renderJsonAction()
-    {}
+    public function getTransportObject(Request $request): TemplateTransport
+    {
+        $to             = new TemplateTransport;
+        $to->sections   = $this->getSections($request);
+        $to->id         = $this->cmsCategoryRecord->id;
+        $to->template   = $this->cmsCategoryRecord->template;
+        $to->url        = $this->cmsCategoryRecord->customUri ? $this->cmsCategoryRecord->customUri : $this->cmsCategoryRecord->uri;
+        $to->dateAdd    = $this->cmsCategoryRecord->dateAdd;
+        $to->dateModify = $this->cmsCategoryRecord->dateModify;
+        $to->attributes = json_decode($this->cmsCategoryRecord->configJson, true);
+        return $to;
+    }
 
     /**
      * Dekoracja formularza edycji
-     * @param CategoryForm $categoryForm
-     * @return void
      */
-    public function decorateEditForm(CategoryForm $categoryForm)
+    public function decorateEditForm(CategoryForm $categoryForm): void
     {}
 
     /**
      * Metoda przed zapisem formularza
-     * @param CategoryForm $categoryForm
-     * @return void
      */
-    public function beforeSaveEditForm(CategoryForm $categoryForm)
+    public function beforeSaveEditForm(CategoryForm $categoryForm): void
     {}
 
     /**
      * Metoda po zapisie formularza
-     * @param CategoryForm $categoryForm
-     * @return void
      */
-    public function afterSaveEditForm(CategoryForm $categoryForm)
+    public function afterSaveEditForm(CategoryForm $categoryForm): void
     {}
+
+    /**
+     * Pobiera obiekty transportowe widgetów (podzielone na sekcje)
+     */
+    protected function getSections(Request $request): array
+    {
+        $widgets = [];
+        //getting section skinsets
+        foreach ($this->cmsCategoryRecord->getWidgetModel()->getWidgetRelations() as $widgetRelationRecord) {
+            //calculating section name by full section path
+            $fullSectionPath = substr($widgetRelationRecord->widget, 0, strrpos($widgetRelationRecord->widget, '/'));
+            $sectionName = substr($fullSectionPath, strrpos($fullSectionPath, '/') + 1);
+            //adding widgets to section
+            $widgets[$sectionName][] = (new WidgetModel($widgetRelationRecord, $this->getSkinsetConfig()))->getTransportObject($request);
+        }
+        return $widgets;
+    }
     
 }
