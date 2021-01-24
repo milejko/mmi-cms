@@ -21,12 +21,11 @@ class Thumb extends \Mmi\Mvc\ViewHelper\HelperAbstract
      * @param \Cms\Orm\CmsFileRecord $file instancja pliku
      * @param string $type skala
      * @param string $value
-     * @param boolean $https null - bez zmian
      * @return string
      */
-    public function thumb(\Cms\Orm\CmsFileRecord $file, $type = null, $value = null, $https = null)
+    public function thumb(\Cms\Orm\CmsFileRecord $file, $type = null, $value = null)
     {
-        return $file->getUrl($type, $value, $https);
+        return $file->getUrl($type, $value);
     }
 
 }
