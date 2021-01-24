@@ -26,6 +26,16 @@ class FileController extends \Mmi\Mvc\Controller
     private $session;
 
     /**
+     * Akcja skalera
+     */
+    public function scalerAction(Request $request)
+    {
+        $this->getResponse()->setType('image/webp');
+        $im = \imagecreatetruecolor(100, 100);
+        return imagewebp($im);
+    }
+
+    /**
      * Lista obrazów json (na potrzeby tinymce)
      * @return string
      */

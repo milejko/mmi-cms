@@ -137,8 +137,16 @@ class CmsFileRecord extends \Mmi\Orm\Record
         }
         //ścieżka CDN
         $cdnPath = rtrim(App::$di->get(View::class)->cdn ? App::$di->get(View::class)->cdn : App::$di->get(View::class)->url([], true), '/');
-        //pobranie ścieżki z systemu plików
-        return $cdnPath . (new \Cms\Model\FileSystemModel($this->name))->getPublicPath($scaleType, $scale);
+        $extension = substr($this->name, strrpos($this->name, '.') + 1);
+        $hash = crc32($scaleType . $scale . $this->name . $this->class);
+        $filePath = $cdnPath . '/data/' . $this->class . '/' . trim($scaleType . '-' . $scale, '-') . '/' . substr($this->name, 0, strrpos($this->name, '.')) . $hash;
+        switch ($this->mimeType) {
+            case 'image/jpeg':
+            case 'image/png':
+                $extension = 'webp';                
+                break;
+        }
+        return $filePath . '.' . $extension;
     }
 
     /**
