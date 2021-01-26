@@ -38,8 +38,9 @@ class CmsRouterConfig extends RouterConfig
         //routa API stron cms
         $this->setRoute('cms-category-api', '/^api\/category$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getCategory']);
 
-        //routa skalera grafik
-        $this->setRoute('cms-file-scaler', '/^data\/([a-z]+)\/([a-z]+)-([0-9]+)x?([0-9]+)?\/([a-f0-9]{32}\.[a-z]+)-([a-f0-9]{32})\.([a-z0-9]+)$/', ['module' => 'cms', 'controller' => 'file', 'action' => 'scaler', 'class' => '$1', 'operation' => '$2', 'x' => '$3', 'y' => '$4', 'name' => '$5', 'hash' => '$6', 'extension' => '$7']);
+        //routy skalera grafik
+        $this->setRoute('cms-file-default', '/^data\/(default)\/([a-f0-9]{32}\.[a-z0-9]+)-([a-f0-9]{32})\.([a-z0-9]+)$/', ['module' => 'cms', 'controller' => 'file', 'action' => 'scaler', 'operation' => '$1', 'name' => '$2', 'hash' => '$3', 'extension' => '$4']);
+        $this->setRoute('cms-file-scaler', '/^data\/([a-z]+)-([0-9]+)x?([0-9]+)?\/([a-f0-9]{32}\.[a-z]+)-([a-f0-9]{32})\.([a-z0-9]+)$/', ['module' => 'cms', 'controller' => 'file', 'action' => 'scaler', 'operation' => '$1', 'x' => '$2', 'y' => '$3', 'name' => '$4', 'hash' => '$5', 'extension' => '$6']);
 
         //routa do stron cms i kategorii
         $this->setRoute('cms-category-dispatch', '/^([a-zA-Z0-9\/\-]+)$/', ['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => '$1']);

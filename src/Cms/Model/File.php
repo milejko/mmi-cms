@@ -85,11 +85,10 @@ class File
      */
     protected static function _checkAndCopyFile(\Mmi\Http\RequestFile $file, $allowedTypes = [])
     {
-        //pomijanie plików typu bmp (bitmapy windows - nieobsługiwane w PHP)
-        if ($file->type == 'image/x-ms-bmp' || $file->type == 'image/tiff' || $file->type == 'image/svg+xml'  || $file->type == 'image/heic') {
+        //pomijanie plików typu tiff, svg, heic
+        if ($file->type == 'image/tiff' || $file->type == 'image/svg+xml'  || $file->type == 'image/heic') {
             $file->type = 'application/octet-stream';
         }
-
         //plik nie jest dozwolony
         if (!empty($allowedTypes) && !in_array($file->type, $allowedTypes)) {
             return null;

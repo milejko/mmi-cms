@@ -8,6 +8,7 @@ namespace Cms\Transport;
 class AttachmentTransport implements TransportInterface
 {
     public string   $name;
+    public string   $url;
     public string   $size;
     public string   $mimeType;
     public int      $order;

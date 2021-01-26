@@ -14,6 +14,7 @@ use Cms\Model\FileSystemModel;
 use Mmi\Http\Request;
 use Mmi\Mvc\MvcForbiddenException;
 use Mmi\Session\SessionInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Kontroler plików
@@ -22,49 +23,55 @@ class FileController extends \Mmi\Mvc\Controller
 {
     /**
      * @Inject
-     * @var SessionInterface
      */
-    private $session;
+    private SessionInterface $session;
+
+    /**
+     * @Inject
+     */
+    private ContainerInterface $container;
 
     /**
      * Akcja skalera
      */
     public function scalerAction(Request $request)
     {
-        $sourcePath = BASE_PATH . '/var/data/' . $request->name[0] . '/' . $request->name[1] . '/' . $request->name[2] . '/' . $request->name[3] . '/' . $request->name;
-        $targetDirPath = BASE_PATH . '/web/data/' . $request->class . '/' . $request->operation . '-' . trim($request->x . 'x' . $request->y, 'x') . '/';
-        $targetFilePath = $targetDirPath . '/' . $request->name . '-' . $request->hash . '.' . $request->extension;
+        $fs = new FileSystemModel($request->name);
+        //public path
+        $publicPath = $fs->getPublicPath($request->operation, trim($request->x . 'x' . $request->y, 'x'));
+        //hash check
+        if (false === strpos($publicPath, $request->hash)) {
+            throw new MvcForbiddenException('Scaler hash invalid');
+        }
+        //target file calculation
+        $targetFilePath = BASE_PATH . '/web' . $publicPath;
         try {
-            mkdir($targetDirPath, 0777, true);
+            mkdir(dirname($targetFilePath), 0777, true);
         } catch (\Exception $e) {}
-        //kopiowanie nieobrazów
-        if ('image' != $request->class || 'gif' == $request->extension) {
-            $this->getResponse()->setType($request->extension)->sendHeaders();
-            copy($sourcePath, $targetFilePath);
-            readfile($sourcePath);
-            exit;
+        //kopiowanie
+        if ('webp' != $request->extension) {
+            copy($fs->getRealPath(), $targetFilePath);
+            return $this->getResponse()->redirectToUrl($this->view->cdn . $publicPath);
         }
         switch ($request->operation) {
             case 'scalex':
-                $resource = \Mmi\Image\Image::scalex($sourcePath, $request->x);
+                $resource = \Mmi\Image\Image::scalex($fs->getRealPath(), $request->x);
                 break;
             case 'scaley':
-                $resource = \Mmi\Image\Image::scaley($sourcePath, $request->x);
+                $resource = \Mmi\Image\Image::scaley($fs->getRealPath(), $request->x);
                 break;
             case 'scalecrop':
-                $resource = \Mmi\Image\Image::scaleCrop($sourcePath, $request->x, $request->y ? $request->y : $request->x);
+                $resource = \Mmi\Image\Image::scaleCrop($fs->getRealPath(), $request->x, $request->y ? $request->y : $request->x);
                 break;
             case 'default':
-                $resource = \Mmi\Image\Image::inputToResource($sourcePath);
+                $resource = \Mmi\Image\Image::inputToResource($fs->getRealPath());
                 break;
             default:
-                throw new MvcForbiddenException('Scaler invalid');
-        }
-        $this->getResponse()->setTypeWebp()->sendHeaders();
-        
-        imagewebp($resource, $targetFilePath, 80);
-        readfile($targetFilePath);
-        exit;
+                throw new MvcForbiddenException('Scaler type invalid');
+        }        
+        //webp generation
+        imagewebp($resource, $targetFilePath, $this->container->get('cms.thumb.quality'));
+        return $this->getResponse()->redirectToUrl($this->view->cdn . $publicPath);
     }
 
     /**
@@ -101,12 +108,11 @@ class FileController extends \Mmi\Mvc\Controller
             return '';
         }
         $files = [];
-        $thumb = new \Cms\Mvc\ViewHelper\Thumb($this->view);
         foreach (\Cms\Orm\CmsFileQuery::byObjectAndClass($request->object, $request->objectId, $request->class)->find() as $file) {
             switch ($file->class) {
                 case 'image':
-                    $full = $thumb->thumb($file, 'default');
-                    $small = $file->getUrl('scaley', '60', false);
+                    $full = $file->getUrl();
+                    $small = $file->getUrl('scalecrop', '100x70');
                     $poster = null;
                     break;
                 case 'audio':

@@ -34,8 +34,6 @@ class FileGarbageCollectorCommand extends CommandAbstract
     {
         //dane (tylko podkatalogi jednoznakowe)
         $this->_scanDir(BASE_PATH . '/var/data', 1);
-        //miniatury (podkatalogi do 12 znaków)
-        $this->_scanDir(BASE_PATH . '/web/data', 12);
         $output->writeln('Garbage collection completed.');
         return 0;
     }

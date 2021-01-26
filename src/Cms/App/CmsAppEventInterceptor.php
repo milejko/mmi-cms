@@ -61,12 +61,7 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
     }
 
     public function beforeSend(): void
-    {
-        //pobranie odpowiedzi
-        $response = $this->container->get(Response::class);
-        //filtracja contentu (ścieki do plików z tinymce)
-        $response->setContent((new \Cms\Model\ContentFilter($response->getContent()))->getFilteredContent());
-    }
+    {}
 
     /**
      * Inicjalizacja tłumaczeń

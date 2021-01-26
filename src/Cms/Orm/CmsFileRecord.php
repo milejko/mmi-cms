@@ -2,6 +2,7 @@
 
 namespace Cms\Orm;
 
+use Cms\Model\FileSystemModel;
 use Mmi\App\App;
 use Mmi\DataObject;
 use Mmi\Mvc\View;
@@ -137,16 +138,8 @@ class CmsFileRecord extends \Mmi\Orm\Record
         }
         //ścieżka CDN
         $cdnPath = rtrim(App::$di->get(View::class)->cdn ? App::$di->get(View::class)->cdn : App::$di->get(View::class)->url([], true), '/');
-        $extension = substr($this->name, strrpos($this->name, '.') + 1);
-        $hash = md5($scaleType . $scale . $this->name . $this->class);
-        $filePath = $cdnPath . '/data/' . $this->class . '/' . trim($scaleType . '-' . $scale, '-') . '/' . $this->name . '-' . $hash;
-        switch ($this->mimeType) {
-            case 'image/jpeg':
-            case 'image/png':
-                $extension = 'webp';                
-                break;
-        }
-        return $filePath . '.' . $extension;
+        //zwrot ścieżki z systemu plików
+        return $cdnPath . (new FileSystemModel($this->name))->getPublicPath($scaleType, $scale);
     }
 
     /**
@@ -163,8 +156,8 @@ class CmsFileRecord extends \Mmi\Orm\Record
         }
         //ścieżka CDN
         $cdnPath = rtrim(App::$di->get(View::class)->cdn ? App::$di->get(View::class)->cdn : App::$di->get(View::class)->url([], true), '/');
-        //pobranie ścieżki z systemu plików
-        return $cdnPath . (new \Cms\Model\FileSystemModel($this->data->posterFileName))->getPublicPath($scaleType, $scale);
+        //zwrot ścieżki z systemu plików
+        return $cdnPath . (new FileSystemModel($this->data->posterFileName))->getPublicPath($scaleType, $scale);
     }
 
     /**
