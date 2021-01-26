@@ -11,8 +11,6 @@
 namespace Cms\Model;
 
 use Mmi\App\App;
-
-use Mmi\Cache\SystemCacheInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -26,11 +24,6 @@ class FileSystemModel
      * @var string
      */
     private $_name;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
 
     /**
      * Konstruktor
@@ -68,39 +61,16 @@ class FileSystemModel
      */
     public function getPublicPath($scaleType = 'default', $scale = null)
     {
-        //plik źródłowy
-        $inputFile = $this->getRealPath();
-        $fileName = '/' . $this->_name[0] . '/' . $this->_name[1] . '/' . $this->_name[2] . '/' . $this->_name[3] . '/' . $scaleType . '/' . $scale . '/' . $this->_name;
-        //inicjalizacja linku publicznego
-        $publicUrl = '/data' . $fileName;
-        //istnieje plik - wiadomość z bufora
-        if (App::$di->get(SystemCacheInterface::class)->load($cacheKey = 'cms-file-' . md5($fileName))) {
-            return $publicUrl;
+        //rozszerzenie
+        $extension = strtolower(substr($this->_name, strrpos($this->_name, '.') + 1));
+        //obliczanie
+        $hash = md5($scaleType . $scale . $this->_name . App::$di->get('cms.auth.salt'));
+        $filePath = '/data/' . trim($scaleType . '-' . $scale, '-x') . '/' . $this->_name . '-' . $hash;
+        //override extension
+        if (in_array($extension, ['bmp', 'jpeg', 'jfif', 'jif', 'jpg', 'png'])) {
+            $extension = 'webp';
         }
-        //brak pliku źródłowego
-        if (!file_exists($inputFile)) {
-            $this->logger->warning('CMS file not found: ' . $fileName);
-            return;
-        }
-        //istnieje plik - zwrot ścieżki publicznej
-        if (file_exists($thumbPath = BASE_PATH . '/web/data' . $fileName)) {
-            App::$di->get(SystemCacheInterface::class)->save(true, $cacheKey);
-            return $publicUrl;
-        }
-        //próba tworzenia katalogów
-        try {
-            mkdir(dirname($thumbPath), 0777, true);
-        } catch (\Mmi\App\KernelException $e) {
-            //nic
-        }
-        //brak skalowania, lub GIF - pomijamy operacje skalowania
-        if ('default' == $scaleType || 'image/gif' == \Mmi\FileSystem::mimeType($inputFile)) {
-            //kopiowanie pliku do web
-            return $this->_copyFileToWeb($inputFile, $thumbPath, $publicUrl);
-        }
-        //uruchomienie skalera
-        $this->_scaler($inputFile, $thumbPath, $scaleType, $scale);
-        return $publicUrl;
+        return $filePath . '.' . $extension;
     }
 
     public function unlink()
@@ -110,110 +80,9 @@ class FileSystemModel
             unlink($this->getRealPath());
         }
         //usuwa miniatury
-        $this->_unlink(BASE_PATH . '/web/data/' . $this->_name[0] . '/' . $this->_name[1] . '/' . $this->_name[2] . '/' . $this->_name[3], $this->_name);
-    }
-
-    /**
-     * Makes the thumb and return its address
-     *
-     * @param string $inputFile
-     * @param string $outputFile
-     * @param string $scaleType
-     * @param string $scale
-     * @return string
-     */
-    protected function _scaler($inputFile, $outputFile, $scaleType, $scale)
-    {
-        switch ($scaleType) {
-            //skalowanie proporcjonalne do maksymalnego rozmiaru
-            case 'scale':
-                $v = explode('x', $scale);
-                if (count($v) == 1 && is_numeric($v[0]) && intval($v[0]) > 0) {
-                    $imgRes = \Mmi\Image\Image::scale($inputFile, $v[0]);
-                } elseif (count($v) == 2 && is_numeric($v[0]) && intval($v[0]) > 0 && is_numeric($v[1]) && intval($v[1]) > 0) {
-                    $imgRes = \Mmi\Image\Image::scale($inputFile, $v[0], $v[1]);
-                }
-                break;
-            //skalowanie do maksymalnego X
-            case 'scalex':
-                $imgRes = \Mmi\Image\Image::scalex($inputFile, intval($scale));
-                break;
-            //skalowanie do maksymalnego Y
-            case 'scaley':
-                $imgRes = \Mmi\Image\Image::scaley($inputFile, intval($scale));
-                break;
-            //skalowanie z obcięciem
-            case 'scalecrop':
-                $v = explode('x', $scale);
-                if (is_numeric($v[0]) && intval($v[0]) > 0 && is_numeric($v[1]) && intval($v[1]) > 0) {
-                    $imgRes = \Mmi\Image\Image::scaleCrop($inputFile, $v[0], $v[1]);
-                }
-                break;
+        foreach (glob(BASE_PATH . '/web/data/*') as $thumbDir) {
+            //@TODO: remove thumbs
         }
-        //brak obrazu
-        if (!isset($imgRes)) {
-            $this->logger->warning('Unable to resize CMS file: ' . $outputFile);
-            return;
-        }
-        //plik istnieje
-        if (!file_exists(dirname($outputFile))) {
-            try {
-                mkdir(dirname($outputFile), 0777, true);
-            } catch (\Mmi\App\KernelException $e) {
-                $this->logger->warning('Unable to create directories: ' . $e->getMessage());
-                return;
-            }
-        }
-        //dla typu PNG zapisujemy PNG - bo przeźroczystość
-        if (\Mmi\FileSystem::mimeType($inputFile) == 'image/png') {
-            //optymalizacja palety - 256 kolorów
-            \Mmi\Image\Image::optimizePalette($imgRes);
-            imagepng($imgRes, $outputFile, 9);
-            return;
-        }
-        //progressive jpeg
-        imageinterlace($imgRes, true);
-        //domyślnie JPEG
-        imagejpeg($imgRes, $outputFile, intval(App::$di->get('cms.thumb.quality')));
-    }
-
-    /**
-     * Usuwa pliki ze ścieżki o danej nazwie
-     * @param string $path ścieżka
-     * @param string $name nazwa pliku
-     */
-    protected function _unlink($path, $name)
-    {
-        //pętla po wszystkich plikach
-        foreach (glob($path . '/*') as $file) {
-            if (is_dir($file)) {
-                //rekurencyjnie schodzi katalog niżej
-                $this->_unlink($file, $name);
-                continue;
-            }
-            //kasowanie pliku jeśli nazwa jest zgodna z wzorcem
-            if (basename($file) == $name) {
-                unlink($file);
-            }
-        }
-    }
-
-    /**
-     * Kopiuje plik do web (bez zmian)
-     * @param $inputFile
-     * @param $thumbPath
-     * @param $publicPath
-     */
-    protected function _copyFileToWeb($inputFile, $thumbPath, $publicPath)
-    {
-        try {
-            //próba skopiowania pliku
-            copy($inputFile, $thumbPath);
-        } catch (\Exception $e) {
-            $this->logger->warning('Unable to copy CMS file to web: ' . $publicPath);
-            return;
-        }
-        return $publicPath;
     }
 
 }

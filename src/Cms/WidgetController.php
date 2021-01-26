@@ -102,11 +102,12 @@ abstract class WidgetController extends Controller
             $sectionName    = substr($file->object, strlen(CmsCategoryWidgetCategoryRecord::FILE_OBJECT));
             $to             = new AttachmentTransport;
             $to->attributes = $file->data->toArray();
+            $to->url        = $file->getUrl();
             $to->size       = $file->size;
             $to->name       = $file->original;
             $to->mimeType   = $file->mimeType;
             $to->order      = $file->order ? : 0;
-            $attachments[$sectionName][] = $to;
+            $attachments[$sectionName ? : 'default'][] = $to;
         }
         return $attachments;
     }
