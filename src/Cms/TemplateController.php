@@ -2,10 +2,11 @@
 
 namespace Cms;
 
+use Cms\Api\TemplateDataTransport;
+use Cms\Api\TransportInterface;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Orm\CmsCategoryRecord;
 use Cms\Model\WidgetModel;
-use Cms\Transport\TemplateTransport;
 use CmsAdmin\Form\CategoryForm;
 use Mmi\Mvc\Controller;
 use Mmi\Http\Request;
@@ -71,9 +72,9 @@ abstract class TemplateController extends Controller
     /**
      * Zwraca obiekt transportowy (na potrzeby API)
      */
-    public function getTransportObject(Request $request): TemplateTransport
+    public function getTransportObject(Request $request): TransportInterface
     {
-        $to             = new TemplateTransport;
+        $to             = new TemplateDataTransport;
         $to->sections   = $this->getSections($request);
         $to->id         = $this->cmsCategoryRecord->id;
         $to->template   = $this->cmsCategoryRecord->template;
@@ -114,7 +115,7 @@ abstract class TemplateController extends Controller
             $fullSectionPath = substr($widgetRelationRecord->widget, 0, strrpos($widgetRelationRecord->widget, '/'));
             $sectionName = substr($fullSectionPath, strrpos($fullSectionPath, '/') + 1);
             //adding widgets to section
-            $widgets[$sectionName][] = (new WidgetModel($widgetRelationRecord, $this->getSkinsetConfig()))->getTransportObject($request);
+            $widgets[$sectionName][] = (new WidgetModel($widgetRelationRecord, $this->getSkinsetConfig()))->getDataObject($request);
         }
         return $widgets;
     }

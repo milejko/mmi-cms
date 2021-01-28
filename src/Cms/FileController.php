@@ -54,6 +54,9 @@ class FileController extends \Mmi\Mvc\Controller
             return $this->getResponse()->redirectToUrl($this->view->cdn . $publicPath);
         }
         switch ($request->operation) {
+            case 'scale':
+                $resource = \Mmi\Image\Image::scalex($fs->getRealPath(), $request->x, $request->y ? : $request->x);
+                break;
             case 'scalex':
                 $resource = \Mmi\Image\Image::scalex($fs->getRealPath(), $request->x);
                 break;
@@ -61,7 +64,7 @@ class FileController extends \Mmi\Mvc\Controller
                 $resource = \Mmi\Image\Image::scaley($fs->getRealPath(), $request->x);
                 break;
             case 'scalecrop':
-                $resource = \Mmi\Image\Image::scaleCrop($fs->getRealPath(), $request->x, $request->y ? $request->y : $request->x);
+                $resource = \Mmi\Image\Image::scaleCrop($fs->getRealPath(), $request->x, $request->y ? : $request->x);
                 break;
             case 'default':
                 $resource = \Mmi\Image\Image::inputToResource($fs->getRealPath());

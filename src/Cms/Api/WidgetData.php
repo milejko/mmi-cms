@@ -1,11 +1,11 @@
 <?php
 
-namespace Cms\Transport;
+namespace Cms\Api;
 
 /**
- * Widget transport object
+ * Widget data object
  */
-class WidgetTransport implements TransportInterface
+class WidgetData implements DataInterface
 {
     public string   $id;
     public string   $widget;

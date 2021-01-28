@@ -263,10 +263,17 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
      */
     public function byHistoryUri($uri)
     {
-        //przeszukiwanie historii po uri
-        return (new self)->whereQuery((new self)->searchByUri($uri))
-            ->join('cms_category', 'cms_category', 'currentCategory')->on('cms_category_original_id', 'id')
-            ->where('active', 'currentCategory')->equals(true);
+        return (new self)
+            ->whereActive()->equals(true)
+            ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
+            ->join('cms_category', 'cms_category', 'currentCategory')->on('id', 'cms_category_original_id')
+            ->where('status', 'currentCategory')->notEquals(CmsCategoryRecord::STATUS_ACTIVE)
+            ->where('active', 'currentCategory')->equals(true)
+            ->whereQuery((new Self)
+                ->where('uri', 'currentCategory')->equals($uri)
+                //@TODO: fix in MMI
+                //->orField('`currentCategory`.`customUri`')->equals($uri)
+            );
     }
 
 }

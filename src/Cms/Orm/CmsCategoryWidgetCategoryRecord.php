@@ -29,8 +29,11 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     //domyślny obiekt do dołączenia plików
     const FILE_OBJECT = 'cmscategorywidgetcategory';
     
-    //prefiks bufora widgetów
+    //prefiks bufora widgetu (html)
     const HTML_CACHE_PREFIX = 'category-widget-html-';
+
+    //prefiks bufora widgetu (json)
+    const JSON_CACHE_PREFIX = 'category-widget-json-';
 
     /**
      * Zapis rekordu
@@ -152,9 +155,11 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     public function clearCache()
     {
         //usuwanie cache
-        App::$di->get(CacheInterface::class)->remove('category-widget-model-' . $this->cmsCategoryId);
+        App::$di->get(CacheInterface::class)->remove(CmsCategoryRecord::WIDGET_MODEL_CACHE_PREFIX . $this->cmsCategoryId);
         App::$di->get(CacheInterface::class)->remove(CmsCategoryRecord::HTML_CACHE_PREFIX . $this->cmsCategoryId);
+        App::$di->get(CacheInterface::class)->remove(CmsCategoryRecord::JSON_CACHE_PREFIX . $this->cmsCategoryId);
         App::$di->get(CacheInterface::class)->remove(self::HTML_CACHE_PREFIX . $this->id);
+        App::$di->get(CacheInterface::class)->remove(self::JSON_CACHE_PREFIX . $this->id);
         return true;
     }
 

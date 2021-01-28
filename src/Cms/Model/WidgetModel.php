@@ -2,6 +2,7 @@
 
 namespace Cms\Model;
 
+use Cms\Api\DataInterface;
 use Cms\Exception\CategoryWidgetException;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 use Cms\WidgetController;
@@ -10,8 +11,8 @@ use Cms\App\CmsWidgetConfig;
 use Cms\App\CmsSectionConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\App\CmsTemplateConfig;
-use Cms\Transport\WidgetTransport;
 use Mmi\App\App;
+use Mmi\Cache\CacheInterface;
 use Mmi\Http\Request;
 
 /**
@@ -38,6 +39,11 @@ class WidgetModel
     private $_widgetConfig;
 
     /**
+     * Cache object
+     */
+    private CacheInterface $_cacheService;
+
+    /**
      * Konstruktor
      * @param CmsCategoryWidgetCategoryRecord $cmsWidgetRecord
      * @param CmsSkinsetConfig $skinsetConfig
@@ -50,6 +56,8 @@ class WidgetModel
         if (!$cmsWidgetRecord->widget) {
             throw new CategoryWidgetException('Widget type not specified');
         }
+        //cache (improper) injection
+        $this->_cacheService = App::$di->get(CacheInterface::class);
         //model zestawu skór
         $this->_skinsetModel = new SkinsetModel($skinsetConfig);
         //wyszukiwanie konfiguracji widgeta
@@ -127,10 +135,13 @@ class WidgetModel
     /**
      * Pobiera obiekt transportowy z kontrolera (na potrzeby API)
      */
-    public function getTransportObject(Request $request): WidgetTransport
+    public function getDataObject(Request $request): DataInterface
     {
+        if (null === $transport = $this->_cacheService->load($cacheKey = CmsCategoryWidgetCategoryRecord::JSON_CACHE_PREFIX . $this->_cmsWidgetRecord->id)) {
+            $this->_cacheService->save($transport = $this->_createController()->getDataObject($request), $cacheKey);
+        }
         //pobranie obiektu z kontrolera
-        return $this->_createController()->getTransportObject($request);
+        return $transport;
     }
 
     /**

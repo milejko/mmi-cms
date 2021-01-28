@@ -2,6 +2,8 @@
 
 namespace Cms\Model;
 
+use Cms\Api\ErrorTransport;
+use Cms\Api\TransportInterface;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Orm\CmsCategoryRecord;
 use Mmi\App\KernelException;
@@ -9,11 +11,9 @@ use Mmi\Mvc\View;
 use Mmi\Http\Request;
 use Cms\App\CmsTemplateConfig;
 use Cms\TemplateController;
-use Cms\Transport\ErrorTransport;
-use Cms\Transport\TransportInterface;
 use CmsAdmin\Form\CategoryForm;
-use Error;
 use Mmi\App\App;
+use Mmi\Cache\CacheInterface;
 
 /**
  * Model szablonu
@@ -39,6 +39,11 @@ class TemplateModel
     private $_skinsetConfig;
 
     /**
+     * Cache object
+     */
+    private CacheInterface $_cacheService;
+
+    /**
      * Konstruktor
      * @param CmsCategoryRecord $cmsCategoryRecord
      * @param CmsSkinsetConfig $skinsetConfig
@@ -47,6 +52,8 @@ class TemplateModel
     {
         $this->_categoryRecord = $categoryRecord;
         $this->_skinsetConfig = $skinsetConfig;
+        //cache (improper) injection
+        $this->_cacheService = App::$di->get(CacheInterface::class);
         //brak zdefiniowanego template w szablonie
         if (null === $this->_categoryRecord->template) {
             return;
@@ -91,7 +98,12 @@ class TemplateModel
         if (null === $controller = $this->_createController()) {
             return new ErrorTransport('Controller not found');
         }
-        return $controller->getTransportObject($request);
+        //pobranie z cache
+        if (null === $transport = $this->_cacheService->load($cacheKey = CmsCategoryRecord::JSON_CACHE_PREFIX . $this->_categoryRecord->id)) {
+            //pobranie obiektu z kontrolera i zapis do cache
+            $this->_cacheService->save($transport = $controller->getTransportObject($request), $cacheKey);
+        }
+        return $transport;
     }
 
     /**

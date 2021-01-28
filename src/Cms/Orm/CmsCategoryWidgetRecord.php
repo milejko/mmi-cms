@@ -82,9 +82,11 @@ class CmsCategoryWidgetRecord extends \Mmi\Orm\Record
             ->equals($this->id)
             ->findPairs('cms_category_widget_category.id', 'cms_category.id') as $id => $categoryId) {
             //usuwanie bufora
-            App::$di->get(CacheInterface::class)->remove('category-widget-html-' . $id);
-            App::$di->get(CacheInterface::class)->remove('category-widget-model-' . $categoryId);
-            App::$di->get(CacheInterface::class)->remove('category-html-' . $categoryId);
+            App::$di->get(CacheInterface::class)->remove(CmsCategoryWidgetCategoryRecord::HTML_CACHE_PREFIX . $id);
+            App::$di->get(CacheInterface::class)->remove(CmsCategoryWidgetCategoryRecord::JSON_CACHE_PREFIX . $id);
+            App::$di->get(CacheInterface::class)->remove(CmsCategoryRecord::WIDGET_MODEL_CACHE_PREFIX . $categoryId);
+            App::$di->get(CacheInterface::class)->remove(CmsCategoryRecord::HTML_CACHE_PREFIX . $categoryId);
+            App::$di->get(CacheInterface::class)->remove(CmsCategoryRecord::JSON_CACHE_PREFIX . $categoryId);
         }
         return true;
     }

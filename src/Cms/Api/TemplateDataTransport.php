@@ -1,11 +1,11 @@
 <?php
 
-namespace Cms\Transport;
+namespace Cms\Api;
 
 /**
- * Template transport object
+ * Template data object
  */
-class TemplateTransport implements TransportInterface
+class TemplateDataTransport extends HttpJsonTransport
 {
     public int      $id;
     public string   $template;
@@ -14,5 +14,5 @@ class TemplateTransport implements TransportInterface
     public string   $dateAdd;
     public string   $dateModify;
     public array    $attributes;
-    public array    $sections;    
+    public array    $sections;
 }
