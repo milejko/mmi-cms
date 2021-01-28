@@ -2,6 +2,7 @@
 
 namespace Cms;
 
+use Cms\Api\LinkData;
 use Cms\Api\TemplateDataTransport;
 use Cms\Api\TransportInterface;
 use Cms\App\CmsSkinsetConfig;
@@ -74,14 +75,15 @@ abstract class TemplateController extends Controller
      */
     public function getTransportObject(Request $request): TransportInterface
     {
-        $to             = new TemplateDataTransport;
-        $to->sections   = $this->getSections($request);
-        $to->id         = $this->cmsCategoryRecord->id;
-        $to->template   = $this->cmsCategoryRecord->template;
-        $to->url        = $this->cmsCategoryRecord->customUri ? $this->cmsCategoryRecord->customUri : $this->cmsCategoryRecord->uri;
-        $to->dateAdd    = $this->cmsCategoryRecord->dateAdd;
-        $to->dateModify = $this->cmsCategoryRecord->dateModify;
-        $to->attributes = json_decode($this->cmsCategoryRecord->configJson, true);
+        $to              = new TemplateDataTransport;
+        $to->id          = $this->cmsCategoryRecord->id;
+        $to->template    = $this->cmsCategoryRecord->template;
+        $to->url         = $this->cmsCategoryRecord->customUri ? $this->cmsCategoryRecord->customUri : $this->cmsCategoryRecord->uri;
+        $to->dateAdd     = $this->cmsCategoryRecord->dateAdd;
+        $to->dateModify  = $this->cmsCategoryRecord->dateModify;
+        $to->attributes  = json_decode($this->cmsCategoryRecord->configJson, true);
+        $to->_links      = $this->getBreadcrumbLinks($request);
+        $to->sections    = $this->getSections($request);
         return $to;
     }
 
@@ -118,6 +120,13 @@ abstract class TemplateController extends Controller
             $widgets[$sectionName][] = (new WidgetModel($widgetRelationRecord, $this->getSkinsetConfig()))->getDataObject($request);
         }
         return $widgets;
+    }
+
+    protected function getBreadcrumbLinks(Request $request): array
+    {
+        $linkData = new LinkData;
+        $linkData->href = $this->cmsCategoryRecord->path;
+        return [$linkData];
     }
     
 }

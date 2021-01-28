@@ -66,9 +66,12 @@ class FileSystemModel
         //obliczanie
         $hash = md5($scaleType . $scale . $this->_name . App::$di->get('cms.auth.salt'));
         $filePath = '/data/' . trim($scaleType . '-' . $scale, '-x') . '/' . $this->_name . '-' . $hash;
-        //override extension
-        if (in_array($extension, ['bmp', 'jpeg', 'jfif', 'jif', 'jpg', 'png'])) {
+        //override extension only if thumb and supported extension
+        if ('download' != $scaleType && in_array($extension, ['bmp', 'jpeg', 'jfif', 'jif', 'jpg', 'png'])) {
             $extension = 'webp';
+        }
+        if ('webp' != $extension && 'download' != $scaleType) {
+            return;
         }
         return $filePath . '.' . $extension;
     }

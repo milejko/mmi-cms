@@ -4,9 +4,11 @@ namespace Cms;
 
 use Cms\Api\AttachmentData;
 use Cms\Api\DataInterface;
+use Cms\Api\LinkData;
 use Cms\Api\WidgetData;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 use Cms\Orm\CmsFileQuery;
+use Cms\Orm\CmsFileRecord;
 use Mmi\Mvc\Controller;
 use Mmi\Http\Request;
 
@@ -110,19 +112,40 @@ abstract class WidgetController extends Controller
             ->orderAscOrder()
             ->orderAscId()
             ->find() as $file) {
-            $sectionName = substr($file->object, strlen(CmsCategoryWidgetCategoryRecord::FILE_OBJECT));
-            $to                 = new AttachmentData;
-            $to->attributes     = $file->data->toArray();
-            $to->originalUrl    = $file->getUrl();
-            $to->thumbUrl       = $file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE);
-            $to->thumb2xUrl     = $file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE2X);
-            $to->thumb4xUrl     = $file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE4X);
-            $to->size           = $file->size;
-            $to->name           = $file->original;
+            $to                   = new AttachmentData;
+            $to->attributes       = $file->data->toArray();
+            $to->_links           = $this->getFileLinks($file);
+            $to->name             = $file->original;
+            $to->size             = $file->size;
             $to->mimeType       = $file->mimeType;
             $to->order          = $file->order ?: 0;
-            $attachments[$sectionName ? : 'default'][] = $to;
+            $attachments[substr($file->object, strlen(CmsCategoryWidgetCategoryRecord::FILE_OBJECT)) ? : 'default'][] = $to;
         }
         return $attachments;
+    }
+
+    protected function getFileLinks(CmsFileRecord $file): array
+    {
+        $downloadLinkData       = new LinkData;
+        $downloadLinkData->href = $file->getUrl('download');
+        $downloadLinkData->rel  = "download";
+
+        $thumbLinkData          = new LinkData; 
+        $thumbLinkData->href    = $file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE);
+        $thumbLinkData->rel     = "thumb";
+
+        $thumbLinkData          = new LinkData; 
+        $thumbLinkData->href    = $file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE);
+        $thumbLinkData->rel     = "thumb";
+
+        $thumb2xLinkData        = new LinkData; 
+        $thumb2xLinkData->href  = $file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE2X);
+        $thumb2xLinkData->rel   = "thumb2x";
+
+        $thumb4xLinkData        = new LinkData; 
+        $thumb4xLinkData->href  = $file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE4X);
+        $thumb4xLinkData->rel   = "thumb4x";
+
+        return [$downloadLinkData, $thumbLinkData, $thumb2xLinkData, $thumb4xLinkData];
     }
 }

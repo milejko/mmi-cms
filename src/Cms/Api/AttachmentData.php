@@ -3,17 +3,14 @@
 namespace Cms\Api;
 
 /**
- * Widget transport object
+ * Attachment data object
  */
 class AttachmentData implements DataInterface
 {
     public string   $name;
-    public string   $originalUrl;
-    public string   $thumbUrl;
-    public string   $thumb2xUrl;
-    public string   $thumb4xUrl;
     public string   $size;
     public string   $mimeType;
-    public int      $order;
-    public array    $attributes;
+    public int      $order      = 0;
+    public array    $attributes = [];
+    public array    $_links     = [];
 }

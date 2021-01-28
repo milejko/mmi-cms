@@ -10,6 +10,6 @@ class WidgetData implements DataInterface
     public string   $id;
     public string   $widget;
     public int      $order;
-    public array    $attributes;
-    public array    $files;
+    public array    $files      = [];
+    public array    $attributes = [];
 }

@@ -41,11 +41,19 @@ class ApiController extends \Mmi\Mvc\Controller
      */
     public function getCategoryAction(Request $request)
     {
-        $transportObject = $this->getTransportObject($request);
+        try {
+            $transportObject = $this->getTransportObject($request);
+            return $this->getResponse()->setTypeJson()
+                ->setCode($transportObject->getCode())
+                ->setContent($transportObject->toString());
+        } catch (\Exception $e) {
+            $errorTransportObject = new ErrorTransport();
+            $errorTransportObject->message = $e->getMessage();
+        }
         return $this->getResponse()->setTypeJson()
-            ->setCode($transportObject->getCode())
-            ->setContent($transportObject->toString());
-    }
+            ->setCode($errorTransportObject->getCode())
+            ->setContent($errorTransportObject->toString());
+}
 
         /**
      * Pobiera opublikowaną kategorię po uri
@@ -137,6 +145,5 @@ class ApiController extends \Mmi\Mvc\Controller
         //przekierowanie 301
         return (new RedirectTransport)->setRedirectTo($category->uri);
     }
-
 
 }

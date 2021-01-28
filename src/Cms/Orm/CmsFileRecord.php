@@ -126,7 +126,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
 
     /**
      * Pobiera adres pliku
-     * @param string $scaleType scale, scalex, scaley, scalecrop
+     * @param string $scaleType default, original, scale, scalex, scaley, scalecrop
      * @param int|string $scale 320, 320x240
      * @return string adres publiczny pliku
      */

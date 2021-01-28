@@ -3,7 +3,7 @@
 namespace Cms\Api;
 
 /**
- * Error transport object
+ * Error transport
  */
 class ErrorTransport extends HttpJsonTransport
 {
