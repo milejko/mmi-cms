@@ -82,7 +82,7 @@ abstract class TemplateController extends Controller
         $to->dateAdd     = $this->cmsCategoryRecord->dateAdd;
         $to->dateModify  = $this->cmsCategoryRecord->dateModify;
         $to->attributes  = json_decode($this->cmsCategoryRecord->configJson, true);
-        $to->_links      = $this->getBreadcrumbLinks($request);
+        $to->breadcrumbs = $this->getBreadcrumbs();
         $to->sections    = $this->getSections($request);
         return $to;
     }
@@ -122,11 +122,29 @@ abstract class TemplateController extends Controller
         return $widgets;
     }
 
-    protected function getBreadcrumbLinks(Request $request): array
+    protected function getBreadcrumbs(): array
     {
-        $linkData = new LinkData;
-        $linkData->href = $this->cmsCategoryRecord->path;
-        return [$linkData];
+        $breadcrumbs = [];
+        $category = $this->cmsCategoryRecord;
+        $order = 0;
+        while (null !== ($category = $category->getParentRecord())) {
+            $linkData = new LinkData;
+            $linkData->href = $this->view->url([
+                'module'        => 'cms',
+                'controller'    => 'api',
+                'action'        => 'getCategory',
+                'uri'           => $category->customUri ? : $category->uri
+                ]);
+            $linkData->rel   = 'back';
+            $breadcrumb = [
+                'title'     => $category->name,
+                'order'     => $order,
+                '_links'    => [$linkData],
+            ];
+            $order++;
+            $breadcrumbs[] = $breadcrumb;
+        }
+        return $breadcrumbs;
     }
     
 }

@@ -13,7 +13,7 @@ class TemplateDataTransport extends HttpJsonTransport
     public string   $url;
     public string   $dateAdd;
     public string   $dateModify;
-    public array    $attributes = [];
-    public array    $sections   = [];
-    public array    $_links     = [];
+    public array    $attributes     = [];
+    public array    $sections       = [];
+    public array    $breadcrumbs    = [];
 }

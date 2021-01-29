@@ -53,9 +53,9 @@ class ApiController extends \Mmi\Mvc\Controller
         return $this->getResponse()->setTypeJson()
             ->setCode($errorTransportObject->getCode())
             ->setContent($errorTransportObject->toString());
-}
+    }
 
-        /**
+    /**
      * Pobiera opublikowaną kategorię po uri
      * @param string $uri
      * @return CmsCategoryRecord
@@ -145,5 +145,4 @@ class ApiController extends \Mmi\Mvc\Controller
         //przekierowanie 301
         return (new RedirectTransport)->setRedirectTo($category->uri);
     }
-
 }
