@@ -134,21 +134,13 @@ abstract class WidgetController extends Controller
         $thumbLinkData->href    = $file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE);
         $thumbLinkData->rel     = "thumb";
 
-        $thumbLinkData          = new LinkData; 
-        $thumbLinkData->href    = $file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE);
-        $thumbLinkData->rel     = "thumb";
-
         $thumb2xLinkData        = new LinkData; 
         $thumb2xLinkData->href  = $file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE2X);
         $thumb2xLinkData->rel   = "thumb2x";
 
-        $thumb4xLinkData        = new LinkData; 
-        $thumb4xLinkData->href  = $file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE4X);
-        $thumb4xLinkData->rel   = "thumb4x";
-
         //only if thumb link exists add thumbs
         return $thumbLinkData->href ? 
-            [$downloadLinkData, $thumbLinkData, $thumb2xLinkData, $thumb4xLinkData] : 
+            [$downloadLinkData, $thumbLinkData, $thumb2xLinkData] : 
             [$downloadLinkData];
     }
 }
