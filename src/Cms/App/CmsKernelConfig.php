@@ -39,6 +39,12 @@ abstract class CmsKernelConfig extends \Mmi\App\KernelConfig
     public $thumbQuality = 90;
 
     /**
+     * Nawigacja zawiera wszystkie kategorie (z cms_category)
+     * @var bool
+     */
+    public $navigationCategoriesEnabled = false;
+
+    /**
      * Zestaw skór CMS CMSowe
      * @var CmsSkinsetConfig
      */

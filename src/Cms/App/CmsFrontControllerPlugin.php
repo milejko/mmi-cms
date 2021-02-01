@@ -70,7 +70,8 @@ class CmsFrontControllerPlugin extends FrontControllerPluginAbstract
         AdminNavigation::setAcl($acl);
         //ustawienie nawigatora
         if (null === ($navigation = Registry::$cache->load('mmi-cms-navigation-' . $request->__get('lang')))) {
-            (new \Cms\Model\Navigation)->decorateConfiguration(Registry::$config->navigation);
+            //dekoracja nawigatora danymi z bazy (jeśli włączone w configu)
+            Registry::$config->navigationCategoriesEnabled ? (new \Cms\Model\Navigation)->decorateConfiguration(Registry::$config->navigation) : null;
             $navigation = new \Mmi\Navigation\Navigation(Registry::$config->navigation);
             //zapis do cache
             Registry::$cache->save($navigation, 'mmi-cms-navigation-' . $request->__get('lang'), 0);
