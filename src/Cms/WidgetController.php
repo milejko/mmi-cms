@@ -119,28 +119,28 @@ abstract class WidgetController extends Controller
             $to->size             = $file->size;
             $to->mimeType       = $file->mimeType;
             $to->order          = $file->order ?: 0;
-            $attachments[substr($file->object, strlen(CmsCategoryWidgetCategoryRecord::FILE_OBJECT)) ? : 'default'][] = $to;
+            $attachments[substr($file->object, strlen(CmsCategoryWidgetCategoryRecord::FILE_OBJECT)) ?: 'default'][] = $to;
         }
         return $attachments;
     }
 
     protected function getFileLinks(CmsFileRecord $file): array
     {
-        $downloadLinkData       = new LinkData;
-        $downloadLinkData->href = $file->getUrl('download');
-        $downloadLinkData->rel  = "download";
+        $downloadLinkData   = (new LinkData)
+            ->setHref($file->getUrl('download'))
+            ->setRel('download');
 
-        $thumbLinkData          = new LinkData; 
-        $thumbLinkData->href    = $file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE);
-        $thumbLinkData->rel     = "thumb";
+        $thumbLinkData      = (new LinkData)
+            ->setHref($file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE))
+            ->setRel('thumb');
 
-        $thumb2xLinkData        = new LinkData; 
-        $thumb2xLinkData->href  = $file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE2X);
-        $thumb2xLinkData->rel   = "thumb2x";
+        $thumb2xLinkData    = (new LinkData)
+            ->setHref($file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE2X))
+            ->setRel('thumb2x');
 
         //only if thumb link exists add thumbs
-        return $thumbLinkData->href ? 
-            [$downloadLinkData, $thumbLinkData, $thumb2xLinkData] : 
+        return $thumbLinkData->href ?
+            [$downloadLinkData, $thumbLinkData, $thumb2xLinkData] :
             [$downloadLinkData];
     }
 }

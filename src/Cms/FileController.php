@@ -49,10 +49,11 @@ class FileController extends \Mmi\Mvc\Controller
             mkdir(dirname($targetFilePath), 0777, true);
         } catch (\Exception $e) {}
         //kopiowanie
-        if ('webp' != $request->extension) {
+        if ('download' == $request->operation) {
             copy($fs->getRealPath(), $targetFilePath);
             return $this->getResponse()->redirectToUrl($this->view->cdn . $publicPath);
         }
+        //wybór skalowania do wykonania
         switch ($request->operation) {
             case 'scale':
                 $resource = \Mmi\Image\Image::scalex($fs->getRealPath(), $request->x, $request->y ? : $request->x);

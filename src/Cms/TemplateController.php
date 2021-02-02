@@ -8,6 +8,7 @@ use Cms\Api\TransportInterface;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Orm\CmsCategoryRecord;
 use Cms\Model\WidgetModel;
+use Cms\Orm\CmsCategoryQuery;
 use CmsAdmin\Form\CategoryForm;
 use Mmi\Mvc\Controller;
 use Mmi\Http\Request;
@@ -17,6 +18,9 @@ use Mmi\Http\Request;
  */
 abstract class TemplateController extends Controller
 {
+
+    const API_PREFIX = '/api/category/';
+
     /**
      * CMS category record
      */
@@ -62,13 +66,15 @@ abstract class TemplateController extends Controller
      * Wyświetlenie szablonu po stronie klienta
      */
     public function displayAction(Request $request)
-    {}
+    {
+    }
 
     /**
      * Akcja wywoływana przy usuwaniu szablonu
      */
     public function deleteAction(): void
-    {}
+    {
+    }
 
     /**
      * Zwraca obiekt transportowy (na potrzeby API)
@@ -78,12 +84,12 @@ abstract class TemplateController extends Controller
         $to              = new TemplateDataTransport;
         $to->id          = $this->cmsCategoryRecord->id;
         $to->template    = $this->cmsCategoryRecord->template;
-        $to->url         = $this->cmsCategoryRecord->customUri ? $this->cmsCategoryRecord->customUri : $this->cmsCategoryRecord->uri;
         $to->dateAdd     = $this->cmsCategoryRecord->dateAdd;
         $to->dateModify  = $this->cmsCategoryRecord->dateModify;
         $to->attributes  = json_decode($this->cmsCategoryRecord->configJson, true);
         $to->breadcrumbs = $this->getBreadcrumbs();
         $to->sections    = $this->getSections($request);
+        $to->menus       = $this->getMenus($request);
         return $to;
     }
 
@@ -91,19 +97,22 @@ abstract class TemplateController extends Controller
      * Dekoracja formularza edycji
      */
     public function decorateEditForm(CategoryForm $categoryForm): void
-    {}
+    {
+    }
 
     /**
      * Metoda przed zapisem formularza
      */
     public function beforeSaveEditForm(CategoryForm $categoryForm): void
-    {}
+    {
+    }
 
     /**
      * Metoda po zapisie formularza
      */
     public function afterSaveEditForm(CategoryForm $categoryForm): void
-    {}
+    {
+    }
 
     /**
      * Pobiera obiekty transportowe widgetów (podzielone na sekcje)
@@ -128,23 +137,61 @@ abstract class TemplateController extends Controller
         $category = $this->cmsCategoryRecord;
         $order = 0;
         while (null !== ($category = $category->getParentRecord())) {
-            $linkData = new LinkData;
-            $linkData->href = $this->view->url([
-                'module'        => 'cms',
-                'controller'    => 'api',
-                'action'        => 'getCategory',
-                'uri'           => $category->customUri ? : $category->uri
-                ]);
-            $linkData->rel   = 'back';
             $breadcrumb = [
                 'title'     => $category->name,
                 'order'     => $order,
-                '_links'    => [$linkData],
+                '_links'    => [
+                    (new LinkData)
+                        ->setHref(self::API_PREFIX . ($category->customUri ?: $category->uri))
+                        ->setRel(LinkData::REL_BACK)
+                ],
             ];
             $order++;
             $breadcrumbs[] = $breadcrumb;
         }
+        $breadcrumbs[] = (new LinkData)
+            ->setHref(self::API_PREFIX . ($this->getCategoryRecord()->customUri ?: $this->getCategoryRecord()->uri))
+            ->setRel(LinkData::REL_SELF);
         return $breadcrumbs;
     }
-    
+
+    protected function getMenus(Request $request): array
+    {
+        $menu = [];
+        foreach ((new CmsCategoryQuery())
+            ->whereStatus()->equals(10)
+            ->whereActive()->equals(1)
+            ->orderAscParentId()
+            ->orderAscOrder()
+            ->findFields(['id', 'template', 'name', 'uri', 'customUri', 'path', 'order']) as $item) {
+            $links = [];
+            if ($item['template']) {
+                $links[] = (new LinkData)
+                    ->setHref(self::API_PREFIX . ($item['customUri'] ?: $item['uri']))
+                    ->setRel(LinkData::REL_NEXT);
+            }
+            $fullPath = trim($item['path'] . '/' . $item['id'], '/');
+            $activatedFullPath = trim($this->cmsCategoryRecord->path . '/' . $this->cmsCategoryRecord->id, '/');
+            $this->injectToMenu($menu, $fullPath, [
+                'id'        => $item['id'],
+                'name'      => $item['name'],
+                'order'     => $item['order'],
+                'fp' => $fullPath . ' vs ' . $this->cmsCategoryRecord->path,
+                'active'    => 0 === strpos($activatedFullPath . '/', $fullPath . '/'),
+                '_links'    => $links,
+                'children'  => [],
+            ]);
+        }
+        return $menu['children'];
+    }
+
+    protected function injectToMenu(&$menu, $path, $value)
+    {
+        $ids = explode("/", $path);
+        $current = &$menu;
+        foreach ($ids as $id) {
+            $current = &$current['children']['item-' . $id];
+        }
+        $current = is_array($current) ? array_merge($value, $current) : $value;
+    }
 }

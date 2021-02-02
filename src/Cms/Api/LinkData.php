@@ -13,8 +13,29 @@ class LinkData implements DataInterface
     const METHOD_DELETE = 'DELETE';
     const METHOD_PATCH  = 'PATCH';
 
+    const REL_NEXT = 'next';
+    const REL_BACK = 'back';
+    const REL_SELF = 'self';
+
     public string   $href;
     public string   $rel;
-    public string   $method = self::METHOD_GET;
-    public string   $title;
+    public string   $method;
+
+    public function setHref(string $href): self
+    {
+        $this->href = $href;
+        return $this;
+    }
+
+    public function setMethod(string $method): self
+    {
+        $this->method = $method;
+        return $this;
+    }
+
+    public function setRel(string $rel): self
+    {
+        $this->rel = $rel;
+        return $this;
+    }
 }
