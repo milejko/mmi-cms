@@ -99,6 +99,7 @@ class TemplateModel
             return new ErrorTransport('Controller not found');
         }
         //pobranie z cache
+        //@TODO: check cms_category cache settings
         if (null === $transport = $this->_cacheService->load($cacheKey = CmsCategoryRecord::JSON_CACHE_PREFIX . $this->_categoryRecord->id)) {
             //pobranie obiektu z kontrolera i zapis do cache
             $this->_cacheService->save($transport = $controller->getTransportObject($request), $cacheKey);
