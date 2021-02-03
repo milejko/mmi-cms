@@ -9,12 +9,17 @@ class RedirectTransport extends HttpJsonTransport
 {
     const DEFAULT_CODE    = 301;
 
-    public string   $redirectTo;
-    public int      $code = self::DEFAULT_CODE;
+    public int      $code   = self::DEFAULT_CODE;
+    public array    $_links = [];
 
-    public function setRedirectTo(string $redirectTo): self
+    public function __construct(string $link)
     {
-        $this->redirectTo = $redirectTo;
+        $this->setHref($link);
+    }
+
+    public function setHref(string $href): self
+    {
+        $this->_links = [(new LinkData())->setHref($href)->setRel('redirect')];
         return $this;
     }
-}
+} 

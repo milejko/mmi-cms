@@ -19,8 +19,6 @@ use Mmi\Http\Request;
 abstract class TemplateController extends Controller
 {
 
-    const API_PREFIX = '/api/category/';
-
     /**
      * CMS category record
      */
@@ -140,17 +138,17 @@ abstract class TemplateController extends Controller
             $breadcrumb = [
                 'title'     => $category->name,
                 'order'     => $order,
-                '_links'    => [
+                '_links'    => $category->template ? [
                     (new LinkData)
-                        ->setHref(self::API_PREFIX . ($category->customUri ?: $category->uri))
+                        ->setHref(ApiController::API_PREFIX . ($category->customUri ?: $category->uri))
                         ->setRel(LinkData::REL_BACK)
-                ],
+                ] : [],
             ];
             $order++;
             $breadcrumbs[] = $breadcrumb;
         }
         $breadcrumbs[] = (new LinkData)
-            ->setHref(self::API_PREFIX . ($this->getCategoryRecord()->customUri ?: $this->getCategoryRecord()->uri))
+            ->setHref(ApiController::API_PREFIX . ($this->getCategoryRecord()->customUri ?: $this->getCategoryRecord()->uri))
             ->setRel(LinkData::REL_SELF);
         return $breadcrumbs;
     }
@@ -164,21 +162,18 @@ abstract class TemplateController extends Controller
             ->orderAscParentId()
             ->orderAscOrder()
             ->findFields(['id', 'template', 'name', 'uri', 'customUri', 'path', 'order']) as $item) {
-            $links = [];
-            if ($item['template']) {
-                $links[] = (new LinkData)
-                    ->setHref(self::API_PREFIX . ($item['customUri'] ?: $item['uri']))
-                    ->setRel(LinkData::REL_NEXT);
-            }
             $fullPath = trim($item['path'] . '/' . $item['id'], '/');
             $activatedFullPath = trim($this->cmsCategoryRecord->path . '/' . $this->cmsCategoryRecord->id, '/');
             $this->injectToMenu($menu, $fullPath, [
                 'id'        => $item['id'],
                 'name'      => $item['name'],
                 'order'     => $item['order'],
-                'fp' => $fullPath . ' vs ' . $this->cmsCategoryRecord->path,
                 'active'    => 0 === strpos($activatedFullPath . '/', $fullPath . '/'),
-                '_links'    => $links,
+                '_links'    => $item['template'] ? [
+                    (new LinkData)
+                        ->setHref(ApiController::API_PREFIX . ($item['customUri'] ?: $item['uri']))
+                        ->setRel(LinkData::REL_NEXT)
+                ] : [],
                 'children'  => [],
             ]);
         }
