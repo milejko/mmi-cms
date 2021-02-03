@@ -96,7 +96,6 @@ class AuthProvider implements AuthProviderInterface
 
     /**
      * Zwraca hash hasła zakodowany z "solą"
-     * //@TODO: refactor this
      * @param string $password
      * @return string
      */

@@ -271,8 +271,7 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
             ->where('active', 'currentCategory')->equals(true)
             ->whereQuery((new Self)
                 ->where('uri', 'currentCategory')->equals($uri)
-                //@TODO: fix in MMI
-                //->orField('`currentCategory`.`customUri`')->equals($uri)
+                ->orField('customUri', 'currentCategory')->equals($uri)
             );
     }
 
