@@ -2,6 +2,7 @@
 
 namespace Cms;
 
+use Cms\Api\BreadcrumbData;
 use Cms\Api\LinkData;
 use Cms\Api\TemplateDataTransport;
 use Cms\Api\TransportInterface;
@@ -85,9 +86,9 @@ abstract class TemplateController extends Controller
         $to->dateAdd     = $this->cmsCategoryRecord->dateAdd;
         $to->dateModify  = $this->cmsCategoryRecord->dateModify;
         $to->attributes  = json_decode($this->cmsCategoryRecord->configJson, true);
-        $to->breadcrumbs = $this->getBreadcrumbs();
         $to->sections    = $this->getSections($request);
-        $to->menus       = $this->getMenus($request);
+        $to->breadcrumbs = $this->getBreadcrumbs();
+        $to->menus       = $this->getMenus();
         return $to;
     }
 
@@ -120,40 +121,35 @@ abstract class TemplateController extends Controller
         $widgets = [];
         //getting section skinsets
         foreach ($this->cmsCategoryRecord->getWidgetModel()->getWidgetRelations() as $widgetRelationRecord) {
-            //calculating section name by full section path
-            $fullSectionPath = substr($widgetRelationRecord->widget, 0, strrpos($widgetRelationRecord->widget, '/'));
-            $sectionName = substr($fullSectionPath, strrpos($fullSectionPath, '/') + 1);
             //adding widgets to section
-            $widgets[$sectionName][] = (new WidgetModel($widgetRelationRecord, $this->getSkinsetConfig()))->getDataObject($request);
+            $widgets[substr($fullSectionPath = substr($widgetRelationRecord->widget, 0, strrpos($widgetRelationRecord->widget, '/')), strrpos($fullSectionPath, '/') + 1)][] = (new WidgetModel($widgetRelationRecord, $this->getSkinsetConfig()))->getDataObject($request);
         }
         return $widgets;
     }
 
+    /**
+     * Pobiera breadcrumby
+     */
     protected function getBreadcrumbs(): array
     {
         $breadcrumbs = [];
         $category = $this->cmsCategoryRecord;
-        $order = 0;
-        while (null !== ($category = $category->getParentRecord())) {
-            $breadcrumb = [
-                'title'     => $category->name,
-                'order'     => $order,
-                '_links'    => $category->template ? [
+        $order = count(explode('/', $this->cmsCategoryRecord->path));
+        while (null !== $category) {
+            $breadcrumbs[] = (new BreadcrumbData)
+                ->setTitle($category->name)
+                ->setOrder($order--)
+                ->setLinks($category->template ? [
                     (new LinkData)
                         ->setHref(ApiController::API_PREFIX . ($category->customUri ?: $category->uri))
-                        ->setRel(LinkData::REL_BACK)
-                ] : [],
-            ];
-            $order++;
-            $breadcrumbs[] = $breadcrumb;
+                        ->setRel($this->cmsCategoryRecord === $category ? LinkData::REL_SELF : LinkData::REL_BACK)
+                ] : []);
+            $category = $category->getParentRecord();
         }
-        $breadcrumbs[] = (new LinkData)
-            ->setHref(ApiController::API_PREFIX . ($this->getCategoryRecord()->customUri ?: $this->getCategoryRecord()->uri))
-            ->setRel(LinkData::REL_SELF);
-        return $breadcrumbs;
+        return array_reverse($breadcrumbs);
     }
 
-    protected function getMenus(Request $request): array
+    protected function getMenus(): array
     {
         $menu = [];
         foreach ((new CmsCategoryQuery())
@@ -164,7 +160,7 @@ abstract class TemplateController extends Controller
             ->findFields(['id', 'template', 'name', 'uri', 'customUri', 'path', 'order']) as $item) {
             $fullPath = trim($item['path'] . '/' . $item['id'], '/');
             $activatedFullPath = trim($this->cmsCategoryRecord->path . '/' . $this->cmsCategoryRecord->id, '/');
-            $this->injectToMenu($menu, $fullPath, [
+            $this->injectIntoMenu($menu, $fullPath, [
                 'id'        => $item['id'],
                 'name'      => $item['name'],
                 'order'     => $item['order'],
@@ -180,12 +176,12 @@ abstract class TemplateController extends Controller
         return $menu['children'];
     }
 
-    protected function injectToMenu(&$menu, $path, $value)
+    protected function injectIntoMenu(&$menu, $path, $value)
     {
-        $ids = explode("/", $path);
+        $ids = explode('/', $path);
         $current = &$menu;
         foreach ($ids as $id) {
-            $current = &$current['children']['item-' . $id];
+            $current = &$current['children'][$id];
         }
         $current = is_array($current) ? array_merge($value, $current) : $value;
     }

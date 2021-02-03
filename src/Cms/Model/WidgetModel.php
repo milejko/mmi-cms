@@ -137,11 +137,11 @@ class WidgetModel
      */
     public function getDataObject(Request $request): DataInterface
     {
-        //@TODO: check widget cache settings
+        //pobranie z cache
         if (null === $transport = $this->_cacheService->load($cacheKey = CmsCategoryWidgetCategoryRecord::JSON_CACHE_PREFIX . $this->_cmsWidgetRecord->id)) {
-            $this->_cacheService->save($transport = $this->_createController()->getDataObject($request), $cacheKey);
+            //pobranie obiektu z kontrolera
+            $this->_cacheService->save($transport = $this->_createController()->getDataObject($request), $cacheKey, $this->_widgetConfig->getCacheLifeTime());
         }
-        //pobranie obiektu z kontrolera
         return $transport;
     }
 
