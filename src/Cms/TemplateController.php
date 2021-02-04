@@ -2,14 +2,12 @@
 
 namespace Cms;
 
-use Cms\Api\BreadcrumbData;
-use Cms\Api\LinkData;
+use Cms\Api\Service\MenuServiceInterface;
 use Cms\Api\TemplateDataTransport;
 use Cms\Api\TransportInterface;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Orm\CmsCategoryRecord;
 use Cms\Model\WidgetModel;
-use Cms\Orm\CmsCategoryQuery;
 use CmsAdmin\Form\CategoryForm;
 use Mmi\Mvc\Controller;
 use Mmi\Http\Request;
@@ -19,6 +17,11 @@ use Mmi\Http\Request;
  */
 abstract class TemplateController extends Controller
 {
+
+    /**
+     * @Inject
+     */
+    private MenuServiceInterface $menuService;
 
     /**
      * CMS category record
@@ -87,8 +90,8 @@ abstract class TemplateController extends Controller
         $to->dateModify  = $this->cmsCategoryRecord->dateModify;
         $to->attributes  = json_decode($this->cmsCategoryRecord->configJson, true);
         $to->sections    = $this->getSections($request);
-        $to->breadcrumbs = $this->getBreadcrumbs();
-        $to->menus       = $this->getMenus();
+        $to->breadcrumbs = $this->menuService->getBreadcrumbs($this->cmsCategoryRecord);
+        $to->menus       = $this->menuService->getMenus($this->cmsCategoryRecord);
         return $to;
     }
 
@@ -127,62 +130,4 @@ abstract class TemplateController extends Controller
         return $widgets;
     }
 
-    /**
-     * Pobiera breadcrumby
-     */
-    protected function getBreadcrumbs(): array
-    {
-        $breadcrumbs = [];
-        $category = $this->cmsCategoryRecord;
-        $order = count(explode('/', $this->cmsCategoryRecord->path));
-        while (null !== $category) {
-            $breadcrumbs[] = (new BreadcrumbData)
-                ->setTitle($category->name)
-                ->setOrder($order--)
-                ->setLinks($category->template ? [
-                    (new LinkData)
-                        ->setHref(ApiController::API_PREFIX . ($category->customUri ?: $category->uri))
-                        ->setRel($this->cmsCategoryRecord === $category ? LinkData::REL_SELF : LinkData::REL_BACK)
-                ] : []);
-            $category = $category->getParentRecord();
-        }
-        return array_reverse($breadcrumbs);
-    }
-
-    protected function getMenus(): array
-    {
-        $menu = [];
-        foreach ((new CmsCategoryQuery())
-            ->whereStatus()->equals(10)
-            ->whereActive()->equals(1)
-            ->orderAscParentId()
-            ->orderAscOrder()
-            ->findFields(['id', 'template', 'name', 'uri', 'customUri', 'path', 'order']) as $item) {
-            $fullPath = trim($item['path'] . '/' . $item['id'], '/');
-            $activatedFullPath = trim($this->cmsCategoryRecord->path . '/' . $this->cmsCategoryRecord->id, '/');
-            $this->injectIntoMenu($menu, $fullPath, [
-                'id'        => $item['id'],
-                'name'      => $item['name'],
-                'order'     => $item['order'],
-                'active'    => 0 === strpos($activatedFullPath . '/', $fullPath . '/'),
-                '_links'    => $item['template'] ? [
-                    (new LinkData)
-                        ->setHref(ApiController::API_PREFIX . ($item['customUri'] ?: $item['uri']))
-                        ->setRel(LinkData::REL_NEXT)
-                ] : [],
-                'children'  => [],
-            ]);
-        }
-        return $menu['children'];
-    }
-
-    protected function injectIntoMenu(&$menu, $path, $value)
-    {
-        $ids = explode('/', $path);
-        $current = &$menu;
-        foreach ($ids as $id) {
-            $current = &$current['children'][$id];
-        }
-        $current = is_array($current) ? array_merge($value, $current) : $value;
-    }
 }
