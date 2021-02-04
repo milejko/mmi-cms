@@ -85,8 +85,6 @@ class CmsCategoryWidgetRecord extends \Mmi\Orm\Record
             App::$di->get(CacheInterface::class)->remove(CmsCategoryWidgetCategoryRecord::HTML_CACHE_PREFIX . $id);
             App::$di->get(CacheInterface::class)->remove(CmsCategoryWidgetCategoryRecord::JSON_CACHE_PREFIX . $id);
             App::$di->get(CacheInterface::class)->remove(CmsCategoryRecord::WIDGET_MODEL_CACHE_PREFIX . $categoryId);
-            App::$di->get(CacheInterface::class)->remove(CmsCategoryRecord::HTML_CACHE_PREFIX . $categoryId);
-            App::$di->get(CacheInterface::class)->remove(CmsCategoryRecord::JSON_CACHE_PREFIX . $categoryId);
         }
         return true;
     }

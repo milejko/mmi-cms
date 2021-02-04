@@ -88,7 +88,7 @@ class TemplateModel
     {
         //pobranie obiektu transportowego szablonu
         if (null === $controller = $this->_createController()) {
-            return new ErrorTransport('Controller not found');
+            return (new ErrorTransport())->setMessage('Controller not found');
         }
         return $controller->getTransportObject($request);
     }

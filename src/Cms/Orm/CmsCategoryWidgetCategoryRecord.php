@@ -156,8 +156,6 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     {
         //usuwanie cache
         App::$di->get(CacheInterface::class)->remove(CmsCategoryRecord::WIDGET_MODEL_CACHE_PREFIX . $this->cmsCategoryId);
-        App::$di->get(CacheInterface::class)->remove(CmsCategoryRecord::HTML_CACHE_PREFIX . $this->cmsCategoryId);
-        App::$di->get(CacheInterface::class)->remove(CmsCategoryRecord::JSON_CACHE_PREFIX . $this->cmsCategoryId);
         App::$di->get(CacheInterface::class)->remove(self::HTML_CACHE_PREFIX . $this->id);
         App::$di->get(CacheInterface::class)->remove(self::JSON_CACHE_PREFIX . $this->id);
         return true;

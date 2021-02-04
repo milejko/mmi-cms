@@ -10,7 +10,7 @@ use Cms\Orm\CmsCategoryRecord;
 use Mmi\Cache\CacheInterface;
 
 /**
- * Redirect transport object
+ * Menu service
  */
 class MenuService implements MenuServiceInterface
 {

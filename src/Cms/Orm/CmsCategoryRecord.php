@@ -162,10 +162,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     const STATUS_HISTORY = 20;
     //nazwa obiektu plików cms
     const FILE_OBJECT = 'cmscategory';
-    //prefiks bufora html
-    const HTML_CACHE_PREFIX = 'category-html-';
-    //prefiks bufora JSON
-    const JSON_CACHE_PREFIX = 'category-json-';
     //prefiks bufora modelu widgetu
     const WIDGET_MODEL_CACHE_PREFIX = 'category-widget-model-';
     //prefiks bufora url->id
@@ -528,10 +524,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $cache->remove('mmi-cms-navigation-');
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->id);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
-        $cache->remove(self::HTML_CACHE_PREFIX . $this->id);
-        $cache->remove(self::HTML_CACHE_PREFIX . $this->cmsCategoryOriginalId);
-        $cache->remove(self::JSON_CACHE_PREFIX . $this->id);
-        $cache->remove(self::JSON_CACHE_PREFIX . $this->cmsCategoryOriginalId);
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->uri));
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->getInitialStateValue('uri')));
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->customUri));
