@@ -101,15 +101,8 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
      * @param \Mmi\Http\Request $request
      * @return \Mmi\Http\Request
      */
-    protected function setLoginRequest(Request $request, $preferAdmin): void
+    protected function setLoginRequest(Request $request): void
     {
-        //logowanie bez preferencji admina, tylko gdy uprawniony
-        if (false === $preferAdmin && $this->container->get('cms.acl')->isRoleAllowed('guest', 'cms:user:login')) {
-            $request->setModuleName('cms')
-                ->setControllerName('user')
-                ->setActionName('login');
-            return;
-        }
         //logowanie admina
         $request->setModuleName('cmsAdmin')
             ->setControllerName('index')

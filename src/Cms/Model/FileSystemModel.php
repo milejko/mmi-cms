@@ -59,21 +59,17 @@ class FileSystemModel
      * @param string $scale
      * @return string
      */
-    public function getPublicPath($scaleType = 'default', $scale = null)
+    public function getPublicPath($scaleType = 'default', $scale = null): ?string
     {
         //rozszerzenie
-        $extension = strtolower(substr($this->_name, strrpos($this->_name, '.') + 1));
-        //obliczanie
-        $hash = md5($scaleType . $scale . $this->_name . App::$di->get('cms.auth.salt'));
-        $filePath = '/data/' . trim($scaleType . '-' . $scale, '-x') . '/' . $this->_name . '-' . $hash;
+        list($name, $extension) = explode('.', $this->_name);
         //override extension only if thumb and supported extension
-        if ('download' != $scaleType && in_array($extension, ['bmp', 'jpeg', 'jfif', 'jif', 'jpg', 'png'])) {
-            $extension = 'webp';
+        if (!in_array(strtolower($extension), ['jpg', 'png', 'jpeg', 'jfif', 'jif', 'bmp'])) {
+            return null;
         }
-        if ('webp' != $extension && 'download' != $scaleType) {
-            return;
-        }
-        return $filePath . '.' . $extension;
+        //obliczanie hasha
+        $hash = md5($scaleType . $scale . $name . App::$di->get('cms.auth.salt'));
+        return '/data/' . trim($scaleType . '-' . $scale, '-x') . '/' . $this->_name . '-' . $hash . '.webp';
     }
 
     public function unlink()

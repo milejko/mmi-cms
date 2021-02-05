@@ -11,6 +11,8 @@
 namespace Cms;
 
 use Cms\Model\FileSystemModel;
+use Cms\Orm\CmsFileQuery;
+use Cms\Orm\CmsFileRecord;
 use Mmi\Http\Request;
 use Mmi\Mvc\MvcForbiddenException;
 use Mmi\Session\SessionInterface;
@@ -48,11 +50,6 @@ class FileController extends \Mmi\Mvc\Controller
         try {
             mkdir(dirname($targetFilePath), 0777, true);
         } catch (\Exception $e) {}
-        //kopiowanie
-        if ('download' == $request->operation) {
-            copy($fs->getRealPath(), $targetFilePath);
-            return $this->getResponse()->redirectToUrl($this->view->cdn . $publicPath);
-        }
         //wybór skalowania do wykonania
         switch ($request->operation) {
             case 'scale':
@@ -76,6 +73,22 @@ class FileController extends \Mmi\Mvc\Controller
         //webp generation
         imagewebp($resource, $targetFilePath, $this->container->get('cms.thumb.quality'));
         return $this->getResponse()->redirectToUrl($this->view->cdn . $publicPath);
+    }
+
+    public function serverAction(Request $request)
+    {
+        ob_end_clean();
+        $fs = new FileSystemModel($request->name);
+        $this->getResponse()
+            ->setHeader('Content-Disposition', 'attachment; filename=' . base64_decode($request->encodedName))
+            ->setHeader('Content-Type', 'application/octet-stream')
+            ->setHeader('Content-Transfer-Encoding', 'binary')
+            ->setHeader('Content-Length', filesize($fs->getRealPath()))
+            ->setHeader('Cache-Control', 'public')
+            ->setHeader('Expires', 'max')
+            ->sendHeaders();
+        readfile($fs->getRealPath());
+        exit;
     }
 
     /**
