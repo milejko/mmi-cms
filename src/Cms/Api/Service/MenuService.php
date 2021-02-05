@@ -33,8 +33,8 @@ class MenuService implements MenuServiceInterface
         foreach ($this->getFromInfrastructure() as $item) {
             $fullPath = trim($item['path'] . '/' . $item['id'], '/');
             $this->injectIntoMenu($menu, $fullPath, [
-                'id'        => $item['id'],
                 'name'      => $item['name'],
+                'template'  => substr($item['template'], strpos($item['template'], '/') + 1),
                 'order'     => $item['order'],
                 '_links'    => $item['template'] ? [
                     (new LinkData)
