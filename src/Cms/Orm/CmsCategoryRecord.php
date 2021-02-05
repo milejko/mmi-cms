@@ -2,6 +2,7 @@
 
 namespace Cms\Orm;
 
+use Cms\Api\Service\MenuService;
 use Cms\App\CmsSkinsetConfig;
 use CmsAdmin\Model\CategoryAclModel;
 use Mmi\App\App;
@@ -522,6 +523,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             $cache->remove('mmi-cms-navigation-' . $lang);
         }
         $cache->remove('mmi-cms-navigation-');
+        $cache->remove(MenuService::CACHE_KEY);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->id);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->uri));

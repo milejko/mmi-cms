@@ -33,10 +33,7 @@ class MenuService implements MenuServiceInterface
                 'name'      => $item['name'],
                 'template'  => substr($item['template'], strpos($item['template'], '/') + 1),
                 'order'     => $item['order'],
-                '_links'    => $item['template'] ? [
-                    (new LinkData)
-                        ->setHref(ApiController::API_PREFIX . ($item['customUri'] ?: $item['uri']))
-                ] : [],
+                '_links'    => $this->getLinks($item),
                 'children'  => [],
             ]);
         }
@@ -61,6 +58,20 @@ class MenuService implements MenuServiceInterface
             ->whereActive()->equals(1)
             ->orderAscParentId()
             ->orderAscOrder()
-            ->findFields(['id', 'template', 'name', 'uri', 'customUri', 'path', 'order']);
+            ->findFields(['id', 'template', 'name', 'uri', 'customUri', 'redirectUri', 'path', 'order']);
+    }
+
+    private function getLinks(array $item): array
+    {
+        if ($item['redirectUri']) {
+            return [(new LinkData)
+                ->setHref($item['redirectUri'])
+                ->setRel('redirect')];
+        }
+        if ($item['template']) {
+            return [(new LinkData)
+                ->setHref(ApiController::API_PREFIX . ($item['customUri'] ?: $item['uri']))];
+        }
+        return [];
     }
 }
