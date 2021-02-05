@@ -2,7 +2,8 @@
 
 namespace Cms;
 
-use Cms\Api\Service\MenuServiceInterface;
+use Cms\Api\BreadcrumbData;
+use Cms\Api\LinkData;
 use Cms\Api\TemplateDataTransport;
 use Cms\Api\TransportInterface;
 use Cms\App\CmsSkinsetConfig;
@@ -17,11 +18,6 @@ use Mmi\Http\Request;
  */
 abstract class TemplateController extends Controller
 {
-
-    /**
-     * @Inject
-     */
-    private MenuServiceInterface $menuService;
 
     /**
      * CMS category record
@@ -90,8 +86,8 @@ abstract class TemplateController extends Controller
         $to->dateModify  = $this->cmsCategoryRecord->dateModify;
         $to->attributes  = json_decode($this->cmsCategoryRecord->configJson, true);
         $to->sections    = $this->getSections($request);
-        $to->breadcrumbs = $this->menuService->getBreadcrumbs($this->cmsCategoryRecord);
-        $to->menus       = $this->menuService->getMenus($this->cmsCategoryRecord);
+        $to->breadcrumbs = $this->getBreadcrumbs();
+        $to->_links      = [(new LinkData)->setHref(rtrim(ApiController::API_PREFIX, '/'))->setRel('menu')];
         return $to;
     }
 
@@ -128,6 +124,28 @@ abstract class TemplateController extends Controller
             $widgets[substr($fullSectionPath = substr($widgetRelationRecord->widget, 0, strrpos($widgetRelationRecord->widget, '/')), strrpos($fullSectionPath, '/') + 1)][] = (new WidgetModel($widgetRelationRecord, $this->getSkinsetConfig()))->getDataObject($request);
         }
         return $widgets;
+    }
+
+    /**
+     * Pobiera breadcrumby
+     */
+    public function getBreadcrumbs(): array
+    {
+        $breadcrumbs = [];
+        $category = $this->cmsCategoryRecord;
+        $order = count(explode('/', $this->cmsCategoryRecord->path));
+        while (null !== $category) {
+            $breadcrumbs[] = (new BreadcrumbData)
+                ->setTitle($category->name)
+                ->setOrder($order--)
+                ->setLinks($category->template ? [
+                    (new LinkData)
+                        ->setHref(ApiController::API_PREFIX . ($category->customUri ?: $category->uri))
+                        ->setRel($this->cmsCategoryRecord === $category ? LinkData::REL_SELF : LinkData::REL_BACK)
+                ] : []);
+            $category = $category->getParentRecord();
+        }
+        return array_reverse($breadcrumbs);
     }
 
 }

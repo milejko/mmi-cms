@@ -37,6 +37,8 @@ class CmsRouterConfig extends RouterConfig
 
         //routa API stron cms
         $this->setRoute('cms-category-api', '/^api\/category\/([a-z0-9\/-]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getCategory', 'uri' => '$1']);
+        //routa API menu
+        $this->setRoute('cms-category-menu-api', '/^api\/category$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getMenu']);
 
         //routy skalera grafik
         $this->setRoute('cms-file-default', '/^data\/(default|download)\/([a-f0-9]{32}\.[a-z0-9]+)-([a-f0-9]{32})\.([a-z0-9]+)$/', ['module' => 'cms', 'controller' => 'file', 'action' => 'scaler', 'operation' => '$1', 'name' => '$2', 'hash' => '$3', 'extension' => '$4']);

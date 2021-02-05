@@ -11,7 +11,9 @@
 namespace Cms;
 
 use Cms\Api\ErrorTransport;
+use Cms\Api\MenuDataTransport;
 use Cms\Api\RedirectTransport;
+use Cms\Api\Service\MenuServiceInterface;
 use Cms\Api\TransportInterface;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Model\TemplateModel;
@@ -37,6 +39,22 @@ class ApiController extends \Mmi\Mvc\Controller
      * @Inject
      */
     private CacheInterface $cache;
+
+    /**
+     * @Inject
+     */
+    private MenuServiceInterface $menuService;
+
+    /**
+     * Akcja pobrania menu 
+     */
+    public function getMenuAction(Request $request)
+    {
+        $menuTransport = (new MenuDataTransport())->setMenu($this->menuService->getMenus());
+        return $this->getResponse()->setTypeJson()
+            ->setCode($menuTransport->getCode())
+            ->setContent($menuTransport->toString());
+    }
 
     /**
      * Akcja dispatchera kategorii
