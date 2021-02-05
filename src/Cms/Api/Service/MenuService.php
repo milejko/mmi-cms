@@ -2,11 +2,9 @@
 
 namespace Cms\Api\Service;
 
-use Cms\Api\BreadcrumbData;
 use Cms\Api\LinkData;
 use Cms\ApiController;
 use Cms\Orm\CmsCategoryQuery;
-use Cms\Orm\CmsCategoryRecord;
 use Mmi\Cache\CacheInterface;
 
 /**
@@ -15,7 +13,6 @@ use Mmi\Cache\CacheInterface;
 class MenuService implements MenuServiceInterface
 {
     const CACHE_KEY = 'cms-api-navigation';
-    const MENU_ITEM_PREFIX = 'item-';
 
     private CacheInterface $cacheService;
 
@@ -52,7 +49,7 @@ class MenuService implements MenuServiceInterface
         $ids = explode('/', $path);
         $current = &$menu;
         foreach ($ids as $id) {
-            $current = &$current['children'][self::MENU_ITEM_PREFIX . $id];
+            $current = &$current['children'][$id];
         }
         $current = is_array($current) ? array_merge($value, $current) : $value;
     }
