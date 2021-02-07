@@ -19,7 +19,9 @@ class RedirectTransport extends HttpJsonTransport
 
     public function setHref(string $href): self
     {
-        $this->_links = [(new LinkData())->setHref($href)->setRel('redirect')];
+        $this->_links = [(new LinkData())
+            ->setMethod(LinkData::METHOD_REDIRECT)
+            ->setHref($href)];
         return $this;
     }
 }

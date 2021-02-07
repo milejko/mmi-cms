@@ -66,7 +66,8 @@ class MenuService implements MenuServiceInterface
         if ($item['redirectUri']) {
             return [(new LinkData)
                 ->setHref($item['redirectUri'])
-                ->setRel('redirect')];
+                ->setMethod(LinkData::METHOD_REDIRECT)
+                ->setRel('external')];
         }
         if ($item['template']) {
             return [(new LinkData)
