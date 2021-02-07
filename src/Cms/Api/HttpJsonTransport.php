@@ -13,7 +13,7 @@ class HttpJsonTransport implements DataInterface, TransportInterface
     const CODE_MOVED     = 301;
     const DEFAULT_CODE   = self::CODE_OK;
 
-    private int $code = self::DEFAULT_CODE;
+    protected int $code = self::DEFAULT_CODE;
 
     public function setCode(int $code): self
     {

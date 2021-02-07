@@ -9,8 +9,8 @@ class RedirectTransport extends HttpJsonTransport
 {
     const DEFAULT_CODE    = 301;
 
-    public int      $code   = self::DEFAULT_CODE;
-    public array    $_links = [];
+    protected   int     $code   = self::DEFAULT_CODE;
+    public      array   $_links = [];
 
     public function __construct(string $link)
     {
@@ -22,4 +22,4 @@ class RedirectTransport extends HttpJsonTransport
         $this->_links = [(new LinkData())->setHref($href)->setRel('redirect')];
         return $this;
     }
-} 
+}
