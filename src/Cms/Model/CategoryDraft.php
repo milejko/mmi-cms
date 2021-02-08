@@ -49,7 +49,7 @@ class CategoryDraft extends \Cms\Model\CategoryCopy
             ->orderDescId()
             ->findFirst()) {
             //czyszczenie starych draftów
-            $this->_gc($userId, $lastDraft->id);
+            //$this->_gc($userId, $lastDraft->id);
             //zwrot ostatniego draftu
             return $lastDraft;
         }
@@ -64,7 +64,7 @@ class CategoryDraft extends \Cms\Model\CategoryCopy
         $draft->dateAdd = date('Y-m-d H:i:s');
         $draft->save();
         //czyszczenie starych draftów
-        $this->_gc($userId, $draft->id);
+        //$this->_gc($userId, $draft->id);
         //zwrot drafta
         return $draft;
     }

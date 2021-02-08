@@ -221,6 +221,7 @@ class CategoryCopy
         //dla każdego pliku powiązanego z kategorią
         foreach ((new \Cms\Orm\CmsFileQuery)
             ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
+            ->andFieldObjectId()->equals($this->_category->id)
             ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
             ->findUnique('object') as $object) {
             \Cms\Model\File::link($object, $this->_category->id, $object, $this->_copy->getPk());
@@ -245,6 +246,7 @@ class CategoryCopy
         foreach ((new \Cms\Orm\CmsFileQuery)
             //obiekt podobny do categoryWidgetRelation
             ->whereObject()->like(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
+            ->andField('objectId')->equals($relationId)
             ->findUnique('object') as $object) {
             \Cms\Model\File::link($object, $relationId, $object, $newRelation->id);
         }

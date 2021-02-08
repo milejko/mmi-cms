@@ -281,8 +281,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     protected function _insert()
     {
-        //usunięcie cache uprawnień
-        \App\Registry::$cache->remove(CategoryAclModel::CACHE_KEY);
         //data aktualizacji
         $this->dateAdd = $this->dateAdd ? $this->dateAdd : date('Y-m-d H:i:s');
         //próba utworzenia rekordu
