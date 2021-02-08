@@ -164,8 +164,8 @@ class FileSystemModel
         }
         //PNG
         if ($mimeType == 'image/png') {
-            //nieprzeźroczysty
-            if (!((imagecolorat($imgRes, 0, 0) & 0x7F000000) >> 24)) {
+            //kompletnie nieprzeźroczysty naroznik
+            if (0 == ((imagecolorat($imgRes, 0, 0) & 0x7F000000) >> 24)) {
                 //redukcja palety do 256 + dithering
                 imagetruecolortopalette($imgRes, true, 256);
             }
