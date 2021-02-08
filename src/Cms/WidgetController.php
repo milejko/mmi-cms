@@ -2,10 +2,13 @@
 
 namespace Cms;
 
+use Cms\Api\AttachmentData;
+use Cms\Api\DataInterface;
+use Cms\Api\LinkData;
+use Cms\Api\WidgetData;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 use Cms\Orm\CmsFileQuery;
-use Cms\Transport\AttachmentTransport;
-use Cms\Transport\WidgetTransport;
+use Cms\Orm\CmsFileRecord;
 use Mmi\Mvc\Controller;
 use Mmi\Http\Request;
 
@@ -14,6 +17,14 @@ use Mmi\Http\Request;
  */
 abstract class WidgetController extends Controller
 {
+
+    /**
+     * Attachment thumb width & 
+     */
+    const ATTACHMENT_THUMB_METHOD   = 'scalecrop';
+    const ATTACHMENT_THUMB_SCALE    = '640x480';
+    const ATTACHMENT_THUMB_SCALE2X  = '1280x960';
+    const ATTACHMENT_THUMB_SCALE4X  = '2560x1920';
 
     /**
      * Widget relation record
@@ -65,20 +76,22 @@ abstract class WidgetController extends Controller
      * Po usunięciu widgeta
      */
     public function deleteAction(): void
-    {}
+    {
+    }
 
     /**
      * Wyświetlenie po stronie klienta (HTML)
      */
     public function displayAction(Request $request)
-    {}
-    
+    {
+    }
+
     /**
      * Pobiera obiekt transportowy (na potrzeby API)
      */
-    public function getTransportObject(Request $request): WidgetTransport
+    public function getDataObject(Request $request): DataInterface
     {
-        $to             = new WidgetTransport();
+        $to             = new WidgetData();
         $to->id         = $this->widgetRecord->uuid;
         $to->widget     = substr($this->widgetRecord->widget, strrpos($this->widgetRecord->widget, '/') + 1);
         $to->attributes = json_decode($this->widgetRecord->configJson, true);
@@ -99,17 +112,35 @@ abstract class WidgetController extends Controller
             ->orderAscOrder()
             ->orderAscId()
             ->find() as $file) {
-            $sectionName    = substr($file->object, strlen(CmsCategoryWidgetCategoryRecord::FILE_OBJECT));
-            $to             = new AttachmentTransport;
-            $to->attributes = $file->data->toArray();
-            $to->url        = $file->getUrl();
-            $to->size       = $file->size;
-            $to->name       = $file->original;
-            $to->mimeType   = $file->mimeType;
-            $to->order      = $file->order ? : 0;
-            $attachments[$sectionName ? : 'default'][] = $to;
+            $to                   = new AttachmentData;
+            $to->attributes       = $file->data->toArray();
+            $to->_links           = $this->getFileLinks($file);
+            $to->name             = $file->original;
+            $to->size             = $file->size;
+            $to->mimeType       = $file->mimeType;
+            $to->order          = $file->order ?: 0;
+            $attachments[substr($file->object, strlen(CmsCategoryWidgetCategoryRecord::FILE_OBJECT)) ?: 'default'][] = $to;
         }
         return $attachments;
     }
 
+    protected function getFileLinks(CmsFileRecord $file): array
+    {
+        $downloadLinkData   = (new LinkData)
+            ->setHref($file->getUrl('download'))
+            ->setRel('download');
+
+        $thumbLinkData      = (new LinkData)
+            ->setHref($file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE))
+            ->setRel('thumb');
+
+        $thumb2xLinkData    = (new LinkData)
+            ->setHref($file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE2X))
+            ->setRel('thumb2x');
+
+        //only if thumb link exists add thumbs
+        return $thumbLinkData->href ?
+            [$downloadLinkData, $thumbLinkData, $thumb2xLinkData] :
+            [$downloadLinkData];
+    }
 }

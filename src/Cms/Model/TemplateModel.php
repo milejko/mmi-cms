@@ -2,6 +2,8 @@
 
 namespace Cms\Model;
 
+use Cms\Api\ErrorTransport;
+use Cms\Api\TransportInterface;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Orm\CmsCategoryRecord;
 use Mmi\App\KernelException;
@@ -9,10 +11,7 @@ use Mmi\Mvc\View;
 use Mmi\Http\Request;
 use Cms\App\CmsTemplateConfig;
 use Cms\TemplateController;
-use Cms\Transport\ErrorTransport;
-use Cms\Transport\TransportInterface;
 use CmsAdmin\Form\CategoryForm;
-use Error;
 use Mmi\App\App;
 
 /**
@@ -89,7 +88,7 @@ class TemplateModel
     {
         //pobranie obiektu transportowego szablonu
         if (null === $controller = $this->_createController()) {
-            return new ErrorTransport('Controller not found');
+            return (new ErrorTransport())->setMessage('Controller not found');
         }
         return $controller->getTransportObject($request);
     }

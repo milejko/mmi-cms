@@ -11,6 +11,8 @@
 namespace Cms;
 
 use Cms\Model\FileSystemModel;
+use Cms\Orm\CmsFileQuery;
+use Cms\Orm\CmsFileRecord;
 use Mmi\Http\Request;
 use Mmi\Mvc\MvcForbiddenException;
 use Mmi\Session\SessionInterface;
@@ -48,12 +50,11 @@ class FileController extends \Mmi\Mvc\Controller
         try {
             mkdir(dirname($targetFilePath), 0777, true);
         } catch (\Exception $e) {}
-        //kopiowanie
-        if ('webp' != $request->extension) {
-            copy($fs->getRealPath(), $targetFilePath);
-            return $this->getResponse()->redirectToUrl($this->view->cdn . $publicPath);
-        }
+        //wybór skalowania do wykonania
         switch ($request->operation) {
+            case 'scale':
+                $resource = \Mmi\Image\Image::scalex($fs->getRealPath(), $request->x, $request->y ? : $request->x);
+                break;
             case 'scalex':
                 $resource = \Mmi\Image\Image::scalex($fs->getRealPath(), $request->x);
                 break;
@@ -61,7 +62,7 @@ class FileController extends \Mmi\Mvc\Controller
                 $resource = \Mmi\Image\Image::scaley($fs->getRealPath(), $request->x);
                 break;
             case 'scalecrop':
-                $resource = \Mmi\Image\Image::scaleCrop($fs->getRealPath(), $request->x, $request->y ? $request->y : $request->x);
+                $resource = \Mmi\Image\Image::scaleCrop($fs->getRealPath(), $request->x, $request->y ? : $request->x);
                 break;
             case 'default':
                 $resource = \Mmi\Image\Image::inputToResource($fs->getRealPath());
@@ -72,6 +73,22 @@ class FileController extends \Mmi\Mvc\Controller
         //webp generation
         imagewebp($resource, $targetFilePath, $this->container->get('cms.thumb.quality'));
         return $this->getResponse()->redirectToUrl($this->view->cdn . $publicPath);
+    }
+
+    public function serverAction(Request $request)
+    {
+        ob_end_clean();
+        $fs = new FileSystemModel($request->name);
+        $this->getResponse()
+            ->setHeader('Content-Disposition', 'attachment; filename=' . base64_decode($request->encodedName))
+            ->setHeader('Content-Type', 'application/octet-stream')
+            ->setHeader('Content-Transfer-Encoding', 'binary')
+            ->setHeader('Content-Length', filesize($fs->getRealPath()))
+            ->setHeader('Cache-Control', 'public')
+            ->setHeader('Expires', 'max')
+            ->sendHeaders();
+        readfile($fs->getRealPath());
+        exit;
     }
 
     /**

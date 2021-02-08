@@ -4,25 +4,28 @@ namespace Cms\App;
 
 use Mmi\App\AppEventInterceptorAbstract;
 use Mmi\Http\Request;
-use Mmi\Http\Response;
 use Mmi\Mvc\View;
-use Mmi\Security\Acl;
 use Mmi\Security\AclInterface;
-use Mmi\Security\Auth;
 use Mmi\Security\AuthInterface;
 use Mmi\Session\SessionInterface;
 use Mmi\Translate\TranslateInterface;
 
 class CmsAppEventInterceptor extends AppEventInterceptorAbstract
 {
+    const API_CONTROLLER_PATTERN = '/api$/i';
 
     public function init(): void
-    {}
+    {
+    }
 
     public function beforeDispatch(): void
     {
-        $this->_initTranslation();
         $request = $this->container->get(Request::class);
+        //api
+        if ($this->isApiController($request)) {
+            return;
+        }
+        $this->initTranslation();
         $this->container->get(SessionInterface::class)->start();
         //zablokowane na ACL
         $acl = $this->container->get(AclInterface::class);
@@ -33,7 +36,7 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
         }
         //brak autoryzacji
         if (!$auth->hasIdentity()) {
-            $this->_setLoginRequest($request, strpos($request->getModuleName(), 'Admin'));
+            $this->setLoginRequest($request, strpos($request->getModuleName(), 'Admin'));
             //logowanie admina
             return;
         }
@@ -45,6 +48,10 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
     public function afterDispatch(): void
     {
         $request = $this->container->get(Request::class);
+        //api
+        if ($this->isApiController($request)) {
+            return;
+        }
         //ustawienie widoku
         $view = $this->container->get(View::class);
         $base = $view->baseUrl;
@@ -57,16 +64,16 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
         unset($jsRequest['action']);
         //umieszczenie tablicy w headScript()
         $view->headScript()->prependScript('var request = ' . json_encode($jsRequest));
-        
     }
 
     public function beforeSend(): void
-    {}
+    {
+    }
 
     /**
      * Inicjalizacja tłumaczeń
      */
-    protected function _initTranslation()
+    protected function initTranslation(): void
     {
         /**
          * @var TranslateInterface $translate 
@@ -85,7 +92,7 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
         }
         //ustawianie języka z requesta
         if ($request->lang) {
-            return $translate->setLocale($request->lang);
+            $translate->setLocale($request->lang);
         }
     }
 
@@ -94,18 +101,16 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
      * @param \Mmi\Http\Request $request
      * @return \Mmi\Http\Request
      */
-    protected function _setLoginRequest(\Mmi\Http\Request $request, $preferAdmin)
+    protected function setLoginRequest(Request $request): void
     {
-        //logowanie bez preferencji admina, tylko gdy uprawniony
-        if (false === $preferAdmin && $this->container->get('cms.acl')->isRoleAllowed('guest', 'cms:user:login')) {
-            return $request->setModuleName('cms')
-                ->setControllerName('user')
-                ->setActionName('login');
-        }
         //logowanie admina
-        return $request->setModuleName('cmsAdmin')
+        $request->setModuleName('cmsAdmin')
             ->setControllerName('index')
             ->setActionName('login');
     }
 
+    protected function isApiController(Request $request): bool
+    {
+        return (bool) \preg_match(self::API_CONTROLLER_PATTERN, $request->getControllerName());
+    }
 }

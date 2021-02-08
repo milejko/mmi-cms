@@ -23,12 +23,6 @@ class CmsTemplateConfig
     private $_controllerClassName;
 
     /**
-     * Czas bufora
-     * @var integer
-     */
-    private $_cacheLifeTime = 2592000;
-
-    /**
      * Sekcje
      * @var array
      */
@@ -92,30 +86,6 @@ class CmsTemplateConfig
     public function getControllerClassName()
     {
         return $this->_controllerClassName;
-    }
-
-    /**
-     * Ustawia czas bufora
-     * @param integer $cacheLifeTime
-     * @return CmsTemplateConfig
-     */
-    public function setCacheLifeTime($cacheLifeTime)
-    {
-        //walidacja
-        if (!is_int($cacheLifeTime)) {
-            throw new KernelException('Cache lifetime invalid');
-        }
-        $this->_cacheLifeTime = $cacheLifeTime;
-        return $this;
-    }
-
-    /**
-     * Pobiera czas bufora
-     * @return integer
-     */
-    public function getCacheLifeTime()
-    {
-        return $this->_cacheLifeTime;
     }
 
     /**

@@ -2,10 +2,13 @@
 
 namespace Cms;
 
+use Cms\Api\BreadcrumbData;
+use Cms\Api\LinkData;
+use Cms\Api\TemplateDataTransport;
+use Cms\Api\TransportInterface;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Orm\CmsCategoryRecord;
 use Cms\Model\WidgetModel;
-use Cms\Transport\TemplateTransport;
 use CmsAdmin\Form\CategoryForm;
 use Mmi\Mvc\Controller;
 use Mmi\Http\Request;
@@ -15,6 +18,7 @@ use Mmi\Http\Request;
  */
 abstract class TemplateController extends Controller
 {
+
     /**
      * CMS category record
      */
@@ -60,27 +64,30 @@ abstract class TemplateController extends Controller
      * Wyświetlenie szablonu po stronie klienta
      */
     public function displayAction(Request $request)
-    {}
+    {
+    }
 
     /**
      * Akcja wywoływana przy usuwaniu szablonu
      */
     public function deleteAction(): void
-    {}
+    {
+    }
 
     /**
      * Zwraca obiekt transportowy (na potrzeby API)
      */
-    public function getTransportObject(Request $request): TemplateTransport
+    public function getTransportObject(Request $request): TransportInterface
     {
-        $to             = new TemplateTransport;
-        $to->sections   = $this->getSections($request);
-        $to->id         = $this->cmsCategoryRecord->id;
-        $to->template   = $this->cmsCategoryRecord->template;
-        $to->url        = $this->cmsCategoryRecord->customUri ? $this->cmsCategoryRecord->customUri : $this->cmsCategoryRecord->uri;
-        $to->dateAdd    = $this->cmsCategoryRecord->dateAdd;
-        $to->dateModify = $this->cmsCategoryRecord->dateModify;
-        $to->attributes = json_decode($this->cmsCategoryRecord->configJson, true);
+        $to              = new TemplateDataTransport;
+        $to->id          = $this->cmsCategoryRecord->id;
+        $to->template    = $this->cmsCategoryRecord->template;
+        $to->dateAdd     = $this->cmsCategoryRecord->dateAdd;
+        $to->dateModify  = $this->cmsCategoryRecord->dateModify;
+        $to->attributes  = json_decode($this->cmsCategoryRecord->configJson, true);
+        $to->sections    = $this->getSections($request);
+        $to->breadcrumbs = $this->getBreadcrumbs();
+        $to->_links      = [(new LinkData)->setHref(rtrim(ApiController::API_PREFIX, '/'))->setRel('menu')];
         return $to;
     }
 
@@ -88,19 +95,22 @@ abstract class TemplateController extends Controller
      * Dekoracja formularza edycji
      */
     public function decorateEditForm(CategoryForm $categoryForm): void
-    {}
+    {
+    }
 
     /**
      * Metoda przed zapisem formularza
      */
     public function beforeSaveEditForm(CategoryForm $categoryForm): void
-    {}
+    {
+    }
 
     /**
      * Metoda po zapisie formularza
      */
     public function afterSaveEditForm(CategoryForm $categoryForm): void
-    {}
+    {
+    }
 
     /**
      * Pobiera obiekty transportowe widgetów (podzielone na sekcje)
@@ -110,13 +120,32 @@ abstract class TemplateController extends Controller
         $widgets = [];
         //getting section skinsets
         foreach ($this->cmsCategoryRecord->getWidgetModel()->getWidgetRelations() as $widgetRelationRecord) {
-            //calculating section name by full section path
-            $fullSectionPath = substr($widgetRelationRecord->widget, 0, strrpos($widgetRelationRecord->widget, '/'));
-            $sectionName = substr($fullSectionPath, strrpos($fullSectionPath, '/') + 1);
             //adding widgets to section
-            $widgets[$sectionName][] = (new WidgetModel($widgetRelationRecord, $this->getSkinsetConfig()))->getTransportObject($request);
+            $widgets[substr($fullSectionPath = substr($widgetRelationRecord->widget, 0, strrpos($widgetRelationRecord->widget, '/')), strrpos($fullSectionPath, '/') + 1)][] = (new WidgetModel($widgetRelationRecord, $this->getSkinsetConfig()))->getDataObject($request);
         }
         return $widgets;
     }
-    
+
+    /**
+     * Pobiera breadcrumby
+     */
+    public function getBreadcrumbs(): array
+    {
+        $breadcrumbs = [];
+        $category = $this->cmsCategoryRecord;
+        $order = count(explode('/', $this->cmsCategoryRecord->path));
+        while (null !== $category) {
+            $breadcrumbs[] = (new BreadcrumbData)
+                ->setTitle($category->name)
+                ->setOrder($order--)
+                ->setLinks($category->template ? [
+                    (new LinkData)
+                        ->setHref(ApiController::API_PREFIX . ($category->customUri ?: $category->uri))
+                        ->setRel($this->cmsCategoryRecord === $category ? LinkData::REL_SELF : LinkData::REL_BACK)
+                ] : []);
+            $category = $category->getParentRecord();
+        }
+        return array_reverse($breadcrumbs);
+    }
+
 }
