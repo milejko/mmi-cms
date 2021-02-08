@@ -165,10 +165,12 @@ class FileSystemModel
         //PNG
         if ($mimeType == 'image/png') {
             //kompletnie nieprzeźroczysty naroznik
-            //if (0 == ((imagecolorat($imgRes, 0, 0) & 0x7F000000) >> 24)) {
+            if (0 == ((imagecolorat($imgRes, 0, 0) & 0x7F000000) >> 24)) {
                 //redukcja palety do 256 + dithering
-                //imagetruecolortopalette($imgRes, true, 256);
-            //}
+                imagetruecolortopalette($imgRes, true, 256);
+            }
+            imagealphablending($imgRes, false);
+            imagesavealpha($imgRes, true);
             imagepng($imgRes, $outputFile, 9);
             return;
         }
