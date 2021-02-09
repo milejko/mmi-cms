@@ -125,11 +125,6 @@ class Tree extends \Mmi\Form\Element\ElementAbstract
         $html .= '<ul>';
         //iteracja po dzieciakach i budowa lisci drzewa
         foreach ($node['children'] as $child) {
-            if (isset($child['record'])) {
-                $children = isset($child['children']) ? $child['children'] : [];
-                $child = $child['record']->toArray();
-                $child['children'] = $children;
-            }
             $select = 'false';
             if (in_array($child['id'], $values)) {
                 $select = 'true';

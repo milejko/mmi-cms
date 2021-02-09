@@ -28,15 +28,18 @@ class CategoryAclModel
             return;
         }
         //uzupełnianie ACL
-        $this->_acl = new \Mmi\Security\Acl;
-        $this->_flatTree = (new \Cms\Model\CategoryModel(new CmsCategoryQuery()))->getCategoryFlatTree();
+        $this->_acl = new CategoryAcl;
         //iteracja po kolekcji rekordów categoryAcl
         foreach ((new \Cms\Orm\CmsCategoryAclQuery)
             ->join('cms_role')->on('cms_role_id')
+            ->join('cms_category')->on('cms_category_id')
             ->find() as $aclRecord) {
-            //aktualizacja acl
-            $this->_updateAcl($aclRecord);
+            //dodawanie ściezek
+            $role = $aclRecord->getJoined('cms_role')->name;
+            $path = trim($aclRecord->getJoined('cms_category')->path . '/' . $aclRecord->getJoined('cms_category')->id, '/');
+            $this->_acl->addPathPermission($role, $path, 'allow' === $aclRecord->access);
         }
+        //zapis cache
         \App\Registry::$cache->save($this->_acl, $cacheKey);
     }
 
@@ -47,45 +50,6 @@ class CategoryAclModel
     public function getAcl()
     {
         return $this->_acl;
-    }
-
-    /**
-     * Aktualizuje ustawienie ACL
-     * @param \Cms\Orm\CmsCategoryAclRecord $aclRecord
-     */
-    protected function _updateAcl(\Cms\Orm\CmsCategoryAclRecord $aclRecord)
-    {
-        //iteracja po identyfikatorach kategorii
-        foreach ($this->_getChildrenCategoryIds($aclRecord->cmsCategoryId) as $categoryId) {
-            //dozwalanie lub zabranianie w ACL
-            $aclRecord->access == 'allow' ?
-                    $this->_acl->allow($aclRecord->getJoined('cms_role')->name, $categoryId) :
-                    $this->_acl->deny($aclRecord->getJoined('cms_role')->name, $categoryId);
-        }
-    }
-
-    /**
-     * Pobiera identyfikatory kategorii dzieci kategorii (wraz z własnym ID)
-     * @param integer $categoryId
-     * @return array
-     */
-    protected function _getChildrenCategoryIds($categoryId)
-    {
-        //brak kategorii
-        if (null === ($chosenLabel = isset($this->_flatTree[$categoryId]) ? $this->_flatTree[$categoryId] : null)) {
-            return [];
-        }
-        $categories = [];
-        //iteracja po spłaszczonym drzewie
-        foreach ($this->_flatTree as $id => $label) {
-            //porównywanie labelki wzorcowek
-            if ($chosenLabel == substr($label, 0, strlen($chosenLabel))) {
-                //zgodny - dodwanie identyfikatora do listy
-                $categories[$id] = $id;
-            }
-        }
-        //zwrot identyfikatorów kategorii
-        return $categories;
     }
 
 }
