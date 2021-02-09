@@ -46,6 +46,7 @@ class CategoryModel
             $fullPath = trim($item['path'] . '/' . $item['id'], '/');
             $this->injectIntoMenu($menu, $fullPath, [
                 'id'        => $item['id'],
+                'record'    => $record,
                 'name'      => $item['name'],
                 'order'     => $item['order'],
                 'active'    => $item['active'],
