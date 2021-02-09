@@ -29,8 +29,7 @@ class CategoryGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('grid.category.name.label'));
 
         //uri
-        $this->addColumn((new Column\SelectColumn('uri'))
-            ->setMultioptions((new \Cms\Orm\CmsCategoryQuery)->orderAscUri()->findPairs('uri', 'uri'))
+        $this->addColumn((new Column\TextColumn('uri'))
             ->setFilterMethodLike()
             ->setLabel('grid.category.uri.label'));
         
