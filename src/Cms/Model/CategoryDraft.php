@@ -48,8 +48,6 @@ class CategoryDraft extends \Cms\Model\CategoryCopy
             ->andFieldCmsAuthId()->equals($userId)
             ->orderDescId()
             ->findFirst()) {
-            //czyszczenie starych draftów
-            $this->_gc($userId, $lastDraft->id);
             //zwrot ostatniego draftu
             return $lastDraft;
         }
@@ -63,8 +61,6 @@ class CategoryDraft extends \Cms\Model\CategoryCopy
         $draft->cmsAuthId = $userId;
         $draft->dateAdd = date('Y-m-d H:i:s');
         $draft->save();
-        //czyszczenie starych draftów
-        $this->_gc($userId, $draft->id);
         //zwrot drafta
         return $draft;
     }
@@ -92,27 +88,6 @@ class CategoryDraft extends \Cms\Model\CategoryCopy
     protected function _generateCategoryName()
     {
         return $this->_category->name . $this->_nameSuffix;
-    }
-
-    /**
-     * Metoda usuwa przestarzałe drafty użytkownika
-     * zachowując bieżący (nowy lub wczytany)
-     * @param integer $userId
-     * @param integer $currentDraftId
-     */
-    protected function _gc($userId, $currentDraftId)
-    {
-        //usuwanie starych śmieci (GC)
-        (new \Cms\Orm\CmsCategoryQuery)
-            ->whereCmsCategoryOriginalId()->equals($this->_category->cmsCategoryOriginalId ? $this->_category->cmsCategoryOriginalId : $this->_category->id)
-            ->whereQuery((new \Cms\Orm\CmsCategoryQuery)
-                ->whereCmsAuthId()->equals($userId)
-                ->orFieldCmsAuthId()->equals(null)
-            )
-            ->andFieldId()->notEquals($currentDraftId)
-            ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_DRAFT)
-            ->find()
-            ->delete();
     }
 
 }
