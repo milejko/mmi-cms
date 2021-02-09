@@ -11,9 +11,7 @@
 namespace CmsAdmin\Mvc\ViewHelper;
 
 use Mmi\App\App;
-use Mmi\Security\Acl;
 use Mmi\Security\AclInterface;
-use Mmi\Security\Auth;
 use Mmi\Security\AuthInterface;
 
 class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract
@@ -81,13 +79,13 @@ class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract
         //iteracja po dzieciakach i budowa węzłów drzewa
         foreach ($node['children'] as $child) {
             $icon = '';
-            if (!$child['record']->active) {
+            if (!$child['active']) {
                 $icon = $this->view->baseUrl . '/resource/cmsAdmin/images/folder-inactive.png';
             }
             $selected = 'false';
             $disabled = 'false';
             //sprawdzenie uprawnień do węzła
-            if (!$acl->isAllowed($auth->getRoles(), $child['record']->id)) {
+            if (!$acl->isAllowed($auth->getRoles(), $child['id'])) {
                 $disabled = 'true';
                 $icon = $this->view->baseUrl . '/resource/cmsAdmin/images/folder-disabled.png';
             }
@@ -95,9 +93,9 @@ class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract
             if (!isset($child['children']) || !count($child['children'])) {
                 $type = 'leaf';
             }
-            $html .= '<li id="' . $child['record']->id . '" class="' . (($type !== 'leaf') ? 'jstree-closed' : '') . '"';
+            $html .= '<li id="' . $child['id'] . '" class="' . (($type !== 'leaf') ? 'jstree-closed' : '') . '"';
             $html .= ' data-jstree=\'{"type":"' . $type . '"' . (($icon) ? ', "icon":"' . $icon . '"' : '');
-            $html .= ', "disabled":' . $disabled . ', "selected":' . $selected . '}\'>' . $child['record']->name;
+            $html .= ', "disabled":' . $disabled . ', "selected":' . $selected . '}\'>' . $child['name'];
             $html = self::_generateTree($child, $html);
             $html .= '</li>';
         }

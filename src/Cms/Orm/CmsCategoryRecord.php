@@ -4,7 +4,6 @@ namespace Cms\Orm;
 
 use Cms\Api\Service\MenuService;
 use Cms\App\CmsSkinsetConfig;
-use CmsAdmin\Model\CategoryAclModel;
 use Mmi\App\App;
 use Mmi\Cache\CacheInterface;
 use Mmi\Mvc\View;
@@ -284,8 +283,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     protected function _insert()
     {
-        //usunięcie cache uprawnień
-        App::$di->get(CacheInterface::class)->remove(CategoryAclModel::CACHE_KEY);
         //data aktualizacji
         $this->dateAdd = $this->dateAdd ? $this->dateAdd : date('Y-m-d H:i:s');
         //próba utworzenia rekordu
