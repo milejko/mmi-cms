@@ -41,26 +41,6 @@ class FileController extends Controller
     }
 
     /**
-     * Akcja ajaxowa - przypinanie pliku
-     * @return string
-     */
-    public function stickAction(Request $request)
-    {
-        $this->getResponse()->setTypePlain();
-        //brak id
-        if (!$this->id) {
-            return '';
-        }
-        //brak pliku
-        if (null === ($file = (new CmsFileQuery)->findPk($request->id)) || $request->hash != $file->name) {
-            return $this->view->_('controller.fileController.stick.error');
-        }
-        //przypina plik
-        $file->setSticky();
-        return '';
-    }
-
-    /**
      * Akcja ajaxowa - edycja pliku
      * @return string
      */

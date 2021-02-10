@@ -73,12 +73,6 @@ namespace Cms\Orm;
  * @method CmsFileQuery orderAscOrder()
  * @method CmsFileQuery orderDescOrder()
  * @method CmsFileQuery groupByOrder()
- * @method QueryHelper\CmsFileQueryField whereSticky()
- * @method QueryHelper\CmsFileQueryField andFieldSticky()
- * @method QueryHelper\CmsFileQueryField orFieldSticky()
- * @method CmsFileQuery orderAscSticky()
- * @method CmsFileQuery orderDescSticky()
- * @method CmsFileQuery groupBySticky()
  * @method QueryHelper\CmsFileQueryField whereObject()
  * @method QueryHelper\CmsFileQueryField andFieldObject()
  * @method QueryHelper\CmsFileQueryField orFieldObject()
@@ -167,25 +161,6 @@ class CmsFileQuery extends \Mmi\Orm\Query
         //zapytanie po obiekcie
         return self::byObject($object, $objectId)
                 ->whereClass()->equals('image');
-    }
-
-    /**
-     * Przyklejone po obiekcie i id
-     * @param string $object
-     * @param string $objectId
-     * @param string $class klasa
-     * @return CmsFileQuery
-     */
-    public static function stickyByObject($object = null, $objectId = null, $class = null)
-    {
-        //zapytanie po obiekcie
-        $q = self::byObject($object, $objectId)
-                ->whereSticky()->equals(1);
-        //dodawanie klasy jeśli wyspecyfikowana
-        if (null !== $class) {
-            $q->andFieldClass()->equals($class);
-        }
-        return $q;
     }
 
     /**

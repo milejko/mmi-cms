@@ -143,9 +143,6 @@ class CategoryCopy
         if (!$this->_copyCategory()) {
             return false;
         }
-        if (!$this->_copyCategoryRoles()) {
-            return false;
-        }
         if (!$this->_copyCategoryFiles()) {
             return false;
         }
@@ -277,27 +274,6 @@ class CategoryCopy
             }
             //kopiowanie plików powiązanych w widgetem
             if (!$this->_copyWidgetRelationFiles($widgetRelation->id, $relation)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Kopiuje powiązania roli z rekordem kategorii
-     * @return boolean
-     */
-    protected function _copyCategoryRoles()
-    {
-        //role zapisane w bazie
-        $roles = (new \Cms\Orm\CmsCategoryRoleQuery)
-            ->whereCmsCategoryId()->equals($this->_category->getPk())
-            ->findUnique('cms_role_id');
-        foreach ($roles as $roleId) {
-            $record = new \Cms\Orm\CmsCategoryRoleRecord();
-            $record->cmsCategoryId = $this->_copy->getPk();
-            $record->cmsRoleId = $roleId;
-            if (!$record->save()) {
                 return false;
             }
         }

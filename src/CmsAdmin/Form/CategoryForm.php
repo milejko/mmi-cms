@@ -119,13 +119,6 @@ class CategoryForm extends Form
             ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
             ->setLabel('form.category.blank.label'));
         
-        //https
-        $this->addElement((new Element\Select('https'))
-            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
-            ->setMultioptions([null => 'form.category.https.option.default', '0' => 'form.category.https.option.nossl', 1 => 'form.category.https.option.ssl'])
-            ->addFilter(new Filter\EmptyToNull)
-            ->setLabel('form.category.https.label'));
-
         //Zaawansowane
         //przekierowanie na link
         $this->addElement((new Element\Text('redirectUri'))
@@ -139,38 +132,6 @@ class CategoryForm extends Form
             ->setLabel('form.category.cacheLifetime.label')
             ->setMultioptions([null => 'form.category.cacheLifetime.default'] + CacheOptions::LIFETIMES)
             ->addFilter(new Filter\EmptyStringToNull));
-
-        //przekierowanie na moduł
-        $this->addElement((new Element\Text('mvcParams'))
-            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
-            ->setLabel('form.category.mvcParams.label')
-            ->setDescription('form.category.mvcParams.description')
-            ->addFilter(new Filter\StringTrim)
-            ->addValidator(new Validator\Regex(['@module\=[a-zA-Z0-9\&\=]+@', 'form.category.mvcParams.validator'])));
-
-        //role uprawnione do wyświetlenia kategorii/strony
-        $this->addElement((new Element\MultiCheckbox('roles'))
-            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
-            ->setLabel('form.category.roles.label')
-            ->setMultioptions((new \Cms\Orm\CmsRoleQuery)->orderAscName()->findPairs('id', 'name'))
-            ->setValue(
-                $this->getRecord()->id ? (new \Cms\Orm\CmsCategoryRoleQuery)
-                    ->whereCmsCategoryId()->equals($this->getRecord()->id)
-                    ->findPairs('cms_role_id', 'cms_role_id') : []
-            ));
-
-        //początek publikacji
-        $this->addElement((new Element\DateTimePicker('dateStart'))
-            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
-            ->setLabel('form.category.dateStart.label')
-            ->setDateMin(date('Y-m-d H:i')));
-    
-        //zakończenie publikacji
-        $this->addElement((new Element\DateTimePicker('dateEnd'))
-            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
-            ->setLabel('form.category.dateEnd.label')
-            ->setDateMin(date('Y-m-d H:i'))
-            ->setDateMinField($this->getElement('dateStart')));
 
         //zapis
         $this->addElement((new Element\Submit('commit'))
@@ -203,72 +164,11 @@ class CategoryForm extends Form
         if (!parent::afterSave()) {
             return false;
         }
-        //jeśli nie udało się zapisać powiązań z rolami
-        if (!$this->_saveRoles()) {
-            return false;
-        }
         //commit wersji
         if ($this->getElement('commit')->getValue()) {
             $this->getRecord()->commitVersion();
         }
         //usunięcie locka
         return (new CategoryLockModel($this->getRecord()->cmsCategoryOriginalId))->releaseLock();
-    }
-
-    /**
-     * Zapisuje powiązania kategorii z rolami
-     * @return bool
-     */
-    protected function _saveRoles()
-    {
-        //role zaznaczone w formularzu
-        $formRoles = $this->getElement('roles')->getValue();
-        //role zapisane w bazie
-        $savedRoles = (new \Cms\Orm\CmsCategoryRoleQuery)
-            ->whereCmsCategoryId()->equals($this->getRecord()->getPk())
-            ->findPairs('cms_role_id', 'cms_role_id');
-        //usuwanie zbędnych
-        if (!$this->_deleteRoles(array_diff($savedRoles, $formRoles))) {
-            return false;
-        }
-        //wstawianie brakujących
-        if (!$this->_insertRoles(array_diff($formRoles, $savedRoles))) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Usuwa zbędne powiązania kategorii z rolami
-     * @param array $delete
-     * @return bool
-     */
-    protected function _deleteRoles(array $delete = [])
-    {
-        if (empty($delete)) {
-            return true;
-        }
-        return count($delete) === (new \Cms\Orm\CmsCategoryRoleQuery)
-            ->whereCmsCategoryId()->equals($this->getRecord()->getPk())
-            ->andFieldCmsRoleId()->equals($delete)
-            ->find()->delete();
-    }
-
-    /**
-     * Wstawia brakujące powiązania kategorii z rolami
-     * @param array $insert
-     * @return bool
-     */
-    protected function _insertRoles(array $insert = [])
-    {
-        foreach ($insert as $roleId) {
-            $record = new \Cms\Orm\CmsCategoryRoleRecord();
-            $record->cmsCategoryId = $this->getRecord()->getPk();
-            $record->cmsRoleId = $roleId;
-            if (!$record->save()) {
-                return false;
-            }
-        }
-        return true;
     }
 }

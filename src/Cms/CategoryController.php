@@ -167,11 +167,6 @@ class CategoryController extends \Mmi\Mvc\Controller
             //przekierowanie na uri
             $this->getResponse()->redirectToUrl($category->redirectUri);
         }
-        //sprawdzenie dostępu dla roli
-        if (!(new Model\CategoryRole($category, $this->auth->getRoles()))->isAllowed()) {
-            //403
-            throw new \Mmi\Mvc\MvcForbiddenException('Category: ' . $category->uri . ' forbidden for roles: ' . implode(', ', $this->auth->getRoles()));
-        }
         //kategoria posiada customUri, a wejście jest na natywny uri
         if ($category->customUri && $this->uri != $category->customUri && $this->uri == $category->uri) {
             //przekierowanie na customUri

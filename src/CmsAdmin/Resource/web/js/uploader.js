@@ -85,17 +85,6 @@ $(document).ready(function () {
         return false;
     });
 
-    $('body').on('click', 'input.sticky', function () {
-        var id = $(this).attr('id').split('-');
-        $.get(
-                request.baseUrl + '/?module=cmsAdmin&controller=file&action=stick&id=' + id[2] + '&hash=' + id[3],
-                function (result) {
-                    if (result) {
-                        alert(result);
-                    }
-                });
-    });
-
     window.iframeId = undefined;
 
     function fileUpload() {

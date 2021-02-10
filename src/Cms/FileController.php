@@ -11,8 +11,6 @@
 namespace Cms;
 
 use Cms\Model\FileSystemModel;
-use Cms\Orm\CmsFileQuery;
-use Cms\Orm\CmsFileRecord;
 use Mmi\Http\Request;
 use Mmi\Mvc\MvcForbiddenException;
 use Mmi\Session\SessionInterface;
