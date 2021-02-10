@@ -182,19 +182,8 @@ class CategoryController extends \Mmi\Mvc\Controller
      * @return string
      * @throws \Mmi\App\KernelException
      */
-    protected function _renderHtml(CmsCategoryRecord $category, Request $request)
+    protected function _renderHtml(CmsCategoryRecord $category)
     {
-        //tworzenie nowego requestu na podstawie obecnego
-        $request = clone $request;
-        //przekierowanie MVC
-        if ($category->mvcParams) {
-            //tablica z tpl
-            $mvcParams = [];
-            //parsowanie parametrów mvc
-            parse_str($category->mvcParams, $mvcParams);
-            //zwrot html
-            return $this->actionHelper->forward($request->setParams($mvcParams));
-        }
         //render szablonu
         return (new TemplateModel($category, $this->cmsSkinsetConfig))->renderDisplayAction($this->view);
     }

@@ -117,12 +117,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     public $description;
 
     /**
-     * Bez flagi nofollow
-     * @var boolean
-     */
-    public $follow;
-
-    /**
      * Nowe okno
      * @var boolean
      */
@@ -494,9 +488,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //usuwanie cache
         $cache = App::$di->get(CacheInterface::class);
         //drop navigation cache
-        foreach (explode(',', App::$di->get('cms.language.list')) as $lang) {
-            $cache->remove('mmi-cms-navigation-' . $lang);
-        }
         $cache->remove('mmi-cms-navigation-');
         $cache->remove(MenuService::CACHE_KEY);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->id);
@@ -511,7 +502,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($this->getInitialStateValue('customUri')));
         $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->id);
         $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->cmsCategoryOriginalId);
-        $cache->remove('categories-roles');
         return true;
     }
 

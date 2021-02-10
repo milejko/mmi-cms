@@ -26,12 +26,6 @@ use Mmi\App\App;
  */
 class CategoryForm extends Form
 {
-    //klucz określający tab
-    const TAB_KEY = 'tab';
-    //klucze sekcji
-    const SECTION_BASIC = 'basic';
-    const SECTION_ADVANCED = 'advanced';
-    const SECTION_INVISIBLE = 'not-visible';
 
     /**
      * Konstruktor
@@ -66,14 +60,12 @@ class CategoryForm extends Form
     {
         //szablony/typy (jeśli istnieją)
         $this->addElement((new Element\Select('template'))
-            ->setOption(self::TAB_KEY, self::SECTION_BASIC)
             ->setLabel('form.category.cmsCategoryTypeId.label')
             ->addFilter(new Filter\EmptyToNull)
             ->setMultioptions([null => 'form.category.cmsCategoryTypeId.default'] + (new SkinsetModel(App::$di->get(CmsSkinsetConfig::class)))->getTemplatesMultioptions()));
 
         //nazwa kategorii
         $this->addElement((new Element\Text('name'))
-            ->setOption(self::TAB_KEY, self::SECTION_BASIC)
             ->setLabel('form.category.name.label')
             ->setRequired()
             ->addFilter(new Filter\StringTrim)
@@ -81,14 +73,12 @@ class CategoryForm extends Form
 
         //aktywna
         $this->addElement((new Element\Checkbox('active'))
-            ->setOption(self::TAB_KEY, self::SECTION_BASIC)
             ->setChecked()
             ->setLabel('form.category.active.label'));
 
         //SEO
         //nazwa kategorii
         $this->addElement((new Element\Text('title'))
-            ->setOption(self::TAB_KEY, self::SECTION_BASIC)
             ->setLabel('form.category.title.label')
             ->setDescription('form.category.title.description')
             ->addFilter(new Filter\StringTrim)
@@ -96,51 +86,38 @@ class CategoryForm extends Form
 
         //meta description
         $this->addElement((new Element\Textarea('description'))
-            ->setOption(self::TAB_KEY, self::SECTION_BASIC)
             ->setLabel('form.category.description.label'));
 
         //własny uri
         $this->addElement((new Element\Text('customUri'))
-            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
             ->setLabel('form.category.customUri.label')
             //adres domyślny (bez baseUrl)
             ->addFilter(new Filter\StringTrim)
             ->addFilter(new Filter\EmptyToNull)
             ->addValidator(new Validator\StringLength([1, 255])));
-
-        //follow
-        $this->addElement((new Element\Checkbox('follow'))
-            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
-            ->setChecked()
-            ->setLabel('form.category.visible.label'));
         
         //blank
             $this->addElement((new Element\Checkbox('blank'))
-            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
             ->setLabel('form.category.blank.label'));
         
         //Zaawansowane
         //przekierowanie na link
         $this->addElement((new Element\Text('redirectUri'))
-            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
             ->setLabel('form.category.redirect.label')
             ->addFilter(new Filter\StringTrim));
 
         //ustawienie bufora
         $this->addElement((new Element\Select('cacheLifetime'))
-            ->setOption(self::TAB_KEY, self::SECTION_ADVANCED)
             ->setLabel('form.category.cacheLifetime.label')
             ->setMultioptions([null => 'form.category.cacheLifetime.default'] + CacheOptions::LIFETIMES)
             ->addFilter(new Filter\EmptyStringToNull));
 
         //zapis
         $this->addElement((new Element\Submit('commit'))
-            ->setOption(self::TAB_KEY, self::SECTION_INVISIBLE)
             ->setLabel('template.category.edit.commit'));
 
         //zapis
         $this->addElement((new Element\Submit('submit'))
-            ->setOption(self::TAB_KEY, self::SECTION_INVISIBLE)
             ->setLabel('template.category.edit.preview'));
     }
 
