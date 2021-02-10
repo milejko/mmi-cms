@@ -72,7 +72,7 @@ class Mail
             $files[$fileName] = ($filePath);
         }
         //serializacja załączników
-        $mailRecord->attachements = serialize($files);
+        $mailRecord->attachments = serialize($files);
         //przepychanie zmiennych do widoku
         $view = App::$di->get(View::class);
         foreach ($params as $key => $value) {
@@ -161,7 +161,7 @@ class Mail
                 //ustawianie tematu
                 $mailer->Subject = $email->subject;
                 //dołączanie załączników
-                $attachments = unserialize($email->attachements);
+                $attachments = unserialize($email->attachments);
                 if (!empty($attachments)) {
                     foreach ($attachments as $fileName => $filePath) {
                         if (!file_exists($filePath)) {
@@ -177,7 +177,7 @@ class Mail
                 //wysyłka maila
                 $mailer->send();
                 //czyszczenie załączników
-                $email->attachements = null;
+                $email->attachments = null;
                 //ustawienie pol po wysłaniu
                 $email->active = 1;
                 $email->dateSent = date('Y-m-d H:i:s');
