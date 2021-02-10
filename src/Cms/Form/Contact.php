@@ -43,12 +43,6 @@ class Contact extends \Mmi\Form\Form
             ->addValidator(new Validator\NotEmpty)
             ->addFilter(new Filter\StripTags));
 
-        //captcha dla niezalogowanych
-        if (!($auth->getId() > 0)) {
-            $this->addElement((new Element\Captcha('regCaptcha'))
-                ->setLabel('form.contact.regCaptcha.label'));
-        }
-
         $this->addElement((new Element\Submit('submit'))
             ->setLabel('form.contact.submit.label'));
     }

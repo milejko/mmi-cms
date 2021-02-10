@@ -24,7 +24,7 @@ class Antirobot extends \Mmi\Validator\ValidatorAbstract
     const INVALID = 'validator.antirobot.message';
 
     /**
-     * Waliduje poprawność captcha
+     * Waliduje poprawność antirobot
      * @param string $value
      * @return boolean
      */
