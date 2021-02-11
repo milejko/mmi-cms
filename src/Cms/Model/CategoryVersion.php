@@ -96,66 +96,10 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
             $file->objectId = $this->_category->id;
             $file->save();
         }
-        //synchronizacja ról
-        $this->_synchronizeRoles($draft);
         //usuwanie draftu
         $draft->delete();
         $this->_category->dateAdd = date('Y-m-d H:i:s');
         return $this->_category->save();
-    }
-
-    /**
-     * Synchronizuje powiązania kategorii z rolami
-     * @param \Cms\Orm\CmsCategoryRecord $draft
-     * @return bool
-     */
-    protected function _synchronizeRoles(\Cms\Orm\CmsCategoryRecord $draft)
-    {
-        //role zaznaczone w draft
-        $draftRoles = (new \Cms\Orm\CmsCategoryRoleQuery)
-            ->whereCmsCategoryId()->equals($draft->getPk())
-            ->findUnique('cms_role_id');
-        //role zapisane w bazie
-        $savedRoles = (new \Cms\Orm\CmsCategoryRoleQuery)
-            ->whereCmsCategoryId()->equals($this->_category->getPk())
-            ->findUnique('cms_role_id');
-        //usuwanie zbędnych
-        $this->_deleteRoles(array_diff($savedRoles, $draftRoles));
-        //wstawianie brakujących
-        $this->_insertRoles(array_diff($draftRoles, $savedRoles));
-        return true;
-    }
-
-    /**
-     * Usuwa zbędne powiązania kategorii z rolami
-     * @param array $delete
-     * @return bool
-     */
-    protected function _deleteRoles(array $delete = [])
-    {
-        if (empty($delete)) {
-            return true;
-        }
-        return count($delete) === (new \Cms\Orm\CmsCategoryRoleQuery)
-                ->whereCmsCategoryId()->equals($this->_category->getPk())
-                ->andFieldCmsRoleId()->equals($delete)
-                ->find()->delete();
-    }
-
-    /**
-     * Wstawia brakujące powiązania kategorii z rolami
-     * @param array $insert
-     * @return bool
-     */
-    protected function _insertRoles(array $insert = [])
-    {
-        foreach ($insert as $roleId) {
-            $record = new \Cms\Orm\CmsCategoryRoleRecord();
-            $record->cmsCategoryId = $this->_category->getPk();
-            $record->cmsRoleId = $roleId;
-            $record->save();
-        }
-        return true;
     }
 
 }

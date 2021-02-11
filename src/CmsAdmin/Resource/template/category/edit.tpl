@@ -34,9 +34,6 @@
                         </li>
                     {/if}
                     <li class="nav-item">
-                        <a title="{#template.category.edit.tab.advanced#}" class="nav-link" data-toggle="tab" href="#advanced" role="tab" aria-controls="advanced" aria-expanded="true"><i class="icon-wrench"></i></a>
-                    </li>
-                    <li class="nav-item">
                         <a title="{#template.category.edit.tab.history#}" class="nav-link" data-toggle="tab" href="#history" role="tab" aria-controls="profile" aria-expanded="false"><i class="icon-clock"></i></a>
                     </li>
                 </ul>
@@ -44,9 +41,10 @@
                     <div class="tab-pane" id="basic" role="tabpanel" aria-expanded="true">
                         {if $duplicateAlert}<div class="em">{#template.category.edit.duplicate.alert#}<br /><br /></div>{/if}
                         {foreach $categoryForm->getElements() as $element}
-                            {if 'basic' == $element->getOption('tab') || !$element->getOption('tab')}
-                                {$element}
+                            {if 'submit' == $element->getName() || 'commit' == $element->getName()}
+                                {continue}
                             {/if}
+                            {$element}
                         {/foreach}
                     </div>
                     {if $widgetData}
@@ -56,12 +54,6 @@
                             </div>
                         </div>
                     {/if}
-                    <div class="tab-pane" id="advanced" role="tabpanel" aria-expanded="true">
-                        {foreach $categoryForm->getElements() as $element}
-                            {if 'advanced' != $element->getOption('tab')}{continue}{/if}
-                            {$element}
-                        {/foreach}
-                    </div>
                     <div class="tab-pane" id="history" role="tabpanel" aria-expanded="false">
                         {$historyGrid}
                     </div>

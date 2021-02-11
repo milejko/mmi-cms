@@ -50,11 +50,6 @@ class CmsFileRecord extends \Mmi\Orm\Record
     public $dateModify;
     public $order;
 
-    /**
-     * Flaga "przyklejony"
-     * @var boolean
-     */
-    public $sticky;
     public $object;
     public $objectId;
 
@@ -69,25 +64,6 @@ class CmsFileRecord extends \Mmi\Orm\Record
      * @var boolean
      */
     public $active;
-
-    /**
-     * Ustawia plik jako przyklejony w obrębie danego object+objectId
-     * @return bool
-     */
-    public function setSticky()
-    {
-        //brak pliku
-        if ($this->id === null) {
-            return false;
-        }
-        //wyłącza sticky na innych plikach dla tego object+objectId
-        foreach (\Cms\Orm\CmsFileQuery::stickyByObject($this->object, $this->objectId)->find() as $related) {
-            $related->sticky = 0;
-            $related->save();
-        }
-        $this->sticky = 1;
-        return $this->save();
-    }
 
     /**
      * Pobiera hash dla danej nazwy pliku

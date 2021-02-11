@@ -77,7 +77,11 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      * @var string
      */
     public $customUri;
-    public $mvcParams;
+
+    /**
+     * Opcjonalny adres przekierowania
+     * @var string
+     */
     public $redirectUri;
 
     /**
@@ -113,34 +117,10 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     public $description;
 
     /**
-     * null - bez zmiany, true - https, false - http
-     * @var string
-     */
-    public $https;
-
-    /**
-     * Bez flagi nofollow
-     * @var boolean
-     */
-    public $follow;
-
-    /**
      * Nowe okno
      * @var boolean
      */
     public $blank;
-
-    /**
-     * Data dodania
-     * @var string
-     */
-    public $dateStart;
-
-    /**
-     * Data modyfikacji
-     * @var string
-     */
-    public $dateEnd;
 
     /**
      * Czas życia bufora
@@ -240,14 +220,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         }
         //jeśli status różny od aktywna (bieżąca)
         if (self::STATUS_ACTIVE != $this->status) {
-            return false;
-        }
-        //nie osiągnięto czasu publikacji
-        if (null !== $this->dateStart && $this->dateStart > date('Y-m-d H:i:s')) {
-            return false;
-        }
-        //przekroczono czas publikacji
-        if (null !== $this->dateEnd && $this->dateEnd < date('Y-m-d H:i:s')) {
             return false;
         }
         return true;
@@ -516,9 +488,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //usuwanie cache
         $cache = App::$di->get(CacheInterface::class);
         //drop navigation cache
-        foreach (explode(',', App::$di->get('cms.language.list')) as $lang) {
-            $cache->remove('mmi-cms-navigation-' . $lang);
-        }
         $cache->remove('mmi-cms-navigation-');
         $cache->remove(MenuService::CACHE_KEY);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->id);
@@ -528,9 +497,11 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->customUri));
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->getInitialStateValue('customUri')));
         $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($this->uri));
+        $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($this->getInitialStateValue('uri')));
+        $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($this->customUri));
+        $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($this->getInitialStateValue('customUri')));
         $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->id);
         $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->cmsCategoryOriginalId);
-        $cache->remove('categories-roles');
         return true;
     }
 

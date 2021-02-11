@@ -279,7 +279,6 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                         });
                         $(edit + ' input[name="original"]').val(data.record.original);
                         $(edit + ' input[name="active"]').prop('checked', (parseInt(data.record.active) > 0) ? 'checked' : '');
-                        $(edit + ' input[name="sticky"]').prop('checked', (parseInt(data.record.sticky) > 0) ? 'checked' : '');
                         $(edit + ' .dialog-error').hide().find('p').text('');
                         window.scrollTo(0, 0);
                         var editDialog = $(edit).dialog({

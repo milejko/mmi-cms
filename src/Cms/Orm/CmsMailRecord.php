@@ -15,7 +15,7 @@ class CmsMailRecord extends \Mmi\Orm\Record
     public $replyTo;
     public $subject;
     public $message;
-    public $attachements;
+    public $attachments;
     public $type;
     public $dateAdd;
     public $dateSent;

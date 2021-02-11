@@ -29,39 +29,45 @@ class MenuService implements MenuServiceInterface
         $menu = [];
         foreach ($this->getFromInfrastructure() as $item) {
             $fullPath = trim($item['path'] . '/' . $item['id'], '/');
-            $this->injectIntoMenu($menu, $fullPath, [
-                'name'      => $item['name'],
-                'template'  => substr($item['template'], strpos($item['template'], '/') + 1),
-                'order'     => $item['order'],
-                '_links'    => $this->getLinks($item),
-                'children'  => [],
-            ]);
+            $this->injectIntoMenu($menu, $fullPath, $this->formatItem($item));
         }
         $this->cacheService->save($menu['children'], self::CACHE_KEY, 0);
         return $menu['children'];
     }
 
-    private function injectIntoMenu(&$menu, $path, $value): void
+    protected function injectIntoMenu(&$menu, $path, $item): void
     {
         $ids = explode('/', $path);
         $current = &$menu;
         foreach ($ids as $id) {
             $current = &$current['children'][$id];
         }
-        $current = is_array($current) ? array_merge($value, $current) : $value;
+        $current = is_array($current) ? array_merge($item, $current) : $item;
+    }
+    
+    protected function formatItem(array $item): array
+    {
+        return [
+            'name'      => $item['name'],
+            'blank'     => (bool) $item['blank'],
+            'template'  => $item['template'],
+            'order'     => (int) $item['order'],
+            '_links'    => $this->getLinks($item),
+            'children'  => [],
+        ];
     }
 
-    private function getFromInfrastructure(): array
+    protected function getFromInfrastructure(): array
     {
         return (new CmsCategoryQuery)
             ->whereStatus()->equals(10)
             ->whereActive()->equals(1)
             ->orderAscParentId()
             ->orderAscOrder()
-            ->findFields(['id', 'template', 'name', 'uri', 'customUri', 'redirectUri', 'path', 'order']);
+            ->findFields(['id', 'template', 'name', 'uri', 'blank', 'customUri', 'redirectUri', 'path', 'order']);
     }
 
-    private function getLinks(array $item): array
+    protected function getLinks(array $item): array
     {
         if ($item['redirectUri']) {
             return [(new LinkData)

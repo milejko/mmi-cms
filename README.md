@@ -24,5 +24,4 @@
 ### .env configuration:
 * CMS_AUTH_SALT=some-random-salt (should be random)
 * CMS_LANG_DEFAULT=en (default admin panel language)
-* CMS_THUMB_QUALITY=85 (JPEG quality in %)
-* CMS_NAVIGATION_CATEGORIES_ENABLED=0 (if enabled navigator builds CMS categories, otherwise just admin panel)
+* CMS_THUMB_QUALITY=85 (WebP / JPEG quality in %)

@@ -34,7 +34,7 @@ class CategoryModel
         $categories = $query
             ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
             ->orderAscOrder()
-            ->findFields(['id', 'path', 'name', 'order', 'active']);
+            ->findFields(['id', 'path', 'name', 'template', 'order', 'redirectUri', 'uri', 'customUri', 'active']);
         $this->_categoryTree = $this->buildTree($categories);
     }
 
@@ -43,13 +43,8 @@ class CategoryModel
         $menu = [];
         foreach ($categories as $item) {
             $fullPath = trim($item['path'] . '/' . $item['id'], '/');
-            $this->injectIntoMenu($menu, $fullPath, [
-                'id'        => $item['id'],
-                'name'      => $item['name'],
-                'order'     => $item['order'],
-                'active'    => $item['active'],
-                'children'  => [],
-            ]);
+            $item['children'] = [];
+            $this->injectIntoMenu($menu, $fullPath, $item);
         }
         return $menu['children'];
     }
@@ -76,7 +71,7 @@ class CategoryModel
             return $this->_categoryTree;
         }
         //wyszukiwanie kategorii
-        return $this->_searchChildren($this->_categoryTree, $parentCategoryId);
+        return $this->searchChildren($this->_categoryTree, $parentCategoryId);
     }
 
     /**
@@ -85,14 +80,14 @@ class CategoryModel
      * @param integer $parentCategoryId
      * @return array
      */
-    private function _searchChildren(array $categories, $parentCategoryId = null)
+    private function searchChildren(array $categories, $parentCategoryId = null)
     {
         //iteracja po kategoriach
         foreach ($categories as $id => $category) {
             if ($id == $parentCategoryId) {
                 return $category['children'];
             }
-            if ([] !== $child = $this->_searchChildren($category['children'], $parentCategoryId)) {
+            if ([] !== $child = $this->searchChildren($category['children'], $parentCategoryId)) {
                 return $child;
             }
         }

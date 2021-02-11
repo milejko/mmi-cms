@@ -167,11 +167,6 @@ class CategoryController extends \Mmi\Mvc\Controller
             //przekierowanie na uri
             $this->getResponse()->redirectToUrl($category->redirectUri);
         }
-        //sprawdzenie dostępu dla roli
-        if (!(new Model\CategoryRole($category, $this->auth->getRoles()))->isAllowed()) {
-            //403
-            throw new \Mmi\Mvc\MvcForbiddenException('Category: ' . $category->uri . ' forbidden for roles: ' . implode(', ', $this->auth->getRoles()));
-        }
         //kategoria posiada customUri, a wejście jest na natywny uri
         if ($category->customUri && $this->uri != $category->customUri && $this->uri == $category->uri) {
             //przekierowanie na customUri
@@ -187,19 +182,8 @@ class CategoryController extends \Mmi\Mvc\Controller
      * @return string
      * @throws \Mmi\App\KernelException
      */
-    protected function _renderHtml(CmsCategoryRecord $category, Request $request)
+    protected function _renderHtml(CmsCategoryRecord $category)
     {
-        //tworzenie nowego requestu na podstawie obecnego
-        $request = clone $request;
-        //przekierowanie MVC
-        if ($category->mvcParams) {
-            //tablica z tpl
-            $mvcParams = [];
-            //parsowanie parametrów mvc
-            parse_str($category->mvcParams, $mvcParams);
-            //zwrot html
-            return $this->actionHelper->forward($request->setParams($mvcParams));
-        }
         //render szablonu
         return (new TemplateModel($category, $this->cmsSkinsetConfig))->renderDisplayAction($this->view);
     }
