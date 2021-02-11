@@ -47,14 +47,6 @@ class CronController extends \Mmi\Mvc\Controller
     }
 
     /**
-     * Agregator statystyk
-     */
-    public function agregateAction()
-    {
-        $this->view->result = \Cms\Model\Stat::agregate();
-    }
-
-    /**
      * Czyści stare wersje
      */
     public function versionCleanupAction()
