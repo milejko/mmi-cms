@@ -79,12 +79,13 @@ abstract class TemplateController extends Controller
      */
     public function getTransportObject(Request $request): TransportInterface
     {
+        $attributes = json_decode($this->cmsCategoryRecord->configJson, true);
         $to              = new TemplateDataTransport;
         $to->id          = $this->cmsCategoryRecord->id;
         $to->template    = $this->cmsCategoryRecord->template;
         $to->dateAdd     = $this->cmsCategoryRecord->dateAdd;
         $to->dateModify  = $this->cmsCategoryRecord->dateModify;
-        $to->attributes  = json_decode($this->cmsCategoryRecord->configJson, true);
+        $to->attributes  = is_array($attributes) ? $attributes : [];
         $to->sections    = $this->getSections($request);
         $to->breadcrumbs = $this->getBreadcrumbs();
         $to->_links      = [(new LinkData)->setHref(rtrim(ApiController::API_PREFIX, '/'))->setRel('menu')];
