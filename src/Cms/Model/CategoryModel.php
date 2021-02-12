@@ -97,7 +97,7 @@ class CategoryModel
     {
         //iteracja po kategoriach
         foreach ($categories as $id => $category) {
-            if ($id == $parentCategoryId) {
+            if ($category['id'] == $parentCategoryId) {
                 return $category['children'];
             }
             if ([] !== $child = $this->searchChildren($category['children'], $parentCategoryId)) {
