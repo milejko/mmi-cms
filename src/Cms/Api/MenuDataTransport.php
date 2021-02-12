@@ -7,11 +7,11 @@ namespace Cms\Api;
  */
 class MenuDataTransport extends HttpJsonTransport
 {
-    public array $menu = [];
+    public array $children = [];
 
     public function setMenu(array $menu): self
     {
-        $this->menu = $menu;
+        $this->children = $menu;
         return $this;
     }
 }

@@ -24,6 +24,7 @@ class CategoryModel
      * @var array
      */
     private $_categoryTree = [];
+    private array $orderMap = [];
 
     /**
      * Konstruktor pobiera kategorie i buduje drzewo
@@ -33,8 +34,7 @@ class CategoryModel
         //pobieranie kategorii
         $categories = $query
             ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
-            ->orderAscOrder()
-            ->findFields(['id', 'path', 'name', 'template', 'order', 'redirectUri', 'uri', 'customUri', 'active']);
+            ->findFields(['id', 'template', 'name', 'uri', 'blank', 'customUri', 'redirectUri', 'path', 'order', 'active']);
         $this->_categoryTree = $this->buildTree($categories);
     }
 
@@ -42,21 +42,34 @@ class CategoryModel
     {
         $menu = [];
         foreach ($categories as $item) {
-            $fullPath = trim($item['path'] . '/' . $item['id'], '/');
-            $item['children'] = [];
-            $this->injectIntoMenu($menu, $fullPath, $item);
+            $this->orderMap[$item['id']] = $item['order'] . '-' . $item['id'];
         }
-        return $menu['children'];
+        foreach ($categories as $item) {
+            $item['children'] = [];
+            $this->injectIntoMenu($menu, $item);
+        }
+        return $this->sortMenu($menu['children']);
     }
 
-    private function injectIntoMenu(&$menu, $path, $value): void
+    protected function sortMenu(array $menu): array
     {
-        $ids = explode('/', $path);
-        $current = &$menu;
-        foreach ($ids as $id) {
-            $current = &$current['children'][$id];
+        $orderedMenu = [];
+        ksort($menu);
+        foreach ($menu as $item) {
+            if (!empty($item['children'])) {
+                $item['children'] = $this->sortMenu($item['children']);
+            }
+            $orderedMenu[] = $item;
         }
-        $current = is_array($current) ? array_merge($value, $current) : $value;
+        return $orderedMenu;
+    }
+
+    protected function injectIntoMenu(&$menu, $item): void
+    {
+        foreach (explode('/', trim($item['path'] . '/' . $item['id'], '/')) as $id) {
+            $menu = &$menu['children'][isset($this->orderMap[$id]) ? $this->orderMap[$id] : '0-' . $id];
+        }
+        $menu = array_merge($item, $menu ? : []);
     }
 
     /**

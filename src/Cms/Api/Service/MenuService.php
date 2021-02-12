@@ -5,6 +5,7 @@ namespace Cms\Api\Service;
 use Cms\Api\LinkData;
 use Cms\ApiController;
 use Cms\Orm\CmsCategoryQuery;
+use Cms\Orm\CmsCategoryRecord;
 use Mmi\Cache\CacheInterface;
 
 /**
@@ -15,6 +16,7 @@ class MenuService implements MenuServiceInterface
     const CACHE_KEY = 'cms-api-navigation';
 
     private CacheInterface $cacheService;
+    private array $orderMap = [];
 
     public function __construct(CacheInterface $cacheService)
     {
@@ -26,33 +28,47 @@ class MenuService implements MenuServiceInterface
         if (null !== $menuStructure = $this->cacheService->load(self::CACHE_KEY)) {
             return $menuStructure;
         }
-        $menu = [];
-        foreach ($this->getFromInfrastructure() as $item) {
-            $fullPath = trim($item['path'] . '/' . $item['id'], '/');
-            $this->injectIntoMenu($menu, $fullPath, $this->formatItem($item));
+        foreach ($items = $this->getFromInfrastructure() as $item) {
+            $this->orderMap[$item['id']] = $item['order'] . '-' . $item['id'];
         }
-        $this->cacheService->save($menu['children'], self::CACHE_KEY, 0);
-        return $menu['children'];
+        foreach ($items as $item) {
+            $this->injectIntoMenu($menu, $item);
+        }
+        $this->cacheService->save($orderedMenu = $this->sortMenu($menu['children']), self::CACHE_KEY, 0);
+        return $orderedMenu;
     }
 
-    protected function injectIntoMenu(&$menu, $path, $item): void
+    protected function sortMenu(array $menu): array
     {
-        $ids = explode('/', $path);
-        $current = &$menu;
-        foreach ($ids as $id) {
-            $current = &$current['children'][$id];
+        $orderedMenu = [];
+        ksort($menu);
+        foreach ($menu as $item) {
+            if (!empty($item['children'])) {
+                $item['children'] = $this->sortMenu($item['children']);
+            }
+            $orderedMenu[] = $item;
         }
-        $current = is_array($current) ? array_merge($item, $current) : $item;
+        return $orderedMenu;
+    }
+
+    protected function injectIntoMenu(&$menu, $item): void
+    {
+        foreach (explode('/', trim($item['path'] . '/' . $item['id'], '/')) as $id) {
+            $menu = &$menu['children'][isset($this->orderMap[$id]) ? $this->orderMap[$id] : '0-' . $id];
+        }
+        $menu = array_merge($this->formatItem($item), $menu ? : []);
     }
     
     protected function formatItem(array $item): array
     {
         return [
+            'id'        => $item['id'],
             'name'      => $item['name'],
             'blank'     => (bool) $item['blank'],
             'template'  => $item['template'],
             'order'     => (int) $item['order'],
-            '_links'    => $this->getLinks($item),
+            'active'    => (bool) $item['active'],
+            '_links'    => (bool) $item['active'] ? $this->getLinks($item) : [],
             'children'  => [],
         ];
     }
@@ -60,11 +76,8 @@ class MenuService implements MenuServiceInterface
     protected function getFromInfrastructure(): array
     {
         return (new CmsCategoryQuery)
-            ->whereStatus()->equals(10)
-            ->whereActive()->equals(1)
-            ->orderAscParentId()
-            ->orderAscOrder()
-            ->findFields(['id', 'template', 'name', 'uri', 'blank', 'customUri', 'redirectUri', 'path', 'order']);
+            ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
+            ->findFields(['id', 'template', 'name', 'uri', 'blank', 'customUri', 'redirectUri', 'path', 'order', 'active']);
     }
 
     protected function getLinks(array $item): array
@@ -81,4 +94,5 @@ class MenuService implements MenuServiceInterface
         }
         return [];
     }
+
 }
