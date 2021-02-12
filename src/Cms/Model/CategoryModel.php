@@ -42,28 +42,42 @@ class CategoryModel
     {
         $menu = [];
         foreach ($categories as $record) {
+            $this->orderMap[$record->id] = $record->order . '-' . $record->id;
+        }
+        foreach ($categories as $record) {
             $item = $record->toArray();
-            $fullPath = trim($item['path'] . '/' . $item['id'], '/');
-            $this->injectIntoMenu($menu, $fullPath, [
+            $this->injectIntoMenu($menu, [
                 'id'        => $item['id'],
                 'record'    => $record,
+                'path'      => $item['path'],
                 'name'      => $item['name'],
                 'order'     => $item['order'],
                 'active'    => $item['active'],
                 'children'  => [],
             ]);
         }
-        return $menu['children'];
+        return $this->sortMenu($menu['children']);
     }
 
-    private function injectIntoMenu(&$menu, $path, $value): void
+    protected function sortMenu(array $menu): array
     {
-        $ids = explode('/', $path);
-        $current = &$menu;
-        foreach ($ids as $id) {
-            $current = &$current['children'][$id];
+        $orderedMenu = [];
+        ksort($menu);
+        foreach ($menu as $item) {
+            if (!empty($item['children'])) {
+                $item['children'] = $this->sortMenu($item['children']);
+            }
+            $orderedMenu[] = $item;
         }
-        $current = is_array($current) ? array_merge($value, $current) : $value;
+        return $orderedMenu;
+    }
+
+    protected function injectIntoMenu(&$menu, $item): void
+    {
+        foreach (explode('/', trim($item['path'] . '/' . $item['id'], '/')) as $id) {
+            $menu = &$menu['children'][isset($this->orderMap[$id]) ? $this->orderMap[$id] : '0-' . $id];
+        }
+        $menu = array_merge($item, $menu ? : []);
     }
 
     /**
@@ -90,8 +104,8 @@ class CategoryModel
     private function _searchChildren(array $categories, $parentCategoryId = null)
     {
         //iteracja po kategoriach
-        foreach ($categories as $id => $category) {
-            if ($id == $parentCategoryId) {
+        foreach ($categories as $category) {
+            if ($category['id'] == $parentCategoryId) {
                 return $category['children'];
             }
             if ([] !== $child = $this->_searchChildren($category['children'], $parentCategoryId)) {
