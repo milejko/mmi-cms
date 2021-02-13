@@ -23,40 +23,58 @@ class MenuService implements MenuServiceInterface
         $this->cacheService = $cacheService;
     }
 
+    /**
+     * Public menu getter
+     */
     public function getMenus(): array
     {
+        //loading from cache
         if (null !== $menuStructure = $this->cacheService->load(self::CACHE_KEY)) {
             return $menuStructure;
         }
+        //getting from infrastructure + writing down item order
         foreach ($items = $this->getFromInfrastructure() as $item) {
-            $this->orderMap[$item['id']] = $item['order'] . '-' . $item['id'];
+            $this->orderMap[$item['id']] = $item['order'];
         }
+        //initializing empty menu structure
+        $menuStructure = [];
+        //adding items into menu 
         foreach ($items as $item) {
-            $this->injectIntoMenu($menu, $item);
+            $this->addItem($item, $menuStructure);
         }
-        $this->cacheService->save($orderedMenu = $this->sortMenu($menu['children']), self::CACHE_KEY, 0);
+        //sorting menu + cache save
+        $this->cacheService->save($orderedMenu = $this->sortMenu($menuStructure['children']), self::CACHE_KEY, 0);
         return $orderedMenu;
     }
 
+    /**
+     * Adding item with direct nesting (unfortunately not sorted)
+     */
+    protected function addItem(array $item, array &$menu): void
+    {
+        //using orderMap and id to determine target table nesting
+        foreach (explode('/', trim($item['path'] . '/' . $item['id'], '/')) as $id) {
+            $menu = &$menu['children'][isset($this->orderMap[$id]) ? ($this->orderMap[$id] . '-' . $id) : '0-' . $id];
+        }
+        //adding formatted item to menu
+        $menu = array_merge($this->formatItem($item), $menu ? : []);
+    }
+
+    /**
+     * Menu sorter
+     */
     protected function sortMenu(array $menu): array
     {
         $orderedMenu = [];
+        //sorting menu by key
         ksort($menu);
         foreach ($menu as $item) {
-            if (!empty($item['children'])) {
-                $item['children'] = $this->sortMenu($item['children']);
-            }
+            //sorting children
+            $item['children'] = $this->sortMenu($item['children']);
+            //adding item with sorted children
             $orderedMenu[] = $item;
         }
         return $orderedMenu;
-    }
-
-    protected function injectIntoMenu(&$menu, $item): void
-    {
-        foreach (explode('/', trim($item['path'] . '/' . $item['id'], '/')) as $id) {
-            $menu = &$menu['children'][isset($this->orderMap[$id]) ? $this->orderMap[$id] : '0-' . $id];
-        }
-        $menu = array_merge($this->formatItem($item), $menu ? : []);
     }
     
     protected function formatItem(array $item): array
@@ -64,8 +82,8 @@ class MenuService implements MenuServiceInterface
         return [
             'id'        => $item['id'],
             'name'      => $item['name'],
-            'blank'     => (bool) $item['blank'],
             'template'  => $item['template'],
+            'blank'     => (bool) $item['blank'],
             'order'     => (int) $item['order'],
             'active'    => (bool) $item['active'],
             '_links'    => (bool) $item['active'] ? $this->getLinks($item) : [],
