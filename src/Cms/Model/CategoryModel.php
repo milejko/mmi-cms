@@ -48,7 +48,7 @@ class CategoryModel
             $item['children'] = [];
             $this->injectIntoMenu($menu, $item);
         }
-        return $this->sortMenu($menu['children']);
+        return $this->sortMenu(isset($menu['children']) ? $menu['children'] : []);
     }
 
     protected function sortMenu(array $menu): array
