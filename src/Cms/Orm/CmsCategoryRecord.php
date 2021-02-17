@@ -140,6 +140,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     const STATUS_ACTIVE = 10;
     //status historia
     const STATUS_HISTORY = 20;
+    //status usunięte
+    const STATUS_DELETED = 30;
     //nazwa obiektu plików cms
     const FILE_OBJECT = 'cmscategory';
     //prefiks bufora modelu widgetu

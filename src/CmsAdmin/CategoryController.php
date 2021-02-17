@@ -14,6 +14,7 @@ use Cms\App\CmsSkinsetConfig;
 use Cms\Model\CategoryValidationModel;
 use Cms\Model\TemplateModel;
 use Cms\Orm\CmsCategoryQuery;
+use Cms\Orm\CmsCategoryRecord;
 use CmsAdmin\Form\CategoryForm;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
@@ -57,19 +58,45 @@ class CategoryController extends Controller
     /**
      * Lista stron CMS - prezentacja w formie grida
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $this->view->grid = new Plugin\CategoryGrid();
+        $parentCategory = null;
+        //wyszukiwanie parenta
+        if ($request->parentId && (null === $parentCategory = (new \Cms\Orm\CmsCategoryQuery)->findPk($request->parentId))) {
+            //błędny parent
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
+        }
+        $breadcrumbs = [];
+        //generowanie breadcrumbów
+        while ($parentCategory) {
+            $breadcrumbs[] = $parentCategory;
+            $parentCategory = $parentCategory->getParentRecord();
+        }
+        $this->view->breadcrumbs = \array_reverse($breadcrumbs);
+        //skinset do widoku
+        $this->view->skinset = $this->cmsSkinsetConfig;
+        //znalezione kategorie do widoku
+        $this->view->categories = (new \Cms\Orm\CmsCategoryQuery)
+            ->whereStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
+            ->whereParentId()->equals($request->parentId ? $request->parentId : null)
+            ->orderAscOrder()
+            ->find();
     }
 
     /**
-     * Lista stron CMS - edycja w formie drzewa
+     * Lista stron CMS - edycja
      */
     public function editAction(Request $request)
     {
-        //brak id przekierowanie na drzewo
+        //brak id - tworzenie nowej kategorii
         if (!$request->id) {
-            throw new \Mmi\Mvc\MvcNotFoundException('Category not found');
+            $category = new CmsCategoryRecord();
+            $category->status = CmsCategoryRecord::STATUS_ACTIVE;
+            $category->template = $request->template;
+            $category->parentId = $request->parentId ? $request->parentId : null;
+            $category->cmsAuthId = $this->auth->getId();
+            $category->save();
+            $request->id = $category->id;
         }
         //wyszukiwanie kategorii
         if (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($request->id)) {
@@ -89,7 +116,7 @@ class CategoryController extends Controller
         //sprawdzenie uprawnień do edycji węzła kategorii
         if (!(new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed($this->auth->getRoles(), $originalId)) {
             $this->getMessenger()->addMessage('messenger.category.permission.denied', false);
-            return $this->_redirectToRefererOrTree($originalId);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
         }
         //modyfikacja breadcrumbów
         $this->view->adminNavigation()->modifyLastBreadcrumb('menu.category.edit', '#');
@@ -137,7 +164,7 @@ class CategoryController extends Controller
         }
         //sprawdzenie czy kategoria nadal istnieje (form robi zapis - to trwa)
         if (!$form->isMine() && (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($request->id))) {
-            //przekierowanie na originalId (lub na tree według powyższego warunku)
+            //przekierowanie na originalId
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $request->originalId]);
         }
         //jeśli nie było posta
@@ -157,7 +184,7 @@ class CategoryController extends Controller
         if ($form->isSaved() && $form->getElement('commit')->getValue()) {
             //zmiany zapisane
             $this->getMessenger()->addMessage('messenger.category.category.saved', true);
-            return $this->_redirectToRefererOrTree($originalId);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
         }
         //zapisany form ze zmianą kategorii
         if ($form->isSaved() && 'type' == $form->getElement('submit')->getValue()) {
@@ -179,7 +206,8 @@ class CategoryController extends Controller
      * Akcja zarządzania drzewem
      */
     public function treeAction()
-    { }
+    {
+    }
 
     /**
      * Renderowanie fragmentu drzewa stron na podstawie parentId
@@ -278,23 +306,19 @@ class CategoryController extends Controller
      */
     public function deleteAction(Request $request)
     {
-        $this->getResponse()->setTypeJson();
         //brak kategorii
-        if (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($request->getPost()->id)) {
-            return json_encode(['status' => false, 'error' => $this->view->_('controller.category.delete.error')]);
+        if (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($request->id)) {
+            //zmiany zapisane
+            $this->getMessenger()->addMessage('controller.category.delete.error', false);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
-        //ma historię, nie możemy usunąć
-        if ($category->hasHistoricalEntries()) {
-            return json_encode(['status' => false, 'error' => $this->view->_('controller.category.delete.error.history')]);
-        }
-        try {
-            //usuwanie - logika szablonu
-            (new TemplateModel($category, $this->cmsSkinsetConfig))->invokeDeleteAction();
-            //usuwanie rekordu
-            $category->delete();
-            return json_encode(['status' => true, 'message' => $this->view->_('controller.category.delete.message')]);
-        } catch (\Cms\Exception\ChildrenExistException $e) { }
-        return json_encode(['status' => false, 'error' => $this->view->_('controller.category.delete.error.children')]);
+        //usuwanie - logika szablonu
+        (new TemplateModel($category, $this->cmsSkinsetConfig))->invokeDeleteAction();
+        //usuwanie rekordu
+        $category->status = CmsCategoryRecord::STATUS_DELETED;
+        $category->save();
+        $this->getMessenger()->addMessage('controller.category.delete.message', true);
+        $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
     }
 
     /**
@@ -350,28 +374,10 @@ class CategoryController extends Controller
         //draft nie może być utworzony, ani wczytany
         if (null === $draft = (new \Cms\Model\CategoryDraft($category))->createAndGetDraftForUser($this->auth->getId(), $force)) {
             $this->getMessenger()->addMessage('messenger.category.draft.fail', false);
-            return $this->_redirectToRefererOrTree($originalId);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
         }
         //przekierowanie do edycji DRAFTu - nowego ID
         $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draft->id, 'originalId' => $originalId, 'uploaderId' => $draft->id]);
-    }
-
-    /**
-     * Przekierowaniena na referer lub tree
-     * @param integer $categoryId
-     */
-    protected function _redirectToRefererOrTree($categoryId)
-    {
-        $sessionSpace = new SessionSpace(self::SESSION_SPACE_PREFIX . $categoryId);
-        //posiada zapisany referer
-        if (null !== ($referer = $sessionSpace->referer)) {
-            //czyszczenie sesji
-            $sessionSpace->unsetAll();
-            $this->getResponse()->redirectToUrl($referer);
-        }
-        //czyszczenie sesji
-        $sessionSpace->unsetAll();
-        $this->getResponse()->redirect('cmsAdmin', 'category', 'tree');
     }
 
     protected function _saveReferer(Request $request, $originalId)
@@ -400,5 +406,4 @@ class CategoryController extends Controller
         //zapis referera do sesji
         $sessionSpace->referer = $referer;
     }
-
 }
