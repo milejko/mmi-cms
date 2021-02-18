@@ -200,10 +200,10 @@ class AuthProvider implements AuthProviderInterface
         $config = $this->container->get(LdapConfig::class);
         try {
             //tworzenie klienta
-            $ldapClient = new \Mmi\Ldap\LdapClient($config->ldap);
+            $ldapClient = new \Mmi\Ldap\LdapClient($config);
 
             //kalkulacja DN na podstawie patternu z konfiguracji
-            $dn = sprintf($config->ldap->dnPattern, str_replace('@' . $config->ldap->domain, '', $identity->username));
+            $dn = sprintf($config->dnPattern, str_replace('@' . $config->domain, '', $identity->username));
 
             //zwrot autoryzacji LDAP
             return $ldapClient->authenticate($dn, $credential);
