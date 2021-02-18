@@ -1,3 +1,4 @@
+{headScript()->appendFile('/resource/cmsAdmin/js/category/index.js')}
 <div class="container-fluid">
     <div class="animated fadeIn">
         <div class="row">
@@ -22,7 +23,8 @@
 
                             </div>
                             <br />
-                            <table class="table table-striped">
+                            <table class="table table-striped table-sort" data-sort-url="{@module=cmsAdmin&controller=category&action=sort@}">
+                                <thead>
                                 {if $breadcrumbs}
                                     <tr>
                                         <th colspan="2">
@@ -43,41 +45,46 @@
                                         <th colspan="2"><i class="icon-home"></i></th>
                                     </tr>
                                 {/if}
+                                </thead>
+                                <tbody class="ui-sortable">
                                 {foreach $categories as $category}
-                                    <tr>
+                                    <tr data-id="{$category->id}">
                                         <td style="vertical-align: middle;">
                                             {if !$category->template}
+                                                <i class="icon-folder"></i>
                                                 <a href="{@module=cmsAdmin&controller=category&action=index&parentId={$category->id}@}">
-                                                    <i class="icon-folder"></i>
-                                                    {if !$category->active}<i class="icon-close"></i>{/if}
-                                                    {if $category->name}{$category->name}{else}({#template.category.index.label.default#}){/if}
-                                                </a>
                                             {else}
-                                                    <i class="icon-doc"></i>
-                                                    {if !$category->active}<i class="icon-close"></i>{/if}
-                                                    {if $category->name}{$category->name}{else}({#template.category.index.label.default#}){/if}
-                                            {/if}                                            
+                                                <i class="icon-doc"></i>
+                                                <a href="{@module=cmsAdmin&controller=category&action=edit&id={$category->id}@}">
+                                            {/if}
+                                                {if !$category->active}<i class="icon-close"></i>{/if}
+                                                {if $category->name}{$category->name}{else}({#template.category.index.label.default#}){/if}
+                                            </a>
                                         </td>
                                         <td align="right">
-                                            <a class="button btn btn-primary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=edit&id={$category->id}@}">
-                                                <i class="icon-pencil"></i>
-                                                edycja
-                                            </a>
-                                            <a class="button btn btn-primary btn-inline-block" href="#">
+                                            <a class="button btn btn-primary btn-inline-block operation-button sort-row ui-sortable-handle" href="#">
                                                 <i class="icon-cursor-move"></i>
                                             </a>
-                                            <a class="button btn btn-danger btn-inline-block confirm" title="{if $category->template}{#template.category.index.delete.page#}{else}{#template.category.index.delete.page#}{/if}" href="{@module=cmsAdmin&controller=category&action=delete&id={$category->id}@}">
-                                                <i class="icon-trash"></i>
-                                            </a>
-                                            <a class="button btn btn-secondary btn-inline-block" href="">
+                                            {if !$category->template}
+                                                <a class="button btn btn-secondary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=edit&id={$category->id}@}">
+                                                    <i class="icon-pencil"></i>
+                                                </a>
+                                            {/if}
+                                            {if $category->template}
+                                                <a class="button btn btn-secondary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=copy&id={$category->id}@}">
+                                                    <i class="icon-docs"></i>
+                                                </a>
+                                            {/if}
+                                            <a class="button btn btn-secondary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=move&id={$category->id}@}">
                                                 <i class="icon-share-alt"></i>
                                             </a>
-                                            <a class="button btn btn-secondary btn-inline-block" href="">
-                                                <i class="icon-docs"></i>
+                                            <a class="button btn btn-danger btn-inline-block confirm" title="{if $category->template}{#template.category.index.delete.page#}{else}{#template.category.index.delete.folder#}{/if}" href="{@module=cmsAdmin&controller=category&action=delete&id={$category->id}@}">
+                                                <i class="icon-trash"></i>
                                             </a>
                                         </td>
                                     </tr>
                                 {/foreach}
+                                </tbody>
                             </table>
                         </div>
                         <div class="clear"></div>

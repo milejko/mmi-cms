@@ -8,12 +8,8 @@
                         <strong>{#template.category.tree.header#}</strong>
                         <span id="categoryMessageContainer" style="display: inline"></span>
                     </div>
-                    <div class="card-body">                        
-                        <div id="categoryTreeContainer">
-                            <div id="jstree" data-url="{@module=cmsAdmin&controller=category&action=node@}">
-                                {jsTree([], $baseUrl . '/resource/cmsAdmin/js/tree.js')}
-                            </div>
-                        </div>
+                    <div class="card-body">
+
                     </div>
                 </div>
             </div>
