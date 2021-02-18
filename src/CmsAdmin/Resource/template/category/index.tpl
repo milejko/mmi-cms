@@ -59,12 +59,22 @@
                                             {/if}                                            
                                         </td>
                                         <td align="right">
-                                            <a class="button btn btn-primary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=edit&id={$category->id}@}"><i class="icon-pencil"></i> edycja</a>
-                                            <a class="button btn btn-primary btn-inline-block" href="#"><i class="icon-cursor-move"></i></a>
-                                            <a class="button btn btn-danger btn-inline-block confirm" title="?" href="{@module=cmsAdmin&controller=category&action=delete&id={$category->id}@}"><i class="icon-trash"></i></a>
-                                            <a class="button btn btn-secondary btn-inline-block" href=""><i class="icon-share-alt"></i></a>
-                                            <a class="button btn btn-secondary btn-inline-block" href=""><i class="icon-docs"></i></a>
-                                        
+                                            <a class="button btn btn-primary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=edit&id={$category->id}@}">
+                                                <i class="icon-pencil"></i>
+                                                edycja
+                                            </a>
+                                            <a class="button btn btn-primary btn-inline-block" href="#">
+                                                <i class="icon-cursor-move"></i>
+                                            </a>
+                                            <a class="button btn btn-danger btn-inline-block confirm" title="{if $category->template}{#template.category.index.delete.page#}{else}{#template.category.index.delete.page#}{/if}" href="{@module=cmsAdmin&controller=category&action=delete&id={$category->id}@}">
+                                                <i class="icon-trash"></i>
+                                            </a>
+                                            <a class="button btn btn-secondary btn-inline-block" href="">
+                                                <i class="icon-share-alt"></i>
+                                            </a>
+                                            <a class="button btn btn-secondary btn-inline-block" href="">
+                                                <i class="icon-docs"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 {/foreach}
