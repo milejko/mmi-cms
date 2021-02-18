@@ -58,12 +58,6 @@ class CategoryForm extends Form
 
     public function init()
     {
-        //szablony/typy (jeśli istnieją)
-        $this->addElement((new Element\Select('template'))
-            ->setLabel('form.category.cmsCategoryTypeId.label')
-            ->addFilter(new Filter\EmptyToNull)
-            ->setMultioptions([null => 'form.category.cmsCategoryTypeId.default'] + (new SkinsetModel(App::$di->get(CmsSkinsetConfig::class)))->getTemplatesMultioptions()));
-
         //nazwa kategorii
         $this->addElement((new Element\Text('name'))
             ->setLabel('form.category.name.label')
@@ -76,47 +70,45 @@ class CategoryForm extends Form
             ->setChecked()
             ->setLabel('form.category.active.label'));
 
-        //SEO
-        //nazwa kategorii
-        $this->addElement((new Element\Text('title'))
-            ->setLabel('form.category.title.label')
-            ->setDescription('form.category.title.description')
-            ->addFilter(new Filter\StringTrim)
-            ->addValidator(new Validator\StringLength([2, 128])));
+        //tylko jeśli ma template (jest stroną)
+        if ($this->getRecord()->template) {
+            //SEO
+            //nazwa kategorii
+            $this->addElement((new Element\Text('title'))
+                ->setLabel('form.category.title.label')
+                ->setDescription('form.category.title.description')
+                ->addFilter(new Filter\StringTrim)
+                ->addValidator(new Validator\StringLength([2, 128])));
 
-        //meta description
-        $this->addElement((new Element\Textarea('description'))
-            ->setLabel('form.category.description.label'));
+            //meta description
+            $this->addElement((new Element\Textarea('description'))
+                ->setLabel('form.category.description.label'));
 
-        //własny uri
-        $this->addElement((new Element\Text('customUri'))
-            ->setLabel('form.category.customUri.label')
-            //adres domyślny (bez baseUrl)
-            ->addFilter(new Filter\StringTrim)
-            ->addFilter(new Filter\EmptyToNull)
-            ->addValidator(new Validator\StringLength([1, 255])));
-        
-        //blank
+            //własny uri
+            $this->addElement((new Element\Text('customUri'))
+                ->setLabel('form.category.customUri.label')
+                //adres domyślny (bez baseUrl)
+                ->addFilter(new Filter\StringTrim)
+                ->addFilter(new Filter\EmptyToNull)
+                ->addValidator(new Validator\StringLength([1, 255])));
+
+            //blank
             $this->addElement((new Element\Checkbox('blank'))
-            ->setLabel('form.category.blank.label'));
-        
-        //Zaawansowane
-        //przekierowanie na link
-        $this->addElement((new Element\Text('redirectUri'))
-            ->setLabel('form.category.redirect.label')
-            ->addFilter(new Filter\StringTrim));
+                ->setLabel('form.category.blank.label'));
 
-        //ustawienie bufora
-        $this->addElement((new Element\Select('cacheLifetime'))
-            ->setLabel('form.category.cacheLifetime.label')
-            ->setMultioptions([null => 'form.category.cacheLifetime.default'] + CacheOptions::LIFETIMES)
-            ->addFilter(new Filter\EmptyStringToNull));
+            //Zaawansowane
+            //przekierowanie na link
+            $this->addElement((new Element\Text('redirectUri'))
+                ->setLabel('form.category.redirect.label')
+                ->addFilter(new Filter\StringTrim));
+
+        }
 
         //zapis
         $this->addElement((new Element\Submit('commit'))
             ->setLabel('template.category.edit.commit'));
 
-        //zapis
+        //podgląd
         $this->addElement((new Element\Submit('submit'))
             ->setLabel('template.category.edit.preview'));
     }

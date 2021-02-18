@@ -12,10 +12,12 @@
                         <i class="icon-close"></i>
                         {#template.category.edit.cancel#}
                     </a>
+                    {if $template}
                     <button style="color: #fff;" id="cmsadmin-form-categoryform-submit-top" type="submit" class="btn btn-secondary" name="cmsadmin-form-categoryform[submit]" value="1">
                         <i class="icon-eyeglass"></i>
                         {#template.category.edit.preview#}
                     </button>
+                    {/if}
                     <button style="color: #fff;" id="cmsadmin-form-categoryform-commit-top" type="submit" class="btn btn-primary" name="cmsadmin-form-categoryform[commit]" value="1">
                         <i class="icon-check"></i>
                         {#template.category.edit.commit#}

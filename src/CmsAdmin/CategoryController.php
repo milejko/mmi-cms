@@ -16,6 +16,7 @@ use Cms\Model\TemplateModel;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use CmsAdmin\Form\CategoryForm;
+use CmsAdmin\Form\CategoryMoveForm;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 use Mmi\Mvc\Router;
@@ -199,6 +200,18 @@ class CategoryController extends Controller
      */
     public function moveAction(Request $request)
     {
+        if (null === $category = (new CmsCategoryQuery)->findPk($request->id)) {
+            //brak strony
+            $this->getMessenger()->addMessage('controller.category.delete.error', false);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
+        }
+        $form = new CategoryMoveForm($category);
+        if ($form->isSaved()) {
+            //brak strony
+            $this->getMessenger()->addMessage('controller.category.delete.error', true);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
+        }
+        $this->view->form = $form;
     }
 
     /**
