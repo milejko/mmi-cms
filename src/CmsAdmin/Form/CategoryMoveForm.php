@@ -15,6 +15,8 @@ use Cms\Form\Element\Tree;
 use Cms\Form\Form;
 use Cms\Model\CategoryModel;
 use Cms\Orm\CmsCategoryQuery;
+use Cms\Orm\CmsCategoryRecord;
+use Mmi\Filter\EmptyToNull;
 
 /**
  * Formularz edycji szegółów kategorii
@@ -29,20 +31,25 @@ class CategoryMoveForm extends Form
         //drzewo kategorii (dozwolone)
         $this->addElement((new Tree('parentId'))
             ->setLabel('form.categoryAcl.allow.label')
+            ->addFilter(new EmptyToNull())
             ->setMultiple(false)
-            ->setStructure(['children' => $this->getFilteredTree($tree)]));
+            ->setStructure(['children' => [['id'=> '0', 'name' => '', 'children' => $this->getFilteredTree($tree, $this->getRecord())]]]));
 
         $this->addElement((new Submit('submit'))->setLabel('sumit'));
     }
 
-    private function getFilteredTree(array $tree): array
+    private function getFilteredTree(array $tree, CmsCategoryRecord $categoryRecord = null): array
     {
         $filteredTree = [];
         foreach ($tree as $category) {
+            if ($category['path'] == $categoryRecord->path) {
+                $category['allow'] = false;    
+            }
             if ($category['template']) {
                 $category['allow'] = false;
             }
-            $category['children'] = $this->getFilteredTree($category['children']);
+            
+            $category['children'] = $this->getFilteredTree($category['children'], $categoryRecord);
             $filteredTree[] = $category;
         }
         return $filteredTree;
