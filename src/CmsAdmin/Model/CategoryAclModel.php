@@ -15,9 +15,8 @@ class CategoryAclModel
 
     /**
      * Obiekt ACL
-     * @var \Mmi\Security\Acl
      */
-    private $_acl;
+    private CategoryAcl $acl;
 
     /**
      * Inicjalizacja danych
@@ -25,11 +24,12 @@ class CategoryAclModel
     public function __construct()
     {
         //ładowanie ACL z bufora
-        if (null !== $this->_acl = App::$di->get(CacheInterface::class)->load($cacheKey = self::CACHE_KEY)) {
+        if (null !== $acl = App::$di->get(CacheInterface::class)->load($cacheKey = self::CACHE_KEY)) {
+            $this->acl = $acl;
             return;
         }
         //uzupełnianie ACL
-        $this->_acl = new CategoryAcl;
+        $this->acl = new CategoryAcl;
         //iteracja po kolekcji rekordów categoryAcl
         foreach ((new \Cms\Orm\CmsCategoryAclQuery)
             ->join('cms_role')->on('cms_role_id')
@@ -38,18 +38,17 @@ class CategoryAclModel
             //dodawanie ściezek
             $role = $aclRecord->getJoined('cms_role')->name;
             $path = trim($aclRecord->getJoined('cms_category')->path . '/' . $aclRecord->getJoined('cms_category')->id, '/');
-            $this->_acl->addPathPermission($role, $path, 'allow' === $aclRecord->access);
+            $this->acl->addPathPermission($role, $path, 'allow' === $aclRecord->access);
         }
         //zapis cache
-        App::$di->get(CacheInterface::class)->save($this->_acl, $cacheKey);
+        App::$di->get(CacheInterface::class)->save($this->acl, $cacheKey);
     }
 
     /**
      * Zwraca obiekt ACL
-     * @return \Mmi\Security\Acl
      */
-    public function getAcl()
+    public function getAcl(): CategoryAcl
     {
-        return $this->_acl;
+        return $this->acl;
     }
 }

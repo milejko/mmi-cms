@@ -16,7 +16,9 @@ use Cms\Form\Form;
 use Cms\Model\CategoryModel;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
+use CmsAdmin\Model\CategoryAcl;
 use Mmi\Filter\EmptyToNull;
+use Mmi\Security\AuthInterface;
 
 /**
  * Formularz edycji szegółów kategorii
@@ -25,30 +27,42 @@ use Mmi\Filter\EmptyToNull;
 class CategoryMoveForm extends Form
 {
 
+    private CategoryAcl $acl;
+    private AuthInterface $auth;
+
     public function init()
     {
+        //injections
+        $this->acl = (new \CmsAdmin\Model\CategoryAclModel)->getAcl();
+        $this->auth = $this->getOption(AuthInterface::class);
+
         $tree = (new CategoryModel(new CmsCategoryQuery()))->getCategoryTree();
         //drzewo kategorii (dozwolone)
         $this->addElement((new Tree('parentId'))
-            ->setLabel('form.categoryAcl.allow.label')
+            ->setLabel('form.categoryMove.parentId.label')
             ->addFilter(new EmptyToNull())
             ->setMultiple(false)
             ->setStructure(['children' => [['id'=> '0', 'name' => '', 'children' => $this->getFilteredTree($tree, $this->getRecord())]]]));
 
-        $this->addElement((new Submit('submit'))->setLabel('sumit'));
+        $this->addElement((new Submit('submit'))->setLabel('form.categoryMove.save.label'));
     }
 
     private function getFilteredTree(array $tree, CmsCategoryRecord $categoryRecord = null): array
     {
         $filteredTree = [];
         foreach ($tree as $category) {
-            if ($category['path'] == $categoryRecord->path) {
+            if ($category['id'] == $categoryRecord->id) {
+                $category['allow'] = false;
+            }
+            if (substr($category['path'], 0, strlen($categoryRecord->path)) == $categoryRecord->path) {
                 $category['allow'] = false;    
             }
             if ($category['template']) {
                 $category['allow'] = false;
             }
-            
+            if (!$this->acl->isAllowed($this->auth->getRoles(), $category['id'])) {
+                $category['allow'] = false;
+            }
             $category['children'] = $this->getFilteredTree($category['children'], $categoryRecord);
             $filteredTree[] = $category;
         }

@@ -49,14 +49,12 @@
                                     {$templateConfig = $skinset->getTemplateConfigByKey($category->template)}
                                     {$folder = !$templateConfig || $templateConfig->getNestingEnabled()}
                                     <tr data-id="{$category->id}">
-                                        <td style="vertical-align: middle;">
-                                            <i class="icon-{if $folder}folder{else}doc{/if}"></i>
+                                        <td class="align-middle">
+                                            <i class="icon-{if $folder}folder{else}doc{/if} p-1 mr-2 {if !$category->active}alert-danger{else}{/if}"></i>
                                             {if $folder}
                                             <a href="{@module=cmsAdmin&controller=category&action=index&parentId={$category->id}@}">
                                             {/if}
-                                                {if !$category->active}<s>{/if}
                                                 {if $category->name}{$category->name}{else}({#template.category.index.label.default#}){/if}
-                                                {if !$category->active}</s>{/if}
                                             </a>
                                             {if $folder}
                                             </a>

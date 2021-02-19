@@ -91,18 +91,17 @@ class CategoryForm extends Form
                 ->addFilter(new Filter\StringTrim)
                 ->addFilter(new Filter\EmptyToNull)
                 ->addValidator(new Validator\StringLength([1, 255])));
-
-            //blank
-            $this->addElement((new Element\Checkbox('blank'))
-                ->setLabel('form.category.blank.label'));
-
-            //Zaawansowane
-            //przekierowanie na link
-            $this->addElement((new Element\Text('redirectUri'))
-                ->setLabel('form.category.redirect.label')
-                ->addFilter(new Filter\StringTrim));
-
         }
+
+        //blank
+        $this->addElement((new Element\Checkbox('blank'))
+            ->setLabel('form.category.blank.label'));
+
+        //Zaawansowane
+        //przekierowanie na link
+        $this->addElement((new Element\Text('redirectUri'))
+            ->setLabel('form.category.redirect.label')
+            ->addFilter(new Filter\StringTrim));
 
         //zapis
         $this->addElement((new Element\Submit('commit'))

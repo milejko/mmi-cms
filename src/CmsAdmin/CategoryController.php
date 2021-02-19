@@ -209,7 +209,7 @@ class CategoryController extends Controller
             $this->getMessenger()->addMessage('controller.category.delete.error', false);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
-        $form = new CategoryMoveForm($category);
+        $form = new CategoryMoveForm($category, [AuthInterface::class => $this->auth]);
         if ($form->isSaved()) {
             //brak strony
             $this->getMessenger()->addMessage('controller.category.delete.error', true);
