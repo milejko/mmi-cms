@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#template.category.tree.header#}</strong>
+                        <strong>{#template.category.move.header#}</strong>
                     </div>
                     <div class="card-body">
                         {$form}

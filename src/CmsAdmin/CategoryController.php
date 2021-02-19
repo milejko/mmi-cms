@@ -12,6 +12,7 @@ namespace CmsAdmin;
 
 use Cms\App\CmsSkinsetConfig;
 use Cms\Model\CategoryValidationModel;
+use Cms\Model\SkinsetModel;
 use Cms\Model\TemplateModel;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
@@ -66,8 +67,8 @@ class CategoryController extends Controller
             $parentCategory = $parentCategory->getParentRecord();
         }
         $this->view->breadcrumbs = \array_reverse($breadcrumbs);
-        //skinset do widoku
-        $this->view->skinset = $this->cmsSkinsetConfig;
+        //model skóry skinset do widoku
+        $this->view->skinset = new SkinsetModel($this->cmsSkinsetConfig);
         //znalezione kategorie do widoku
         $this->view->categories = (new \Cms\Orm\CmsCategoryQuery)
             ->whereStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
@@ -112,7 +113,10 @@ class CategoryController extends Controller
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
         }
         //modyfikacja breadcrumbów
-        $this->view->adminNavigation()->modifyLastBreadcrumb('menu.category.edit', '#');
+        $this->view->adminNavigation()
+            ->removeLastBreadcrumb()
+            ->modifyLastBreadcrumb('menu.category.index', $this->view->url(['module' => 'cmsAdmin', 'controller' => 'category', 'action' => 'index', 'parentId' => $category->parentId]))
+            ->appendBreadcrumb('menu.category.edit', '#');
         //pobranie listy widgetów koniecznych do dodania przed zapisem
         $minOccurrenceWidgets = (new CategoryValidationModel($category, $this->cmsSkinsetConfig))->getMinOccurenceWidgets();
         //konfiguracja kategorii
