@@ -23,6 +23,10 @@ class AclAllowed extends \Mmi\Mvc\ViewHelper\HelperAbstract
      */
     public function aclAllowed(array $params)
     {
+        //defaults
+        $params['module'] = isset($params['module']) ? $params['module'] : 'mmi';
+        $params['controller'] = isset($params['controller']) ? $params['controller'] : 'index';
+        $params['action'] = isset($params['action']) ? $params['action'] : 'index';
         //zwrot z ACL
         return $this->view->getAcl()->isAllowed($this->view->getAuth()->getRoles(), strtolower($params['module'] . ':' . $params['controller'] . ':' . $params['action']));
     }

@@ -43,7 +43,7 @@ class CategoryController extends Controller
     private $cmsSkinsetConfig;
 
     /**
-     * Lista stron CMS - prezentacja w formie grida
+     * Lista stron CMS - prezentacja w formie katalogów
      */
     public function indexAction(Request $request)
     {

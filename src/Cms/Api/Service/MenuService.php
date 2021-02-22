@@ -42,8 +42,10 @@ class MenuService implements MenuServiceInterface
         foreach ($items as $item) {
             $this->addItem($item, $menuStructure);
         }
-        //sorting menu + cache save
-        $this->cacheService->save($orderedMenu = $this->sortMenu($menuStructure['children']), self::CACHE_KEY, 0);
+        //sorting menu
+        $orderedMenu = isset($menuStructure['children']) ? $this->sortMenu($menuStructure['children']): [];
+        //cache save
+        $this->cacheService->save($orderedMenu, self::CACHE_KEY, 0);
         return $orderedMenu;
     }
 
