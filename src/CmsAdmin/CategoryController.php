@@ -20,7 +20,6 @@ use CmsAdmin\Form\CategoryForm;
 use CmsAdmin\Form\CategoryMoveForm;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
-use Mmi\Mvc\Router;
 use Mmi\Security\AuthInterface;
 
 /**
@@ -36,12 +35,6 @@ class CategoryController extends Controller
      * @var AuthInterface
      */
     private $auth;
-
-    /**
-     * @Inject
-     * @var Router
-     */
-    private $router;
 
     /**
      * @Inject
@@ -206,14 +199,15 @@ class CategoryController extends Controller
     {
         if (null === $category = (new CmsCategoryQuery)->findPk($request->id)) {
             //brak strony
-            $this->getMessenger()->addMessage('controller.category.delete.error', false);
+            $this->getMessenger()->addMessage('controller.category.move.error', false);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
+        //powołanie formularza
         $form = new CategoryMoveForm($category, [AuthInterface::class => $this->auth]);
         if ($form->isSaved()) {
             //brak strony
-            $this->getMessenger()->addMessage('controller.category.delete.error', true);
-            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
+            $this->getMessenger()->addMessage('controller.category.move.message', true);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $form->getRecord()->parentId]);
         }
         $this->view->form = $form;
     }
@@ -299,13 +293,12 @@ class CategoryController extends Controller
 
     /**
      * Przygotowanie drafta
-     * @param \Cms\Orm\CmsCategoryRecord $category
      * @param integer $originalId
      */
-    protected function _prepareDraft(\Cms\Orm\CmsCategoryRecord $category, Request $request, $originalId)
+    protected function _prepareDraft(CmsCategoryRecord $category, Request $request, $originalId)
     {
         //jeśli to nie był DRAFT
-        if (\Cms\Orm\CmsCategoryRecord::STATUS_DRAFT == $category->status) {
+        if (CmsCategoryRecord::STATUS_DRAFT == $category->status) {
             return;
         }
         //wymuszony świeży draft jeśli informacja przyszła w url, lub kategoria jest z archiwum
