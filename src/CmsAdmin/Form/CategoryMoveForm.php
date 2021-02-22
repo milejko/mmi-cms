@@ -54,7 +54,7 @@ class CategoryMoveForm extends Form
             if ($category['id'] == $categoryRecord->id) {
                 $category['allow'] = false;
             }
-            if (substr($category['path'], 0, strlen($categoryRecord->path)) == $categoryRecord->path) {
+            if (substr($category['path'], 0, strlen($categoryRecord->path) + 1) == $categoryRecord->path . '/') {
                 $category['allow'] = false;    
             }
             if ($category['template']) {
