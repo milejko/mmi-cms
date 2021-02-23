@@ -2,8 +2,6 @@
 
 namespace Cms\App;
 
-use Mmi\App\KernelException;
-
 /**
  * Konfiguracja szablonu
  */
@@ -21,6 +19,11 @@ class CmsTemplateConfig
      * @var string
      */
     private $_controllerClassName;
+
+    /**
+     * Is nesting allowed
+     */
+    private bool $_nestingEnabled = false;
 
     /**
      * Sekcje
@@ -46,6 +49,23 @@ class CmsTemplateConfig
     public function getName()
     {
         return $this->_name;
+    }
+
+    /**
+     * Enabling/disabling nesting
+     */
+    public function setNestingEnabled(bool $nestingEnabled = true): self
+    {
+        $this->_nestingEnabled = $nestingEnabled;
+        return $this;
+    }
+
+    /**
+     * Gets nesting enabled option
+     */
+    public function getNestingEnabled(): bool
+    {
+        return $this->_nestingEnabled;
     }
 
     /**

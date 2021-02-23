@@ -34,7 +34,7 @@ class MenuService implements MenuServiceInterface
         }
         //getting from infrastructure + writing down item order
         foreach ($items = $this->getFromInfrastructure() as $item) {
-            $this->orderMap[$item['id']] = $item['order'];
+            $this->orderMap[$item['id']] = str_pad($item['order'], 10, "0", \STR_PAD_LEFT);
         }
         //initializing empty menu structure
         $menuStructure = [];
@@ -42,8 +42,10 @@ class MenuService implements MenuServiceInterface
         foreach ($items as $item) {
             $this->addItem($item, $menuStructure);
         }
-        //sorting menu + cache save
-        $this->cacheService->save($orderedMenu = $this->sortMenu($menuStructure['children']), self::CACHE_KEY, 0);
+        //sorting menu
+        $orderedMenu = isset($menuStructure['children']) ? $this->sortMenu($menuStructure['children']): [];
+        //cache save
+        $this->cacheService->save($orderedMenu, self::CACHE_KEY, 0);
         return $orderedMenu;
     }
 
@@ -54,7 +56,11 @@ class MenuService implements MenuServiceInterface
     {
         //using orderMap and id to determine target table nesting
         foreach (explode('/', trim($item['path'] . '/' . $item['id'], '/')) as $id) {
-            $menu = &$menu['children'][isset($this->orderMap[$id]) ? ($this->orderMap[$id] . '-' . $id) : '0-' . $id];
+            //some objects in the path are deleted
+            if (!isset($this->orderMap[$id])) {
+                return;
+            }
+            $menu = &$menu['children'][$this->orderMap[$id] . '-' . $id];
         }
         //adding formatted item to menu
         $menu = array_merge($this->formatItem($item), $menu ? : []);

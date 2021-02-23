@@ -8,14 +8,16 @@
                 {$category = $categoryForm->getRecord()}
                 <h5>{$categoryForm->getRecord()->name}{if $template} ({_($template->getName())}){/if}</h5>
                 <div class="floating-buttons">
-                    <a style="color: #fff;" href="{@module=cmsAdmin&controller=category&action=tree@}" class="btn btn-secondary confirm" title="{#template.category.edit.cancel.alert#}">
+                    <a style="color: #fff;" href="{@module=cmsAdmin&controller=category&action=index&parentId={$category->parentId}@}" class="btn btn-secondary confirm" title="{#template.category.edit.cancel.alert#}">
                         <i class="icon-close"></i>
                         {#template.category.edit.cancel#}
                     </a>
+                    {if $template}
                     <button style="color: #fff;" id="cmsadmin-form-categoryform-submit-top" type="submit" class="btn btn-secondary" name="cmsadmin-form-categoryform[submit]" value="1">
                         <i class="icon-eyeglass"></i>
                         {#template.category.edit.preview#}
                     </button>
+                    {/if}
                     <button style="color: #fff;" id="cmsadmin-form-categoryform-commit-top" type="submit" class="btn btn-primary" name="cmsadmin-form-categoryform[commit]" value="1">
                         <i class="icon-check"></i>
                         {#template.category.edit.commit#}

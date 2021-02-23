@@ -67,7 +67,10 @@ class CategoryModel
     protected function injectIntoMenu(&$menu, $item): void
     {
         foreach (explode('/', trim($item['path'] . '/' . $item['id'], '/')) as $id) {
-            $menu = &$menu['children'][isset($this->orderMap[$id]) ? $this->orderMap[$id] : '0-' . $id];
+            if (!isset($this->orderMap[$id])) {
+                return;
+            }
+            $menu = &$menu['children'][$this->orderMap[$id]];
         }
         $menu = array_merge($item, $menu ? : []);
     }
@@ -96,7 +99,7 @@ class CategoryModel
     private function searchChildren(array $categories, $parentCategoryId = null)
     {
         //iteracja po kategoriach
-        foreach ($categories as $id => $category) {
+        foreach ($categories as $category) {
             if ($category['id'] == $parentCategoryId) {
                 return $category['children'];
             }

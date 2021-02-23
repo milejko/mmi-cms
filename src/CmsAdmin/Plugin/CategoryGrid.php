@@ -10,43 +10,50 @@
 
 namespace CmsAdmin\Plugin;
 
+use Cms\Orm\CmsCategoryQuery;
+use Cms\Orm\CmsCategoryRecord;
 use CmsAdmin\Grid\Column;
+use CmsAdmin\Grid\Column\OperationColumn;
 
 /**
- * Grid kategorii
+ * Grid do prezentacji historycznych wersji danej kategorii
  */
 class CategoryGrid extends \CmsAdmin\Grid\Grid
 {
 
     public function init()
     {
-
         //query
-        $this->setQuery((new \Cms\Orm\CmsCategoryQuery)->whereStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE));
+        $this->setQuery((new CmsCategoryQuery)
+                ->whereStatus()->equals(CmsCategoryRecord::STATUS_DELETED)
+                ->orQuery((new CmsCategoryQuery())
+                        ->whereCmsCategoryOriginalId()->equals(null)
+                        ->whereStatus()->equals(CmsCategoryRecord::STATUS_DRAFT)
+                )
+        );
 
         //nazwa
         $this->addColumn((new Column\TextColumn('name'))
-            ->setLabel('grid.category.name.label'));
+            ->setLabel('grid.categoryTrash.name.label'));
 
-        //uri
-        $this->addColumn((new Column\TextColumn('uri'))
-            ->setFilterMethodLike()
-            ->setLabel('grid.category.uri.label'));
-        
-        //uri
-        $this->addColumn((new Column\TextColumn('customUri'))
-            ->setLabel('grid.category.customUri.label'));
+        //data utworzenia wersji
+        $this->addColumn((new Column\TextColumn('dateAdd'))
+            ->setLabel('grid.categoryTrash.dateAdd.label'));
 
-        //title
-        $this->addColumn((new Column\TextColumn('title'))
-            ->setLabel('grid.category.title.label'));
+        //status
+        $this->addColumn((new Column\SelectColumn('status'))
+                ->setLabel('grid.categoryTrash.status.label')
+                ->setMultioptions([
+                    CmsCategoryRecord::STATUS_DELETED => 'grid.categoryTrash.status.option.deleted',
+                    CmsCategoryRecord::STATUS_DRAFT => 'grid.categoryTrash.status.option.draft',
+                ])
+        );
 
         //operacje
-        $this->addColumn((new Column\CustomColumn('operation'))
-            ->setLabel('grid.shared.operation.label')
-            ->setTemplateCode('{$id = $record->id}{if categoryAclAllowed($id)}<a href="{@module=cmsAdmin&controller=category&action=edit&id={$id}@}" id="category-edit-{$id}"><i class="fa fa-2 fa-edit"></i></a>{else}-{/if}')
+        $this->addColumn((new OperationColumn)
+                ->addCustomButton('fa-2 fa-history', ['module' => 'cmsAdmin', 'controller' => 'categoryTrash', 'action' => 'restore', 'id' => '%id%'])
+                ->setDeleteParams([])
+                ->setEditParams([])
         );
-            
     }
-
 }
