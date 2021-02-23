@@ -5,7 +5,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#template.category.index.header#}</strong>
+                        <strong>{#template.categoryTrash.index.header#}</strong>
                     </div>
                     <div class="card-body">
                         <div class="content-box-content clearfix">
