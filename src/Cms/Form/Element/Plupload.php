@@ -295,7 +295,7 @@ class Plupload extends UploaderElementAbstract
         $html .= '<div id="' . $this->getId() . '-edit" class="plupload-edit-container" title="">';
         $html .= '<fieldset>';
         $html .= $this->_renderImprintElements();
-        $html .= '<label for="' . $this->getId() . '-edit-original">nazwa wyświetlana</label>';
+        $html .= '<label for="' . $this->getId() . '-edit-original">nazwa pliku</label>';
         $html .= '<input type="text" class="text imprint" name="original" id="' . $this->getId() . '-edit-userFileName">';
         $html .= '<div id="' . $this->getId() . '-edit-buttons" class="plupload-edit-buttons">';
         $html .= '<input type="checkbox" name="active" id="' . $this->getId() . '-edit-active" value="1"><label for="' . $this->getId() . '-edit-active">aktywny</label>';
