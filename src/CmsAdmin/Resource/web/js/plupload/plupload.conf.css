@@ -49,6 +49,7 @@ div.plupload-edit-container label, div.plupload-edit-container input {
 }
 
 div.plupload-edit-container div.plupload-edit-buttons {
+    clear: both;
     margin-top: 15px;
 }
 

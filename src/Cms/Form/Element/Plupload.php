@@ -295,8 +295,10 @@ class Plupload extends UploaderElementAbstract
         $html .= '<div id="' . $this->getId() . '-edit" class="plupload-edit-container" title="">';
         $html .= '<fieldset>';
         $html .= $this->_renderImprintElements();
-        $html .= '<label for="' . $this->getId() . '-edit-original">nazwa pliku</label>';
+        $html .= '<div class="plupload-edit-buttons">';
+        $html .= '<label for="' . $this->getId() . '-edit-original">nazwa pliku:</label>';
         $html .= '<input type="text" class="text imprint" name="original" id="' . $this->getId() . '-edit-userFileName">';
+        $html .= '</div>';
         $html .= '<div id="' . $this->getId() . '-edit-buttons" class="plupload-edit-buttons">';
         $html .= '<input type="checkbox" name="active" id="' . $this->getId() . '-edit-active" value="1"><label for="' . $this->getId() . '-edit-active">aktywny</label>';
         $html .= '</div>';
@@ -408,7 +410,7 @@ class Plupload extends UploaderElementAbstract
             return;
         }
         //element label
-        $label = ' <div class="form-group"><label for="' . $fieldId . '">' . $element['label'] . (($element['type'] != 'checkbox') ? ':' : '') . '</label>';
+        $label = '<div class="plupload-edit-buttons"><label for="' . $fieldId . '">' . $element['label'] . (($element['type'] != 'checkbox') ? ':' : '') . '</label>';
         //input text
         if ($element['type'] == 'text') {
             return $label .
@@ -416,7 +418,7 @@ class Plupload extends UploaderElementAbstract
         }
         //input checkbox
         if ($element['type'] == 'checkbox') {
-            return '<input id="' . $fieldId . '" type="' . $element['type'] . '" name="' . $element['name'] . '" value="1" class="imprint ' . $element['type'] . '">' . $label;
+            return '<div class="plupload-edit-buttons"><input id="' . $fieldId . '" type="' . $element['type'] . '" name="' . $element['name'] . '" value="1" class="imprint ' . $element['type'] . '"><label for="' . $fieldId . '">' . $element['label'] . (($element['type'] != 'checkbox') ? ':' : '') . '</label></div>';
         }
         //textarea
         if ($element['type'] == 'textarea') {
