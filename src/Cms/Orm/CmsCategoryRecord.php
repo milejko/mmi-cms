@@ -336,6 +336,31 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     }
 
     /**
+     * Miękkie kasowanie kategorii
+     */
+    public function softDelete()
+    {
+        $this->status = self::STATUS_DELETED;
+        $this->_softDeleteChildren($this->id);
+        return $this->save();
+    }
+
+    /**
+     * Przywracanie skasowanej kategorii
+     */
+    public function restore()
+    {
+        $this->status = self::STATUS_ACTIVE;
+        $parent = $this;
+        //przywracanie rodziców
+        while ($parent = $parent->getParentRecord()) {
+            $parent->status = self::STATUS_ACTIVE;
+            $parent->save();
+        }
+        return $this->save();
+    }
+
+    /**
      * Pobiera url kategorii
      * @param boolean $https true - tak, false - nie, null - bez zmiany protokołu
      * @return string
@@ -438,6 +463,17 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             $categoryRecord->simpleUpdate();
             //zejście rekurencyjne
             $this->_rebuildChildren($categoryRecord->id);
+        }
+    }
+
+    /**
+     * Miękkie usuwanie dzieci
+     */
+    protected function _softDeleteChildren($parentId)
+    {
+        foreach ($this->_getActiveChildren($parentId) as $categoryRecord) {
+            $categoryRecord->softDelete();
+            $this->_softDeleteChildren($categoryRecord->id);
         }
     }
 

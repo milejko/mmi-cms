@@ -224,9 +224,8 @@ class CategoryController extends Controller
         }
         //usuwanie - logika szablonu
         (new TemplateModel($category, $this->cmsSkinsetConfig))->invokeDeleteAction();
-        //usuwanie rekordu
-        $category->status = CmsCategoryRecord::STATUS_DELETED;
-        $category->save();
+        //miękkie usuwanie rekordu
+        $category->softDelete();
         $this->getMessenger()->addMessage('controller.category.delete.message', true);
         $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
     }
