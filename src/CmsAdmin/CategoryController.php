@@ -14,10 +14,14 @@ use Cms\App\CmsSkinsetConfig;
 use Cms\Model\CategoryValidationModel;
 use Cms\Model\SkinsetModel;
 use Cms\Model\TemplateModel;
+use Cms\Orm\CmsCategoryAclRecord;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
+use Cms\Orm\CmsRoleQuery;
 use CmsAdmin\Form\CategoryForm;
 use CmsAdmin\Form\CategoryMoveForm;
+use CmsAdmin\Model\CategoryAclModel;
+use Mmi\Cache\CacheInterface;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 use Mmi\Security\AuthInterface;
@@ -35,6 +39,11 @@ class CategoryController extends Controller
      * @var AuthInterface
      */
     private $auth;
+
+    /**
+     * @Inject
+     */
+    private CacheInterface $cache;
 
     /**
      * @Inject
@@ -72,6 +81,7 @@ class CategoryController extends Controller
 
     /**
      * Lista stron CMS - edycja
+     * //TODO: refactor!!!!!!!!!
      */
     public function editAction(Request $request)
     {
@@ -84,6 +94,14 @@ class CategoryController extends Controller
             $category->cmsAuthId = $this->auth->getId();
             $category->save();
             $request->id = $category->id;
+            if (null === $category->parentId && null !== ($adminRole = (new CmsRoleQuery())->whereName()->equals('admin')->findFirst())) {
+                $aclRecord = new CmsCategoryAclRecord();
+                $aclRecord->cmsCategoryId = $category->id;
+                $aclRecord->cmsRoleId = $adminRole->id;
+                $aclRecord->access = 'allow';
+                $aclRecord->save();
+                $this->cache->remove(CategoryAclModel::CACHE_KEY);
+            }
         }
         //wyszukiwanie kategorii
         if (null === $category = (new CmsCategoryQuery)->findPk($request->id)) {
@@ -224,9 +242,8 @@ class CategoryController extends Controller
         }
         //usuwanie - logika szablonu
         (new TemplateModel($category, $this->cmsSkinsetConfig))->invokeDeleteAction();
-        //usuwanie rekordu
-        $category->status = CmsCategoryRecord::STATUS_DELETED;
-        $category->save();
+        //miękkie usuwanie rekordu
+        $category->softDelete();
         $this->getMessenger()->addMessage('controller.category.delete.message', true);
         $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
     }

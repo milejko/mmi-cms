@@ -49,8 +49,7 @@ class CategoryTrashController extends Controller
             return $this->getResponse()->redirect('cmsAdmin', 'categoryTrash', 'index');
         }
         //aktywacja
-        $category->status = CmsCategoryRecord::STATUS_ACTIVE;
-        $category->save();
+        $category->restore();
         $this->getMessenger()->addMessage('messenger.categoryTrash.success', true);
         return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
     }
