@@ -56,6 +56,9 @@ class CategoryModel
         $orderedMenu = [];
         ksort($menu);
         foreach ($menu as $item) {
+            if (!isset($item['id'])) {
+                continue;
+            }
             if (!empty($item['children'])) {
                 $item['children'] = $this->sortMenu($item['children']);
             }
@@ -100,10 +103,6 @@ class CategoryModel
     {
         //iteracja po kategoriach
         foreach ($categories as $category) {
-            //kategoria błędna
-            if (!isset($category['id'])) {
-                continue;
-            }
             if ($category['id'] == $parentCategoryId) {
                 return $category['children'];
             }
