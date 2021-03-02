@@ -12,6 +12,7 @@ namespace CmsAdmin;
 
 use Mmi\Mvc\Controller;
 use Ifsnop\Mysqldump\Mysqldump;
+use Mmi\App\App;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -35,6 +36,8 @@ class DbController extends Controller
     public function dumpAction()
     {
         ob_end_clean();
+        //TODO: remove after upgrade
+        $this->container = App::$di;
         //new dumper object
         $dumper = new Mysqldump(
             'mysql:host=' . $this->container->get('db.host') . ';dbname=' . $this->container->get('db.name') . ';dbport=' . $this->container->get('db.port'),
