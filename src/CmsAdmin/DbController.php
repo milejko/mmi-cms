@@ -13,7 +13,6 @@ namespace CmsAdmin;
 use Mmi\Mvc\Controller;
 use Ifsnop\Mysqldump\Mysqldump;
 use App\Registry;
-use Psr\Container\ContainerInterface;
 
 /**
  * Kontroler operacji na DB
@@ -26,30 +25,23 @@ class DbController extends Controller
     ];
 
     /**
-     * @Inject
-     */
-    private ContainerInterface $container;
-
-    /**
      * Database dump
      */
     public function dumpAction()
     {
         ob_end_clean();
-        //TODO: remove after upgrade MMi to 4.x
-        $this->container = Registry::$di;
         //new dumper object
         $dumper = new Mysqldump(
-            'mysql:host=' . $this->container->get('db.host') . ';dbname=' . $this->container->get('db.name') . ';dbport=' . $this->container->get('db.port'),
-            $this->container->get('db.user'),
-            $this->container->get('db.password'),
+            'mysql:host=' . Registry::$config->db->host . ';dbname=' . Registry::$config->db->name . ';dbport=' . Registry::$config->db->port,
+            Registry::$config->db->user,
+            Registry::$config->db->password,
             self::OPTIONS
         );
         //write file
         $dumper->start(self::PATH);
         //headers
         $this->getResponse()
-            ->setHeader('Content-Disposition', 'attachment; filename=' . $this->container->get('db.name') . date('-Y-m-d-Hi') . '.sql.gz')
+            ->setHeader('Content-Disposition', 'attachment; filename=' . Registry::$config->db->name . date('-Y-m-d-Hi') . '.sql.gz')
             ->setHeader('Content-Type', 'application/octet-stream')
             ->setHeader('Content-Transfer-Encoding', 'binary')
             ->sendHeaders();
