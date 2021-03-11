@@ -334,17 +334,18 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         if ($this->getPk() === null) {
             return false;
         }
+        //sprawdzanie istnienia dzieci
+        if (0 != (new CmsCategoryQuery())
+            ->whereParentId()->equals($this->id)
+            ->count()) {
+            throw new \Cms\Exception\ChildrenExistException();
+        }
         //usuwanie historycznych, draftów i dzieci
         (new CmsCategoryQuery)
             ->whereCmsCategoryOriginalId()->equals($this->id)
             ->orFieldParentId()->equals($this->id)
             ->find()
             ->delete();
-        //pobranie dzieci
-        $children = (new \Cms\Model\CategoryModel(new CmsCategoryQuery))->getCategoryTree($this->getPk());
-        if (!empty($children)) {
-            throw new \Cms\Exception\ChildrenExistException();
-        }
         //usuwanie plików
         (new CmsFileQuery)
             ->whereQuery((new CmsFileQuery)
