@@ -308,16 +308,16 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         if ($this->getPk() === null) {
             return false;
         }
-        //usuwanie historycznych, draftów i dzieci
-        (new CmsCategoryQuery)
-            ->whereCmsCategoryOriginalId()->equals($this->id)
-            ->orFieldParentId()->equals($this->id)
-            ->delete();
         //pobranie dzieci
         $children = (new \Cms\Model\CategoryModel(new CmsCategoryQuery))->getCategoryTree($this->getPk());
         if (!empty($children)) {
             throw new \Cms\Exception\ChildrenExistException();
         }
+        //usuwanie historycznych, draftów i dzieci
+        (new CmsCategoryQuery)
+            ->whereCmsCategoryOriginalId()->equals($this->id)
+            ->orFieldParentId()->equals($this->id)
+            ->delete();
         //usuwanie plików
         (new CmsFileQuery)
             ->whereQuery((new CmsFileQuery)
@@ -329,7 +329,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //usuwanie widgetów
         (new CmsCategoryWidgetCategoryQuery)
             ->whereCmsCategoryId()->equals($this->getPk())
-            ->find()
             ->delete();
         //usuwanie kategorii i czyszczenie bufora
         return parent::delete() && $this->clearCache();
