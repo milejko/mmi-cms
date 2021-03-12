@@ -47,6 +47,7 @@ class WidgetModel
      * Konstruktor
      * @param CmsCategoryWidgetCategoryRecord $cmsWidgetRecord
      * @param CmsSkinsetConfig $skinsetConfig
+     * @throws CategoryWidgetException
      */
     public function __construct(CmsCategoryWidgetCategoryRecord $cmsWidgetRecord, CmsSkinsetConfig $skinsetConfig)
     {
@@ -97,6 +98,7 @@ class WidgetModel
      * Render akcji edycji
      * @param View $view
      * @return string
+     * @throws CategoryWidgetException
      */
     public function renderEditAction(View $view)
     {
@@ -110,6 +112,7 @@ class WidgetModel
      * Render akcji podglądu
      * @param View $view
      * @return string
+     * @throws CategoryWidgetException
      */
     public function renderPreviewAction(View $view)
     {
@@ -123,6 +126,7 @@ class WidgetModel
      * Render akcji wyświetlenia
      * @param View $view
      * @return string
+     * @throws CategoryWidgetException
      */
     public function renderDisplayAction(View $view)
     {
@@ -149,6 +153,7 @@ class WidgetModel
      * Wywołanie akcji usuwania
      * @param View $view
      * @return void
+     * @throws CategoryWidgetException
      */
     public function invokeDeleteAction()
     {
@@ -159,6 +164,7 @@ class WidgetModel
     /**
      * Tworzy instancję kontrolera
      * @return WidgetController
+     * @throws CategoryWidgetException
      */
     private function _createController()
     {
@@ -177,7 +183,7 @@ class WidgetModel
         //injecting category record
         $targetController->setWidgetRecord($this->_cmsWidgetRecord);
         //zwrot instancji kontrolera
-        return $targetController;        
+        return $targetController;
     }
 
     /**
@@ -187,7 +193,7 @@ class WidgetModel
     private function _getTemplatePrefix()
     {
         $explodedControllerClass = explode('\\', $this->_widgetConfig->getControllerClassName());
-        return lcfirst($explodedControllerClass[0]) . '/' . lcfirst(substr($explodedControllerClass[1], 0, -10));
+        return lcfirst($explodedControllerClass[0]) . '/' . lcfirst(substr(array_pop($explodedControllerClass), 0, -10));
     }
 
 }
