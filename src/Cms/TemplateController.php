@@ -121,6 +121,10 @@ abstract class TemplateController extends Controller
         $widgets = [];
         //getting section skinsets
         foreach ($this->cmsCategoryRecord->getWidgetModel()->getWidgetRelations() as $widgetRelationRecord) {
+            //inactive widget
+            if (!$widgetRelationRecord->active) {
+                continue;
+            }
             //adding widgets to section
             $widgets[substr($fullSectionPath = substr($widgetRelationRecord->widget, 0, strrpos($widgetRelationRecord->widget, '/')), strrpos($fullSectionPath, '/') + 1)][] = (new WidgetModel($widgetRelationRecord, $this->getSkinsetConfig()))->getDataObject($request);
         }
