@@ -312,6 +312,7 @@ class TinyMce extends UploaderElementAbstract
             image_class_list: [
                 {title: 'Obrazek do lewej', value: 'image-left'},
                 {title: 'Obrazek do prawej', value: 'image-right'},
+                {title: 'Zoom', value: 'image-zoom'},
             ],
 		";
     }
