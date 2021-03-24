@@ -15,5 +15,6 @@ class TemplateDataTransport extends HttpJsonTransport
     public array    $attributes     = [];
     public array    $sections       = [];
     public array    $breadcrumbs    = [];
+    public array    $siblings       = [];
     public array    $_links         = [];
 }

@@ -14,9 +14,11 @@ class LinkData implements DataInterface
     const METHOD_PATCH      = 'PATCH';
     const METHOD_REDIRECT   = 'REDIRECT';
 
-    const REL_NEXT = 'next';
-    const REL_BACK = 'back';
-    const REL_SELF = 'self';
+    const REL_NEXT          = 'next';
+    const REL_BACK          = 'back';
+    const REL_SELF          = 'self';
+    const REL_SIBLING       = 'sibling';
+    const REL_MENU          = 'menu';
 
     public string   $href;
     public string   $rel;

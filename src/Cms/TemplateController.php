@@ -18,7 +18,6 @@ use Mmi\Http\Request;
  */
 abstract class TemplateController extends Controller
 {
-
     /**
      * CMS category record
      */
@@ -80,15 +79,16 @@ abstract class TemplateController extends Controller
     public function getTransportObject(Request $request): TransportInterface
     {
         $attributes = json_decode($this->cmsCategoryRecord->configJson, true);
-        $to              = new TemplateDataTransport;
-        $to->id          = $this->cmsCategoryRecord->id;
-        $to->template    = $this->cmsCategoryRecord->template;
-        $to->dateAdd     = $this->cmsCategoryRecord->dateAdd;
-        $to->dateModify  = $this->cmsCategoryRecord->dateModify;
-        $to->attributes  = is_array($attributes) ? $attributes : [];
-        $to->sections    = $this->getSections($request);
+        $to = new TemplateDataTransport;
+        $to->id = $this->cmsCategoryRecord->id;
+        $to->template = $this->cmsCategoryRecord->template;
+        $to->dateAdd = $this->cmsCategoryRecord->dateAdd;
+        $to->dateModify = $this->cmsCategoryRecord->dateModify;
+        $to->attributes = is_array($attributes) ? $attributes : [];
+        $to->sections = $this->getSections($request);
         $to->breadcrumbs = $this->getBreadcrumbs();
-        $to->_links      = [(new LinkData)->setHref(rtrim(ApiController::API_PREFIX, '/'))->setRel('menu')];
+        $to->siblings = $this->getSiblings();
+        $to->_links = [(new LinkData)->setHref(rtrim(ApiController::API_PREFIX, '/'))->setRel(LinkData::REL_MENU)];
         return $to;
     }
 
@@ -137,20 +137,42 @@ abstract class TemplateController extends Controller
     public function getBreadcrumbs(): array
     {
         $breadcrumbs = [];
-        $category = $this->cmsCategoryRecord;
+        $record = $this->cmsCategoryRecord;
         $order = count(explode('/', $this->cmsCategoryRecord->path));
-        while (null !== $category) {
+        while (null !== $record) {
             $breadcrumbs[] = (new BreadcrumbData)
-                ->setTitle($category->name)
+                ->setTitle($record->name)
                 ->setOrder($order--)
-                ->setLinks($category->template ? [
+                ->setLinks($record->template ? [
                     (new LinkData)
-                        ->setHref(ApiController::API_PREFIX . ($category->customUri ?: $category->uri))
-                        ->setRel($this->cmsCategoryRecord === $category ? LinkData::REL_SELF : LinkData::REL_BACK)
+                        ->setHref(ApiController::API_PREFIX . ($record->customUri ?: $record->uri))
+                        ->setRel($this->cmsCategoryRecord === $record ? LinkData::REL_SELF : LinkData::REL_BACK)
                 ] : []);
-            $category = $category->getParentRecord();
+            $record = $record->getParentRecord();
         }
         return array_reverse($breadcrumbs);
     }
 
+    /**
+     * Pobiera rodzeństwo
+     */
+    public function getSiblings(): array
+    {
+        $siblings = [];
+        $records = $this->cmsCategoryRecord->getParentRecord()->getChildrenRecords();
+        foreach ($records as $record) {
+            if ($record->id === $this->cmsCategoryRecord->id) {
+                continue;
+            }
+            $siblings[] = (new BreadcrumbData)
+                ->setTitle($record->name)
+                ->setLinks($record->template ? [
+                    (new LinkData)
+                        ->setHref(ApiController::API_PREFIX . ($record->customUri ?: $record->uri))
+                        ->setRel(LinkData::REL_SIBLING)
+                ] : []);
+        }
+
+        return $siblings;
+    }
 }
