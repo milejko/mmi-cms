@@ -187,7 +187,7 @@ class TemplateModel
     private function _getTemplatePrefix()
     {
         $explodedControllerClass = explode('\\', $this->_templateConfig->getControllerClassName());
-        return lcfirst($explodedControllerClass[0]) . '/' . lcfirst(substr($explodedControllerClass[1], 0, -10));
+        return lcfirst($explodedControllerClass[0]) . '/' . lcfirst(substr(array_pop($explodedControllerClass), 0, -10));
     }
 
 }

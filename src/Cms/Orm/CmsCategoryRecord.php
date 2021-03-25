@@ -130,7 +130,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
 
     /**
      * Aktywność
-     * @var integer 
+     * @var integer
      */
     public $active;
 
@@ -323,7 +323,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             ->whereQuery((new CmsFileQuery)
                 ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
                 ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
-            )        
+            )
             ->andFieldObjectId()->equals($this->getPk())
             ->delete();
         //usuwanie widgetów
@@ -406,6 +406,19 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     }
 
     /**
+     * Pobiera rekordy dzieci
+     * @return array
+     */
+    public function getChildrenRecords($id = null)
+    {
+        if (!$id) {
+            $id = $this->id;
+        }
+
+        return $this->_getActiveChildren($id);
+    }
+
+    /**
      * Zwraca konfigurację
      * @return \Mmi\DataObject
      */
@@ -430,7 +443,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      * @param array $data
      * @return bool
      */
-    public function setConfigFromArray(array $data = []) {
+    public function setConfigFromArray(array $data = [])
+    {
         //kodowanie konfiguracji
         $this->configJson = empty($data) ? null : \json_encode($data);
         return $this;
@@ -440,7 +454,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      * Zwraca czy istnieją rekordy historyczne
      * @return boolean
      */
-    public function hasHistoricalEntries() {
+    public function hasHistoricalEntries()
+    {
         return 0 < (new CmsCategoryQuery)->whereCmsCategoryOriginalId()->equals($this->cmsCategoryOriginalId ? $this->cmsCategoryOriginalId : $this->id)
                 ->andFieldStatus()->equals(self::STATUS_HISTORY)
                 ->count();

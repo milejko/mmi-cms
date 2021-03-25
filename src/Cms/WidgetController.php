@@ -19,7 +19,7 @@ abstract class WidgetController extends Controller
 {
 
     /**
-     * Attachment thumb width & 
+     * Attachment thumb width &
      */
     const ATTACHMENT_THUMB_METHOD   = 'scale';
     const ATTACHMENT_THUMB_SCALE    = '800';
@@ -116,8 +116,9 @@ abstract class WidgetController extends Controller
             $to->_links           = $this->getFileLinks($file);
             $to->name             = $file->original;
             $to->size             = $file->size;
-            $to->mimeType       = $file->mimeType;
-            $to->order          = $file->order ?: 0;
+            $to->mimeType         = $file->mimeType;
+            $to->order            = $file->order ?: 0;
+            $to->isActive         = $file->active ? true : false;
             $attachments[substr($file->object, strlen(CmsCategoryWidgetCategoryRecord::FILE_OBJECT)) ?: 'default'][] = $to;
         }
         return $attachments;
