@@ -124,10 +124,11 @@ class FileController extends \Mmi\Mvc\Controller
         }
         $files = [];
         foreach (\Cms\Orm\CmsFileQuery::byObjectAndClass($request->object, $request->objectId, $request->class)->find() as $file) {
-            $full = $this->view->cdn ? $file->getUrl() : 'http' . ($request->getServer()->httpSecure ? 's' : '') . '://' . $request->getServer()->httpHost . $file->getUrl();
+            $full = $file->getUrl();
             switch ($file->class) {
                 case 'image':
                     $small = $file->getUrl('scalecrop', '100x70');
+                    $full = $file->getUrl();
                     $poster = null;
                     break;
                 case 'audio':

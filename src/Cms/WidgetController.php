@@ -21,10 +21,9 @@ abstract class WidgetController extends Controller
     /**
      * Attachment thumb width & 
      */
-    const ATTACHMENT_THUMB_METHOD   = 'scalecrop';
-    const ATTACHMENT_THUMB_SCALE    = '640x480';
-    const ATTACHMENT_THUMB_SCALE2X  = '1280x960';
-    const ATTACHMENT_THUMB_SCALE4X  = '2560x1920';
+    const ATTACHMENT_THUMB_METHOD   = 'scale';
+    const ATTACHMENT_THUMB_SCALE    = '800';
+    const ATTACHMENT_THUMB_SCALE2X  = '1600';
 
     /**
      * Widget relation record
@@ -139,7 +138,7 @@ abstract class WidgetController extends Controller
             ->setRel('thumb2x');
 
         //only if thumb link exists add thumbs
-        return $thumbLinkData->href ?
+        return 'image' == $file->class ?
             [$downloadLinkData, $thumbLinkData, $thumb2xLinkData] :
             [$downloadLinkData];
     }

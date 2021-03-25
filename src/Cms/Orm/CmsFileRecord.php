@@ -5,6 +5,7 @@ namespace Cms\Orm;
 use Cms\Model\FileSystemModel;
 use Mmi\App\App;
 use Mmi\DataObject;
+use Mmi\Http\Request;
 use Mmi\Mvc\View;
 use Mmi\Security\AuthInterface;
 
@@ -112,8 +113,11 @@ class CmsFileRecord extends \Mmi\Orm\Record
         if ($this->id === null) {
             return;
         }
+        //@TODO: refactor (move to helper)
+        $request = App::$di->get(Request::class);
         //ścieżka CDN
-        $cdnPath = rtrim(App::$di->get(View::class)->cdn ? App::$di->get(View::class)->cdn : App::$di->get(View::class)->url([], true), '/');
+        $cdnPath = rtrim(App::$di->get(View::class)->cdn ? App::$di->get(View::class)->cdn : 
+            'http' . ($request->getServer()->httpSecure ? 's' : '') . '://' . $request->getServer()->httpHost . App::$di->get(View::class)->url([], true), '/');
         //zwrot ścieżki z systemu plików
         return 'download' == $scaleType ?
             $cdnPath . '/download/' . $this->name . '-' . base64_encode($this->original) :
