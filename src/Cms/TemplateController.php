@@ -82,8 +82,13 @@ abstract class TemplateController extends Controller
         $to = new TemplateDataTransport;
         $to->id = $this->cmsCategoryRecord->id;
         $to->template = $this->cmsCategoryRecord->template;
+        $to->name = $this->cmsCategoryRecord->name;
         $to->dateAdd = $this->cmsCategoryRecord->dateAdd;
         $to->dateModify = $this->cmsCategoryRecord->dateModify;
+        $to->title = $this->cmsCategoryRecord->title;
+        $to->description = $this->cmsCategoryRecord->description;
+        $to->opensNewWindow = $this->cmsCategoryRecord->blank ? true : false;
+        $to->isActive = $this->cmsCategoryRecord->active ? true : false;
         $to->attributes = is_array($attributes) ? $attributes : [];
         $to->sections = $this->getSections($request);
         $to->breadcrumbs = $this->getBreadcrumbs();
