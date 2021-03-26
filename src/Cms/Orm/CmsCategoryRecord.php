@@ -150,6 +150,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     const URI_ID_CACHE_PREFIX = 'category-uri-id-';
     //prefiks bufora obiektu kategorii
     const CATEGORY_CACHE_PREFIX = 'category-';
+    //prefix bufora dzieci kategorii
+    const CATEGORY_CHILDREN_CACHE_PREFIX = 'category-children-';
     //prefiks bufora przekierowania
     const REDIRECT_CACHE_PREFIX = 'category-redirect-';
 
@@ -409,13 +411,14 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      * Pobiera rekordy dzieci
      * @return array
      */
-    public function getChildrenRecords($id = null)
+    public function getChildrenRecords()
     {
-        if (!$id) {
-            $id = $this->id;
+        //próba pobrania dzieci z cache
+        if (null === $children = App::$di->get(CacheInterface::class)->load($cacheKey = self::CATEGORY_CHILDREN_CACHE_PREFIX . $this->id)) {
+            //pobieranie dzieci
+            App::$di->get(CacheInterface::class)->save($children = $this->_getActiveChildren($this->id), $cacheKey, 0);
         }
-
-        return $this->_getActiveChildren($id);
+        return $children;
     }
 
     /**
@@ -539,11 +542,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     {
         //usuwanie cache
         $cache = App::$di->get(CacheInterface::class);
-        //drop navigation cache
-        $cache->remove('mmi-cms-navigation-');
-        $cache->remove(MenuService::CACHE_KEY);
-        $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->id);
-        $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->uri));
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->getInitialStateValue('uri')));
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->customUri));
@@ -554,6 +552,21 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($this->getInitialStateValue('customUri')));
         $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->id);
         $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->cmsCategoryOriginalId);
+        //caches associated with active version
+        if (self::STATUS_ACTIVE != $this->status) {
+            return true;
+        }
+        //drop navigation cache
+        $cache->remove('mmi-cms-navigation-');
+        $cache->remove(MenuService::CACHE_KEY);
+        $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->id);
+        $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
+        //usuwanie cache dzieci kategorii
+        $cache->remove(self::CATEGORY_CHILDREN_CACHE_PREFIX . $this->id);
+        foreach ($this->_getActiveChildren($this->id) as $childRecord) {
+            $cache->remove(self::CATEGORY_CHILDREN_CACHE_PREFIX . $childRecord->id);
+        }
+        $cache->remove(self::CATEGORY_CHILDREN_CACHE_PREFIX . $this->parentId);
         return true;
     }
 

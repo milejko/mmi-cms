@@ -146,7 +146,7 @@ abstract class TemplateController extends Controller
         $order = count(explode('/', $this->cmsCategoryRecord->path));
         while (null !== $record) {
             $breadcrumbs[] = (new BreadcrumbData)
-                ->setTitle($record->name)
+                ->setTitle($record->name ? : '')
                 ->setOrder($order--)
                 ->setLinks($record->template ? [
                     (new LinkData)
@@ -164,20 +164,21 @@ abstract class TemplateController extends Controller
     public function getSiblings(): array
     {
         $siblings = [];
-        $records = $this->cmsCategoryRecord->getParentRecord()->getChildrenRecords();
-        foreach ($records as $record) {
+        foreach ($this->cmsCategoryRecord->getParentRecord()->getChildrenRecords() as $record) {
             if ($record->id === $this->cmsCategoryRecord->id) {
                 continue;
             }
+            if (!$record->active) {
+                continue;
+            }
             $siblings[] = (new BreadcrumbData)
-                ->setTitle($record->name)
+                ->setTitle($record->name ? : '')
                 ->setLinks($record->template ? [
                     (new LinkData)
                         ->setHref(ApiController::API_PREFIX . ($record->customUri ?: $record->uri))
                         ->setRel(LinkData::REL_SIBLING)
                 ] : []);
         }
-
         return $siblings;
     }
 }
