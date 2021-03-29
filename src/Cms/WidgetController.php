@@ -106,6 +106,7 @@ abstract class WidgetController extends Controller
     {
         $attachments = [];
         foreach ((new CmsFileQuery)
+            ->whereActive()->equals(true)
             ->whereObject()->like(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
             ->andFieldObjectId()->equals($this->widgetRecord->id)
             ->orderAscOrder()
@@ -118,7 +119,6 @@ abstract class WidgetController extends Controller
             $to->size             = $file->size;
             $to->mimeType         = $file->mimeType;
             $to->order            = $file->order ?: 0;
-            $to->isActive         = $file->active ? true : false;
             $attachments[substr($file->object, strlen(CmsCategoryWidgetCategoryRecord::FILE_OBJECT)) ?: 'default'][] = $to;
         }
         return $attachments;

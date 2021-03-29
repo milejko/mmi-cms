@@ -11,7 +11,6 @@ class AttachmentData implements DataInterface
     public string   $size;
     public string   $mimeType;
     public int      $order      = 0;
-    public bool     $isActive   = false;
     public array    $attributes = [];
     public array    $_links     = [];
 }

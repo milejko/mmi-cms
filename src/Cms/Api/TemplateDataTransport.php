@@ -15,7 +15,6 @@ class TemplateDataTransport extends HttpJsonTransport
     public string   $title;
     public string   $description;
     public bool     $opensNewWindow = false;
-    public bool     $isActive       = false;
     public array    $attributes     = [];
     public array    $sections       = [];
     public array    $breadcrumbs    = [];

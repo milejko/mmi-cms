@@ -88,7 +88,6 @@ abstract class TemplateController extends Controller
         $to->title = $this->cmsCategoryRecord->title;
         $to->description = $this->cmsCategoryRecord->description;
         $to->opensNewWindow = $this->cmsCategoryRecord->blank ? true : false;
-        $to->isActive = $this->cmsCategoryRecord->active ? true : false;
         $to->attributes = is_array($attributes) ? $attributes : [];
         $to->sections = $this->getSections($request);
         $to->breadcrumbs = $this->getBreadcrumbs();
