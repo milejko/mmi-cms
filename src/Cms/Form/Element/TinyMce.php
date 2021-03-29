@@ -298,7 +298,7 @@ class TinyMce extends UploaderElementAbstract
 				'Wingdings=wingdings,zapf dingbats'");
         }
         if ($this->getFontSizeFormats() === null) {
-            $this->setFontSizeFormats('4px 6px 8px 9pc 10px 11px 12px 13px 14px 16px 18px 20px 22px 24px 26px 28px 36px 48px 50px 72px 100px');
+            $this->setFontSizeFormats('4px 6px 8px 9px 10px 11px 12px 13px 14px 16px 18px 20px 22px 24px 26px 28px 36px 48px 50px 72px 100px');
         }
         $this->_common = "
 			autoresize_min_height: " . ($this->getHeight() ? $this->getHeight() : 300) . ",
