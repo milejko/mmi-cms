@@ -47,6 +47,8 @@ abstract class UploaderElementAbstract extends ElementAbstract
     {
         //parent
         parent::setForm($form);
+        //no value
+        $this->setIgnore();
         //obiekt niezdefiniowany
         if (!$this->getObject() && $form->hasRecord()) {
             //ustawianie obiektu
