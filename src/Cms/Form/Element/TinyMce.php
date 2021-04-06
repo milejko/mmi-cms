@@ -11,6 +11,7 @@
 namespace Cms\Form\Element;
 
 use Mmi\App\App;
+use Mmi\Form\Form;
 use Mmi\Session\SessionInterface;
 
 /**
@@ -55,6 +56,18 @@ class TinyMce extends UploaderElementAbstract
      * @var string
      */
     protected $_common;
+
+    /**
+     * Ustawia form macierzysty
+     * @param Form $form
+     * @return self
+     */
+    public function setForm(Form $form)
+    {
+        parent::setForm($form);
+        $this->setIgnore(false);
+        return $this;
+    }
 
     /**
      * Alias na setObject()s
