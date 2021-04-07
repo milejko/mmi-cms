@@ -47,11 +47,12 @@ class FileController extends \Mmi\Mvc\Controller
         $targetFilePath = BASE_PATH . '/web' . $publicPath;
         try {
             mkdir(dirname($targetFilePath), 0777, true);
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
         //wybór skalowania do wykonania
         switch ($request->operation) {
             case 'scale':
-                $resource = \Mmi\Image\Image::scalex($fs->getRealPath(), $request->x, $request->y ? : $request->x);
+                $resource = \Mmi\Image\Image::scalex($fs->getRealPath(), $request->x, $request->y ?: $request->x);
                 break;
             case 'scalex':
                 $resource = \Mmi\Image\Image::scalex($fs->getRealPath(), $request->x);
@@ -60,14 +61,14 @@ class FileController extends \Mmi\Mvc\Controller
                 $resource = \Mmi\Image\Image::scaley($fs->getRealPath(), $request->x);
                 break;
             case 'scalecrop':
-                $resource = \Mmi\Image\Image::scaleCrop($fs->getRealPath(), $request->x, $request->y ? : $request->x);
+                $resource = \Mmi\Image\Image::scaleCrop($fs->getRealPath(), $request->x, $request->y ?: $request->x);
                 break;
             case 'default':
                 $resource = \Mmi\Image\Image::inputToResource($fs->getRealPath());
                 break;
             default:
                 throw new MvcForbiddenException('Scaler type invalid');
-        }        
+        }
         //webp generation
         imagewebp($resource, $targetFilePath, $this->container->get('cms.thumb.quality'));
         return $this->getResponse()->redirectToUrl($this->view->cdn . $publicPath);
@@ -75,7 +76,6 @@ class FileController extends \Mmi\Mvc\Controller
 
     public function serverAction(Request $request)
     {
-        ob_end_clean();
         $fs = new FileSystemModel($request->name);
         $this->getResponse()
             ->setHeader('Content-Disposition', 'attachment; filename=' . base64_decode($request->encodedName))
@@ -108,7 +108,7 @@ class FileController extends \Mmi\Mvc\Controller
         }
         return json_encode($files);
     }
-    
+
     /**
      * Lista obrazów (na potrzeby tinymce)
      * @return view layout
@@ -151,5 +151,4 @@ class FileController extends \Mmi\Mvc\Controller
         //przekazanie danych
         $this->view->files = $files;
     }
-
 }
