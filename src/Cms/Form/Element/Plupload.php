@@ -197,7 +197,7 @@ class Plupload extends UploaderElementAbstract
         if (null === $imprint) {
             $imprint = [];
         }
-        $imprint[] = ['type' => $type, 'name' => $name, 'label' => ($label ?: $name), 'options' => $options];
+        $imprint[] = ['type' => $type, 'name' => $name, 'label' => ($label ? $this->view->_($label) : $name), 'options' => $options];
         return $this->setOption('imprint', $imprint);
     }
 
