@@ -133,7 +133,7 @@ class Tags extends Select
         $values = is_array($this->getValue()) ? $this->getValue() : [$this->getValue()];
 
         if ($this->issetOption('multiple')) {
-            $this->setName($this->getName() . '[]');
+            $this->setName($this->getBaseName() . '[]');
         }
 
         //nagłówek selecta
