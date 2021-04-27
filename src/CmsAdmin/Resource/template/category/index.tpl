@@ -11,11 +11,11 @@
                         <div class="content-box-content clearfix">
                             <div class="available-templates" style="overflow-x: auto; white-space:nowrap;">
                                 <a class="button btn btn-primary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=edit&parentId={$request->parentId}@}">
-                                    <i class="icon-plus"></i> Folder
+                                    <i class="icon-plus"></i> {#template.category.index.folder.label#}
                                 </a>
                                 {foreach $skinset->getTemplatesMultioptions() as $templateKey => $templateName}
                                     <a class="button btn btn-primary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=edit&parentId={$request->parentId}&template={$templateKey}@}">
-                                        <i class="icon-plus"></i> {$templateName}
+                                        <i class="icon-plus"></i> {_($templateName)}
                                     </a>
                                 {/foreach}
                             </div>
