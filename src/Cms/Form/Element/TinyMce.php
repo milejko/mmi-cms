@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -16,7 +16,7 @@ use Mmi\Session\SessionInterface;
 
 /**
  * Element tinymce
- * 
+ *
  * Gettery
  * @method string getObject() pobiera obiekt
  * @method int getObjectId() pobiera identyfikator obiektu
@@ -149,7 +149,7 @@ class TinyMce extends UploaderElementAbstract
 
     /**
      * Powołanie pola
-     * @param type $name
+     * @param string $name
      */
     public function __construct($name)
     {
