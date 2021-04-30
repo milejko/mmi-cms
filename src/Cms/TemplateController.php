@@ -7,11 +7,11 @@ use Cms\Api\LinkData;
 use Cms\Api\TemplateDataTransport;
 use Cms\Api\TransportInterface;
 use Cms\App\CmsSkinsetConfig;
-use Cms\Orm\CmsCategoryRecord;
 use Cms\Model\WidgetModel;
+use Cms\Orm\CmsCategoryRecord;
 use CmsAdmin\Form\CategoryForm;
-use Mmi\Mvc\Controller;
 use Mmi\Http\Request;
+use Mmi\Mvc\Controller;
 
 /**
  * Abstrakcyjna klasa kontrolera widgetów
@@ -163,11 +163,8 @@ abstract class TemplateController extends Controller
     public function getSiblings(): array
     {
         $siblings = [];
-        foreach ($this->cmsCategoryRecord->getParentRecord()->getChildrenRecords() as $record) {
-            if ($record->id === $this->cmsCategoryRecord->id) {
-                continue;
-            }
-            if (!$record->active) {
+        foreach ($this->cmsCategoryRecord->getSiblingsRecords() as $record) {
+            if (!$record->active || $record->id === $this->cmsCategoryRecord->id) {
                 continue;
             }
             $siblings[] = (new BreadcrumbData)

@@ -422,6 +422,20 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     }
 
     /**
+     * Pobiera rekordy tego samego poziomu
+     * @return array
+     */
+    public function getSiblingsRecords()
+    {
+        //próba pobrania dzieci z cache
+        if (null === $siblings = App::$di->get(CacheInterface::class)->load($cacheKey = self::CATEGORY_CHILDREN_CACHE_PREFIX . $this->parentId)) {
+            //pobieranie dzieci
+            App::$di->get(CacheInterface::class)->save($siblings = $this->_getActiveChildren($this->parentId), $cacheKey, 0);
+        }
+        return $siblings;
+    }
+
+    /**
      * Zwraca konfigurację
      * @return \Mmi\DataObject
      */
