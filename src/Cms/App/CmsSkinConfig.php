@@ -10,64 +10,59 @@ class CmsSkinConfig
 
     /**
      * Nazwa skóry
-     * @var string
      */
-    private $_name;
+    private string $name;
+
+    /**
+     * Klucz
+     */
+    private string $key;
 
     /**
      * Dostępne szablony
-     * @var array
      */
-    private $_templates = [];
+    private array $templates = [];
 
     /**
      * Ustawia nazwę
-     * @param string $name
-     * @return CmsSkinConfig
      */
-    public function setName($name)
+    public function setName(string $name): CmsSkinConfig
     {
-        $this->_name = $name;
+        $this->name = $name;
         return $this;
     }
 
     /**
      * Pobiera nazwę
-     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
-        return $this->_name;
+        return $this->name;
     }
 
     /**
      * Ustawia klucz
-     * @param string $name
-     * @return CmsSkinConfig
      */
-    public function setKey($key)
+    public function setKey(string $key): CmsSkinConfig
     {
-        $this->_key = $key;
+        $this->key = $key;
         return $this;
     }
 
     /**
      * Pobiera klucz
-     * @return string
      */
-    public function getKey()
+    public function getKey(): string
     {
-        return $this->_key;
+        return $this->key;
     }
 
     /**
      * Dodaje szablon
-     * @param CmsTemplateConfig $templateConfig
-     * @return CmsSkinConfig
      */
-    public function addTemplate(CmsTemplateConfig $templateConfig)
+    public function addTemplate(CmsTemplateConfig $templateConfig): CmsSkinConfig
     {
-        $this->_templates[] = $templateConfig;
+        $this->templates[] = $templateConfig;
         return $this;
     }
 
@@ -75,9 +70,9 @@ class CmsSkinConfig
      * Pobiera dostępne szablony
      * @return CmsTemplateConfig[]
      */
-    public function getTemplates()
+    public function getTemplates(): array
     {
-        return $this->_templates;
+        return $this->templates;
     }
 
 }

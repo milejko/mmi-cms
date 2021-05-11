@@ -7,31 +7,42 @@ namespace Cms\App;
  */
 class CmsSkinsetConfig
 {
+    const SKIN_NOT_FOND_MESSAGE = 'Skin not found';
 
     /**
      * Dostępne szablony
-     * @var array
      */
-    private $_skins = [];
+    private array $skins = [];
 
     /**
      * Dodaje skórę
      * @param CmsSkinConfig $skinConfig
      * @return CmsSkinsetConfig
      */
-    public function addSkin(CmsSkinConfig $skinConfig)
+    public function addSkin(CmsSkinConfig $skinConfig): CmsSkinsetConfig
     {
-        $this->_skins[] = $skinConfig;
+        $this->skins[$skinConfig->getKey()] = $skinConfig;
         return $this;
+    }
+
+    /**
+     * Gets skin by key
+     */
+    public function getSkinByKey(string $key): CmsSkinConfig
+    {
+        if (!isset($this->skins[$key])) {
+            throw new CmsSkinNotFoundException(self::SKIN_NOT_FOND_MESSAGE);
+        }
+        return $this->skins[$key];
     }
 
     /**
      * Pobiera dostępne skóry
      * @return CmsSkinConfig[]
      */
-    public function getSkins()
+    public function getSkins(): array
     {
-        return $this->_skins;
+        return $this->skins;
     }
 
 }
