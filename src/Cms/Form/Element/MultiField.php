@@ -35,6 +35,12 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
     protected $_elements = [];
 
     /**
+     * Błędy elementów formularza
+     * @var array
+     */
+    private $_elementErrors = [];
+
+    /**
      * Konstruktor
      * @param string $name
      */
@@ -58,6 +64,38 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
         }
 
         return $this;
+    }
+
+    /**
+     * Waliduje pole
+     * @return boolean
+     */
+    public function isValid()
+    {
+        $result = true;
+        if (!is_array($this->getValue())) {
+            return $result;
+        }
+        foreach ($this->getValue() as $index => $itemValues) {
+            foreach ($this->getElements() as $element) {
+                $value = $itemValues[$element->getBaseName()] ?? null;
+                //waliduje poprawnie jeśli niewymagane, ale tylko gdy niepuste
+                if (empty($value) && false === $element->getRequired()) {
+                    return $result;
+                }
+                //iteracja po walidatorach
+                foreach ($element->getValidators() as $validator) {
+                    if ($validator->isValid($value)) {
+                        continue;
+                    }
+                    $result = false;
+                    //dodawanie wiadomości z walidatora
+                    $this->_elementErrors[$index][$element->getBaseName()][] = $validator->getMessage() ? $validator->getMessage() : $validator->getError();
+                }
+            }
+        }
+        //zwrot rezultatu wszystkich walidacji (iloczyn)
+        return $result;
     }
 
     /**
@@ -131,6 +169,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
             $element->setId($this->getId() . '-' . $index . '-' . $element->getBaseName());
             $element->setName($this->getBaseName() . '[' . $index . '][' . $element->getBaseName() . ']');
             $element->setValue($itemValues[$element->getBaseName()] ?? null);
+            $element->setErrors($this->_elementErrors[$index][$element->getBaseName()] ?? []);
             $html .= $element->__toString();
         }
 
