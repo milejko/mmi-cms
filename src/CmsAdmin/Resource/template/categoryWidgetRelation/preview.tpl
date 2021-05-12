@@ -42,7 +42,7 @@
                         </div>
                         <div class="operation">
                             {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'config'])}
-                                <button class="button edit" type="submit" name="cmsadmin-form-categoryform[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&action=edit&widget={$widgetRelation->widget}&id={$widgetRelation->id}&categoryId={$category->id}&uploaderId={$widgetRelation->id}&originalId={$category->cmsCategoryOriginalId}@}">
+                                <button class="button edit" type="submit" name="cmsadmin-form-categoryform[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&action=edit&widget={$widgetRelation->widget}&id={$widgetRelation->id}&categoryId={$category->id}&originalId={$category->cmsCategoryOriginalId}@}">
                                     <i class="fa fa-pencil-square-o pull-right fa-2"></i>
                                 </button>
                             {/if}
