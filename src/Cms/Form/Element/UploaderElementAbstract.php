@@ -12,6 +12,7 @@ namespace Cms\Form\Element;
 
 use Cms\Model\File;
 use Cms\Orm\CmsFileQuery;
+use Cms\Orm\CmsFileRecord;
 use Mmi\App\App;
 use Mmi\Form\Element\ElementAbstract;
 use Mmi\Form\Form;
@@ -36,6 +37,7 @@ abstract class UploaderElementAbstract extends ElementAbstract
 
     //przedrostek tymczasowego obiektu plików
     const TEMP_OBJECT_PREFIX = 'tmp-';
+    const PLACEHOLDER_NAME = '.placeholder';
     const FILES_MOVED_OPTION_PREFIX = 'move-files-handled-';
 
     /**
@@ -101,6 +103,12 @@ abstract class UploaderElementAbstract extends ElementAbstract
         $this->_form->setOption(self::FILES_MOVED_OPTION_PREFIX . $this->getObject(), true);
         //usuwanie z docelowego "worka"
         File::deleteByObject($this->getObject(), $this->getObjectId());
+        //usuwanie placeholdera
+        if (null !== $placeholder = CmsFileQuery::byObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId())
+            ->whereName()->equals(self::PLACEHOLDER_NAME)
+            ->findFirst()) {
+            $placeholder->delete();
+        }    
         //przenoszenie plikow z tymczasowego "worka" do docelowego
         File::move(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), $this->getObject(), $this->getObjectId());
         return parent::onFormSaved();
@@ -120,6 +128,11 @@ abstract class UploaderElementAbstract extends ElementAbstract
         }
         //tworzymy pliki tymczasowe - kopie oryginałów
         File::link($this->getObject(), $this->getObjectId(), self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId());
+        $placeholder = new CmsFileRecord();
+        $placeholder->name = self::PLACEHOLDER_NAME;
+        $placeholder->object = self::TEMP_OBJECT_PREFIX . $this->getObject();
+        $placeholder->objectId = $this->getUploaderId();
+        $placeholder->save();
         return true;
     }
 

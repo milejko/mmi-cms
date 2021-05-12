@@ -75,12 +75,14 @@ class UploadController extends Controller
                 //domyślne zapytanie o wszystkie pliki
                 $query = CmsFileQuery::byObject($request->getPost()->object, $objectId);
         }
-
-        $records = $query->find();
+        //wybieranie rekordów z rozmiarem i mimetypem
+        $records = $query
+            ->whereSize()->notEquals(null)
+            ->whereMimeType()->notEquals(null)
+            ->find();
         foreach ($records as $record) {
             $record->data = $record->data->toArray();
         }
-
         //zwrot json'a z plikami
         return json_encode([
             'result' => 'OK',
