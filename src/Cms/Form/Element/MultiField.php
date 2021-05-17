@@ -131,7 +131,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
         $this->view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
         $this->view->headScript()->appendScript($this->jsScript());
 
-        return $this->renderList() . '<a href="#" class="btn btn-primary btn-add" role="button">Dodaj element</a>';
+        return '<div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">' . $this->renderList() . '<a href="#" class="btn btn-primary btn-add" role="button">Dodaj element</a></div>';
     }
 
     /**
@@ -139,7 +139,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
      */
     private function renderList()
     {
-        $html = '<ul class="list-unstyled field-list" id="' . $this->getId() . '-list">';
+        $html = '<ul class="list-unstyled field-list">';
 
         if (is_array($this->getValue())) {
             $index = 0;
