@@ -65,7 +65,7 @@ div.plupload-edit-container div.plupload-edit-buttons input[type="radio"]:first-
 	margin-left: 0;
 }
 
-div.plupload-edit-container input.text, div.plupload-edit-container textarea {
+div.plupload-edit-container input.text, div.plupload-edit-container textarea, div.plupload-edit-container select {
     margin-bottom: 10px;
     width: 100%;
     padding: .3em;
