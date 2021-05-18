@@ -440,9 +440,9 @@ class Plupload extends UploaderElementAbstract
                     foreach ($value['data'] as $data_key => $data_val) {
                         $data .= str_replace('_', '-', $data_key) . '="' . $data_val . '"';
                     }
-                    array_push($option, '<option value="' . $key . '" ' . $data . '>' . $value['value'] . '</option>"');
+                    array_push($option, '<option value="' . $key . '" ' . $data . '>' . $value['value'] . '</option>');
                 } else {
-                    array_push($option, '<option value="' . $key . '">' . $value . '</option>"');
+                    array_push($option, '<option value="' . $key . '">' . $value . '</option>');
                 }
             }
 
@@ -474,7 +474,7 @@ class Plupload extends UploaderElementAbstract
             }
 
             return $label .
-                '<select id="' . $fieldId . '" name="' . $element['name'] . '" class="' . ($image != '' ? 'col_9' : '') . ' plupload-edit-tinymce imprint ' . $element['type'] . '">' . implode($option) . '</select></div>' . $image;
+                '<select id="' . $fieldId . '" name="' . $element['name'] . '" class="imprint ' . $element['type'] . ($image != '' ? ' col_9' : '') . '">' . implode($option) . '</select></div>' . $image;
         }
     }
 

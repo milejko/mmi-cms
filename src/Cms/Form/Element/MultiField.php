@@ -161,7 +161,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
      * @param string $index
      * @return string
      */
-    private function renderListElement(?array $itemValues = null, string $index = '*')
+    private function renderListElement(?array $itemValues = null, string $index = '**')
     {
         $html = '<li class="border mb-3 p-3"><a href="#" class="btn btn-remove pull-right" role="button"><i class="fa fa-trash-o fa-2"></i></a><section>';
 
@@ -198,7 +198,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
                 
                 $('.btn-add').click(function(e) {
                     e.preventDefault();
-                    list.append('$listElement'.replaceAll('*', list.children().length));
+                    list.append('$listElement'.replaceAll('**', list.children().length));
                 });
                 
                 function reindex() {
