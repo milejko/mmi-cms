@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -12,14 +12,14 @@ namespace Cms\Validator;
 
 /**
  * Walidator - niepusta lista plików w Cms (musi być conajmniej jeden)
- * 
+ *
  * @method self setObject($object) ustawia obiekt
  * @method self setObjectId($objectId) ustawia ID obiektu
  * @method self setClass($class) ustawia klasę plików
  * @method self setActive($active) ustawia aktywność
  * @method self setTemporary($tmp) ustawia, czy pliki tymczasowe
  * @method self setMessage($message) ustawia własną wiadomość walidatora
- * 
+ *
  * @method string getObject() pobiera obiekt
  * @method integer getObjectId() pobiera ID obiektu
  * @method string getClass() pobiera klasę plików
@@ -54,7 +54,8 @@ class NotEmptyCmsFiles extends \Mmi\Validator\ValidatorAbstract
     public function isValid($value)
     {
         $query = (new \Cms\Orm\CmsFileQuery)
-            ->byObject($this->_getObjectName(), $this->getObjectId());
+            ->byObject($this->_getObjectName(), $this->getObjectId())
+            ->andFieldSize()->notEquals(null);
         if ($this->getClass()) {
             $query->andFieldClass()->equals($this->getClass());
         }
@@ -67,7 +68,7 @@ class NotEmptyCmsFiles extends \Mmi\Validator\ValidatorAbstract
         }
         return true;
     }
-    
+
     /**
      * Zwraca nazwę obiektu dla zapytania o pliki
      * @return string
