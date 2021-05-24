@@ -29,16 +29,18 @@
             <ul class="wlist ui-sortable widget-list" data-category-id="{$category->id}">
                 {foreach $widgetRelations as $widgetRelation}
                     {$widgetContent = categoryWidgetPreview($widgetRelation)}
+                    {foreach $section->getAvailableWidgets() as $widgetKey => $widget}
+                        {if $widgetKey == $widgetRelation->widget}
+                            {$widgetName = _($widget->getName())}
+                        {/if}
+                    {/foreach}
                     <li id="widget-item-{$widgetRelation->id}" class="ui-sortable-handle">
                         <div class="sort-preview handle-widget">
-                            {foreach $section->getAvailableWidgets() as $widgetKey => $widget}
-                                {if $widgetKey == $widgetRelation->widget}
-                                    <i class="fa fa2 fa-sort"></i> <strong>{_($widget->getName())}</strong> / {$widgetContent|stripTags|truncate:100}
-                                {/if}
-                            {/foreach}
+                            <i class="fa fa2 fa-sort"></i> <strong>{$widgetName}</strong> / {$widgetContent|stripTags|truncate:100}
                         </div>
                         <div class="preview">
-                            {$widgetContent}
+                            <h6>{$widgetName}</h6>
+                            <div>{$widgetContent}</div>
                         </div>
                         <div class="operation">
                             {if aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'config'])}
