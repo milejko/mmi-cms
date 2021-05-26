@@ -128,7 +128,7 @@ class CmsFrontControllerPlugin extends FrontControllerPluginAbstract
         //pobranie odpowiedzi
         $response = FrontController::getInstance()->getResponse();
         //zmiana contentu
-        $response->setContent((new \Cms\Model\ContentFilter($response->getContent()))->getFilteredContent());
+        $response->setContent($response->getContent());
     }
 
     /**

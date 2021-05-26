@@ -12,6 +12,7 @@ namespace Cms;
 
 use Cms\Model\FileSystemModel;
 use Mmi\Mvc\MvcForbiddenException;
+use App\Registry;
 
 /**
  * Kontroler plików
@@ -58,7 +59,7 @@ class FileController extends \Mmi\Mvc\Controller
                 throw new MvcForbiddenException('Scaler type invalid');
         }
         //webp generation
-        imagewebp($resource, $targetFilePath, $this->container->get('cms.thumb.quality'));
+        imagewebp($resource, $targetFilePath, Registry::$config->thumbQuality);
         return $this->getResponse()->redirectToUrl($this->view->cdn . $publicPath);
     }
 
