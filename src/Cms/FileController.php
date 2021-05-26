@@ -10,11 +10,58 @@
 
 namespace Cms;
 
+use Cms\Model\FileSystemModel;
+use Mmi\Mvc\MvcForbiddenException;
+
 /**
  * Kontroler plików
  */
 class FileController extends \Mmi\Mvc\Controller
 {
+
+        /**
+     * Akcja skalera
+     */
+    public function scalerAction()
+    {
+        $fs = new FileSystemModel($this->name);
+        //public path
+        $publicPath = $fs->getPublicPath($this->operation, trim($this->x . 'x' . $this->y, 'x'));
+        //hash check
+        if (false === strpos($publicPath, $this->hash)) {
+            throw new MvcForbiddenException('Scaler hash invalid');
+        }
+        //target file calculation
+        $targetFilePath = BASE_PATH . '/web' . $publicPath;
+        try {
+            mkdir(dirname($targetFilePath), 0777, true);
+        } catch (\Exception $e) {
+        }
+        //wybór skalowania do wykonania
+        switch ($this->operation) {
+            case 'scale':
+                $resource = \Mmi\Image\Image::scalex($fs->getRealPath(), $this->x, $this->y ?: $this->x);
+                break;
+            case 'scalex':
+                $resource = \Mmi\Image\Image::scalex($fs->getRealPath(), $this->x);
+                break;
+            case 'scaley':
+                $resource = \Mmi\Image\Image::scaley($fs->getRealPath(), $this->x);
+                break;
+            case 'scalecrop':
+                $resource = \Mmi\Image\Image::scaleCrop($fs->getRealPath(), $this->x, $this->y ?: $this->x);
+                break;
+            case 'default':
+                $resource = \Mmi\Image\Image::inputToResource($fs->getRealPath());
+                break;
+            default:
+                throw new MvcForbiddenException('Scaler type invalid');
+        }
+        //webp generation
+        imagewebp($resource, $targetFilePath, $this->container->get('cms.thumb.quality'));
+        return $this->getResponse()->redirectToUrl($this->view->cdn . $publicPath);
+    }
+
     /**
      * Lista obrazów json (na potrzeby tinymce)
      * @return string
