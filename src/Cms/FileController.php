@@ -62,6 +62,21 @@ class FileController extends \Mmi\Mvc\Controller
         return $this->getResponse()->redirectToUrl($this->view->cdn . $publicPath);
     }
 
+    public function serverAction()
+    {
+        $fs = new FileSystemModel($this->name);
+        $this->getResponse()
+            ->setHeader('Content-Disposition', 'attachment; filename=' . base64_decode($this->encodedName))
+            ->setHeader('Content-Type', 'application/octet-stream')
+            ->setHeader('Content-Transfer-Encoding', 'binary')
+            ->setHeader('Content-Length', filesize($fs->getRealPath()))
+            ->setHeader('Cache-Control', 'public')
+            ->setHeader('Expires', 'max')
+            ->sendHeaders();
+        readfile($fs->getRealPath());
+        exit;
+    }
+
     /**
      * Lista obrazów json (na potrzeby tinymce)
      * @return string
