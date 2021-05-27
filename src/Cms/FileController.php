@@ -13,6 +13,8 @@ namespace Cms;
 use Cms\Model\FileSystemModel;
 use Mmi\Mvc\MvcForbiddenException;
 use App\Registry;
+use Cms\Orm\CmsFileQuery;
+use Mmi\Http\ResponseTypes;
 
 /**
  * Kontroler plików
@@ -20,11 +22,13 @@ use App\Registry;
 class FileController extends \Mmi\Mvc\Controller
 {
 
-        /**
+    /**
      * Akcja skalera
      */
     public function scalerAction()
     {
+        //memory limit bump
+        ini_set('memory_limit', '512M');
         $fs = new FileSystemModel($this->name);
         //public path
         $publicPath = $fs->getPublicPath($this->operation, trim($this->x . 'x' . $this->y, 'x'));
@@ -63,14 +67,29 @@ class FileController extends \Mmi\Mvc\Controller
         return $this->getResponse()->redirectToUrl($this->view->cdn . $publicPath);
     }
 
-    public function serverAction()
+    /**
+     * Akcja kopiowania
+     */
+    public function copyAction()
     {
         $fs = new FileSystemModel($this->name);
+        //public path
+        $publicPath = $fs->getPublicPath();
+        //hash check
+        if (false === strpos($publicPath, $this->hash)) {
+            throw new MvcForbiddenException('Scaler hash invalid');
+        }
+        //target file calculation
+        $targetFilePath = BASE_PATH . '/web' . $publicPath;
+        try {
+            mkdir(dirname($targetFilePath), 0777, true);
+        } catch (\Exception $e) {
+        }
+        list($name, $extension) = explode('.', $this->name);
+        copy($fs->getRealPath(), $targetFilePath);
         $this->getResponse()
-            ->setHeader('Content-Disposition', 'attachment; filename=' . base64_decode($this->encodedName))
-            ->setHeader('Content-Type', 'application/octet-stream')
-            ->setHeader('Content-Transfer-Encoding', 'binary')
             ->setHeader('Content-Length', filesize($fs->getRealPath()))
+            ->setType(ResponseTypes::searchType($extension))
             ->setHeader('Cache-Control', 'public')
             ->setHeader('Expires', 'max')
             ->sendHeaders();
