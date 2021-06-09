@@ -239,7 +239,7 @@ class UploadController extends Controller
             ->findPk($request->id)) {
             return '';
         }
-        $this->getResponse()->redirectToUrl($file->getUrl());
+        $this->getResponse()->redirectToUrl($file->getUrl('download'));
     }
 
     /**
