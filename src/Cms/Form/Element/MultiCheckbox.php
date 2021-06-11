@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2017 Mariusz Miłejko (mariusz@milejko.pl)
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
@@ -61,12 +61,12 @@ class MultiCheckbox extends \Mmi\Form\Element\MultiCheckbox
             if (in_array($key, $values)) {
                 $checkbox->setChecked();
             }
-            //wartość wyłączona
+            //wartość wyłączona
             if (strpos($key, ':disabled') !== false) {
                 $checkbox->setValue('')
                     ->setDisabled();
             }
-            $html .= '<li ' . ($checkbox->getDisabled() ? 'class="disabled" ' : '') . 'id="' . $checkbox->getId() . '-item' . '">' .
+            $html .= '<li class="form-check' . ($checkbox->getDisabled() ? ' disabled ' : '') . '" id="' . $checkbox->getId() . '-item' . '">' .
                 $checkbox . '</li>';
         }
         return $html . '</ul>';
