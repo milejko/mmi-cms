@@ -10,6 +10,8 @@
 
 namespace CmsAdmin;
 
+use Cms\App\CmsScopeConfig;
+use CmsAdmin\Form\ScopeSelectForm;
 use Mmi\Security\AuthInterface;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
@@ -23,15 +25,18 @@ class IndexController extends Controller
 
     /**
      * @Inject
-     * @var AuthInterface
      */
-    private $auth;
+    private AuthInterface $auth;
 
     /**
      * @Inject
-     * @var SessionInterface
      */
-    private $session;
+    private SessionInterface $session;
+
+    /**
+     * @Inject
+     */
+    private CmsScopeConfig $scopeConfig;
 
     /**
      * Strona główna admina
@@ -99,10 +104,22 @@ class IndexController extends Controller
         if (!$form->isSaved()) {
             return;
         }
-        $this->getMessenger()->addMessage('messenger.index.password.success');
+        $this->getMessenger()->addMessage('messenger.index.password.success', true);
         //wylogowanie
         $this->auth->clearIdentity();
         $this->getResponse()->redirect('cmsAdmin');
+    }
+
+    public function scopeMenuAction()
+    {
+        $form = new ScopeSelectForm(null, [ScopeSelectForm::SCOPE_CONFIG_OPTION_NAME => $this->scopeConfig]);
+        $this->view->form = $form;
+        //obsługa POST
+        if ($form->isMine()) {
+            $this->scopeConfig->setName($form->getElement('scope')->getValue());
+            $this->getMessenger()->addMessage('messenger.index.scopeMenu.success', true);
+            $this->getResponse()->redirect('cmsAdmin');
+        }
     }
 
 }

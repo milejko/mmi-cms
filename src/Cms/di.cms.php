@@ -1,6 +1,7 @@
 <?php
 
 use Cms\App\CmsAppEventInterceptor;
+use Cms\App\CmsScopeConfig;
 use Cms\Security\AuthProvider;
 use Mmi\App\AppEventInterceptorInterface;
 use Mmi\Security\AuthProviderInterface;
@@ -17,4 +18,5 @@ return [
     //auth & cms interceptor
     AppEventInterceptorInterface::class => autowire(CmsAppEventInterceptor::class),
     AuthProviderInterface::class        => autowire(AuthProvider::class),
+    CmsScopeConfig::class               => autowire(CmsScopeConfig::class),
 ];
