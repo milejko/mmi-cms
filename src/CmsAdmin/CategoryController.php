@@ -10,8 +10,10 @@
 
 namespace CmsAdmin;
 
+use Cms\App\CmsScopeConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Model\CategoryValidationModel;
+use Cms\Model\NullTemplateModel;
 use Cms\Model\SkinsetModel;
 use Cms\Model\TemplateModel;
 use Cms\Orm\CmsCategoryAclRecord;
@@ -36,9 +38,8 @@ class CategoryController extends Controller
 
     /**
      * @Inject
-     * @var AuthInterface
      */
-    private $auth;
+    private AuthInterface $auth;
 
     /**
      * @Inject
@@ -47,15 +48,20 @@ class CategoryController extends Controller
 
     /**
      * @Inject
-     * @var CmsSkinsetConfig
      */
-    private $cmsSkinsetConfig;
+    private CmsScopeConfig $scopeConfig;
+
+    /**
+     * @Inject
+     */
+    private CmsSkinsetConfig $cmsSkinsetConfig;
 
     /**
      * Lista stron CMS - prezentacja w formie katalogów
      */
     public function indexAction(Request $request)
     {
+        $this->checkScope();
         $parentCategory = null;
         //wyszukiwanie parenta
         if ($request->parentId && (null === $parentCategory = (new CmsCategoryQuery)->findPk($request->parentId))) {
@@ -75,6 +81,7 @@ class CategoryController extends Controller
         $this->view->categories = (new \Cms\Orm\CmsCategoryQuery)
             ->whereStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
             ->whereParentId()->equals($request->parentId ? $request->parentId : null)
+            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
             ->orderAscOrder()
             ->find();
     }
@@ -85,6 +92,7 @@ class CategoryController extends Controller
      */
     public function editAction(Request $request)
     {
+        $this->checkScope();
         //brak id - tworzenie nowej kategorii
         if (!$request->id) {
             $category = new CmsCategoryRecord();
@@ -135,9 +143,13 @@ class CategoryController extends Controller
         //form do widoku
         $this->view->categoryForm = $form;
         //model szablonu
-        $templateModel = new TemplateModel($category, $this->cmsSkinsetConfig);
+        try {
+            $templateModel = new TemplateModel($category, $this->cmsSkinsetConfig);
+        } catch (\Exception $e) {
+            $templateModel = new NullTemplateModel;
+        }
         //szablon strony istnieje
-        if ($category->template) {
+        if (null !== $templateModel && $category->template) {
             $this->view->template = $templateModel->getTemplateConfg();
             //dekoracja formularza
             $templateModel->invokeDecorateEditForm($form);
@@ -215,6 +227,7 @@ class CategoryController extends Controller
      */
     public function moveAction(Request $request)
     {
+        $this->checkScope();
         if (null === $category = (new CmsCategoryQuery)->findPk($request->id)) {
             //brak strony
             $this->getMessenger()->addMessage('controller.category.move.error', false);
@@ -235,6 +248,7 @@ class CategoryController extends Controller
      */
     public function deleteAction(Request $request)
     {
+        $this->checkScope();
         if (null === $category = (new CmsCategoryQuery)->findPk($request->id)) {
             //brak strony
             $this->getMessenger()->addMessage('controller.category.delete.error', false);
@@ -253,6 +267,7 @@ class CategoryController extends Controller
      */
     public function copyAction(Request $request)
     {
+        $this->checkScope();
         if (null === $category = (new CmsCategoryQuery)->findPk($request->id)) {
             //brak strony
             $this->getMessenger()->addMessage('controller.category.copy.error', false);
@@ -269,6 +284,7 @@ class CategoryController extends Controller
 
     public function sortAction(Request $request)
     {
+        $this->checkScope();
         $this->getResponse()->setTypePlain();
         //sprawdzanie istnienia danych sortujących
         if (null === ($order = $this->getRequest()->getPost()->value)) {
@@ -327,6 +343,15 @@ class CategoryController extends Controller
         }
         //przekierowanie do edycji DRAFTu - nowego ID
         $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draft->id, 'originalId' => $originalId, 'uploaderId' => $draft->id]);
+    }
+
+    private function checkScope(): void
+    {
+        if (!$this->scopeConfig->getName()) {
+            $this->getMessenger()->addMessage('messenger.category.scope.fail', false);
+            $this->getResponse()->redirect('cmsAdmin');
+        }
+        $this->view->scope = $this->scopeConfig->getName();
     }
 
 }

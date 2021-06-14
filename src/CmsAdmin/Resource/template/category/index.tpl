@@ -10,7 +10,7 @@
                     <div class="card-body">
                         <div class="content-box-content clearfix">
                             <div class="available-templates" style="overflow-x: auto; white-space:nowrap;">
-                                <a class="button btn btn-primary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=edit&parentId={$request->parentId}@}">
+                                <a class="button btn btn-primary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=edit&parentId={$request->parentId}&template={$scope}@}">
                                     <i class="icon-plus"></i> {#template.category.index.folder.label#}
                                 </a>
                                 {foreach $skinset->getTemplatesMultioptions() as $templateKey => $templateName}
