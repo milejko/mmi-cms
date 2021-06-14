@@ -11,6 +11,7 @@
 namespace CmsAdmin;
 
 use Cms\App\CmsScopeConfig;
+use Cms\App\CmsSkinsetConfig;
 use CmsAdmin\Form\ScopeSelectForm;
 use Mmi\Security\AuthInterface;
 use Mmi\Http\Request;
@@ -37,6 +38,11 @@ class IndexController extends Controller
      * @Inject
      */
     private CmsScopeConfig $scopeConfig;
+
+    /**
+     * @Inject
+     */
+    private CmsSkinsetConfig $skinsetConfig;
 
     /**
      * Strona główna admina
@@ -112,7 +118,15 @@ class IndexController extends Controller
 
     public function scopeMenuAction()
     {
-        $form = new ScopeSelectForm(null, [ScopeSelectForm::SCOPE_CONFIG_OPTION_NAME => $this->scopeConfig]);
+        $options = [];
+        foreach ($this->skinsetConfig->getSkins() as $skin) {
+            $options[$skin->getKey()] = $skin->getName();
+        }
+        if (!$this->scopeConfig->getName()) {
+            $this->scopeConfig->setName(array_key_first($options));
+        }
+        $form = new ScopeSelectForm(null, [ScopeSelectForm::OPTION_SELECTED => $this->scopeConfig->getName(), ScopeSelectForm::OPTION_MULTIOPTIONS => $options]);
+
         $this->view->form = $form;
         //obsługa POST
         if ($form->isMine()) {

@@ -24,7 +24,7 @@ class CategoryAclForm extends \Cms\Form\Form
 
     public function init()
     {
-        $tree = (new \Cms\Model\CategoryModel(new CmsCategoryQuery()))->getCategoryTree();
+        $tree = (new \Cms\Model\CategoryModel((new CmsCategoryQuery())->whereTemplate()->like($this->getOption('scope') . '%')))->getCategoryTree();
         //drzewo kategorii (dozwolone)
         $this->addElement((new Element\Tree('allow'))
             ->setLabel('form.categoryAcl.allow.label')

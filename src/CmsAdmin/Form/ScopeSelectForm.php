@@ -21,23 +21,15 @@ use Mmi\App\App;
  */
 class ScopeSelectForm extends Form
 {
-    public const SCOPE_CONFIG_OPTION_NAME = 'scope-option';
+    public const OPTION_SELECTED = 'selected';
+    public const OPTION_MULTIOPTIONS = 'multioptions';
 
     public function init()
     {
         $this->addElement((new Select('scope'))
-            ->setValue($this->getOption(self::SCOPE_CONFIG_OPTION_NAME)->getName())
-            ->setMultioptions($this->getSkinMultioptions())
+            ->setValue($this->getOption(self::OPTION_SELECTED))
+            ->setMultioptions($this->getOption(self::OPTION_MULTIOPTIONS))
         );
-    }
-
-    private function getSkinMultioptions(): array
-    {
-        $options = [null => '---'];
-        foreach (App::$di->get(CmsSkinsetConfig::class)->getSkins() as $skin) {
-            $options[$skin->getKey()] = $skin->getName();
-        }
-        return $options;
     }
 
 }
