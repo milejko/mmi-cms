@@ -26,6 +26,7 @@ use Mmi\Security\AuthInterface;
  */
 class CategoryMoveForm extends Form
 {
+    public const SCOPE_CONFIG_OPTION_NAME = 'scope';
 
     private CategoryAcl $acl;
     private AuthInterface $auth;
@@ -36,7 +37,9 @@ class CategoryMoveForm extends Form
         $this->acl = (new \CmsAdmin\Model\CategoryAclModel)->getAcl();
         $this->auth = $this->getOption(AuthInterface::class);
 
-        $tree = (new CategoryModel(new CmsCategoryQuery()))->getCategoryTree();
+        $tree = (new CategoryModel((new CmsCategoryQuery())
+            ->whereTemplate()->like(self::SCOPE_CONFIG_OPTION_NAME . '%')
+            ))->getCategoryTree();
         //drzewo kategorii (dozwolone)
         $this->addElement((new Tree('parentId'))
             ->setLabel('form.categoryMove.parentId.label')

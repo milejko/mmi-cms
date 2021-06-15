@@ -44,7 +44,9 @@ class CategoryTrashController extends Controller
     public function restoreAction(Request $request)
     {
         //wyszukiwanie kategorii
-        if (null === $category = (new CmsCategoryQuery())->findPk($request->id)) {
+        if (null === $category = (new CmsCategoryQuery())
+            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+            ->findPk($request->id)) {
             //przekierowanie na trash
             return $this->getResponse()->redirect('cmsAdmin', 'categoryTrash', 'index');
         }

@@ -62,7 +62,9 @@ class CategoryController extends Controller
     {
         $parentCategory = null;
         //wyszukiwanie parenta
-        if ($request->parentId && (null === $parentCategory = (new CmsCategoryQuery)->findPk($request->parentId))) {
+        if ($request->parentId && (null === $parentCategory = (new CmsCategoryQuery)
+            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+            ->findPk($request->parentId))) {
             //błędny parent
             $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
@@ -90,7 +92,11 @@ class CategoryController extends Controller
      */
     public function editAction(Request $request)
     {
-        $this->view->scope = $this->scopeConfig->getName();
+        //brak id i szablonu
+        if (!$request->id && !$request->template) {
+            //nowy artykuł bez template
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
+        }
         //brak id - tworzenie nowej kategorii
         if (!$request->id) {
             $category = new CmsCategoryRecord();
@@ -110,7 +116,9 @@ class CategoryController extends Controller
             }
         }
         //wyszukiwanie kategorii
-        if (null === $category = (new CmsCategoryQuery)->findPk($request->id)) {
+        if (null === $category = (new CmsCategoryQuery)
+            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+            ->findPk($request->id)) {
             //przekierowanie na originalId
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $request->originalId]);
         }
@@ -122,6 +130,8 @@ class CategoryController extends Controller
         if ($category->cmsAuthId != $this->auth->getId()) {
             throw new \Mmi\Mvc\MvcForbiddenException('Category not allowed');
         }
+        //scope do widoku
+        $this->view->scope = $this->scopeConfig->getName();
         //sprawdzanie czy nie duplikat
         $this->view->duplicateAlert = $this->_isCategoryDuplicate($originalId);
         //sprawdzenie uprawnień do edycji węzła kategorii
@@ -221,13 +231,15 @@ class CategoryController extends Controller
      */
     public function moveAction(Request $request)
     {
-        if (null === $category = (new CmsCategoryQuery)->findPk($request->id)) {
+        if (null === $category = (new CmsCategoryQuery)
+            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+            ->findPk($request->id)) {
             //brak strony
             $this->getMessenger()->addMessage('controller.category.move.error', false);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
         //powołanie formularza
-        $form = new CategoryMoveForm($category, [AuthInterface::class => $this->auth]);
+        $form = new CategoryMoveForm($category, [AuthInterface::class => $this->auth, CategoryMoveForm::SCOPE_CONFIG_OPTION_NAME => $this->scopeConfig->getName()]);
         if ($form->isSaved()) {
             //brak strony
             $this->getMessenger()->addMessage('controller.category.move.message', true);
@@ -241,7 +253,9 @@ class CategoryController extends Controller
      */
     public function deleteAction(Request $request)
     {
-        if (null === $category = (new CmsCategoryQuery)->findPk($request->id)) {
+        if (null === $category = (new CmsCategoryQuery)
+            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+            ->findPk($request->id)) {
             //brak strony
             $this->getMessenger()->addMessage('controller.category.delete.error', false);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
@@ -259,7 +273,9 @@ class CategoryController extends Controller
      */
     public function copyAction(Request $request)
     {
-        if (null === $category = (new CmsCategoryQuery)->findPk($request->id)) {
+        if (null === $category = (new CmsCategoryQuery)
+            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+            ->findPk($request->id)) {
             //brak strony
             $this->getMessenger()->addMessage('controller.category.copy.error', false);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
@@ -287,7 +303,9 @@ class CategoryController extends Controller
         //sortowanie
         foreach ($order as $order => $id) {
             //brak rekordu o danym ID
-            if (null === ($record = (new CmsCategoryQuery())->findPk($id))) {
+            if (null === ($record = (new CmsCategoryQuery())
+                ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+                ->findPk($id))) {
                 continue;
             }
             //ustawianie kolejności i zapis
@@ -308,6 +326,7 @@ class CategoryController extends Controller
         //znaleziono kategorię o tym samym uri
         return (null !== (new CmsCategoryQuery)
             ->whereId()->notEquals($category->id)
+            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
             ->andFieldRedirectUri()->equals(null)
             ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
             ->andQuery((new CmsCategoryQuery)->searchByUri($category->uri))

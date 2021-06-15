@@ -10,6 +10,7 @@
 
 namespace CmsAdmin;
 
+use Cms\App\CmsScopeConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Model\CategoryValidationModel;
 use Cms\Model\SkinsetModel;
@@ -30,12 +31,19 @@ class CategoryWidgetRelationController extends Controller
     private $cmsSkinsetConfig;
 
     /**
+     * @Inject
+     */
+    private CmsScopeConfig $scopeConfig;
+
+    /**
      * Edycja widgeta
      */
     public function editAction(Request $request)
     {
         //wyszukiwanie kategorii
-        if ((null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($request->categoryId)) || $category->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
+        if ((null === $category = (new \Cms\Orm\CmsCategoryQuery)
+            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+            ->findPk($request->categoryId)) || $category->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
             //brak kategorii
             $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }

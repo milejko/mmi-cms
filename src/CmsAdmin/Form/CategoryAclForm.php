@@ -22,9 +22,11 @@ use Mmi\Cache\CacheInterface;
 class CategoryAclForm extends \Cms\Form\Form
 {
 
+    public const SCOPE_CONFIG_OPTION_NAME = 'scope';
+
     public function init()
     {
-        $tree = (new \Cms\Model\CategoryModel((new CmsCategoryQuery())->whereTemplate()->like($this->getOption('scope') . '%')))->getCategoryTree();
+        $tree = (new \Cms\Model\CategoryModel((new CmsCategoryQuery())->whereTemplate()->like($this->getOption(self::SCOPE_CONFIG_OPTION_NAME) . '%')))->getCategoryTree();
         //drzewo kategorii (dozwolone)
         $this->addElement((new Element\Tree('allow'))
             ->setLabel('form.categoryAcl.allow.label')
