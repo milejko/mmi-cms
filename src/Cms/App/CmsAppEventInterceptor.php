@@ -16,6 +16,7 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
 
     public function init(): void
     {
+        $this->container->get(CmsScopeConfig::class)->setName('other-skin');
     }
 
     public function beforeDispatch(): void
@@ -27,6 +28,11 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
         }
         $this->initTranslation();
         $this->container->get(SessionInterface::class)->start();
+        //wybranie domyślnego scope jeśli brak
+        if (!$this->container->get(CmsScopeConfig::class)->getName()) {
+            $firstSkin = current($this->container->get(CmsSkinsetConfig::class)->getSkins());
+            $this->container->get(CmsScopeConfig::class)->setName($firstSkin->getKey());
+        }
         //zablokowane na ACL
         $acl = $this->container->get(AclInterface::class);
         $auth = $this->container->get(AuthInterface::class);

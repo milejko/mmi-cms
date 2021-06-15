@@ -119,11 +119,9 @@ class IndexController extends Controller
     public function scopeMenuAction()
     {
         $options = [];
+        //default
         foreach ($this->skinsetConfig->getSkins() as $skin) {
             $options[$skin->getKey()] = $skin->getName();
-        }
-        if (!$this->scopeConfig->getName()) {
-            $this->scopeConfig->setName(array_key_first($options));
         }
         $form = new ScopeSelectForm(null, [ScopeSelectForm::OPTION_SELECTED => $this->scopeConfig->getName(), ScopeSelectForm::OPTION_MULTIOPTIONS => $options]);
 
@@ -132,7 +130,11 @@ class IndexController extends Controller
         if ($form->isMine()) {
             $this->scopeConfig->setName($form->getElement('scope')->getValue());
             $this->getMessenger()->addMessage('messenger.index.scopeMenu.success', true);
-            $this->getResponse()->redirect('cmsAdmin');
+            //przekierowanie na referer
+            if (isset($_SERVER['HTTP_REFERER'])) {
+                return $this->getResponse()->redirectToUrl($_SERVER['HTTP_REFERER']);
+            }
+            return $this->getResponse()->redirect('cmsAdmin');
         }
     }
 

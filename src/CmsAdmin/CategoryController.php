@@ -77,6 +77,8 @@ class CategoryController extends Controller
         $this->view->breadcrumbs = \array_reverse($breadcrumbs);
         //model skóry skinset do widoku
         $this->view->skinset = new SkinsetModel($this->cmsSkinsetConfig);
+        //scope do widoku
+        $this->view->scopeName = $this->scopeConfig->getName();
         //znalezione kategorie do widoku
         $this->view->categories = (new \Cms\Orm\CmsCategoryQuery)
             ->whereStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
@@ -130,8 +132,6 @@ class CategoryController extends Controller
         if ($category->cmsAuthId != $this->auth->getId()) {
             throw new \Mmi\Mvc\MvcForbiddenException('Category not allowed');
         }
-        //scope do widoku
-        $this->view->scope = $this->scopeConfig->getName();
         //sprawdzanie czy nie duplikat
         $this->view->duplicateAlert = $this->_isCategoryDuplicate($originalId);
         //sprawdzenie uprawnień do edycji węzła kategorii

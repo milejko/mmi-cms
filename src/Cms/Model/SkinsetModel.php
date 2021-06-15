@@ -30,23 +30,6 @@ class SkinsetModel
     }
 
     /**
-     * Pobiera tablicę szablonów
-     * @return array
-     */
-    public function getTemplatesMultioptions()
-    {
-        $templates = [];
-        //iteracja po skórach
-        foreach ($this->_skinsetConfig->getSkins() as $skinConfig) {
-            //iteracja po szablonach
-            foreach ($skinConfig->getTemplates() as $templateConfig) {
-                $templates[$skinConfig->getKey() . self::SEPARATOR . $templateConfig->getKey()] = $templateConfig->getName();
-            }
-        }
-        return $templates;
-    }
-
-    /**
      * Zwraca sekcje po szablonie
      * @param string $key
      * @return SectionModel[]
