@@ -60,7 +60,7 @@ class CategoryMoveForm extends Form
             if (substr($category['path'], 0, strlen($categoryRecord->path) + 1) == $categoryRecord->path . '/') {
                 $category['allow'] = false;    
             }
-            if ($category['template']) {
+            if (strpos($category['template'], '/')) {
                 $category['allow'] = false;
             }
             if (!$this->acl->isAllowed($this->auth->getRoles(), $category['id'])) {
