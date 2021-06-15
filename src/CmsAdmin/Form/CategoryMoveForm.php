@@ -38,7 +38,7 @@ class CategoryMoveForm extends Form
         $this->auth = $this->getOption(AuthInterface::class);
 
         $tree = (new CategoryModel((new CmsCategoryQuery())
-            ->whereTemplate()->like(self::SCOPE_CONFIG_OPTION_NAME . '%')
+            ->whereTemplate()->like($this->getOption(self::SCOPE_CONFIG_OPTION_NAME) . '%')
             ))->getCategoryTree();
         //drzewo kategorii (dozwolone)
         $this->addElement((new Tree('parentId'))
