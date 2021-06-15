@@ -15,6 +15,7 @@ use Cms\App\CmsSkinsetConfig;
 use Cms\Model\CategoryValidationModel;
 use Cms\Model\SkinsetModel;
 use Cms\Model\WidgetModel;
+use Cms\Orm\CmsCategoryRecord;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 
@@ -40,15 +41,8 @@ class CategoryWidgetRelationController extends Controller
      */
     public function editAction(Request $request)
     {
-        //wyszukiwanie kategorii
-        if ((null === $category = (new \Cms\Orm\CmsCategoryQuery)
-            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-            ->findPk($request->categoryId)) || $category->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
-            //brak kategorii
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
-        }
         //kategoria do widoku
-        $this->view->category = $category;
+        $this->view->category = $category = $this->getCategoryOrRedirect($request->categoryId);
         //walidacja czy można dodać kolejny taki widget
         if (!$this->id && !(new CategoryValidationModel($category, $this->cmsSkinsetConfig))->isWidgetAvailable($request->widget)) {
             $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $request->categoryId, 'originalId' => $request->originalId, 'uploaderId' => $category->id]);
@@ -91,12 +85,8 @@ class CategoryWidgetRelationController extends Controller
      */
     public function previewAction(Request $request)
     {
-        //wyszukiwanie kategorii
-        if (null === $category = (new \Cms\Orm\CmsCategoryQuery)->findPk($request->categoryId)) {
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
-        }
         //kategoria do widoku
-        $this->view->category = $category;
+        $this->view->category = $category = $this->getCategoryOrRedirect($request->categoryId);
         //brak skór
         if (!$this->cmsSkinsetConfig) {
             return;
@@ -112,9 +102,10 @@ class CategoryWidgetRelationController extends Controller
      */
     public function deleteAction(Request $request)
     {
+        $category = $this->getCategoryOrRedirect($request->categoryId);
         //wyszukiwanie relacji do edycji
         if (null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
-            ->whereCmsCategoryId()->equals($request->categoryId)
+            ->whereCmsCategoryId()->equals($category->id)
             ->findPk($this->id)) {
             return '';
         }
@@ -130,9 +121,10 @@ class CategoryWidgetRelationController extends Controller
      */
     public function toggleAction(Request $request)
     {
+        $category = $this->getCategoryOrRedirect($request->categoryId);
         //wyszukiwanie relacji do edycji
         if (null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
-            ->whereCmsCategoryId()->equals($request->categoryId)
+            ->whereCmsCategoryId()->equals($category->id)
             ->findPk($request->id)) {
             return '';
         }
@@ -148,16 +140,29 @@ class CategoryWidgetRelationController extends Controller
      */
     public function sortAction(Request $request)
     {
+        $category = $this->getCategoryOrRedirect($request->categoryId);
         $this->getResponse()->setTypePlain();
         //brak pola
         if (null === $serial = $request->getPost()->__get('widget-item')) {
             return $this->view->_('controller.categoryWidgetRelation.move.error');
         }
         //sortowanie
-        (new \Cms\Model\CategoryWidgetModel($this->categoryId, $this->cmsSkinsetConfig))
+        (new \Cms\Model\CategoryWidgetModel($category->id, $this->cmsSkinsetConfig))
             ->sortBySerial($serial);
         //pusty zwrot
         return '';
+    }
+
+    private function getCategoryOrRedirect(int $categoryId): CmsCategoryRecord
+    {
+        //wyszukiwanie kategorii
+        if ((null === $category = (new \Cms\Orm\CmsCategoryQuery)
+            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+            ->findPk($categoryId)) || $category->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
+            //brak kategorii
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
+        }
+        return $category;
     }
 
 }
