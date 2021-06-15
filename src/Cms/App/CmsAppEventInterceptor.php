@@ -31,7 +31,7 @@ class CmsAppEventInterceptor extends AppEventInterceptorAbstract
         //wybranie domyślnego scope jeśli brak
         if (!$this->container->get(CmsScopeConfig::class)->getName()) {
             $firstSkin = current($this->container->get(CmsSkinsetConfig::class)->getSkins());
-            $this->container->get(CmsScopeConfig::class)->setName($firstSkin->getKey());
+            $firstSkin && $this->container->get(CmsScopeConfig::class)->setName($firstSkin->getKey());
         }
         //zablokowane na ACL
         $acl = $this->container->get(AclInterface::class);

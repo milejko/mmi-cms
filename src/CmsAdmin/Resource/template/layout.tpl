@@ -35,9 +35,7 @@
     <div class="app-body">
         {if $auth->hasIdentity()}
             <div class="sidebar">
-                <div class="mt-2 ml-2 mr-2">
-                    {widget('cmsAdmin', 'index', 'scopeMenu')}
-                </div>
+                {widget('cmsAdmin', 'index', 'scopeMenu')}
                 <nav class="sidebar-nav">
                     <ul class="nav">
                         {adminNavigation()->setRoot('admin-menu')->menu()}

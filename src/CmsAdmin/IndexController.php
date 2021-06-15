@@ -45,6 +45,11 @@ class IndexController extends Controller
     private CmsSkinsetConfig $skinsetConfig;
 
     /**
+     * @Inject
+     */
+    private Request $masterRequest;
+
+    /**
      * Strona główna admina
      */
     public function indexAction()
@@ -119,20 +124,24 @@ class IndexController extends Controller
     public function scopeMenuAction()
     {
         $options = [];
-        //default
+        //opcje
         foreach ($this->skinsetConfig->getSkins() as $skin) {
             $options[$skin->getKey()] = $skin->getName();
         }
+        //brak domen
+        if (count($options) < 2) {
+            return;
+        }
         $form = new ScopeSelectForm(null, [ScopeSelectForm::OPTION_SELECTED => $this->scopeConfig->getName(), ScopeSelectForm::OPTION_MULTIOPTIONS => $options]);
-
+        //form do widoku
         $this->view->form = $form;
         //obsługa POST
         if ($form->isMine()) {
             $this->scopeConfig->setName($form->getElement('scope')->getValue());
             $this->getMessenger()->addMessage('messenger.index.scopeMenu.success', true);
             //przekierowanie na referer
-            if (isset($_SERVER['HTTP_REFERER'])) {
-                return $this->getResponse()->redirectToUrl($_SERVER['HTTP_REFERER']);
+            if ($this->masterRequest->getReferer()) {
+                return $this->getResponse()->redirectToUrl($this->masterRequest->getReferer());
             }
             return $this->getResponse()->redirect('cmsAdmin');
         }
