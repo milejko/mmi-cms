@@ -50,10 +50,12 @@ class MultiCheckbox extends \Mmi\Form\Element\MultiCheckbox
         $f = new \Mmi\Filter\Url;
         foreach ($this->getMultioptions() as $key => $caption) {
             //nowy checkbox
-            $checkbox = new Checkbox($this->getBaseName() . '[]');
+            $checkbox = new Checkbox($this->getBaseName());
             //konfiguracja checkboxa
-            $checkbox->setLabel($caption)
+            $checkbox
+                ->setLabel($caption)
                 ->setForm($this->_form)
+                ->setName($this->getBaseName() . '[]')
                 ->setValue($key)
                 ->setId($baseId . '-' . $f->filter($key))
                 ->setRenderingOrder(['fetchField']);
