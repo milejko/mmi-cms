@@ -13,7 +13,7 @@ use Mmi\Cache\CacheInterface;
  */
 class MenuService implements MenuServiceInterface
 {
-    const CACHE_KEY = 'cms-api-navigation';
+    const CACHE_KEY = 'cms-api-navigation-';
 
     private CacheInterface $cacheService;
     private array $orderMap = [];
@@ -26,14 +26,14 @@ class MenuService implements MenuServiceInterface
     /**
      * Public menu getter
      */
-    public function getMenus(): array
+    public function getMenus(?string $scope): array
     {
         //loading from cache
-        if (null !== $menuStructure = $this->cacheService->load(self::CACHE_KEY)) {
+        if (null !== $menuStructure = $this->cacheService->load(self::CACHE_KEY . $scope)) {
             return $menuStructure;
         }
         //getting from infrastructure + writing down item order
-        foreach ($items = $this->getFromInfrastructure() as $item) {
+        foreach ($items = $this->getFromInfrastructure($scope) as $item) {
             $this->orderMap[$item['id']] = str_pad($item['order'], 10, "0", \STR_PAD_LEFT);
         }
         //initializing empty menu structure
@@ -45,7 +45,7 @@ class MenuService implements MenuServiceInterface
         //sorting menu
         $orderedMenu = isset($menuStructure['children']) ? $this->sortMenu($menuStructure['children']): [];
         //cache save
-        $this->cacheService->save($orderedMenu, self::CACHE_KEY, 0);
+        $this->cacheService->save($orderedMenu, self::CACHE_KEY . $scope, 0);
         return $orderedMenu;
     }
 
@@ -101,10 +101,11 @@ class MenuService implements MenuServiceInterface
         ];
     }
 
-    protected function getFromInfrastructure(): array
+    protected function getFromInfrastructure($scope): array
     {
         return (new CmsCategoryQuery)
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
+            ->whereTemplate()->like($scope . '%')
             ->findFields(['id', 'template', 'name', 'uri', 'blank', 'customUri', 'redirectUri', 'path', 'order', 'active']);
     }
 

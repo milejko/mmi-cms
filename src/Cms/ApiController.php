@@ -15,6 +15,7 @@ use Cms\Api\MenuDataTransport;
 use Cms\Api\RedirectTransport;
 use Cms\Api\Service\MenuServiceInterface;
 use Cms\Api\TransportInterface;
+use Cms\App\CmsSkinNotFoundException;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Model\TemplateModel;
 use Cms\Orm\CmsCategoryQuery;
@@ -50,7 +51,18 @@ class ApiController extends \Mmi\Mvc\Controller
      */
     public function getMenuAction(Request $request)
     {
-        $menuTransport = (new MenuDataTransport())->setMenu($this->menuService->getMenus());
+        //checking scope availability
+        try {
+            $request->scope && $this->cmsSkinsetConfig->getSkinByKey($request->scope);
+        } catch (CmsSkinNotFoundException $e) {
+            //error
+            $errorTransportObject = new ErrorTransport();
+            $errorTransportObject->message = $e->getMessage();
+            return $this->getResponse()->setTypeJson()
+                ->setCode($errorTransportObject->getCode())
+                ->setContent($errorTransportObject->toString());
+        }
+        $menuTransport = (new MenuDataTransport())->setMenu($this->menuService->getMenus($request->scope));
         return $this->getResponse()->setTypeJson()
             ->setCode($menuTransport->getCode())
             ->setContent($menuTransport->toString());
