@@ -101,7 +101,7 @@ class MenuService implements MenuServiceInterface
         ];
     }
 
-    protected function getFromInfrastructure($scope): array
+    protected function getFromInfrastructure(?string $scope): array
     {
         return (new CmsCategoryQuery)
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
