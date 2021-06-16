@@ -24,6 +24,12 @@ use Mmi\Session\SessionInterface;
 class IndexController extends Controller
 {
 
+    private const MESSENGER_LOGIN_FAILED = 'messenger.index.login.fail';
+    private const MESSENGER_LOGIN_SUCCESS = 'messenger.index.login.success';
+    private const MESSENGER_LOGOUT_SUCCESS = 'messenger.index.logout.success';
+    private const MESSENGER_PASSWORD_SUCCESS = 'messenger.index.password.success';
+    private const MESSENGER_SCOPE_SUCCESS = 'messenger.index.scopeMenu.success';
+
     /**
      * @Inject
      */
@@ -75,13 +81,13 @@ class IndexController extends Controller
         }
         //logowanie niepoprawne
         if (!$form->isSaved()) {
-            $this->getMessenger()->addMessage('messenger.index.login.fail', false);
+            $this->getMessenger()->addMessage(self::MESSENGER_LOGIN_FAILED, false);
             return;
         }
         //regeneracja ID sesji
         $this->session->regenerateId();
         //zalogowano
-        $this->getMessenger()->addMessage('messenger.index.login.success', true);
+        $this->getMessenger()->addMessage(self::MESSENGER_LOGIN_SUCCESS, true);
         $referer = $request->getReferer();
         //przekierowanie na referer
         if ($referer && $referer != $this->getRequest()->getServer()->requestUri) {
@@ -96,7 +102,7 @@ class IndexController extends Controller
     public function logoutAction()
     {
         $this->auth->clearIdentity();
-        $this->getMessenger()->addMessage('messenger.index.logout.success', true);
+        $this->getMessenger()->addMessage(self::MESSENGER_LOGOUT_SUCCESS, true);
         $this->getResponse()->redirect('cmsAdmin');
     }
 
@@ -115,7 +121,7 @@ class IndexController extends Controller
         if (!$form->isSaved()) {
             return;
         }
-        $this->getMessenger()->addMessage('messenger.index.password.success', true);
+        $this->getMessenger()->addMessage(self::MESSENGER_PASSWORD_SUCCESS, true);
         //wylogowanie
         $this->auth->clearIdentity();
         $this->getResponse()->redirect('cmsAdmin');
@@ -138,7 +144,7 @@ class IndexController extends Controller
         //obsługa POST
         if ($form->isMine()) {
             $this->scopeConfig->setName($form->getElement('scope')->getValue());
-            $this->getMessenger()->addMessage('messenger.index.scopeMenu.success', true);
+            $this->getMessenger()->addMessage(self::MESSENGER_SCOPE_SUCCESS, true);
             //przekierowanie na referer
             if ($this->masterRequest->getReferer()) {
                 return $this->getResponse()->redirectToUrl($this->masterRequest->getReferer());
