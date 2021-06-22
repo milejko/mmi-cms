@@ -6,7 +6,7 @@
                 {if $categoryForm}
                 {$categoryForm->start()}
                 {$category = $categoryForm->getRecord()}
-                <h5>{$categoryForm->getRecord()->name}{if $template} ({_($template->getName())}){/if}</h5>
+                <h5>{$categoryForm->getRecord()->name}{if $template && _($template->getName())} ({_($template->getName())}){/if}</h5>
                 <div class="floating-buttons">
                     <a style="color: #fff;" href="{@module=cmsAdmin&controller=category&action=index&parentId={$category->parentId}@}" class="btn btn-secondary confirm" title="{#template.category.edit.cancel.alert#}">
                         <i class="icon-close"></i>
@@ -43,7 +43,7 @@
                     <div class="tab-pane" id="basic" role="tabpanel" aria-expanded="true">
                         {if $duplicateAlert}<div class="em">{#template.category.edit.duplicate.alert#}<br /><br /></div>{/if}
                         {foreach $categoryForm->getElements() as $element}
-                            {if 'submit' == $element->getName() || 'commit' == $element->getName()}
+                            {if 'submit' == $element->getBasename() || 'commit' == $element->getBasename()}
                                 {continue}
                             {/if}
                             {$element}

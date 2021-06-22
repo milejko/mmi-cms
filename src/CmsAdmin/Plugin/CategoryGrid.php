@@ -21,12 +21,16 @@ use CmsAdmin\Grid\Column\OperationColumn;
 class CategoryGrid extends \CmsAdmin\Grid\Grid
 {
 
+    public const SCOPE_CONFIG_OPTION_NAME = 'scope';
+
     public function init()
     {
         //query
         $this->setQuery((new CmsCategoryQuery)
                 ->whereStatus()->equals(CmsCategoryRecord::STATUS_DELETED)
+                ->whereTemplate()->like($this->getOption(self::SCOPE_CONFIG_OPTION_NAME)->getName() . '%')
                 ->orQuery((new CmsCategoryQuery())
+                        ->whereTemplate()->like($this->getOption(self::SCOPE_CONFIG_OPTION_NAME)->getName() . '%')
                         ->whereCmsCategoryOriginalId()->equals(null)
                         ->whereStatus()->equals(CmsCategoryRecord::STATUS_DRAFT)
                 )

@@ -50,10 +50,8 @@ class TemplateModel
         if (null === $this->_categoryRecord->template) {
             return;
         }
-        //szablon nieodnaleziony
-        if (null === $this->_templateConfig = (new SkinsetModel($skinsetConfig))->getTemplateConfigByKey($categoryRecord->template)) {
-            throw new KernelException('Template not found');
-        }
+        //konfiguracja szablonu
+        $this->_templateConfig = (new SkinsetModel($skinsetConfig))->getTemplateConfigByKey($categoryRecord->template);
     }
 
     /**

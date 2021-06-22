@@ -572,7 +572,9 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         }
         //drop navigation cache
         $cache->remove('mmi-cms-navigation-');
+        //drop skin menu cache
         $cache->remove(MenuService::CACHE_KEY);
+        $cache->remove(MenuService::CACHE_KEY . substr($this->template, 0, strpos($this->template, '/')));
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->id);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
         //usuwanie cache dzieci kategorii

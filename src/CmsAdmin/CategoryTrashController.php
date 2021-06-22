@@ -10,8 +10,8 @@
 
 namespace CmsAdmin;
 
+use Cms\App\CmsScopeConfig;
 use Cms\Orm\CmsCategoryQuery;
-use Cms\Orm\CmsCategoryRecord;
 use CmsAdmin\Model\CategoryAclModel;
 use CmsAdmin\Plugin\CategoryGrid;
 use Mmi\Http\Request;
@@ -29,17 +29,24 @@ class CategoryTrashController extends Controller
     private AuthInterface $auth;
 
     /**
+     * @Inject
+     */
+    private CmsScopeConfig $scopeConfig;
+
+    /**
      * Lista usuniętych stron CMS - prezentacja w formie grida
      */
     public function indexAction()
     {
-        $this->view->grid = new CategoryGrid;
+        $this->view->grid = new CategoryGrid([CategoryGrid::SCOPE_CONFIG_OPTION_NAME => $this->scopeConfig]);
     }
 
     public function restoreAction(Request $request)
     {
         //wyszukiwanie kategorii
-        if (null === $category = (new CmsCategoryQuery())->findPk($request->id)) {
+        if (null === $category = (new CmsCategoryQuery())
+            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+            ->findPk($request->id)) {
             //przekierowanie na trash
             return $this->getResponse()->redirect('cmsAdmin', 'categoryTrash', 'index');
         }
@@ -53,4 +60,5 @@ class CategoryTrashController extends Controller
         $this->getMessenger()->addMessage('messenger.categoryTrash.success', true);
         return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
     }
+
 }

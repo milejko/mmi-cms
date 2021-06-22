@@ -10,6 +10,8 @@
 
 namespace CmsAdmin;
 
+use Cms\App\CmsScopeConfig;
+use CmsAdmin\Form\CategoryAclForm;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 
@@ -18,6 +20,11 @@ use Mmi\Mvc\Controller;
  */
 class CategoryAclController extends Controller
 {
+
+    /**
+     * @Inject
+     */
+    private CmsScopeConfig $scopeConfig;
 
     /**
      * Akcja ustawiania uprawnień na kategoriach
@@ -30,7 +37,7 @@ class CategoryAclController extends Controller
             $this->getResponse()->redirect('cmsAdmin', 'categoryAcl', 'index', ['roleId' => $this->view->roles[0]->id]);
         }
         //formularz edycji uprawnień
-        $form = new Form\CategoryAclForm(null, ['roleId' => $request->roleId]);
+        $form = new CategoryAclForm(null, ['roleId' => $request->roleId, CategoryAclForm::SCOPE_CONFIG_OPTION_NAME => $this->scopeConfig->getName()]);
         //po zapisie
         if ($form->isSaved()) {
             $this->getMessenger()->addMessage('messenger.categoryAcl.permissions.saved', true);

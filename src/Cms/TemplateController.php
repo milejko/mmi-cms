@@ -92,7 +92,8 @@ abstract class TemplateController extends Controller
         $to->sections = $this->getSections($request);
         $to->breadcrumbs = $this->getBreadcrumbs();
         $to->siblings = $this->getSiblings();
-        $to->_links = [(new LinkData)->setHref(rtrim(ApiController::API_PREFIX, '/'))->setRel(LinkData::REL_MENU)];
+        $scope = substr($this->cmsCategoryRecord->template, 0, strpos($this->cmsCategoryRecord->template, '/'));
+        $to->_links = [(new LinkData)->setHref(ApiController::API_PREFIX . $scope)->setRel(LinkData::REL_MENU)];
         return $to;
     }
 
@@ -144,12 +145,13 @@ abstract class TemplateController extends Controller
         $record = $this->cmsCategoryRecord;
         $order = count(explode('/', $this->cmsCategoryRecord->path));
         while (null !== $record) {
+            $scope = substr($record->template, 0, strpos($record->template, '/'));
             $breadcrumbs[] = (new BreadcrumbData)
                 ->setTitle($record->name ? : '')
                 ->setOrder($order--)
-                ->setLinks($record->template ? [
+                ->setLinks($scope ? [
                     (new LinkData)
-                        ->setHref(ApiController::API_PREFIX . ($record->customUri ?: $record->uri))
+                        ->setHref(ApiController::API_PREFIX . $scope . '/' . ($record->customUri ?: $record->uri))
                         ->setRel($this->cmsCategoryRecord === $record ? LinkData::REL_SELF : LinkData::REL_BACK)
                 ] : []);
             $record = $record->getParentRecord();
@@ -167,11 +169,12 @@ abstract class TemplateController extends Controller
             if (!$record->active || $record->id === $this->cmsCategoryRecord->id) {
                 continue;
             }
+            $scope = substr($record->template, 0, strpos($record->template, '/'));
             $siblings[] = (new BreadcrumbData)
                 ->setTitle($record->name ? : '')
-                ->setLinks($record->template ? [
+                ->setLinks($scope ? [
                     (new LinkData)
-                        ->setHref(ApiController::API_PREFIX . ($record->customUri ?: $record->uri))
+                        ->setHref(ApiController::API_PREFIX . $scope . '/' . ($record->customUri ?: $record->uri))
                         ->setRel(LinkData::REL_SIBLING)
                 ] : []);
         }

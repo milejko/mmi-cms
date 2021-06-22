@@ -10,14 +10,17 @@
                     <div class="card-body">
                         <div class="content-box-content clearfix">
                             <div class="available-templates" style="overflow-x: auto; white-space:nowrap;">
-                                <a class="button btn btn-primary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=edit&parentId={$request->parentId}@}">
+                                <a class="button btn btn-primary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=edit&parentId={$request->parentId}&template={$scopeName}@}">
                                     <i class="icon-plus"></i> {#template.category.index.folder.label#}
                                 </a>
-                                {foreach $skinset->getTemplatesMultioptions() as $templateKey => $templateName}
-                                    <a class="button btn btn-primary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=edit&parentId={$request->parentId}&template={$templateKey}@}">
-                                        <i class="icon-plus"></i> {_($templateName)}
-                                    </a>
-                                {/foreach}
+                                {$skin = $skinset->getSkinConfigByKey($scopeName)}
+                                {if $skin}
+                                    {foreach $skin->getTemplates() as $templateConfig}
+                                        <a class="button btn btn-primary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=edit&parentId={$request->parentId}&template={$scopeName}/{$templateConfig->getKey()}@}">
+                                            <i class="icon-plus"></i> {_($templateConfig->getName())}
+                                        </a>
+                                    {/foreach}
+                                {/if}
                             </div>
                             <br />
                             <table class="table table-striped table-sort" data-sort-url="{@module=cmsAdmin&controller=category&action=sort@}">
