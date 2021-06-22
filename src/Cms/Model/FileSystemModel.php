@@ -64,7 +64,7 @@ class FileSystemModel
         //rozszerzenie
         list($name, $extension) = explode('.', $this->_name);
         //override extension only if thumb and supported extension
-        if (!in_array(strtolower($extension), ['jpg', 'png', 'jpeg', 'jfif', 'jif', 'bmp'])) {
+        if (!in_array(strtolower($extension), ['jpg', 'png', 'jpeg', 'jfif', 'jif', 'bmp', 'webp'])) {
             return null;
         }
         //obliczanie hasha
