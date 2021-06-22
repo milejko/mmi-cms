@@ -13,7 +13,8 @@ use Mmi\Cache\CacheInterface;
  */
 class MenuService implements MenuServiceInterface
 {
-    const CACHE_KEY = 'cms-api-navigation-';
+    public const CACHE_KEY = 'cms-api-navigation-';
+    private const PATH_SEPARATOR = '/';
 
     private CacheInterface $cacheService;
     private array $orderMap = [];
@@ -117,9 +118,10 @@ class MenuService implements MenuServiceInterface
                 ->setMethod(LinkData::METHOD_REDIRECT)
                 ->setRel('external')];
         }
-        if ($item['template']) {
+        $scope = substr($item['template'], 0, strpos($item['template'], self::PATH_SEPARATOR));
+        if ($scope) {
             return [(new LinkData)
-                ->setHref(ApiController::API_PREFIX . ($item['customUri'] ?: $item['uri']))];
+                ->setHref(ApiController::API_PREFIX . $scope . self::PATH_SEPARATOR . ($item['customUri'] ?: $item['uri']))];
         }
         return [];
     }
