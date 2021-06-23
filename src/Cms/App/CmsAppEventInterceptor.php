@@ -34,7 +34,7 @@ class CmsAppEventInterceptor implements AppEventInterceptorInterface
         SessionInterface $session,
         CmsSkinsetConfig $cmsSkinsetConfig,
         View $view,
-        TranslateInterface $translate,
+        TranslateInterface $translate
     )
     {
         $this->container = $container;
