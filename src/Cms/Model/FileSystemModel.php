@@ -65,7 +65,8 @@ class FileSystemModel
         list($name, $extension) = explode('.', $this->_name);
         //override extension only if thumb and supported extension
         if (!in_array(strtolower($extension), ['jpg', 'png', 'jpeg', 'jfif', 'jif', 'bmp', 'webp'])) {
-            return null;
+            //copy
+            return '/data/copy/'  . md5($name . App::$di->get('cms.auth.salt')) . '-' . $this->_name;
         }
         //obliczanie hasha
         $hash = md5($scaleType . $scale . $name . App::$di->get('cms.auth.salt'));
