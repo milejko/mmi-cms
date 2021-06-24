@@ -12,6 +12,7 @@ namespace Cms;
 
 use Cms\Model\FileSystemModel;
 use Mmi\Http\Request;
+use Mmi\Http\ResponseTypes;
 use Mmi\Mvc\MvcForbiddenException;
 use Mmi\Session\SessionInterface;
 use Psr\Container\ContainerInterface;
@@ -82,6 +83,36 @@ class FileController extends \Mmi\Mvc\Controller
             ->setHeader('Content-Type', 'application/octet-stream')
             ->setHeader('Content-Transfer-Encoding', 'binary')
             ->setHeader('Content-Length', filesize($fs->getRealPath()))
+            ->setHeader('Cache-Control', 'public')
+            ->setHeader('Expires', 'max')
+            ->sendHeaders();
+        readfile($fs->getRealPath());
+        exit;
+    }
+
+    /**
+     * Akcja kopiowania
+     */
+    public function copyAction()
+    {
+        $fs = new FileSystemModel($this->name);
+        //public path
+        $publicPath = $fs->getPublicPath();
+        //hash check
+        if (false === strpos($publicPath, $this->hash)) {
+            throw new MvcForbiddenException('Scaler hash invalid');
+        }
+        //target file calculation
+        $targetFilePath = BASE_PATH . '/web' . $publicPath;
+        try {
+            mkdir(dirname($targetFilePath), 0777, true);
+        } catch (\Exception $e) {
+        }
+        list($name, $extension) = explode('.', $this->name);
+        copy($fs->getRealPath(), $targetFilePath);
+        $this->getResponse()
+            ->setHeader('Content-Length', filesize($fs->getRealPath()))
+            ->setType(ResponseTypes::searchType($extension))
             ->setHeader('Cache-Control', 'public')
             ->setHeader('Expires', 'max')
             ->sendHeaders();
