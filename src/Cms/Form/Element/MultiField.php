@@ -170,6 +170,11 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
             $element->setName($this->getBaseName() . '[' . $index . '][' . $element->getBaseName() . ']');
             $element->setValue($itemValues[$element->getBaseName()] ?? null);
             $element->setErrors($this->_elementErrors[$index][$element->getBaseName()] ?? []);
+
+            if ($element instanceof Checkbox) {
+                $element->getValue() ? $element->setChecked() : $element->setChecked(false);
+            }
+
             $html .= $element->__toString();
         }
 
