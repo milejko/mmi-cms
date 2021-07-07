@@ -81,7 +81,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
                 $value = $itemValues[$element->getBaseName()] ?? null;
                 //waliduje poprawnie jeśli niewymagane, ale tylko gdy niepuste
                 if (empty($value) && false === $element->getRequired()) {
-                    return $result;
+                    continue;
                 }
                 //iteracja po walidatorach
                 foreach ($element->getValidators() as $validator) {
