@@ -193,21 +193,19 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
 
         return <<<html
             $(document).ready(function() {
-                let list = $('#$listId').find('.field-list');
+                let list = $('#$listId > .field-list');
 
-                $(document).off('click', '#$listId .btn-remove');
-                $(document).on('click', '#$listId .btn-remove', function(e) {
+                $(document).off('click', '#$listId > .field-list > li > .btn-remove');
+                $(document).on('click', '#$listId > .field-list > li > .btn-remove', function(e) {
                     e.preventDefault();
                     $(this).parent().remove();
                     reindex(list);
                 });
 
-                $(document).off('click', '#$listId .btn-add');
-                $(document).on('click', '#$listId .btn-add', function(e) {
+                $(document).off('click', '#$listId > .btn-add');
+                $(document).on('click', '#$listId > .btn-add', function(e) {
                     e.preventDefault();
-                    console.log(list);
                     list.append('$listElement'.replaceAll('**', list.children().length));
-                    console.log('zaa');
                 });
 
                 function reindex(list) {
@@ -228,7 +226,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
                         });
                     });
                 }
-            });     
+            });      
 html;
     }
 }
