@@ -189,6 +189,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
     private function jsScript()
     {
         $listElement = addcslashes($this->renderListElement(), "'");
+        $listId = $this->getId() . '-list';
 
         return <<<html
             $(document).ready(function() {
