@@ -192,39 +192,42 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
 
         return <<<html
             $(document).ready(function() {
-            
-                let list = $('.field-list').change();
-           
-                $(document).on('click', '.btn-remove', function(e) {
+                let list = $('#$listId').find('.field-list');
+
+                $(document).off('click', '#$listId .btn-remove');
+                $(document).on('click', '#$listId .btn-remove', function(e) {
                     e.preventDefault();
                     $(this).parent().remove();
-                    reindex();
-                });
-                
-                $('.btn-add').click(function(e) {
-                    e.preventDefault();
-                    list.append('$listElement'.replaceAll('**', list.children().length));
+                    reindex(list);
                 });
 
-                function reindex() {
+                $(document).off('click', '#$listId .btn-add');
+                $(document).on('click', '#$listId .btn-add', function(e) {
+                    e.preventDefault();
+                    console.log(list);
+                    list.append('$listElement'.replaceAll('**', list.children().length));
+                    console.log('zaa');
+                });
+
+                function reindex(list) {
                     list.children().each(function(i) {
                         let elementsWithId = $('[id]', this);                      
                         elementsWithId.each(function(){
                             $(this).attr('id', $(this).attr('id').replace(/-\d+-/ig, '-' + i + '-'));
                         });
-                        
+
                         let elementsWithFor = $('[for]', this);
                         elementsWithFor.each(function(){
                             $(this).attr('for', $(this).attr('for').replace(/-\d+-/ig, '-' + i + '-'));
                         });
-                        
+
                         let elementsWithName  = $('[name]', this);   
                         elementsWithName.each(function(){
                             $(this).attr('name', $(this).attr('name').replace(/\[\d+\]/ig, '[' + i + ']'));
                         });
                     });
                 }
-            });    
+            });     
 html;
     }
 }
