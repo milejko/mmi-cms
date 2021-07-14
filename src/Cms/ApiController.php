@@ -104,7 +104,7 @@ class ApiController extends \Mmi\Mvc\Controller
                 //zapis informacji o braku kategorii w cache
                 $this->cache->save(false, $cacheKey, 0);
                 //301 (o ile możliwe) lub 404
-                return $this->getRedirectOrErrorTransport($request->uri);
+                return $this->getRedirectOrErrorTransport($request->scope, $request->uri);
             }
             //id kategorii
             $categoryId = $category->id;
@@ -114,7 +114,7 @@ class ApiController extends \Mmi\Mvc\Controller
         //w buforze jest informacja o braku strony
         if (false === $categoryId) {
             //301 (o ile możliwe) lub 404
-            return $this->getRedirectOrErrorTransport($request->uri);
+            return $this->getRedirectOrErrorTransport($request->scope, $request->uri);
         }
         //kategoria
         if ($category) {
@@ -134,12 +134,12 @@ class ApiController extends \Mmi\Mvc\Controller
         //kategoria to przekierowanie
         if ($category->redirectUri) {
             //przekierowanie na uri
-            return new RedirectTransport(self::API_PREFIX . $category->redirectUri);
+            return new RedirectTransport($category->redirectUri);
         }
         //kategoria posiada customUri, a wejście jest na natywny uri
         if ($category->customUri && $this->uri != $category->customUri && $this->uri == $category->uri) {
             //przekierowanie na customUri
-            return new RedirectTransport(self::API_PREFIX . $category->customUri);
+            return new RedirectTransport(self::API_PREFIX . $request->scope . '/' . $category->customUri);
         }
         //opublikowana kategoria
         return (new TemplateModel($category, $this->cmsSkinsetConfig))->getTransportObject($request);
@@ -148,10 +148,10 @@ class ApiController extends \Mmi\Mvc\Controller
     /**
      * Przekierowanie 301 (poszukiwanie w historii), lub 404
      */
-    private function getRedirectOrErrorTransport(string $uri): TransportInterface
+    private function getRedirectOrErrorTransport(string $scope, string $uri): TransportInterface
     {
         //klucz bufora
-        $cacheKey = CmsCategoryRecord::REDIRECT_CACHE_PREFIX . md5($uri);
+        $cacheKey = CmsCategoryRecord::REDIRECT_CACHE_PREFIX . md5($scope . $uri);
         //zbuforowany brak uri w historii
         if (false === ($redirectUri = $this->cache->load($cacheKey))) {
             //404
@@ -164,7 +164,9 @@ class ApiController extends \Mmi\Mvc\Controller
             return new RedirectTransport(self::API_PREFIX . $redirectUri);
         }
         //wyszukiwanie bieżącej kategorii (aktywnej)
-        if (null === $category = (new CmsCategoryQuery())->byHistoryUri($uri)->findFirst()) {
+        if (null === $category = (new CmsCategoryQuery())
+            ->whereTemplate()->like($scope . '%')
+            ->byHistoryUri($uri)->findFirst()) {
             //brak kategorii w historii - buforowanie informacji
             $this->cache->save(false, $cacheKey, 0);
             //404
@@ -173,8 +175,8 @@ class ApiController extends \Mmi\Mvc\Controller
                 ->setCode(ErrorTransport::CODE_NOT_FOUND);
         }
         //zapis uri przekierowania do bufora
-        $this->cache->save($category->uri, $cacheKey, 0);
+        $this->cache->save($scope . '/' . $category->uri, $cacheKey, 0);
         //przekierowanie 301
-        return new RedirectTransport(self::API_PREFIX . $category->uri);
+        return new RedirectTransport(self::API_PREFIX . $scope . '/' . $category->uri);
     }
 }
