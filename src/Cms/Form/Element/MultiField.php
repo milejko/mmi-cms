@@ -131,6 +131,8 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
         $this->view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
         $this->view->headScript()->appendScript($this->jsScript());
 
+        $this->view->headLink()->appendStylesheet('/resource/cmsAdmin/css/multifield.css');
+
         return '<div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">' . $this->renderList() . '<a href="#" class="btn btn-primary btn-add" role="button">Dodaj element</a></div>';
     }
 
@@ -163,7 +165,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
      */
     private function renderListElement(?array $itemValues = null, string $index = '**')
     {
-        $html = '<li class="border mb-3 p-3"><a href="#" class="btn btn-remove pull-right" role="button"><i class="fa fa-trash-o fa-2"></i></a><section>';
+        $html = '<li class="field-list-item border mb-3 p-3"><a href="#" class="btn btn-remove pull-right" role="button"><i class="fa fa-trash-o fa-2"></i></a><a href="#" class="btn btn-toggle pull-right" role="button"><i class="fa fa-angle-down fa-2"></i></a><section>';
 
         foreach ($this->getElements() as $element) {
             $element->setId($this->getId() . '-' . $index . '-' . $element->getBaseName());
@@ -207,6 +209,12 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
                     e.preventDefault();
                     list.append('$listElement'.replaceAll('**', list.children().length));
                 });
+                
+                $(document).off('click', '#$listId > .field-list > li > .btn-toggle');
+                $(document).on('click', '#$listId > .field-list > li > .btn-toggle', function(e) {
+                    $('#$listId > .field-list > .field-list-item').removeClass('active');
+                    $(this).closest('.field-list-item').toggleClass('active');
+                });
 
                 function reindex(list) {
                     list.children().each(function(i) {
@@ -226,7 +234,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
                         });
                     });
                 }
-            });      
+            });    
 html;
     }
 }

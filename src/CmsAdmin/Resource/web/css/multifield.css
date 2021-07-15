@@ -1,0 +1,34 @@
+.form-control.multifield {
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.form-control.multifield > .field-list > .field-list-item {
+  background-color: #fff;
+  transition: all 0.5s;
+  transition-timing-function: linear;
+  max-height: 6rem;
+  overflow: hidden;
+}
+
+.form-control.multifield > .field-list > .field-list-item.active {
+  max-height: 1000px;
+}
+
+.form-control.multifield > .field-list > .field-list-item > section {
+  display: flex;
+  justify-content: space-between;
+  flex-flow: row wrap;
+}
+
+.form-control.multifield > .field-list > .field-list-item > section > .form-group {
+  flex: 0 1 calc(50% - 1rem);
+}
+
+.form-control.has-nested-multifield > .field-list > .field-list-item > section .form-group:last-child {
+  flex: 1 0 100%;
+}
+
+.form-control.has-nested-multifield > .field-list > .field-list-item > section .form-group:first-child {
+  flex: 1 0 100%;
+}
