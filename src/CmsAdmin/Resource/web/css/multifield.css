@@ -9,6 +9,16 @@
   transition-timing-function: linear;
   max-height: 6rem;
   overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-control.multifield > .field-list > .field-list-item > a {
+  flex: 0 0 1rem;
+}
+
+.form-control.multifield > .field-list > .field-list-item > section {
+  flex: 0 1 calc(100% - 4rem);
 }
 
 .form-control.multifield > .field-list > .field-list-item.active {
@@ -22,7 +32,7 @@
 }
 
 .form-control.multifield > .field-list > .field-list-item > section > .form-group {
-  flex: 0 1 calc(50% - 1rem);
+  flex: 0 1 calc(50% - 0.75rem);
 }
 
 .form-control.has-nested-multifield > .field-list > .field-list-item > section .form-group:last-child {

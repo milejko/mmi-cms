@@ -165,7 +165,11 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
      */
     private function renderListElement(?array $itemValues = null, string $index = '**')
     {
-        $html = '<li class="field-list-item border mb-3 p-3"><a href="#" class="btn btn-remove pull-right" role="button"><i class="fa fa-trash-o fa-2"></i></a><a href="#" class="btn btn-toggle pull-right" role="button"><i class="fa fa-angle-down fa-2"></i></a><section>';
+        $html = '<li class="field-list-item border mb-3 p-3">
+            <a href="#" class="btn-toggle" role="button">
+                <i class="fa fa-angle-down fa-2"></i>
+            </a>
+        <section>';
 
         foreach ($this->getElements() as $element) {
             $element->setId($this->getId() . '-' . $index . '-' . $element->getBaseName());
@@ -180,7 +184,11 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
             $html .= $element->__toString();
         }
 
-        $html .= '</section></li>';
+        $html .= '</section>
+            <a href="#" class="btn-remove" role="button">
+                <i class="fa fa-trash-o fa-2"></i>
+            </a>
+        </li>';
 
         return trim(preg_replace('/\r|\n|\s\s+/', ' ', $html));
     }
