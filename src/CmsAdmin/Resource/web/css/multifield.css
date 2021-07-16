@@ -35,7 +35,7 @@
   flex: 0 1 calc(50% - 0.75rem);
 }
 
-.form-control.has-nested-multifield > .field-list > .field-list-item > section .form-group:last-child {
+.form-control.has-nested-multifield > .field-list > .field-list-item > section > .form-group:last-child {
   flex: 1 0 100%;
 }
 

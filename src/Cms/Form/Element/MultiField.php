@@ -18,30 +18,33 @@ use Mmi\Form\Element\ElementAbstract;
 class MultiField extends \Mmi\Form\Element\ElementAbstract
 {
     //szablon początku pola
-    CONST TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
     //szablon opisu
-    CONST TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
     //szablon końca pola
-    CONST TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
     //szablon błędów
-    CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
-    CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
     /**
      * Elementy formularza
+     *
      * @var ElementAbstract[]
      */
     protected $_elements = [];
 
     /**
      * Błędy elementów formularza
+     *
      * @var array
      */
     private $_elementErrors = [];
 
     /**
      * Konstruktor
+     *
      * @param string $name
      */
     public function __construct($name)
@@ -52,7 +55,9 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
 
     /**
      * Ustawia form macierzysty
+     *
      * @param \Mmi\Form\Form $form
+     *
      * @return self
      */
     public function setForm(\Mmi\Form\Form $form)
@@ -68,6 +73,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
 
     /**
      * Waliduje pole
+     *
      * @return boolean
      */
     public function isValid()
@@ -94,13 +100,16 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
                 }
             }
         }
+
         //zwrot rezultatu wszystkich walidacji (iloczyn)
         return $result;
     }
 
     /**
      * Dodawanie elementu formularza z gotowego obiektu
+     *
      * @param ElementAbstract $element obiekt elementu formularza
+     *
      * @return self
      */
     public function addElement(ElementAbstract $element)
@@ -116,6 +125,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
 
     /**
      * Pobranie elementów formularza
+     *
      * @return ElementAbstract[]
      */
     final public function getElements()
@@ -159,8 +169,10 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
 
     /**
      * Renderer pol formularza
+     *
      * @param array|null $itemValues
-     * @param string $index
+     * @param string     $index
+     *
      * @return string
      */
     private function renderListElement(?array $itemValues = null, string $index = '**')
@@ -199,7 +211,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
     private function jsScript()
     {
         $listElement = addcslashes($this->renderListElement(), "'");
-        $listId = $this->getId() . '-list';
+        $listId      = $this->getId() . '-list';
 
         return <<<html
             $(document).ready(function() {
@@ -220,8 +232,8 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
                 
                 $(document).off('click', '#$listId > .field-list > li > .btn-toggle');
                 $(document).on('click', '#$listId > .field-list > li > .btn-toggle', function(e) {
-                    $('#$listId > .field-list > .field-list-item').removeClass('active');
-                    $(this).closest('.field-list-item').toggleClass('active');
+                    e.preventDefault();
+                    toggleTile($(this));
                 });
 
                 function reindex(list) {
@@ -241,6 +253,15 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
                             $(this).attr('name', $(this).attr('name').replace(/\[\d+\]/ig, '[' + i + ']'));
                         });
                     });
+                }
+                
+                function toggleTile(tileSwitch) {
+                    tileSwitch.closest('.field-list-item').toggleClass('active');
+                    tileSwitch.children('.fa').toggleClass('fa-angle-up fa-angle-down');
+                    
+                    tileSwitch.closest('.field-list-item').siblings().removeClass('active');
+                    tileSwitch.closest('.field-list-item').siblings().children('.btn-toggle').children('.fa').removeClass('fa-angle-up');
+                    tileSwitch.closest('.field-list-item').siblings().children('.btn-toggle').children('.fa').addClass('fa-angle-down');
                 }
             });    
 html;
