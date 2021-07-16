@@ -216,6 +216,12 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
         return <<<html
             $(document).ready(function() {
                 let list = $('#$listId > .field-list');
+                
+                list.find('.ne-error-list').each(function(){
+                    if($(this).children().length > 0){
+                        toggleTile($(this).closest('.field-list-item'));
+                    }
+                });
 
                 $(document).off('click', '#$listId > .field-list > li > .btn-remove');
                 $(document).on('click', '#$listId > .field-list > li > .btn-remove', function(e) {
@@ -233,7 +239,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
                 $(document).off('click', '#$listId > .field-list > li > .btn-toggle');
                 $(document).on('click', '#$listId > .field-list > li > .btn-toggle', function(e) {
                     e.preventDefault();
-                    toggleTile($(this));
+                    toggleTile($(this).closest('.field-list-item'));
                 });
 
                 function reindex(list) {
@@ -255,13 +261,13 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
                     });
                 }
                 
-                function toggleTile(tileSwitch) {
-                    tileSwitch.closest('.field-list-item').toggleClass('active');
-                    tileSwitch.children('.fa').toggleClass('fa-angle-up fa-angle-down');
+                function toggleTile(tile) {
+                    tile.toggleClass('active');
+                    tile.children('.btn-toggle').children('.fa').toggleClass('fa-angle-up fa-angle-down');
                     
-                    tileSwitch.closest('.field-list-item').siblings().removeClass('active');
-                    tileSwitch.closest('.field-list-item').siblings().children('.btn-toggle').children('.fa').removeClass('fa-angle-up');
-                    tileSwitch.closest('.field-list-item').siblings().children('.btn-toggle').children('.fa').addClass('fa-angle-down');
+                    tile.siblings().removeClass('active');
+                    tile.siblings().children('.btn-toggle').children('.fa').removeClass('fa-angle-up');
+                    tile.siblings().children('.btn-toggle').children('.fa').addClass('fa-angle-down');
                 }
             });    
 html;
