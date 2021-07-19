@@ -22,6 +22,12 @@ $(document).ready(function () {
             e.preventDefault();
             toggleMultifieldItem($(this).closest('.field-list-item'));
         });
+
+        $(document).off('click', '#' + containerId + ' > .btn-toggle');
+        $(document).on('click', '#' + containerId + ' > .btn-toggle', function (e) {
+            e.preventDefault();
+            showAllMultifieldItems($(this).closest('.multifield').children('.field-list'));
+        });
     });
 
     function reindexMultifield(list) {
@@ -52,9 +58,15 @@ $(document).ready(function () {
         listItem.siblings().children('.btn-toggle').children('.fa').addClass('fa-angle-down');
     }
 
-    function showMultifieldItem(listItem){
+    function showMultifieldItem(listItem) {
         listItem.addClass('active');
         listItem.children('.btn-toggle').children('.fa').addClass('fa-angle-down');
         listItem.children('.btn-toggle').children('.fa').removeClass('fa-angle-up');
+    }
+
+    function showAllMultifieldItems(list) {
+        $(list).children('.field-list-item').each(function () {
+            showMultifieldItem($(this));
+        });
     }
 });
