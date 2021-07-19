@@ -2,12 +2,11 @@ $(document).ready(function () {
     let lists = $('.multifield');
 
     lists.each(function (index, list) {
-        console.log(list);
         let containerId = $(list).attr('id');
 
         $(list).find('.ne-error-list').each(function () {
             if ($(this).children().length > 0) {
-                toggleMultifieldItem($(this).closest('.field-list-item'));
+                showMultifieldItem($(this).closest('.field-list-item'));
             }
         });
 
@@ -26,7 +25,7 @@ $(document).ready(function () {
     });
 
     function reindexMultifield(list) {
-        list.children().each(function (i) {
+        $(list).children().each(function (i) {
             let elementsWithId = $('[id]', this);
             elementsWithId.each(function () {
                 $(this).attr('id', $(this).attr('id').replace(/-\d+-/ig, '-' + i + '-'));
@@ -51,5 +50,11 @@ $(document).ready(function () {
         listItem.siblings().removeClass('active');
         listItem.siblings().children('.btn-toggle').children('.fa').removeClass('fa-angle-up');
         listItem.siblings().children('.btn-toggle').children('.fa').addClass('fa-angle-down');
+    }
+
+    function showMultifieldItem(listItem){
+        listItem.addClass('active');
+        listItem.children('.btn-toggle').children('.fa').addClass('fa-angle-down');
+        listItem.children('.btn-toggle').children('.fa').removeClass('fa-angle-up');
     }
 });
