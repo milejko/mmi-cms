@@ -49,8 +49,10 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
      */
     public function __construct($name)
     {
-        $this->addClass('form-control');
         parent::__construct($name);
+        $this
+            ->addClass('form-control')
+            ->addClass('multifield');
     }
 
     /**
@@ -140,6 +142,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
     {
         $this->view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
         $this->view->headScript()->appendScript($this->jsScript());
+        $this->view->headScript()->appendFile('/resource/cmsAdmin/js/multifield.js');
 
         $this->view->headLink()->appendStylesheet('/resource/cmsAdmin/css/multifield.css');
 
@@ -216,59 +219,12 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
         return <<<html
             $(document).ready(function() {
                 let list = $('#$listId > .field-list');
-                
-                list.find('.ne-error-list').each(function(){
-                    if($(this).children().length > 0){
-                        toggleTile($(this).closest('.field-list-item'));
-                    }
-                });
-
-                $(document).off('click', '#$listId > .field-list > li > .btn-remove');
-                $(document).on('click', '#$listId > .field-list > li > .btn-remove', function(e) {
-                    e.preventDefault();
-                    $(this).parent().remove();
-                    reindex(list);
-                });
 
                 $(document).off('click', '#$listId > .btn-add');
                 $(document).on('click', '#$listId > .btn-add', function(e) {
                     e.preventDefault();
-                    list.append('$listElement'.replaceAll('**', list.children().length));
+                    $(list).append('$listElement'.replaceAll('**', list.children().length));
                 });
-                
-                $(document).off('click', '#$listId > .field-list > li > .btn-toggle');
-                $(document).on('click', '#$listId > .field-list > li > .btn-toggle', function(e) {
-                    e.preventDefault();
-                    toggleTile($(this).closest('.field-list-item'));
-                });
-
-                function reindex(list) {
-                    list.children().each(function(i) {
-                        let elementsWithId = $('[id]', this);                      
-                        elementsWithId.each(function(){
-                            $(this).attr('id', $(this).attr('id').replace(/-\d+-/ig, '-' + i + '-'));
-                        });
-
-                        let elementsWithFor = $('[for]', this);
-                        elementsWithFor.each(function(){
-                            $(this).attr('for', $(this).attr('for').replace(/-\d+-/ig, '-' + i + '-'));
-                        });
-
-                        let elementsWithName  = $('[name]', this);   
-                        elementsWithName.each(function(){
-                            $(this).attr('name', $(this).attr('name').replace(/\[\d+\]/ig, '[' + i + ']'));
-                        });
-                    });
-                }
-                
-                function toggleTile(tile) {
-                    tile.toggleClass('active');
-                    tile.children('.btn-toggle').children('.fa').toggleClass('fa-angle-up fa-angle-down');
-                    
-                    tile.siblings().removeClass('active');
-                    tile.siblings().children('.btn-toggle').children('.fa').removeClass('fa-angle-up');
-                    tile.siblings().children('.btn-toggle').children('.fa').addClass('fa-angle-down');
-                }
             });    
 html;
     }
