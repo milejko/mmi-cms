@@ -60,8 +60,8 @@ $(document).ready(function () {
 
     function showMultifieldItem(listItem) {
         listItem.addClass('active');
-        listItem.children('.btn-toggle').children('.fa').addClass('fa-angle-down');
-        listItem.children('.btn-toggle').children('.fa').removeClass('fa-angle-up');
+        listItem.children('.btn-toggle').children('.fa').removeClass('fa-angle-down');
+        listItem.children('.btn-toggle').children('.fa').addClass('fa-angle-up');
     }
 
     function showAllMultifieldItems(list) {

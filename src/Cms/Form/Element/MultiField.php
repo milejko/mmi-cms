@@ -146,7 +146,13 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
 
         $this->view->headLink()->appendStylesheet('/resource/cmsAdmin/css/multifield.css');
 
-        return '<div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">' . $this->renderList() . '<a href="#" class="btn btn-primary btn-add" role="button">Dodaj element</a></div>';
+        return '<div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">
+            <a href="#" class="btn-toggle" role="button">
+                Rozwiń wszystkie <i class="fa fa-angle-down fa-2"></i>
+            </a>
+            ' . $this->renderList() . '
+            <a href="#" class="btn btn-primary btn-add" role="button">Dodaj element</a>
+            </div>';
     }
 
     /**
