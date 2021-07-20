@@ -81,7 +81,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
                 $value = $itemValues[$element->getBaseName()] ?? null;
                 //waliduje poprawnie jeśli niewymagane, ale tylko gdy niepuste
                 if (empty($value) && false === $element->getRequired()) {
-                    return $result;
+                    continue;
                 }
                 //iteracja po walidatorach
                 foreach ($element->getValidators() as $validator) {
@@ -170,6 +170,11 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
             $element->setName($this->getBaseName() . '[' . $index . '][' . $element->getBaseName() . ']');
             $element->setValue($itemValues[$element->getBaseName()] ?? null);
             $element->setErrors($this->_elementErrors[$index][$element->getBaseName()] ?? []);
+
+            if ($element instanceof Checkbox) {
+                $element->getValue() ? $element->setChecked() : $element->setChecked(false);
+            }
+
             $html .= $element->__toString();
         }
 
@@ -200,18 +205,25 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
                     e.preventDefault();
                     list.append('$listElement'.replaceAll('**', list.children().length));
                 });
-                
+
                 function reindex() {
                     list.children().each(function(i) {
-                        let elementWithId = $('[id]', this);
-                        elementWithId.attr('id', elementWithId.attr('id').replace(/-\d+-/ig, '-' + i + '-'));
-                        let elementWithFor = $('[for]', this);
-                        elementWithFor.attr('for', elementWithFor.attr('for').replace(/-\d+-/ig, '-' + i + '-'));
-                        let elementWithName  = $('[name]', this);
-                        elementWithName .attr('name', elementWithName .attr('name').replace(/\[\d+\]/ig, '[' + i + ']'));
+                        let elementsWithId = $('[id]', this);                      
+                        elementsWithId.each(function(){
+                            $(this).attr('id', $(this).attr('id').replace(/-\d+-/ig, '-' + i + '-'));
+                        });
+                        
+                        let elementsWithFor = $('[for]', this);
+                        elementsWithFor.each(function(){
+                            $(this).attr('for', $(this).attr('for').replace(/-\d+-/ig, '-' + i + '-'));
+                        });
+                        
+                        let elementsWithName  = $('[name]', this);   
+                        elementsWithName.each(function(){
+                            $(this).attr('name', $(this).attr('name').replace(/\[\d+\]/ig, '[' + i + ']'));
+                        });
                     });
                 }
-                
             });    
 html;
     }

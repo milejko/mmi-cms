@@ -12,10 +12,12 @@
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <strong>{#template.config.index.server.header#}</strong>
+                        <strong>{#template.config.index.server.header#} @ PHP {php_phpversion()} {php_php_sapi_name()}</strong>
                     </div>
                     <div class="card-body">
-                        <pre>{$server}</pre>
+                        <pre>
+                        {$server}
+                        </pre>
                     </div>
                 </div>
             </div>
