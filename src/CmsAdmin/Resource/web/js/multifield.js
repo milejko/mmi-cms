@@ -29,21 +29,28 @@ $(document).ready(function () {
             toggleGeneralSwitch($(this));
         });
 
-        $(document).on('focus', '#' + containerId + ' .form-group:first-child > input[type=text]', function(e){
-            if(false === $(this).closest('.field-list-item').hasClass('active')){
+        $(document).on('focus', '#' + containerId + ' .form-group:first-child > input[type=text]', function (e) {
+            if (false === $(this).closest('.field-list-item').hasClass('active')) {
                 toggleMultifieldItem($(this).closest('.field-list-item'));
             }
         });
     });
 
-    function toggleGeneralSwitch(generalSwitch) {
+    function toggleGeneralSwitchStyle(generalSwitch) {
         $(generalSwitch).toggleClass('active');
         $(generalSwitch).children('.fa').toggleClass('fa-angle-up fa-angle-down');
         if ($(generalSwitch).hasClass('active')) {
             $(generalSwitch).children('span').text('Zwiń wszystkie');
-            showAllMultifieldItems($(generalSwitch).closest('.multifield').children('.field-list'));
         } else {
             $(generalSwitch).children('span').text('Rozwiń wszystkie');
+        }
+    }
+
+    function toggleGeneralSwitch(generalSwitch) {
+        toggleGeneralSwitchStyle(generalSwitch);
+        if ($(generalSwitch).hasClass('active')) {
+            showAllMultifieldItems($(generalSwitch).closest('.multifield').children('.field-list'));
+        } else {
             hideAllMultifieldItems($(generalSwitch).closest('.multifield').children('.field-list'));
         }
     }
@@ -76,7 +83,7 @@ $(document).ready(function () {
                 hideMultifieldItem(sibling);
             });
         } else if (listItem.closest('.field-list').find('.active').length === 0) {
-            toggleGeneralSwitch(listItem.closest('.multifield').children('.btn-toggle'));
+            toggleGeneralSwitchStyle(listItem.closest('.multifield').children('.btn-toggle'));
         }
     }
 
