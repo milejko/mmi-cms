@@ -28,6 +28,10 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
     //szablon etykiety
     const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
+    const JQUERY_URL         = '/resource/cmsAdmin/js/jquery/jquery.js';
+    const MULTIFIELD_JS_URL  = '/resource/cmsAdmin/js/multifield.js';
+    const MULTIFIELD_CSS_URL = '/resource/cmsAdmin/css/multifield.css';
+
     /**
      * Elementy formularza
      *
@@ -140,11 +144,11 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
      */
     public function fetchField()
     {
-        $this->view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
+        $this->view->headScript()->prependFile(self::JQUERY_URL);
         $this->view->headScript()->appendScript($this->jsScript());
-        $this->view->headScript()->appendFile('/resource/cmsAdmin/js/multifield.js');
+        $this->view->headScript()->appendFile(self::JS_URL);
 
-        $this->view->headLink()->appendStylesheet('/resource/cmsAdmin/css/multifield.css');
+        $this->view->headLink()->appendStylesheet(self::CSS_URL);
 
         return '<div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">
             <a href="#" class="btn-toggle" role="button">

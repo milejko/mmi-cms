@@ -31,7 +31,7 @@
   flex-flow: row wrap;
 }
 
-.form-control.multifield > .field-list > .field-list-item > section > .form-group {
+.form-control.multifield > .field-list > .field-list-item > section > .form-group:not(:first-child) {
   flex: 0 1 calc(50% - 0.75rem);
 }
 

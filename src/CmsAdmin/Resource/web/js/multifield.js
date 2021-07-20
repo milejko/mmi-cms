@@ -26,17 +26,21 @@ $(document).ready(function () {
         $(document).off('click', '#' + containerId + ' > .btn-toggle');
         $(document).on('click', '#' + containerId + ' > .btn-toggle', function (e) {
             e.preventDefault();
-            $(this).toggleClass('active');
-            $(this).children('.fa').toggleClass('fa-angle-up fa-angle-down');
-            if ($(this).hasClass('active')) {
-                $(this).children('span').text('Zwiń wszystkie');
-                showAllMultifieldItems($(this).closest('.multifield').children('.field-list'));
-            } else {
-                $(this).children('span').text('Rozwiń wszystkie');
-                hideAllMultifieldItems($(this).closest('.multifield').children('.field-list'));
-            }
+            toggleGeneralSwitch($(this));
         });
     });
+
+    function toggleGeneralSwitch(generalSwitch) {
+        $(generalSwitch).toggleClass('active');
+        $(generalSwitch).children('.fa').toggleClass('fa-angle-up fa-angle-down');
+        if ($(generalSwitch).hasClass('active')) {
+            $(generalSwitch).children('span').text('Zwiń wszystkie');
+            showAllMultifieldItems($(generalSwitch).closest('.multifield').children('.field-list'));
+        } else {
+            $(generalSwitch).children('span').text('Rozwiń wszystkie');
+            hideAllMultifieldItems($(generalSwitch).closest('.multifield').children('.field-list'));
+        }
+    }
 
     function reindexMultifield(list) {
         $(list).children().each(function (i) {
@@ -59,12 +63,14 @@ $(document).ready(function () {
 
     function toggleMultifieldItem(listItem) {
         listItem.toggleClass('active');
-        listItem.children('.btn-toggle').children('.fa').toggleClass('fa-angle-up fa-angle-down');
+        $(listItem).children('.btn-toggle').children('.fa').toggleClass('fa-angle-up fa-angle-down');
 
         if (listItem.hasClass('active')) {
             listItem.siblings().each(function (index, sibling) {
                 hideMultifieldItem(sibling);
             });
+        } else if (listItem.closest('.field-list').find('.active').length === 0) {
+            toggleGeneralSwitch(listItem.closest('.multifield').children('.btn-toggle'));
         }
     }
 
@@ -75,9 +81,9 @@ $(document).ready(function () {
     }
 
     function hideMultifieldItem(listItem) {
-        listItem.removeClass('active');
-        listItem.children('.btn-toggle').children('.fa').removeClass('fa-angle-up');
-        listItem.children('.btn-toggle').children('.fa').addClass('fa-angle-down');
+        $(listItem).removeClass('active');
+        $(listItem).children('.btn-toggle').children('.fa').removeClass('fa-angle-up');
+        $(listItem).children('.btn-toggle').children('.fa').addClass('fa-angle-down');
     }
 
     function showAllMultifieldItems(list) {
