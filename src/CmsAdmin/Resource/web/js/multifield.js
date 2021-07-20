@@ -28,6 +28,12 @@ $(document).ready(function () {
             e.preventDefault();
             toggleGeneralSwitch($(this));
         });
+
+        $(document).on('focus', '#' + containerId + ' .form-group:first-child > input[type=text]', function(e){
+            if(false === $(this).closest('.field-list-item').hasClass('active')){
+                toggleMultifieldItem($(this).closest('.field-list-item'));
+            }
+        });
     });
 
     function toggleGeneralSwitch(generalSwitch) {

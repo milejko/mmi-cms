@@ -5,8 +5,8 @@
 
 .form-control.multifield > .field-list > .field-list-item {
   background-color: #fff;
-  transition: all 0.5s;
-  transition-timing-function: linear;
+  transition: all 0.8s;
+  transition-timing-function: ease-in-out;
   max-height: 6rem;
   overflow: hidden;
   display: flex;
@@ -22,7 +22,7 @@
 }
 
 .form-control.multifield > .field-list > .field-list-item.active {
-  max-height: 1000px;
+  max-height: 2000px;
 }
 
 .form-control.multifield > .field-list > .field-list-item > section {
