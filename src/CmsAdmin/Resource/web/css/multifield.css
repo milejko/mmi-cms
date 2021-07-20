@@ -40,3 +40,13 @@
 .form-control.multifield > .field-list > .field-list-item > section > .form-group.cmsformelementtextarea {
   flex: 1 0 100%;
 }
+
+.multifield > .btn-toggle {
+  display: block;
+  margin-bottom: 1rem;
+  text-align: right;
+}
+
+.multifield > .btn-toggle .fa {
+  vertical-align: sub;
+}

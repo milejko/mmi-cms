@@ -26,7 +26,15 @@ $(document).ready(function () {
         $(document).off('click', '#' + containerId + ' > .btn-toggle');
         $(document).on('click', '#' + containerId + ' > .btn-toggle', function (e) {
             e.preventDefault();
-            showAllMultifieldItems($(this).closest('.multifield').children('.field-list'));
+            $(this).toggleClass('active');
+            $(this).children('.fa').toggleClass('fa-angle-up fa-angle-down');
+            if ($(this).hasClass('active')) {
+                $(this).children('span').text('Zwiń wszystkie');
+                showAllMultifieldItems($(this).closest('.multifield').children('.field-list'));
+            } else {
+                $(this).children('span').text('Rozwiń wszystkie');
+                hideAllMultifieldItems($(this).closest('.multifield').children('.field-list'));
+            }
         });
     });
 
@@ -53,9 +61,11 @@ $(document).ready(function () {
         listItem.toggleClass('active');
         listItem.children('.btn-toggle').children('.fa').toggleClass('fa-angle-up fa-angle-down');
 
-        listItem.siblings().removeClass('active');
-        listItem.siblings().children('.btn-toggle').children('.fa').removeClass('fa-angle-up');
-        listItem.siblings().children('.btn-toggle').children('.fa').addClass('fa-angle-down');
+        if (listItem.hasClass('active')) {
+            listItem.siblings().each(function (index, sibling) {
+                hideMultifieldItem(sibling);
+            });
+        }
     }
 
     function showMultifieldItem(listItem) {
@@ -64,9 +74,21 @@ $(document).ready(function () {
         listItem.children('.btn-toggle').children('.fa').addClass('fa-angle-up');
     }
 
+    function hideMultifieldItem(listItem) {
+        listItem.removeClass('active');
+        listItem.children('.btn-toggle').children('.fa').removeClass('fa-angle-up');
+        listItem.children('.btn-toggle').children('.fa').addClass('fa-angle-down');
+    }
+
     function showAllMultifieldItems(list) {
         $(list).children('.field-list-item').each(function () {
             showMultifieldItem($(this));
+        });
+    }
+
+    function hideAllMultifieldItems(list) {
+        $(list).children('.field-list-item').each(function () {
+            hideMultifieldItem($(this));
         });
     }
 });

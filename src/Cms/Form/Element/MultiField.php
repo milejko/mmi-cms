@@ -148,7 +148,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
 
         return '<div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">
             <a href="#" class="btn-toggle" role="button">
-                Rozwiń wszystkie <i class="fa fa-angle-down fa-2"></i>
+                <span>Rozwiń wszystkie</span> <i class="fa fa-angle-down fa-2"></i>
             </a>
             ' . $this->renderList() . '
             <a href="#" class="btn btn-primary btn-add" role="button">Dodaj element</a>
