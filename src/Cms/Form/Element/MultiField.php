@@ -146,9 +146,9 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
     {
         $this->view->headScript()->prependFile(self::JQUERY_URL);
         $this->view->headScript()->appendScript($this->jsScript());
-        $this->view->headScript()->appendFile(self::JS_URL);
+        $this->view->headScript()->appendFile(self::MULTIFIELD_JS_URL);
 
-        $this->view->headLink()->appendStylesheet(self::CSS_URL);
+        $this->view->headLink()->appendStylesheet(self::MULTIFIELD_CSS_URL);
 
         return '<div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">
             <a href="#" class="btn-toggle" role="button">
