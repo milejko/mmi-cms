@@ -18,41 +18,52 @@ use Mmi\Form\Element\ElementAbstract;
 class MultiField extends \Mmi\Form\Element\ElementAbstract
 {
     //szablon początku pola
-    CONST TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
     //szablon opisu
-    CONST TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
     //szablon końca pola
-    CONST TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
     //szablon błędów
-    CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
-    CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+
+    const JQUERY_URL         = '/resource/cmsAdmin/js/jquery/jquery.js';
+    const MULTIFIELD_JS_URL  = '/resource/cmsAdmin/js/multifield.js';
+    const MULTIFIELD_CSS_URL = '/resource/cmsAdmin/css/multifield.css';
 
     /**
      * Elementy formularza
+     *
      * @var ElementAbstract[]
      */
     protected $_elements = [];
 
     /**
      * Błędy elementów formularza
+     *
      * @var array
      */
     private $_elementErrors = [];
 
     /**
      * Konstruktor
+     *
      * @param string $name
      */
     public function __construct($name)
     {
-        $this->addClass('form-control');
         parent::__construct($name);
+        $this
+            ->addClass('form-control')
+            ->addClass('multifield');
     }
 
     /**
      * Ustawia form macierzysty
+     *
      * @param \Mmi\Form\Form $form
+     *
      * @return self
      */
     public function setForm(\Mmi\Form\Form $form)
@@ -68,6 +79,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
 
     /**
      * Waliduje pole
+     *
      * @return boolean
      */
     public function isValid()
@@ -94,13 +106,16 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
                 }
             }
         }
+
         //zwrot rezultatu wszystkich walidacji (iloczyn)
         return $result;
     }
 
     /**
      * Dodawanie elementu formularza z gotowego obiektu
+     *
      * @param ElementAbstract $element obiekt elementu formularza
+     *
      * @return self
      */
     public function addElement(ElementAbstract $element)
@@ -116,6 +131,7 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
 
     /**
      * Pobranie elementów formularza
+     *
      * @return ElementAbstract[]
      */
     final public function getElements()
@@ -128,10 +144,19 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
      */
     public function fetchField()
     {
-        $this->view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
+        $this->view->headScript()->prependFile(self::JQUERY_URL);
         $this->view->headScript()->appendScript($this->jsScript());
+        $this->view->headScript()->appendFile(self::MULTIFIELD_JS_URL);
 
-        return '<div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">' . $this->renderList() . '<a href="#" class="btn btn-primary btn-add" role="button">Dodaj element</a></div>';
+        $this->view->headLink()->appendStylesheet(self::MULTIFIELD_CSS_URL);
+
+        return '<div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">
+            <a href="#" class="btn-toggle" role="button">
+                <span>Rozwiń wszystkie</span> <i class="fa fa-angle-down fa-2"></i>
+            </a>
+            ' . $this->renderList() . '
+            <a href="#" class="btn btn-primary btn-add" role="button">Dodaj element</a>
+            </div>';
     }
 
     /**
@@ -157,13 +182,19 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
 
     /**
      * Renderer pol formularza
+     *
      * @param array|null $itemValues
-     * @param string $index
+     * @param string     $index
+     *
      * @return string
      */
     private function renderListElement(?array $itemValues = null, string $index = '**')
     {
-        $html = '<li class="border mb-3 p-3"><a href="#" class="btn btn-remove pull-right" role="button"><i class="fa fa-trash-o fa-2"></i></a><section>';
+        $html = '<li class="field-list-item border mb-3 p-3">
+            <a href="#" class="btn-toggle" role="button">
+                <i class="fa fa-angle-down fa-2"></i>
+            </a>
+        <section>';
 
         foreach ($this->getElements() as $element) {
             $element->setId($this->getId() . '-' . $index . '-' . $element->getBaseName());
@@ -178,7 +209,11 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
             $html .= $element->__toString();
         }
 
-        $html .= '</section></li>';
+        $html .= '</section>
+            <a href="#" class="btn-remove" role="button">
+                <i class="fa fa-trash-o fa-2"></i>
+            </a>
+        </li>';
 
         return trim(preg_replace('/\r|\n|\s\s+/', ' ', $html));
     }
@@ -189,41 +224,17 @@ class MultiField extends \Mmi\Form\Element\ElementAbstract
     private function jsScript()
     {
         $listElement = addcslashes($this->renderListElement(), "'");
+        $listId      = $this->getId() . '-list';
 
         return <<<html
             $(document).ready(function() {
-            
-                let list = $('.field-list').change();
-           
-                $(document).on('click', '.btn-remove', function(e) {
-                    e.preventDefault();
-                    $(this).parent().remove();
-                    reindex();
-                });
-                
-                $('.btn-add').click(function(e) {
-                    e.preventDefault();
-                    list.append('$listElement'.replaceAll('**', list.children().length));
-                });
+                let list = $('#$listId > .field-list');
 
-                function reindex() {
-                    list.children().each(function(i) {
-                        let elementsWithId = $('[id]', this);                      
-                        elementsWithId.each(function(){
-                            $(this).attr('id', $(this).attr('id').replace(/-\d+-/ig, '-' + i + '-'));
-                        });
-                        
-                        let elementsWithFor = $('[for]', this);
-                        elementsWithFor.each(function(){
-                            $(this).attr('for', $(this).attr('for').replace(/-\d+-/ig, '-' + i + '-'));
-                        });
-                        
-                        let elementsWithName  = $('[name]', this);   
-                        elementsWithName.each(function(){
-                            $(this).attr('name', $(this).attr('name').replace(/\[\d+\]/ig, '[' + i + ']'));
-                        });
-                    });
-                }
+                $(document).off('click', '#$listId > .btn-add');
+                $(document).on('click', '#$listId > .btn-add', function(e) {
+                    e.preventDefault();
+                    $(list).append('$listElement'.replaceAll('**', list.children().length));
+                });
             });    
 html;
     }

@@ -1,0 +1,52 @@
+.form-control.multifield {
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.form-control.multifield > .field-list > .field-list-item {
+  background-color: #fff;
+  transition: all 0.8s;
+  transition-timing-function: ease-in-out;
+  max-height: 6rem;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-control.multifield > .field-list > .field-list-item > a {
+  flex: 0 0 1rem;
+}
+
+.form-control.multifield > .field-list > .field-list-item > section {
+  flex: 0 1 calc(100% - 4rem);
+}
+
+.form-control.multifield > .field-list > .field-list-item.active {
+  max-height: 2000px;
+}
+
+.form-control.multifield > .field-list > .field-list-item > section {
+  display: flex;
+  justify-content: space-between;
+  flex-flow: row wrap;
+}
+
+.form-control.multifield > .field-list > .field-list-item > section > .form-group:not(:first-child) {
+  flex: 0 1 calc(50% - 0.75rem);
+}
+
+.form-control.has-nested-multifield > .field-list > .field-list-item > section > .form-group:last-child,
+.form-control.multifield > .field-list > .field-list-item > section .form-group:first-child,
+.form-control.multifield > .field-list > .field-list-item > section > .form-group.cmsformelementtextarea {
+  flex: 1 0 100%;
+}
+
+.multifield > .btn-toggle {
+  display: block;
+  margin-bottom: 1rem;
+  text-align: right;
+}
+
+.multifield > .btn-toggle .fa {
+  vertical-align: sub;
+}
