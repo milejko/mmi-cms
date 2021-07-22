@@ -554,16 +554,17 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public function clearCache()
     {
+        $scope = substr($this->template, 0, strpos($this->template, '/'));
         //usuwanie cache
         $cache = App::$di->get(CacheInterface::class);
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->uri));
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->getInitialStateValue('uri')));
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->customUri));
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->getInitialStateValue('customUri')));
-        $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($this->uri));
-        $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($this->getInitialStateValue('uri')));
-        $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($this->customUri));
-        $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($this->getInitialStateValue('customUri')));
+        $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->uri));
+        $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->getInitialStateValue('uri')));
+        $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->customUri));
+        $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->getInitialStateValue('customUri')));
         $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->id);
         $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->cmsCategoryOriginalId);
         //caches associated with active version
@@ -574,7 +575,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $cache->remove('mmi-cms-navigation-');
         //drop skin menu cache
         $cache->remove(MenuService::CACHE_KEY);
-        $cache->remove(MenuService::CACHE_KEY . substr($this->template, 0, strpos($this->template, '/')));
+        $cache->remove(MenuService::CACHE_KEY . $scope);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->id);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
         //usuwanie cache dzieci kategorii

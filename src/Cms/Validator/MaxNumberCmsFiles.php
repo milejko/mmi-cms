@@ -34,7 +34,7 @@ class MaxNumberCmsFiles extends \Mmi\Validator\ValidatorAbstract
     /**
      * Komunikat błędnego kodu zabezpieczającego
      */
-    const INVALID = 'validator.minNumberCmsFiles.message';
+    const INVALID = 'validator.maxNumberCmsFiles.message';
 
     /**
      * Ustawia opcje
