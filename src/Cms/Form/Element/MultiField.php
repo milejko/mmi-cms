@@ -280,8 +280,9 @@ class MultiField extends ElementAbstract
                 $(document).on('click', '#$listId > .btn-add', function(e) {
                     e.preventDefault();
                     $(list).append('$listElement'.replaceAll('**', list.children().length));
+                    $(list).children('.field-list-item').last().find('.select2').select2();
                 });
             });    
-html;
+        html;
     }
 }
