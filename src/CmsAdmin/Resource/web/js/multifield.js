@@ -5,7 +5,6 @@ $(document).ready(function () {
 $(window).on('load', function () {
     $('.multifield .ne-error-list').each(function () {
         if ($(this).children().length > 0) {
-            console.log($(this).children());
             $('html, body').animate({
                 scrollTop: $(this).offset().top - 200
             }, 1000);
