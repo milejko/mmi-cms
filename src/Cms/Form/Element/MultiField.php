@@ -234,7 +234,7 @@ class MultiField extends ElementAbstract
      *
      * @return string
      */
-    private function renderListElement(?array $itemValues = null, string $index = '**'): string
+    protected function renderListElement(?array $itemValues = null, string $index = '**'): string
     {
         $html = '<li class="field-list-item border mb-3 p-3">
             <a href="#" class="btn-toggle" role="button">
@@ -267,7 +267,7 @@ class MultiField extends ElementAbstract
     /**
      * @return string
      */
-    private function jsScript(): string
+    protected function jsScript(): string
     {
         $listElement = addcslashes($this->renderListElement(), "'");
         $listId      = $this->getId() . '-list';

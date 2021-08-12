@@ -1,0 +1,24 @@
+.upload-add-label {
+  display: block;
+  border: 1px dashed #0a6aa1;
+  width: 100%;
+  text-align: center;
+  padding: 2rem 1rem;
+  position: relative;
+}
+
+.upload-add {
+  display: block;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.form-control.multifield > .field-list > .field-list-item > section .form-group:nth-child(2) {
+  flex: 1 0 100%;
+}
