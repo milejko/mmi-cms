@@ -31,7 +31,9 @@ class FileController extends \Mmi\Mvc\Controller
         ini_set('memory_limit', '512M');
         $fs = new FileSystemModel($this->name);
         //public path
-        $publicPath = $fs->getPublicPath($this->operation, trim($this->x . 'x' . $this->y, 'x'));
+        $publicPath = $this->legacy ? 
+            str_replace('.webp', '.jpg', $fs->getPublicPath($this->operation, trim($this->x . 'x' . $this->y, 'x')))
+            : $fs->getPublicPath($this->operation, trim($this->x . 'x' . $this->y, 'x'));
         //hash check
         if (false === strpos($publicPath, $this->hash)) {
             throw new MvcForbiddenException('Scaler hash invalid');
@@ -63,7 +65,9 @@ class FileController extends \Mmi\Mvc\Controller
                 throw new MvcForbiddenException('Scaler type invalid');
         }
         //webp generation
-        imagewebp($resource, $targetFilePath, Registry::$config->thumbQuality);
+        $this->legacy ? 
+            imagejpeg($resource, $targetFilePath, Registry::$config->thumbQuality) :
+            imagewebp($resource, $targetFilePath, Registry::$config->thumbQuality);
         return $this->getResponse()->redirectToUrl($this->view->cdn . $publicPath);
     }
 
