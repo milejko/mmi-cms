@@ -39,7 +39,8 @@ class ContentFilter
     public function getFilteredContent()
     {
         //zastępowanie ścieżek "świeżymi renderami"
-        return preg_replace_callback('/\/data\/[a-f0-9]\/[a-f0-9]\/[a-f0-9]\/[a-f0-9]\/(scalecrop|scalex|scaley|default)\/([0-9x]{0,10})\/([a-f0-9]{32}\.[a-zA-Z0-9]{1,4})/', [&$this, '_refreshThumbs'], $this->_content);
+        preg_replace_callback('/\/data\/[a-f0-9]\/[a-f0-9]\/[a-f0-9]\/[a-f0-9]\/(scalecrop|scalex|scaley|default)\/([0-9x]{0,10})\/([a-f0-9]{32}\.[a-zA-Z0-9]{1,4})/', [&$this, '_refreshThumbs'], $this->_content);
+        return $this->_content;
     }
 
     /**
