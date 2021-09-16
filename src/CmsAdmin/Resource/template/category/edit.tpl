@@ -24,9 +24,25 @@
                     </button>
                 </div>
                 <ul class="nav nav-tabs" role="tablist" data-id="{$categoryForm->getRecord()->id}">
-                    <li class="nav-item">
-                        <a title="{#template.category.edit.tab.config#}" class="nav-link" data-toggle="tab" href="#basic" role="tab" aria-controls="basic" aria-expanded="true"><i class="icon-pencil"></i></a>
-                    </li>
+                    {foreach $categoryForm->getOption('tabs') as $tabKey => $tab}
+                        {$tabContainsElement = false}
+                        {foreach $categoryForm->getElements() as $element}
+                            {if 'submit' == $element->getBasename() || 'commit' == $element->getBasename()}
+                                {continue}
+                            {/if}
+                            {if $tabKey == 'default' && !$element->getOption('tab')}
+                                {$tabContainsElement = true}{break}
+                            {/if}
+                            {if $tabKey == $element->getOption('tab')}
+                                {$tabContainsElement = true}{break}
+                            {/if}
+                        {/foreach}
+                        {if $tabContainsElement}
+                            <li class="nav-item">
+                                <a title="{_('template.category.edit.tab.' . $tab['label'])}" class="nav-link" data-toggle="tab" href="#{$tabKey}" role="tab" aria-controls="basic" aria-expanded="true"><i class="icon-{$tab.icon}"></i></a>
+                            </li>
+                        {/if}
+                    {/foreach}
                     {if $category->template && aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'preview'])}
                         {$widgetData = widget('cmsAdmin', 'categoryWidgetRelation', 'preview', ['categoryId' => $category->id, 'uploaderId' => $request->uploaderId])}
                     {/if}
@@ -40,15 +56,19 @@
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane" id="basic" role="tabpanel" aria-expanded="true">
-                        {if $duplicateAlert}<div class="em">{#template.category.edit.duplicate.alert#}<br /><br /></div>{/if}
-                        {foreach $categoryForm->getElements() as $element}
-                            {if 'submit' == $element->getBasename() || 'commit' == $element->getBasename()}
-                                {continue}
-                            {/if}
-                            {$element}
-                        {/foreach}
-                    </div>
+                    {foreach $categoryForm->getOption('tabs') as $tabKey => $tab}
+                        <div class="tab-pane" id="{$tabKey}" role="tabpanel" aria-expanded="true">
+                            {if $duplicateAlert}<div class="em">{#template.category.edit.duplicate.alert#}<br /><br /></div>{/if}
+                            {foreach $categoryForm->getElements() as $element}
+                                {if 'submit' == $element->getBasename() || 'commit' == $element->getBasename()}
+                                    {continue}
+                                {/if}
+                                {if ($tabKey == 'default' && !$element->getOption('tab')) || $tabKey == $element->getOption('tab')}
+                                    {$element}
+                                {/if}
+                            {/foreach}
+                        </div>
+                    {/foreach}
                     {if $widgetData}
                         <div class="tab-pane" id="widgets" role="tabpanel" aria-expanded="false" style="padding-bottom: 0">
                             <div id="widget-list-container" data-category-id="{$category->id}">

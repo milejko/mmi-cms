@@ -10,15 +10,11 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\App\CmsSkinsetConfig;
 use Cms\Form\Element;
 use Cms\Form\Form;
 use Mmi\Validator;
 use Mmi\Filter;
-use Cms\Model\CacheOptions;
-use Cms\Model\SkinsetModel;
 use Cms\Orm\CmsCategoryRecord;
-use Mmi\App\App;
 
 /**
  * Formularz edycji szegółów kategorii
@@ -44,7 +40,8 @@ class CategoryForm extends Form
         $this->setClass($this->_formBaseName . ' vertical')
             ->setOption('accept-charset', 'utf-8')
             ->setMethod('post')
-            ->setOption('enctype', 'multipart/form-data');
+            ->setOption('enctype', 'multipart/form-data')
+            ->addTab('default', 'config', 'pencil');
 
         //opcje przekazywane z konstruktora
         $this->setOptions($options);
@@ -54,6 +51,28 @@ class CategoryForm extends Form
 
         //dane z rekordu
         $this->hasNotEmptyRecord() && $this->setFromRecord($this->_record);
+    }
+
+    /**
+     * Dodawanie zakładki
+     */
+    public function addTab(string $key, string $label, string $icon): self
+    {
+        $tabs = is_array($this->getOption('tabs')) ? $this->getOption('tabs') : [];
+        $tabs[$key] = ['label' => $label, 'icon' => $icon];
+        $this->setOption('tabs', $tabs);
+        return $this;
+    }
+
+    /**
+     * Usuwanie zakładki
+     */
+    public function removeTab(string $key): self
+    {
+        $tabs = is_array($this->getOption('tabs')) ? $this->getOption('tabs') : [];
+        unset($tabs[$key]);
+        $this->setOption('tabs', $tabs);
+        return $this;
     }
 
     public function init()
