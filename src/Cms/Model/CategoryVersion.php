@@ -54,12 +54,15 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
                 ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
             )
             ->andFieldObjectId()->equals($this->_category->id)
-            ->find()
+            ->delete();
+        //usuwanie tagów
+        (new \Cms\Orm\CmsTagRelationQuery)
+            ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
+            ->andFieldObjectId()->equals($this->_category->id)
             ->delete();
         //usuwanie widgetów
         (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
             ->whereCmsCategoryId()->equals($this->_category->id)
-            ->find()
             ->delete();
         //nadpisanie danych oryginału
         $this->_category->setFromArray($draft->toArray());
@@ -73,8 +76,16 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
         $this->_category->status = \Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE;
         //czyszczenie id oryginału
         $this->_category->cmsCategoryOriginalId = null;
-        //przenoszenie plików
-        \Cms\Model\File::move(CmsCategoryRecord::FILE_OBJECT, $draft->id, CmsCategoryRecord::FILE_OBJECT, $this->_category->id);
+        //przenoszenie tagów
+        foreach ((new \Cms\Orm\CmsTagRelationQuery)
+            //tinymce i uploadery
+            ->whereObject()->like(CmsCategoryRecord::TAG_OBJECT . '%')
+            ->andFieldObjectId()->equals($draft->id)
+            ->find() as $tag) {
+            //przepinanie id
+            $tag->objectId = $this->_category->id;
+            $tag->save();
+        }
         //przepinanie widgetów
         foreach ((new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
             ->whereCmsCategoryId()->equals($draft->id)

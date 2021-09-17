@@ -13,6 +13,7 @@ namespace Cms\Model;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
+use Cms\Orm\CmsTagRelationRecord;
 use Mmi\App\App;
 use Mmi\Db\DbInterface;
 
@@ -149,6 +150,9 @@ class CategoryCopy
         if (!$this->_copyWidgetRelations()) {
             return false;
         }
+        if (!$this->_copyTagRelations()) {
+            return false;
+        }
         return true;
     }
 
@@ -249,6 +253,32 @@ class CategoryCopy
             ->andFieldObjectId()->equals($relationId)
             ->findUnique('object') as $object) {
             \Cms\Model\File::link($object, $relationId, $object, $newRelation->id);
+        }
+        return true;
+    }
+
+    /**
+     * Kopiuje tagi
+     * @param integer $relationId
+     * @param \Cms\Orm\CmsCategoryWidgetCategoryRecord $newRelation
+     * @return boolean
+     */
+    protected function _copyTagRelations()
+    {
+        //jeśli rekord kopii jest niezapisany
+        if (!$this->_copy->getPk()) {
+            return false;
+        }
+        //dla każdego pliku powiązanego z kategorią
+        foreach ((new \Cms\Orm\CmsTagRelationQuery())
+            ->whereObject()->like(CmsCategoryRecord::TAG_OBJECT . '%')
+            ->andFieldObjectId()->equals($this->_category->id)
+            ->find() as $tagRelation) {
+            $newTagRelation = new CmsTagRelationRecord();
+            $newTagRelation->cmsTagId = $tagRelation->cmsTagId;
+            $newTagRelation->object = $tagRelation->object;
+            $newTagRelation->objectId = $this->_copy->getPk();
+            $newTagRelation->save();
         }
         return true;
     }

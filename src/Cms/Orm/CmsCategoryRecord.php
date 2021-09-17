@@ -144,6 +144,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     const STATUS_DELETED = 30;
     //nazwa obiektu plików cms
     const FILE_OBJECT = 'cmscategory';
+    //nazwa obiektów tagów
+    const TAG_OBJECT = 'cmscategory';
     //prefiks bufora modelu widgetu
     const WIDGET_MODEL_CACHE_PREFIX = 'category-widget-model-';
     //prefiks bufora url->id
@@ -326,6 +328,11 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
                 ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
                 ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
             )
+            ->andFieldObjectId()->equals($this->getPk())
+            ->delete();
+        //usuwanie tagów
+        (new CmsTagRelationQuery())
+            ->whereObject()->like(CmsCategoryRecord::TAG_OBJECT . '%')
             ->andFieldObjectId()->equals($this->getPk())
             ->delete();
         //usuwanie widgetów

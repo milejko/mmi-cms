@@ -12,6 +12,8 @@ namespace Cms\Form\Element;
 
 use Cms\Orm\CmsTagQuery;
 use Cms\Orm\CmsTagRecord;
+use Cms\Orm\CmsTagRelationQuery;
+use Cms\Orm\CmsTagRelationRecord;
 
 /**
  * Element tagi
@@ -30,6 +32,9 @@ class Tags extends Select
     //szablon etykiety
     const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
+    private string $object;
+    private string $objectId;
+
     /**
      * Konstruktor
      */
@@ -38,6 +43,18 @@ class Tags extends Select
         parent::__construct($name);
         $this->setMultiple()
             ->setValue([]);
+    }
+
+    public function setObject(string $object): self
+    {
+        $this->object = $object;
+        return $this;
+    }
+
+    public function setObjectId(string $objectId): self
+    {
+        $this->objectId = $objectId;
+        return $this;
     }
 
     /**
@@ -184,7 +201,22 @@ class Tags extends Select
             $newTag->tag = $tag;
             $newTag->save();
         }
-        print_r($this->_form->getRecordClass());exit;
+        $object = $this->object ?? $this->_form->getRecordClass();
+        $objecId = $this->objectId ?? $this->_form->getRecord()->id;
+        //tag relations cleanup
+        (new CmsTagRelationQuery())
+            ->whereObject()->equals($object)
+            ->andFieldObjectId()->equals($objecId)
+            ->delete();
+
+        $tagIds = (new CmsTagQuery())->whereTag()->equals($this->getValue())->findPairs('tag', 'id');
+        foreach($this->getValue() as $tagValue) {
+            $newTagRelation = new CmsTagRelationRecord();
+            $newTagRelation->object = $object;
+            $newTagRelation->objectId = $objecId;
+            $newTagRelation->cmsTagId = $tagIds[$tagValue];
+            $newTagRelation->save();
+        }
     }
 
     /**
