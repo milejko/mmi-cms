@@ -10,6 +10,9 @@
 
 namespace Cms\Form\Element;
 
+use Cms\Orm\CmsTagQuery;
+use Cms\Orm\CmsTagRecord;
+
 /**
  * Element tagi
  */
@@ -133,7 +136,7 @@ class Tags extends Select
         $values = is_array($this->getValue()) ? $this->getValue() : [$this->getValue()];
 
         if ($this->issetOption('multiple')) {
-            $this->setName($this->getBaseName() . '[]');
+            $this->setName($this->getName() . '[]');
         }
 
         //nagłówek selecta
@@ -170,15 +173,30 @@ class Tags extends Select
     }
 
     /**
+     * Po zapisie rekordu
+     */
+    public function onRecordSaved()
+    {
+        $existingTags = (new CmsTagQuery())->whereTag()->equals($this->getValue())->findPairs('tag', 'tag');
+        $inexistentTags = array_diff($this->getValue(), $existingTags);
+        foreach ($inexistentTags as $tag) {
+            $newTag = new CmsTagRecord();
+            $newTag->tag = $tag;
+            $newTag->save();
+        }
+        print_r($this->_form->getRecordClass());exit;
+    }
+
+    /**
      * łączenie wartości
      * @return array
      */
     public function getMultioptions()
     {
-        $array = [];
-        foreach ((new \Cms\Orm\CmsTagQuery)->orderAscTag()->findPairs('tag', 'tag') as $k => $t) {
-            $array[$k] = $k;
+        $availableTags = [];
+        foreach ((new CmsTagQuery())->orderAscTag()->findPairs('tag', 'tag') as $tag) {
+            $availableTags[$tag] = $tag;
         }
-        return $this->getValue() + $array;
+        return $this->getValue() + $availableTags;
     }
 }

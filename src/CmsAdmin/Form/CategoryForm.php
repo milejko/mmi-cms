@@ -22,6 +22,7 @@ use Cms\Orm\CmsCategoryRecord;
  */
 class CategoryForm extends Form
 {
+    const OG_IMAGE_OBJECT = CmsCategoryRecord::FILE_OBJECT . 'ogImage';
 
     /**
      * Konstruktor
@@ -41,7 +42,8 @@ class CategoryForm extends Form
             ->setOption('accept-charset', 'utf-8')
             ->setMethod('post')
             ->setOption('enctype', 'multipart/form-data')
-            ->addTab('default', 'config', 'pencil');
+            ->addTab('default', 'config', 'pencil') //tab domyślny
+            ->addTab('seo', 'seo', 'magnifier'); //tab seo
 
         //opcje przekazywane z konstruktora
         $this->setOptions($options);
@@ -89,11 +91,21 @@ class CategoryForm extends Form
             ->setChecked()
             ->setLabel('form.category.active.label'));
 
+        //blank
+        $this->addElement((new Element\Checkbox('blank'))
+            ->setLabel('form.category.blank.label'));                
+
+        //przekierowanie na link
+        $this->addElement((new Element\Text('redirectUri'))
+                ->setLabel('form.category.redirect.label')
+                ->addFilter(new Filter\StringTrim));
+    
         //tylko jeśli ma template (jest stroną)
-        if ($this->getRecord()->template) {
+        if (strpos($this->getRecord()->template, '/')) {
             //SEO
-            //nazwa kategorii
+            //meta title
             $this->addElement((new Element\Text('title'))
+                ->setOption('tab', 'seo')
                 ->setLabel('form.category.title.label')
                 ->setDescription('form.category.title.description')
                 ->addFilter(new Filter\StringTrim)
@@ -101,7 +113,14 @@ class CategoryForm extends Form
 
             //meta description
             $this->addElement((new Element\Textarea('description'))
+                ->setOption('tab', 'seo')
                 ->setLabel('form.category.description.label'));
+
+            //og image
+            $this->addElement((new Element\Image('ogImage'))
+                ->setOption('tab', 'seo')
+                ->setObject(self::OG_IMAGE_OBJECT)
+                ->setLabel('form.category.image.label'));
 
             //własny uri
             $this->addElement((new Element\Text('customUri'))
@@ -111,16 +130,6 @@ class CategoryForm extends Form
                 ->addFilter(new Filter\EmptyToNull)
                 ->addValidator(new Validator\StringLength([1, 255])));
         }
-
-        //blank
-        $this->addElement((new Element\Checkbox('blank'))
-            ->setLabel('form.category.blank.label'));
-
-        //Zaawansowane
-        //przekierowanie na link
-        $this->addElement((new Element\Text('redirectUri'))
-            ->setLabel('form.category.redirect.label')
-            ->addFilter(new Filter\StringTrim));
 
         //zapis
         $this->addElement((new Element\Submit('commit'))

@@ -27,13 +27,6 @@ class Select extends \Mmi\Form\Element\Select
     //szablon etykiety
     const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
-    //biblioteka Select2
-    const SELECT2_JS_URL  = 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js';
-    const SELECT2_CSS_URL = 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css';
-    //pliki js i css
-    const SELECT_JS_URL   = '/resource/cmsAdmin/js/select2.js';
-    const SELECT_CSS_URL  = '/resource/cmsAdmin/css/select2.css';
-
     /**
      * Konstruktor
      *
@@ -43,16 +36,5 @@ class Select extends \Mmi\Form\Element\Select
     {
         $this->addClass('form-control');
         parent::__construct($name);
-    }
-
-    public function fetchField()
-    {
-        $this->view->headScript()->appendFile(self::SELECT2_JS_URL);
-        $this->view->headScript()->appendFile(self::SELECT_JS_URL);
-
-        $this->view->headLink()->appendStylesheet(self::SELECT2_CSS_URL);
-        $this->view->headLink()->appendStylesheet(self::SELECT_CSS_URL);
-
-        return parent::fetchField();
     }
 }

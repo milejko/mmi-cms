@@ -115,7 +115,7 @@ CMS.category = function () {
             $('ul.nav-tabs > li > a[href$="' + currentTab + '"]').click();
             return;
         }
-        $('ul.nav-tabs > li > a[href$="#basic"]').click();
+        $('ul.nav-tabs > li > a[href$="#default"]').click();
     };
     dataTabRestore();
     initSortableWidgets();

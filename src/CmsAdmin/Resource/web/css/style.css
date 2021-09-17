@@ -280,6 +280,14 @@ button::-moz-focus-inner, [type="button"]::-moz-focus-inner, [type="reset"]::-mo
     border-style: none;
 }
 
+ul.form-radio {
+    padding-inline-start: 20px;
+}
+
+ul.form-radio label {
+    margin-bottom: 0.25em;
+}
+
 input[type="radio"], input[type="checkbox"] {
     box-sizing: border-box;
     padding: 0;
@@ -11394,35 +11402,10 @@ div.field.hidden {
     border: none;
 }
 
-ul.chosen-choices {
-    display: inline-block;
-    *display: inline;
-    vertical-align: middle;
-    width: auto;
-    zoom: 1;
-    margin: 0 0 10px 0 !important;
-    border: 1px solid #ccc !important;
-    font-size: 1em;
-    padding: 5px 0;
-    text-indent: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    background: #fff !important;
-    -moz-box-shadow: inset 0 0 6px #ccc;
-    -webkit-box-shadow: inset 0 1px 6px #ccc;
-    box-shadow: inset 0 1px 6px #ccc;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-.chosen-container.chosen-with-drop .chosen-drop {
-    margin-top: -10px;
-}
-
-.chosen-container {
-    width: 80% !important;
+form .chosen-container {
+    width: 100% !important;
+    display: block;
+    margin: 0 !important;
 }
 
 #categoryTreeContainer {
