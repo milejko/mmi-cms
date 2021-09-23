@@ -9,6 +9,7 @@ use Cms\Api\TransportInterface;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryRecord;
+use Cms\Orm\CmsFileQuery;
 use CmsAdmin\Form\CategoryForm;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
@@ -86,6 +87,9 @@ abstract class TemplateController extends Controller
         $to->dateAdd = $this->cmsCategoryRecord->dateAdd;
         $to->dateModify = $this->cmsCategoryRecord->dateModify;
         $to->title = $this->cmsCategoryRecord->title;
+        if (null !== $ogImageRecord = CmsFileQuery::imagesByObject(CmsCategoryRecord::OG_IMAGE_OBJECT, $this->cmsCategoryRecord->id)->findFirst()) {
+            $to->ogImageUrl = $ogImageRecord->getUrl('scalecrop', '1200x630');
+        }
         $to->description = $this->cmsCategoryRecord->description;
         $to->opensNewWindow = $this->cmsCategoryRecord->blank ? true : false;
         $to->attributes = is_array($attributes) ? $attributes : [];
@@ -139,7 +143,7 @@ abstract class TemplateController extends Controller
     /**
      * Pobiera breadcrumby
      */
-    public function getBreadcrumbs(): array
+    protected function getBreadcrumbs(): array
     {
         $breadcrumbs = [];
         $record = $this->cmsCategoryRecord;
@@ -162,7 +166,7 @@ abstract class TemplateController extends Controller
     /**
      * Pobiera rodzeństwo
      */
-    public function getSiblings(): array
+    protected function getSiblings(): array
     {
         $siblings = [];
         foreach ($this->cmsCategoryRecord->getSiblingsRecords() as $record) {

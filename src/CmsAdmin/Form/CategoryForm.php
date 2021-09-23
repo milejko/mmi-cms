@@ -15,6 +15,7 @@ use Cms\Form\Form;
 use Mmi\Validator;
 use Mmi\Filter;
 use Cms\Orm\CmsCategoryRecord;
+use Mmi\Validator\Url;
 
 /**
  * Formularz edycji szegółów kategorii
@@ -22,8 +23,6 @@ use Cms\Orm\CmsCategoryRecord;
  */
 class CategoryForm extends Form
 {
-    const OG_IMAGE_OBJECT = CmsCategoryRecord::FILE_OBJECT . 'ogImage';
-
     /**
      * Konstruktor
      * @param CmsCategoryRecord $record
@@ -98,6 +97,7 @@ class CategoryForm extends Form
         //przekierowanie na link
         $this->addElement((new Element\Text('redirectUri'))
                 ->setLabel('form.category.redirect.label')
+                ->addValidator(new Url())
                 ->addFilter(new Filter\StringTrim));
     
         //tylko jeśli ma template (jest stroną)
@@ -119,7 +119,7 @@ class CategoryForm extends Form
             //og image
             $this->addElement((new Element\Image('ogImage'))
                 ->setOption('tab', 'seo')
-                ->setObject(self::OG_IMAGE_OBJECT)
+                ->setObject(CmsCategoryRecord::OG_IMAGE_OBJECT)
                 ->setLabel('form.category.image.label'));
 
             //własny uri

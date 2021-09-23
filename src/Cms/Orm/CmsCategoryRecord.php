@@ -144,6 +144,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     const STATUS_DELETED = 30;
     //nazwa obiektu plików cms
     const FILE_OBJECT = 'cmscategory';
+    //nazwa obiektu pliku OG image
+    const OG_IMAGE_OBJECT = self::FILE_OBJECT . 'ogimage';
     //nazwa obiektów tagów
     const TAG_OBJECT = 'cmscategory';
     //prefiks bufora modelu widgetu
