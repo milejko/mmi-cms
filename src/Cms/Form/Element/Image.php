@@ -80,6 +80,7 @@ class Image extends ElementAbstract
     {
         //parent
         parent::setForm($form);
+        $this->setIgnore();
         //nazwa pola
         $this->setDeleteCheckboxName($form->getBaseName() . '[' . $this->getBasename() . self::DELETE_FIELD_SUFFIX . ']');
         //obiekt niezdefiniowany

@@ -7,13 +7,13 @@ namespace Cms\Api;
  */
 class BreadcrumbData implements DataInterface
 {
-    public string   $title;
+    public string   $name;
     public int      $order;
     public array    $_links = [];
 
-    public function setTitle(string $title): self
+    public function setName(string $name): self
     {
-        $this->title = $title;
+        $this->name = $name;
         return $this;
     }
 

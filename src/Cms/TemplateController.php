@@ -86,7 +86,7 @@ abstract class TemplateController extends Controller
         $to->name = $this->cmsCategoryRecord->name;
         $to->dateAdd = $this->cmsCategoryRecord->dateAdd;
         $to->dateModify = $this->cmsCategoryRecord->dateModify;
-        $to->title = $this->cmsCategoryRecord->title;
+        $to->title = $this->cmsCategoryRecord->title ? : $this->cmsCategoryRecord->name;
         if (null !== $ogImageRecord = CmsFileQuery::imagesByObject(CmsCategoryRecord::OG_IMAGE_OBJECT, $this->cmsCategoryRecord->id)->findFirst()) {
             $to->ogImageUrl = $ogImageRecord->getUrl('scalecrop', '1200x630');
         }
@@ -151,7 +151,7 @@ abstract class TemplateController extends Controller
         while (null !== $record) {
             $scope = substr($record->template, 0, strpos($record->template, '/'));
             $breadcrumbs[] = (new BreadcrumbData)
-                ->setTitle($record->name ? : '')
+                ->setName($record->name ? : '')
                 ->setOrder($order--)
                 ->setLinks($scope ? [
                     (new LinkData)
@@ -175,7 +175,7 @@ abstract class TemplateController extends Controller
             }
             $scope = substr($record->template, 0, strpos($record->template, '/'));
             $siblings[] = (new BreadcrumbData)
-                ->setTitle($record->name ? : '')
+                ->setName($record->name ? : '')
                 ->setLinks($scope ? [
                     (new LinkData)
                         ->setHref(ApiController::API_PREFIX . $scope . '/' . ($record->customUri ?: $record->uri))
