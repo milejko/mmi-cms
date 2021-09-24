@@ -22,12 +22,12 @@ abstract class TemplateController extends Controller
     /**
      * CMS category record
      */
-    private CmsCategoryRecord $cmsCategoryRecord;
+    protected CmsCategoryRecord $cmsCategoryRecord;
 
     /**
      * CMS skinset config
      */
-    private CmsSkinsetConfig $cmsSkinsetConfig;
+    protected CmsSkinsetConfig $cmsSkinsetConfig;
 
     /**
      * Sets the CMS category record
