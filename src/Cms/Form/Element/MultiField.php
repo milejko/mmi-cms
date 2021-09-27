@@ -19,19 +19,19 @@ use Mmi\Form\Form;
 class MultiField extends ElementAbstract
 {
     //szablon początku pola
-    const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    public const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
     //szablon opisu
-    const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    public const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
     //szablon końca pola
-    const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    public const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
     //szablon błędów
-    const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    public const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
-    const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    public const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
     //pliki js i css
-    const JQUERY_URL         = '/resource/cmsAdmin/js/jquery/jquery.js';
-    const MULTIFIELD_JS_URL  = '/resource/cmsAdmin/js/multifield.js';
-    const MULTIFIELD_CSS_URL = '/resource/cmsAdmin/css/multifield.css';
+    protected const JQUERY_URL         = '/resource/cmsAdmin/js/jquery/jquery.js';
+    protected const MULTIFIELD_JS_URL  = '/resource/cmsAdmin/js/multifield.js';
+    protected const MULTIFIELD_CSS_URL = '/resource/cmsAdmin/css/multifield.css';
 
     /**
      * Elementy formularza
@@ -45,7 +45,14 @@ class MultiField extends ElementAbstract
      *
      * @var array
      */
-    private $_elementErrors = [];
+    protected $_elementErrors = [];
+
+    /**
+     * Błędy zagnieżdzonych elementów formularza
+     *
+     * @var array
+     */
+    protected $_elementNestedErrors = [];
 
     /**
      * Konstruktor
@@ -57,7 +64,12 @@ class MultiField extends ElementAbstract
         parent::__construct($name);
         $this
             ->addClass('form-control')
-            ->addClass('multifield');
+            ->addClass('multifield')
+            ->addElement(
+                (new Checkbox('isActive'))
+                    ->setLabel('form.multifield.active.label')
+                    ->setValue(1)
+            );
     }
 
     /**
@@ -99,18 +111,38 @@ class MultiField extends ElementAbstract
     }
 
     /**
+     * Waliduje pole
+     *
+     * @return boolean
+     */
+    public function isNestedValid(int $parentIndex): bool
+    {
+        $result = true;
+        if (false === is_array($this->getValue())) {
+            return $result;
+        }
+
+        foreach ($this->getValue() as $index => $itemValues) {
+            $this->validateItem($index, $itemValues, $result, $parentIndex);
+        }
+
+        //zwrot rezultatu wszystkich walidacji (iloczyn)
+        return $result;
+    }
+
+    /**
      * @param int   $index
      * @param array $itemValues
      * @param bool  $result
      */
-    private function validateItem(int $index, array $itemValues, bool &$result): void
+    private function validateItem(int $index, array $itemValues, bool &$result, ?int $parentIndex = null): void
     {
         foreach ($this->getElements() as $element) {
             $value = $itemValues[$element->getBaseName()] ?? null;
 
             //waliduje zagnieżdżone pole multifield
             if ($element instanceof self) {
-                $this->validateMultifieldElement($element, $value, $result);
+                $this->validateMultifieldElement($element, $value, $result, $index);
                 continue;
             }
 
@@ -120,7 +152,7 @@ class MultiField extends ElementAbstract
             }
 
             //iteracja po walidatorach
-            $this->validateElement($index, $element, $value, $result);
+            $this->validateElement($index, $element, $value, $result, $parentIndex);
         }
     }
 
@@ -129,22 +161,23 @@ class MultiField extends ElementAbstract
      * @param array|null      $value
      * @param bool            $result
      */
-    private function validateMultifieldElement(ElementAbstract $element, ?array $value, bool &$result): void
+    private function validateMultifieldElement(Multifield $element, ?array $value, bool &$result, int $parentIndex): void
     {
         $element->setValue($value);
 
-        if (false === $element->isValid()) {
+        if (false === $element->isNestedValid($parentIndex)) {
             $result = false;
         }
     }
 
     /**
-     * @param int               $index
-     * @param ElementAbstract   $element
-     * @param array|string|null $value
-     * @param bool              $result
+     * @param int             $index
+     * @param ElementAbstract $element
+     * @param                 $value
+     * @param bool            $result
+     * @param int|null        $parentIndex
      */
-    private function validateElement(int $index, ElementAbstract $element, array|string|null $value, bool &$result): void
+    protected function validateElement(int $index, ElementAbstract $element, $value, bool &$result, ?int $parentIndex = null): void
     {
         foreach ($element->getValidators() as $validator) {
             if ($validator->isValid($value)) {
@@ -152,7 +185,13 @@ class MultiField extends ElementAbstract
             }
 
             $result = false;
-            //dodawanie wiadomości z walidatora
+
+            // dodawanie wiadomości z walidatora
+            if (null !== $parentIndex) {
+                $this->_elementNestedErrors[$parentIndex][$index][$element->getBaseName()][] = $validator->getMessage() ? $validator->getMessage() : $validator->getError();
+                continue;
+            }
+
             $this->_elementErrors[$index][$element->getBaseName()][] = $validator->getMessage() ? $validator->getMessage() : $validator->getError();
         }
     }
@@ -185,33 +224,37 @@ class MultiField extends ElementAbstract
         return $this->_elements;
     }
 
-    /**
-     * @return string
-     */
-    public function fetchField(): string
+    protected function addScriptsAndLinks(): void
     {
         $this->view->headScript()->prependFile(self::JQUERY_URL);
         $this->view->headScript()->appendScript($this->jsScript());
         $this->view->headScript()->appendFile(self::MULTIFIELD_JS_URL);
 
         $this->view->headLink()->appendStylesheet(self::MULTIFIELD_CSS_URL);
+    }
+
+    /**
+     * @return string
+     */
+    public function fetchField(): string
+    {
+        $this->addScriptsAndLinks();
 
         return '<div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">
             <a href="#" class="btn-toggle" role="button">
                 <span>Rozwiń wszystkie</span> <i class="fa fa-angle-down fa-2"></i>
             </a>
             ' . $this->renderList() . '
-            <a href="#" class="btn btn-primary btn-add" role="button">Dodaj element</a>
+            <a href="#" class="btn btn-primary btn-add" role="button" data-template="' . $this->getDeclaredName() . '">Dodaj element</a>
             </div>';
     }
 
     /**
      * @return string
      */
-    private function renderList(): string
+    protected function renderList(): string
     {
-        $html = '<ul class="list-unstyled field-list">';
-
+        $html = '<ul class="list-unstyled field-list sortable">';
         if (is_array($this->getValue())) {
             $index = 0;
             foreach ($this->getValue() as $itemValues) {
@@ -234,12 +277,14 @@ class MultiField extends ElementAbstract
      *
      * @return string
      */
-    private function renderListElement(?array $itemValues = null, string $index = '**'): string
+    protected function renderListElement(?array $itemValues = null, string $index = '**'): string
     {
         $html = '<li class="field-list-item border mb-3 p-3">
-            <a href="#" class="btn-toggle" role="button">
-                <i class="fa fa-angle-down fa-2"></i>
-            </a>
+            <div class="icons">
+                <a href="#" class="btn-toggle" role="button">
+                    <i class="fa fa-angle-down fa-2"></i>
+                </a>
+            </div>
         <section>';
 
         foreach ($this->getElements() as $element) {
@@ -248,17 +293,34 @@ class MultiField extends ElementAbstract
             $element->setValue($itemValues[$element->getBaseName()] ?? null);
             $element->setErrors($this->_elementErrors[$index][$element->getBaseName()] ?? []);
 
+            if ($element instanceof self) {
+                $element->_elementErrors = $element->_elementNestedErrors[$index] ?? [];
+            }
+
+            if ('**' === $index) {
+                $element->setId(preg_replace('/\-\d\-/', '-##-', $element->getId()));
+                $element->setName(preg_replace('/\[\d\]/', '[##]', $element->getName()));
+            }
+
             if ($element instanceof Checkbox) {
-                $element->getValue() ? $element->setChecked() : $element->setChecked(false);
+                null !== $element->getValue() && false !== $element->getValue() ? $element->setChecked() : $element->setChecked(false);
             }
 
             $html .= $element->__toString();
         }
 
         $html .= '</section>
-            <a href="#" class="btn-remove" role="button">
-                <i class="fa fa-trash-o fa-2"></i>
-            </a>
+            <div class="icons">
+                <a href="#" class="sortable-handler" role="button">
+                    <i class="fa fa-arrows fa-2"></i>
+                </a>
+                <a href="#" class="btn-active" role="button">
+                    <i class="fa fa-eye fa-2"></i>
+                </a>
+                <a href="#" class="btn-remove" role="button">
+                    <i class="fa fa-trash-o fa-2"></i>
+                </a>
+            </div>
         </li>';
 
         return trim(preg_replace('/\r|\n|\s\s+/', ' ', $html));
@@ -267,22 +329,27 @@ class MultiField extends ElementAbstract
     /**
      * @return string
      */
-    private function jsScript(): string
+    protected function jsScript(): string
     {
         $listElement = addcslashes($this->renderListElement(), "'");
-        $listId      = $this->getId() . '-list';
+        $listType    = $this->getDeclaredName();
 
         return <<<html
             $(document).ready(function() {
-                let list = $('#$listId > .field-list');
-
-                $(document).off('click', '#$listId > .btn-add');
-                $(document).on('click', '#$listId > .btn-add', function(e) {
-                    e.preventDefault();
-                    $(list).append('$listElement'.replaceAll('**', list.children().length));
-                    $(list).children('.field-list-item').last().find('.select2').select2();
-                });
+                listItemTemplate['$listType'] = '$listElement';
             });    
         html;
+    }
+
+    private function getDeclaredName(): string
+    {
+        $name = $this->getBaseName();
+
+        if (false !== strpos($name, '[')) {
+            $name = substr($name, strpos($name, '['));
+            $name = str_replace(['[', ']'], '', $name);
+        }
+
+        return $name;
     }
 }
