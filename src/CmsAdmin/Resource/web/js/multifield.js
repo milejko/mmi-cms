@@ -1,5 +1,14 @@
+let listItemTemplate = {};
+
 $(document).ready(function () {
     initLists(('.multifield'));
+    $('.multifield .field-list').sortable({
+        axis: "y",
+        helper: function () {
+            return '<li class="field-list-item border mb-3 p-3"></li>';
+        },
+        handle: '.sortable-handler'
+    });
 });
 
 $(window).on('load', function () {
@@ -23,31 +32,81 @@ function initLists(lists) {
         });
 
         let containerId = $(list).attr('id');
+        initContainer(containerId);
+    });
+}
 
-        $(document).off('click', '#' + containerId + ' > .field-list > li > .btn-remove');
-        $(document).on('click', '#' + containerId + ' > .field-list > li > .btn-remove', function (e) {
-            e.preventDefault();
-            $(this).parent().remove();
-            reindexMultifield(list);
-        });
+function initContainer(containerId) {
+    initActive(containerId);
+    initRemove(containerId);
+    initToggle(containerId);
+    initToggleAll(containerId);
+    initAdd(containerId);
+    initToggleAuto(containerId);
+    initLists('#' + containerId + ' .multifield');
+}
 
-        $(document).off('click', '#' + containerId + ' > .field-list > li > .btn-toggle');
-        $(document).on('click', '#' + containerId + ' > .field-list > li > .btn-toggle', function (e) {
-            e.preventDefault();
+function initActive(containerId) {
+    $('#' + containerId).children('.field-list').children('.field-list-item').each(function () {
+        readActive($(this));
+    });
+
+    $(document).off('click', '#' + containerId + ' > .field-list > li > .icons > .btn-active');
+    $(document).on('click', '#' + containerId + ' > .field-list > li > .icons > .btn-active', function (e) {
+        e.preventDefault();
+        toggleActive($(this).closest('.field-list-item'));
+    });
+}
+
+function initRemove(containerId) {
+    $(document).off('click', '#' + containerId + ' > .field-list > li > .icons > .btn-remove');
+    $(document).on('click', '#' + containerId + ' > .field-list > li > .icons > .btn-remove', function (e) {
+        e.preventDefault();
+        if(confirm('Czy na pewno usunąć?')){
+            $(this).closest('.field-list-item').remove();
+        }
+    });
+}
+
+function initToggle(containerId) {
+    $(document).off('click', '#' + containerId + ' > .field-list > li > .icons > .btn-toggle');
+    $(document).on('click', '#' + containerId + ' > .field-list > li > .icons > .btn-toggle', function (e) {
+        e.preventDefault();
+        toggleMultifieldItem($(this).closest('.field-list-item'));
+    });
+}
+
+function initToggleAll(containerId) {
+    $(document).off('click', '#' + containerId + ' > .btn-toggle');
+    $(document).on('click', '#' + containerId + ' > .btn-toggle', function (e) {
+        e.preventDefault();
+        toggleGeneralSwitch($(this));
+    });
+}
+
+function initAdd(containerId) {
+    $(document).off('click', '#' + containerId + ' > .btn-add');
+    $(document).on('click', '#' + containerId + ' > .btn-add', function (e) {
+        e.preventDefault();
+        let template = $(this).data('template');
+        let list = $(this).closest('.multifield').find('.field-list').first();
+
+        $(list).append(
+            listItemTemplate[template]
+                .replaceAll('**', $(list).children().length)
+                .replaceAll('##', $(list).parents('.field-list-item').last().index())
+        );
+        $(list).children('.field-list-item').last().find('.select2').select2();
+        initContainer(containerId);
+    });
+}
+
+function initToggleAuto(containerId) {
+    $(document).off('focus', '#' + containerId + ' .form-group:nth-child(2) > input[type=text]');
+    $(document).on('focus', '#' + containerId + ' .form-group:nth-child(2) > input[type=text]', function (e) {
+        if (false === $(this).closest('.field-list-item').hasClass('active')) {
             toggleMultifieldItem($(this).closest('.field-list-item'));
-        });
-
-        $(document).off('click', '#' + containerId + ' > .btn-toggle');
-        $(document).on('click', '#' + containerId + ' > .btn-toggle', function (e) {
-            e.preventDefault();
-            toggleGeneralSwitch($(this));
-        });
-
-        $(document).on('focus', '#' + containerId + ' .form-group:first-child > input[type=text]', function (e) {
-            if (false === $(this).closest('.field-list-item').hasClass('active')) {
-                toggleMultifieldItem($(this).closest('.field-list-item'));
-            }
-        });
+        }
     });
 }
 
@@ -68,25 +127,6 @@ function toggleGeneralSwitch(generalSwitch) {
     } else {
         hideAllMultifieldItems($(generalSwitch).closest('.multifield').children('.field-list'));
     }
-}
-
-function reindexMultifield(list) {
-    $(list).children().each(function (i) {
-        let elementsWithId = $('[id]', this);
-        elementsWithId.each(function () {
-            $(this).attr('id', $(this).attr('id').replace(/-\d+-/ig, '-' + i + '-'));
-        });
-
-        let elementsWithFor = $('[for]', this);
-        elementsWithFor.each(function () {
-            $(this).attr('for', $(this).attr('for').replace(/-\d+-/ig, '-' + i + '-'));
-        });
-
-        let elementsWithName = $('[name]', this);
-        elementsWithName.each(function () {
-            $(this).attr('name', $(this).attr('name').replace(/\[\d+\]/ig, '[' + i + ']'));
-        });
-    });
 }
 
 function toggleMultifieldItem(listItem) {
@@ -128,4 +168,28 @@ function hideAllMultifieldItems(list) {
     $(list).children('.field-list-item').each(function () {
         hideMultifieldItem($(this));
     });
+}
+
+function readActive(listItem) {
+    let checkbox = $(listItem).find('input[type=checkbox][name$="[isActive]"]');
+    let isActive = checkbox.prop('checked');
+    let button = $(listItem).find('.btn-active').find('.fa');
+
+    if (isActive) {
+        $(listItem).addClass('is-active');
+        button.removeClass('fa-eye-slash');
+        button.addClass('fa-eye');
+        return;
+    }
+
+    $(listItem).removeClass('is-active');
+    button.removeClass('fa-eye');
+    button.addClass('fa-eye-slash');
+}
+
+function toggleActive(listItem) {
+    $(listItem).toggleClass('is-active');
+    $(listItem).find('.btn-active').find('.fa').toggleClass('fa-eye fa-eye-slash');
+    let checkbox = $(listItem).find('input[type=checkbox][name$="[isActive]"]');
+    checkbox.prop('checked', !checkbox.prop('checked'));
 }
