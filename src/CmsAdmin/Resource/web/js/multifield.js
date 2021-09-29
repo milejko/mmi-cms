@@ -96,8 +96,10 @@ function initAdd(containerId) {
                 .replaceAll('**', $(list).children().length)
                 .replaceAll('##', $(list).parents('.field-list-item').last().index())
         );
-        $(list).children('.field-list-item').last().find('.select2').select2();
+        let newItem = $(list).children('.field-list-item').last();
+        newItem.find('.select2').select2();
         initContainer(containerId);
+        toggleActive(newItem);
     });
 }
 
@@ -131,7 +133,7 @@ function toggleGeneralSwitch(generalSwitch) {
 
 function toggleMultifieldItem(listItem) {
     listItem.toggleClass('active');
-    $(listItem).children('.btn-toggle').children('.fa').toggleClass('fa-angle-up fa-angle-down');
+    $(listItem).children('.icons').children('.btn-toggle').children('.fa').toggleClass('fa-angle-up fa-angle-down');
 
     if (listItem.hasClass('active')) {
         listItem.siblings().each(function (index, sibling) {
@@ -144,8 +146,8 @@ function toggleMultifieldItem(listItem) {
 
 function showMultifieldItem(listItem) {
     listItem.addClass('active');
-    listItem.children('.btn-toggle').children('.fa').removeClass('fa-angle-down');
-    listItem.children('.btn-toggle').children('.fa').addClass('fa-angle-up');
+    listItem.children('.icons').children('.btn-toggle').children('.fa').removeClass('fa-angle-down');
+    listItem.children('.icons').children('.btn-toggle').children('.fa').addClass('fa-angle-up');
 
     if (listItem.closest('.nested-multifield').length > 0) {
         showMultifieldItem(listItem.closest('.nested-multifield').closest('.field-list-item'));
@@ -154,8 +156,8 @@ function showMultifieldItem(listItem) {
 
 function hideMultifieldItem(listItem) {
     $(listItem).removeClass('active');
-    $(listItem).children('.btn-toggle').children('.fa').removeClass('fa-angle-up');
-    $(listItem).children('.btn-toggle').children('.fa').addClass('fa-angle-down');
+    $(listItem).children('.icons').children('.btn-toggle').children('.fa').removeClass('fa-angle-up');
+    $(listItem).children('.icons').children('.btn-toggle').children('.fa').addClass('fa-angle-down');
 }
 
 function showAllMultifieldItems(list) {
