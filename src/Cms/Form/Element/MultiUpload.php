@@ -30,7 +30,14 @@ class MultiUpload extends MultiField
      *
      * @var array
      */
-    private $_elementErrors = [];
+    protected $_elementErrors = [];
+
+    /**
+     * Błędy zagnieżdzonych elementów formularza
+     *
+     * @var array
+     */
+    protected array $_elementNestedErrors = [];
 
     /**
      * Konstruktor
@@ -41,9 +48,9 @@ class MultiUpload extends MultiField
     {
         parent::__construct($name);
         $this
-            ->addClass('multiupload');
-
-        $this->addElement(new Hidden('file'));
+            ->addClass('multiupload')
+            ->addElement(new Hidden('file'))
+            ->addElement((new Text('filename'))->setLabel('Nazwa pliku'));
     }
 
     /**
@@ -54,15 +61,12 @@ class MultiUpload extends MultiField
         $this->addScriptsAndLinks();
 
         return '<div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">
-            <a href="#" class="btn-toggle" role="button">
-                <span>Rozwiń wszystkie</span> <i class="fa fa-angle-down fa-2"></i>
-            </a>
-            ' . $this->renderList() . '
-            
             <label for="' . $this->getId() . '-add" class="upload-add-label">
+                <img src="/resource/cmsAdmin/css/img/upload.png"/>
                 Kliknij lub upuść pliki w tym obszarze
                 <input type="file" id="' . $this->getId() . '-add" class="upload-add">
             </label>
+            ' . $this->renderList() . '
             <div class="upload-bar"></div>
             
             </div>';
@@ -79,9 +83,11 @@ class MultiUpload extends MultiField
     protected function renderListElement(?array $itemValues = null, string $index = '**'): string
     {
         $html = '<li class="field-list-item border mb-3 p-3">
-            <a href="#" class="btn-toggle" role="button">
-                <i class="fa fa-angle-down fa-2"></i>
-            </a>
+            <div class="icons">
+                <a href="#" class="btn-toggle" role="button">
+                    <i class="fa fa-angle-down fa-2"></i>
+                </a>
+            </div>
         <section>';
 
         foreach ($this->getElements() as $element) {
@@ -102,9 +108,11 @@ class MultiUpload extends MultiField
         }
 
         $html .= '</section>
-            <a href="#" class="btn-remove" role="button">
-                <i class="fa fa-trash-o fa-2"></i>
-            </a>
+            <div class="icons">
+                <a href="#" class="btn-remove" role="button">
+                    <i class="fa fa-trash-o fa-2"></i>
+                </a>
+            </div>
         </li>';
 
         return trim(preg_replace('/\r|\n|\s\s+/', ' ', $html));
@@ -125,7 +133,7 @@ class MultiUpload extends MultiField
         $listElement = addcslashes($this->renderListElement(), "'");
         $listId      = $this->getId() . '-list';
         $uploadUrl   = '/cmsAdmin/upload/multiupload';
-        $thumbUrl    = '/cmsAdmin/upload/thumbnail';
+        $thumbUrl    = '/cmsAdmin/upload/multithumbnail';
         $id          = $this->getId();
 
         return <<<html
@@ -137,7 +145,7 @@ class MultiUpload extends MultiField
                     uploadBar.show();
                     uploadBar.html(0);
                 
-                    const chunkSize = 1024*1024; 
+                    const chunkSize = 1024*512; 
                     
                     let reader = new FileReader();
                     let file = $(this).prop('files')[0];       
@@ -208,7 +216,7 @@ class MultiUpload extends MultiField
                         }
                     })
                     .done(function(response){
-                        sourceInput.before('<img src="'+response.url+'"/>');
+                        sourceInput.before('<div class="thumb"><img class="thumb-small" src="'+response.thumb+'"/><img class="thumb-big" src="'+response.image+'"/></div>');
                     });
                 }
             });
