@@ -14,7 +14,7 @@ use Mmi\Http\Request;
 /**
  * Abstrakcyjna klasa kontrolera widgetów
  */
-abstract class WidgetController extends Controller
+abstract class AbstractWidgetController extends Controller
 {
 
     /**

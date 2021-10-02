@@ -10,7 +10,7 @@ use Mmi\App\KernelException;
 use Mmi\Mvc\View;
 use Mmi\Http\Request;
 use Cms\App\CmsTemplateConfig;
-use Cms\TemplateController;
+use Cms\AbstractTemplateController;
 use CmsAdmin\Form\CategoryForm;
 use Mmi\App\App;
 
@@ -26,7 +26,7 @@ class TemplateModel
     private $_categoryRecord;
 
     /**
-     * Konfiguracja widgetas
+     * Konfiguracja widgeta
      * @var CmsTemplateConfig
      */
     private $_templateConfig;
@@ -168,8 +168,8 @@ class TemplateModel
         //getting controller from the DI
         $targetController = App::$di->get($controllerName);
         //controller invalid
-        if (!($targetController instanceof TemplateController)) {
-            throw new KernelException($controllerName . ' should extend \Cms\TemplateController');
+        if (!($targetController instanceof AbstractTemplateController)) {
+            throw new KernelException($controllerName . ' should extend \Cms\AbstractTemplateController');
         }
         //injecting category record & skinset config
         $targetController->setCategoryRecord($this->_categoryRecord);
