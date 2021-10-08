@@ -4,7 +4,6 @@ namespace Cms;
 
 use Cms\Api\AttachmentData;
 use Cms\Api\DataInterface;
-use Cms\Api\LinkData;
 use Cms\Api\WidgetData;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 use Cms\Orm\CmsFileQuery;
@@ -15,7 +14,7 @@ use Mmi\Http\Request;
 /**
  * Abstrakcyjna klasa kontrolera widgetów
  */
-abstract class WidgetController extends Controller
+abstract class AbstractWidgetController extends Controller
 {
 
     /**
@@ -112,35 +111,28 @@ abstract class WidgetController extends Controller
             ->orderAscOrder()
             ->orderAscId()
             ->find() as $file) {
-            $to                   = new AttachmentData;
-            $to->attributes       = $file->data->toArray();
-            $to->_links           = $this->getFileLinks($file);
-            $to->name             = $file->original;
-            $to->size             = $file->size;
-            $to->mimeType         = $file->mimeType;
-            $to->order            = $file->order ?: 0;
-            $attachments[substr($file->object, strlen(CmsCategoryWidgetCategoryRecord::FILE_OBJECT)) ?: 'default'][] = $to;
+            $attachments[substr($file->object, strlen(CmsCategoryWidgetCategoryRecord::FILE_OBJECT)) ?: 'default'][] = $this->getAttachmentData($file);
         }
         return $attachments;
     }
 
-    protected function getFileLinks(CmsFileRecord $file): array
+    /**
+     * Pobiera dane załącznika na podstawie pliku
+     */
+    protected function getAttachmentData(CmsFileRecord $fileRecord): AttachmentData
     {
-        $downloadLinkData   = (new LinkData)
-            ->setHref($file->getUrl('download'))
-            ->setRel('download');
-
-        $thumbLinkData      = (new LinkData)
-            ->setHref($file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE))
-            ->setRel('thumb');
-
-        $thumb2xLinkData    = (new LinkData)
-            ->setHref($file->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE2X))
-            ->setRel('thumb2x');
-
-        //only if thumb link exists add thumbs
-        return 'image' == $file->class ?
-            [$downloadLinkData, $thumbLinkData, $thumb2xLinkData] :
-            [$downloadLinkData];
+        $to                             = new AttachmentData;
+        $to->attributes                 = $fileRecord->data->toArray();
+        $to->name                       = $fileRecord->original;
+        $to->size                       = $fileRecord->size;
+        $to->mimeType                   = $fileRecord->mimeType;
+        $to->order                      = $fileRecord->order ?: 0;
+        $to->attributes['downloadUrl']  = $fileRecord->getUrl('download');
+        if ('image' == $fileRecord->class) {
+            $to->attributes['thumbUrl']     = $fileRecord->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE);
+            $to->attributes['thumb2xUrl']   = $fileRecord->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE2X);
+        }
+        return $to;
     }
+
 }

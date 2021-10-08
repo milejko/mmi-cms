@@ -17,7 +17,7 @@ use Mmi\Mvc\Controller;
 /**
  * Abstrakcyjna klasa kontrolera widgetów
  */
-abstract class TemplateController extends Controller
+abstract class AbstractTemplateController extends Controller
 {
     /**
      * CMS category record

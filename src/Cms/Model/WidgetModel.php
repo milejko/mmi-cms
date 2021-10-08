@@ -5,7 +5,7 @@ namespace Cms\Model;
 use Cms\Api\DataInterface;
 use Cms\Exception\CategoryWidgetException;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
-use Cms\WidgetController;
+use Cms\AbstractWidgetController;
 use Mmi\Mvc\View;
 use Cms\App\CmsWidgetConfig;
 use Cms\App\CmsSectionConfig;
@@ -177,8 +177,8 @@ class WidgetModel
         //getting controller from the DI
         $targetController = App::$di->get($controllerName);
         //controller invalid
-        if (!($targetController instanceof WidgetController)) {
-            throw new CategoryWidgetException($controllerName . ' should extend \Cms\WidgetController');
+        if (!($targetController instanceof AbstractWidgetController)) {
+            throw new CategoryWidgetException($controllerName . ' should extend \Cms\AbstractWidgetController');
         }
         //injecting category record
         $targetController->setWidgetRecord($this->_cmsWidgetRecord);
