@@ -98,6 +98,14 @@ class MultiField extends ElementAbstract
     public function isValid(): bool
     {
         $result = true;
+
+        foreach ($this->getValidators() as $validator) {
+            if (false === $validator->isValid($this->getValue())) {
+                $this->addError($validator->getError());
+                return false;
+            }
+        }
+
         if (false === is_array($this->getValue())) {
             return $result;
         }
