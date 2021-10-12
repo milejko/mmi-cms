@@ -31,6 +31,7 @@ $(document).ready(function () {
         initToggleAll(containerId);
         initAdd(containerId);
         initToggleAuto(containerId);
+        initTinyMce(containerId);
         initLists('#' + containerId + ' .multifield');
     }
 
@@ -97,6 +98,18 @@ $(document).ready(function () {
             if (false === $(this).closest('.field-list-item').hasClass('active')) {
                 toggleMultifieldItem($(this).closest('.field-list-item'));
             }
+        });
+    }
+
+    function initTinyMce(containerId) {
+        if (typeof tinyMCE === "undefined") {
+            return;
+        }
+        const editors = $('#' + containerId).find('.tinymce');
+        editors.each(function () {
+            var configJson = $(this).data('config');
+            configJson.language = request.locale;
+            tinyMCE.init(configJson);
         });
     }
 
