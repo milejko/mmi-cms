@@ -57,6 +57,25 @@ class UploadController extends Controller
     }
 
     /**
+     * Odbieranie danych z plugina Plupload
+     */
+    public function multiuploadAction(Request $request)
+    {
+        set_time_limit(5 * 60);
+        //obiekt handlera plupload
+        $pluploadHandler = new Model\PluploadHandler();
+        //jeśli wystąpił błąd
+        if (!$pluploadHandler->handle()) {
+            return $this->_jsonError($pluploadHandler->getErrorCode(), $pluploadHandler->getErrorMessage());
+        }
+        //jeśli wykonać operację po przesłaniu całego pliku i zapisaniu rekordu
+        if ($request->getPost()->afterUpload && null !== $record = $pluploadHandler->getSavedCmsFileRecord()) {
+            $this->_operationAfter($request->getPost()->afterUpload, $record);
+        }
+        return json_encode(['result' => 'OK', 'cmsFileId' => $pluploadHandler->getSavedCmsFileId()]);
+    }
+
+    /**
      * Zwraca listę aktualnych plików przypiętych do obiektu formularza
      */
     public function currentAction(Request $request)
@@ -132,7 +151,7 @@ class UploadController extends Controller
                         return json_encode(['result' => 'OK', 'url' => $url]);
                     }
                 } catch (\Exception $ex) {
-                    
+
                 }
             }
         }
@@ -165,7 +184,7 @@ class UploadController extends Controller
         $data['urlFile'] = $record->getUrl();
         if ($record->data->posterFileName) {
             $data['poster'] = $record->getPosterUrl();
-        }    
+        }
         return json_encode(['result' => 'OK', 'record' => $record, 'data' => $data]);
     }
 

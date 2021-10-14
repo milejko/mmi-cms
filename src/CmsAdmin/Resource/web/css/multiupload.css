@@ -1,0 +1,87 @@
+.upload-add-label {
+  flex: 0 0 200px;
+  margin: 0;
+  margin-right: 1rem;
+  display: block;
+  border: 1px dashed #0a6aa1;
+  color: #0a6aa1;
+  height: 200px;
+  text-align: center;
+  padding: 2rem 1rem;
+  position: relative;
+  background-color: #dce5ea;
+  border-radius: 1rem;
+}
+
+.upload-add-label img {
+  width: 50%;
+  opacity: 0.25;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  transition: all 0.5s ease;
+}
+
+.upload-add-label:hover img {
+  opacity: 1;
+}
+
+.upload-add {
+  display: block;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.form-control.multiupload {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-control.multiupload > .field-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.form-control.multiupload > .field-list > .field-list-item > section > .form-group.cmsformelementtextarea,
+.form-control.multiupload > .field-list > .field-list-item > section > .form-group.widgetbaseformelementdescription,
+.form-control.multiupload > .field-list > .field-list-item {
+  flex: 0 0 100%;
+}
+
+.form-control.multiupload > .field-list > .field-list-item > section > .form-group:first-child {
+  flex: 0 0 60px;
+}
+
+.form-control.multiupload > .field-list > .field-list-item > section > .form-group:nth-child(2) {
+  flex: 0 1 calc(100% - 60px - 1rem);
+}
+
+.form-control.multiupload > .field-list > .field-list-item .thumb {
+  position: relative;
+}
+
+.form-control.multiupload > .field-list > .field-list-item .thumb .thumb-big {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -50%;
+  margin-left: -50%;
+  max-width: 100%;
+  transition: max-width 0.2s linear;
+}
+
+.form-control.multiupload > .field-list > .field-list-item .thumb .thumb-big:hover {
+  max-width: 360px;
+}
+
+.form-control.multiupload > .field-list > .field-list-item {
+  max-height: calc(62px + 2rem);
+}
