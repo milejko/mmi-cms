@@ -9,20 +9,21 @@
   text-align: center;
   padding: 2rem 1rem;
   position: relative;
-  background-color: #dce5ea;
+  background-color: #f1f5f8;
   border-radius: 1rem;
 }
 
-.upload-add-label img {
+.upload-add-label .icon {
   width: 50%;
-  opacity: 0.25;
+  opacity: 0.5;
   display: block;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 1rem;
   transition: all 0.5s ease;
 }
 
-.upload-add-label:hover img {
+.upload-add-label:hover .icon {
   opacity: 1;
 }
 
@@ -48,6 +49,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
+  flex: 1 0;
 }
 
 .form-control.multiupload > .field-list > .field-list-item > section > .form-group.cmsformelementtextarea,
@@ -56,32 +58,28 @@
   flex: 0 0 100%;
 }
 
-.form-control.multiupload > .field-list > .field-list-item > section > .form-group:first-child {
+.form-control.multiupload > .field-list > .field-list-item > section > .form-group:nth-child(2) {
   flex: 0 0 60px;
 }
 
-.form-control.multiupload > .field-list > .field-list-item > section > .form-group:nth-child(2) {
-  flex: 0 1 calc(100% - 60px - 1rem);
+.form-control.multiupload > .field-list > .field-list-item > section > .form-group:nth-child(n + 2) {
+  flex: 1 0;
 }
 
 .form-control.multiupload > .field-list > .field-list-item .thumb {
   position: relative;
+  margin-right: 1rem;
 }
 
 .form-control.multiupload > .field-list > .field-list-item .thumb .thumb-big {
-  position: absolute;
+  display:none;
+}
+
+.thumb-zoom {
+  position: fixed;
   top: 50%;
   left: 50%;
-  margin-top: -50%;
-  margin-left: -50%;
-  max-width: 100%;
-  transition: max-width 0.2s linear;
-}
-
-.form-control.multiupload > .field-list > .field-list-item .thumb .thumb-big:hover {
-  max-width: 360px;
-}
-
-.form-control.multiupload > .field-list > .field-list-item {
-  max-height: calc(62px + 2rem);
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
 }

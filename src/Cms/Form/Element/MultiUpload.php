@@ -10,27 +10,33 @@
 
 namespace Cms\Form\Element;
 
+use Mmi\Form\Element\ElementAbstract;
+
 /**
  * Element wielokrotny upload
  */
 class MultiUpload extends MultiField
 {
     //pliki js i css
-    const MULTIUPLOAD_CSS_URL = '/resource/cmsAdmin/css/multiupload.css';
+    private const MULTIUPLOAD_CSS_URL = '/resource/cmsAdmin/css/multiupload.css';
+    private const MULTIUPLOAD_JS_URL  = '/resource/cmsAdmin/js/multiupload.js';
+
+    //przedrostek tymczasowego obiektu plików
+    public const TEMP_OBJECT_PREFIX = 'tmp-';
 
     /**
      * Elementy formularza
      *
      * @var ElementAbstract[]
      */
-    protected $_elements = [];
+    protected array $_elements = [];
 
     /**
      * Błędy elementów formularza
      *
      * @var array
      */
-    protected $_elementErrors = [];
+    protected array $_elementErrors = [];
 
     /**
      * Błędy zagnieżdzonych elementów formularza
@@ -62,9 +68,9 @@ class MultiUpload extends MultiField
 
         return '<div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">
             <label for="' . $this->getId() . '-add" class="upload-add-label">
-                <img src="/resource/cmsAdmin/css/img/upload.png"/>
+                <i class="icon fa fa-5 fa-cloud-upload"></i>
                 Kliknij lub upuść pliki w tym obszarze
-                <input type="file" id="' . $this->getId() . '-add" class="upload-add">
+                <input type="file" id="' . $this->getId() . '-add" class="upload-add" data-template="' . $this->getDeclaredName() . '">
             </label>
             ' . $this->renderList() . '
             <div class="upload-bar"></div>
@@ -109,6 +115,12 @@ class MultiUpload extends MultiField
 
         $html .= '</section>
             <div class="icons">
+                <a href="#" class="sortable-handler" role="button">
+                    <i class="fa fa-arrows fa-2"></i>
+                </a>
+                <a href="#" class="btn-active" role="button">
+                    <i class="fa fa-eye fa-2"></i>
+                </a>
                 <a href="#" class="btn-remove" role="button">
                     <i class="fa fa-trash-o fa-2"></i>
                 </a>
@@ -123,6 +135,7 @@ class MultiUpload extends MultiField
         parent::addScriptsAndLinks();
 
         $this->view->headLink()->appendStylesheet(self::MULTIUPLOAD_CSS_URL);
+        $this->view->headScript()->appendFile(self::MULTIUPLOAD_JS_URL);
     }
 
     /**
@@ -131,17 +144,61 @@ class MultiUpload extends MultiField
     protected function jsScript(): string
     {
         $listElement = addcslashes($this->renderListElement(), "'");
-        $listId      = $this->getId() . '-list';
-        $uploadUrl   = '/cmsAdmin/upload/multiupload';
-        $thumbUrl    = '/cmsAdmin/upload/multithumbnail';
-        $id          = $this->getId();
+        $listType    = $this->getDeclaredName();
+
+        $uploadUrl = '/cmsAdmin/upload/multiupload';
+        $thumbUrl  = '/cmsAdmin/upload/multithumbnail';
+        $id        = $this->getId();
+        $object    = self::TEMP_OBJECT_PREFIX . $this->getObject();
+        $objectId  = $this->getUploaderId();
 
         return <<<html
             $(document).ready(function() {
-                let list = $('#$listId > .field-list');
+                multifieldListItemTemplate['$listType'] = '$listElement';
+            });
+            
+            $(document).ready(function () {
+                multiuploadInitLists(('.multiupload'));
+            });
+
+            function multiuploadInitLists(lists) {
+                $(lists).each(function (index, list) {                
+                    let containerId = $(list).attr('id');
+                    multiuploadInitContainer(containerId);
+                });
+            }
+            
+            function multiuploadInitContainer(containerId){
+                multiuploadInitThumbs(containerId);
+                multiuploadInitAdd(containerId);
+            }
+
+            function multiuploadInitThumbs(containerId){
+                multiuploadLoadThumb($('#' + containerId + ' > .field-list > li input[type=hidden]'));
+            }
                 
-                $('.upload-add').on("change", function(){
+            function multiuploadLoadThumb(sourceInput){
+                $.ajax({
+                    url: "$thumbUrl",
+                    type: "POST",
+                    data: {
+                        "cmsFileId": parseInt(sourceInput.attr('value'))
+                    }
+                })
+                .done(function(response){
+                    sourceInput.before('<div class="thumb"><img class="thumb-small" src="'+response.thumb+'"/><img class="thumb-big" src="'+response.image+'"/></div>');
+                });
+            }
+
+            function multiuploadInitAdd(containerId){
+                $(document).off('change', '#' + containerId + ' .upload-add');
+                $(document).on('change', '#' + containerId + ' .upload-add', function (e) {
+                    e.preventDefault();
+                    
+                    let template = $(this).data('template');
+                    let list = $(this).closest('.multifield').find('.field-list').first();
                     let uploadBar = $(this).closest('.multiupload').find('.upload-progress');
+                    
                     uploadBar.show();
                     uploadBar.html(0);
                 
@@ -155,7 +212,6 @@ class MultiUpload extends MultiField
                     let loaded = 0;
                     let blob = file.slice(0, chunkSize); 
                     let cmsFileId = 0;
-                    let objectId = list.children().length + 1;
                     
                     reader.readAsArrayBuffer(blob);             
                     reader.onload = function(e){            
@@ -165,10 +221,10 @@ class MultiUpload extends MultiField
                         formData.append('name', file.name);
                         formData.append('chunk', partsLoaded);
                         formData.append('chunks', parts);
-                        formData.append('fileId', objectId);
+                        formData.append('fileId', '$id');
                         formData.append('fileSize', total);
-                        formData.append('formObject', 'tmp-$id');
-                        formData.append('formObjectId', objectId);
+                        formData.append('formObject', '$object');
+                        formData.append('formObjectId', '$objectId');
                         formData.append('cmsFileId', 0);
                         formData.append('filters[max_file_size]', 0);
                         formData.append('filters[prevent_duplicates]', false);
@@ -182,7 +238,7 @@ class MultiUpload extends MultiField
                             contentType: false,
                             data: formData
                         })
-                        .done(function(response){                            
+                        .done(function(response){               
                             cmsFileId = response.cmsFileId;
                             loaded += chunkSize;          
                             partsLoaded += 1;     
@@ -192,34 +248,25 @@ class MultiUpload extends MultiField
                             if(loaded <= total){
                                 blob = file.slice(loaded,loaded+chunkSize);
                                 reader.readAsArrayBuffer(blob); 
-                            } else {
-                                $(list).append('$listElement'.replaceAll('**', list.children().length).replaceAll('{{cmsFileId}}', response.cmsFileId));
-                                $(list).children('.field-list-item').last().find('.select2').select2();
-                                    
-                                let fileInput = $(list).children('.field-list-item').last().find('input[type=hidden]');
-                                loadThumb(fileInput);
+                            } else {                    
+                                $(list).append(
+                                    multifieldListItemTemplate[template]
+                                        .replaceAll('**', $(list).children().length)
+                                        .replaceAll('##', $(list).parents('.field-list-item').last().index())
+                                        .replaceAll('{{cmsFileId}}', response.cmsFileId)
+                                );
+                                let newItem = $(list).children('.field-list-item').last();
+                                newItem.find('.select2').select2();
+                                multifieldInitContainer($(list).attr('id'));
+                                multifieldToggleActive(newItem);
+
+                                let fileInput = newItem.find('input[type=hidden]');
+                                multiuploadLoadThumb(fileInput);
                             }
                         });       
                     };
                 });
-                
-                $(list).children('.field-list-item').find('input[type=hidden]').each(function(){
-                    loadThumb($(this));
-                });
-                
-                function loadThumb(sourceInput){
-                    $.ajax({
-                        url: "$thumbUrl",
-                        type: "POST",
-                        data: {
-                            "cmsFileId": parseInt(sourceInput.attr('value'))
-                        }
-                    })
-                    .done(function(response){
-                        sourceInput.before('<div class="thumb"><img class="thumb-small" src="'+response.thumb+'"/><img class="thumb-big" src="'+response.image+'"/></div>');
-                    });
-                }
-            });
+            }
         html;
     }
 }

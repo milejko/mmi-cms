@@ -16,7 +16,7 @@ use Mmi\Form\Form;
 /**
  * Element wielokrotny checkbox
  */
-class MultiField extends ElementAbstract
+class MultiField extends UploaderElementAbstract
 {
     //szablon początku pola
     public const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
@@ -38,21 +38,21 @@ class MultiField extends ElementAbstract
      *
      * @var ElementAbstract[]
      */
-    protected $_elements = [];
+    protected array $_elements = [];
 
     /**
      * Błędy elementów formularza
      *
      * @var array
      */
-    protected $_elementErrors = [];
+    protected array $_elementErrors = [];
 
     /**
      * Błędy zagnieżdzonych elementów formularza
      *
      * @var array
      */
-    protected $_elementNestedErrors = [];
+    protected array $_elementNestedErrors = [];
 
     /**
      * Konstruktor
@@ -83,6 +83,8 @@ class MultiField extends ElementAbstract
     {
         parent::setForm($form);
 
+        $this->setIgnore(false);
+
         foreach ($this->getElements() as $element) {
             $element->setForm($form);
         }
@@ -102,6 +104,7 @@ class MultiField extends ElementAbstract
         foreach ($this->getValidators() as $validator) {
             if (false === $validator->isValid($this->getValue())) {
                 $this->addError($validator->getError());
+
                 return false;
             }
         }
@@ -165,9 +168,9 @@ class MultiField extends ElementAbstract
     }
 
     /**
-     * @param ElementAbstract $element
-     * @param array|null      $value
-     * @param bool            $result
+     * @param Multifield $element
+     * @param array|null $value
+     * @param bool       $result
      */
     private function validateMultifieldElement(Multifield $element, ?array $value, bool &$result, int $parentIndex): void
     {
@@ -344,7 +347,7 @@ class MultiField extends ElementAbstract
 
         return <<<html
             $(document).ready(function() {
-                listItemTemplate['$listType'] = '$listElement';
+                multifieldListItemTemplate['$listType'] = '$listElement';
             });    
         html;
     }

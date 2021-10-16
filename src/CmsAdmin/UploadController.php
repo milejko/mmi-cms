@@ -10,6 +10,7 @@
 
 namespace CmsAdmin;
 
+use Cms\Mvc\ViewHelper\Thumb;
 use Cms\Orm\CmsFileQuery;
 use Mmi\Http\Request;
 use Mmi\Mvc\ActionHelper;
@@ -145,10 +146,37 @@ class UploadController extends Controller
             //sprawdzenie czy obrazek
             if ($record->class === 'image') {
                 try {
-                    $thumb = new \Cms\Mvc\ViewHelper\Thumb($this->view);
+                    $thumb = new Thumb($this->view);
                     $url = $thumb->thumb($record, 'scaley', '60');
                     if (!empty($url)) {
                         return json_encode(['result' => 'OK', 'url' => $url]);
+                    }
+                } catch (\Exception $ex) {
+
+                }
+            }
+        }
+        return $this->_jsonError(179);
+    }
+
+    /**
+     * Zwraca minaturę wybranego rekord pliku
+     */
+    public function multithumbnailAction(Request $request)
+    {
+        if (!$request->getPost()->cmsFileId) {
+            return $this->_jsonError(179);
+        }
+        //szukamy rekordu pliku
+        if (null !== $record = (new CmsFileQuery)->findPk($request->getPost()->cmsFileId)) {
+            //sprawdzenie czy obrazek
+            if ($record->class === 'image') {
+                try {
+                    $thumbHelper = new Thumb($this->view);
+                    $thumb = $thumbHelper->thumb($record, 'scalecrop', '68');
+                    $image = $thumbHelper->thumb($record, 'scalecrop', '300');
+                    if (!empty($thumb) && !empty($image)) {
+                        return json_encode(['result' => 'OK', 'image' => $image, 'thumb' => $thumb]);
                     }
                 } catch (\Exception $ex) {
 
