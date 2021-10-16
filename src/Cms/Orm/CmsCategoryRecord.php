@@ -144,12 +144,18 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     const STATUS_DELETED = 30;
     //nazwa obiektu plików cms
     const FILE_OBJECT = 'cmscategory';
+    //nazwa obiektu pliku OG image
+    const OG_IMAGE_OBJECT = self::FILE_OBJECT . 'ogimage';
+    //nazwa obiektów tagów
+    const TAG_OBJECT = 'cmscategory';
     //prefiks bufora modelu widgetu
     const WIDGET_MODEL_CACHE_PREFIX = 'category-widget-model-';
     //prefiks bufora url->id
     const URI_ID_CACHE_PREFIX = 'category-uri-id-';
     //prefiks bufora obiektu kategorii
     const CATEGORY_CACHE_PREFIX = 'category-';
+    //prefiks bufora obiektu transportowego kategorii
+    const CATEGORY_CACHE_TRANSPORT_PREFIX = 'category-transport-';
     //prefix bufora dzieci kategorii
     const CATEGORY_CHILDREN_CACHE_PREFIX = 'category-children-';
     //prefiks bufora przekierowania
@@ -326,6 +332,11 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
                 ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
                 ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
             )
+            ->andFieldObjectId()->equals($this->getPk())
+            ->delete();
+        //usuwanie tagów
+        (new CmsTagRelationQuery())
+            ->whereObject()->like(CmsCategoryRecord::TAG_OBJECT . '%')
             ->andFieldObjectId()->equals($this->getPk())
             ->delete();
         //usuwanie widgetów
@@ -567,6 +578,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->getInitialStateValue('customUri')));
         $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->id);
         $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->cmsCategoryOriginalId);
+        $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $this->id);
         //caches associated with active version
         if (self::STATUS_ACTIVE != $this->status) {
             return true;

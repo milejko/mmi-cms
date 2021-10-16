@@ -50,7 +50,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
     public $dateAdd;
     public $dateModify;
     public $order;
-
+    public $sticky;
     public $object;
     public $objectId;
 

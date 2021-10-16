@@ -17,6 +17,7 @@ use Cms\Api\Service\MenuServiceInterface;
 use Cms\Api\TransportInterface;
 use Cms\App\CmsSkinNotFoundException;
 use Cms\App\CmsSkinsetConfig;
+use Cms\Model\SkinsetModel;
 use Cms\Model\TemplateModel;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
@@ -141,8 +142,15 @@ class ApiController extends \Mmi\Mvc\Controller
             //przekierowanie na customUri
             return new RedirectTransport(self::API_PREFIX . $request->scope . '/' . $category->customUri);
         }
-        //opublikowana kategoria
-        return (new TemplateModel($category, $this->cmsSkinsetConfig))->getTransportObject($request);
+
+        //ładowanie obiektu transportowego z bufora
+        if (null === $transportObject = $this->cache->load($cacheKey = CmsCategoryRecord::CATEGORY_CACHE_TRANSPORT_PREFIX . $category->id)) {
+            //generowanie obiektu transportowego i zapis do cache
+            $transportObject = (new TemplateModel($category, $this->cmsSkinsetConfig))->getTransportObject($request);
+            $templateConfig = (new SkinsetModel($this->cmsSkinsetConfig))->getTemplateConfigByKey($category->template);
+            $this->cache->save($transportObject, $cacheKey, $templateConfig->getCacheLifeTime());
+        }
+        return $transportObject;
     }
 
     /**

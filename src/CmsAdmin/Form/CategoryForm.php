@@ -10,15 +10,12 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\App\CmsSkinsetConfig;
 use Cms\Form\Element;
 use Cms\Form\Form;
 use Mmi\Validator;
 use Mmi\Filter;
-use Cms\Model\CacheOptions;
-use Cms\Model\SkinsetModel;
 use Cms\Orm\CmsCategoryRecord;
-use Mmi\App\App;
+use Mmi\Validator\Url;
 
 /**
  * Formularz edycji szegółów kategorii
@@ -26,7 +23,6 @@ use Mmi\App\App;
  */
 class CategoryForm extends Form
 {
-
     /**
      * Konstruktor
      * @param CmsCategoryRecord $record
@@ -44,7 +40,9 @@ class CategoryForm extends Form
         $this->setClass($this->_formBaseName . ' vertical')
             ->setOption('accept-charset', 'utf-8')
             ->setMethod('post')
-            ->setOption('enctype', 'multipart/form-data');
+            ->setOption('enctype', 'multipart/form-data')
+            ->addTab('default', 'config', 'pencil') //tab domyślny
+            ->addTab('seo', 'seo', 'magnifier'); //tab seo
 
         //opcje przekazywane z konstruktora
         $this->setOptions($options);
@@ -54,6 +52,28 @@ class CategoryForm extends Form
 
         //dane z rekordu
         $this->hasNotEmptyRecord() && $this->setFromRecord($this->_record);
+    }
+
+    /**
+     * Dodawanie zakładki
+     */
+    public function addTab(string $key, string $label, string $icon): self
+    {
+        $tabs = is_array($this->getOption('tabs')) ? $this->getOption('tabs') : [];
+        $tabs[$key] = ['label' => $label, 'icon' => $icon];
+        $this->setOption('tabs', $tabs);
+        return $this;
+    }
+
+    /**
+     * Usuwanie zakładki
+     */
+    public function removeTab(string $key): self
+    {
+        $tabs = is_array($this->getOption('tabs')) ? $this->getOption('tabs') : [];
+        unset($tabs[$key]);
+        $this->setOption('tabs', $tabs);
+        return $this;
     }
 
     public function init()
@@ -70,11 +90,22 @@ class CategoryForm extends Form
             ->setChecked()
             ->setLabel('form.category.active.label'));
 
+        //blank
+        $this->addElement((new Element\Checkbox('blank'))
+            ->setLabel('form.category.blank.label'));                
+
+        //przekierowanie na link
+        $this->addElement((new Element\Text('redirectUri'))
+                ->setLabel('form.category.redirect.label')
+                ->addValidator(new Url())
+                ->addFilter(new Filter\StringTrim));
+    
         //tylko jeśli ma template (jest stroną)
-        if ($this->getRecord()->template) {
+        if (strpos($this->getRecord()->template, '/')) {
             //SEO
-            //nazwa kategorii
+            //meta title
             $this->addElement((new Element\Text('title'))
+                ->setOption('tab', 'seo')
                 ->setLabel('form.category.title.label')
                 ->setDescription('form.category.title.description')
                 ->addFilter(new Filter\StringTrim)
@@ -82,7 +113,14 @@ class CategoryForm extends Form
 
             //meta description
             $this->addElement((new Element\Textarea('description'))
+                ->setOption('tab', 'seo')
                 ->setLabel('form.category.description.label'));
+
+            //og image
+            $this->addElement((new Element\Image('ogImage'))
+                ->setOption('tab', 'seo')
+                ->setObject(CmsCategoryRecord::OG_IMAGE_OBJECT)
+                ->setLabel('form.category.image.label'));
 
             //własny uri
             $this->addElement((new Element\Text('customUri'))
@@ -92,16 +130,6 @@ class CategoryForm extends Form
                 ->addFilter(new Filter\EmptyToNull)
                 ->addValidator(new Validator\StringLength([1, 255])));
         }
-
-        //blank
-        $this->addElement((new Element\Checkbox('blank'))
-            ->setLabel('form.category.blank.label'));
-
-        //Zaawansowane
-        //przekierowanie na link
-        $this->addElement((new Element\Text('redirectUri'))
-            ->setLabel('form.category.redirect.label')
-            ->addFilter(new Filter\StringTrim));
 
         //zapis
         $this->addElement((new Element\Submit('commit'))

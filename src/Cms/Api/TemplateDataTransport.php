@@ -14,6 +14,7 @@ class TemplateDataTransport extends HttpJsonTransport
     public string   $dateModify;
     public string   $title;
     public string   $description;
+    public string   $ogImageUrl;
     public bool     $opensNewWindow = false;
     public array    $attributes     = [];
     public array    $sections       = [];

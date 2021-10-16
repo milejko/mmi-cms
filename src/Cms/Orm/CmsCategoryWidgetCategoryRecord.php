@@ -15,7 +15,6 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     public $id;
     public $uuid;
     public $widget;
-    public $cmsCategoryWidgetId;
     public $cmsCategoryId;
     public $configJson;
     public $active = 1;

@@ -2,6 +2,8 @@
 
 namespace Cms\App;
 
+use Mmi\App\KernelException;
+
 /**
  * Konfiguracja szablonu
  */
@@ -12,13 +14,19 @@ class CmsTemplateConfig
      * Nazwa szablonu
      * @var string
      */
-    private $_name;
+    private string $_name;
 
     /**
      * Nazwa klasy kontrolera
      * @var string
      */
-    private $_controllerClassName;
+    private string $_controllerClassName;
+
+    /**
+     * Długość bufora
+     * @var integer
+     */
+    private int $_cacheLifeTime = 2592000;
 
     /**
      * Is nesting allowed
@@ -29,14 +37,14 @@ class CmsTemplateConfig
      * Sekcje
      * @var array
      */
-    private $_sections = [];
+    private array $_sections = [];
 
     /**
      * Ustawia nazwę
      * @param string $name
      * @return CmsTemplateConfig
      */
-    public function setName($name)
+    public function setName($name): self
     {
         $this->_name = $name;
         return $this;
@@ -46,7 +54,7 @@ class CmsTemplateConfig
      * Pobiera nazwę
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->_name;
     }
@@ -73,7 +81,7 @@ class CmsTemplateConfig
      * @param string $name
      * @return CmsTemplateConfig
      */
-    public function setKey($key)
+    public function setKey($key): self
     {
         $this->_key = $key;
         return $this;
@@ -83,7 +91,7 @@ class CmsTemplateConfig
      * Pobiera klucz
      * @return string
      */
-    public function getKey()
+    public function getKey(): string
     {
         return $this->_key;
     }
@@ -93,7 +101,7 @@ class CmsTemplateConfig
      * @param string $controllerClassName
      * @return CmsTemplateConfig
      */
-    public function setControllerClassName($controllerClassName)
+    public function setControllerClassName($controllerClassName): self
     {
         $this->_controllerClassName = $controllerClassName;
         return $this;
@@ -103,7 +111,7 @@ class CmsTemplateConfig
      * Pobiera nazwę klasy kontrolera
      * @return string
      */
-    public function getControllerClassName()
+    public function getControllerClassName(): string
     {
         return $this->_controllerClassName;
     }
@@ -114,7 +122,7 @@ class CmsTemplateConfig
      * @param CmsSectionConfig $sectionConfig
      * @return CmsTemplateConfig
      */
-    public function addSection(CmsSectionConfig $sectionConfig)
+    public function addSection(CmsSectionConfig $sectionConfig): self
     {
         $this->_sections[] = $sectionConfig;
         return $this;
@@ -124,9 +132,33 @@ class CmsTemplateConfig
      * Zwraca listę sekcji z kompatybilnymi widgetami
      * @return CmsSectionConfig[]
      */
-    public function getSections()
+    public function getSections(): array
     {
         return $this->_sections;
+    }
+
+        /**
+     * Ustawia czas bufora
+     * @param integer $cacheLifeTime
+     * @return CmsWidgetConfig
+     */
+    public function setCacheLifeTime($cacheLifeTime): self
+    {
+        //walidacja
+        if (!is_int($cacheLifeTime)) {
+            throw new KernelException('Cache lifetime invalid');
+        }
+        $this->_cacheLifeTime = $cacheLifeTime;
+        return $this;
+    }
+
+    /**
+     * Pobiera czas bufora
+     * @return integer
+     */
+    public function getCacheLifeTime(): int
+    {
+        return $this->_cacheLifeTime;
     }
 
 }

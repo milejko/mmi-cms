@@ -9,6 +9,7 @@ use Cms\Api\TransportInterface;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryRecord;
+use Cms\Orm\CmsFileQuery;
 use CmsAdmin\Form\CategoryForm;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
@@ -16,17 +17,17 @@ use Mmi\Mvc\Controller;
 /**
  * Abstrakcyjna klasa kontrolera widgetów
  */
-abstract class TemplateController extends Controller
+abstract class AbstractTemplateController extends Controller
 {
     /**
      * CMS category record
      */
-    private CmsCategoryRecord $cmsCategoryRecord;
+    protected CmsCategoryRecord $cmsCategoryRecord;
 
     /**
      * CMS skinset config
      */
-    private CmsSkinsetConfig $cmsSkinsetConfig;
+    protected CmsSkinsetConfig $cmsSkinsetConfig;
 
     /**
      * Sets the CMS category record
@@ -85,7 +86,10 @@ abstract class TemplateController extends Controller
         $to->name = $this->cmsCategoryRecord->name;
         $to->dateAdd = $this->cmsCategoryRecord->dateAdd;
         $to->dateModify = $this->cmsCategoryRecord->dateModify;
-        $to->title = $this->cmsCategoryRecord->title;
+        $to->title = $this->cmsCategoryRecord->title ? : $this->cmsCategoryRecord->name;
+        if (null !== $ogImageRecord = CmsFileQuery::imagesByObject(CmsCategoryRecord::OG_IMAGE_OBJECT, $this->cmsCategoryRecord->id)->findFirst()) {
+            $to->ogImageUrl = $ogImageRecord->getUrl('scalecrop', '1200x630');
+        }
         $to->description = $this->cmsCategoryRecord->description;
         $to->opensNewWindow = $this->cmsCategoryRecord->blank ? true : false;
         $to->attributes = is_array($attributes) ? $attributes : [];
@@ -139,7 +143,7 @@ abstract class TemplateController extends Controller
     /**
      * Pobiera breadcrumby
      */
-    public function getBreadcrumbs(): array
+    protected function getBreadcrumbs(): array
     {
         $breadcrumbs = [];
         $record = $this->cmsCategoryRecord;
@@ -147,7 +151,7 @@ abstract class TemplateController extends Controller
         while (null !== $record) {
             $scope = substr($record->template, 0, strpos($record->template, '/'));
             $breadcrumbs[] = (new BreadcrumbData)
-                ->setTitle($record->name ? : '')
+                ->setName($record->name ? : '')
                 ->setOrder($order--)
                 ->setLinks($scope ? [
                     (new LinkData)
@@ -162,7 +166,7 @@ abstract class TemplateController extends Controller
     /**
      * Pobiera rodzeństwo
      */
-    public function getSiblings(): array
+    protected function getSiblings(): array
     {
         $siblings = [];
         foreach ($this->cmsCategoryRecord->getSiblingsRecords() as $record) {
@@ -171,7 +175,7 @@ abstract class TemplateController extends Controller
             }
             $scope = substr($record->template, 0, strpos($record->template, '/'));
             $siblings[] = (new BreadcrumbData)
-                ->setTitle($record->name ? : '')
+                ->setName($record->name ? : '')
                 ->setLinks($scope ? [
                     (new LinkData)
                         ->setHref(ApiController::API_PREFIX . $scope . '/' . ($record->customUri ?: $record->uri))

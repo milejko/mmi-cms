@@ -10,6 +10,11 @@
 
 namespace Cms\Form\Element;
 
+use Cms\Orm\CmsTagQuery;
+use Cms\Orm\CmsTagRecord;
+use Cms\Orm\CmsTagRelationQuery;
+use Cms\Orm\CmsTagRelationRecord;
+
 /**
  * Element tagi
  */
@@ -27,6 +32,9 @@ class Tags extends Select
     //szablon etykiety
     const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
+    private string $object;
+    private string $objectId;
+
     /**
      * Konstruktor
      */
@@ -35,6 +43,18 @@ class Tags extends Select
         parent::__construct($name);
         $this->setMultiple()
             ->setValue([]);
+    }
+
+    public function setObject(string $object): self
+    {
+        $this->object = $object;
+        return $this;
+    }
+
+    public function setObjectId(string $objectId): self
+    {
+        $this->objectId = $objectId;
+        return $this;
     }
 
     /**
@@ -133,7 +153,7 @@ class Tags extends Select
         $values = is_array($this->getValue()) ? $this->getValue() : [$this->getValue()];
 
         if ($this->issetOption('multiple')) {
-            $this->setName($this->getBaseName() . '[]');
+            $this->setName($this->getName() . '[]');
         }
 
         //nagłówek selecta
@@ -170,15 +190,45 @@ class Tags extends Select
     }
 
     /**
+     * Po zapisie rekordu
+     */
+    public function onRecordSaved()
+    {
+        $existingTags = (new CmsTagQuery())->whereTag()->equals($this->getValue())->findPairs('tag', 'tag');
+        $inexistentTags = array_diff($this->getValue(), $existingTags);
+        foreach ($inexistentTags as $tag) {
+            $newTag = new CmsTagRecord();
+            $newTag->tag = $tag;
+            $newTag->save();
+        }
+        $object = $this->object ?? $this->_form->getRecordClass();
+        $objecId = $this->objectId ?? $this->_form->getRecord()->id;
+        //tag relations cleanup
+        (new CmsTagRelationQuery())
+            ->whereObject()->equals($object)
+            ->andFieldObjectId()->equals($objecId)
+            ->delete();
+
+        $tagIds = (new CmsTagQuery())->whereTag()->equals($this->getValue())->findPairs('tag', 'id');
+        foreach($this->getValue() as $tagValue) {
+            $newTagRelation = new CmsTagRelationRecord();
+            $newTagRelation->object = $object;
+            $newTagRelation->objectId = $objecId;
+            $newTagRelation->cmsTagId = $tagIds[$tagValue];
+            $newTagRelation->save();
+        }
+    }
+
+    /**
      * łączenie wartości
      * @return array
      */
     public function getMultioptions()
     {
-        $array = [];
-        foreach ((new \Cms\Orm\CmsTagQuery)->orderAscTag()->findPairs('tag', 'tag') as $k => $t) {
-            $array[$k] = $k;
+        $availableTags = [];
+        foreach ((new CmsTagQuery())->orderAscTag()->findPairs('tag', 'tag') as $tag) {
+            $availableTags[$tag] = $tag;
         }
-        return $this->getValue() + $array;
+        return $this->getValue() + $availableTags;
     }
 }
