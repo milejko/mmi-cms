@@ -70,11 +70,10 @@ class MultiUpload extends MultiField
             <label for="' . $this->getId() . '-add" class="upload-add-label">
                 <i class="icon fa fa-5 fa-cloud-upload"></i>
                 Kliknij lub upuść pliki w tym obszarze
-                <input type="file" id="' . $this->getId() . '-add" class="upload-add" data-template="' . $this->getDeclaredName() . '">
+                <input type="file" id="' . $this->getId() . '-add" class="upload-add" data-template="' . $this->getDeclaredName() . '">                
+                <div class="multiupload-progress-bar"><div class="progress"></div></div>
             </label>
-            ' . $this->renderList() . '
-            <div class="upload-bar"></div>
-            
+            ' . $this->renderList() . '            
             </div>';
     }
 
@@ -174,20 +173,37 @@ class MultiUpload extends MultiField
             }
 
             function multiuploadInitThumbs(containerId){
-                multiuploadLoadThumb($('#' + containerId + ' > .field-list > li input[type=hidden]'));
+                $('#' + containerId + ' > .field-list > li').each(function(){                
+                    multiuploadLoadThumb($(this).find('input[type=hidden]'));
+                });
             }
                 
             function multiuploadLoadThumb(sourceInput){
-                $.ajax({
-                    url: "$thumbUrl",
-                    type: "POST",
-                    data: {
-                        "cmsFileId": parseInt(sourceInput.attr('value'))
-                    }
-                })
-                .done(function(response){
-                    sourceInput.before('<div class="thumb"><img class="thumb-small" src="'+response.thumb+'"/><img class="thumb-big" src="'+response.image+'"/></div>');
-                });
+                if($(sourceInput).parent().find('.thumb').length < 1){
+                    $.ajax({
+                        url: "$thumbUrl",
+                        type: "POST",
+                        data: {
+                            "cmsFileId": parseInt(sourceInput.attr('value'))
+                        }
+                    })
+                    .done(function(response){
+                        sourceInput.before('<div class="thumb"><img class="thumb-small" src="'+response.thumb+'" data-image="'+response.image+'"/><img class="thumb-big" src="'+response.image+'"/></div>');
+                    });
+                }
+            }
+            
+            function multiuploadUpdateProgress(containerId, progress){
+                let progressBar = $('#' + containerId).find('.multiupload-progress-bar .progress');
+                progressBar.css('width',  progress + '%');
+                
+                if(progress === 100){
+                    let icon = $('#' + containerId).find('.upload-add-label .icon');
+                    icon.addClass('pulse');
+                    setTimeout(function(){
+                        icon.removeClass('pulse');
+                    }, 300);
+                }
             }
 
             function multiuploadInitAdd(containerId){
@@ -197,10 +213,12 @@ class MultiUpload extends MultiField
                     
                     let template = $(this).data('template');
                     let list = $(this).closest('.multifield').find('.field-list').first();
-                    let uploadBar = $(this).closest('.multiupload').find('.upload-progress');
+                    let uploadBar = $(this).closest('.multiupload').find('.multiupload-progress-bar');
                     
-                    uploadBar.show();
-                    uploadBar.html(0);
+                    multiuploadUpdateProgress(containerId, 0);
+                    setTimeout(function(){
+                        uploadBar.addClass('active');
+                    }, 100);
                 
                     const chunkSize = 1024*512; 
                     
@@ -215,7 +233,7 @@ class MultiUpload extends MultiField
                     
                     reader.readAsArrayBuffer(blob);             
                     reader.onload = function(e){            
-                        let chunk = blob //{file:reader.result}
+                        let chunk = blob
                         let formData = new FormData();
 
                         formData.append('name', file.name);
@@ -242,13 +260,14 @@ class MultiUpload extends MultiField
                             cmsFileId = response.cmsFileId;
                             loaded += chunkSize;          
                             partsLoaded += 1;     
-                            
-                            uploadBar.html((loaded/total) * 100);
+                        
+                            multiuploadUpdateProgress(containerId, loaded/total * 100);
             
                             if(loaded <= total){
                                 blob = file.slice(loaded,loaded+chunkSize);
                                 reader.readAsArrayBuffer(blob); 
-                            } else {                    
+                            } else {                   
+                                multiuploadUpdateProgress(containerId, 100);
                                 $(list).append(
                                     multifieldListItemTemplate[template]
                                         .replaceAll('**', $(list).children().length)
@@ -257,11 +276,13 @@ class MultiUpload extends MultiField
                                 );
                                 let newItem = $(list).children('.field-list-item').last();
                                 newItem.find('.select2').select2();
-                                multifieldInitContainer($(list).attr('id'));
+                                multifieldInitContainer(containerId);
+                                multiuploadInitContainer(containerId);
                                 multifieldToggleActive(newItem);
-
-                                let fileInput = newItem.find('input[type=hidden]');
-                                multiuploadLoadThumb(fileInput);
+                                
+                                setTimeout(function(){
+                                    uploadBar.removeClass('active');
+                                }, 200);
                             }
                         });       
                     };

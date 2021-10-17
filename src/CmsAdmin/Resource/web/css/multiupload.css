@@ -23,6 +23,11 @@
   transition: all 0.5s ease;
 }
 
+.upload-add-label .icon.pulse {
+  transform: scale(1.2);
+  color: #0aa135;
+}
+
 .upload-add-label:hover .icon {
   opacity: 1;
 }
@@ -43,6 +48,7 @@
 .form-control.multiupload {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .form-control.multiupload > .field-list {
@@ -71,15 +77,60 @@
   margin-right: 1rem;
 }
 
+.form-control.multiupload > .field-list > .field-list-item .thumb .thumb-small {
+  width: 68px;
+  height: 68px;
+}
+
 .form-control.multiupload > .field-list > .field-list-item .thumb .thumb-big {
-  display:none;
+  display: none;
 }
 
 .thumb-zoom {
+  display: block;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 300px;
+  height: 150px;
+  opacity: 0.3;
+  pointer-events: none;
+  border: white 10px solid;
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+.thumb-zoom.hidden {
+  display: none;
+}
+
+.thumb-zoom.active {
+  opacity: 1;
   height: 300px;
+}
+
+.multiupload-progress-bar {
+  display: block;
+  border: 1px solid #ccc;
+  width: 90%;
+  height: 0.5rem;
+  position: absolute;
+  flex-basis: 100%;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+}
+
+.multiupload-progress-bar.active {
+  opacity: 1;
+}
+
+.multiupload-progress-bar .progress {
+  display: block;
+  position: absolute;
+  background-color: #0a6aa1;
+  width: 0;
+  height: 100%;
+  transition: all 0.1s linear;
 }

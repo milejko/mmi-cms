@@ -165,7 +165,7 @@ class UploadController extends Controller
     public function multithumbnailAction(Request $request)
     {
         if (!$request->getPost()->cmsFileId) {
-            return $this->_jsonError(179);
+            return $this->_jsonError(179, 'No file id specified');
         }
         //szukamy rekordu pliku
         if (null !== $record = (new CmsFileQuery)->findPk($request->getPost()->cmsFileId)) {
@@ -174,7 +174,7 @@ class UploadController extends Controller
                 try {
                     $thumbHelper = new Thumb($this->view);
                     $thumb = $thumbHelper->thumb($record, 'scalecrop', '68');
-                    $image = $thumbHelper->thumb($record, 'scalecrop', '300');
+                    $image = $thumbHelper->thumb($record, 'scaley', '300');
                     if (!empty($thumb) && !empty($image)) {
                         return json_encode(['result' => 'OK', 'image' => $image, 'thumb' => $thumb]);
                     }
@@ -183,7 +183,7 @@ class UploadController extends Controller
                 }
             }
         }
-        return $this->_jsonError(179);
+        return $this->_jsonError(179, 'File not found');
     }
 
     /**

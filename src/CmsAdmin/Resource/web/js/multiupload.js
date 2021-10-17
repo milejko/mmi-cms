@@ -1,12 +1,20 @@
 $(document).ready(function () {
     $(document).on('mouseenter', '.multiupload .thumb-small', function () {
-        console.log($(this).attr('src'));
-        let url = $(this).closest('.thumb').find('.thumb-big').attr('src');
+        let url = $(this).data('image');
 
-        $('body').append('<img class="thumb-zoom" src="' + url + '">');
+        $('.thumb-zoom').remove();
+        $('body').append('<img class="thumb-zoom " src="' + url + '">');
+        $('.thumb-zoom').removeClass('hidden');
+        setTimeout(function(){
+            $('.thumb-zoom').removeClass('hidden').addClass('active');
+        }, 100);
     });
 
-    $(document).on('mouseleave', '.thumb-zoom, .thumb-small', function () {
-        $('.thumb-zoom').remove();
+    $(document).on('mouseleave', '.thumb-small', function () {
+        let zoom = $('.thumb-zoom')
+        zoom.removeClass('active');
+        setTimeout(function(){
+            zoom.remove();
+        }, 200);
     });
 });

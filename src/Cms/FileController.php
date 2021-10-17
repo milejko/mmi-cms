@@ -71,7 +71,7 @@ class FileController extends \Mmi\Mvc\Controller
                 throw new MvcForbiddenException('Scaler type invalid');
         }
         //webp generation
-        imagewebp($resource, $targetFilePath, (int)$this->container->get('cms.thumb.quality'));
+        imagewebp($resource, $targetFilePath, 80);
         return $this->getResponse()->redirectToUrl($this->view->cdn . $publicPath);
     }
 
