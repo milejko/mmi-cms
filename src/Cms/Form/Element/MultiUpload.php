@@ -93,6 +93,9 @@ class MultiUpload extends MultiField
                     <i class="fa fa-angle-down fa-2"></i>
                 </a>
             </div>
+            <div class="thumb">
+                <img src="/resource/cmsAdmin/images/loader.gif">
+            </div>
         <section>';
 
         foreach ($this->getElements() as $element) {
@@ -147,7 +150,7 @@ class MultiUpload extends MultiField
 
         $uploadUrl = '/cmsAdmin/upload/multiupload';
         $thumbUrl  = '/cmsAdmin/upload/multithumbnail';
-        $id        = $this->getId();
+        $id        = $this->getUploaderId();
         $object    = self::TEMP_OBJECT_PREFIX . $this->getObject();
         $objectId  = $this->getUploaderId();
 
@@ -188,7 +191,8 @@ class MultiUpload extends MultiField
                         }
                     })
                     .done(function(response){
-                        sourceInput.before('<div class="thumb"><img class="thumb-small" src="'+response.thumb+'" data-image="'+response.image+'"/><img class="thumb-big" src="'+response.image+'"/></div>');
+                        let thumb = $(sourceInput).closest('.field-list-item').find('.thumb img');
+                        $(thumb).attr('src', response.thumb);
                     });
                 }
             }

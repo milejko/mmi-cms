@@ -73,40 +73,22 @@
 }
 
 .form-control.multiupload > .field-list > .field-list-item .thumb {
-  position: relative;
-  margin-right: 1rem;
-}
-
-.form-control.multiupload > .field-list > .field-list-item .thumb .thumb-small {
+  margin-left: 1rem;
   width: 68px;
-  height: 68px;
 }
 
-.form-control.multiupload > .field-list > .field-list-item .thumb .thumb-big {
-  display: none;
-}
-
-.thumb-zoom {
-  display: block;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: 150px;
-  opacity: 0.3;
+.form-control.multiupload > .field-list > .field-list-item .thumb img {
+  width: auto;
+  max-height: 68px;
+  position:absolute;
+  transition: all 0.3s ease;
   pointer-events: none;
-  border: white 10px solid;
-  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.3);
-  transition: all 0.2s ease;
+  z-index: 1;
 }
 
-.thumb-zoom.hidden {
-  display: none;
-}
-
-.thumb-zoom.active {
-  opacity: 1;
-  height: 300px;
+.form-control.multiupload > .field-list > .field-list-item .thumb:hover img {
+  max-height: 300px;
+  z-index: 2;
 }
 
 .multiupload-progress-bar {

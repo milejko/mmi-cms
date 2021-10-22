@@ -173,10 +173,9 @@ class UploadController extends Controller
             if ($record->class === 'image') {
                 try {
                     $thumbHelper = new Thumb($this->view);
-                    $thumb = $thumbHelper->thumb($record, 'scalecrop', '68');
-                    $image = $thumbHelper->thumb($record, 'scaley', '300');
-                    if (!empty($thumb) && !empty($image)) {
-                        return json_encode(['result' => 'OK', 'image' => $image, 'thumb' => $thumb]);
+                    $thumb = $thumbHelper->thumb($record, 'scalecrop', '300');
+                    if (!empty($thumb)) {
+                        return json_encode(['result' => 'OK', 'thumb' => $thumb]);
                     }
                 } catch (\Exception $ex) {
 
