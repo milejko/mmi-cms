@@ -81,13 +81,13 @@
   width: auto;
   max-height: 68px;
   position:absolute;
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
   pointer-events: none;
   z-index: 1;
 }
 
 .form-control.multiupload > .field-list > .field-list-item .thumb:hover img {
-  max-height: 300px;
+  transform: scale(3);
   z-index: 2;
 }
 
