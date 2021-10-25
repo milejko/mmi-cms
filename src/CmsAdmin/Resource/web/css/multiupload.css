@@ -1,12 +1,11 @@
 .upload-add-label {
   flex: 0 0 200px;
   width: 200px;
-  margin: 0;
-  margin-right: 1rem;
+  height: 200px;
+  margin: 0 1rem 0 0;
   display: block;
   border: 1px dashed #c2cfd6;
   color: #0a6aa1;
-  height: 200px;
   text-align: center;
   padding: 2rem 1rem;
   position: relative;

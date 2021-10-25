@@ -4,21 +4,24 @@ $(window).on('load', function () {
         let container = $(this).closest('.multiupload');
 
         $(window).scroll(function () {
-            let containerHeight = container.outerHeight();
             let containerTop = container.offset().top;
             let windowScroll = $(window).scrollTop();
+            let containerHeight = container.outerHeight();
 
-            if (windowScroll >= containerTop - 65 && windowScroll <= containerTop + containerHeight - elementHeight + 120) {
-                container.addClass('multiupload-fixed');
-                if (windowScroll >= containerTop + containerHeight - elementHeight - 130) {
-                    container.addClass('multiupload-fixed-bottom');
+            if (containerHeight > 2 * elementHeight) {
+                if (windowScroll >= containerTop - 65 && windowScroll <= containerTop + containerHeight - elementHeight + 120) {
+                    container.addClass('multiupload-fixed');
+                    if (windowScroll >= containerTop + containerHeight - elementHeight - 130) {
+                        container.addClass('multiupload-fixed-bottom');
+                    } else {
+                        container.removeClass('multiupload-fixed-bottom');
+                    }
                 } else {
+                    container.removeClass('multiupload-fixed');
                     container.removeClass('multiupload-fixed-bottom');
                 }
-            } else {
-                container.removeClass('multiupload-fixed');
-                container.removeClass('multiupload-fixed-bottom');
             }
+
         });
     });
 });
