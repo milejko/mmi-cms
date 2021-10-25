@@ -18,8 +18,9 @@ use Mmi\Form\Element\ElementAbstract;
 class MultiUpload extends MultiField
 {
     //pliki js i css
-    private const MULTIUPLOAD_CSS_URL = '/resource/cmsAdmin/css/multiupload.css';
-    private const MULTIUPLOAD_JS_URL  = '/resource/cmsAdmin/js/multiupload.js';
+    private const MULTIUPLOAD_CSS_URL    = '/resource/cmsAdmin/css/multiupload.css';
+    private const MULTIUPLOAD_JS_URL     = '/resource/cmsAdmin/js/multiupload.js';
+    private const MULTIUPLOAD_IMAGES_URL = '/resource/cmsAdmin/images/upload/';
 
     //przedrostek tymczasowego obiektu plików
     public const TEMP_OBJECT_PREFIX = 'tmp-';
@@ -150,6 +151,7 @@ class MultiUpload extends MultiField
 
         $uploadUrl = '/cmsAdmin/upload/multiupload';
         $thumbUrl  = '/cmsAdmin/upload/multithumbnail';
+        $iconsUrl  = self::MULTIUPLOAD_IMAGES_URL;
         $id        = $this->getUploaderId();
         $object    = self::TEMP_OBJECT_PREFIX . $this->getObject();
         $objectId  = $this->getUploaderId();
@@ -192,7 +194,13 @@ class MultiUpload extends MultiField
                     })
                     .done(function(response){
                         let thumb = $(sourceInput).closest('.field-list-item').find('.thumb img');
-                        $(thumb).attr('src', response.thumb);
+                        if('undefined' !== typeof response.thumb){
+                            $(thumb).attr('src', response.thumb);
+                        }
+                        if('undefined' !== typeof response.class){
+                            $(thumb).attr('src', '$iconsUrl' + response.class + '.svg');
+                            $(thumb).addClass('file-icon');
+                        }
                     });
                 }
             }

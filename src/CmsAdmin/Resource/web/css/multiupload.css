@@ -95,9 +95,17 @@
   width: auto;
   max-height: 68px;
   position:absolute;
-  transition: all 0.5s ease;
+  transition: transform 0.5s ease;
   pointer-events: none;
   z-index: 1;
+}
+
+.form-control.multiupload > .field-list > .field-list-item .thumb img.file-icon {
+  padding: 9px 15px;
+}
+
+.form-control.multiupload > .field-list > .field-list-item .thumb:hover img.file-icon {
+  transform: scale(1);
 }
 
 .form-control.multiupload > .field-list > .field-list-item .thumb:hover img {

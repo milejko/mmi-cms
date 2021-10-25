@@ -35,7 +35,6 @@ class UploadController extends Controller
     {
         $this->view->setLayoutDisabled();
         $this->getResponse()->setTypeJson();
-
     }
 
     /**
@@ -54,6 +53,7 @@ class UploadController extends Controller
         if ($request->getPost()->afterUpload && null !== $record = $pluploadHandler->getSavedCmsFileRecord()) {
             $this->_operationAfter($request->getPost()->afterUpload, $record);
         }
+
         return json_encode(['result' => 'OK', 'cmsFileId' => $pluploadHandler->getSavedCmsFileId()]);
     }
 
@@ -73,6 +73,7 @@ class UploadController extends Controller
         if ($request->getPost()->afterUpload && null !== $record = $pluploadHandler->getSavedCmsFileRecord()) {
             $this->_operationAfter($request->getPost()->afterUpload, $record);
         }
+
         return json_encode(['result' => 'OK', 'cmsFileId' => $pluploadHandler->getSavedCmsFileId()]);
     }
 
@@ -103,11 +104,12 @@ class UploadController extends Controller
         foreach ($records as $record) {
             $record->data = $record->data->toArray();
         }
+
         //zwrot json'a z plikami
         return json_encode([
-            'result' => 'OK',
-            'files' => $records->toArray()
-        ]);
+                               'result' => 'OK',
+                               'files'  => $records->toArray(),
+                           ]);
     }
 
     /**
@@ -127,9 +129,11 @@ class UploadController extends Controller
                 if ($request->getPost()->afterDelete) {
                     $this->_operationAfter($request->getPost()->afterDelete, $record);
                 }
+
                 return json_encode(['result' => 'OK']);
             }
         }
+
         return $this->_jsonError(178);
     }
 
@@ -147,15 +151,15 @@ class UploadController extends Controller
             if ($record->class === 'image') {
                 try {
                     $thumb = new Thumb($this->view);
-                    $url = $thumb->thumb($record, 'scaley', '60');
+                    $url   = $thumb->thumb($record, 'scaley', '60');
                     if (!empty($url)) {
                         return json_encode(['result' => 'OK', 'url' => $url]);
                     }
                 } catch (\Exception $ex) {
-
                 }
             }
         }
+
         return $this->_jsonError(179);
     }
 
@@ -173,15 +177,22 @@ class UploadController extends Controller
             if ($record->class === 'image') {
                 try {
                     $thumbHelper = new Thumb($this->view);
-                    $thumb = $thumbHelper->thumb($record, 'scalecrop', '300');
+                    $thumb       = $thumbHelper->thumb($record, 'scalecrop', '300');
                     if (!empty($thumb)) {
                         return json_encode(['result' => 'OK', 'thumb' => $thumb]);
                     }
                 } catch (\Exception $ex) {
-
+                    return $this->_jsonError(179, 'Thumb creation failed');
                 }
             }
+
+            if (in_array($record->class, ['audio', 'application', 'video', 'text'])) {
+                return json_encode(['result' => 'OK', 'class' => $record->class]);
+            }
+
+            return json_encode(['result' => 'OK', 'class' => 'file']);
         }
+
         return $this->_jsonError(179, 'File not found');
     }
 
@@ -212,6 +223,7 @@ class UploadController extends Controller
         if ($record->data->posterFileName) {
             $data['poster'] = $record->getPosterUrl();
         }
+
         return json_encode(['result' => 'OK', 'record' => $record, 'data' => $data]);
     }
 
@@ -263,7 +275,7 @@ class UploadController extends Controller
                 }
             }
         }
-        $record->active = \array_key_exists('active', $formData);
+        $record->active   = \array_key_exists('active', $formData);
         $record->original = isset($formData['original']) ? $formData['original'] : $record->original;
         if (!$record->save()) {
             return $this->_jsonError(186);
@@ -272,17 +284,19 @@ class UploadController extends Controller
         if ($request->getPost()->afterEdit) {
             $this->_operationAfter($request->getPost()->afterEdit, $record);
         }
+
         return json_encode(['result' => 'OK']);
     }
 
     /**
      * Przekierowanie na plik
+     *
      * @return string
      */
     public function downloadAction(Request $request)
     {
         if (null === $file = (new CmsFileQuery)->byObject($request->object, $request->objectId)
-            ->findPk($request->id)) {
+                ->findPk($request->id)) {
             return '';
         }
         $this->getResponse()->redirectToUrl($file->getUrl('download'));
@@ -302,30 +316,35 @@ class UploadController extends Controller
         } catch (\Exception $ex) {
             return $this->_jsonError(180);
         }
+
         return json_encode(['result' => 'OK']);
     }
 
     /**
      * Zwraca sformatowany błąd JSON
+     *
      * @param integer $code
-     * @param string $message
+     * @param string  $message
+     *
      * @return string
      */
     protected function _jsonError($code = 403, $message = '')
     {
         return json_encode([
-            'result' => 'ERR',
-            'error' => [
-                'code' => $code,
-                'message' => $message
-            ]
-        ]);
+                               'result' => 'ERR',
+                               'error'  => [
+                                   'code'    => $code,
+                                   'message' => $message,
+                               ],
+                           ]);
     }
 
     /**
      * Wykonuje dodatkową operację po innym zdarzeniu
-     * @param array $action
+     *
+     * @param array                  $action
      * @param \Cms\Orm\CmsFileRecord $record
+     *
      * @return mixed
      */
     protected function _operationAfter($action, \Cms\Orm\CmsFileRecord $record)
@@ -335,8 +354,10 @@ class UploadController extends Controller
 
     /**
      * Zapisanie postera dla video
-     * @param string $blob
+     *
+     * @param string                 $blob
      * @param \Cms\Orm\CmsFileRecord $file
+     *
      * @return string
      */
     protected function _savePoster($blob, \Cms\Orm\CmsFileRecord $file)
@@ -358,6 +379,7 @@ class UploadController extends Controller
         file_put_contents(str_replace($file->name, $posterFileName, $file->getRealPath()), base64_decode($match[2]));
         //zapis do rekordu
         $file->data->posterFileName = $posterFileName;
+
         return $posterFileName;
     }
 
