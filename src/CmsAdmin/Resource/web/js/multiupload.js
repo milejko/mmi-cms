@@ -4,9 +4,13 @@ $(window).on('load', function () {
         let container = $(this).closest('.multiupload');
 
         $(window).scroll(function () {
-            if ($(window).scrollTop() >= container.offset().top - 65 && $(window).scrollTop() <= container.offset().top + container.outerHeight() - elementHeight + 120) {
+            let containerHeight = container.outerHeight();
+            let containerTop = container.offset().top;
+            let windowScroll = $(window).scrollTop();
+
+            if (windowScroll >= containerTop - 65 && windowScroll <= containerTop + containerHeight - elementHeight + 120) {
                 container.addClass('multiupload-fixed');
-                if ($(window).scrollTop() >= container.offset().top + container.outerHeight() - elementHeight - 130) {
+                if (windowScroll >= containerTop + containerHeight - elementHeight - 130) {
                     container.addClass('multiupload-fixed-bottom');
                 } else {
                     container.removeClass('multiupload-fixed-bottom');
