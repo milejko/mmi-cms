@@ -1,5 +1,6 @@
 .upload-add-label {
   flex: 0 0 200px;
+  width: 200px;
   margin: 0;
   margin-right: 1rem;
   display: block;
@@ -21,6 +22,21 @@
   margin-right: auto;
   margin-bottom: 1rem;
   transition: all 0.5s ease;
+}
+
+.multiupload-fixed .upload-add-label {
+  position: fixed;
+  top: 80px;
+}
+
+.multiupload-fixed-bottom .upload-add-label {
+  position: absolute;
+  top: auto;
+  bottom: 3rem;
+}
+
+.multiupload-fixed .field-list {
+  margin-left: calc(200px + 1rem);
 }
 
 .upload-add-label .icon.pulse {
