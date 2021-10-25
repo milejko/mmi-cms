@@ -18,9 +18,11 @@ use Mmi\Form\Element\ElementAbstract;
 class MultiUpload extends MultiField
 {
     //pliki js i css
-    private const MULTIUPLOAD_CSS_URL    = '/resource/cmsAdmin/css/multiupload.css';
-    private const MULTIUPLOAD_JS_URL     = '/resource/cmsAdmin/js/multiupload.js';
-    private const MULTIUPLOAD_IMAGES_URL = '/resource/cmsAdmin/images/upload/';
+    private const MULTIUPLOAD_CSS_URL = '/resource/cmsAdmin/css/multiupload.css';
+    private const MULTIUPLOAD_JS_URL  = '/resource/cmsAdmin/js/multiupload.js';
+    private const ICONS_URL           = '/resource/cmsAdmin/images/upload/';
+    private const UPLOAD_URL          = '/cmsAdmin/upload/multiupload';
+    private const THUMB_URL           = '/cmsAdmin/upload/multithumbnail';
 
     //przedrostek tymczasowego obiektu plików
     public const TEMP_OBJECT_PREFIX = 'tmp-';
@@ -71,7 +73,14 @@ class MultiUpload extends MultiField
             <label for="' . $this->getId() . '-add" class="upload-add-label">
                 <i class="icon fa fa-5 fa-cloud-upload"></i>
                 Kliknij lub upuść pliki w tym obszarze
-                <input type="file" id="' . $this->getId() . '-add" class="upload-add" data-template="' . $this->getDeclaredName() . '">                
+                <input type="file" id="' . $this->getId() . '-add" class="upload-add" 
+                    data-template="' . $this->getDeclaredName() . '" 
+                    data-thumb-url="' . self::THUMB_URL . '" 
+                    data-icons-url="' . self::ICONS_URL . '" 
+                    data-upload-url="' . self::UPLOAD_URL . '"
+                    data-object-id="' . $this->getUploaderId() . '"
+                    data-file-id="' . $this->getId() . '"
+                >                
                 <div class="multiupload-progress-bar"><div class="progress"></div></div>
             </label>
             ' . $this->renderList() . '            
@@ -149,157 +158,10 @@ class MultiUpload extends MultiField
         $listElement = addcslashes($this->renderListElement(), "'");
         $listType    = $this->getDeclaredName();
 
-        $uploadUrl = '/cmsAdmin/upload/multiupload';
-        $thumbUrl  = '/cmsAdmin/upload/multithumbnail';
-        $iconsUrl  = self::MULTIUPLOAD_IMAGES_URL;
-        $id        = $this->getUploaderId();
-        $object    = self::TEMP_OBJECT_PREFIX . $this->getObject();
-        $objectId  = $this->getUploaderId();
-
         return <<<html
             $(document).ready(function() {
                 multifieldListItemTemplate['$listType'] = '$listElement';
             });
-            
-            $(document).ready(function () {
-                multiuploadInitLists(('.multiupload'));
-            });
-
-            function multiuploadInitLists(lists) {
-                $(lists).each(function (index, list) {                
-                    let containerId = $(list).attr('id');
-                    multiuploadInitContainer(containerId);
-                });
-            }
-            
-            function multiuploadInitContainer(containerId){
-                multiuploadInitThumbs(containerId);
-                multiuploadInitAdd(containerId);
-            }
-
-            function multiuploadInitThumbs(containerId){
-                $('#' + containerId + ' > .field-list > li').each(function(){                
-                    multiuploadLoadThumb($(this).find('input[type=hidden]'));
-                });
-            }
-                
-            function multiuploadLoadThumb(sourceInput){
-                if($(sourceInput).parent().find('.thumb').length < 1){
-                    $.ajax({
-                        url: "$thumbUrl",
-                        type: "POST",
-                        data: {
-                            "cmsFileId": parseInt(sourceInput.attr('value'))
-                        }
-                    })
-                    .done(function(response){
-                        let thumb = $(sourceInput).closest('.field-list-item').find('.thumb img');
-                        if('undefined' !== typeof response.thumb){
-                            $(thumb).attr('src', response.thumb);
-                        }
-                        if('undefined' !== typeof response.class){
-                            $(thumb).attr('src', '$iconsUrl' + response.class + '.svg');
-                            $(thumb).addClass('file-icon');
-                        }
-                    });
-                }
-            }
-            
-            function multiuploadUpdateProgress(containerId, progress){
-                let progressBar = $('#' + containerId).find('.multiupload-progress-bar .progress');
-                progressBar.css('width',  progress + '%');
-                
-                if(progress === 100){
-                    let icon = $('#' + containerId).find('.upload-add-label .icon');
-                    icon.addClass('pulse');
-                    setTimeout(function(){
-                        icon.removeClass('pulse');
-                    }, 300);
-                }
-            }
-
-            function multiuploadInitAdd(containerId){
-                $(document).off('change', '#' + containerId + ' .upload-add');
-                $(document).on('change', '#' + containerId + ' .upload-add', function (e) {
-                    e.preventDefault();
-                    
-                    let template = $(this).data('template');
-                    let list = $(this).closest('.multifield').find('.field-list').first();
-                    let uploadBar = $(this).closest('.multiupload').find('.multiupload-progress-bar');
-                    
-                    multiuploadUpdateProgress(containerId, 0);
-                    setTimeout(function(){
-                        uploadBar.addClass('active');
-                    }, 100);
-                
-                    const chunkSize = 1024*512; 
-                    
-                    let reader = new FileReader();
-                    let file = $(this).prop('files')[0];       
-                    let total = file.size; 
-                    let parts = Math.ceil(file.size / chunkSize);
-                    let partsLoaded = 0;
-                    let loaded = 0;
-                    let blob = file.slice(0, chunkSize); 
-                    let cmsFileId = 0;
-                    
-                    reader.readAsArrayBuffer(blob);             
-                    reader.onload = function(e){            
-                        let chunk = blob
-                        let formData = new FormData();
-
-                        formData.append('name', file.name);
-                        formData.append('chunk', partsLoaded);
-                        formData.append('chunks', parts);
-                        formData.append('fileId', '$id');
-                        formData.append('fileSize', total);
-                        formData.append('formObject', '$object');
-                        formData.append('formObjectId', '$objectId');
-                        formData.append('cmsFileId', 0);
-                        formData.append('filters[max_file_size]', 0);
-                        formData.append('filters[prevent_duplicates]', false);
-                        formData.append('filters[prevent_empty]', true);
-                        formData.append('file', chunk);
-                        
-                        $.ajax({
-                            url: "$uploadUrl",
-                            type: "POST", 
-                            processData: false,
-                            contentType: false,
-                            data: formData
-                        })
-                        .done(function(response){               
-                            cmsFileId = response.cmsFileId;
-                            loaded += chunkSize;          
-                            partsLoaded += 1;     
-                        
-                            multiuploadUpdateProgress(containerId, loaded/total * 100);
-            
-                            if(loaded <= total){
-                                blob = file.slice(loaded,loaded+chunkSize);
-                                reader.readAsArrayBuffer(blob); 
-                            } else {                   
-                                multiuploadUpdateProgress(containerId, 100);
-                                $(list).append(
-                                    multifieldListItemTemplate[template]
-                                        .replaceAll('**', $(list).children().length)
-                                        .replaceAll('##', $(list).parents('.field-list-item').last().index())
-                                        .replaceAll('{{cmsFileId}}', response.cmsFileId)
-                                );
-                                let newItem = $(list).children('.field-list-item').last();
-                                newItem.find('.select2').select2();
-                                multifieldInitContainer(containerId);
-                                multiuploadInitContainer(containerId);
-                                multifieldToggleActive(newItem);
-                                
-                                setTimeout(function(){
-                                    uploadBar.removeClass('active');
-                                }, 200);
-                            }
-                        });       
-                    };
-                });
-            }
         html;
     }
 }
