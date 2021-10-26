@@ -11,6 +11,7 @@
 namespace Cms\Form\Element;
 
 use Mmi\Form\Element\ElementAbstract;
+use Mmi\Validator\NotEmpty;
 
 /**
  * Element wielokrotny upload
@@ -56,10 +57,16 @@ class MultiUpload extends MultiField
     public function __construct($name)
     {
         parent::__construct($name);
+        $this->setIgnore();
         $this
             ->addClass('multiupload')
             ->addElement(new Hidden('file'))
-            ->addElement((new Text('filename'))->setLabel('Nazwa pliku'));
+            ->addElement(
+                (new Text('filename'))
+                    ->setLabel('Nazwa pliku')
+                    ->setRequired()
+                    ->addValidator(new NotEmpty())
+            );
     }
 
     /**

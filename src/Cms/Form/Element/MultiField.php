@@ -62,6 +62,7 @@ class MultiField extends UploaderElementAbstract
     public function __construct($name)
     {
         parent::__construct($name);
+        $this->setIgnore(false);
         $this
             ->addClass('form-control')
             ->addClass('multifield')

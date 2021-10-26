@@ -21,7 +21,7 @@ use Mmi\Http\Response;
 
 /**
  * Abstrakcyjna klasa uploadera
- * 
+ *
  * Gettery
  * @method string getObject() pobiera obiekt
  * @method int getObjectId() pobiera identyfikator obiektu
@@ -108,7 +108,7 @@ abstract class UploaderElementAbstract extends ElementAbstract
             ->whereName()->equals(self::PLACEHOLDER_NAME)
             ->findFirst()) {
             $placeholder->delete();
-        }    
+        }
         //przenoszenie plikow z tymczasowego "worka" do docelowego
         File::move(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), $this->getObject(), $this->getObjectId());
         return parent::onFormSaved();
@@ -146,5 +146,4 @@ abstract class UploaderElementAbstract extends ElementAbstract
         $parts = \explode('\\', strtolower($name));
         return substr(end($parts), 0, -6);
     }
-
 }
