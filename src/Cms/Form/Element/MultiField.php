@@ -130,6 +130,7 @@ class MultiField extends UploaderElementAbstract
     public function isNestedValid(int $parentIndex): bool
     {
         $result = true;
+
         if (false === is_array($this->getValue())) {
             return $result;
         }
@@ -147,7 +148,7 @@ class MultiField extends UploaderElementAbstract
      * @param array $itemValues
      * @param bool  $result
      */
-    private function validateItem(int $index, array $itemValues, bool &$result, ?int $parentIndex = null): void
+    protected function validateItem(int $index, array $itemValues, bool &$result, ?int $parentIndex = null): void
     {
         foreach ($this->getElements() as $element) {
             $value = $itemValues[$element->getBaseName()] ?? null;
