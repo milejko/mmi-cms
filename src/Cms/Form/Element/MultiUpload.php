@@ -10,7 +10,10 @@
 
 namespace Cms\Form\Element;
 
+use Mmi\App\App;
 use Mmi\Form\Element\ElementAbstract;
+use Mmi\Form\Form;
+use Mmi\Http\Request;
 use Mmi\Validator\NotEmpty;
 
 /**
@@ -24,6 +27,7 @@ class MultiUpload extends MultiField
     private const ICONS_URL           = '/resource/cmsAdmin/images/upload/';
     private const UPLOAD_URL          = '/cmsAdmin/upload/multiupload';
     private const THUMB_URL           = '/cmsAdmin/upload/multithumbnail';
+    private const CURRENT_URL         = '/cmsAdmin/upload/current';
 
     //przedrostek tymczasowego obiektu plików
     public const TEMP_OBJECT_PREFIX = 'tmp-';
@@ -57,7 +61,6 @@ class MultiUpload extends MultiField
     public function __construct($name)
     {
         parent::__construct($name);
-        $this->setIgnore();
         $this
             ->addClass('multiupload')
             ->addElement(new Hidden('file'))
@@ -67,6 +70,29 @@ class MultiUpload extends MultiField
                     ->setRequired()
                     ->addValidator(new NotEmpty())
             );
+    }
+
+    /**
+     * @param Form $form
+     *
+     * @return $this
+     */
+    public function setForm(Form $form): self
+    {
+        if (!$this->getObject() && $form->hasRecord()) {
+            $this->setObject($this->_getFileObjectByClassName(get_class($form->getRecord())));
+        }
+
+        if (!$this->getObjectId() && $form->hasRecord()) {
+            $this->setObjectId($form->getRecord()->id);
+        }
+
+        $request = App::$di->get(Request::class);
+        if ($request->uploaderId) {
+            $this->setUploaderId($request->uploaderId);
+        }
+
+        return parent::setForm($form);
     }
 
     /**
@@ -84,7 +110,9 @@ class MultiUpload extends MultiField
                     data-template="' . $this->getDeclaredName() . '" 
                     data-thumb-url="' . self::THUMB_URL . '" 
                     data-icons-url="' . self::ICONS_URL . '" 
+                    data-current-url="' . self::CURRENT_URL . '" 
                     data-upload-url="' . self::UPLOAD_URL . '"
+                    data-object="' . self::TEMP_OBJECT_PREFIX . $this->getObject() . '"
                     data-object-id="' . $this->getUploaderId() . '"
                     data-file-id="' . $this->getId() . '"
                 >                

@@ -16,7 +16,7 @@ use Mmi\Form\Form;
 /**
  * Element wielokrotny checkbox
  */
-class MultiField extends UploaderElementAbstract
+class MultiField extends ElementAbstract
 {
     //szablon początku pola
     public const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
@@ -83,8 +83,6 @@ class MultiField extends UploaderElementAbstract
     public function setForm(Form $form): self
     {
         parent::setForm($form);
-
-        $this->setIgnore(false);
 
         foreach ($this->getElements() as $element) {
             $element->setForm($form);

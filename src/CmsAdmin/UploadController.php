@@ -106,10 +106,12 @@ class UploadController extends Controller
         }
 
         //zwrot json'a z plikami
-        return json_encode([
-                               'result' => 'OK',
-                               'files'  => $records->toArray(),
-                           ]);
+        return json_encode(
+            [
+                'result' => 'OK',
+                'files'  => $records->toArray(),
+            ]
+        );
     }
 
     /**

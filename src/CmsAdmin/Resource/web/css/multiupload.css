@@ -72,18 +72,12 @@
   flex: 1 0;
 }
 
-.form-control.multiupload > .field-list > .field-list-item > section > .form-group.cmsformelementtextarea,
-.form-control.multiupload > .field-list > .field-list-item > section > .form-group.widgetbaseformelementdescription,
-.form-control.multiupload > .field-list > .field-list-item {
+.form-control.multiupload > .field-list > .field-list-item > section > .form-group {
   flex: 0 0 100%;
 }
 
 .form-control.multiupload > .field-list > .field-list-item > section > .form-group:nth-child(2) {
   flex: 0 0 60px;
-}
-
-.form-control.multiupload > .field-list > .field-list-item > section > .form-group:nth-child(n + 2) {
-  flex: 1 0;
 }
 
 .form-control.multiupload > .field-list > .field-list-item .thumb {
