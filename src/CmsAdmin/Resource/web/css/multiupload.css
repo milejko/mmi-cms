@@ -72,6 +72,10 @@
   flex: 1 0;
 }
 
+.form-control.multiupload > .field-list > .field-list-item {
+  flex: 1 0 100%;
+}
+
 .form-control.multiupload > .field-list > .field-list-item > section > .form-group {
   flex: 0 0 100%;
 }
@@ -88,7 +92,7 @@
 .form-control.multiupload > .field-list > .field-list-item .thumb img {
   width: auto;
   max-height: 68px;
-  position:absolute;
+  position: absolute;
   transition: transform 0.5s ease;
   pointer-events: none;
   z-index: 1;

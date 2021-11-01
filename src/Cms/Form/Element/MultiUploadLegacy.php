@@ -104,6 +104,17 @@ class MultiUploadLegacy extends MultiUpload
     }
 
     /**
+     * Generuje automatyczny obiekt dla plików na podstawie nazwy klasy formularza
+     * @param string $name
+     * @return string
+     */
+    protected function _getFileObjectByClassName($name)
+    {
+        $parts = \explode('\\', strtolower($name));
+        return substr(end($parts), 0, -6);
+    }
+
+    /**
      * Dodaje pole do metryczki
      *
      * @param string $type    typ pola: text, checkbox, textarea, tinymce, select
@@ -129,7 +140,14 @@ class MultiUploadLegacy extends MultiUpload
             $this->addElement($element);
         }
 
-        return $this;
+        $imprint = $this->getOption('imprint');
+        //brak pól - pusta lista
+        if (null === $imprint) {
+            $imprint = [];
+        }
+        $imprint[] = ['type' => $type, 'name' => $name, 'label' => ($label ? $this->view->_($label) : $name), 'options' => $options];
+
+        return $this->setOption('imprint', $imprint);
     }
 
     /**

@@ -106,7 +106,7 @@ class MultiUpload extends MultiField
             <label for="' . $this->getId() . '-add" class="upload-add-label">
                 <i class="icon fa fa-5 fa-cloud-upload"></i>
                 Kliknij lub upuść pliki w tym obszarze
-                <input type="file" id="' . $this->getId() . '-add" class="upload-add" 
+                <input type="file" multiple="multiple" id="' . $this->getId() . '-add" class="upload-add" 
                     data-template="' . $this->getDeclaredName() . '" 
                     data-thumb-url="' . self::THUMB_URL . '" 
                     data-icons-url="' . self::ICONS_URL . '" 
@@ -198,5 +198,16 @@ class MultiUpload extends MultiField
                 multifieldListItemTemplate['$listType'] = '$listElement';
             });
         html;
+    }
+
+    /**
+     * Generuje automatyczny obiekt dla plików na podstawie nazwy klasy formularza
+     * @param string $name
+     * @return string
+     */
+    protected function _getFileObjectByClassName($name)
+    {
+        $parts = \explode('\\', strtolower($name));
+        return substr(end($parts), 0, -6);
     }
 }

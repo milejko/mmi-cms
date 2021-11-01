@@ -13,6 +13,7 @@ function multiuploadInitContainer(containerId) {
     multiuploadInitThumbs(containerId);
     multiuploadInitAdd(containerId);
     multiuploadInitScroll(containerId);
+    multiuploadInitToggleAuto(containerId)
 }
 
 function multiuploadInitScroll(containerId) {
@@ -102,70 +103,89 @@ function multiuploadInitAdd(containerId) {
         }, 100);
 
         const chunkSize = 1024 * 512;
+        let files = $(this).prop('files');
+        let filesCompleted = 0;
+        let filesTotal = files.length;
 
-        let reader = new FileReader();
-        let file = $(this).prop('files')[0];
-        let total = file.size;
-        let parts = Math.ceil(file.size / chunkSize);
-        let partsLoaded = 0;
-        let loaded = 0;
-        let blob = file.slice(0, chunkSize);
-        let cmsFileId = 0;
+        $.each(files, function (index, file) {
+            let reader = new FileReader();
+            let total = file.size;
+            let parts = Math.ceil(file.size / chunkSize);
+            let partsLoaded = 0;
+            let loaded = 0;
+            let blob = file.slice(0, chunkSize);
+            let cmsFileId = 0;
 
-        reader.readAsArrayBuffer(blob);
-        reader.onload = function (e) {
-            let chunk = blob
-            let formData = new FormData();
+            reader.readAsArrayBuffer(blob);
+            reader.onload = function (e) {
+                let chunk = blob
+                let formData = new FormData();
 
-            formData.append('name', file.name);
-            formData.append('chunk', partsLoaded);
-            formData.append('chunks', parts);
-            formData.append('fileId', fileId);
-            formData.append('fileSize', total);
-            formData.append('formObject', objectId);
-            formData.append('formObjectId', objectId);
-            formData.append('cmsFileId', 0);
-            formData.append('filters[max_file_size]', 0);
-            formData.append('filters[prevent_duplicates]', false);
-            formData.append('filters[prevent_empty]', true);
-            formData.append('file', chunk);
+                formData.append('name', file.name);
+                formData.append('chunk', partsLoaded);
+                formData.append('chunks', parts);
+                formData.append('fileId', fileId);
+                formData.append('fileSize', total);
+                formData.append('formObject', objectId);
+                formData.append('formObjectId', objectId);
+                formData.append('cmsFileId', 0);
+                formData.append('filters[max_file_size]', 0);
+                formData.append('filters[prevent_duplicates]', false);
+                formData.append('filters[prevent_empty]', true);
+                formData.append('file', chunk);
 
-            $.ajax({
-                url: uploadUrl,
-                type: "POST",
-                processData: false,
-                contentType: false,
-                data: formData
-            })
-                .done(function (response) {
-                    cmsFileId = response.cmsFileId;
-                    loaded += chunkSize;
-                    partsLoaded += 1;
+                $.ajax({
+                    url: uploadUrl,
+                    type: "POST",
+                    processData: false,
+                    contentType: false,
+                    data: formData
+                })
+                    .done(function (response) {
+                        cmsFileId = response.cmsFileId;
+                        loaded += chunkSize;
+                        partsLoaded += 1;
 
-                    multiuploadUpdateProgress(containerId, loaded / total * 100);
+                        if (filesTotal === 1) {
+                            multiuploadUpdateProgress(containerId, loaded / total * 100);
+                        }
 
-                    if (loaded <= total) {
-                        blob = file.slice(loaded, loaded + chunkSize);
-                        reader.readAsArrayBuffer(blob);
-                    } else {
-                        multiuploadUpdateProgress(containerId, 100);
-                        $(list).append(
-                            multifieldListItemTemplate[template]
-                                .replaceAll('**', $(list).children().length)
-                                .replaceAll('##', $(list).parents('.field-list-item').last().index())
-                                .replaceAll('{{cmsFileId}}', response.cmsFileId)
-                        );
-                        let newItem = $(list).children('.field-list-item').last();
-                        newItem.find('.select2').select2();
-                        multifieldInitContainer(containerId);
-                        multiuploadInitContainer(containerId);
-                        multifieldToggleActive(newItem);
+                        if (loaded <= total) {
+                            blob = file.slice(loaded, loaded + chunkSize);
+                            reader.readAsArrayBuffer(blob);
+                        } else {
+                            filesCompleted += 1;
+                            multiuploadUpdateProgress(containerId, filesCompleted / filesTotal * 100);
 
-                        setTimeout(function () {
-                            uploadBar.removeClass('active');
-                        }, 200);
-                    }
-                });
-        };
+                            $(list).append(
+                                multifieldListItemTemplate[template]
+                                    .replaceAll('**', $(list).children().length)
+                                    .replaceAll('##', $(list).parents('.field-list-item').last().index())
+                                    .replaceAll('{{cmsFileId}}', response.cmsFileId)
+                            );
+                            let newItem = $(list).children('.field-list-item').last();
+                            newItem.find('.select2').select2();
+                            multifieldInitContainer(containerId);
+                            multiuploadInitContainer(containerId);
+                            multifieldToggleActive(newItem);
+
+                            if (filesCompleted === filesTotal) {
+                                setTimeout(function () {
+                                    uploadBar.removeClass('active');
+                                }, 200);
+                            }
+                        }
+                    });
+            };
+        });
+    });
+}
+
+function multiuploadInitToggleAuto(containerId) {
+    $(document).off('focus', '#' + containerId + ' .form-group:nth-child(3) > input[type=text]');
+    $(document).on('focus', '#' + containerId + ' .form-group:nth-child(3) > input[type=text]', function (e) {
+        if (false === $(this).closest('.field-list-item').hasClass('active')) {
+            multifieldToggleMultifieldItem($(this).closest('.field-list-item'));
+        }
     });
 }
