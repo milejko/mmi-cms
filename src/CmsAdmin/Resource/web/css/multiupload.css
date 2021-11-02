@@ -1,28 +1,48 @@
 .upload-add-label {
   flex: 0 0 200px;
-  margin: 0;
-  margin-right: 1rem;
-  display: block;
-  border: 1px dashed #0a6aa1;
-  color: #0a6aa1;
+  width: 200px;
   height: 200px;
+  margin: 0 1rem 0 0;
+  display: block;
+  border: 1px dashed #c2cfd6;
+  color: #0a6aa1;
   text-align: center;
   padding: 2rem 1rem;
   position: relative;
-  background-color: #dce5ea;
-  border-radius: 1rem;
+  background-color: #f1f5f8;
 }
 
-.upload-add-label img {
+.upload-add-label .icon {
   width: 50%;
-  opacity: 0.25;
+  opacity: 0.5;
   display: block;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 1rem;
   transition: all 0.5s ease;
 }
 
-.upload-add-label:hover img {
+.multiupload-fixed .upload-add-label {
+  position: fixed;
+  top: 80px;
+}
+
+.multiupload-fixed-bottom .upload-add-label {
+  position: absolute;
+  top: auto;
+  bottom: 3rem;
+}
+
+.multiupload-fixed .field-list {
+  margin-left: calc(200px + 1rem);
+}
+
+.upload-add-label .icon.pulse {
+  transform: scale(1.2);
+  color: #0aa135;
+}
+
+.upload-add-label:hover .icon {
   opacity: 1;
 }
 
@@ -42,46 +62,77 @@
 .form-control.multiupload {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .form-control.multiupload > .field-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
+  flex: 1 0;
 }
 
-.form-control.multiupload > .field-list > .field-list-item > section > .form-group.cmsformelementtextarea,
-.form-control.multiupload > .field-list > .field-list-item > section > .form-group.widgetbaseformelementdescription,
 .form-control.multiupload > .field-list > .field-list-item {
+  flex: 1 0 100%;
+}
+
+.form-control.multiupload > .field-list > .field-list-item > section > .form-group {
   flex: 0 0 100%;
 }
 
-.form-control.multiupload > .field-list > .field-list-item > section > .form-group:first-child {
+.form-control.multiupload > .field-list > .field-list-item > section > .form-group:nth-child(2) {
   flex: 0 0 60px;
 }
 
-.form-control.multiupload > .field-list > .field-list-item > section > .form-group:nth-child(2) {
-  flex: 0 1 calc(100% - 60px - 1rem);
-}
-
 .form-control.multiupload > .field-list > .field-list-item .thumb {
-  position: relative;
+  margin-left: 1rem;
+  width: 68px;
 }
 
-.form-control.multiupload > .field-list > .field-list-item .thumb .thumb-big {
+.form-control.multiupload > .field-list > .field-list-item .thumb img {
+  width: auto;
+  max-height: 68px;
   position: absolute;
-  top: 50%;
+  transition: transform 0.5s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.form-control.multiupload > .field-list > .field-list-item .thumb img.file-icon {
+  padding: 9px 15px;
+}
+
+.form-control.multiupload > .field-list > .field-list-item .thumb:hover img.file-icon {
+  transform: scale(1);
+}
+
+.form-control.multiupload > .field-list > .field-list-item .thumb:hover img {
+  transform: scale(3);
+  z-index: 2;
+}
+
+.multiupload-progress-bar {
+  display: block;
+  border: 1px solid #ccc;
+  width: 90%;
+  height: 0.5rem;
+  position: absolute;
+  flex-basis: 100%;
+  bottom: 1rem;
   left: 50%;
-  margin-top: -50%;
-  margin-left: -50%;
-  max-width: 100%;
-  transition: max-width 0.2s linear;
+  transform: translateX(-50%);
+  opacity: 0;
 }
 
-.form-control.multiupload > .field-list > .field-list-item .thumb .thumb-big:hover {
-  max-width: 360px;
+.multiupload-progress-bar.active {
+  opacity: 1;
 }
 
-.form-control.multiupload > .field-list > .field-list-item {
-  max-height: calc(62px + 2rem);
+.multiupload-progress-bar .progress {
+  display: block;
+  position: absolute;
+  background-color: #0a6aa1;
+  width: 0;
+  height: 100%;
+  transition: all 0.1s linear;
 }

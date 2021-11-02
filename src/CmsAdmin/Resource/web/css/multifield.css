@@ -1,13 +1,14 @@
 .form-control.multifield {
   padding: 1rem;
   background-color: rgba(0, 0, 0, 0.05);
+  position: relative;
 }
 
 .form-control.multifield > .field-list > .field-list-item {
   background-color: #fff;
   transition: max-height 0.8s;
   transition-timing-function: ease-in-out;
-  max-height: 6rem;
+  max-height: 6.4rem;
   overflow: hidden;
   display: flex;
   justify-content: space-between;
@@ -36,17 +37,18 @@
   flex-flow: row wrap;
 }
 
+.form-control.multifield > .field-list > .field-list-item > section > .form-group {
+  flex: 0 1 calc(50% - 0.75rem);
+}
+
 .form-control.multifield > .field-list > .field-list-item > section > .form-group:first-child {
   display: none;
 }
 
-.form-control.multifield > .field-list > .field-list-item > section > .form-group:nth-child(n+2) {
-  flex: 0 1 calc(50% - 0.75rem);
-}
-
 .form-control.has-nested-multifield > .field-list > .field-list-item > section > .form-group:last-child,
-.form-control.multifield > .field-list > .field-list-item > section .form-group:nth-child(2),
-.form-control.multifield > .field-list > .field-list-item > section > .form-group.cmsformelementtextarea {
+.form-control.multifield > .field-list > .field-list-item > section > .form-group:nth-child(2),
+.form-control.multifield > .field-list > .field-list-item > section > .form-group.cmsformelementtextarea,
+.form-control.multifield > .field-list > .field-list-item > section > .form-group.cmsformelementtinymce {
   flex: 1 0 100%;
 }
 

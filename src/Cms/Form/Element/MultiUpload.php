@@ -10,27 +10,41 @@
 
 namespace Cms\Form\Element;
 
+use Mmi\App\App;
+use Mmi\Form\Element\ElementAbstract;
+use Mmi\Form\Form;
+use Mmi\Http\Request;
+use Mmi\Validator\NotEmpty;
+
 /**
  * Element wielokrotny upload
  */
 class MultiUpload extends MultiField
 {
     //pliki js i css
-    const MULTIUPLOAD_CSS_URL = '/resource/cmsAdmin/css/multiupload.css';
+    private const MULTIUPLOAD_CSS_URL = '/resource/cmsAdmin/css/multiupload.css';
+    private const MULTIUPLOAD_JS_URL  = '/resource/cmsAdmin/js/multiupload.js';
+    private const ICONS_URL           = '/resource/cmsAdmin/images/upload/';
+    private const UPLOAD_URL          = '/cmsAdmin/upload/multiupload';
+    private const THUMB_URL           = '/cmsAdmin/upload/multithumbnail';
+    private const CURRENT_URL         = '/cmsAdmin/upload/current';
+
+    //przedrostek tymczasowego obiektu plików
+    public const TEMP_OBJECT_PREFIX = 'tmp-';
 
     /**
      * Elementy formularza
      *
      * @var ElementAbstract[]
      */
-    protected $_elements = [];
+    protected array $_elements = [];
 
     /**
      * Błędy elementów formularza
      *
      * @var array
      */
-    protected $_elementErrors = [];
+    protected array $_elementErrors = [];
 
     /**
      * Błędy zagnieżdzonych elementów formularza
@@ -50,7 +64,35 @@ class MultiUpload extends MultiField
         $this
             ->addClass('multiupload')
             ->addElement(new Hidden('file'))
-            ->addElement((new Text('filename'))->setLabel('Nazwa pliku'));
+            ->addElement(
+                (new Text('filename'))
+                    ->setLabel('Nazwa pliku')
+                    ->setRequired()
+                    ->addValidator(new NotEmpty())
+            );
+    }
+
+    /**
+     * @param Form $form
+     *
+     * @return $this
+     */
+    public function setForm(Form $form): self
+    {
+        if (!$this->getObject() && $form->hasRecord()) {
+            $this->setObject($this->_getFileObjectByClassName(get_class($form->getRecord())));
+        }
+
+        if (!$this->getObjectId() && $form->hasRecord()) {
+            $this->setObjectId($form->getRecord()->id);
+        }
+
+        $request = App::$di->get(Request::class);
+        if ($request->uploaderId) {
+            $this->setUploaderId($request->uploaderId);
+        }
+
+        return parent::setForm($form);
     }
 
     /**
@@ -62,13 +104,21 @@ class MultiUpload extends MultiField
 
         return '<div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">
             <label for="' . $this->getId() . '-add" class="upload-add-label">
-                <img src="/resource/cmsAdmin/css/img/upload.png"/>
+                <i class="icon fa fa-5 fa-cloud-upload"></i>
                 Kliknij lub upuść pliki w tym obszarze
-                <input type="file" id="' . $this->getId() . '-add" class="upload-add">
+                <input type="file" multiple="multiple" id="' . $this->getId() . '-add" class="upload-add" 
+                    data-template="' . $this->getDeclaredName() . '" 
+                    data-thumb-url="' . self::THUMB_URL . '" 
+                    data-icons-url="' . self::ICONS_URL . '" 
+                    data-current-url="' . self::CURRENT_URL . '" 
+                    data-upload-url="' . self::UPLOAD_URL . '"
+                    data-object="' . self::TEMP_OBJECT_PREFIX . $this->getObject() . '"
+                    data-object-id="' . $this->getUploaderId() . '"
+                    data-file-id="' . $this->getId() . '"
+                >                
+                <div class="multiupload-progress-bar"><div class="progress"></div></div>
             </label>
-            ' . $this->renderList() . '
-            <div class="upload-bar"></div>
-            
+            ' . $this->renderList() . '            
             </div>';
     }
 
@@ -87,6 +137,9 @@ class MultiUpload extends MultiField
                 <a href="#" class="btn-toggle" role="button">
                     <i class="fa fa-angle-down fa-2"></i>
                 </a>
+            </div>
+            <div class="thumb">
+                <img src="/resource/cmsAdmin/images/loader.gif">
             </div>
         <section>';
 
@@ -109,6 +162,12 @@ class MultiUpload extends MultiField
 
         $html .= '</section>
             <div class="icons">
+                <a href="#" class="sortable-handler" role="button">
+                    <i class="fa fa-arrows fa-2"></i>
+                </a>
+                <a href="#" class="btn-active" role="button">
+                    <i class="fa fa-eye fa-2"></i>
+                </a>
                 <a href="#" class="btn-remove" role="button">
                     <i class="fa fa-trash-o fa-2"></i>
                 </a>
@@ -123,6 +182,7 @@ class MultiUpload extends MultiField
         parent::addScriptsAndLinks();
 
         $this->view->headLink()->appendStylesheet(self::MULTIUPLOAD_CSS_URL);
+        $this->view->headScript()->appendFile(self::MULTIUPLOAD_JS_URL);
     }
 
     /**
@@ -131,95 +191,23 @@ class MultiUpload extends MultiField
     protected function jsScript(): string
     {
         $listElement = addcslashes($this->renderListElement(), "'");
-        $listId      = $this->getId() . '-list';
-        $uploadUrl   = '/cmsAdmin/upload/multiupload';
-        $thumbUrl    = '/cmsAdmin/upload/multithumbnail';
-        $id          = $this->getId();
+        $listType    = $this->getDeclaredName();
 
         return <<<html
             $(document).ready(function() {
-                let list = $('#$listId > .field-list');
-                
-                $('.upload-add').on("change", function(){
-                    let uploadBar = $(this).closest('.multiupload').find('.upload-progress');
-                    uploadBar.show();
-                    uploadBar.html(0);
-                
-                    const chunkSize = 1024*512; 
-                    
-                    let reader = new FileReader();
-                    let file = $(this).prop('files')[0];       
-                    let total = file.size; 
-                    let parts = Math.ceil(file.size / chunkSize);
-                    let partsLoaded = 0;
-                    let loaded = 0;
-                    let blob = file.slice(0, chunkSize); 
-                    let cmsFileId = 0;
-                    let objectId = list.children().length + 1;
-                    
-                    reader.readAsArrayBuffer(blob);             
-                    reader.onload = function(e){            
-                        let chunk = blob //{file:reader.result}
-                        let formData = new FormData();
-
-                        formData.append('name', file.name);
-                        formData.append('chunk', partsLoaded);
-                        formData.append('chunks', parts);
-                        formData.append('fileId', objectId);
-                        formData.append('fileSize', total);
-                        formData.append('formObject', 'tmp-$id');
-                        formData.append('formObjectId', objectId);
-                        formData.append('cmsFileId', 0);
-                        formData.append('filters[max_file_size]', 0);
-                        formData.append('filters[prevent_duplicates]', false);
-                        formData.append('filters[prevent_empty]', true);
-                        formData.append('file', chunk);
-                        
-                        $.ajax({
-                            url: "$uploadUrl",
-                            type: "POST", 
-                            processData: false,
-                            contentType: false,
-                            data: formData
-                        })
-                        .done(function(response){                            
-                            cmsFileId = response.cmsFileId;
-                            loaded += chunkSize;          
-                            partsLoaded += 1;     
-                            
-                            uploadBar.html((loaded/total) * 100);
-            
-                            if(loaded <= total){
-                                blob = file.slice(loaded,loaded+chunkSize);
-                                reader.readAsArrayBuffer(blob); 
-                            } else {
-                                $(list).append('$listElement'.replaceAll('**', list.children().length).replaceAll('{{cmsFileId}}', response.cmsFileId));
-                                $(list).children('.field-list-item').last().find('.select2').select2();
-                                    
-                                let fileInput = $(list).children('.field-list-item').last().find('input[type=hidden]');
-                                loadThumb(fileInput);
-                            }
-                        });       
-                    };
-                });
-                
-                $(list).children('.field-list-item').find('input[type=hidden]').each(function(){
-                    loadThumb($(this));
-                });
-                
-                function loadThumb(sourceInput){
-                    $.ajax({
-                        url: "$thumbUrl",
-                        type: "POST",
-                        data: {
-                            "cmsFileId": parseInt(sourceInput.attr('value'))
-                        }
-                    })
-                    .done(function(response){
-                        sourceInput.before('<div class="thumb"><img class="thumb-small" src="'+response.thumb+'"/><img class="thumb-big" src="'+response.image+'"/></div>');
-                    });
-                }
+                multifieldListItemTemplate['$listType'] = '$listElement';
             });
         html;
+    }
+
+    /**
+     * Generuje automatyczny obiekt dla plików na podstawie nazwy klasy formularza
+     * @param string $name
+     * @return string
+     */
+    protected function _getFileObjectByClassName($name)
+    {
+        $parts = \explode('\\', strtolower($name));
+        return substr(end($parts), 0, -6);
     }
 }

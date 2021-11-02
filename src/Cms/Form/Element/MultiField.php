@@ -38,21 +38,21 @@ class MultiField extends ElementAbstract
      *
      * @var ElementAbstract[]
      */
-    protected $_elements = [];
+    protected array $_elements = [];
 
     /**
      * Błędy elementów formularza
      *
      * @var array
      */
-    protected $_elementErrors = [];
+    protected array $_elementErrors = [];
 
     /**
      * Błędy zagnieżdzonych elementów formularza
      *
      * @var array
      */
-    protected $_elementNestedErrors = [];
+    protected array $_elementNestedErrors = [];
 
     /**
      * Konstruktor
@@ -62,6 +62,7 @@ class MultiField extends ElementAbstract
     public function __construct($name)
     {
         parent::__construct($name);
+        $this->setIgnore(false);
         $this
             ->addClass('form-control')
             ->addClass('multifield')
@@ -102,6 +103,7 @@ class MultiField extends ElementAbstract
         foreach ($this->getValidators() as $validator) {
             if (false === $validator->isValid($this->getValue())) {
                 $this->addError($validator->getError());
+
                 return false;
             }
         }
@@ -126,6 +128,7 @@ class MultiField extends ElementAbstract
     public function isNestedValid(int $parentIndex): bool
     {
         $result = true;
+
         if (false === is_array($this->getValue())) {
             return $result;
         }
@@ -143,7 +146,7 @@ class MultiField extends ElementAbstract
      * @param array $itemValues
      * @param bool  $result
      */
-    private function validateItem(int $index, array $itemValues, bool &$result, ?int $parentIndex = null): void
+    protected function validateItem(int $index, array $itemValues, bool &$result, ?int $parentIndex = null): void
     {
         foreach ($this->getElements() as $element) {
             $value = $itemValues[$element->getBaseName()] ?? null;
@@ -165,9 +168,9 @@ class MultiField extends ElementAbstract
     }
 
     /**
-     * @param ElementAbstract $element
-     * @param array|null      $value
-     * @param bool            $result
+     * @param Multifield $element
+     * @param array|null $value
+     * @param bool       $result
      */
     private function validateMultifieldElement(Multifield $element, ?array $value, bool &$result, int $parentIndex): void
     {
@@ -344,7 +347,7 @@ class MultiField extends ElementAbstract
 
         return <<<html
             $(document).ready(function() {
-                listItemTemplate['$listType'] = '$listElement';
+                multifieldListItemTemplate['$listType'] = '$listElement';
             });    
         html;
     }
