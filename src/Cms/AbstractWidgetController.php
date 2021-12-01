@@ -5,11 +5,14 @@ namespace Cms;
 use Cms\Api\AttachmentData;
 use Cms\Api\DataInterface;
 use Cms\Api\WidgetData;
+use Cms\App\CmsScopeConfig;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 use Cms\Orm\CmsFileQuery;
 use Cms\Orm\CmsFileRecord;
 use Mmi\Mvc\Controller;
 use Mmi\Http\Request;
+use Mmi\Http\Response;
+use Mmi\Mvc\View;
 
 /**
  * Abstrakcyjna klasa kontrolera widgetów
@@ -28,6 +31,26 @@ abstract class AbstractWidgetController extends Controller
      * Widget relation record
      */
     private CmsCategoryWidgetCategoryRecord $widgetRecord;
+
+    /**
+     * Scope / skin
+     */
+    protected CmsScopeConfig $scope;
+
+    /**
+     * Konstruktor
+     */
+    public function __construct(
+        View $view,
+        Response $response,
+        CmsScopeConfig $scope,
+    )
+    {
+        //scope injection
+        $this->scope        = $scope;
+        //init method
+        parent::__construct($view, $response);
+    }
 
     /**
      * Sets the CMS category record

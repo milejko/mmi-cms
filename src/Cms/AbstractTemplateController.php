@@ -6,13 +6,16 @@ use Cms\Api\BreadcrumbData;
 use Cms\Api\LinkData;
 use Cms\Api\TemplateDataTransport;
 use Cms\Api\TransportInterface;
+use Cms\App\CmsScopeConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryRecord;
 use Cms\Orm\CmsFileQuery;
 use CmsAdmin\Form\CategoryForm;
 use Mmi\Http\Request;
+use Mmi\Http\Response;
 use Mmi\Mvc\Controller;
+use Mmi\Mvc\View;
 
 /**
  * Abstrakcyjna klasa kontrolera widgetów
@@ -28,6 +31,21 @@ abstract class AbstractTemplateController extends Controller
      * CMS skinset config
      */
     protected CmsSkinsetConfig $cmsSkinsetConfig;
+
+        /**
+     * Konstruktor
+     */
+    public function __construct(
+        View $view,
+        Response $response,
+        CmsScopeConfig $scope,
+    )
+    {
+        //scope injection
+        $this->scope        = $scope;
+        //init method
+        parent::__construct($view, $response);
+    }
 
     /**
      * Sets the CMS category record
