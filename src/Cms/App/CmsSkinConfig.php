@@ -19,6 +19,11 @@ class CmsSkinConfig
     private string $key;
 
     /**
+     * Opcje
+     */
+    private array $options = [];
+
+    /**
      * Dostępne szablony
      */
     private array $templates = [];
@@ -73,6 +78,23 @@ class CmsSkinConfig
     public function getTemplates(): array
     {
         return $this->templates;
+    }
+
+    /**
+     * Dodaje opcje
+     */
+    public function setOptions(array $options): self
+    {
+        $this->options = $options;
+        return $this;
+    }
+
+    /**
+     * Pobiera opcje
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
     }
 
 }
