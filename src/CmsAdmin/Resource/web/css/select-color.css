@@ -1,5 +1,5 @@
 div.select-color div.color {
-    border: 5px solid #ccc;
+    border: 5px solid #eee;
     margin-right: 5px;
     display: inline-block;
     line-height: 100%;
@@ -12,5 +12,5 @@ div.select-color div.color div.color-label {
 }
 
 div.select-color div.color.selected {
-    border-color: #20a8d8;
+    border-color: #000;
 }
