@@ -10,6 +10,7 @@
 
 namespace Cms\Form\Element;
 
+use Mmi\Filter\EmptyToNull;
 use Mmi\Form\Element\ElementAbstract;
 
 /**
@@ -42,7 +43,8 @@ class SelectColor extends ElementAbstract
      */
     public function __construct($name)
     {
-        $this->addClass('form-control');
+        $this->addClass('form-control')
+            ->addFilter(new EmptyToNull());
         parent::__construct($name);
     }
 }
