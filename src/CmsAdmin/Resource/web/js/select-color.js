@@ -5,7 +5,7 @@ $(document).ready(function () {
 
     'use strict';
 
-    $('div.select-color > div.color').click(function ()
+    $(document).on('click', 'div.select-color > div.color', function ()
     {
         $('#' + $(this).parent('div.select-color').attr('data-for-id')).val($(this).attr('data-color-class'));
         $(this).parent('div.select-color').children('div.color').removeClass('selected');
