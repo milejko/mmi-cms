@@ -35,6 +35,9 @@ class CmsRouterConfig extends RouterConfig
         //routa do strony głównej (opartej o category)
         $this->setRoute('cms-category-home', '', ['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => '/']);
 
+        //routa API config
+        $this->setRoute('cms-api', 'api', ['module' => 'cms', 'controller' => 'api', 'action' => 'index']);
+
         //routa API stron cms
         $this->setRoute('cms-category-api', '/^api\/category\/([a-z0-9-]+)\/([a-z0-9\/-]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getCategory', 'scope' => '$1', 'uri' => '$2']);
 

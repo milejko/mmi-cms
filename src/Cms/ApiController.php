@@ -11,9 +11,13 @@
 namespace Cms;
 
 use Cms\Api\ErrorTransport;
+use Cms\Api\LinkData;
 use Cms\Api\MenuDataTransport;
 use Cms\Api\RedirectTransport;
 use Cms\Api\Service\MenuServiceInterface;
+use Cms\Api\SkinData;
+use Cms\Api\SkinsetData;
+use Cms\Api\SkinsetDataTransport;
 use Cms\Api\TransportInterface;
 use Cms\App\CmsSkinNotFoundException;
 use Cms\App\CmsSkinsetConfig;
@@ -46,6 +50,32 @@ class ApiController extends \Mmi\Mvc\Controller
      * @Inject
      */
     private MenuServiceInterface $menuService;
+
+    /**
+     * Index action (skin configuration)
+     */
+    public function indexAction()
+    {
+        $skins = [];
+        //iterating skins
+        foreach ($this->cmsSkinsetConfig->getSkins() as $skin) {
+            $skinData = new SkinData;
+            $skinData->key = $skin->getKey();
+            $skinData->name = $skin->getName();
+            $skinData->attributes = $skin->getAttributes();
+            //add self link
+            $skinData->_links[] = ((new LinkData())
+                ->setHref(self::API_PREFIX . $skin->getKey())
+                ->setRel(LinkData::REL_SELF)
+            );
+            $skins[] = $skinData;
+        }
+        //serves transport object
+        $skinsetTransport = (new SkinsetDataTransport())->setSkins($skins);
+        return $this->getResponse()->setTypeJson()
+            ->setCode($skinsetTransport->getCode())
+            ->setContent($skinsetTransport->toString());
+    }
 
     /**
      * Akcja pobrania menu 

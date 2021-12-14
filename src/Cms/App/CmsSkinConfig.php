@@ -21,7 +21,7 @@ class CmsSkinConfig
     /**
      * Opcje
      */
-    private array $options = [];
+    private array $attributes = [];
 
     /**
      * Dostępne szablony
@@ -81,20 +81,20 @@ class CmsSkinConfig
     }
 
     /**
-     * Dodaje opcje
+     * Dodaje atrybuty
      */
-    public function setOptions(array $options): self
+    public function setAttributes(array $attributes): self
     {
-        $this->options = $options;
+        $this->attributes = $attributes;
         return $this;
     }
 
     /**
-     * Pobiera opcje
+     * Pobiera atrybuty
      */
-    public function getOptions(): array
+    public function getAttributes(): array
     {
-        return $this->options;
+        return $this->attributes;
     }
 
 }
