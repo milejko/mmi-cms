@@ -94,6 +94,7 @@ function multiuploadInitAdd(containerId) {
         let list = $(this).closest('.multifield').find('.field-list').first();
         let uploadBar = $(this).closest('.multiupload').find('.multiupload-progress-bar');
         let uploadUrl = $(this).data('upload-url');
+        let object = $(this).data('object');
         let objectId = $(this).data('object-id');
         let fileId = $(this).data('file-id');
 
@@ -126,7 +127,7 @@ function multiuploadInitAdd(containerId) {
                 formData.append('chunks', parts);
                 formData.append('fileId', fileId);
                 formData.append('fileSize', total);
-                formData.append('formObject', objectId);
+                formData.append('formObject', object);
                 formData.append('formObjectId', objectId);
                 formData.append('cmsFileId', 0);
                 formData.append('filters[max_file_size]', 0);
