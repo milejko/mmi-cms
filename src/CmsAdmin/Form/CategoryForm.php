@@ -83,7 +83,7 @@ class CategoryForm extends Form
             ->setLabel('form.category.name.label')
             ->setRequired()
             ->addFilter(new Filter\StringTrim)
-            ->addValidator(new Validator\StringLength([0, 128])));
+            ->addValidator(new Validator\StringLength([2, 128])));
 
         //aktywna
         $this->addElement((new Element\Checkbox('active'))
@@ -92,14 +92,14 @@ class CategoryForm extends Form
 
         //blank
         $this->addElement((new Element\Checkbox('blank'))
-            ->setLabel('form.category.blank.label'));                
+            ->setLabel('form.category.blank.label'));
 
         //przekierowanie na link
         $this->addElement((new Element\Text('redirectUri'))
                 ->setLabel('form.category.redirect.label')
                 ->addValidator(new Url())
                 ->addFilter(new Filter\StringTrim));
-    
+
         //tylko jeśli ma template (jest stroną)
         if (strpos($this->getRecord()->template, '/')) {
             //SEO
