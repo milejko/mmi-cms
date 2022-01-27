@@ -140,7 +140,7 @@ class IndexController extends Controller
         }
         $form = new ScopeSelectForm(null, [ScopeSelectForm::OPTION_SELECTED => $this->scopeConfig->getName(), ScopeSelectForm::OPTION_MULTIOPTIONS => $options]);
         //form do widoku
-        $this->view->form = $form;
+        $this->view->scopeSelectionForm = $form;
         //obsługa POST
         if ($form->isMine()) {
             $this->scopeConfig->setName($form->getElement('scope')->getValue());
