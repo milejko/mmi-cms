@@ -10,18 +10,13 @@
 
 namespace Cms\Form\Element;
 
-use Cms\Model\File;
 use Cms\Orm\CmsFileQuery;
-use Cms\Orm\CmsFileRecord;
-use Mmi\Form\Form;
 
 /**
  * Element wielokrotny upload
  */
 class MultiUploadLegacy extends MultiUpload
 {
-    private const PLACEHOLDER_NAME = '.placeholder';
-
     public function getValue(): mixed
     {
         $value = parent::getValue();
@@ -30,15 +25,15 @@ class MultiUploadLegacy extends MultiUpload
             $objectId = $this->getObjectId();
 
             switch ($this->getFileTypes()) {
-                case 'images' :
+                case 'images':
                     //zapytanie o obrazki
                     $query = CmsFileQuery::imagesByObject($this->getObject(), $objectId);
                     break;
-                case 'notImages' :
+                case 'notImages':
                     //wszystkie pliki bez obrazków
                     $query = CmsFileQuery::notImagesByObject($this->getObject(), $objectId);
                     break;
-                default :
+                default:
                     //domyślne zapytanie o wszystkie pliki
                     $query = CmsFileQuery::byObject($this->getObject(), $objectId);
             }
@@ -77,30 +72,6 @@ class MultiUploadLegacy extends MultiUpload
         $this->_createTempFiles();
 
         return $this;
-    }
-
-    /**
-     * Utorzenie kopii plików dla tego uploadera
-     *
-     * @return boolean
-     */
-    protected function _createTempFiles()
-    {
-        //jeśli już są pliki tymczasowe, to wychodzimy
-        if ((new CmsFileQuery())
-            ->byObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId())
-            ->count()) {
-            return true;
-        }
-        //tworzymy pliki tymczasowe - kopie oryginałów
-        File::link($this->getObject(), $this->getObjectId(), self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId());
-        $placeholder           = new CmsFileRecord();
-        $placeholder->name     = self::PLACEHOLDER_NAME;
-        $placeholder->object   = self::TEMP_OBJECT_PREFIX . $this->getObject();
-        $placeholder->objectId = $this->getUploaderId();
-        $placeholder->save();
-
-        return true;
     }
 
     /**
