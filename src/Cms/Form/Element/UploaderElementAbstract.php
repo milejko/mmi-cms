@@ -32,14 +32,8 @@ use Mmi\Http\Response;
  * @method self setObjectId($id) ustawia identyfikator obiektu
  * @method self setUploaderId($id) ustawia id uploadera
  */
-abstract class UploaderElementAbstract extends ElementAbstract
+abstract class UploaderElementAbstract extends ElementAbstract implements UploaderElementInterface
 {
-
-    //przedrostek tymczasowego obiektu plików
-    const TEMP_OBJECT_PREFIX = 'tmp-';
-    const PLACEHOLDER_NAME = '.placeholder';
-    const FILES_MOVED_OPTION_PREFIX = 'move-files-handled-';
-
     /**
      * Ustawia form macierzysty
      * @param Form $form

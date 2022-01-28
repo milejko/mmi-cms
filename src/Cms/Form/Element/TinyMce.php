@@ -43,8 +43,6 @@ class TinyMce extends UploaderElementAbstract
     const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
     //szablon pola textarea
     const TEMPLATE_FIELD = 'mmi/form/element/textarea';
-    //przedrostek tymczasowego obiektu plików
-    const TEMP_OBJECT_PREFIX = 'tmp-';
 
     const TOOLBARS = [
         'default'  => [

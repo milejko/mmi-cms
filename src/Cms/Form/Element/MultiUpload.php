@@ -10,8 +10,10 @@
 
 namespace Cms\Form\Element;
 
+use Cms\Model\File;
+use Cms\Orm\CmsFileQuery;
+use Cms\Orm\CmsFileRecord;
 use Mmi\App\App;
-use Mmi\Form\Element\ElementAbstract;
 use Mmi\Form\Form;
 use Mmi\Http\Request;
 use Mmi\Validator\NotEmpty;
@@ -19,7 +21,7 @@ use Mmi\Validator\NotEmpty;
 /**
  * Element wielokrotny upload
  */
-class MultiUpload extends MultiField
+class MultiUpload extends MultiField implements UploaderElementInterface
 {
     //pliki js i css
     private const MULTIUPLOAD_CSS_URL = '/resource/cmsAdmin/css/multiupload.css';
@@ -28,30 +30,6 @@ class MultiUpload extends MultiField
     private const UPLOAD_URL          = '/cmsAdmin/upload/multiupload';
     private const THUMB_URL           = '/cmsAdmin/upload/multithumbnail';
     private const CURRENT_URL         = '/cmsAdmin/upload/current';
-
-    //przedrostek tymczasowego obiektu plików
-    public const TEMP_OBJECT_PREFIX = 'tmp-';
-
-    /**
-     * Elementy formularza
-     *
-     * @var ElementAbstract[]
-     */
-    protected array $_elements = [];
-
-    /**
-     * Błędy elementów formularza
-     *
-     * @var array
-     */
-    protected array $_elementErrors = [];
-
-    /**
-     * Błędy zagnieżdzonych elementów formularza
-     *
-     * @var array
-     */
-    protected array $_elementNestedErrors = [];
 
     /**
      * Konstruktor
@@ -90,6 +68,7 @@ class MultiUpload extends MultiField
         $request = App::$di->get(Request::class);
         if ($request->uploaderId) {
             $this->setUploaderId($request->uploaderId);
+            $this->_createTempFiles();
         }
 
         return parent::setForm($form);
@@ -198,6 +177,65 @@ class MultiUpload extends MultiField
                 multifieldListItemTemplate['$listType'] = '$listElement';
             });
         html;
+    }
+
+    /**
+     * Po zapisie rekordu
+     */
+    public function onRecordSaved()
+    {
+        //brak zdefiniowanego objectId
+        if (!$this->getObjectId()) {
+            //pobranie id z rekordu
+            $this->setObjectId($this->_form->getRecord()->id);
+        }
+        parent::onRecordSaved();
+    }
+
+    /**
+     * Zapis formularza przenosi pliki
+     */
+    public function onFormSaved()
+    {
+        //pliki już obsłużone (inny uploader z tym samym prefixem)
+        if ($this->_form->getOption(self::FILES_MOVED_OPTION_PREFIX . $this->getObject())) {
+            return parent::onFormSaved();
+        }
+        //ustawianie flagi na formie dla innych uploaderów
+        $this->_form->setOption(self::FILES_MOVED_OPTION_PREFIX . $this->getObject(), true);
+        //usuwanie z docelowego "worka"
+        File::deleteByObject($this->getObject(), $this->getObjectId());
+        //usuwanie placeholdera
+        if (null !== $placeholder = CmsFileQuery::byObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId())
+                ->whereName()->equals(self::PLACEHOLDER_NAME)
+                ->findFirst()) {
+            $placeholder->delete();
+        }
+        //przenoszenie plikow z tymczasowego "worka" do docelowego
+        File::move(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), $this->getObject(), $this->getObjectId());
+        return parent::onFormSaved();
+    }
+
+    /**
+     * Utorzenie kopii plików dla tego uploadera
+     * @return boolean
+     */
+    protected function _createTempFiles()
+    {
+        //jeśli już są pliki tymczasowe, to wychodzimy
+        if ((new CmsFileQuery())
+            ->byObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId())
+            ->count()) {
+            return true;
+        }
+        //tworzymy pliki tymczasowe - kopie oryginałów
+        File::link($this->getObject(), $this->getObjectId(), self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId());
+        $placeholder = new CmsFileRecord();
+        $placeholder->name = self::PLACEHOLDER_NAME;
+        $placeholder->object = self::TEMP_OBJECT_PREFIX . $this->getObject();
+        $placeholder->objectId = $this->getUploaderId();
+        $placeholder->save();
+        return true;
     }
 
     /**

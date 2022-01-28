@@ -10,6 +10,7 @@
 
 namespace Cms\Model;
 
+use Cms\Form\Element\UploaderElementInterface;
 use Cms\Orm\CmsFileQuery;
 use Cms\Orm\CmsFileRecord;
 use Mmi\App\App;
@@ -312,7 +313,7 @@ class File
         if (empty($modifiedDate)) {
             $modifiedDate = date('Y-m-d H:i:s', strtotime('-1 week'));
         }
-        (new CmsFileQuery)->whereObject()->like('tmp-%')
+        (new CmsFileQuery)->whereObject()->like(UploaderElementInterface::TEMP_OBJECT_PREFIX . '%')
             ->andFieldDateModify()->less($modifiedDate)
             ->find()
             ->delete();

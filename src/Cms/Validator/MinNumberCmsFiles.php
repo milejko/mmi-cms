@@ -10,6 +10,10 @@
 
 namespace Cms\Validator;
 
+use Cms\Form\Element\UploaderElementInterface;
+use Cms\Orm\CmsFileQuery;
+use Mmi\Validator\ValidatorAbstract;
+
 /**
  * Walidator - minimalna liczba plików w Cms (musi być conajmniej tyle ile podano)
  *
@@ -29,7 +33,7 @@ namespace Cms\Validator;
  * @method boolean getTemporary() pobiera, czy pliki tymczasowe
  * @method string getMessage() pobiera wiadomość
  */
-class MinNumberCmsFiles extends \Mmi\Validator\ValidatorAbstract
+class MinNumberCmsFiles extends ValidatorAbstract
 {
     /**
      * Komunikat błędnego kodu zabezpieczającego
@@ -56,7 +60,7 @@ class MinNumberCmsFiles extends \Mmi\Validator\ValidatorAbstract
      */
     public function isValid($value)
     {
-        $query = (new \Cms\Orm\CmsFileQuery)
+        $query = (new CmsFileQuery)
             ->byObject($this->_getObjectName(), $this->getObjectId())
             ->andFieldSize()->notEquals(null);
         if ($this->getClass()) {
@@ -81,6 +85,6 @@ class MinNumberCmsFiles extends \Mmi\Validator\ValidatorAbstract
         if ($this->getTemporary() === false) {
             return $this->getObject();
         }
-        return 'tmp-' . $this->getObject();
+        return UploaderElementInterface::TEMP_OBJECT_PREFIX . $this->getObject();
     }
 }

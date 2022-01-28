@@ -37,8 +37,6 @@ class Plupload extends UploaderElementAbstract
     CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
     CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
-    //przedrostek tymczasowego obiektu plików
-    const TEMP_OBJECT_PREFIX = 'tmp-';
 
     /**
      * Ustawia rozmiar chunka
