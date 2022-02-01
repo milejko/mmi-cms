@@ -114,7 +114,7 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         $html = '<li class="field-list-item border mb-3 p-3">
             <div class="icons">
                 <a href="#" class="btn-toggle" role="button">
-                    <i class="fa fa-angle-down fa-2"></i>
+                    <i class="fa fa-angle-down fa-6"></i>
                 </a>
             </div>
             <div class="thumb">
