@@ -41,13 +41,7 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         parent::__construct($name);
         $this
             ->addClass('multiupload')
-            ->addElement(new Hidden('file'))
-            ->addElement(
-                (new Text('filename'))
-                    ->setLabel('Nazwa pliku')
-                    ->setRequired()
-                    ->addValidator(new NotEmpty())
-            );
+            ->addElement(new Hidden('file'));
     }
 
     /**
