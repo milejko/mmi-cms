@@ -57,17 +57,16 @@ function multiuploadLoadThumb(sourceInput) {
             data: {
                 "cmsFileId": parseInt(sourceInput.attr('value'))
             }
-        })
-            .done(function (response) {
-                let thumb = $(sourceInput).closest('.field-list-item').find('.thumb img');
-                if ('undefined' !== typeof response.thumb) {
-                    $(thumb).attr('src', response.thumb);
-                }
-                if ('undefined' !== typeof response.class) {
-                    $(thumb).attr('src', uploader.data('icons-url') + response.class + '.svg');
-                    $(thumb).addClass('file-icon');
-                }
-            });
+        }).done(function (response) {
+            let thumb = $(sourceInput).closest('.field-list-item').find('.thumb img');
+            if ('undefined' !== typeof response.thumb) {
+                $(thumb).attr('src', response.thumb);
+            }
+            if ('undefined' !== typeof response.class) {
+                $(thumb).attr('src', uploader.data('icons-url') + response.class + '.svg');
+                $(thumb).addClass('file-icon');
+            }
+        });
     }
 }
 

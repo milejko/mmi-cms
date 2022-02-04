@@ -16,14 +16,13 @@ use Cms\Orm\CmsFileRecord;
 use Mmi\App\App;
 use Mmi\Form\Form;
 use Mmi\Http\Request;
-use Mmi\Validator\NotEmpty;
 
 /**
  * Element wielokrotny upload
  */
 class MultiUpload extends MultiField implements UploaderElementInterface
 {
-    //pliki js i css
+    private const FILE_ELEMENT_NAME   = 'file';
     private const MULTIUPLOAD_CSS_URL = '/resource/cmsAdmin/css/multiupload.css';
     private const MULTIUPLOAD_JS_URL  = '/resource/cmsAdmin/js/multiupload.js';
     private const ICONS_URL           = '/resource/cmsAdmin/images/upload/';
@@ -41,7 +40,7 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         parent::__construct($name);
         $this
             ->addClass('multiupload')
-            ->addElement(new Hidden('file'));
+            ->addElement(new Hidden(self::FILE_ELEMENT_NAME));
     }
 
     /**
@@ -126,7 +125,7 @@ class MultiUpload extends MultiField implements UploaderElementInterface
                 $element->getValue() ? $element->setChecked() : $element->setChecked(false);
             }
 
-            if ($element instanceof Hidden) {
+            if (self::FILE_ELEMENT_NAME === $element->getBaseName()) {
                 $element->setValue($itemValues[$element->getBaseName()] ?? '{{cmsFileId}}');
             }
 
