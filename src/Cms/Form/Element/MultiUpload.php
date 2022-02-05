@@ -172,6 +172,16 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         html;
     }
 
+    public function beforeFormSaved()
+    {
+        $values = $this->getValue();
+        foreach ($values as $key => $item) {
+            $values[$key][self::FILE_ELEMENT_NAME] = CmsFileQuery::findLastFileId($item[self::FILE_ELEMENT_NAME] ?? null);
+        }
+        $this->setValue($values);
+        parent::beforeFormSaved();
+    }
+
     /**
      * Po zapisie rekordu
      */
