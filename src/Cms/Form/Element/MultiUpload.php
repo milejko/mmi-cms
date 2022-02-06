@@ -208,6 +208,8 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         $this->_form->setOption(self::FILES_MOVED_OPTION_PREFIX . $this->getObject(), true);
         //usuwanie z docelowego "worka"
         File::deleteByObject($this->getObject(), $this->getObjectId());
+        //usuwanie niepotrzebnych plikow
+        File::deleteByObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), $this->getFileIds());
         //usuwanie placeholdera
         if (null !== $placeholder = CmsFileQuery::byObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId())
                 ->whereName()->equals(self::PLACEHOLDER_NAME)
@@ -250,5 +252,21 @@ class MultiUpload extends MultiField implements UploaderElementInterface
     {
         $parts = \explode('\\', strtolower($name));
         return substr(end($parts), 0, -6);
+    }
+
+    /**
+     * @return array
+     */
+    private function getFileIds(): array
+    {
+        $ids = [];
+
+        foreach ($this->getValue() as $item) {
+            if (isset($item[self::FILE_ELEMENT_NAME])) {
+                $ids[] = $item[self::FILE_ELEMENT_NAME];
+            }
+        }
+
+        return $ids;
     }
 }
