@@ -348,11 +348,11 @@ class MultiField extends ElementAbstract
         return <<<html
             $(document).ready(function() {
                 multifieldListItemTemplate['$listType'] = '$listElement';
-            });    
+            });
         html;
     }
 
-    private function getDeclaredName(): string
+    protected function getDeclaredName(): string
     {
         $name = $this->getBaseName();
 

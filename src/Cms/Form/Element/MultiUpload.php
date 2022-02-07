@@ -157,29 +157,18 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         $this->view->headScript()->appendFile(self::MULTIUPLOAD_JS_URL);
     }
 
-    /**
-     * @return string
-     */
-    protected function jsScript(): string
-    {
-        $listElement = addcslashes($this->renderListElement(), "'");
-        $listType    = $this->getDeclaredName();
-
-        return <<<html
-            $(document).ready(function() {
-                multifieldListItemTemplate['$listType'] = '$listElement';
-            });
-        html;
-    }
-
-    public function beforeFormSaved()
+    public function beforeFormSave()
     {
         $values = $this->getValue();
-        foreach ($values as $key => $item) {
-            $values[$key][self::FILE_ELEMENT_NAME] = CmsFileQuery::findLastFileId($item[self::FILE_ELEMENT_NAME] ?? null);
+
+        if (is_array($values)) {
+            foreach ($values as $key => $item) {
+                $values[$key][self::FILE_ELEMENT_NAME] = CmsFileQuery::findLastFileId($item[self::FILE_ELEMENT_NAME] ?? null);
+            }
+            $this->setValue($values);
         }
-        $this->setValue($values);
-        parent::beforeFormSaved();
+
+        parent::beforeFormSave();
     }
 
     /**
@@ -261,7 +250,7 @@ class MultiUpload extends MultiField implements UploaderElementInterface
     {
         $ids = [];
 
-        foreach ($this->getValue() as $item) {
+        foreach ($this->getValue() ?? [] as $item) {
             if (isset($item[self::FILE_ELEMENT_NAME])) {
                 $ids[] = $item[self::FILE_ELEMENT_NAME];
             }
