@@ -11531,6 +11531,10 @@ ul.wlist li div.operation a:hover, ul.wlist li div.operation button:hover {
     font-size: 5em !important;
 }
 
+.fa-6 {
+    font-size: 6em !important;
+}
+
 .mr-fix-3 {
     margin-right: 3px !important;
 }

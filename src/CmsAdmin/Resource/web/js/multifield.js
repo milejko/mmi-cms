@@ -106,8 +106,8 @@ function multifieldInitAdd(containerId) {
 }
 
 function multifieldInitToggleAuto(containerId) {
-    $(document).off('focus', '#' + containerId + ' .form-group:nth-child(2) > input[type=text]');
-    $(document).on('focus', '#' + containerId + ' .form-group:nth-child(2) > input[type=text]', function (e) {
+    $(document).off('focus', '#' + containerId + ' .form-group:nth-child(2) > input[type=text], #' + containerId + ' .form-group:nth-child(2) > select, #' + containerId + ' .form-group:nth-child(2) > .select2');
+    $(document).on('focus', '#' + containerId + ' .form-group:nth-child(2) > input[type=text], #' + containerId + ' .form-group:nth-child(2) > select, #' + containerId + ' .form-group:nth-child(2) > .select2', function (e) {
         if (false === $(this).closest('.field-list-item').hasClass('active')) {
             multifieldToggleMultifieldItem($(this).closest('.field-list-item'));
         }

@@ -293,7 +293,7 @@ class MultiField extends ElementAbstract
         $html = '<li class="field-list-item border mb-3 p-3">
             <div class="icons">
                 <a href="#" class="btn-toggle" role="button">
-                    <i class="fa fa-angle-down fa-2"></i>
+                    <i class="fa fa-angle-down fa-6"></i>
                 </a>
             </div>
         <section>';
@@ -348,11 +348,11 @@ class MultiField extends ElementAbstract
         return <<<html
             $(document).ready(function() {
                 multifieldListItemTemplate['$listType'] = '$listElement';
-            });    
+            });
         html;
     }
 
-    private function getDeclaredName(): string
+    protected function getDeclaredName(): string
     {
         $name = $this->getBaseName();
 

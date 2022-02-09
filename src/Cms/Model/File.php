@@ -294,14 +294,16 @@ class File
      * Usuwa kolekcję rekordów po obiekcie i id
      * @param string $object
      * @param string $objectId
+     * @param array $ignoreIds
      * @return int ilość usuniętych obiektów
      */
-    public static function deleteByObject($object = null, $objectId = null)
+    public static function deleteByObject($object = null, $objectId = null, $ignoreIds = [])
     {
         //wybieramy kolekcję i usuwamy całą
         return CmsFileQuery::byObject($object, $objectId)
-                ->find()
-                ->delete();
+            ->andFieldId()->notEquals($ignoreIds)
+            ->find()
+            ->delete();
     }
 
     /**

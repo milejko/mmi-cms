@@ -16,14 +16,13 @@ use Cms\Orm\CmsFileRecord;
 use Mmi\App\App;
 use Mmi\Form\Form;
 use Mmi\Http\Request;
-use Mmi\Validator\NotEmpty;
 
 /**
  * Element wielokrotny upload
  */
 class MultiUpload extends MultiField implements UploaderElementInterface
 {
-    //pliki js i css
+    private const FILE_ELEMENT_NAME   = 'file';
     private const MULTIUPLOAD_CSS_URL = '/resource/cmsAdmin/css/multiupload.css';
     private const MULTIUPLOAD_JS_URL  = '/resource/cmsAdmin/js/multiupload.js';
     private const ICONS_URL           = '/resource/cmsAdmin/images/upload/';
@@ -41,13 +40,7 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         parent::__construct($name);
         $this
             ->addClass('multiupload')
-            ->addElement(new Hidden('file'))
-            ->addElement(
-                (new Text('filename'))
-                    ->setLabel('Nazwa pliku')
-                    ->setRequired()
-                    ->addValidator(new NotEmpty())
-            );
+            ->addElement(new Hidden(self::FILE_ELEMENT_NAME));
     }
 
     /**
@@ -114,7 +107,7 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         $html = '<li class="field-list-item border mb-3 p-3">
             <div class="icons">
                 <a href="#" class="btn-toggle" role="button">
-                    <i class="fa fa-angle-down fa-2"></i>
+                    <i class="fa fa-angle-down fa-6"></i>
                 </a>
             </div>
             <div class="thumb">
@@ -132,7 +125,7 @@ class MultiUpload extends MultiField implements UploaderElementInterface
                 $element->getValue() ? $element->setChecked() : $element->setChecked(false);
             }
 
-            if ($element instanceof Hidden) {
+            if (self::FILE_ELEMENT_NAME === $element->getBaseName()) {
                 $element->setValue($itemValues[$element->getBaseName()] ?? '{{cmsFileId}}');
             }
 
@@ -164,19 +157,18 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         $this->view->headScript()->appendFile(self::MULTIUPLOAD_JS_URL);
     }
 
-    /**
-     * @return string
-     */
-    protected function jsScript(): string
+    public function beforeFormSave()
     {
-        $listElement = addcslashes($this->renderListElement(), "'");
-        $listType    = $this->getDeclaredName();
+        $values = $this->getValue();
 
-        return <<<html
-            $(document).ready(function() {
-                multifieldListItemTemplate['$listType'] = '$listElement';
-            });
-        html;
+        if (is_array($values)) {
+            foreach ($values as $key => $item) {
+                $values[$key][self::FILE_ELEMENT_NAME] = CmsFileQuery::findLastFileId($item[self::FILE_ELEMENT_NAME] ?? null);
+            }
+            $this->setValue($values);
+        }
+
+        parent::beforeFormSave();
     }
 
     /**
@@ -205,6 +197,8 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         $this->_form->setOption(self::FILES_MOVED_OPTION_PREFIX . $this->getObject(), true);
         //usuwanie z docelowego "worka"
         File::deleteByObject($this->getObject(), $this->getObjectId());
+        //usuwanie niepotrzebnych plikow
+        File::deleteByObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), $this->getFileIds());
         //usuwanie placeholdera
         if (null !== $placeholder = CmsFileQuery::byObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId())
                 ->whereName()->equals(self::PLACEHOLDER_NAME)
@@ -247,5 +241,21 @@ class MultiUpload extends MultiField implements UploaderElementInterface
     {
         $parts = \explode('\\', strtolower($name));
         return substr(end($parts), 0, -6);
+    }
+
+    /**
+     * @return array
+     */
+    private function getFileIds(): array
+    {
+        $ids = [];
+
+        foreach ($this->getValue() ?? [] as $item) {
+            if (isset($item[self::FILE_ELEMENT_NAME])) {
+                $ids[] = $item[self::FILE_ELEMENT_NAME];
+            }
+        }
+
+        return $ids;
     }
 }

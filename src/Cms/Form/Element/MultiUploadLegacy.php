@@ -11,12 +11,30 @@
 namespace Cms\Form\Element;
 
 use Cms\Orm\CmsFileQuery;
+use Mmi\Validator\NotEmpty;
 
 /**
  * Element wielokrotny upload
  */
 class MultiUploadLegacy extends MultiUpload
 {
+    /**
+     * Konstruktor
+     *
+     * @param string $name
+     */
+    public function __construct($name)
+    {
+        parent::__construct($name);
+        $this
+            ->addElement(
+                (new Text('filename'))
+                    ->setLabel('form.multiupload.filename.label')
+                    ->setRequired()
+                    ->addValidator(new NotEmpty())
+            );
+    }
+
     public function getValue(): mixed
     {
         $value = parent::getValue();

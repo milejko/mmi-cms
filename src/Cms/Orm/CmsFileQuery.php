@@ -3,14 +3,18 @@
 namespace Cms\Orm;
 
 //<editor-fold defaultstate="collapsed" desc="CmsFileQuery">
+use Mmi\Orm\OrmException;
+use Mmi\Orm\Query;
+use Mmi\Orm\Record;
+
 /**
  * @method CmsFileQuery limit($limit = null)
  * @method CmsFileQuery offset($offset = null)
  * @method CmsFileQuery orderAsc($fieldName, $tableName = null)
  * @method CmsFileQuery orderDesc($fieldName, $tableName = null)
- * @method CmsFileQuery andQuery(\Mmi\Orm\Query $query)
- * @method CmsFileQuery whereQuery(\Mmi\Orm\Query $query)
- * @method CmsFileQuery orQuery(\Mmi\Orm\Query $query)
+ * @method CmsFileQuery andQuery(Query $query)
+ * @method CmsFileQuery whereQuery(Query $query)
+ * @method CmsFileQuery orQuery(Query $query)
  * @method CmsFileQuery resetOrder()
  * @method CmsFileQuery resetWhere()
  * @method QueryHelper\CmsFileQueryField whereId()
@@ -113,7 +117,7 @@ namespace Cms\Orm;
  * @method CmsFileRecord findPk($value)
  */
 //</editor-fold>
-class CmsFileQuery extends \Mmi\Orm\Query
+class CmsFileQuery extends Query
 {
 
     protected $_tableName = 'cms_file';
@@ -182,4 +186,32 @@ class CmsFileQuery extends \Mmi\Orm\Query
                 ->whereClass()->notEquals('image');
     }
 
+    /**
+     * Szuka id najnowszego pliku
+     * @param $id
+     * @return string|null
+     */
+    public static function findLastFileId($id)
+    {
+        $record = (new self())
+            ->where('id')
+            ->equals($id)
+            ->findFirst();
+
+        if (!$record instanceof CmsFileRecord) {
+            return null;
+        }
+
+        $record = (new self())
+            ->where('name')
+            ->equals($record->name)
+            ->orderDescId()
+            ->findFirst();
+
+        if (!$record instanceof CmsFileRecord) {
+            return null;
+        }
+
+        return $record->id;
+    }
 }

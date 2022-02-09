@@ -57,17 +57,16 @@ function multiuploadLoadThumb(sourceInput) {
             data: {
                 "cmsFileId": parseInt(sourceInput.attr('value'))
             }
-        })
-            .done(function (response) {
-                let thumb = $(sourceInput).closest('.field-list-item').find('.thumb img');
-                if ('undefined' !== typeof response.thumb) {
-                    $(thumb).attr('src', response.thumb);
-                }
-                if ('undefined' !== typeof response.class) {
-                    $(thumb).attr('src', uploader.data('icons-url') + response.class + '.svg');
-                    $(thumb).addClass('file-icon');
-                }
-            });
+        }).done(function (response) {
+            let thumb = $(sourceInput).closest('.field-list-item').find('.thumb img');
+            if ('undefined' !== typeof response.thumb) {
+                $(thumb).attr('src', response.thumb);
+            }
+            if ('undefined' !== typeof response.class) {
+                $(thumb).attr('src', uploader.data('icons-url') + response.class + '.svg');
+                $(thumb).addClass('file-icon');
+            }
+        });
     }
 }
 
@@ -119,7 +118,7 @@ function multiuploadInitAdd(containerId) {
 
             reader.readAsArrayBuffer(blob);
             reader.onload = function (e) {
-                let chunk = blob
+                let chunk = blob;
                 let formData = new FormData();
 
                 formData.append('name', file.name);
@@ -141,42 +140,41 @@ function multiuploadInitAdd(containerId) {
                     processData: false,
                     contentType: false,
                     data: formData
-                })
-                    .done(function (response) {
-                        cmsFileId = response.cmsFileId;
-                        loaded += chunkSize;
-                        partsLoaded += 1;
+                }).done(function (response) {
+                    cmsFileId = response.cmsFileId;
+                    loaded += chunkSize;
+                    partsLoaded += 1;
 
-                        if (filesTotal === 1) {
-                            multiuploadUpdateProgress(containerId, loaded / total * 100);
+                    if (filesTotal === 1) {
+                        multiuploadUpdateProgress(containerId, loaded / total * 100);
+                    }
+
+                    if (loaded <= total) {
+                        blob = file.slice(loaded, loaded + chunkSize);
+                        reader.readAsArrayBuffer(blob);
+                    } else {
+                        filesCompleted += 1;
+                        multiuploadUpdateProgress(containerId, filesCompleted / filesTotal * 100);
+
+                        $(list).append(
+                            multifieldListItemTemplate[template]
+                                .replaceAll('**', $(list).children().length)
+                                .replaceAll('##', $(list).parents('.field-list-item').last().index())
+                                .replaceAll('{{cmsFileId}}', response.cmsFileId)
+                        );
+                        let newItem = $(list).children('.field-list-item').last();
+                        newItem.find('.select2').select2();
+                        multifieldInitContainer(containerId);
+                        multiuploadInitContainer(containerId);
+                        multifieldToggleActive(newItem);
+
+                        if (filesCompleted === filesTotal) {
+                            setTimeout(function () {
+                                uploadBar.removeClass('active');
+                            }, 200);
                         }
-
-                        if (loaded <= total) {
-                            blob = file.slice(loaded, loaded + chunkSize);
-                            reader.readAsArrayBuffer(blob);
-                        } else {
-                            filesCompleted += 1;
-                            multiuploadUpdateProgress(containerId, filesCompleted / filesTotal * 100);
-
-                            $(list).append(
-                                multifieldListItemTemplate[template]
-                                    .replaceAll('**', $(list).children().length)
-                                    .replaceAll('##', $(list).parents('.field-list-item').last().index())
-                                    .replaceAll('{{cmsFileId}}', response.cmsFileId)
-                            );
-                            let newItem = $(list).children('.field-list-item').last();
-                            newItem.find('.select2').select2();
-                            multifieldInitContainer(containerId);
-                            multiuploadInitContainer(containerId);
-                            multifieldToggleActive(newItem);
-
-                            if (filesCompleted === filesTotal) {
-                                setTimeout(function () {
-                                    uploadBar.removeClass('active');
-                                }, 200);
-                            }
-                        }
-                    });
+                    }
+                });
             };
         });
     });

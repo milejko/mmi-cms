@@ -115,6 +115,13 @@ $(document).ready(function ($) {
         e.preventDefault();
     });
 
+    /* ---------- Scroll to first error ---------- */
+    const errorElement = $('.form-control-feedback.ne-error-list ul:first');
+    if (errorElement.length) {
+        $('html, body').animate({
+            scrollTop: errorElement.parents('.form-group').offset().top - 100
+        }, 500);
+    }
 });
 
 /****
