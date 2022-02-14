@@ -18,6 +18,7 @@ use Mmi\Form\Form;
  */
 class MultiField extends ElementAbstract
 {
+    public const IS_ACTIVE = 'isActive';
     //szablon początku pola
     public const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
     //szablon opisu
@@ -67,7 +68,7 @@ class MultiField extends ElementAbstract
             ->addClass('form-control')
             ->addClass('multifield')
             ->addElement(
-                (new Checkbox('isActive'))
+                (new Checkbox(self::IS_ACTIVE))
                     ->setLabel('form.multifield.active.label')
                     ->setValue(1)
             );

@@ -203,8 +203,7 @@ class CmsFileQuery extends Query
         }
 
         $record = (new self())
-            ->where('name')
-            ->equals($record->name)
+            ->whereName()->equals($record->name)
             ->orderDescId()
             ->findFirst();
 

@@ -18,6 +18,8 @@ use Mmi\Validator\NotEmpty;
  */
 class MultiUploadLegacy extends MultiUpload
 {
+    private const FILENAME_ELEMENT_NAME = 'filename';
+
     /**
      * Konstruktor
      *
@@ -28,7 +30,7 @@ class MultiUploadLegacy extends MultiUpload
         parent::__construct($name);
         $this
             ->addElement(
-                (new Text('filename'))
+                (new Text(self::FILENAME_ELEMENT_NAME))
                     ->setLabel('form.multiupload.filename.label')
                     ->setRequired()
                     ->addValidator(new NotEmpty())
@@ -66,9 +68,9 @@ class MultiUploadLegacy extends MultiUpload
                 foreach ($records as $record) {
                     $imprints    = $record->data->toArray();
                     $recordArray = [
-                        'file'     => $record->id,
-                        'isActive' => $record->active,
-                        'filename' => $record->name,
+                        self::FILE_ELEMENT_NAME     => $record->id,
+                        self::IS_ACTIVE             => $record->active,
+                        self::FILENAME_ELEMENT_NAME => $record->name,
                     ];
 
                     $value[] = array_merge($recordArray, $imprints);

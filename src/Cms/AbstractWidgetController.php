@@ -121,8 +121,9 @@ abstract class AbstractWidgetController extends Controller
      */
     protected function getAttachmentData(CmsFileRecord $fileRecord): AttachmentData
     {
-        $to                             = new AttachmentData;
+        $to                             = new AttachmentData();
         $to->attributes                 = $fileRecord->data->toArray();
+        $to->id                         = $fileRecord->id;
         $to->name                       = $fileRecord->original;
         $to->size                       = $fileRecord->size;
         $to->mimeType                   = $fileRecord->mimeType;

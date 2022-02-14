@@ -22,7 +22,7 @@ use Mmi\Http\Request;
  */
 class MultiUpload extends MultiField implements UploaderElementInterface
 {
-    private const FILE_ELEMENT_NAME   = 'file';
+    public const FILE_ELEMENT_NAME    = 'file';
     private const MULTIUPLOAD_CSS_URL = '/resource/cmsAdmin/css/multiupload.css';
     private const MULTIUPLOAD_JS_URL  = '/resource/cmsAdmin/js/multiupload.js';
     private const ICONS_URL           = '/resource/cmsAdmin/images/upload/';
