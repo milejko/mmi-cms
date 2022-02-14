@@ -7,6 +7,7 @@ namespace Cms\Api;
  */
 class AttachmentData implements DataInterface
 {
+    public string   $id;
     public string   $name;
     public string   $size;
     public string   $mimeType;
