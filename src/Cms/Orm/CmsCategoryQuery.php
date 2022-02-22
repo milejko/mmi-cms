@@ -188,13 +188,14 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
      * @param string $uri
      * @return \Cms\Orm\CmsCategoryRecord
      */
-    public function getCategoryByUri($uri)
+    public function getCategoryByUri(string $uri, string $scope)
     {
         $redirectCategory = null;
         //iteracja po kategoriach
         foreach ((new CmsCategoryQuery())
             ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
             ->andFieldActive()->equals(true)
+            ->andFieldTemplate()->like($scope . '%')
             ->andQuery((new CmsCategoryQuery())->searchByUri($uri))
             ->find() as $category) {
             //kategoria jest przekierowaniem

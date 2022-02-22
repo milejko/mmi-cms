@@ -66,7 +66,7 @@ class CategoryController extends \Mmi\Mvc\Controller
     public function dispatchAction(Request $request)
     {
         //pobranie kategorii
-        $category = $this->_getPublishedCategoryByUri($request->uri);
+        $category = $this->_getPublishedCategoryByUri($request->uri, (string) $request->scope);
         //renderowanie docelowej akcji
         $html = $this->_renderHtml($category, $request);
         //zwrot html
@@ -116,14 +116,14 @@ class CategoryController extends \Mmi\Mvc\Controller
      * @return CmsCategoryRecord
      * @throws \Mmi\Mvc\MvcNotFoundException
      */
-    protected function _getPublishedCategoryByUri($uri)
+    protected function _getPublishedCategoryByUri($uri, $scope)
     {
         //inicjalizacja zmiennej
         $category = null;
         //próba mapowania uri na ID kategorii z cache
         if (null === $categoryId = $this->cache->load($cacheKey = CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($uri))) {
             //próba pobrania kategorii po URI
-            if (null === $category = (new Orm\CmsCategoryQuery)->getCategoryByUri($uri)) {
+            if (null === $category = (new Orm\CmsCategoryQuery)->getCategoryByUri($uri, $scope)) {
                 //zapis informacji o braku kategorii w cache
                 $this->cache->save(false, $cacheKey, 0);
                 //301 (o ile możliwe) lub 404

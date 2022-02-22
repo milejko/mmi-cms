@@ -128,10 +128,11 @@ class ApiController extends \Mmi\Mvc\Controller
     {
         //inicjalizacja zmiennej
         $category = null;
+        print_r($request->scope);
         //próba mapowania uri na ID kategorii z cache
-        if (null === $categoryId = $this->cache->load($cacheKey = CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($request->uri))) {
+        if (null === $categoryId = $this->cache->load($cacheKey = CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($request->scope . $request->uri))) {
             //próba pobrania kategorii po URI
-            if (null === $category = (new Orm\CmsCategoryQuery)->getCategoryByUri($request->uri)) {
+            if (null === $category = (new Orm\CmsCategoryQuery)->getCategoryByUri($request->uri, $request->scope)) {
                 //zapis informacji o braku kategorii w cache
                 $this->cache->save(false, $cacheKey, 0);
                 //301 (o ile możliwe) lub 404
