@@ -122,7 +122,7 @@ class MultiUpload extends MultiField implements UploaderElementInterface
             $element->setErrors($this->_elementErrors[$index][$element->getBaseName()] ?? []);
 
             if ($element instanceof Checkbox) {
-                $element->getValue() ? $element->setChecked() : $element->setChecked(false);
+                $element->setChecked($element->getValue());
             }
 
             if (self::FILE_ELEMENT_NAME === $element->getBaseName()) {
