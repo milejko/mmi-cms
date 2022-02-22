@@ -30,8 +30,8 @@ class MultiField extends ElementAbstract
     //szablon etykiety
     public const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
     //pliki js i css
-    protected const JQUERY_URL         = '/resource/cmsAdmin/js/jquery/jquery.js';
-    protected const MULTIFIELD_JS_URL  = '/resource/cmsAdmin/js/multifield.js';
+    protected const JQUERY_URL = '/resource/cmsAdmin/js/jquery/jquery.js';
+    protected const MULTIFIELD_JS_URL = '/resource/cmsAdmin/js/multifield.js';
     protected const MULTIFIELD_CSS_URL = '/resource/cmsAdmin/css/multifield.css';
 
     /**
@@ -70,7 +70,6 @@ class MultiField extends ElementAbstract
             ->addElement(
                 (new Checkbox(self::IS_ACTIVE))
                     ->setLabel('form.multifield.active.label')
-                    ->setValue(1)
             );
     }
 
@@ -143,9 +142,9 @@ class MultiField extends ElementAbstract
     }
 
     /**
-     * @param int   $index
+     * @param int $index
      * @param array $itemValues
-     * @param bool  $result
+     * @param bool $result
      */
     protected function validateItem(int $index, array $itemValues, bool &$result, ?int $parentIndex = null): void
     {
@@ -171,7 +170,7 @@ class MultiField extends ElementAbstract
     /**
      * @param Multifield $element
      * @param array|null $value
-     * @param bool       $result
+     * @param bool $result
      */
     private function validateMultifieldElement(Multifield $element, ?array $value, bool &$result, int $parentIndex): void
     {
@@ -183,11 +182,11 @@ class MultiField extends ElementAbstract
     }
 
     /**
-     * @param int             $index
+     * @param int $index
      * @param ElementAbstract $element
      * @param                 $value
-     * @param bool            $result
-     * @param int|null        $parentIndex
+     * @param bool $result
+     * @param int|null $parentIndex
      */
     protected function validateElement(int $index, ElementAbstract $element, $value, bool &$result, ?int $parentIndex = null): void
     {
@@ -285,7 +284,7 @@ class MultiField extends ElementAbstract
      * Renderer pol formularza
      *
      * @param array|null $itemValues
-     * @param string     $index
+     * @param string $index
      *
      * @return string
      */
@@ -315,7 +314,7 @@ class MultiField extends ElementAbstract
             }
 
             if ($element instanceof Checkbox) {
-                null !== $element->getValue() && false !== $element->getValue() ? $element->setChecked() : $element->setChecked(false);
+                $element->setChecked((bool)$element->getValue());
             }
 
             $html .= $element->__toString();
@@ -344,7 +343,7 @@ class MultiField extends ElementAbstract
     protected function jsScript(): string
     {
         $listElement = addcslashes($this->renderListElement(), "'");
-        $listType    = $this->getDeclaredName();
+        $listType = $this->getDeclaredName();
 
         return <<<html
             $(document).ready(function() {
@@ -363,5 +362,26 @@ class MultiField extends ElementAbstract
         }
 
         return $name;
+    }
+
+    /**
+     * @param mixed $value
+     * @return $this
+     */
+    public function setValue($value): self
+    {
+        if (!is_array($value)) {
+            return parent::setValue(null);
+        }
+
+        foreach ($value as $key => $itemValues) {
+            foreach ($this->getElements() as $element) {
+                if ($element instanceof Checkbox) {
+                    $value[$key][$element->getBaseName()] = (bool)($value[$key][$element->getBaseName()] ?? false);
+                }
+            }
+        }
+
+        return parent::setValue($value);
     }
 }
