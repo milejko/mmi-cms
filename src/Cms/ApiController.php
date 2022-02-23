@@ -132,9 +132,12 @@ class ApiController extends \Mmi\Mvc\Controller
                 //zapis informacji o braku kategorii
                 $this->cache->save(false, $cacheKey, 0);    
             }
-            //zapis pobranej kategorii w cache i mapowania uri->id
-            $this->cache->save($categoryRecord, $cacheKey, 0);
-            $this->cache->save($categoryRecord->id, CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($categoryRecord->getScope() . $categoryRecord->getUri()));
+            //jeśli znaleziony rekord
+            if ($categoryRecord) {
+                //zapis pobranej kategorii w cache i mapowania uri->id
+                $this->cache->save($categoryRecord, $cacheKey, 0);
+                $this->cache->save($categoryRecord->id, CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($categoryRecord->getScope() . $categoryRecord->getUri()));
+            }
         }
         //brak kategorii lub szablonu
         if (!$categoryRecord || $categoryRecord->template == $categoryRecord->getScope()) {
@@ -145,6 +148,7 @@ class ApiController extends \Mmi\Mvc\Controller
                 ->setCode($errorTransport->getCode())
                 ->setContent($errorTransport->toString());
         }
+        //obiekt transportowy
         $redirectTransportObject = new RedirectTransport(self::API_PREFIX . $categoryRecord->getScope() . '/' . $categoryRecord->getUri());
         return $this->getResponse()->setTypeJson()
             ->setCode($redirectTransportObject->getCode())
