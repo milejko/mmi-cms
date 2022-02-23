@@ -561,11 +561,22 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     }
 
     /**
+     * Pobiera scope
+     */
+    public function getScope(): string
+    {
+        if (false === $slashPosition = strpos($this->template, '/')) {
+            return $this->template;
+        }
+        return substr($this->template, 0, $slashPosition);
+    }
+
+    /**
      * Usuwa cache
      */
     public function clearCache()
     {
-        $scope = substr($this->template, 0, strpos($this->template, '/'));
+        $scope = $this->getScope();
         //usuwanie cache
         $cache = App::$di->get(CacheInterface::class);
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($this->uri));

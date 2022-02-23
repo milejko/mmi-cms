@@ -119,6 +119,38 @@ class ApiController extends \Mmi\Mvc\Controller
     }
 
     /**
+     * Akcja przekierowania ID na scope/uri
+     */
+    public function redirectIdAction(Request $request)
+    {
+        $this->getResponse()->setTypeJson();
+        $cacheKey = CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $request->id;
+        //wyszukiwanie kategorii w cache
+        if (null === $categoryRecord = $this->cache->load($cacheKey)) {
+            //wyszukiwanie kategorii w db
+            if (null === $categoryRecord = (new CmsCategoryQuery())->publishedActive()->findPk($request->id)) {
+                //zapis informacji o braku kategorii
+                $this->cache->save(false, $cacheKey, 0);    
+            }
+            //zapis pobranej kategorii w cache
+            $this->cache->save($categoryRecord, $cacheKey, 0);
+        }
+        //brak kategorii lub szablonu
+        if (!$categoryRecord || $categoryRecord->template == $categoryRecord->getScope()) {
+            $errorTransport = (new ErrorTransport)
+                ->setMessage('Page not found')
+                ->setCode(ErrorTransport::CODE_NOT_FOUND);
+            return $this->getResponse()->setTypeJson()
+                ->setCode($errorTransport->getCode())
+                ->setContent($errorTransport->toString());
+        }
+        $redirectTransportObject = new RedirectTransport(self::API_PREFIX . $categoryRecord->getScope() . '/' . ($categoryRecord->customUri ? $categoryRecord->customUri : $categoryRecord->uri));
+        return $this->getResponse()->setTypeJson()
+            ->setCode($redirectTransportObject->getCode())
+            ->setContent($redirectTransportObject->toString());
+    }
+
+    /**
      * Pobiera opublikowaną kategorię po uri
      * @param string $uri
      * @return CmsCategoryRecord
