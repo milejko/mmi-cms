@@ -119,7 +119,7 @@ class ApiController extends \Mmi\Mvc\Controller
     }
 
     /**
-     * Akcja przekierowania ID na scope/uri
+     * Akcja przekierowania z ID na scope/uri
      */
     public function redirectIdAction(Request $request)
     {
@@ -132,8 +132,9 @@ class ApiController extends \Mmi\Mvc\Controller
                 //zapis informacji o braku kategorii
                 $this->cache->save(false, $cacheKey, 0);    
             }
-            //zapis pobranej kategorii w cache
+            //zapis pobranej kategorii w cache i mapowania uri->id
             $this->cache->save($categoryRecord, $cacheKey, 0);
+            $this->cache->save($categoryRecord->id, CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($categoryRecord->getScope() . $categoryRecord->getUri()));
         }
         //brak kategorii lub szablonu
         if (!$categoryRecord || $categoryRecord->template == $categoryRecord->getScope()) {
@@ -144,7 +145,7 @@ class ApiController extends \Mmi\Mvc\Controller
                 ->setCode($errorTransport->getCode())
                 ->setContent($errorTransport->toString());
         }
-        $redirectTransportObject = new RedirectTransport(self::API_PREFIX . $categoryRecord->getScope() . '/' . ($categoryRecord->customUri ? $categoryRecord->customUri : $categoryRecord->uri));
+        $redirectTransportObject = new RedirectTransport(self::API_PREFIX . $categoryRecord->getScope() . '/' . $categoryRecord->getUri());
         return $this->getResponse()->setTypeJson()
             ->setCode($redirectTransportObject->getCode())
             ->setContent($redirectTransportObject->toString());

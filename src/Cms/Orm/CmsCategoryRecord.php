@@ -380,7 +380,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     public function getUrl($https = null)
     {
         //pobranie linku z widoku
-        return App::$di->get(View::class)->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->customUri ? $this->customUri : $this->uri], true, $https);
+        return App::$di->get(View::class)->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->getUri()], true, $https);
     }
 
     /**
@@ -490,6 +490,25 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     }
 
     /**
+     * Pobiera uri (z uwzględnieniem custom uri)
+     */
+    public function getUri(): string
+    {
+        return $this->customUri ? $this->customUri : $this->uri;
+    }
+
+    /**
+     * Pobiera scope
+     */
+    public function getScope(): string
+    {
+        if (false === $slashPosition = strpos($this->template, '/')) {
+            return $this->template;
+        }
+        return substr($this->template, 0, $slashPosition);
+    }
+
+    /**
      * Przebudowuje dzieci (wywołuje save)
      * @param integer $parentId rodzic
      */
@@ -558,17 +577,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             //prosty zapis
             $categoryRecord->simpleUpdate();
         }
-    }
-
-    /**
-     * Pobiera scope
-     */
-    public function getScope(): string
-    {
-        if (false === $slashPosition = strpos($this->template, '/')) {
-            return $this->template;
-        }
-        return substr($this->template, 0, $slashPosition);
     }
 
     /**
