@@ -119,6 +119,43 @@ class ApiController extends \Mmi\Mvc\Controller
     }
 
     /**
+     * Akcja przekierowania z ID na scope/uri
+     */
+    public function redirectIdAction(Request $request)
+    {
+        $this->getResponse()->setTypeJson();
+        $cacheKey = CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $request->id;
+        //wyszukiwanie kategorii w cache
+        if (null === $categoryRecord = $this->cache->load($cacheKey)) {
+            //wyszukiwanie kategorii w db
+            if (null === $categoryRecord = (new CmsCategoryQuery())->publishedActive()->findPk($request->id)) {
+                //zapis informacji o braku kategorii
+                $this->cache->save(false, $cacheKey, 0);    
+            }
+            //jeśli znaleziony rekord
+            if ($categoryRecord) {
+                //zapis pobranej kategorii w cache i mapowania uri->id
+                $this->cache->save($categoryRecord, $cacheKey, 0);
+                $this->cache->save($categoryRecord->id, CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($categoryRecord->getScope() . $categoryRecord->getUri()));
+            }
+        }
+        //brak kategorii lub szablonu
+        if (!$categoryRecord || $categoryRecord->template == $categoryRecord->getScope()) {
+            $errorTransport = (new ErrorTransport)
+                ->setMessage('Page not found')
+                ->setCode(ErrorTransport::CODE_NOT_FOUND);
+            return $this->getResponse()->setTypeJson()
+                ->setCode($errorTransport->getCode())
+                ->setContent($errorTransport->toString());
+        }
+        //obiekt transportowy
+        $redirectTransportObject = new RedirectTransport(self::API_PREFIX . $categoryRecord->getScope() . '/' . $categoryRecord->getUri());
+        return $this->getResponse()->setTypeJson()
+            ->setCode($redirectTransportObject->getCode())
+            ->setContent($redirectTransportObject->toString());
+    }
+
+    /**
      * Pobiera opublikowaną kategorię po uri
      * @param string $uri
      * @return CmsCategoryRecord

@@ -184,6 +184,16 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
     }
 
     /**
+     * Zapytanie o aktywne opublikowane
+     */
+    public function publishedActive(): self
+    {
+        return $this
+            ->whereStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
+            ->whereActive()->equals(true);
+    }
+
+    /**
      * Wyszukuje kategorię po uri z uwzględnieniem priorytetu
      * @param string $uri
      * @return \Cms\Orm\CmsCategoryRecord
