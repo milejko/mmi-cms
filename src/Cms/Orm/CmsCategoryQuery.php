@@ -226,11 +226,12 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
      * @param string $uri
      * @return self
      */
-    public function byHistoryUri($uri)
+    public function byHistoryUri(string $uri, string $scope)
     {
         return (new self)
             ->whereActive()->equals(true)
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
+            ->whereTemplate()->like($scope . '%')
             ->join('cms_category', 'cms_category', 'currentCategory')->on('id', 'cms_category_original_id')
             ->where('status', 'currentCategory')->notEquals(CmsCategoryRecord::STATUS_ACTIVE)
             ->where('active', 'currentCategory')->equals(true)

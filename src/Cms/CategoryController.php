@@ -127,7 +127,7 @@ class CategoryController extends \Mmi\Mvc\Controller
                 //zapis informacji o braku kategorii w cache
                 $this->cache->save(false, $cacheKey, 0);
                 //301 (o ile możliwe) lub 404
-                $this->_redirectOrNotFound($uri);
+                $this->_redirectOrNotFound($uri, $scope);
             }
             //id kategorii
             $categoryId = $category->id;
@@ -137,7 +137,7 @@ class CategoryController extends \Mmi\Mvc\Controller
         //w buforze jest informacja o braku strony
         if (false === $categoryId) {
             //301 (o ile możliwe) lub 404
-            $this->_redirectOrNotFound($uri);
+            $this->_redirectOrNotFound($uri, $scope);
         }
         //kategoria
         if ($category) {
@@ -241,25 +241,25 @@ class CategoryController extends \Mmi\Mvc\Controller
      * @throws \Exception
      * @throws \Mmi\Mvc\MvcNotFoundException
      */
-    protected function _redirectOrNotFound($uri)
+    protected function _redirectOrNotFound(string $uri, string $scope)
     {
         //klucz bufora
-        $cacheKey = CmsCategoryRecord::REDIRECT_CACHE_PREFIX . md5($uri);
+        $cacheKey = CmsCategoryRecord::REDIRECT_CACHE_PREFIX . md5($scope . $uri);
         //zbuforowany brak uri w historii
         if (false === ($redirectUri = $this->cache->load($cacheKey))) {
             //404
-            throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
+            throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $scope . '/' . $uri);
         }
         //przekierowanie 301
         if (null !== $redirectUri) {
             return $this->getResponse()->setCode(301)->redirect('cms', 'category', 'dispatch', ['uri' => $redirectUri]);
         }
         //wyszukiwanie bieżącej kategorii (aktywnej)
-        if (null === $category = (new CmsCategoryQuery)->byHistoryUri($uri)->findFirst()) {
+        if (null === $category = (new CmsCategoryQuery)->byHistoryUri($uri, $scope)->findFirst()) {
             //brak kategorii w historii - buforowanie informacji
             $this->cache->save(false, $cacheKey, 0);
             //404
-            throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $uri);
+            throw new \Mmi\Mvc\MvcNotFoundException('Category not found: ' . $scope . '/' . $uri);
         }
         //zapis uri przekierowania do bufora
         $this->cache->save($category->uri, $cacheKey, 0);

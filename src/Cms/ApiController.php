@@ -239,8 +239,7 @@ class ApiController extends \Mmi\Mvc\Controller
         }
         //wyszukiwanie bieżącej kategorii (aktywnej)
         if (null === $category = (new CmsCategoryQuery())
-            ->whereTemplate()->like($scope . '%')
-            ->byHistoryUri($uri)->findFirst()) {
+            ->byHistoryUri($uri, $scope)->findFirst()) {
             //brak kategorii w historii - buforowanie informacji
             $this->cache->save(false, $cacheKey, 0);
             //404
