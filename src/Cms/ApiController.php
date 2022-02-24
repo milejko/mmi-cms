@@ -205,11 +205,10 @@ class ApiController extends \Mmi\Mvc\Controller
             return new RedirectTransport($category->redirectUri);
         }
         //kategoria posiada customUri, a wejście jest na natywny uri
-        if ($category->customUri && $this->uri != $category->customUri && $this->uri == $category->uri) {
+        if ($category->customUri && $request->uri != $category->customUri && $request->uri == $category->uri) {
             //przekierowanie na customUri
             return new RedirectTransport(self::API_PREFIX . $request->scope . '/' . $category->customUri);
         }
-
         //ładowanie obiektu transportowego z bufora
         if (null === $transportObject = $this->cache->load($cacheKey = CmsCategoryRecord::CATEGORY_CACHE_TRANSPORT_PREFIX . $category->id)) {
             //generowanie obiektu transportowego i zapis do cache

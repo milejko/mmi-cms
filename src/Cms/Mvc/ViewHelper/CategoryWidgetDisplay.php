@@ -23,7 +23,7 @@ class CategoryWidgetDisplay extends \Mmi\Mvc\ViewHelper\HelperAbstract
 {
 
     /**
-     * @var Cache
+     * @var CacheInterface
      */
     private $cache;
 
