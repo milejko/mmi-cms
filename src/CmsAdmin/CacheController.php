@@ -10,7 +10,7 @@
 
 namespace CmsAdmin;
 
-use Mmi\Cache\Cache;
+use Mmi\Cache\CacheInterface;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 
@@ -22,9 +22,8 @@ class CacheController extends Controller
 
     /**
      * @Inject
-     * @var Cache
      */
-    private $cache;
+    private CacheInterface $cache;
 
     /**
      * Czyści cały cache
