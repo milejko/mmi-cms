@@ -12,6 +12,7 @@ namespace CmsAdmin\Form;
 
 use Cms\Form\Element;
 use Cms\Form\Form;
+use Cms\Orm\CmsCategoryQuery;
 use Mmi\Validator;
 use Mmi\Filter;
 use Cms\Orm\CmsCategoryRecord;
@@ -158,6 +159,12 @@ class CategoryForm extends Form
     {
         //jeśli czegoś nie uddało się zapisać wcześniej
         if (!parent::afterSave()) {
+            return false;
+        }
+        //weryfikacja unikalnosci uri
+        if ($this->getRecord()->active && (new CmsCategoryQuery())->isSimilarActivePage($this->getRecord()->getUri(), $this->getRecord()->getScope(), $this->getRecord()->cmsCategoryOriginalId)
+        ) {
+            $this->getElement('active')->addError('form.category.active.error');
             return false;
         }
         //commit wersji

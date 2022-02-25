@@ -4,6 +4,7 @@ namespace Cms\Orm;
 
 use Mmi\App\App;
 use Mmi\Http\Request;
+use Mmi\Orm\Query;
 
 //<editor-fold defaultstate="collapsed" desc="CmsCategoryQuery">
 /**
@@ -11,9 +12,9 @@ use Mmi\Http\Request;
  * @method CmsCategoryQuery offset($offset = null)
  * @method CmsCategoryQuery orderAsc($fieldName, $tableName = null)
  * @method CmsCategoryQuery orderDesc($fieldName, $tableName = null)
- * @method CmsCategoryQuery andQuery(\Mmi\Orm\Query $query)
- * @method CmsCategoryQuery whereQuery(\Mmi\Orm\Query $query)
- * @method CmsCategoryQuery orQuery(\Mmi\Orm\Query $query)
+ * @method CmsCategoryQuery andQuery(Query $query)
+ * @method CmsCategoryQuery whereQuery(Query $query)
+ * @method CmsCategoryQuery orQuery(Query $query)
  * @method CmsCategoryQuery resetOrder()
  * @method CmsCategoryQuery resetWhere()
  * @method QueryHelper\CmsCategoryQueryField whereId()
@@ -152,7 +153,7 @@ use Mmi\Http\Request;
  * @method CmsCategoryRecord findPk($value)
  */
 //</editor-fold>
-class CmsCategoryQuery extends \Mmi\Orm\Query
+class CmsCategoryQuery extends Query
 {
 
     protected $_tableName = 'cms_category';
@@ -164,12 +165,12 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
     public function lang()
     {
         if (!App::$di->get(Request::class)->lang) {
-            return (new self);
+            return (new self());
         }
         return $this
-                ->whereLang()->equals(App::$di->get(Request::class)->lang)
-                ->orFieldLang()->equals(null)
-                ->orderDescLang();
+            ->whereLang()->equals(App::$di->get(Request::class)->lang)
+            ->orFieldLang()->equals(null)
+            ->orderDescLang();
     }
 
     /**
@@ -180,7 +181,7 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
     public function searchByUri($uri)
     {
         return $this->whereUri()->equals($uri)
-                ->orFieldCustomUri()->equals($uri);
+            ->orFieldCustomUri()->equals($uri);
     }
 
     /**
@@ -196,18 +197,20 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
     /**
      * Wyszukuje kategorię po uri z uwzględnieniem priorytetu
      * @param string $uri
-     * @return \Cms\Orm\CmsCategoryRecord
+     * @return CmsCategoryRecord
      */
     public function getCategoryByUri(string $uri, string $scope)
     {
         $redirectCategory = null;
         //iteracja po kategoriach
-        foreach ((new CmsCategoryQuery())
-            ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
-            ->andFieldActive()->equals(true)
-            ->andFieldTemplate()->like($scope . '%')
-            ->andQuery((new CmsCategoryQuery())->searchByUri($uri))
-            ->find() as $category) {
+        foreach (
+            (new self())
+                ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
+                ->andFieldActive()->equals(true)
+                ->andFieldTemplate()->like($scope . '%')
+                ->andQuery((new CmsCategoryQuery())->searchByUri($uri))
+                ->find() as $category
+        ) {
             //kategoria jest przekierowaniem
             if ($category->redirectUri) {
                 //używane jest pierwsze znalezione przekierowanie
@@ -228,17 +231,42 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
      */
     public function byHistoryUri(string $uri, string $scope)
     {
-        return (new self)
+        return (new self())
             ->whereActive()->equals(true)
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
             ->whereTemplate()->like($scope . '%')
             ->join('cms_category', 'cms_category', 'currentCategory')->on('id', 'cms_category_original_id')
             ->where('status', 'currentCategory')->notEquals(CmsCategoryRecord::STATUS_ACTIVE)
             ->where('active', 'currentCategory')->equals(true)
-            ->whereQuery((new Self)
-                ->where('uri', 'currentCategory')->equals($uri)
-                ->orField('customUri', 'currentCategory')->equals($uri)
+            ->whereQuery(
+                (new self())
+                    ->where('uri', 'currentCategory')->equals($uri)
+                    ->orField('customUri', 'currentCategory')->equals($uri)
             );
     }
 
+    /**
+     * Wyszukiwanie, czy jakas strona o danym uri jest juz aktywna
+     * @param string $uri
+     * @param string $scope
+     * @param int|null $ignoreId
+     * @return bool
+     */
+    public function isSimilarActivePage(string $uri, string $scope = null, int $ignoreId = null): bool
+    {
+        $query = (new self())
+            ->whereQuery((new self())->searchByUri($uri))
+            ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
+            ->whereActive()->equals(true);
+
+        if ($scope) {
+            $query->whereTemplate()->like($scope . '/%');
+        }
+
+        if ($ignoreId) {
+            $query->whereId()->notEquals($ignoreId);
+        }
+
+        return $query->count() > 0;
+    }
 }
