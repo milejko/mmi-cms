@@ -204,6 +204,7 @@ class CmsFileQuery extends Query
 
         $record = (new self())
             ->whereName()->equals($record->name)
+            ->whereActive()->equals(true)
             ->orderDescId()
             ->findFirst();
 
