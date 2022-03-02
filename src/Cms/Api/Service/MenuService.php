@@ -108,12 +108,14 @@ class MenuService implements MenuServiceInterface
 
     protected function getFromInfrastructure(?string $scope): array
     {
-        return (new CmsCategoryQuery)
+        $query = (new CmsCategoryQuery)
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
-            ->whereTemplate()->like($scope . '%')
-            //filtering allowed templates
-            ->whereTemplate()->equals((new SkinsetModel($this->cmsSkinsetConfig))->getAllowedTemplateKeysBySkinKey($scope))
-            ->findFields(['id', 'template', 'name', 'uri', 'blank', 'customUri', 'redirectUri', 'path', 'order', 'active']);
+            ->whereTemplate()->like($scope . '%');
+        //scope is defined (filtering templates)        
+        if (null !== $scope) {
+            $query->whereTemplate()->equals((new SkinsetModel($this->cmsSkinsetConfig))->getAllowedTemplateKeysBySkinKey($scope));
+        }
+        return $query->findFields(['id', 'template', 'name', 'uri', 'blank', 'customUri', 'redirectUri', 'path', 'order', 'active']);
     }
 
     protected function getLinks(array $item): array
