@@ -76,7 +76,7 @@ class CategoryController extends Controller
         }
         $this->view->breadcrumbs = \array_reverse($breadcrumbs);
         //model skóry skinset do widoku
-        $this->view->skinset = new SkinsetModel($this->cmsSkinsetConfig);
+        $this->view->skinset = $skinsetModel = new SkinsetModel($this->cmsSkinsetConfig);
         //scope do widoku
         $this->view->scopeName = $this->scopeConfig->getName();
         //znalezione kategorie do widoku
@@ -84,6 +84,7 @@ class CategoryController extends Controller
             ->whereStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
             ->whereParentId()->equals($request->parentId ? $request->parentId : null)
             ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+            ->whereTemplate()->equals($skinsetModel->getAllowedTemplateKeysBySkinKey($this->scopeConfig->getName()))
             ->orderAscOrder()
             ->find();
     }

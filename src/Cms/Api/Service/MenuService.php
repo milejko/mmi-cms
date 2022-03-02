@@ -4,6 +4,8 @@ namespace Cms\Api\Service;
 
 use Cms\Api\LinkData;
 use Cms\ApiController;
+use Cms\App\CmsSkinsetConfig;
+use Cms\Model\SkinsetModel;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use Mmi\Cache\CacheInterface;
@@ -17,11 +19,13 @@ class MenuService implements MenuServiceInterface
     private const PATH_SEPARATOR = '/';
 
     private CacheInterface $cacheService;
+    private CmsSkinsetConfig $cmsSkinsetConfig;
     private array $orderMap = [];
 
-    public function __construct(CacheInterface $cacheService)
+    public function __construct(CacheInterface $cacheService, CmsSkinsetConfig $cmsSkinsetConfig)
     {
         $this->cacheService = $cacheService;
+        $this->cmsSkinsetConfig = $cmsSkinsetConfig;
     }
 
     /**
@@ -107,6 +111,8 @@ class MenuService implements MenuServiceInterface
         return (new CmsCategoryQuery)
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
             ->whereTemplate()->like($scope . '%')
+            //filtering allowed templates
+            ->whereTemplate()->equals((new SkinsetModel($this->cmsSkinsetConfig))->getAllowedTemplateKeysBySkinKey($scope))
             ->findFields(['id', 'template', 'name', 'uri', 'blank', 'customUri', 'redirectUri', 'path', 'order', 'active']);
     }
 

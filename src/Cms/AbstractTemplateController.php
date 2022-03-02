@@ -170,6 +170,7 @@ abstract class AbstractTemplateController extends Controller
     {
         $siblings = [];
         foreach ($this->cmsCategoryRecord->getSiblingsRecords() as $record) {
+            continue;
             if (!$record->active || $record->id === $this->cmsCategoryRecord->id) {
                 continue;
             }

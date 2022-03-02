@@ -209,11 +209,16 @@ class ApiController extends \Mmi\Mvc\Controller
             //przekierowanie na customUri
             return new RedirectTransport(self::API_PREFIX . $request->scope . '/' . $category->customUri);
         }
+        //kategoria posiada niewłaściwy (niewspierany) template
+        if (null === $templateConfig = (new SkinsetModel($this->cmsSkinsetConfig))->getTemplateConfigByKey($category->template)) {
+            return (new ErrorTransport)
+                ->setMessage('Page unsupported')
+                ->setCode(ErrorTransport::CODE_NOT_FOUND);;
+        }
         //ładowanie obiektu transportowego z bufora
         if (null === $transportObject = $this->cache->load($cacheKey = CmsCategoryRecord::CATEGORY_CACHE_TRANSPORT_PREFIX . $category->id)) {
             //generowanie obiektu transportowego i zapis do cache
             $transportObject = (new TemplateModel($category, $this->cmsSkinsetConfig))->getTransportObject($request);
-            $templateConfig = (new SkinsetModel($this->cmsSkinsetConfig))->getTemplateConfigByKey($category->template);
             $this->cache->save($transportObject, $cacheKey, $templateConfig->getCacheLifeTime());
         }
         return $transportObject;

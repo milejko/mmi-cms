@@ -29,6 +29,17 @@ class SkinsetModel
         $this->_skinsetConfig = $skinsetConfig;
     }
 
+    public function getAllowedTemplateKeysBySkinKey(string $key): array {
+        if (null === $skin = $this->getSkinConfigByKey($key)) {
+            return [];
+        }
+        $allowedTemplateKeys = [];
+        foreach ($skin->getTemplates() as $template) {
+            $allowedTemplateKeys[] = $key . self::SEPARATOR . $template->getKey();
+        }
+        return $allowedTemplateKeys;
+    }
+
     /**
      * Zwraca sekcje po szablonie
      * @param string $key
