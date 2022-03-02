@@ -110,6 +110,7 @@ class MenuService implements MenuServiceInterface
     {
         $query = (new CmsCategoryQuery)
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
+            ->whereActive()->equals(true)
             ->whereTemplate()->like($scope . '%');
         //scope is defined (filtering templates)        
         if (null !== $scope) {
