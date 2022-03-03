@@ -102,7 +102,7 @@ class CategoryController extends Controller
         //brak id - tworzenie nowej kategorii
         if (!$request->id) {
             $category = new CmsCategoryRecord();
-            $category->status = CmsCategoryRecord::STATUS_ACTIVE;
+            $category->status = CmsCategoryRecord::STATUS_DRAFT;
             $category->template = $request->template;
             $category->parentId = $request->parentId ? $request->parentId : null;
             $category->cmsAuthId = $this->auth->getId();
@@ -283,7 +283,7 @@ class CategoryController extends Controller
         //model do kopiowania kategorii
         $copyModel = new \Cms\Model\CategoryCopy($category);
         //kopiowanie z transakcją
-        $copyModel->copyWithTransaction() ? 
+        $copyModel->copyWithTransaction() ?
             $this->getMessenger()->addMessage('controller.category.copy.message', true) :
             $this->getMessenger()->addMessage('controller.category.copy.error', false);
         return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
@@ -340,7 +340,7 @@ class CategoryController extends Controller
     protected function _prepareDraft(CmsCategoryRecord $category, Request $request, $originalId)
     {
         //jeśli to nie był DRAFT
-        if (CmsCategoryRecord::STATUS_DRAFT == $category->status) {
+        if (null !== $category->cmsCategoryOriginalId && CmsCategoryRecord::STATUS_DRAFT == $category->status) {
             return;
         }
         //wymuszony świeży draft jeśli informacja przyszła w url, lub kategoria jest z archiwum
