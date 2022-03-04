@@ -196,17 +196,17 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         //ustawianie flagi na formie dla innych uploaderów
         $this->_form->setOption(self::FILES_MOVED_OPTION_PREFIX . $this->getObject(), true);
         //usuwanie z docelowego "worka"
-        File::deleteByObject($this->getObject(), $this->getObjectId());
+        File::deleteByObject($this->getObject(), $this->getObjectId(), $this->getFileIds());
         //usuwanie niepotrzebnych plikow
         File::deleteByObject($this->getUploader(), $this->getUploaderId(), $this->getFileIds());
+        //przenoszenie plikow z tymczasowego "worka" do docelowego
+        File::move($this->getUploader(), $this->getUploaderId(), $this->getObject(), $this->getObjectId());
         //usuwanie placeholdera
         if (null !== $placeholder = CmsFileQuery::byObject($this->getUploader(), $this->getUploaderId())
                 ->whereName()->equals(self::PLACEHOLDER_NAME)
                 ->findFirst()) {
             $placeholder->delete();
         }
-        //przenoszenie plikow z tymczasowego "worka" do docelowego
-        File::move($this->getUploader(), $this->getUploaderId(), $this->getObject(), $this->getObjectId());
         return parent::onFormSaved();
     }
 
