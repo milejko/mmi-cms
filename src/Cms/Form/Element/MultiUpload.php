@@ -84,7 +84,7 @@ class MultiUpload extends MultiField implements UploaderElementInterface
                     data-icons-url="' . self::ICONS_URL . '" 
                     data-current-url="' . self::CURRENT_URL . '" 
                     data-upload-url="' . self::UPLOAD_URL . '"
-                    data-object="' . self::TEMP_OBJECT_PREFIX . $this->getObject() . '"
+                    data-object="' . $this->getUploader() . '"
                     data-object-id="' . $this->getUploaderId() . '"
                     data-file-id="' . $this->getId() . '"
                 >                
@@ -196,17 +196,17 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         //ustawianie flagi na formie dla innych uploaderów
         $this->_form->setOption(self::FILES_MOVED_OPTION_PREFIX . $this->getObject(), true);
         //usuwanie z docelowego "worka"
-        File::deleteByObject($this->getObject(), $this->getObjectId());
+        File::deleteByObject($this->getObject(), $this->getObjectId(), $this->getFileIds());
         //usuwanie niepotrzebnych plikow
-        File::deleteByObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), $this->getFileIds());
+        File::deleteByObject($this->getUploader(), $this->getUploaderId(), $this->getFileIds());
+        //przenoszenie plikow z tymczasowego "worka" do docelowego
+        File::move($this->getUploader(), $this->getUploaderId(), $this->getObject(), $this->getObjectId());
         //usuwanie placeholdera
-        if (null !== $placeholder = CmsFileQuery::byObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId())
+        if (null !== $placeholder = CmsFileQuery::byObject($this->getUploader(), $this->getUploaderId())
                 ->whereName()->equals(self::PLACEHOLDER_NAME)
                 ->findFirst()) {
             $placeholder->delete();
         }
-        //przenoszenie plikow z tymczasowego "worka" do docelowego
-        File::move(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), $this->getObject(), $this->getObjectId());
         return parent::onFormSaved();
     }
 
@@ -218,15 +218,15 @@ class MultiUpload extends MultiField implements UploaderElementInterface
     {
         //jeśli już są pliki tymczasowe, to wychodzimy
         if ((new CmsFileQuery())
-            ->byObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId())
+            ->byObject($this->getUploader(), $this->getUploaderId())
             ->count()) {
             return true;
         }
         //tworzymy pliki tymczasowe - kopie oryginałów
-        File::link($this->getObject(), $this->getObjectId(), self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId());
+        File::link($this->getObject(), $this->getObjectId(), $this->getUploader(), $this->getUploaderId());
         $placeholder = new CmsFileRecord();
         $placeholder->name = self::PLACEHOLDER_NAME;
-        $placeholder->object = self::TEMP_OBJECT_PREFIX . $this->getObject();
+        $placeholder->object = $this->getUploader();
         $placeholder->objectId = $this->getUploaderId();
         $placeholder->save();
         return true;
@@ -257,5 +257,10 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         }
 
         return $ids;
+    }
+
+    private function getUploader(): string
+    {
+        return self::TEMP_OBJECT_PREFIX . $this->getObject();
     }
 }
