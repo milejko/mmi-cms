@@ -17,7 +17,6 @@ use Cms\Api\RedirectTransport;
 use Cms\Api\Service\MenuServiceInterface;
 use Cms\Api\SkinConfigTransport;
 use Cms\Api\SkinData;
-use Cms\Api\SkinsetData;
 use Cms\Api\SkinsetDataTransport;
 use Cms\Api\TransportInterface;
 use Cms\App\CmsSkinNotFoundException;
