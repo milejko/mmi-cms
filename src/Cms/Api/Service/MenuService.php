@@ -114,7 +114,7 @@ class MenuService implements MenuServiceInterface
             ->whereTemplate()->like($scope . '%');
         //scope is defined (filtering templates)        
         if (null !== $scope) {
-            $query->whereTemplate()->equals((new SkinsetModel($this->cmsSkinsetConfig))->getAllowedTemplateKeysBySkinKey($scope));
+            $query->whereTemplate()->equals([$scope => $scope] + (new SkinsetModel($this->cmsSkinsetConfig))->getAllowedTemplateKeysBySkinKey($scope));
         }
         return $query->findFields(['id', 'template', 'name', 'uri', 'blank', 'customUri', 'redirectUri', 'path', 'order', 'active']);
     }

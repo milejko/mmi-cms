@@ -84,7 +84,7 @@ class CategoryController extends Controller
             ->whereStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
             ->whereParentId()->equals($request->parentId ? $request->parentId : null)
             ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-            ->whereTemplate()->equals($skinsetModel->getAllowedTemplateKeysBySkinKey($this->scopeConfig->getName()))
+            ->whereTemplate()->equals([$this->scopeConfig->getName() => $this->scopeConfig->getName()] + $skinsetModel->getAllowedTemplateKeysBySkinKey($this->scopeConfig->getName()))
             ->orderAscOrder()
             ->find();
     }
