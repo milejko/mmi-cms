@@ -64,14 +64,10 @@ class ApiController extends \Mmi\Mvc\Controller
             $skinData = new SkinData;
             $skinData->key = $skin->getKey();
             $skinData->name = $skin->getName();
-            //add self link
-            $skinData->_links[] = ((new LinkData())
-                ->setHref(self::API_PREFIX . $skin->getKey())
-                ->setRel(LinkData::REL_NEXT)
-            );
+            //config link
             $skinData->_links[] = ((new LinkData())
                 ->setHref(self::API_CONFIG_PREFIX . $skin->getKey())
-                ->setRel(LinkData::REL_SELF)
+                ->setRel(LinkData::REL_NEXT)
             );
             $skins[] = $skinData;
         }
@@ -87,8 +83,20 @@ class ApiController extends \Mmi\Mvc\Controller
      */
     public function configAction(Request $request)
     {
-        $skinConfig = $this->cmsSkinsetConfig->getSkinByKey($request->scope);
+        try {
+            //search for skin
+            $skinConfig = $this->cmsSkinsetConfig->getSkinByKey($request->scope);
+        } catch (CmsSkinNotFoundException $e) {
+            //skin not found
+            $errorTransportObject = new ErrorTransport();
+            $errorTransportObject->setMessage($e->getMessage());
+            return $this->getResponse()->setTypeJson()
+                ->setCodeNotFound()
+                ->setContent($errorTransportObject->toString());
+        }
+        //setting transport object
         $skinConfigTransport = new SkinConfigTransport();
+        $skinConfigTransport->key = $skinConfig->getKey();
         $skinConfigTransport->attributes = $skinConfig->getAttributes();
         $skinConfigTransport->_links[] = ((new LinkData())
             ->setHref(self::API_PREFIX . $skinConfig->getKey())
