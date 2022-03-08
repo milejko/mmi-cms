@@ -440,8 +440,16 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     {
         //próba pobrania dzieci z cache
         if (null === $siblings = App::$di->get(CacheInterface::class)->load($cacheKey = self::CATEGORY_CHILDREN_CACHE_PREFIX . $this->parentId)) {
+            $siblings = (new CmsCategoryQuery)
+                ->whereParentId()->equals($this->parentId)
+                ->whereActive()->equals(true)
+                ->whereStatus()->equals(self::STATUS_ACTIVE)
+                ->whereTemplate()->like($this->getScope() . '%')
+                ->orderAscOrder()
+                ->orderAscId()
+                ->find();
             //pobieranie dzieci
-            App::$di->get(CacheInterface::class)->save($siblings = $this->_getActiveChildren($this->parentId), $cacheKey, 0);
+            App::$di->get(CacheInterface::class)->save($siblings, $cacheKey, 0);
         }
         return $siblings;
     }
