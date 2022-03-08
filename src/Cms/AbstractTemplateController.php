@@ -7,6 +7,7 @@ use Cms\Api\LinkData;
 use Cms\Api\TemplateDataTransport;
 use Cms\Api\TransportInterface;
 use Cms\App\CmsSkinsetConfig;
+use Cms\Exception\CategoryWidgetException;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryRecord;
 use Cms\Orm\CmsFileQuery;
@@ -134,8 +135,12 @@ abstract class AbstractTemplateController extends Controller
             if (!$widgetRelationRecord->active) {
                 continue;
             }
-            //adding widgets to section
-            $widgets[substr($fullSectionPath = substr($widgetRelationRecord->widget, 0, strrpos($widgetRelationRecord->widget, '/')), strrpos($fullSectionPath, '/') + 1)][] = (new WidgetModel($widgetRelationRecord, $this->getSkinsetConfig()))->getDataObject($request);
+            try {
+                //adding widgets to section
+                $widgets[substr($fullSectionPath = substr($widgetRelationRecord->widget, 0, strrpos($widgetRelationRecord->widget, '/')), strrpos($fullSectionPath, '/') + 1)][] = (new WidgetModel($widgetRelationRecord, $this->getSkinsetConfig()))->getDataObject($request);
+            } catch (CategoryWidgetException $e) {
+                //ignoring failed widgets
+            }
         }
         return $widgets;
     }
