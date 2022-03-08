@@ -7,11 +7,11 @@ namespace Cms\Api;
  */
 class SkinsetDataTransport extends HttpJsonTransport
 {
-    public array $skins = [];
+    public array $scopes = [];
 
-    public function setSkins(array $skins): self
+    public function setSkins(array $scopes): self
     {
-        $this->skins = $skins;
+        $this->scopes = $scopes;
         return $this;
     }
 }
