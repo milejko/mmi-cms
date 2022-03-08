@@ -12,6 +12,7 @@ namespace CmsAdmin;
 
 use Cms\App\CmsScopeConfig;
 use Cms\App\CmsSkinsetConfig;
+use Cms\Exception\CategoryWidgetException;
 use Cms\Model\CategoryValidationModel;
 use Cms\Model\SkinsetModel;
 use Cms\Model\WidgetModel;
@@ -110,7 +111,11 @@ class CategoryWidgetRelationController extends Controller
             return '';
         }
         //usuwanie - logika widgeta
-        (new WidgetModel($widgetRelation, $this->cmsSkinsetConfig))->invokeDeleteAction();
+        try {
+            (new WidgetModel($widgetRelation, $this->cmsSkinsetConfig))->invokeDeleteAction();
+        } catch (CategoryWidgetException $e) {
+            //ignore this error
+        }
         //usuwanie relacji
         $widgetRelation->delete();
         $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $request->categoryId, 'uploaderId' => $request->categoryId, 'originalId' => $request->originalId]);
