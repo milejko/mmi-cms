@@ -439,7 +439,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     public function getSiblingsRecords()
     {
         //próba pobrania dzieci z cache
-        if (null === $siblings = App::$di->get(CacheInterface::class)->load($cacheKey = self::CATEGORY_CHILDREN_CACHE_PREFIX . $this->parentId)) {
+        if (null === $siblings = App::$di->get(CacheInterface::class)->load($cacheKey = self::CATEGORY_CHILDREN_CACHE_PREFIX . $this->getScope() . $this->parentId)) {
             $siblings = (new CmsCategoryQuery)
                 ->whereParentId()->equals($this->parentId)
                 ->whereActive()->equals(true)
