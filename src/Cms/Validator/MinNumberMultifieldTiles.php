@@ -52,7 +52,7 @@ class MinNumberMultifieldTiles extends ValidatorAbstract
     public function isValid($value)
     {
         if (false === is_array($value) || count($value) < $this->getNumber()) {
-            $this->_error(self::INVALID);
+            $this->_error([self::INVALID, [$this->getNumber()]]);
 
             return false;
         }

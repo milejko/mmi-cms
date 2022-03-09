@@ -70,7 +70,7 @@ class MinNumberCmsFiles extends ValidatorAbstract
             $query->andFieldActive()->equals($this->getActive());
         }
         if ($query->count() < $this->getValue()) {
-            $this->_error(self::INVALID);
+            $this->_error([self::INVALID, [$this->getValue()]]);
             return false;
         }
         return true;
