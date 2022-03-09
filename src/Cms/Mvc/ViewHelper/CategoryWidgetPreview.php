@@ -28,7 +28,11 @@ class CategoryWidgetPreview extends \Mmi\Mvc\ViewHelper\HelperAbstract
     public function categoryWidgetPreview(CmsCategoryWidgetCategoryRecord $widgetRelationRecord)
     {
         //render szablonu
-        return (new WidgetModel($widgetRelationRecord, App::$di->get(CmsSkinsetConfig::class)))->renderPreviewAction($this->view);
+        try {
+            return (new WidgetModel($widgetRelationRecord, App::$di->get(CmsSkinsetConfig::class)))->renderPreviewAction($this->view);
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
 }

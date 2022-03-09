@@ -7,6 +7,7 @@ use Cms\Api\LinkData;
 use Cms\Api\TemplateDataTransport;
 use Cms\Api\TransportInterface;
 use Cms\App\CmsSkinsetConfig;
+use Cms\Exception\CategoryWidgetException;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryRecord;
 use Cms\Orm\CmsFileQuery;
@@ -134,8 +135,12 @@ abstract class AbstractTemplateController extends Controller
             if (!$widgetRelationRecord->active) {
                 continue;
             }
-            //adding widgets to section
-            $widgets[substr($fullSectionPath = substr($widgetRelationRecord->widget, 0, strrpos($widgetRelationRecord->widget, '/')), strrpos($fullSectionPath, '/') + 1)][] = (new WidgetModel($widgetRelationRecord, $this->getSkinsetConfig()))->getDataObject($request);
+            try {
+                //adding widgets to section
+                $widgets[substr($fullSectionPath = substr($widgetRelationRecord->widget, 0, strrpos($widgetRelationRecord->widget, '/')), strrpos($fullSectionPath, '/') + 1)][] = (new WidgetModel($widgetRelationRecord, $this->getSkinsetConfig()))->getDataObject($request);
+            } catch (CategoryWidgetException $e) {
+                //ignoring failed widgets
+            }
         }
         return $widgets;
     }
@@ -170,17 +175,22 @@ abstract class AbstractTemplateController extends Controller
     {
         $siblings = [];
         foreach ($this->cmsCategoryRecord->getSiblingsRecords() as $record) {
+            //not active or self
             if (!$record->active || $record->id === $this->cmsCategoryRecord->id) {
                 continue;
             }
             $scope = substr($record->template, 0, strpos($record->template, '/'));
+            //folder (ignored)
+            if (!$scope) {
+                continue;
+            }
             $siblings[] = (new BreadcrumbData)
                 ->setName($record->name ? : '')
-                ->setLinks($scope ? [
+                ->setLinks([
                     (new LinkData)
                         ->setHref(ApiController::API_PREFIX . $scope . '/' . ($record->customUri ?: $record->uri))
                         ->setRel(LinkData::REL_SIBLING)
-                ] : []);
+                ]);
         }
         return $siblings;
     }

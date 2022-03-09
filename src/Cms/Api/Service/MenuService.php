@@ -4,6 +4,8 @@ namespace Cms\Api\Service;
 
 use Cms\Api\LinkData;
 use Cms\ApiController;
+use Cms\App\CmsSkinsetConfig;
+use Cms\Model\SkinsetModel;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use Mmi\Cache\CacheInterface;
@@ -17,11 +19,13 @@ class MenuService implements MenuServiceInterface
     private const PATH_SEPARATOR = '/';
 
     private CacheInterface $cacheService;
+    private CmsSkinsetConfig $cmsSkinsetConfig;
     private array $orderMap = [];
 
-    public function __construct(CacheInterface $cacheService)
+    public function __construct(CacheInterface $cacheService, CmsSkinsetConfig $cmsSkinsetConfig)
     {
         $this->cacheService = $cacheService;
+        $this->cmsSkinsetConfig = $cmsSkinsetConfig;
     }
 
     /**
@@ -104,10 +108,15 @@ class MenuService implements MenuServiceInterface
 
     protected function getFromInfrastructure(?string $scope): array
     {
-        return (new CmsCategoryQuery)
+        $query = (new CmsCategoryQuery)
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
-            ->whereTemplate()->like($scope . '%')
-            ->findFields(['id', 'template', 'name', 'uri', 'blank', 'customUri', 'redirectUri', 'path', 'order', 'active']);
+            ->whereActive()->equals(true)
+            ->whereTemplate()->like($scope . '%');
+        //scope is defined (filtering templates)        
+        if (null !== $scope) {
+            $query->whereTemplate()->equals([$scope => $scope] + (new SkinsetModel($this->cmsSkinsetConfig))->getAllowedTemplateKeysBySkinKey($scope));
+        }
+        return $query->findFields(['id', 'template', 'name', 'uri', 'blank', 'customUri', 'redirectUri', 'path', 'order', 'active']);
     }
 
     protected function getLinks(array $item): array

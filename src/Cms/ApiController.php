@@ -33,8 +33,9 @@ use Mmi\Http\Request;
  */
 class ApiController extends \Mmi\Mvc\Controller
 {
-
-    const API_PREFIX = '/api/category/';
+    private const API_PATH_SEPARATOR = '/';
+    private const API_HOME = self::API_PATH_SEPARATOR . 'api';
+    public const API_PREFIX = self::API_HOME . self::API_PATH_SEPARATOR . 'category' . self::API_PATH_SEPARATOR;
     private const API_CONFIG_PREFIX = '/api/config/';
 
     /**
@@ -111,9 +112,16 @@ class ApiController extends \Mmi\Mvc\Controller
      */
     public function getMenuAction(Request $request)
     {
+        //scope not found - redirect to home
+        if (!$request->scope) {
+            $redirectTransportObject = new RedirectTransport(self::API_HOME);
+            return $this->getResponse()->setTypeJson()
+                ->setCode($redirectTransportObject->getCode())
+                ->setContent($redirectTransportObject->toString());
+        }
         //checking scope availability
         try {
-            $request->scope && $this->cmsSkinsetConfig->getSkinByKey($request->scope);
+            $this->cmsSkinsetConfig->getSkinByKey($request->scope);
         } catch (CmsSkinNotFoundException $e) {
             //error
             $errorTransportObject = new ErrorTransport();
@@ -178,7 +186,7 @@ class ApiController extends \Mmi\Mvc\Controller
                 ->setContent($errorTransport->toString());
         }
         //obiekt transportowy
-        $redirectTransportObject = new RedirectTransport(self::API_PREFIX . $categoryRecord->getScope() . '/' . $categoryRecord->getUri());
+        $redirectTransportObject = new RedirectTransport(self::API_PREFIX . $categoryRecord->getScope() . self::API_PATH_SEPARATOR . $categoryRecord->getUri());
         return $this->getResponse()->setTypeJson()
             ->setCode($redirectTransportObject->getCode())
             ->setContent($redirectTransportObject->toString());
@@ -236,13 +244,18 @@ class ApiController extends \Mmi\Mvc\Controller
         //kategoria posiada customUri, a wejście jest na natywny uri
         if ($category->customUri && $request->uri != $category->customUri && $request->uri == $category->uri) {
             //przekierowanie na customUri
-            return new RedirectTransport(self::API_PREFIX . $request->scope . '/' . $category->customUri);
+            return new RedirectTransport(self::API_PREFIX . $request->scope . self::API_PATH_SEPARATOR . $category->customUri);
+        }
+        //kategoria posiada niewłaściwy (niewspierany) template
+        if (null === $templateConfig = (new SkinsetModel($this->cmsSkinsetConfig))->getTemplateConfigByKey($category->template)) {
+            return (new ErrorTransport)
+                ->setMessage('Page unsupported')
+                ->setCode(ErrorTransport::CODE_NOT_FOUND);;
         }
         //ładowanie obiektu transportowego z bufora
         if (null === $transportObject = $this->cache->load($cacheKey = CmsCategoryRecord::CATEGORY_CACHE_TRANSPORT_PREFIX . $category->id)) {
             //generowanie obiektu transportowego i zapis do cache
             $transportObject = (new TemplateModel($category, $this->cmsSkinsetConfig))->getTransportObject($request);
-            $templateConfig = (new SkinsetModel($this->cmsSkinsetConfig))->getTemplateConfigByKey($category->template);
             $this->cache->save($transportObject, $cacheKey, $templateConfig->getCacheLifeTime());
         }
         return $transportObject;
@@ -280,6 +293,6 @@ class ApiController extends \Mmi\Mvc\Controller
         //zapis uri przekierowania do bufora
         $this->cache->save($scope . '/' . $category->uri, $cacheKey, 0);
         //przekierowanie 301
-        return new RedirectTransport(self::API_PREFIX . $scope . '/' . $category->uri);
+        return new RedirectTransport(self::API_PREFIX. $scope . self::API_PATH_SEPARATOR . $category->uri);
     }
 }
