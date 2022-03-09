@@ -50,7 +50,7 @@ class MaxNumberMultifieldTiles extends \Mmi\Validator\ValidatorAbstract
     public function isValid($value)
     {
         if (is_array($value) && count($value) > $this->getNumber()) {
-            $this->_error(self::INVALID);
+            $this->_error([self::INVALID, [$this->getNumber()]]);
 
             return false;
         }
