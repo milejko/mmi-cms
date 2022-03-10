@@ -10,10 +10,13 @@
 
 namespace CmsAdmin\Plugin;
 
+use Cms\App\CmsSkinsetConfig;
+use Cms\Model\SkinsetModel;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use CmsAdmin\Grid\Column;
 use CmsAdmin\Grid\Column\OperationColumn;
+use Mmi\App\App;
 
 /**
  * Grid do prezentacji historycznych wersji danej kategorii
@@ -39,6 +42,9 @@ class CategoryGrid extends \CmsAdmin\Grid\Grid
         //nazwa
         $this->addColumn((new Column\TextColumn('name'))
             ->setLabel('grid.categoryTrash.name.label'));
+
+        $this->addColumn((new Column\TextColumn('template'))
+            ->setLabel('grid.categoryTrash.template.label'));
 
         //data utworzenia wersji
         $this->addColumn((new Column\TextColumn('dateAdd'))
