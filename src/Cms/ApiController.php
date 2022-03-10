@@ -69,7 +69,12 @@ class ApiController extends \Mmi\Mvc\Controller
             //config link
             $skinData->_links[] = ((new LinkData())
                 ->setHref(self::API_CONFIG_PREFIX . $skin->getKey())
-                ->setRel(LinkData::REL_NEXT)
+                ->setRel(LinkData::REL_CONFIG)
+            );
+            //menu link
+            $skinData->_links[] = ((new LinkData())
+                ->setHref(self::API_PREFIX . $skin->getKey())
+                ->setRel(LinkData::REL_MENU)
             );
             $skins[] = $skinData;
         }
@@ -98,7 +103,7 @@ class ApiController extends \Mmi\Mvc\Controller
         $skinConfigTransport->attributes = $skinConfig->getAttributes();
         $skinConfigTransport->_links[] = ((new LinkData())
             ->setHref(self::API_PREFIX . $skinConfig->getKey())
-            ->setRel(LinkData::REL_NEXT)
+            ->setRel(LinkData::REL_MENU)
         );
         return $this->getResponse()->setTypeJson()
             ->setCode($skinConfigTransport->getCode())
@@ -151,7 +156,8 @@ class ApiController extends \Mmi\Mvc\Controller
     public function getCategoryPreviewAction(Request $request)
     {
         //search for a category
-        if (null === $category = (new CmsCategoryQuery())
+        if (
+            null === $category = (new CmsCategoryQuery())
             ->whereCmsCategoryOriginalId()->equals($request->originalId)
             ->whereCmsAuthId()->equals($request->authId)
             ->whereDateModify()->greater(date('Y-m-d H:i:s', strtotime('-8 hours')))
