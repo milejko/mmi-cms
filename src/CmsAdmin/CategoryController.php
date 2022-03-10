@@ -223,8 +223,12 @@ class CategoryController extends Controller
             //zmiany zapisane
             $this->getResponse()->redirectToUrl(substr($form->getElement('submit')->getValue(), 9));
         }
-        //przekierowanie na podgląd
-        $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);
+        //pobranie przekierowania na front zdefiniowanego w skórce
+        $skinBasedPreviewUrl = $this->cmsSkinsetConfig->getSkinByKey($this->scopeConfig->getName())->getPreviewUrl();
+        //przekierowanie na skórkowy lub defaultowy adres
+        $skinBasedPreviewUrl ? 
+            $this->getResponse()->redirectToUrl($skinBasedPreviewUrl . '/?' . http_build_query(['id' => $category->id, 'oid' => $category->cmsCategoryOriginalId, 'aid' => $category->cmsAuthId])) :
+            $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);
     }
 
     /**
