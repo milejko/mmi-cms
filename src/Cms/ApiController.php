@@ -27,6 +27,8 @@ use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use Mmi\Cache\CacheInterface;
 use Mmi\Http\Request;
+use Mmi\Http\Response;
+use Mmi\Validator\Integer;
 
 /**
  * Kontroler kategorii
@@ -67,7 +69,12 @@ class ApiController extends \Mmi\Mvc\Controller
             //config link
             $skinData->_links[] = ((new LinkData())
                 ->setHref(self::API_CONFIG_PREFIX . $skin->getKey())
-                ->setRel(LinkData::REL_NEXT)
+                ->setRel(LinkData::REL_CONFIG)
+            );
+            //menu link
+            $skinData->_links[] = ((new LinkData())
+                ->setHref(self::API_PREFIX . $skin->getKey())
+                ->setRel(LinkData::REL_MENU)
             );
             $skins[] = $skinData;
         }
@@ -87,12 +94,8 @@ class ApiController extends \Mmi\Mvc\Controller
             //search for skin
             $skinConfig = $this->cmsSkinsetConfig->getSkinByKey($request->scope);
         } catch (CmsSkinNotFoundException $e) {
-            //skin not found
-            $errorTransportObject = new ErrorTransport();
-            $errorTransportObject->setMessage($e->getMessage());
-            return $this->getResponse()->setTypeJson()
-                ->setCodeNotFound()
-                ->setContent($errorTransportObject->toString());
+            //404 - skin not found
+            return $this->getNotFoundResponse($e->getMessage());
         }
         //setting transport object
         $skinConfigTransport = new SkinConfigTransport();
@@ -100,7 +103,7 @@ class ApiController extends \Mmi\Mvc\Controller
         $skinConfigTransport->attributes = $skinConfig->getAttributes();
         $skinConfigTransport->_links[] = ((new LinkData())
             ->setHref(self::API_PREFIX . $skinConfig->getKey())
-            ->setRel(LinkData::REL_NEXT)
+            ->setRel(LinkData::REL_MENU)
         );
         return $this->getResponse()->setTypeJson()
             ->setCode($skinConfigTransport->getCode())
@@ -123,12 +126,8 @@ class ApiController extends \Mmi\Mvc\Controller
         try {
             $this->cmsSkinsetConfig->getSkinByKey($request->scope);
         } catch (CmsSkinNotFoundException $e) {
-            //error
-            $errorTransportObject = new ErrorTransport();
-            $errorTransportObject->message = $e->getMessage();
-            return $this->getResponse()->setTypeJson()
-                ->setCode($errorTransportObject->getCode())
-                ->setContent($errorTransportObject->toString());
+            //404 - skin not found
+            return $this->getNotFoundResponse($e->getMessage());
         }
         $menuTransport = (new MenuDataTransport())->setMenu($this->menuService->getMenus($request->scope));
         return $this->getResponse()->setTypeJson()
@@ -147,12 +146,30 @@ class ApiController extends \Mmi\Mvc\Controller
                 ->setCode($transportObject->getCode())
                 ->setContent($transportObject->toString());
         } catch (\Exception $e) {
-            $errorTransportObject = new ErrorTransport();
-            $errorTransportObject->message = $e->getMessage();
+            return $this->getNotFoundResponse($e->getMessage());
         }
+    }
+
+    /**
+     * Podgląd nieopublikowanych kategorii
+     */
+    public function getCategoryPreviewAction(Request $request)
+    {
+        //search for a category
+        if (
+            null === $category = (new CmsCategoryQuery())
+            ->whereCmsCategoryOriginalId()->equals($request->originalId)
+            ->whereCmsAuthId()->equals($request->authId)
+            ->whereDateModify()->greater(date('Y-m-d H:i:s', strtotime('-8 hours')))
+            ->findPk($request->id)
+        ) {
+            return $this->getNotFoundResponse();
+        }
+        //returning transport object
+        $transportObject = (new TemplateModel($category, $this->cmsSkinsetConfig))->getTransportObject($request);
         return $this->getResponse()->setTypeJson()
-            ->setCode($errorTransportObject->getCode())
-            ->setContent($errorTransportObject->toString());
+            ->setCode($transportObject->getCode())
+            ->setContent($transportObject->toString());
     }
 
     /**
@@ -178,12 +195,8 @@ class ApiController extends \Mmi\Mvc\Controller
         }
         //brak kategorii lub szablonu
         if (!$categoryRecord || $categoryRecord->template == $categoryRecord->getScope()) {
-            $errorTransport = (new ErrorTransport)
-                ->setMessage('Page not found')
-                ->setCode(ErrorTransport::CODE_NOT_FOUND);
-            return $this->getResponse()->setTypeJson()
-                ->setCode($errorTransport->getCode())
-                ->setContent($errorTransport->toString());
+            //404
+            return $this->getNotFoundResponse();
         }
         //obiekt transportowy
         $redirectTransportObject = new RedirectTransport(self::API_PREFIX . $categoryRecord->getScope() . self::API_PATH_SEPARATOR . $categoryRecord->getUri());
@@ -234,6 +247,9 @@ class ApiController extends \Mmi\Mvc\Controller
         return $this->getCategoryTransport($category, $request);
     }
 
+    /**
+     * Pobiera obiekt transportowy kategorii
+     */
     private function getCategoryTransport(CmsCategoryRecord $category, Request $request): TransportInterface
     {
         //kategoria to przekierowanie
@@ -262,6 +278,19 @@ class ApiController extends \Mmi\Mvc\Controller
     }
 
     /**
+     * Zwraca odpowiedź 404 z podanym messagem
+     */
+    private function getNotFoundResponse(string $message = 'Page not found'): Response
+    {
+        $errorTransport = (new ErrorTransport)
+            ->setMessage($message)
+            ->setCode(ErrorTransport::CODE_NOT_FOUND);
+        return $this->getResponse()->setTypeJson()
+            ->setCode($errorTransport->getCode())
+            ->setContent($errorTransport->toString());
+    }
+
+    /**
      * Przekierowanie 301 (poszukiwanie w historii), lub 404
      */
     private function getRedirectOrErrorTransport(string $scope, string $uri): TransportInterface
@@ -280,7 +309,8 @@ class ApiController extends \Mmi\Mvc\Controller
             return new RedirectTransport(self::API_PREFIX . $redirectUri);
         }
         //wyszukiwanie bieżącej kategorii (aktywnej)
-        if (null === $category = (new CmsCategoryQuery())
+        if (
+            null === $category = (new CmsCategoryQuery())
             ->byHistoryUri($uri, $scope)->findFirst()
         ) {
             //brak kategorii w historii - buforowanie informacji
@@ -293,6 +323,6 @@ class ApiController extends \Mmi\Mvc\Controller
         //zapis uri przekierowania do bufora
         $this->cache->save($scope . '/' . $category->uri, $cacheKey, 0);
         //przekierowanie 301
-        return new RedirectTransport(self::API_PREFIX. $scope . self::API_PATH_SEPARATOR . $category->uri);
+        return new RedirectTransport(self::API_PREFIX . $scope . self::API_PATH_SEPARATOR . $category->uri);
     }
 }

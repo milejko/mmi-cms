@@ -24,7 +24,7 @@ class CategoryLockModel
     //czas blokady (na transakcję)
     const LOCK_TIMEOUT = 15;
     //dodatkowa blokada po zapisie
-    const RELEASE_TIMEOUT = 5;
+    const RELEASE_TIMEOUT = 3;
 
     /**
      * Identyfikator kategorii

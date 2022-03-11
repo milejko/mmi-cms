@@ -19,6 +19,7 @@ class LinkData implements DataInterface
     const REL_SELF          = 'self';
     const REL_SIBLING       = 'sibling';
     const REL_MENU          = 'menu';
+    const REL_CONFIG        = 'config';
 
     public string   $href;
     public string   $rel;

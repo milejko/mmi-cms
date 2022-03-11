@@ -51,6 +51,9 @@ class CmsRouterConfig extends RouterConfig
         $this->setRoute('cms-category-menu-scopes-api', '/^api\/category\/([a-z0-9-]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getMenu', 'scope' => '$1']);
         $this->setRoute('cms-category-menu-api', '/^api\/category$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getMenu']);
 
+        //routa API podgląd nieopublikownych stron cms
+        $this->setRoute('cms-category-preview-api', '/^api\/category-preview\/([0-9]+)\/([0-9]+)\/([0-9]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getCategoryPreview', 'id' => '$1', 'originalId' => '$2', 'authId' => '$3']);
+
         //routy skalera grafik
         $this->setRoute('cms-file-copy', '/^data\/copy\/([a-f0-9]{32})-([a-f0-9]{32}\.[a-z0-9]+)$/i', ['module' => 'cms', 'controller' => 'file', 'action' => 'copy', 'hash' => '$1', 'name' => '$2']);
         $this->setRoute('cms-file-server', '/^download\/([a-f0-9]{32}\.[a-z0-9]+)-(.*)$/i', ['module' => 'cms', 'controller' => 'file', 'action' => 'server', 'name' => '$1', 'encodedName' => '$2']);

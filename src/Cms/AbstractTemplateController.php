@@ -8,6 +8,7 @@ use Cms\Api\TemplateDataTransport;
 use Cms\Api\TransportInterface;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Exception\CategoryWidgetException;
+use Cms\Model\SkinsetModel;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryRecord;
 use Cms\Orm\CmsFileQuery;
@@ -176,12 +177,16 @@ abstract class AbstractTemplateController extends Controller
         $siblings = [];
         foreach ($this->cmsCategoryRecord->getSiblingsRecords() as $record) {
             //not active or self
-            if (!$record->active || $record->id === $this->cmsCategoryRecord->id) {
+            if (!$record->active || $record->id == $this->cmsCategoryRecord->id || $record->id == $this->cmsCategoryRecord->cmsCategoryOriginalId) {
                 continue;
             }
             $scope = substr($record->template, 0, strpos($record->template, '/'));
             //folder (ignored)
             if (!$scope) {
+                continue;
+            }
+            //template not compatible
+            if (null === (new SkinsetModel($this->cmsSkinsetConfig))->getTemplateConfigByKey($record->template)) {
                 continue;
             }
             $siblings[] = (new BreadcrumbData)

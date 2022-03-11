@@ -19,6 +19,11 @@ class CmsSkinConfig
     private string $key;
 
     /**
+     * Preview frontu
+     */
+    private string $previewUrl = '';
+
+    /**
      * Opcje
      */
     private array $attributes = [];
@@ -60,6 +65,23 @@ class CmsSkinConfig
     public function getKey(): string
     {
         return $this->key;
+    }
+
+    /**
+     * Ustawia url podglądu
+     */
+    public function setPreviewUrl(string $previewUrl): CmsSkinConfig
+    {
+        $this->previewUrl = $previewUrl;
+        return $this;
+    }
+
+    /**
+     * Pobiera url podglądu
+     */
+    public function getPreviewUrl(): string
+    {
+        return $this->previewUrl;
     }
 
     /**
