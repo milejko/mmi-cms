@@ -10,6 +10,7 @@
 
 namespace CmsAdmin;
 
+use Cms\ApiController;
 use Cms\App\CmsScopeConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Model\CategoryValidationModel;
@@ -34,6 +35,7 @@ class CategoryController extends Controller
 {
     //przedrostek brakującego widgeta
     const MISSING_WIDGET_MESSENGER_PREFIX = 'messenger.widget.missing.';
+    private const RETURN_URL_PREFIX = '/cmsAdmin/category/edit/?';
 
     /**
      * @Inject
@@ -227,7 +229,7 @@ class CategoryController extends Controller
         $skinBasedPreviewUrl = $this->cmsSkinsetConfig->getSkinByKey($this->scopeConfig->getName())->getPreviewUrl();
         //przekierowanie na skórkowy lub defaultowy adres
         $skinBasedPreviewUrl ? 
-            $this->getResponse()->redirectToUrl($skinBasedPreviewUrl . '/?' . http_build_query(['id' => $category->id, 'oid' => $category->cmsCategoryOriginalId, 'aid' => $category->cmsAuthId])) :
+            $this->getResponse()->redirectToUrl($skinBasedPreviewUrl . '?apiUrl=' . ApiController::API_PREVIEW_PREFIX . $category->getScope() . ApiController::API_PATH_SEPARATOR . $category->id . ApiController::API_PATH_SEPARATOR . $category->cmsCategoryOriginalId . ApiController::API_PATH_SEPARATOR . $category->cmsAuthId . '&returnUrl=' . $this->view->url([], false)) :
             $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);
     }
 

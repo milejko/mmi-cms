@@ -28,17 +28,17 @@ use Cms\Orm\CmsCategoryRecord;
 use Mmi\Cache\CacheInterface;
 use Mmi\Http\Request;
 use Mmi\Http\Response;
-use Mmi\Validator\Integer;
 
 /**
  * Kontroler kategorii
  */
 class ApiController extends \Mmi\Mvc\Controller
 {
-    private const API_PATH_SEPARATOR = '/';
-    private const API_HOME = self::API_PATH_SEPARATOR . 'api';
+    public const API_PATH_SEPARATOR = '/';
+    public const API_HOME = self::API_PATH_SEPARATOR . 'api';
     public const API_PREFIX = self::API_HOME . self::API_PATH_SEPARATOR . 'category' . self::API_PATH_SEPARATOR;
-    private const API_CONFIG_PREFIX = '/api/config/';
+    public const API_CONFIG_PREFIX = self::API_HOME . 'config';
+    public const API_PREVIEW_PREFIX = self::API_HOME . self::API_PATH_SEPARATOR . 'category-preview' . self::API_PATH_SEPARATOR;
 
     /**
      * @Inject
@@ -156,10 +156,12 @@ class ApiController extends \Mmi\Mvc\Controller
     public function getCategoryPreviewAction(Request $request)
     {
         //search for a category
+        //findPk it is all that is needed, but other conditions secures the request
         if (
             null === $category = (new CmsCategoryQuery())
             ->whereCmsCategoryOriginalId()->equals($request->originalId)
             ->whereCmsAuthId()->equals($request->authId)
+            ->whereTemplate()->like($request->scope . '%')
             ->whereDateModify()->greater(date('Y-m-d H:i:s', strtotime('-8 hours')))
             ->findPk($request->id)
         ) {
