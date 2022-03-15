@@ -16,6 +16,7 @@ use Cms\Orm\CmsFileRecord;
 use Mmi\App\App;
 use Mmi\Form\Form;
 use Mmi\Http\Request;
+use Mmi\Validator\Numeric;
 
 /**
  * Element wielokrotny upload
@@ -40,7 +41,11 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         parent::__construct($name);
         $this
             ->addClass('multiupload')
-            ->addElement(new Hidden(self::FILE_ELEMENT_NAME));
+            ->addElement(
+                (new Hidden(self::FILE_ELEMENT_NAME))
+                    ->addValidator((new Numeric())->setMessage('validator.noFile.message'))
+                    ->setRequired()
+            );
     }
 
     /**
@@ -98,7 +103,7 @@ class MultiUpload extends MultiField implements UploaderElementInterface
      * Renderer pol formularza
      *
      * @param array|null $itemValues
-     * @param string     $index
+     * @param string $index
      *
      * @return string
      */
