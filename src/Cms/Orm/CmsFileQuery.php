@@ -131,13 +131,13 @@ class CmsFileQuery extends Query
     public static function byObject($object = null, $objectId = null)
     {
         //zapytanie o pliki po obiektach i id
-        return (new self)
-                ->whereObject()->equals($object)
-                ->andFieldObjectId()->equals($objectId)
-                //posortowane po kolejności
-                ->orderAscOrder()
-                //sortowanie po ID, jeśli ordery są NULL
-                ->orderAscId();
+        return (new self())
+            ->whereObject()->equals($object)
+            ->andFieldObjectId()->equals($objectId)
+            //posortowane po kolejności
+            ->orderAscOrder()
+            //sortowanie po ID, jeśli ordery są NULL
+            ->orderAscId();
     }
 
     /**
@@ -150,14 +150,14 @@ class CmsFileQuery extends Query
     public static function byObjectAndClass($object = null, $objectId = null, $class = 'image')
     {
         //zapytanie o pliki po obiektach i id
-        return (new self)
-                ->whereObject()->equals($object)
-                ->andFieldObjectId()->equals($objectId)
-                ->whereClass()->equals($class)
-                //posortowane po kolejności
-                ->orderAscOrder()
-                //sortowanie po ID, jeśli ordery są NULL
-                ->orderAscId();
+        return (new self())
+            ->whereObject()->equals($object)
+            ->andFieldObjectId()->equals($objectId)
+            ->whereClass()->equals($class)
+            //posortowane po kolejności
+            ->orderAscOrder()
+            //sortowanie po ID, jeśli ordery są NULL
+            ->orderAscId();
     }
 
     /**
@@ -170,7 +170,7 @@ class CmsFileQuery extends Query
     {
         //zapytanie po obiekcie
         return self::byObject($object, $objectId)
-                ->whereClass()->equals('image');
+            ->whereClass()->equals('image');
     }
 
     /**
@@ -183,36 +183,21 @@ class CmsFileQuery extends Query
     {
         //zapytanie po obiekcie i id
         return self::byObject($object, $objectId)
-                ->whereClass()->notEquals('image');
+            ->whereClass()->notEquals('image');
     }
 
     /**
-     * Szuka id najnowszego pliku
-     * @param $id
-     * @return string|null
+     * @param string $fileName
+     * @param string|null $object
+     * @param string|null $objectId
+     * @return CmsFileQuery
+     * @throws OrmException
      */
-    public static function findLastFileId($id)
+    public static function byFileName($fileName, $object = null, $objectId = null)
     {
-        $record = (new self())
-            ->where('id')
-            ->equals($id)
-            ->findFirst();
-
-        if (!$record instanceof CmsFileRecord) {
-            return null;
-        }
-
-        $record = (new self())
-            ->whereName()->equals($record->name)
-            ->whereObjectId()->equals($record->objectId)
-            ->whereActive()->equals(true)
-            ->orderDescId()
-            ->findFirst();
-
-        if (!$record instanceof CmsFileRecord) {
-            return null;
-        }
-
-        return $record->id;
+        return (new self())
+            ->whereName()->equals($fileName)
+            ->andFieldObject()->equals($object)
+            ->andFieldObjectId()->equals($objectId);
     }
 }

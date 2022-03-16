@@ -10,9 +10,14 @@
 
 namespace CmsAdmin;
 
+use Cms\Model\File;
 use Cms\Mvc\ViewHelper\Thumb;
 use Cms\Orm\CmsFileQuery;
+use Cms\Orm\CmsFileRecord;
+use Exception;
+use Mmi\DataObject;
 use Mmi\Http\Request;
+use Mmi\Http\ResponseTypes;
 use Mmi\Mvc\ActionHelper;
 use Mmi\Mvc\Controller;
 
@@ -54,7 +59,13 @@ class UploadController extends Controller
             $this->_operationAfter($request->getPost()->afterUpload, $record);
         }
 
-        return json_encode(['result' => 'OK', 'cmsFileId' => $pluploadHandler->getSavedCmsFileId()]);
+        return json_encode(
+            [
+                'result' => 'OK',
+                'cmsFileId' => $pluploadHandler->getSavedCmsFileId()
+            ],
+            JSON_THROW_ON_ERROR
+        );
     }
 
     /**
@@ -74,7 +85,14 @@ class UploadController extends Controller
             $this->_operationAfter($request->getPost()->afterUpload, $record);
         }
 
-        return json_encode(['result' => 'OK', 'cmsFileId' => $pluploadHandler->getSavedCmsFileId()]);
+        return json_encode(
+            [
+                'result' => 'OK',
+                'cmsFileId' => $pluploadHandler->getSavedCmsFileId(),
+                'cmsFileName' => $pluploadHandler->getSavedCmsFileName(),
+            ],
+            JSON_THROW_ON_ERROR
+        );
     }
 
     /**
@@ -109,8 +127,9 @@ class UploadController extends Controller
         return json_encode(
             [
                 'result' => 'OK',
-                'files'  => $records->toArray(),
-            ]
+                'files' => $records->toArray(),
+            ],
+            JSON_THROW_ON_ERROR
         );
     }
 
@@ -120,7 +139,7 @@ class UploadController extends Controller
     public function deleteAction(Request $request)
     {
         //szukamy rekordu pliku
-        if (!$request->getPost()->cmsFileId || null === $record = (new CmsFileQuery)->findPk($request->getPost()->cmsFileId)) {
+        if (!$request->getPost()->cmsFileId || null === $record = (new CmsFileQuery())->findPk($request->getPost()->cmsFileId)) {
             return $this->_jsonError(178);
         }
         //sprawdzenie zgodności z obiektem formularza
@@ -132,7 +151,12 @@ class UploadController extends Controller
                     $this->_operationAfter($request->getPost()->afterDelete, $record);
                 }
 
-                return json_encode(['result' => 'OK']);
+                return json_encode(
+                    [
+                        'result' => 'OK'
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
             }
         }
 
@@ -148,16 +172,22 @@ class UploadController extends Controller
             return $this->_jsonError(179);
         }
         //szukamy rekordu pliku
-        if (null !== $record = (new CmsFileQuery)->findPk($request->getPost()->cmsFileId)) {
+        if (null !== $record = (new CmsFileQuery())->findPk($request->getPost()->cmsFileId)) {
             //sprawdzenie czy obrazek
             if ($record->class === 'image') {
                 try {
                     $thumb = new Thumb($this->view);
-                    $url   = $thumb->thumb($record, 'scaley', '60');
+                    $url = $thumb->thumb($record, 'scaley', '60');
                     if (!empty($url)) {
-                        return json_encode(['result' => 'OK', 'url' => $url]);
+                        return json_encode(
+                            [
+                                'result' => 'OK',
+                                'url' => $url
+                            ],
+                            JSON_THROW_ON_ERROR
+                        );
                     }
-                } catch (\Exception $ex) {
+                } catch (Exception $ex) {
                 }
             }
         }
@@ -170,29 +200,51 @@ class UploadController extends Controller
      */
     public function multithumbnailAction(Request $request)
     {
-        if (!$request->getPost()->cmsFileId) {
+        if (!$request->getPost()->cmsFileName) {
             return $this->_jsonError(179, 'No file id specified');
         }
+        $record = (new CmsFileQuery())
+            ->byFileName(
+                $request->getPost()->cmsFileName,
+                $request->getPost()->object,
+                $request->getPost()->objectId
+            )
+            ->findFirst();
         //szukamy rekordu pliku
-        if (null !== $record = (new CmsFileQuery)->findPk($request->getPost()->cmsFileId)) {
+        if (null !== $record) {
             //sprawdzenie czy obrazek
             if ($record->class === 'image') {
                 try {
                     $thumbHelper = new Thumb($this->view);
-                    $thumb       = $thumbHelper->thumb($record, 'scalecrop', '300');
+                    $thumb = $thumbHelper->thumb($record, 'scalecrop', '300');
                     if (!empty($thumb)) {
-                        return json_encode(['result' => 'OK', 'thumb' => $thumb]);
+                        return json_encode(
+                            ['result' => 'OK', 'thumb' => $thumb],
+                            JSON_THROW_ON_ERROR
+                        );
                     }
-                } catch (\Exception $ex) {
+                } catch (Exception $ex) {
                     return $this->_jsonError(179, 'Thumb creation failed');
                 }
             }
 
             if (in_array($record->class, ['audio', 'application', 'video', 'text'])) {
-                return json_encode(['result' => 'OK', 'class' => $record->class]);
+                return json_encode(
+                    [
+                        'result' => 'OK',
+                        'class' => $record->class
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
             }
 
-            return json_encode(['result' => 'OK', 'class' => 'file']);
+            return json_encode(
+                [
+                    'result' => 'OK',
+                    'class' => 'file'
+                ],
+                JSON_THROW_ON_ERROR
+            );
         }
 
         return $this->_jsonError(179, 'File not found');
@@ -207,7 +259,7 @@ class UploadController extends Controller
             return $this->_jsonError(185);
         }
         //szukamy rekordu pliku
-        if (null == $record = (new CmsFileQuery)->findPk($request->getPost()->cmsFileId)) {
+        if (null === $record = (new CmsFileQuery())->findPk($request->getPost()->cmsFileId)) {
             return $this->_jsonError(185);
         }
         //wycinamy rozszerzenie z nazwy oryginalnego pliku do edycji
@@ -217,7 +269,7 @@ class UploadController extends Controller
             $record->original = substr($record->original, 0, $pointPosition);
         }
         $data = [];
-        if ($record->data instanceof \Mmi\DataObject) {
+        if ($record->data instanceof DataObject) {
             //parametry
             $data = $record->data->toArray();
         }
@@ -226,7 +278,14 @@ class UploadController extends Controller
             $data['poster'] = $record->getPosterUrl();
         }
 
-        return json_encode(['result' => 'OK', 'record' => $record, 'data' => $data]);
+        return json_encode(
+            [
+                'result' => 'OK',
+                'record' => $record,
+                'data' => $data
+            ],
+            JSON_THROW_ON_ERROR
+        );
     }
 
     /**
@@ -239,7 +298,7 @@ class UploadController extends Controller
             return $this->_jsonError(186);
         }
         //szukamy rekordu pliku
-        if (null === $record = (new CmsFileQuery)->findPk($request->getPost()->cmsFileId)) {
+        if (null === $record = (new CmsFileQuery())->findPk($request->getPost()->cmsFileId)) {
             return $this->_jsonError(186);
         }
         $formData = [];
@@ -265,7 +324,7 @@ class UploadController extends Controller
         if (isset($request->getPost()->form['poster']) && $request->getPost()->form['poster']) {
             $formData['posterFileName'] = $this->_savePoster($request->getPost()->form['poster'], $record);
         }
-        if ($record->data instanceof \Mmi\DataObject) {
+        if ($record->data instanceof DataObject) {
             //czyszczenie nieprzesłanych checkboxów
             foreach (array_keys($record->data->toArray()) as $name) {
                 //nie czyścimy postera jeśli był wgrany
@@ -277,7 +336,7 @@ class UploadController extends Controller
                 }
             }
         }
-        $record->active   = \array_key_exists('active', $formData);
+        $record->active = array_key_exists('active', $formData);
         $record->original = isset($formData['original']) ? $formData['original'] : $record->original;
         if (!$record->save()) {
             return $this->_jsonError(186);
@@ -287,7 +346,12 @@ class UploadController extends Controller
             $this->_operationAfter($request->getPost()->afterEdit, $record);
         }
 
-        return json_encode(['result' => 'OK']);
+        return json_encode(
+            [
+                'result' => 'OK'
+            ],
+            JSON_THROW_ON_ERROR
+        );
     }
 
     /**
@@ -297,7 +361,7 @@ class UploadController extends Controller
      */
     public function downloadAction(Request $request)
     {
-        if (null === $file = (new CmsFileQuery)->byObject($request->object, $request->objectId)
+        if (null === $file = (new CmsFileQuery())->byObject($request->object, $request->objectId)
                 ->findPk($request->id)) {
             return '';
         }
@@ -311,70 +375,83 @@ class UploadController extends Controller
     {
         $order = $request->getPost()->order;
         if (empty($order) || !is_array($order)) {
-            return json_encode(['result' => 'OK']);
+            return json_encode(
+                [
+                    'result' => 'OK'
+                ],
+                JSON_THROW_ON_ERROR
+            );
         }
         try {
-            \Cms\Model\File::sortBySerial($order);
-        } catch (\Exception $ex) {
+            File::sortBySerial($order);
+        } catch (Exception $ex) {
             return $this->_jsonError(180);
         }
 
-        return json_encode(['result' => 'OK']);
+        return json_encode(
+            [
+                'result' => 'OK'
+            ],
+            JSON_THROW_ON_ERROR
+        );
     }
 
     /**
      * Zwraca sformatowany błąd JSON
      *
      * @param integer $code
-     * @param string  $message
+     * @param string $message
      *
      * @return string
      */
     protected function _jsonError($code = 403, $message = '')
     {
-        return json_encode([
-                               'result' => 'ERR',
-                               'error'  => [
-                                   'code'    => $code,
-                                   'message' => $message,
-                               ],
-                           ]);
+        return json_encode(
+            [
+                'result' => 'ERR',
+                'error' => [
+                    'code' => $code,
+                    'message' => $message,
+                ],
+            ],
+            JSON_THROW_ON_ERROR
+        );
     }
 
     /**
      * Wykonuje dodatkową operację po innym zdarzeniu
      *
-     * @param array                  $action
-     * @param \Cms\Orm\CmsFileRecord $record
+     * @param array $action
+     * @param CmsFileRecord $record
      *
      * @return mixed
      */
-    protected function _operationAfter($action, \Cms\Orm\CmsFileRecord $record)
+    protected function _operationAfter($action, CmsFileRecord $record)
     {
-        return $this->actionHelper->action(new \Mmi\Http\Request(array_merge($record->toArray(), $action)));
+        return $this->actionHelper->action(new Request(array_merge($record->toArray(), $action)));
     }
 
     /**
      * Zapisanie postera dla video
      *
-     * @param string                 $blob
-     * @param \Cms\Orm\CmsFileRecord $file
+     * @param string $blob
+     * @param CmsFileRecord $file
      *
      * @return string
      */
-    protected function _savePoster($blob, \Cms\Orm\CmsFileRecord $file)
+    protected function _savePoster($blob, CmsFileRecord $file)
     {
         //brak danych
-        if (!\preg_match('/^data:(image\/[a-z]+);base64,(.*)/i', $blob, $match)) {
+        if (!preg_match('/^data:(image\/[a-z]+);base64,(.*)/i', $blob, $match)) {
             return;
         }
         //nazwa postera
-        $posterFileName = substr($file->name, 0, strpos($file->name, '.')) . '-' . $file->id . '.' . \Mmi\Http\ResponseTypes::getExtensionByType($match[1]);
+        $posterFileName = substr($file->name, 0, strpos($file->name, '.')) . '-' . $file->id . '.' . ResponseTypes::getExtensionByType($match[1]);
         //próba utworzenia katalogu
         try {
             //tworzenie katalogu
             mkdir(dirname($file->getRealPath()), 0777, true);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             //nic
         }
         //zapis

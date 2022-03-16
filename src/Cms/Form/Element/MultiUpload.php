@@ -16,20 +16,20 @@ use Cms\Orm\CmsFileRecord;
 use Mmi\App\App;
 use Mmi\Form\Form;
 use Mmi\Http\Request;
-use Mmi\Validator\Numeric;
+use Mmi\Validator\StringLength;
 
 /**
  * Element wielokrotny upload
  */
 class MultiUpload extends MultiField implements UploaderElementInterface
 {
-    public const FILE_ELEMENT_NAME    = 'file';
+    public const FILE_ELEMENT_NAME = 'file';
     private const MULTIUPLOAD_CSS_URL = '/resource/cmsAdmin/css/multiupload.css';
-    private const MULTIUPLOAD_JS_URL  = '/resource/cmsAdmin/js/multiupload.js';
-    private const ICONS_URL           = '/resource/cmsAdmin/images/upload/';
-    private const UPLOAD_URL          = '/cmsAdmin/upload/multiupload';
-    private const THUMB_URL           = '/cmsAdmin/upload/multithumbnail';
-    private const CURRENT_URL         = '/cmsAdmin/upload/current';
+    private const MULTIUPLOAD_JS_URL = '/resource/cmsAdmin/js/multiupload.js';
+    private const ICONS_URL = '/resource/cmsAdmin/images/upload/';
+    private const UPLOAD_URL = '/cmsAdmin/upload/multiupload';
+    private const THUMB_URL = '/cmsAdmin/upload/multithumbnail';
+    private const CURRENT_URL = '/cmsAdmin/upload/current';
 
     /**
      * Konstruktor
@@ -43,7 +43,15 @@ class MultiUpload extends MultiField implements UploaderElementInterface
             ->addClass('multiupload')
             ->addElement(
                 (new Hidden(self::FILE_ELEMENT_NAME))
-                    ->addValidator((new Numeric())->setMessage('validator.noFile.message'))
+                    ->addValidator(
+                        new StringLength(
+                            [
+                                'min' => 32,
+                                'max' => 40,
+                                'message' => 'validator.noFile.message',
+                            ]
+                        )
+                    )
                     ->setRequired()
             );
     }
@@ -131,7 +139,7 @@ class MultiUpload extends MultiField implements UploaderElementInterface
             }
 
             if (self::FILE_ELEMENT_NAME === $element->getBaseName()) {
-                $element->setValue($itemValues[$element->getBaseName()] ?? '{{cmsFileId}}');
+                $element->setValue($itemValues[$element->getBaseName()] ?? '{{cmsFileName}}');
             }
 
             $html .= $element->__toString();
@@ -162,20 +170,6 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         $this->view->headScript()->appendFile(self::MULTIUPLOAD_JS_URL);
     }
 
-    public function beforeFormSave()
-    {
-        $values = $this->getValue();
-
-        if (is_array($values)) {
-            foreach ($values as $key => $item) {
-                $values[$key][self::FILE_ELEMENT_NAME] = CmsFileQuery::findLastFileId($item[self::FILE_ELEMENT_NAME] ?? null);
-            }
-            $this->setValue($values);
-        }
-
-        parent::beforeFormSave();
-    }
-
     /**
      * Po zapisie rekordu
      */
@@ -201,9 +195,9 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         //ustawianie flagi na formie dla innych uploaderów
         $this->_form->setOption(self::FILES_MOVED_OPTION_PREFIX . $this->getObject(), true);
         //usuwanie z docelowego "worka"
-        File::deleteByObject($this->getObject(), $this->getObjectId(), $this->getFileIds());
+        File::deleteByObject($this->getObject(), $this->getObjectId());
         //usuwanie niepotrzebnych plikow
-        File::deleteByObject($this->getUploader(), $this->getUploaderId(), $this->getFileIds());
+        File::deleteByObject($this->getUploader(), $this->getUploaderId(), $this->getFileNames());
         //przenoszenie plikow z tymczasowego "worka" do docelowego
         File::move($this->getUploader(), $this->getUploaderId(), $this->getObject(), $this->getObjectId());
         //usuwanie placeholdera
@@ -249,21 +243,24 @@ class MultiUpload extends MultiField implements UploaderElementInterface
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    private function getFileIds(): array
+    private function getFileNames(): array
     {
-        $ids = [];
+        $names = [];
 
         foreach ($this->getValue() ?? [] as $item) {
             if (isset($item[self::FILE_ELEMENT_NAME])) {
-                $ids[] = $item[self::FILE_ELEMENT_NAME];
+                $names[] = $item[self::FILE_ELEMENT_NAME];
             }
         }
 
-        return $ids;
+        return $names;
     }
 
+    /**
+     * @return string
+     */
     private function getUploader(): string
     {
         return self::TEMP_OBJECT_PREFIX . $this->getObject();
