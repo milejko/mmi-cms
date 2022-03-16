@@ -344,6 +344,18 @@ class PluploadHandler
     }
 
     /**
+     * Zwraca id zapisanego rekordu pliku
+     * @return integer
+     */
+    public function getSavedCmsFileName()
+    {
+        if ($this->_cmsFileRecord) {
+            return $this->_cmsFileRecord->name;
+        }
+        return null;
+    }
+
+    /**
      * Zwraca zapisany rekord pliku
      * @return \Cms\Orm\CmsFileRecord
      */

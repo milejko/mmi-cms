@@ -13,7 +13,10 @@ namespace Cms\Model;
 use Cms\Form\Element\UploaderElementInterface;
 use Cms\Orm\CmsFileQuery;
 use Cms\Orm\CmsFileRecord;
+use Exception;
 use Mmi\App\App;
+use Mmi\App\KernelException;
+use Mmi\Http\RequestFile;
 use Mmi\Security\AuthInterface;
 use Psr\Log\LoggerInterface;
 
@@ -36,7 +39,7 @@ class File
         //pola formularza
         foreach ($files as $fileSet) {
             //pojedynczy upload
-            if ($fileSet instanceof \Mmi\Http\RequestFile) {
+            if ($fileSet instanceof RequestFile) {
                 if (null === self::appendFile($fileSet, $object, $id, $allowedTypes)) {
                     return false;
                 }
@@ -44,7 +47,7 @@ class File
             }
             //pliki w polu formularza
             foreach ($fileSet as $file) {
-                /* @var $file \Mmi\Http\RequestFile */
+                /* @var $file RequestFile */
                 if (null === self::appendFile($file, $object, $id, $allowedTypes)) {
                     return false;
                 }
@@ -55,20 +58,20 @@ class File
 
     /**
      * Dołącza pliki dla danego object i id bezpośrednio z serwera
-     * @param \Mmi\Http\RequestFile $file obiekt pliku
+     * @param RequestFile $file obiekt pliku
      * @param string $object obiekt
      * @param int $id id obiektu
      * @param array $allowedTypes dozwolone typy plików
-     * @return \Cms\Orm\CmsFileRecord
+     * @return CmsFileRecord
      */
-    public static function appendFile(\Mmi\Http\RequestFile $file, $object, $id = null, $allowedTypes = [])
+    public static function appendFile(RequestFile $file, $object, $id = null, $allowedTypes = [])
     {
         //sprawdzenie i skopiowanie pliku do odpowiedniego katalogu na dysku
         if (null === $name = self::_checkAndCopyFile($file, $allowedTypes)) {
             return null;
         }
         //przypisywanie pól w rekordzie
-        $record = self::_updateRecordFromRequestFile($file, new \Cms\Orm\CmsFileRecord());
+        $record = self::_updateRecordFromRequestFile($file, new CmsFileRecord());
         //zapis nazwy pliku
         $record->name = $name;
         //obiekt i id
@@ -80,14 +83,14 @@ class File
 
     /**
      * Sprawdza parametry i kopiuje plik do odpowiedniego katalogu na dysku
-     * @param \Mmi\Http\RequestFile $file obiekt pliku
+     * @param RequestFile $file obiekt pliku
      * @param array $allowedTypes dozwolone typy plików
      * @return string|null zwraca nazwę utworzonego pliku na dysku
      */
-    protected static function _checkAndCopyFile(\Mmi\Http\RequestFile $file, $allowedTypes = [])
+    protected static function _checkAndCopyFile(RequestFile $file, $allowedTypes = [])
     {
         //pomijanie plików typu tiff, svg, heic
-        if ($file->type == 'image/tiff' || $file->type == 'image/svg+xml'  || $file->type == 'image/heic') {
+        if ($file->type == 'image/tiff' || $file->type == 'image/svg+xml' || $file->type == 'image/heic') {
             $file->type = 'application/octet-stream';
         }
         //plik nie jest dozwolony
@@ -149,12 +152,14 @@ class File
         foreach (CmsFileQuery::byObject($srcObject, $srcId)->find() as $file) {
             try {
                 //tworzenie kopii
-                $copy = new \Mmi\Http\RequestFile([
-                    'name' => $file->original,
-                    'tmp_name' => $file->getRealPath(),
-                    'size' => $file->size
-                ]);
-            } catch (\Mmi\App\KernelException $e) {
+                $copy = new RequestFile(
+                    [
+                        'name' => $file->original,
+                        'tmp_name' => $file->getRealPath(),
+                        'size' => $file->size
+                    ]
+                );
+            } catch (KernelException $e) {
                 App::$di->get(LoggerInterface::class)->warning('Unable to copy file, file not found: ' . $file->getRealPath());
                 continue;
             }
@@ -192,13 +197,13 @@ class File
 
     /**
      * Kopiuje plik Cms, zachowując pola oryginalnego rekordu
-     * @param \Mmi\Http\RequestFile $file obiekt pliku
+     * @param RequestFile $file obiekt pliku
      * @param string $object obiekt
      * @param int $id id obiektu
-     * @param \Cms\Orm\CmsFileRecord $copy rekord pliku Cms
-     * @return \Cms\Orm\CmsFileRecord|null
+     * @param CmsFileRecord $copy rekord pliku Cms
+     * @return CmsFileRecord|null
      */
-    protected static function _copyFile(\Mmi\Http\RequestFile $file, $object, $id, \Cms\Orm\CmsFileRecord $copy)
+    protected static function _copyFile(RequestFile $file, $object, $id, CmsFileRecord $copy)
     {
         //sprawdzenie i skopiowanie pliku do odpowiedniego katalogu na dysku
         if (null === $name = self::_checkAndCopyFile($file)) {
@@ -224,13 +229,15 @@ class File
     public static function copyWithData(CmsFileRecord $file, $destId)
     {
         try {
-            $copy = new \Mmi\Http\RequestFile([
-                'name' => $file->original,
-                'tmp_name' => $file->getRealPath(),
-                'size' => $file->size
-            ]);
+            $copy = new RequestFile(
+                [
+                    'name' => $file->original,
+                    'tmp_name' => $file->getRealPath(),
+                    'size' => $file->size
+                ]
+            );
             $newFile = self::appendFile($copy, $file->object, $destId);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             App::$di->get(LoggerInterface::class)->warning($e->getMessage());
             return;
         }
@@ -259,11 +266,11 @@ class File
 
     /**
      * Aktualizuje rekord na podstawie pliku z requestu
-     * @param \Mmi\Http\RequestFile $file plik z requesta
-     * @param \Cms\Orm\CmsFileRecord $record rekord pliku Cms
+     * @param RequestFile $file plik z requesta
+     * @param CmsFileRecord $record rekord pliku Cms
      * @return CmsFileRecord rekord pliku
      */
-    protected static function _updateRecordFromRequestFile(\Mmi\Http\RequestFile $file, \Cms\Orm\CmsFileRecord $record)
+    protected static function _updateRecordFromRequestFile(RequestFile $file, CmsFileRecord $record)
     {
         //typ zasobu
         $record->mimeType = $file->type;
@@ -294,14 +301,14 @@ class File
      * Usuwa kolekcję rekordów po obiekcie i id
      * @param string $object
      * @param string $objectId
-     * @param array $ignoreIds
+     * @param string[] $ignoreFileNames
      * @return int ilość usuniętych obiektów
      */
-    public static function deleteByObject($object = null, $objectId = null, $ignoreIds = [])
+    public static function deleteByObject($object = null, $objectId = null, $ignoreFileNames = [])
     {
         //wybieramy kolekcję i usuwamy całą
         return CmsFileQuery::byObject($object, $objectId)
-            ->andFieldId()->notEquals($ignoreIds)
+            ->andFieldName()->notEquals($ignoreFileNames)
             ->find()
             ->delete();
     }

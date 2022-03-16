@@ -53,9 +53,11 @@ function multiuploadLoadThumb(sourceInput) {
         let uploader = sourceInput.closest('.multiupload').find('.upload-add-label input[type=file]');
         $.ajax({
             url: uploader.data('thumb-url'),
-            type: "POST",
+            type: 'POST',
             data: {
-                "cmsFileId": parseInt(sourceInput.attr('value'))
+                'object': uploader.data('object'),
+                'objectId': uploader.data('object-id'),
+                'cmsFileName': sourceInput.attr('value')
             }
         }).done(function (response) {
             let thumb = $(sourceInput).closest('.field-list-item').find('.thumb img');
@@ -114,7 +116,7 @@ function multiuploadInitAdd(containerId) {
             let partsLoaded = 0;
             let loaded = 0;
             let blob = file.slice(0, chunkSize);
-            let cmsFileId = 0;
+            let cmsFileName = '';
 
             reader.readAsArrayBuffer(blob);
             reader.onload = function (e) {
@@ -128,7 +130,7 @@ function multiuploadInitAdd(containerId) {
                 formData.append('fileSize', total);
                 formData.append('formObject', object);
                 formData.append('formObjectId', objectId);
-                formData.append('cmsFileId', 0);
+                formData.append('cmsFileName', '');
                 formData.append('filters[max_file_size]', 0);
                 formData.append('filters[prevent_duplicates]', false);
                 formData.append('filters[prevent_empty]', true);
@@ -141,7 +143,7 @@ function multiuploadInitAdd(containerId) {
                     contentType: false,
                     data: formData
                 }).done(function (response) {
-                    cmsFileId = response.cmsFileId;
+                    cmsFileName = response.cmsFileName;
                     loaded += chunkSize;
                     partsLoaded += 1;
 
@@ -160,7 +162,7 @@ function multiuploadInitAdd(containerId) {
                             multifieldListItemTemplate[template]
                                 .replaceAll('**', $(list).children().length)
                                 .replaceAll('##', $(list).parents('.field-list-item').last().index())
-                                .replaceAll('{{cmsFileId}}', response.cmsFileId)
+                                .replaceAll('{{cmsFileName}}', cmsFileName)
                         );
                         let newItem = $(list).children('.field-list-item').last();
                         newItem.find('.select2').select2();
