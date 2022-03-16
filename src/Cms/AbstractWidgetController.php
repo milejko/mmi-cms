@@ -123,8 +123,8 @@ abstract class AbstractWidgetController extends Controller
     {
         $to                             = new AttachmentData();
         $to->attributes                 = $fileRecord->data->toArray();
-        $to->id                         = $fileRecord->id;
         $to->name                       = $fileRecord->original;
+        $to->fileName                   = $fileRecord->name;
         $to->size                       = $fileRecord->size;
         $to->mimeType                   = $fileRecord->mimeType;
         $to->order                      = $fileRecord->order ?: 0;
