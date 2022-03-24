@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -52,7 +52,7 @@ class CmsRouterConfig extends RouterConfig
         $this->setRoute('cms-category-menu-api', '/^api\/category$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getMenu']);
 
         //routa API podgląd nieopublikownych stron cms
-        $this->setRoute('cms-category-preview-api', '/^api\/category-preview\/([a-z0-9]+)\/([0-9]+)\/([0-9]+)\/([0-9]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getCategoryPreview', 'scope' => '$1', 'id' => '$2', 'originalId' => '$3', 'authId' => '$4']);
+        $this->setRoute('cms-category-preview-api', '/^api\/category-preview\/([a-z0-9-]+)\/([0-9]+)\/([0-9]+)\/([0-9]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getCategoryPreview', 'scope' => '$1', 'id' => '$2', 'originalId' => '$3', 'authId' => '$4']);
 
         //routy skalera grafik
         $this->setRoute('cms-file-copy', '/^data\/copy\/([a-f0-9]{32})-([a-f0-9]{32}\.[a-z0-9]+)$/i', ['module' => 'cms', 'controller' => 'file', 'action' => 'copy', 'hash' => '$1', 'name' => '$2']);

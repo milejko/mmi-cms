@@ -228,8 +228,8 @@ class CategoryController extends Controller
         //pobranie przekierowania na front zdefiniowanego w skórce
         $skinBasedPreviewUrl = $this->cmsSkinsetConfig->getSkinByKey($this->scopeConfig->getName())->getPreviewUrl();
         //przekierowanie na skórkowy lub defaultowy adres
-        $skinBasedPreviewUrl ? 
-            $this->getResponse()->redirectToUrl($skinBasedPreviewUrl . '?apiUrl=' . ApiController::API_PREVIEW_PREFIX . $category->getScope() . ApiController::API_PATH_SEPARATOR . $category->id . ApiController::API_PATH_SEPARATOR . $category->cmsCategoryOriginalId . ApiController::API_PATH_SEPARATOR . $category->cmsAuthId . '&returnUrl=' . $this->view->url([], false)) :
+        $skinBasedPreviewUrl ?
+            $this->getResponse()->redirectToUrl($skinBasedPreviewUrl . '?apiUrl=' . urlencode(ApiController::API_PREVIEW_PREFIX . $category->getScope() . ApiController::API_PATH_SEPARATOR . $category->id . ApiController::API_PATH_SEPARATOR . $category->cmsCategoryOriginalId . ApiController::API_PATH_SEPARATOR . $category->cmsAuthId) . '&returnUrl=' . urlencode($this->view->url([], false))) :
             $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);
     }
 
