@@ -160,6 +160,7 @@ PLUPLOADCONF.settings.init = {
             PLUPLOADCONF.editable(up, file);
         }
         $('div#' + up.getOption('form_element_id') + ' li#' + file.id + ' div.ui-icon-circle-check').removeClass('ui-icon-circle-check').addClass('ui-icon-circle-minus');
+        $('div#' + up.getOption('form_element_id') + '-container div.ne-error-list').html('');
     },
     ChunkUploaded: function (up, file, info) {
         PLUPLOADCONF.parseResponse(up, file, info);
@@ -299,7 +300,7 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                                             if (data.result === 'OK') {
                                                 //pobranie i odtworzenie aktualnej listy z serwera
                                                 args.up.setOption('refresh_current', true);
-                                                PLUPLOADCONF.getCurrent(args.up);
+                                                //PLUPLOADCONF.getCurrent(args.up);
                                                 args.up.refresh();
                                                 editDialog.dialog('close');
                                             } else {
@@ -309,13 +310,6 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                                         .fail(function () {
                                             $(edit + ' .dialog-error p').text('Nie udało się zapisać zmian! Spróbuj ponownie!').parent().show();
                                         });
-                                },
-                                'Zastąp plik': function () {
-                                    args.up.setOption('replace_file', file);
-                                    args.up.getOption('that').plupload("enable");
-                                    setTimeout(function () {
-                                        $('div#' + args.up.getOption('form_element_id') + ' div.moxie-shim-html5 input[type=file]').trigger('click');
-                                    }, 500);
                                 },
                                 'Pobierz plik': function () {
                                     window.open(request.baseUrl + '/cmsAdmin/upload/download?id=' + file.cmsFileId + '&object=' + args.up.getOption('form_object') + '&objectId=' + args.up.getOption('form_object_id'), '_blank');
@@ -379,7 +373,7 @@ PLUPLOADCONF.settings.selected = function (event, args) {
                 $(selector).remove();
                 args.up.removeFile(file);
             });
-        } else if (extraCount === 0) {
+        } else if (extraCount == 0) {
             $(this).plupload("disable");
         }
     }
