@@ -272,7 +272,7 @@ class PluploadHandler
             $this->_setError(PLUPLOAD_INPUT_ERR, "Błąd: niekompletne parametry żądania");
             return false;
         }
-        $this->_filePath = $this->_targetDir . $this->_fileId;
+        $this->_filePath = $this->_targetDir . $this->_fileId . sha1($this->_fileName);
         if (strrpos($this->_fileName, '.') > 0) {
             $this->_filePath .= substr($this->_fileName, strrpos($this->_fileName, '.'));
         }
