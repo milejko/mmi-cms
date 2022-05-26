@@ -103,8 +103,7 @@ class MultiField extends ElementAbstract
         foreach ($this->getValidators() as $validator) {
             if (false === $validator->isValid($this->getValue())) {
                 $this->addError($validator->getError());
-
-                return false;
+                $result = false;
             }
         }
 
@@ -123,7 +122,7 @@ class MultiField extends ElementAbstract
     /**
      * Waliduje pole
      *
-     * @return boolean
+     * @return bool
      */
     public function isNestedValid(int $parentIndex): bool
     {
@@ -151,12 +150,6 @@ class MultiField extends ElementAbstract
         foreach ($this->getElements() as $element) {
             $value = $itemValues[$element->getBaseName()] ?? null;
 
-            //waliduje zagnieżdżone pole multifield
-            if ($element instanceof self) {
-                $this->validateMultifieldElement($element, $value, $result, $index);
-                continue;
-            }
-
             //waliduje poprawnie jeśli niewymagane, ale tylko gdy niepuste
             if (empty($value) && false === $element->getRequired()) {
                 continue;
@@ -164,6 +157,11 @@ class MultiField extends ElementAbstract
 
             //iteracja po walidatorach
             $this->validateElement($index, $element, $value, $result, $parentIndex);
+
+            //waliduje zagnieżdżone pole multifield
+            if ($element instanceof self) {
+                $this->validateMultifieldElement($element, $value, $result, $index);
+            }
         }
     }
 
@@ -233,6 +231,17 @@ class MultiField extends ElementAbstract
     final public function getElements(): array
     {
         return $this->_elements;
+    }
+
+    /**
+     * Pobranie elementu multifielda
+     *
+     * @param string $name nazwa elementu
+     * @return ElementAbstract
+     */
+    final public function getElement($name)
+    {
+        return isset($this->_elements[$name]) ? $this->_elements[$name] : null;
     }
 
     protected function addScriptsAndLinks(): void
