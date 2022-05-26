@@ -297,6 +297,10 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             //sortuje dzieci
             $this->_sortChildren();
         }
+        //przebudowa dzieci tylko dla aktywnych
+        if (self::STATUS_ACTIVE != $this->status) {
+            return true;
+        }
         //zmieniono parenta, nazwę, lub aktywność
         if ($parentModified || $nameModified || $activeModified) {
             //przebudowa dzieci
@@ -523,11 +527,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     protected function _rebuildChildren($parentId)
     {
         $i = 0;
+        //clear parent cache
+        App::$di->get(CacheInterface::class)->remove(self::CATEGORY_CACHE_PREFIX . $parentId);
         //iteracja po dzieciach
         foreach ($this->_getActiveChildren($parentId) as $categoryRecord) {
             //wyznaczanie kolejności
             $categoryRecord->order = $i++;
-            $categoryRecord->_calculatePathAndUri(true);
+            $categoryRecord->_calculatePathAndUri();
             //zapis rekordu
             $categoryRecord->simpleUpdate();
             //zejście rekurencyjne

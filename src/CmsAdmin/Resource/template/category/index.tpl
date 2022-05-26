@@ -50,18 +50,16 @@
                                 {foreach $categories as $category}
                                     {$allowed = categoryAclAllowed($category->id)}
                                     {$templateConfig = $skinset->getTemplateConfigByKey($category->template)}
-                                    {$folder = !$templateConfig || $templateConfig->getNestingEnabled()}
+                                    {$nestingEnabled = !$templateConfig || $templateConfig->getNestingEnabled()}
                                     <tr data-id="{$category->id}">
                                         <td class="align-middle">
-                                            <i class="icon-{if $folder}folder{else}doc{/if} p-1 mr-2 {if !$category->active}alert-danger{else}{/if}"></i>
-                                            {if $folder}
-                                            <a href="{@module=cmsAdmin&controller=category&action=index&parentId={$category->id}@}">
-                                            {/if}
-                                                {if $category->name}{$category->name}{else}({#template.category.index.label.default#}){/if}
-                                            </a>
-                                            {if $folder}
-                                            </a>
-                                            {/if}
+                                            <i class="icon-{if $nestingEnabled}folder{else}doc{/if} p-1 mr-2 {if !$category->active}alert-danger{else}{/if}"></i>
+                                            {if $nestingEnabled}<a href="{@module=cmsAdmin&controller=category&action=index&parentId={$category->id}@}">{/if}
+                                            {if $category->name}{$category->name}{else}({#template.category.index.label.default#}){/if}{if $nestingEnabled}</a>{/if}
+                                            <small>
+                                                {$templateConfig = $skinset->getTemplateConfigByKey($category->template)}
+                                                ({if $templateConfig}{_($templateConfig->getName())}{else}{#template.category.index.folder.label#}{/if})
+                                            </small>
                                         </td>
                                         <td align="right" {if !$allowed}class="inactive"{/if}>
                                             {if $allowed}
