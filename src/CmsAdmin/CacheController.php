@@ -11,6 +11,7 @@
 namespace CmsAdmin;
 
 use Mmi\Cache\CacheInterface;
+use Mmi\Cache\SystemCacheInterface;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 
@@ -26,12 +27,18 @@ class CacheController extends Controller
     private CacheInterface $cache;
 
     /**
+     * @Inject
+     */
+    private SystemCacheInterface $systemCache;
+
+    /**
      * Czyści cały cache
      */
     public function indexAction(Request $request)
     {
         //czyszczenie cache
         $this->cache->flush();
+        $this->systemCache->flush();
         //messenger
         $this->getMessenger()->addMessage('messenger.cache.cleared', true);
         //przekierowanie na referer
