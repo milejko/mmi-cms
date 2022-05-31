@@ -17,6 +17,7 @@ class TemplateDataTransport extends HttpJsonTransport
     public string   $ogImageUrl;
     public bool     $opensNewWindow = false;
     public array    $attributes     = [];
+    public array    $children       = [];
     public array    $sections       = [];
     public array    $breadcrumbs    = [];
     public array    $siblings       = [];

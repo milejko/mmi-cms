@@ -7,13 +7,34 @@ namespace Cms\Api;
  */
 class BreadcrumbData implements DataInterface
 {
+    public int      $id;
     public string   $name;
+    public string   $template;
+    public bool     $blank = false;
     public int      $order;
     public array    $_links = [];
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
 
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function setTemplate(string $template): self
+    {
+        $this->template = $template;
+        return $this;
+    }
+
+    public function setBlank($blank = true): self
+    {
+        $this->blank = $blank;
         return $this;
     }
 

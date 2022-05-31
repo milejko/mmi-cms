@@ -268,7 +268,7 @@ class ApiController extends \Mmi\Mvc\Controller
         if (null === $templateConfig = (new SkinsetModel($this->cmsSkinsetConfig))->getTemplateConfigByKey($category->template)) {
             return (new ErrorTransport)
                 ->setMessage('Page unsupported')
-                ->setCode(ErrorTransport::CODE_NOT_FOUND);;
+                ->setCode(ErrorTransport::CODE_NOT_FOUND);
         }
         //ładowanie obiektu transportowego z bufora
         if (null === $transportObject = $this->cache->load($cacheKey = CmsCategoryRecord::CATEGORY_CACHE_TRANSPORT_PREFIX . $category->id)) {
