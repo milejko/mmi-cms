@@ -333,8 +333,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //usuwanie plików
         (new CmsFileQuery)
             ->whereQuery((new CmsFileQuery)
-                ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
-                ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
+                    ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
+                    ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
             )
             ->andFieldObjectId()->equals($this->getPk())
             ->delete();
@@ -431,7 +431,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //próba pobrania dzieci z cache
         if (null === $children = App::$di->get(CacheInterface::class)->load($cacheKey = self::CATEGORY_CHILDREN_CACHE_PREFIX . $this->id)) {
             //pobieranie dzieci
-            App::$di->get(CacheInterface::class)->save($children = $this->_getActiveChildren($this->id), $cacheKey, 0);
+            App::$di->get(CacheInterface::class)->save($children = $this->_getPublishedChildren($this->id), $cacheKey, 0);
         }
         return $children;
     }
@@ -442,20 +442,14 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public function getSiblingsRecords()
     {
-        //próba pobrania dzieci z cache
-        if (null === $siblings = App::$di->get(CacheInterface::class)->load($cacheKey = self::CATEGORY_CHILDREN_CACHE_PREFIX . $this->getScope() . $this->parentId)) {
-            $siblings = (new CmsCategoryQuery)
-                ->whereParentId()->equals($this->parentId)
-                ->whereActive()->equals(true)
-                ->whereStatus()->equals(self::STATUS_ACTIVE)
-                ->whereTemplate()->like($this->getScope() . '%')
-                ->orderAscOrder()
-                ->orderAscId()
-                ->find();
-            //pobieranie dzieci
-            App::$di->get(CacheInterface::class)->save($siblings, $cacheKey, 0);
-        }
-        return $siblings;
+        return (new CmsCategoryQuery)
+            ->whereParentId()->equals($this->parentId)
+            ->whereActive()->equals(true)
+            ->whereStatus()->equals(self::STATUS_ACTIVE)
+            ->whereTemplate()->like($this->getScope() . '%')
+            ->orderAscOrder()
+            ->orderAscId()
+            ->find();
     }
 
     /**
@@ -497,8 +491,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     public function hasHistoricalEntries()
     {
         return 0 < (new CmsCategoryQuery)->whereCmsCategoryOriginalId()->equals($this->cmsCategoryOriginalId ? $this->cmsCategoryOriginalId : $this->id)
-                ->andFieldStatus()->equals(self::STATUS_HISTORY)
-                ->count();
+            ->andFieldStatus()->equals(self::STATUS_HISTORY)
+            ->count();
     }
 
     /**
@@ -530,7 +524,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //clear parent cache
         App::$di->get(CacheInterface::class)->remove(self::CATEGORY_CACHE_PREFIX . $parentId);
         //iteracja po dzieciach
-        foreach ($this->_getActiveChildren($parentId) as $categoryRecord) {
+        foreach ($this->_getPublishedChildren($parentId) as $categoryRecord) {
             //wyznaczanie kolejności
             $categoryRecord->order = $i++;
             $categoryRecord->_calculatePathAndUri();
@@ -546,7 +540,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     protected function _softDeleteChildren($parentId)
     {
-        foreach ($this->_getActiveChildren($parentId) as $categoryRecord) {
+        foreach ($this->_getPublishedChildren($parentId) as $categoryRecord) {
             $categoryRecord->softDelete();
             $this->_softDeleteChildren($categoryRecord->id);
         }
@@ -558,7 +552,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      * @param boolean $activeOnly tylko aktywne
      * @return \Cms\Orm\CmsCategoryRecord[]
      */
-    protected function _getActiveChildren($parentId)
+    protected function _getPublishedChildren($parentId)
     {
         //zwrot kolekcji rekordów
         return (new CmsCategoryQuery)
@@ -577,7 +571,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     {
         $i = 0;
         //pobranie dzieci swojego rodzica
-        foreach ($this->_getActiveChildren($this->parentId) as $categoryRecord) {
+        foreach ($this->_getPublishedChildren($this->parentId) as $categoryRecord) {
             //ten rekord musi pozostać w niezmienionej pozycji (był sortowany)
             if ($categoryRecord->id == $this->id) {
                 continue;
@@ -625,11 +619,10 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
         //usuwanie cache dzieci kategorii
         $cache->remove(self::CATEGORY_CHILDREN_CACHE_PREFIX . $this->id);
-        foreach ($this->_getActiveChildren($this->id) as $childRecord) {
+        foreach ($this->_getPublishedChildren($this->id) as $childRecord) {
             $cache->remove(self::CATEGORY_CHILDREN_CACHE_PREFIX . $childRecord->id);
         }
         $cache->remove(self::CATEGORY_CHILDREN_CACHE_PREFIX . $this->parentId);
         return true;
     }
-
 }

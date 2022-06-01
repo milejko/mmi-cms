@@ -101,7 +101,9 @@ class SkinsetModel
         }
         //folder
         if ($key == $skinConfig->getKey()) {
-            return (new CmsTemplateConfig)->setControllerClassName(FolderTemplateController::class);
+            return (new CmsTemplateConfig)
+                ->setName('template.category.index.folder.label')
+                ->setControllerClassName(FolderTemplateController::class);
         }
     }
 

@@ -226,6 +226,7 @@ class ApiController extends \Mmi\Mvc\Controller
                 //301 (o ile możliwe) lub 404
                 return $this->getRedirectOrErrorTransport($request->scope, $request->uri);
             }
+            //die();
             //id kategorii
             $categoryId = $category->id;
             //zapis id kategorii i kategorii w cache 
