@@ -222,15 +222,19 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      * Czy kategoria (strona) jest widoczna na froncie - aktywna itp.
      * @return boolean
      */
-    public function isVisible()
+    public function isActive()
     {
-        //jeśli nie jest aktywna
-        if (!$this->active) {
-            return false;
-        }
         //jeśli status różny od aktywna (bieżąca)
         if (self::STATUS_ACTIVE != $this->status) {
             return false;
+        }
+        //sprawdzanie aktywności rekordu i jego rodziców
+        $record = $this;
+        while (null !== $record) {
+            if (!$record->active) {
+                return false;
+            }
+            $record = $record->getParentRecord();
         }
         return true;
     }
@@ -248,7 +252,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //ustawiamy uri na podstawie rodzica
         if ($this->parentId && (null !== $parent = $this->getParentRecord())) {
             //nieaktywny nie jest ujawniony w uri
-            $this->uri = $parent->active ? $parent->uri : substr($parent->uri, 0, strrpos($parent->uri, '/'));
+            //$this->uri = $parent->active ? $parent->uri : substr($parent->uri, 0, strrpos($parent->uri, '/'));
+            $this->uri = $parent->uri;
             //bez względu na aktywność jest w ścieżce - path
             $this->path = trim($parent->path . '/' . $parent->id, '/');
         }

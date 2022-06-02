@@ -188,15 +188,20 @@ class ApiController extends \Mmi\Mvc\Controller
                 //zapis informacji o braku kategorii
                 $this->cache->save(false, $cacheKey, 0);
             }
+            //kategoria nieaktywna
+            if ($categoryRecord && !$categoryRecord->isActive()) {
+                //zapis informacji o braku aktywności kategorii
+                $this->cache->save(false, $cacheKey, 0);
+            }
             //jeśli znaleziony rekord
-            if ($categoryRecord) {
+            if ($categoryRecord && $categoryRecord->isActive()) {
                 //zapis pobranej kategorii w cache i mapowania uri->id
                 $this->cache->save($categoryRecord, $cacheKey, 0);
                 $this->cache->save($categoryRecord->id, CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($categoryRecord->getScope() . $categoryRecord->getUri()));
             }
         }
         //brak kategorii lub szablonu
-        if (!$categoryRecord || $categoryRecord->template == $categoryRecord->getScope()) {
+        if (!$categoryRecord || !$categoryRecord->isActive() || $categoryRecord->template == $categoryRecord->getScope()) {
             //404
             return $this->getNotFoundResponse();
         }
@@ -215,31 +220,11 @@ class ApiController extends \Mmi\Mvc\Controller
      */
     private function getTransportObject(Request $request): TransportInterface
     {
-        //inicjalizacja zmiennej
-        $category = null;
-        //próba mapowania uri na ID kategorii z cache
-        if (null === $categoryId = $this->cache->load($cacheKey = CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($request->scope . $request->uri))) {
-            //próba pobrania kategorii po URI
-            if (null === $category = (new Orm\CmsCategoryQuery)->getCategoryByUri($request->uri, $request->scope)) {
-                //zapis informacji o braku kategorii w cache
-                $this->cache->save(false, $cacheKey, 0);
-                //301 (o ile możliwe) lub 404
-                return $this->getRedirectOrErrorTransport($request->scope, $request->uri);
-            }
-            //die();
-            //id kategorii
-            $categoryId = $category->id;
-            //zapis id kategorii i kategorii w cache 
-            $this->cache->save($categoryId, $cacheKey, 0) && $this->cache->save($category, CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $categoryId, 0);
-        }
-        //w buforze jest informacja o braku strony
-        if (false === $categoryId) {
+        $categoryId = $this->getCategoryId($request->scope, $request->uri);
+        //brak ID dla danego uri/scope
+        if (!$categoryId) {
             //301 (o ile możliwe) lub 404
             return $this->getRedirectOrErrorTransport($request->scope, $request->uri);
-        }
-        //kategoria
-        if ($category) {
-            return $this->getCategoryTransport($category, $request);
         }
         //pobranie kategorii z bufora
         if (null === $category = $this->cache->load($cacheKey = CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $categoryId)) {
@@ -269,7 +254,7 @@ class ApiController extends \Mmi\Mvc\Controller
         if (null === $templateConfig = (new SkinsetModel($this->cmsSkinsetConfig))->getTemplateConfigByKey($category->template)) {
             return (new ErrorTransport)
                 ->setMessage('Page unsupported')
-                ->setCode(ErrorTransport::CODE_NOT_FOUND);
+                ->setCode(ErrorTransport::CODE_ERROR);
         }
         //ładowanie obiektu transportowego z bufora
         if (null === $transportObject = $this->cache->load($cacheKey = CmsCategoryRecord::CATEGORY_CACHE_TRANSPORT_PREFIX . $category->id)) {
@@ -327,5 +312,31 @@ class ApiController extends \Mmi\Mvc\Controller
         $this->cache->save($scope . '/' . $category->uri, $cacheKey, 0);
         //przekierowanie 301
         return new RedirectTransport(self::API_PREFIX . $scope . self::API_PATH_SEPARATOR . $category->uri);
+    }
+
+    private function getCategoryId($scope, $uri)
+    {
+        //próba mapowania uri na ID kategorii z cache
+        if ($categoryId = $this->cache->load($cacheKey = CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($scope . $uri))) {
+            return $categoryId;
+        }
+        if (false === $categoryId) {
+            return null;
+        }
+        //próba pobrania kategorii po URI
+        if (null === $category = (new Orm\CmsCategoryQuery)->getCategoryByUri($uri, $scope)) {
+            //zapis informacji o braku kategorii w cache
+            $this->cache->save(false, $cacheKey, 0);
+            return null;
+        }
+        //kategoria jest nieaktywna
+        if (!$category->isActive()) {
+            //zapis informacji o braku kategorii w cache
+            $this->cache->save(false, $cacheKey, 0);
+            $this->cache->save(false, CmsCategoryRecord::REDIRECT_CACHE_PREFIX . md5($scope . $uri), 0);
+            return null;
+        }
+        $this->cache->save($categoryId, $cacheKey, 0);
+        return $category->id;
     }
 }
