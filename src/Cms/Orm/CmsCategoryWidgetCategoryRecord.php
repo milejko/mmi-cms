@@ -92,21 +92,6 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     }
 
     /**
-     * Zwraca rekord widgeta
-     * @return CmsCategoryWidgetRecord
-     * @throws \Cms\Exception\CategoryWidgetException
-     */
-    public function getWidgetRecord()
-    {
-        //zwrot dołączonego widgeta
-        if ($this->getJoined('cms_category_widget')) {
-            return $this->getJoined('cms_category_widget');
-        }
-        //brak widgeta
-        throw new \Cms\Exception\CategoryWidgetException('Widget not joined');
-    }
-
-    /**
      * Zwraca konfigurację
      * @return \Mmi\DataObject
      */

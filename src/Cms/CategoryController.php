@@ -213,7 +213,7 @@ class CategoryController extends \Mmi\Mvc\Controller
         //model szablonu
         $templateModel = new TemplateModel($category, $this->cmsSkinsetConfig);
         //czas buforowania (na podstawie typu kategorii i pojedynczej kategorii
-        $cacheLifetime = (null !== $category->cacheLifetime) ? $category->cacheLifetime : $templateModel->getTemplateConfg()->getCacheLifeTime();
+        $cacheLifetime = $templateModel->getTemplateConfg()->getCacheLifeTime();
         //jeśli bufor wyłączony (na poziomie typu kategorii, lub pojedynczej kategorii)
         if (0 == $cacheLifetime) {
             //brak bufora

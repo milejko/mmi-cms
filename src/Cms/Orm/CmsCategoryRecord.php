@@ -123,12 +123,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     public $blank;
 
     /**
-     * Czas życia bufora
-     * @var integer
-     */
-    public $cacheLifetime;
-
-    /**
      * Aktywność
      * @var integer
      */

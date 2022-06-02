@@ -1,0 +1,1 @@
+ALTER TABLE `cms_category` DROP COLUMN `cacheLifetime`;
