@@ -86,10 +86,15 @@ class CategoryForm extends Form
             ->addFilter(new Filter\StringTrim)
             ->addValidator(new Validator\StringLength([2, 128])));
 
-        //aktywna
-        $this->addElement((new Element\Checkbox('active'))
-            ->setChecked()
-            ->setLabel('form.category.active.label'));
+        $this->addElement((new Element\Radio('visibility'))
+            ->setIgnore()
+            ->setValue((int) $this->getRecord()->active + (int) $this->getRecord()->visible)
+            ->setMultioptions([
+                2 => 'form.category.visibility.on.label',
+                1 => 'form.category.visibility.off.label',
+                0 => 'form.category.visibility.disabled.label',
+            ])
+        );
 
         //blank
         $this->addElement((new Element\Checkbox('blank'))
@@ -149,6 +154,24 @@ class CategoryForm extends Form
     {
         //wynik założenia blokady zapisu
         return (new CategoryLockModel($this->getRecord()->cmsCategoryOriginalId))->lock();
+    }
+
+    public function beforeSave()
+    {
+        switch ($this->getElement('visibility')->getValue()) {
+            case 0:
+                $this->getRecord()->visible = false;
+                $this->getRecord()->active = false;
+                return;
+            case 1:
+                $this->getRecord()->visible = false;
+                $this->getRecord()->active = true;
+                return;
+            case 2:
+                $this->getRecord()->visible = true;
+                $this->getRecord()->active = true;
+                return;    
+        }
     }
 
     /**

@@ -103,6 +103,7 @@ class SkinsetModel
         if ($key == $skinConfig->getKey()) {
             return (new CmsTemplateConfig)
                 ->setName('template.category.index.folder.label')
+                ->setNestingEnabled()
                 ->setControllerClassName(FolderTemplateController::class);
         }
     }

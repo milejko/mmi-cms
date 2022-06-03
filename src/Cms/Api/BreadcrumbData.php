@@ -11,6 +11,7 @@ class BreadcrumbData implements DataInterface
     public string   $name;
     public string   $template;
     public bool     $blank = false;
+    public bool     $visible = true;
     public int      $order;
     public array    $_links = [];
 
@@ -35,6 +36,12 @@ class BreadcrumbData implements DataInterface
     public function setBlank($blank = true): self
     {
         $this->blank = $blank;
+        return $this;
+    }
+
+    public function setVisible($visible = true): self
+    {
+        $this->visible = $visible;
         return $this;
     }
 

@@ -93,6 +93,7 @@ abstract class AbstractTemplateController extends Controller
         }
         $to->description = (string) $this->cmsCategoryRecord->description;
         $to->opensNewWindow = (bool) $this->cmsCategoryRecord->blank;
+        $to->visible = (bool) $this->cmsCategoryRecord->visible;
         $to->children = $this->getChildren();
         //attributes
         $attributes = json_decode((string) $this->cmsCategoryRecord->configJson, true);
@@ -218,6 +219,7 @@ abstract class AbstractTemplateController extends Controller
             ->setName($cmsCategoryRecord->name ?: '')
             ->setTemplate($cmsCategoryRecord->template)
             ->setBlank($cmsCategoryRecord->blank)
+            ->setVisible($cmsCategoryRecord->visible)
             ->setOrder($cmsCategoryRecord->order)
             ->setLinks([
                 (new LinkData)

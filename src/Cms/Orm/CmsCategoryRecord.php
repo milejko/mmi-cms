@@ -128,6 +128,12 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public $active;
 
+    /**
+     * Widoczność
+     * @var bool
+     */
+    public $visible;
+
     //status draft
     const STATUS_DRAFT = 0;
     //status artykuł aktywny
@@ -246,8 +252,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //ustawiamy uri na podstawie rodzica
         if ($this->parentId && (null !== $parent = $this->getParentRecord())) {
             //nieaktywny nie jest ujawniony w uri
-            //$this->uri = $parent->active ? $parent->uri : substr($parent->uri, 0, strrpos($parent->uri, '/'));
-            $this->uri = $parent->uri;
+            $this->uri = $parent->visible ? $parent->uri : substr($parent->uri, 0, strrpos($parent->uri, '/'));
             //bez względu na aktywność jest w ścieżce - path
             $this->path = trim($parent->path . '/' . $parent->id, '/');
         }
@@ -283,6 +288,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $orderModified = $this->isModified('order');
         //zmodyfikowana aktywność
         $activeModified = $this->isModified('active');
+        //zmodyfikowana widoczność
+        $visibleModified = $this->isModified('visible');
         //czy nazwa zmodyfikowana
         $nameModified = $this->isModified('name');
         //data modyfikacji
@@ -301,7 +308,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             return true;
         }
         //zmieniono parenta, nazwę, lub aktywność
-        if ($parentModified || $nameModified || $activeModified) {
+        if ($parentModified || $nameModified || $activeModified || $visibleModified) {
             //przebudowa dzieci
             $this->_rebuildChildren($this->id);
         }

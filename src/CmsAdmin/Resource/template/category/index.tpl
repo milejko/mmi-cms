@@ -50,10 +50,10 @@
                                 {foreach $categories as $category}
                                     {$allowed = categoryAclAllowed($category->id)}
                                     {$templateConfig = $skinset->getTemplateConfigByKey($category->template)}
-                                    {$nestingEnabled = !$templateConfig || $templateConfig->getNestingEnabled()}
+                                    {$nestingEnabled = $templateConfig && $templateConfig->getNestingEnabled()}
                                     <tr data-id="{$category->id}">
                                         <td class="align-middle">
-                                            <i class="icon-{if $nestingEnabled}folder{else}doc{/if} p-1 mr-2 {if !$category->active}alert-danger{else}{/if}"></i>
+                                            <i class="icon-{if $nestingEnabled}folder{else}doc{/if} p-1 mr-2 {if !$category->active}alert-danger{elseif $category->visible}alert-success{else}alert-warning{/if}"></i>
                                             {if $nestingEnabled}<a href="{@module=cmsAdmin&controller=category&action=index&parentId={$category->id}@}">{/if}
                                             {if $category->name}{$category->name}{else}({#template.category.index.label.default#}){/if}{if $nestingEnabled}</a>{/if}
                                             <small>

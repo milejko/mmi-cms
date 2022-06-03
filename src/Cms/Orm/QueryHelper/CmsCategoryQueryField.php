@@ -132,6 +132,12 @@ namespace Cms\Orm\QueryHelper;
  * @method \Cms\Orm\CmsCategoryQuery lessThanColumnActive()
  * @method \Cms\Orm\CmsCategoryQuery greaterOrEqualsColumnActive()
  * @method \Cms\Orm\CmsCategoryQuery lessOrEqualsColumnActive()
+ * @method \Cms\Orm\CmsCategoryQuery equalsColumnVisible()
+ * @method \Cms\Orm\CmsCategoryQuery notEqualsColumnVisible()
+ * @method \Cms\Orm\CmsCategoryQuery greaterThanColumnVisible()
+ * @method \Cms\Orm\CmsCategoryQuery lessThanColumnVisible()
+ * @method \Cms\Orm\CmsCategoryQuery greaterOrEqualsColumnVisible()
+ * @method \Cms\Orm\CmsCategoryQuery lessOrEqualsColumnVisible()
  */
 class CmsCategoryQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
