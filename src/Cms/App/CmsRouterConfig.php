@@ -48,8 +48,9 @@ class CmsRouterConfig extends RouterConfig
         $this->setRoute('cms-category-api', '/^api\/category\/([a-z0-9-]+)\/([a-z0-9\/-]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getCategory', 'scope' => '$1', 'uri' => '$2']);
 
         //routy API menu
-        $this->setRoute('cms-category-menu-scopes-api', '/^api\/category\/([a-z0-9-]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getMenu', 'scope' => '$1']);
-        $this->setRoute('cms-category-menu-api', '/^api\/category$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getMenu']);
+        $this->setRoute('cms-category-scopes-api', '/^api\/category\/([a-z0-9-]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getCategory', 'scope' => '$1']);
+        $this->setRoute('cms-category-menu-scopes-api', '/^api\/sitemap\/([a-z0-9-]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getMenu', 'scope' => '$1']);
+        $this->setRoute('cms-category-menu-api', '/^api\/(category|sitemap)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getMenu']);
 
         //routa API podgląd nieopublikownych stron cms
         $this->setRoute('cms-category-preview-api', '/^api\/category-preview\/([a-z0-9-]+)\/([0-9]+)\/([0-9]+)\/([0-9]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getCategoryPreview', 'scope' => '$1', 'id' => '$2', 'originalId' => '$3', 'authId' => '$4']);

@@ -157,7 +157,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     //prefiks bufora obiektu transportowego kategorii
     const CATEGORY_CACHE_TRANSPORT_PREFIX = 'category-transport-';
     //prefix bufora dzieci kategorii
-    const CATEGORY_CHILDREN_CACHE_PREFIX = 'category-children-';
+    const CATEGORY_CHILDREN_CACHE_PREFIX = 'category-children-%s-';
     //prefiks bufora przekierowania
     const REDIRECT_CACHE_PREFIX = 'category-redirect-';
 
@@ -435,9 +435,9 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     public function getChildrenRecords()
     {
         //próba pobrania dzieci z cache
-        if (null === $children = App::$di->get(CacheInterface::class)->load($cacheKey = self::CATEGORY_CHILDREN_CACHE_PREFIX . $this->id)) {
+        if (null === $children = App::$di->get(CacheInterface::class)->load($cacheKey = sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $this->getScope()) . $this->id)) {
             //pobieranie dzieci
-            App::$di->get(CacheInterface::class)->save($children = $this->_getPublishedChildren($this->id), $cacheKey, 0);
+            App::$di->get(CacheInterface::class)->save($children = $this->_getPublishedChildren($this->id, $this->getScope()), $cacheKey, 0);
         }
         return $children;
     }
@@ -530,7 +530,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //clear parent cache
         App::$di->get(CacheInterface::class)->remove(self::CATEGORY_CACHE_PREFIX . $parentId);
         //iteracja po dzieciach
-        foreach ($this->_getPublishedChildren($parentId) as $categoryRecord) {
+        foreach ($this->_getPublishedChildren($parentId, $this->getScope()) as $categoryRecord) {
             //wyznaczanie kolejności
             $categoryRecord->order = $i++;
             $categoryRecord->_calculatePathAndUri();
@@ -546,7 +546,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     protected function _softDeleteChildren($parentId)
     {
-        foreach ($this->_getPublishedChildren($parentId) as $categoryRecord) {
+        foreach ($this->_getPublishedChildren($parentId, $this->getScope()) as $categoryRecord) {
             $categoryRecord->softDelete();
             $this->_softDeleteChildren($categoryRecord->id);
         }
@@ -558,11 +558,12 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      * @param boolean $activeOnly tylko aktywne
      * @return \Cms\Orm\CmsCategoryRecord[]
      */
-    protected function _getPublishedChildren($parentId)
+    protected function _getPublishedChildren($parentId, $scope)
     {
         //zwrot kolekcji rekordów
         return (new CmsCategoryQuery)
             ->whereParentId()->equals($parentId)
+            ->whereTemplate()->like($scope . '%')
             ->whereStatus()->equals(self::STATUS_ACTIVE)
             ->orderAscOrder()
             ->orderAscId()
@@ -577,7 +578,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     {
         $i = 0;
         //pobranie dzieci swojego rodzica
-        foreach ($this->_getPublishedChildren($this->parentId) as $categoryRecord) {
+        foreach ($this->_getPublishedChildren($this->parentId, $this->getScope()) as $categoryRecord) {
             //ten rekord musi pozostać w niezmienionej pozycji (był sortowany)
             if ($categoryRecord->id == $this->id) {
                 continue;
@@ -601,6 +602,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $scope = $this->getScope();
         //usuwanie cache
         $cache = App::$di->get(CacheInterface::class);
+        $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $this->id);
+        $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->id);
+        $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->cmsCategoryOriginalId);
+        //caches associated with active version
+        if (self::STATUS_ACTIVE != $this->status) {
+            return true;
+        }
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($scope . $this->uri));
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($scope . $this->getInitialStateValue('uri')));
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($scope . $this->customUri));
@@ -609,26 +617,22 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->getInitialStateValue('uri')));
         $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->customUri));
         $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->getInitialStateValue('customUri')));
-        $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->id);
-        $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->cmsCategoryOriginalId);
-        $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $this->id);
-        //caches associated with active version
-        if (self::STATUS_ACTIVE != $this->status) {
-            return true;
+        if (null === $this->parentId) {
+            $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $this->getScope()));
         }
-        //drop navigation cache
-        $cache->remove('mmi-cms-navigation-');
         //drop skin menu cache
         $cache->remove(MenuService::CACHE_KEY);
         $cache->remove(MenuService::CACHE_KEY . $scope);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->id);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
+        $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $this->getScope()) . $this->id);
         //usuwanie cache dzieci kategorii
-        $cache->remove(self::CATEGORY_CHILDREN_CACHE_PREFIX . $this->id);
-        foreach ($this->_getPublishedChildren($this->id) as $childRecord) {
-            $cache->remove(self::CATEGORY_CHILDREN_CACHE_PREFIX . $childRecord->id);
+        foreach ($this->_getPublishedChildren($this->id, $this->getScope()) as $childRecord) {
+            $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $childRecord->getScope()) . $childRecord->id);
         }
-        $cache->remove(self::CATEGORY_CHILDREN_CACHE_PREFIX . $this->parentId);
+        if (null !== $parent = $this->getParentRecord()) {
+            $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $parent->getScope()) . $this->parentId);
+        }
         return true;
     }
 }

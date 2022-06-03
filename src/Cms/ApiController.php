@@ -37,6 +37,7 @@ class ApiController extends \Mmi\Mvc\Controller
     public const API_PATH_SEPARATOR = '/';
     public const API_HOME = self::API_PATH_SEPARATOR . 'api';
     public const API_PREFIX = self::API_HOME . self::API_PATH_SEPARATOR . 'category' . self::API_PATH_SEPARATOR;
+    public const API_SITEMAP_PREFIX = self::API_HOME . self::API_PATH_SEPARATOR . 'sitemap' . self::API_PATH_SEPARATOR;
     public const API_CONFIG_PREFIX = self::API_HOME . self::API_PATH_SEPARATOR . 'config' . self::API_PATH_SEPARATOR;
     public const API_PREVIEW_PREFIX = self::API_HOME . self::API_PATH_SEPARATOR . 'category-preview' . self::API_PATH_SEPARATOR;
 
@@ -75,6 +76,10 @@ class ApiController extends \Mmi\Mvc\Controller
             $skinData->_links[] = ((new LinkData())
                 ->setHref(self::API_PREFIX . $skin->getKey())
                 ->setRel(LinkData::REL_MENU)
+            );
+            $skinData->_links[] = ((new LinkData())
+                ->setHref(self::API_SITEMAP_PREFIX . $skin->getKey())
+                ->setRel(LinkData::REL_SITEMAP)
             );
             $skins[] = $skinData;
         }
@@ -220,6 +225,10 @@ class ApiController extends \Mmi\Mvc\Controller
      */
     private function getTransportObject(Request $request): TransportInterface
     {
+        //null uri = dummy, root category
+        if (null === $request->uri) {
+            return (new TemplateModel($this->getDummyRootCategory($request), $this->cmsSkinsetConfig))->getTransportObject($request);
+        }
         $categoryId = $this->getCategoryId($request->scope, $request->uri);
         //brak ID dla danego uri/scope
         if (!$categoryId) {
@@ -314,6 +323,9 @@ class ApiController extends \Mmi\Mvc\Controller
         return new RedirectTransport(self::API_PREFIX . $scope . self::API_PATH_SEPARATOR . $category->uri);
     }
 
+    /**
+     * Pobiera ID categorii
+     */
     private function getCategoryId($scope, $uri)
     {
         //próba mapowania uri na ID kategorii z cache
@@ -338,5 +350,18 @@ class ApiController extends \Mmi\Mvc\Controller
         }
         $this->cache->save($categoryId, $cacheKey, 0);
         return $category->id;
+    }
+
+    /**
+     * Pobiera pustą kategorię na potrzeby root
+     */
+    private function getDummyRootCategory(Request $request): CmsCategoryRecord
+    {
+        $record = new CmsCategoryRecord();
+        $record->id = null;
+        $record->parentId = 0;
+        $record->template = $request->scope;
+        $record->dateAdd = $record->dateModify = date('Y-m-d H:i:s');
+        return $record;
     }
 }

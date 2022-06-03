@@ -82,12 +82,12 @@ abstract class AbstractTemplateController extends Controller
     public function getTransportObject(Request $request): TransportInterface
     {
         $to = new TemplateDataTransport;
-        $to->id = $this->cmsCategoryRecord->id;
+        $to->id = (int) $this->cmsCategoryRecord->id;
         $to->template = $this->cmsCategoryRecord->template;
-        $to->name = $this->cmsCategoryRecord->name;
+        $to->name = (string) $this->cmsCategoryRecord->name;
         $to->dateAdd = $this->cmsCategoryRecord->dateAdd;
         $to->dateModify = $this->cmsCategoryRecord->dateModify;
-        $to->title = $this->cmsCategoryRecord->title ?: $this->cmsCategoryRecord->name;
+        $to->title = (string) ($this->cmsCategoryRecord->title ?: $this->cmsCategoryRecord->name);
         if (null !== $ogImageRecord = CmsFileQuery::imagesByObject(CmsCategoryRecord::OG_IMAGE_OBJECT, $this->cmsCategoryRecord->id)->findFirst()) {
             $to->ogImageUrl = $ogImageRecord->getUrl('scalecrop', '1200x630');
         }
@@ -101,7 +101,10 @@ abstract class AbstractTemplateController extends Controller
         $to->sections = $this->getSections($request);
         $to->breadcrumbs = $this->getBreadcrumbs();
         $to->siblings = $this->getSiblings();
-        $to->_links = [(new LinkData)->setHref(ApiController::API_PREFIX . $this->cmsCategoryRecord->getScope())->setRel(LinkData::REL_MENU)];
+        $to->_links = [
+            (new LinkData)->setHref(ApiController::API_PREFIX . $this->cmsCategoryRecord->getScope())->setRel(LinkData::REL_MENU),
+            (new LinkData)->setHref(ApiController::API_SITEMAP_PREFIX . $this->cmsCategoryRecord->getScope())->setRel(LinkData::REL_SITEMAP)
+        ];
         return $to;
     }
 

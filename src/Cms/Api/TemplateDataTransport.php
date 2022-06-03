@@ -18,8 +18,8 @@ class TemplateDataTransport extends HttpJsonTransport
     public bool     $opensNewWindow = false;
     public bool     $visible        = true;
     public array    $attributes     = [];
-    public array    $children       = [];
     public array    $sections       = [];
+    public array    $children       = [];
     public array    $breadcrumbs    = [];
     public array    $siblings       = [];
     public array    $_links         = [];
