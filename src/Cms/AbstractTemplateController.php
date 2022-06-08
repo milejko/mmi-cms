@@ -81,25 +81,30 @@ abstract class AbstractTemplateController extends Controller
      */
     public function getTransportObject(Request $request): TransportInterface
     {
-        $attributes = json_decode($this->cmsCategoryRecord->configJson, true);
         $to = new TemplateDataTransport;
-        $to->id = $this->cmsCategoryRecord->id;
+        $to->id = (int) $this->cmsCategoryRecord->id;
         $to->template = $this->cmsCategoryRecord->template;
-        $to->name = $this->cmsCategoryRecord->name;
+        $to->name = (string) $this->cmsCategoryRecord->name;
         $to->dateAdd = $this->cmsCategoryRecord->dateAdd;
         $to->dateModify = $this->cmsCategoryRecord->dateModify;
-        $to->title = $this->cmsCategoryRecord->title ? : $this->cmsCategoryRecord->name;
+        $to->title = (string) ($this->cmsCategoryRecord->title ?: $this->cmsCategoryRecord->name);
         if (null !== $ogImageRecord = CmsFileQuery::imagesByObject(CmsCategoryRecord::OG_IMAGE_OBJECT, $this->cmsCategoryRecord->id)->findFirst()) {
             $to->ogImageUrl = $ogImageRecord->getUrl('scalecrop', '1200x630');
         }
-        $to->description = $this->cmsCategoryRecord->description;
-        $to->opensNewWindow = $this->cmsCategoryRecord->blank ? true : false;
+        $to->description = (string) $this->cmsCategoryRecord->description;
+        $to->opensNewWindow = (bool) $this->cmsCategoryRecord->blank;
+        $to->visible = (bool) $this->cmsCategoryRecord->visible;
+        $to->children = $this->getChildren();
+        //attributes
+        $attributes = json_decode((string) $this->cmsCategoryRecord->configJson, true);
         $to->attributes = is_array($attributes) ? $attributes : [];
         $to->sections = $this->getSections($request);
         $to->breadcrumbs = $this->getBreadcrumbs();
         $to->siblings = $this->getSiblings();
-        $scope = substr($this->cmsCategoryRecord->template, 0, strpos($this->cmsCategoryRecord->template, '/'));
-        $to->_links = [(new LinkData)->setHref(ApiController::API_PREFIX . $scope)->setRel(LinkData::REL_MENU)];
+        $to->_links = [
+            (new LinkData)->setHref(ApiController::API_PREFIX . $this->cmsCategoryRecord->getScope())->setRel(LinkData::REL_MENU),
+            (new LinkData)->setHref(ApiController::API_SITEMAP_PREFIX . $this->cmsCategoryRecord->getScope())->setRel(LinkData::REL_SITEMAP)
+        ];
         return $to;
     }
 
@@ -152,21 +157,41 @@ abstract class AbstractTemplateController extends Controller
     protected function getBreadcrumbs(): array
     {
         $breadcrumbs = [];
-        $record = $this->cmsCategoryRecord;
+        $record = $this->cmsCategoryRecord->getParentRecord();
         $order = count(explode('/', $this->cmsCategoryRecord->path));
+        $skinsetModel = new SkinsetModel($this->cmsSkinsetConfig);
         while (null !== $record) {
-            $scope = substr($record->template, 0, strpos($record->template, '/'));
-            $breadcrumbs[] = (new BreadcrumbData)
-                ->setName($record->name ? : '')
-                ->setOrder($order--)
-                ->setLinks($scope ? [
-                    (new LinkData)
-                        ->setHref(ApiController::API_PREFIX . $scope . '/' . ($record->customUri ?: $record->uri))
-                        ->setRel($this->cmsCategoryRecord === $record ? LinkData::REL_SELF : LinkData::REL_BACK)
-                ] : []);
+            //template not compatible
+            if (null === $skinsetModel->getTemplateConfigByKey($record->template)) {
+                continue;
+            }
+            //adding breadcrumb with modified order field
+            $breadcrumbs[] = $this->getBreadcrumbDataByRecord($record, LinkData::REL_BACK)
+                ->setOrder($order--);
             $record = $record->getParentRecord();
         }
         return array_reverse($breadcrumbs);
+    }
+
+    /**
+     * Pobiera dzieci
+     */
+    protected function getChildren(): array
+    {
+        $children = [];
+        $skinsetModel = new SkinsetModel($this->cmsSkinsetConfig);
+        foreach ($this->cmsCategoryRecord->getChildrenRecords() as $record) {
+            //inavtive record
+            if (!$record->active) {
+                continue;
+            }
+            //template not compatible
+            if (null === $skinsetModel->getTemplateConfigByKey($record->template)) {
+                continue;
+            }            
+            $children[] = $this->getBreadcrumbDataByRecord($record);
+        }
+        return $children;
     }
 
     /**
@@ -175,28 +200,34 @@ abstract class AbstractTemplateController extends Controller
     protected function getSiblings(): array
     {
         $siblings = [];
+        $skinsetModel = new SkinsetModel($this->cmsSkinsetConfig);
         foreach ($this->cmsCategoryRecord->getSiblingsRecords() as $record) {
-            //not active or self
-            if (!$record->active || $record->id == $this->cmsCategoryRecord->id || $record->id == $this->cmsCategoryRecord->cmsCategoryOriginalId) {
-                continue;
-            }
-            $scope = substr($record->template, 0, strpos($record->template, '/'));
-            //folder (ignored)
-            if (!$scope) {
+            //if self
+            if ($record->id == $this->cmsCategoryRecord->id || $record->id == $this->cmsCategoryRecord->cmsCategoryOriginalId) {
                 continue;
             }
             //template not compatible
-            if (null === (new SkinsetModel($this->cmsSkinsetConfig))->getTemplateConfigByKey($record->template)) {
+            if (null === $skinsetModel->getTemplateConfigByKey($record->template)) {
                 continue;
             }
-            $siblings[] = (new BreadcrumbData)
-                ->setName($record->name ? : '')
-                ->setLinks([
-                    (new LinkData)
-                        ->setHref(ApiController::API_PREFIX . $scope . '/' . ($record->customUri ?: $record->uri))
-                        ->setRel(LinkData::REL_SIBLING)
-                ]);
+            $siblings[] = $this->getBreadcrumbDataByRecord($record, LinkData::REL_SIBLING);
         }
         return $siblings;
+    }
+
+    protected function getBreadcrumbDataByRecord(CmsCategoryRecord $cmsCategoryRecord, string $linkRel = LinkData::REL_NEXT): BreadcrumbData
+    {
+        return (new BreadcrumbData)
+            ->setId($cmsCategoryRecord->id)
+            ->setName($cmsCategoryRecord->name ?: '')
+            ->setTemplate($cmsCategoryRecord->template)
+            ->setBlank($cmsCategoryRecord->blank)
+            ->setVisible($cmsCategoryRecord->visible)
+            ->setOrder($cmsCategoryRecord->order)
+            ->setLinks([
+                (new LinkData)
+                    ->setHref(ApiController::API_PREFIX . $cmsCategoryRecord->getScope() . '/' . ($cmsCategoryRecord->customUri ?: $cmsCategoryRecord->uri))
+                    ->setRel($linkRel)
+            ]);
     }
 }

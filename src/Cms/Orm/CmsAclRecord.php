@@ -60,7 +60,6 @@ class CmsAclRecord extends \Mmi\Orm\Record
      */
     public function clearCache()
     {
-        App::$di->get(CacheInterface::class)->remove('mmi-cms-navigation-');
         App::$di->get(CacheInterface::class)->remove('mmi-cms-acl');
         return true;
     }

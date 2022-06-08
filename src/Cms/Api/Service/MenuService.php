@@ -99,9 +99,9 @@ class MenuService implements MenuServiceInterface
             'name'      => $item['name'],
             'template'  => $item['template'],
             'blank'     => (bool) $item['blank'],
+            'visible'   => (bool) $item['visible'],
             'order'     => (int) $item['order'],
-            'active'    => (bool) $item['active'],
-            '_links'    => (bool) $item['active'] ? $this->getLinks($item) : [],
+            '_links'    => $this->getLinks($item),
             'children'  => [],
         ];
     }
@@ -116,7 +116,7 @@ class MenuService implements MenuServiceInterface
         if (null !== $scope) {
             $query->whereTemplate()->equals([$scope => $scope] + (new SkinsetModel($this->cmsSkinsetConfig))->getAllowedTemplateKeysBySkinKey($scope));
         }
-        return $query->findFields(['id', 'template', 'name', 'uri', 'blank', 'customUri', 'redirectUri', 'path', 'order', 'active']);
+        return $query->findFields(['id', 'template', 'name', 'uri', 'blank', 'visible', 'customUri', 'redirectUri', 'path', 'order']);
     }
 
     protected function getLinks(array $item): array
@@ -127,7 +127,7 @@ class MenuService implements MenuServiceInterface
                 ->setMethod(LinkData::METHOD_REDIRECT)
                 ->setRel('external')];
         }
-        $scope = substr($item['template'], 0, strpos($item['template'], self::PATH_SEPARATOR));
+        $scope = substr($item['template'], 0, strpos($item['template'], self::PATH_SEPARATOR)) ?: $item['template'];
         if ($scope) {
             return [(new LinkData)
                 ->setHref(ApiController::API_PREFIX . $scope . self::PATH_SEPARATOR . ($item['customUri'] ?: $item['uri']))];
