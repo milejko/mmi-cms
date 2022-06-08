@@ -10,9 +10,6 @@
                     <div class="card-body">
                         <div class="content-box-content clearfix">
                             <div class="available-templates" style="overflow-x: auto; white-space:nowrap;">
-                                <a class="button btn btn-primary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=edit&parentId={$request->parentId}&template={$scopeName}@}">
-                                    <i class="icon-plus"></i> {#template.category.index.folder.label#}
-                                </a>
                                 {$skin = $skinset->getSkinConfigByKey($scopeName)}
                                 {if $skin}
                                     {foreach $skin->getTemplates() as $templateConfig}
@@ -58,7 +55,7 @@
                                             {if $category->name}{$category->name}{else}({#template.category.index.label.default#}){/if}{if $nestingEnabled}</a>{/if}
                                             <small>
                                                 {$templateConfig = $skinset->getTemplateConfigByKey($category->template)}
-                                                ({if $templateConfig}{_($templateConfig->getName())}{else}{#template.category.index.folder.label#}{/if})
+                                                ({if $templateConfig}{_($templateConfig->getName())}{/if})
                                             </small>
                                         </td>
                                         <td align="right" {if !$allowed}class="inactive"{/if}>
