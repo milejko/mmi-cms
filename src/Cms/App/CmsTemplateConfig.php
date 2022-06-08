@@ -82,14 +82,6 @@ class CmsTemplateConfig
     }
 
     /**
-     * Gets nesting enabled option
-     */
-    public function getNestingEnabled(): bool
-    {
-        return !empty($this->compatibleChildrenKeys);
-    }
-
-    /**
      * Sets compatible children keys like [folder, article]
      */
     public function setCompatibleChildrenKeys(array $compatibleChildrenKeys): self

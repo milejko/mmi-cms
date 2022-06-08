@@ -44,7 +44,8 @@
                                 {foreach $categories as $category}
                                     {$allowed = categoryAclAllowed($category->id)}
                                     {$templateConfig = $skinset->getTemplateConfigByKey($category->template)}
-                                    {$nestingEnabled = $templateConfig->getNestingEnabled()}
+                                    {$compatibleChildrenKeys = $templateConfig->getCompatibleChildrenKeys()}
+                                    {$nestingEnabled = $compatibleChildrenKeys|count}
                                     <tr data-id="{$category->id}">
                                         <td class="align-middle">
                                             <i class="icon-{if $nestingEnabled}folder{else}doc{/if} p-1 mr-2 {if !$category->active}alert-danger{elseif $category->visible}alert-success{else}alert-warning{/if}"></i>
