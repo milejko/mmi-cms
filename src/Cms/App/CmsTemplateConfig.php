@@ -36,7 +36,7 @@ class CmsTemplateConfig
     /**
      * Allowed on root
      */
-    private bool $allowedOnRoot = true;
+    private bool $allowedOnRoot = false;
 
     /**
      * Sekcje
@@ -86,7 +86,7 @@ class CmsTemplateConfig
      */
     public function getNestingEnabled(): bool
     {
-        return empty($this->compatibleChildrenKeys);
+        return !empty($this->compatibleChildrenKeys);
     }
 
     /**
