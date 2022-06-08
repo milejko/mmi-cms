@@ -21,8 +21,7 @@ class FolderTemplateConfig extends CmsTemplateConfig
     {
         $this
             ->setName('template.category.index.folder.label')
-            ->setNestingEnabled(true)
-            ->setCompatibleNestingLevels([0,1,2,3,4,5,6,7,8,9,10])
+            ->setAllowedOnRoot(true)
             ->setKey(self::KEY)
             ->setControllerClassName(FolderTemplateController::class);
     }

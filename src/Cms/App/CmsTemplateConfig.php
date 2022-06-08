@@ -29,19 +29,14 @@ class CmsTemplateConfig
     private int $cacheLifeTime = 2592000;
 
     /**
-     * Is nesting allowed
-     */
-    private bool $nestingEnabled = false;
-
-    /**
      * Compatible children keys array
      */
     private array $compatibleChildrenKeys = [];
 
     /**
-     * Compatible nesting levels
+     * Allowed on root
      */
-    private array $compatibleNestingLevels = [];
+    private bool $allowedOnRoot = true;
 
     /**
      * Sekcje
@@ -70,12 +65,20 @@ class CmsTemplateConfig
     }
 
     /**
-     * Enabling/disabling nesting
+     * Sets allowed on root option
      */
-    public function setNestingEnabled(bool $nestingEnabled = true): self
+    public function setAllowedOnRoot(bool $allowedOnRoot): self
     {
-        $this->nestingEnabled = $nestingEnabled;
+        $this->allowedOnRoot = $allowedOnRoot;
         return $this;
+    }
+
+    /**
+     * Gets allowed on root option
+     */
+    public function getAllowedOnRoot(): bool
+    {
+        return $this->allowedOnRoot;
     }
 
     /**
@@ -83,7 +86,7 @@ class CmsTemplateConfig
      */
     public function getNestingEnabled(): bool
     {
-        return $this->nestingEnabled;
+        return empty($this->compatibleChildrenKeys);
     }
 
     /**
@@ -101,15 +104,6 @@ class CmsTemplateConfig
     public function getCompatibleChildrenKeys(): array
     {
         return $this->compatibleChildrenKeys;
-    }
-
-    /**
-     * Sets compatible nesting levels like [0, 1]
-     */
-    public function setCompatibleNestingLevels(array $compatibleNestingLevels): self
-    {
-        $this->compatibleNestingLevels = $compatibleNestingLevels;
-        return $this;
     }
 
     /**
