@@ -44,7 +44,11 @@
                                 {foreach $categories as $category}
                                     {$allowed = categoryAclAllowed($category->id)}
                                     {$templateConfig = $skinset->getTemplateConfigByKey($category->template)}
-                                    {$compatibleChildrenKeys = $templateConfig->getCompatibleChildrenKeys()}
+                                    {if $templateConfig}
+                                        {$compatibleChildrenKeys = $templateConfig->getCompatibleChildrenKeys()}
+                                    {else}
+                                        {$compatibleChildrenKeys = []}
+                                    {/if}
                                     {$nestingEnabled = $compatibleChildrenKeys|count}
                                     <tr data-id="{$category->id}">
                                         <td class="align-middle">
