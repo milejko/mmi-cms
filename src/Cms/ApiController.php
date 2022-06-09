@@ -106,10 +106,15 @@ class ApiController extends \Mmi\Mvc\Controller
         $skinConfigTransport = new SkinConfigTransport();
         $skinConfigTransport->key = $skinConfig->getKey();
         $skinConfigTransport->attributes = $skinConfig->getAttributes();
-        $skinConfigTransport->_links[] = ((new LinkData())
-            ->setHref(self::API_PREFIX . $skinConfig->getKey())
-            ->setRel(LinkData::REL_MENU)
-        );
+        $skinConfigTransport->_links = [
+            ((new LinkData())
+                ->setHref(self::API_SITEMAP_PREFIX . $skinConfig->getKey())
+                ->setRel(LinkData::REL_SITEMAP)),
+            ((new LinkData())
+                ->setHref(self::API_PREFIX . $skinConfig->getKey())
+                ->setRel(LinkData::REL_MENU)
+            )
+        ];
         return $this->getResponse()->setTypeJson()
             ->setCode($skinConfigTransport->getCode())
             ->setContent($skinConfigTransport->toString());
