@@ -221,8 +221,8 @@ abstract class AbstractTemplateController extends Controller
             ->setId($cmsCategoryRecord->id)
             ->setName($cmsCategoryRecord->name ?: '')
             ->setTemplate($cmsCategoryRecord->template)
-            ->setBlank($cmsCategoryRecord->blank)
-            ->setVisible($cmsCategoryRecord->visible)
+            ->setBlank((bool) $cmsCategoryRecord->blank)
+            ->setVisible((bool) $cmsCategoryRecord->visible)
             ->setOrder($cmsCategoryRecord->order)
             ->setLinks([
                 (new LinkData)
