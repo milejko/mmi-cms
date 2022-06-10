@@ -108,9 +108,9 @@ class ApiController extends \Mmi\Mvc\Controller
     }
 
     /**
-     * Akcja pobrania menu 
+     * Akcja listowania contentu
      */
-    public function getMenuAction(Request $request)
+    public function getContentsAction(Request $request)
     {
         //scope not found - redirect to home
         if (!$request->scope) {

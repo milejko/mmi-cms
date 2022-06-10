@@ -11,6 +11,7 @@
 namespace CmsAdmin;
 
 use Cms\ApiController;
+use Cms\App\CmsRouterConfig;
 use Cms\App\CmsScopeConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Model\CategoryValidationModel;
@@ -251,7 +252,12 @@ class CategoryController extends Controller
         $skinBasedPreviewUrl = $this->cmsSkinsetConfig->getSkinByKey($this->scopeConfig->getName())->getPreviewUrl();
         //przekierowanie na skórkowy lub defaultowy adres
         $skinBasedPreviewUrl ?
-            $this->getResponse()->redirectToUrl($skinBasedPreviewUrl . '?apiUrl=' . urlencode(ApiController::API_PREVIEW_PREFIX . $category->getScope() . ApiController::API_PATH_SEPARATOR . $category->id . ApiController::API_PATH_SEPARATOR . $category->cmsCategoryOriginalId . ApiController::API_PATH_SEPARATOR . $category->cmsAuthId) . '&returnUrl=' . urlencode($this->view->url([], false))) :
+            $this->getResponse()->redirectToUrl($skinBasedPreviewUrl . 
+                '?apiUrl=' . 
+                urlencode(sprintf(CmsRouterConfig::API_METHOD_PREVIEW, $category->getScope(), $category->id, $category->cmsCategoryOriginalId, $category->cmsAuthId)) .
+                '&returnUrl=' . 
+                urlencode($this->view->url([], false))
+            ) :
             $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);
     }
 
