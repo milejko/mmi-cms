@@ -3,7 +3,7 @@
 namespace Cms\Api\Service;
 
 use Cms\Api\LinkData;
-use Cms\ApiController;
+use Cms\App\CmsRouterConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Model\SkinsetModel;
 use Cms\Orm\CmsCategoryQuery;
@@ -125,12 +125,14 @@ class MenuService implements MenuServiceInterface
             return [(new LinkData)
                 ->setHref($item['redirectUri'])
                 ->setMethod(LinkData::METHOD_REDIRECT)
-                ->setRel('external')];
+                ->setRel(LinkData::REL_EXTERNAL)];
         }
         $scope = substr($item['template'], 0, strpos($item['template'], self::PATH_SEPARATOR)) ?: $item['template'];
         if ($scope) {
             return [(new LinkData)
-                ->setHref(ApiController::API_PREFIX . $scope . self::PATH_SEPARATOR . ($item['customUri'] ?: $item['uri']))];
+                ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $scope, $item['customUri'] ?: $item['uri']))
+                ->setRel(LinkData::REL_CONTENT)
+            ];
         }
         return [];
     }

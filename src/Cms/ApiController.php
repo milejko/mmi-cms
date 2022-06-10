@@ -19,6 +19,7 @@ use Cms\Api\SkinConfigTransport;
 use Cms\Api\SkinData;
 use Cms\Api\SkinsetDataTransport;
 use Cms\Api\TransportInterface;
+use Cms\App\CmsRouterConfig;
 use Cms\App\CmsSkinNotFoundException;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Model\SkinsetModel;
@@ -34,13 +35,6 @@ use Mmi\Http\Response;
  */
 class ApiController extends \Mmi\Mvc\Controller
 {
-    public const API_PATH_SEPARATOR = '/';
-    public const API_HOME = self::API_PATH_SEPARATOR . 'api';
-    public const API_PREFIX = self::API_HOME . self::API_PATH_SEPARATOR . 'category' . self::API_PATH_SEPARATOR;
-    public const API_SITEMAP_PREFIX = self::API_HOME . self::API_PATH_SEPARATOR . 'sitemap' . self::API_PATH_SEPARATOR;
-    public const API_CONFIG_PREFIX = self::API_HOME . self::API_PATH_SEPARATOR . 'config' . self::API_PATH_SEPARATOR;
-    public const API_PREVIEW_PREFIX = self::API_HOME . self::API_PATH_SEPARATOR . 'category-preview' . self::API_PATH_SEPARATOR;
-
     /**
      * @Inject
      */
@@ -69,17 +63,13 @@ class ApiController extends \Mmi\Mvc\Controller
             $skinData->name = $skin->getName();
             //config link
             $skinData->_links[] = ((new LinkData())
-                ->setHref(self::API_CONFIG_PREFIX . $skin->getKey())
+                ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONFIG, $skin->getKey()))
                 ->setRel(LinkData::REL_CONFIG)
             );
             //menu link
             $skinData->_links[] = ((new LinkData())
-                ->setHref(self::API_PREFIX . $skin->getKey())
-                ->setRel(LinkData::REL_MENU)
-            );
-            $skinData->_links[] = ((new LinkData())
-                ->setHref(self::API_SITEMAP_PREFIX . $skin->getKey())
-                ->setRel(LinkData::REL_SITEMAP)
+                ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $skin->getKey()))
+                ->setRel(LinkData::REL_CONTENTS)
             );
             $skins[] = $skinData;
         }
@@ -108,11 +98,8 @@ class ApiController extends \Mmi\Mvc\Controller
         $skinConfigTransport->attributes = $skinConfig->getAttributes();
         $skinConfigTransport->_links = [
             ((new LinkData())
-                ->setHref(self::API_SITEMAP_PREFIX . $skinConfig->getKey())
-                ->setRel(LinkData::REL_SITEMAP)),
-            ((new LinkData())
-                ->setHref(self::API_PREFIX . $skinConfig->getKey())
-                ->setRel(LinkData::REL_MENU)
+                ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $skinConfig->getKey()))
+                ->setRel(LinkData::REL_CONTENTS)
             )
         ];
         return $this->getResponse()->setTypeJson()
@@ -127,7 +114,7 @@ class ApiController extends \Mmi\Mvc\Controller
     {
         //scope not found - redirect to home
         if (!$request->scope) {
-            $redirectTransportObject = new RedirectTransport(self::API_HOME);
+            $redirectTransportObject = new RedirectTransport(CmsRouterConfig::API_HOME);
             return $this->getResponse()->setTypeJson()
                 ->setCode($redirectTransportObject->getCode())
                 ->setContent($redirectTransportObject->toString());
@@ -216,7 +203,7 @@ class ApiController extends \Mmi\Mvc\Controller
             return $this->getNotFoundResponse();
         }
         //obiekt transportowy
-        $redirectTransportObject = new RedirectTransport(self::API_PREFIX . $categoryRecord->getScope() . self::API_PATH_SEPARATOR . $categoryRecord->getUri());
+        $redirectTransportObject = new RedirectTransport(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $categoryRecord->getScope(), $categoryRecord->getUri()));
         return $this->getResponse()->setTypeJson()
             ->setCode($redirectTransportObject->getCode())
             ->setContent($redirectTransportObject->toString());
@@ -230,10 +217,6 @@ class ApiController extends \Mmi\Mvc\Controller
      */
     private function getTransportObject(Request $request): TransportInterface
     {
-        //null uri = dummy, root category
-        if (null === $request->uri) {
-            return (new TemplateModel($this->getDummyRootCategory($request), $this->cmsSkinsetConfig))->getTransportObject($request);
-        }
         $categoryId = $this->getCategoryId($request->scope, $request->uri);
         //brak ID dla danego uri/scope
         if (!$categoryId) {
@@ -262,7 +245,7 @@ class ApiController extends \Mmi\Mvc\Controller
         //kategoria posiada customUri, a wejście jest na natywny uri
         if ($category->customUri && $request->uri != $category->customUri && $request->uri == $category->uri) {
             //przekierowanie na customUri
-            return new RedirectTransport(self::API_PREFIX . $request->scope . self::API_PATH_SEPARATOR . $category->customUri);
+            return new RedirectTransport(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $request->scope, $category->customUri));
         }
         //kategoria posiada niewłaściwy (niewspierany) template
         if (null === $templateConfig = (new SkinsetModel($this->cmsSkinsetConfig))->getTemplateConfigByKey($category->template)) {
@@ -308,7 +291,7 @@ class ApiController extends \Mmi\Mvc\Controller
         }
         //przekierowanie 301
         if (null !== $redirectUri) {
-            return new RedirectTransport(self::API_PREFIX . $redirectUri);
+            return new RedirectTransport(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $scope, $redirectUri));
         }
         //wyszukiwanie bieżącej kategorii (aktywnej)
         if (
@@ -325,7 +308,7 @@ class ApiController extends \Mmi\Mvc\Controller
         //zapis uri przekierowania do bufora
         $this->cache->save($scope . '/' . $category->uri, $cacheKey, 0);
         //przekierowanie 301
-        return new RedirectTransport(self::API_PREFIX . $scope . self::API_PATH_SEPARATOR . $category->uri);
+        return new RedirectTransport(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $scope, $category->uri));
     }
 
     /**
@@ -357,16 +340,4 @@ class ApiController extends \Mmi\Mvc\Controller
         return $category->id;
     }
 
-    /**
-     * Pobiera pustą kategorię na potrzeby root
-     */
-    private function getDummyRootCategory(Request $request): CmsCategoryRecord
-    {
-        $record = new CmsCategoryRecord();
-        $record->id = null;
-        $record->parentId = 0;
-        $record->template = $request->scope;
-        $record->dateAdd = $record->dateModify = date('Y-m-d H:i:s');
-        return $record;
-    }
 }
