@@ -70,12 +70,15 @@ class CategoryController extends Controller
             //błędny parent
             $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
-        $breadcrumbs = [];
+        //dostępne szablony
+        $this->view->allowedTemplates = $this->getAllowedTemplates($parentCategory);
         //generowanie breadcrumbów
+        $breadcrumbs = [];
         while ($parentCategory) {
             $breadcrumbs[] = $parentCategory;
             $parentCategory = $parentCategory->getParentRecord();
         }
+        //breadcrumby
         $this->view->breadcrumbs = \array_reverse($breadcrumbs);
         //model skóry skinset do widoku
         $this->view->skinset = $skinsetModel = new SkinsetModel($this->cmsSkinsetConfig);
@@ -99,6 +102,13 @@ class CategoryController extends Controller
     {
         //brak id i szablonu
         if (!$request->id && !$request->template) {
+            //nowy artykuł bez template
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
+        }
+        $parentCategory = null;
+        if ($request->parentId && (null === $parentCategory = (new CmsCategoryQuery)
+            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+            ->findPk($request->parentId))) {
             //nowy artykuł bez template
             $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
@@ -127,6 +137,18 @@ class CategoryController extends Controller
             //przekierowanie na originalId
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $request->originalId]);
         }
+        //sprawdzanie kompatybilności templata
+        $requestedTemplateAllowed = false;
+        foreach ($this->getAllowedTemplates($category->getParentRecord()) as $allowedTemplateConfig) {
+            if ($category->template == $this->scopeConfig->getName() . '/' . $allowedTemplateConfig->getKey()) {
+                $requestedTemplateAllowed = true;
+                break;
+            }
+        }
+        //template niekompatybilny
+        if (!$requestedTemplateAllowed) {
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
+        }        
         //zapisywanie oryginalnego id
         $originalId = $category->cmsCategoryOriginalId ? $category->cmsCategoryOriginalId : $category->id;
         //przygotowanie draftu (lub przekierowanie)
@@ -359,6 +381,29 @@ class CategoryController extends Controller
         }
         //przekierowanie do edycji DRAFTu - nowego ID
         $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draft->id, 'originalId' => $originalId, 'uploaderId' => $draft->id]);
+    }
+
+    /**
+     * Pobiera dozwolone szablony do dodania pod podaną kategorią
+     */
+    protected function getAllowedTemplates(?CmsCategoryRecord $parentCategory): array
+    {
+        $skinsetModel = new SkinsetModel($this->cmsSkinsetConfig);
+        $allowedTemplates = [];
+        foreach ($skinsetModel->getSkinConfigByKey($this->scopeConfig->getName())->getTemplates() as $templateConfig) {
+            if (null === $parentCategory && $templateConfig->getAllowedOnRoot()) {
+                $allowedTemplates[] = $templateConfig;
+                continue;
+            }
+            if (null === $parentCategory) {
+                continue;
+            }
+            $parentTemplateConfig = $skinsetModel->getTemplateConfigByKey($parentCategory->template);
+            if (in_array($templateConfig->getKey(), $parentTemplateConfig->getCompatibleChildrenKeys())) {
+                $allowedTemplates[] = $templateConfig;
+            }
+        }
+        return $allowedTemplates;
     }
 
 }

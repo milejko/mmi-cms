@@ -10,17 +10,11 @@
                     <div class="card-body">
                         <div class="content-box-content clearfix">
                             <div class="available-templates" style="overflow-x: auto; white-space:nowrap;">
-                                <a class="button btn btn-primary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=edit&parentId={$request->parentId}&template={$scopeName}@}">
-                                    <i class="icon-plus"></i> {#template.category.index.folder.label#}
-                                </a>
-                                {$skin = $skinset->getSkinConfigByKey($scopeName)}
-                                {if $skin}
-                                    {foreach $skin->getTemplates() as $templateConfig}
-                                        <a class="button btn btn-primary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=edit&parentId={$request->parentId}&template={$scopeName}/{$templateConfig->getKey()}@}">
-                                            <i class="icon-plus"></i> {_($templateConfig->getName())}
-                                        </a>
-                                    {/foreach}
-                                {/if}
+                                {foreach $allowedTemplates as $templateConfig}
+                                    <a class="button btn btn-primary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=edit&parentId={$request->parentId}&template={$scopeName}/{$templateConfig->getKey()}@}">
+                                        <i class="icon-plus"></i> {_($templateConfig->getName())}
+                                    </a>
+                                {/foreach}
                             </div>
                             <br />
                             <table class="table table-striped table-sort" data-sort-url="{@module=cmsAdmin&controller=category&action=sort@}">
@@ -50,7 +44,12 @@
                                 {foreach $categories as $category}
                                     {$allowed = categoryAclAllowed($category->id)}
                                     {$templateConfig = $skinset->getTemplateConfigByKey($category->template)}
-                                    {$nestingEnabled = $templateConfig && $templateConfig->getNestingEnabled()}
+                                    {if $templateConfig}
+                                        {$compatibleChildrenKeys = $templateConfig->getCompatibleChildrenKeys()}
+                                    {else}
+                                        {$compatibleChildrenKeys = []}
+                                    {/if}
+                                    {$nestingEnabled = $compatibleChildrenKeys|count}
                                     <tr data-id="{$category->id}">
                                         <td class="align-middle">
                                             <i class="icon-{if $nestingEnabled}folder{else}doc{/if} p-1 mr-2 {if !$category->active}alert-danger{elseif $category->visible}alert-success{else}alert-warning{/if}"></i>
@@ -58,7 +57,7 @@
                                             {if $category->name}{$category->name}{else}({#template.category.index.label.default#}){/if}{if $nestingEnabled}</a>{/if}
                                             <small>
                                                 {$templateConfig = $skinset->getTemplateConfigByKey($category->template)}
-                                                ({if $templateConfig}{_($templateConfig->getName())}{else}{#template.category.index.folder.label#}{/if})
+                                                ({if $templateConfig}{_($templateConfig->getName())}{/if})
                                             </small>
                                         </td>
                                         <td align="right" {if !$allowed}class="inactive"{/if}>

@@ -1,0 +1,1 @@
+UPDATE `cms_category` SET `template` = CONCAT(`template`, '/folder') WHERE `template` NOT LIKE '%/%';

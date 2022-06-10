@@ -48,7 +48,7 @@ class CategoryMoveForm extends Form
             ->setLabel('form.categoryMove.parentId.label')
             ->addFilter(new EmptyToNull())
             ->setMultiple(false)
-            ->setStructure(['children' => [['id'=> '0', 'name' => '', 'children' => $this->getFilteredTree($tree, $this->getRecord())]]]));
+            ->setStructure(['children' => [['id'=> '0', 'name' => '', 'allow' => $this->skinsetModel->getTemplateConfigByKey($this->getRecord()->template)->getAllowedOnRoot(), 'children' => $this->getFilteredTree($tree, $this->getRecord())]]]));
 
         $this->addElement((new Submit('submit'))->setLabel('form.categoryMove.save.label'));
     }
@@ -56,6 +56,7 @@ class CategoryMoveForm extends Form
     private function getFilteredTree(array $tree, CmsCategoryRecord $categoryRecord = null): array
     {
         $filteredTree = [];
+        $categoryTemplateConfig = $this->skinsetModel->getTemplateConfigByKey($categoryRecord->template);
         foreach ($tree as $category) {
             //checking if template is compatible
             if (strpos($category['template'], '/') && null === $template = $this->skinsetModel->getTemplateConfigByKey($category['template'])) {
@@ -65,13 +66,11 @@ class CategoryMoveForm extends Form
             if ($category['id'] == $categoryRecord->id) {
                 continue;
             }
-            //checking if is in the same path
-            if (substr($category['path'], 0, strlen($categoryRecord->path) + 1) == $categoryRecord->path . '/') {
+            //allow by default
+            $category['allow'] = true;
+            //target category template doesn't allow required category
+            if (!in_array($categoryTemplateConfig->getKey(), $template->getCompatibleChildrenKeys())) {
                 $category['allow'] = false;
-            }
-            //not folder types are checked if they can be nested
-            if (strpos($category['template'], '/')) {
-                $category['allow'] = $template->getNestingEnabled();
             }
             //acl check
             if (!$this->acl->isAllowed($this->auth->getRoles(), $category['id'])) {

@@ -14,30 +14,35 @@ class CmsTemplateConfig
      * Nazwa szablonu
      * @var string
      */
-    private string $_name;
+    private string $name;
 
     /**
      * Nazwa klasy kontrolera
      * @var string
      */
-    private string $_controllerClassName;
+    private string $controllerClassName;
 
     /**
      * Długość bufora
      * @var integer
      */
-    private int $_cacheLifeTime = 2592000;
+    private int $cacheLifeTime = 2592000;
 
     /**
-     * Is nesting allowed
+     * Compatible children keys array
      */
-    private bool $_nestingEnabled = false;
+    private array $compatibleChildrenKeys = [];
+
+    /**
+     * Allowed on root
+     */
+    private bool $allowedOnRoot = false;
 
     /**
      * Sekcje
      * @var array
      */
-    private array $_sections = [];
+    private array $sections = [];
 
     /**
      * Ustawia nazwę
@@ -46,7 +51,7 @@ class CmsTemplateConfig
      */
     public function setName($name): self
     {
-        $this->_name = $name;
+        $this->name = $name;
         return $this;
     }
 
@@ -56,24 +61,49 @@ class CmsTemplateConfig
      */
     public function getName(): string
     {
-        return $this->_name;
+        return $this->name;
     }
 
     /**
-     * Enabling/disabling nesting
+     * Sets allowed on root option
      */
-    public function setNestingEnabled(bool $nestingEnabled = true): self
+    public function setAllowedOnRoot(bool $allowedOnRoot): self
     {
-        $this->_nestingEnabled = $nestingEnabled;
+        $this->allowedOnRoot = $allowedOnRoot;
         return $this;
     }
 
     /**
-     * Gets nesting enabled option
+     * Gets allowed on root option
      */
-    public function getNestingEnabled(): bool
+    public function getAllowedOnRoot(): bool
     {
-        return $this->_nestingEnabled;
+        return $this->allowedOnRoot;
+    }
+
+    /**
+     * Sets compatible children keys like [folder, article]
+     */
+    public function setCompatibleChildrenKeys(array $compatibleChildrenKeys): self
+    {
+        $this->compatibleChildrenKeys = $compatibleChildrenKeys;
+        return $this;
+    }
+
+    /**
+     * Gets compatible children keys
+     */
+    public function getCompatibleChildrenKeys(): array
+    {
+        return $this->compatibleChildrenKeys;
+    }
+
+    /**
+     * Gets compatible nesting levels
+     */
+    public function getCompatibleNestingLevels(): array
+    {
+        return $this->compatibleNestingLevels;
     }
 
     /**
@@ -83,7 +113,7 @@ class CmsTemplateConfig
      */
     public function setKey($key): self
     {
-        $this->_key = $key;
+        $this->key = $key;
         return $this;
     }
 
@@ -93,7 +123,7 @@ class CmsTemplateConfig
      */
     public function getKey(): string
     {
-        return $this->_key;
+        return $this->key;
     }
 
     /**
@@ -103,7 +133,7 @@ class CmsTemplateConfig
      */
     public function setControllerClassName($controllerClassName): self
     {
-        $this->_controllerClassName = $controllerClassName;
+        $this->controllerClassName = $controllerClassName;
         return $this;
     }
 
@@ -113,7 +143,7 @@ class CmsTemplateConfig
      */
     public function getControllerClassName(): string
     {
-        return $this->_controllerClassName;
+        return $this->controllerClassName;
     }
 
     /**
@@ -124,7 +154,7 @@ class CmsTemplateConfig
      */
     public function addSection(CmsSectionConfig $sectionConfig): self
     {
-        $this->_sections[] = $sectionConfig;
+        $this->sections[] = $sectionConfig;
         return $this;
     }
 
@@ -134,10 +164,10 @@ class CmsTemplateConfig
      */
     public function getSections(): array
     {
-        return $this->_sections;
+        return $this->sections;
     }
 
-        /**
+    /**
      * Ustawia czas bufora
      * @param integer $cacheLifeTime
      * @return CmsWidgetConfig
@@ -148,7 +178,7 @@ class CmsTemplateConfig
         if (!is_int($cacheLifeTime)) {
             throw new KernelException('Cache lifetime invalid');
         }
-        $this->_cacheLifeTime = $cacheLifeTime;
+        $this->cacheLifeTime = $cacheLifeTime;
         return $this;
     }
 
@@ -158,7 +188,7 @@ class CmsTemplateConfig
      */
     public function getCacheLifeTime(): int
     {
-        return $this->_cacheLifeTime;
+        return $this->cacheLifeTime;
     }
 
 }

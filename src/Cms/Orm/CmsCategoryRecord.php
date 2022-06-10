@@ -514,10 +514,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public function getScope(): string
     {
-        if (false === $slashPosition = strpos($this->template, '/')) {
-            return $this->template;
-        }
-        return substr($this->template, 0, $slashPosition);
+        return substr($this->template, 0, strpos($this->template, '/'));
     }
 
     /**

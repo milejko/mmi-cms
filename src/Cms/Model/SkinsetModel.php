@@ -5,7 +5,6 @@ namespace Cms\Model;
 use Cms\App\CmsSkinConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\App\CmsTemplateConfig;
-use Cms\FolderTemplateController;
 
 /**
  * Model zestawu skór
@@ -98,13 +97,6 @@ class SkinsetModel
             if ($templateKey == substr($key, 0, strlen($templateKey))) {
                 return $templateConfig;
             }
-        }
-        //folder
-        if ($key == $skinConfig->getKey()) {
-            return (new CmsTemplateConfig)
-                ->setName('template.category.index.folder.label')
-                ->setNestingEnabled()
-                ->setControllerClassName(FolderTemplateController::class);
         }
     }
 

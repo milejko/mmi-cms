@@ -33,13 +33,13 @@ class BreadcrumbData implements DataInterface
         return $this;
     }
 
-    public function setBlank($blank = true): self
+    public function setBlank(bool $blank = true): self
     {
         $this->blank = $blank;
         return $this;
     }
 
-    public function setVisible($visible = true): self
+    public function setVisible(bool $visible = true): self
     {
         $this->visible = $visible;
         return $this;
