@@ -74,9 +74,17 @@ class TemplateModel
         if (null === $controller = $this->_createController()) {
             return;
         }
-        $controller->displayAction($view->request);
-        //render szablonu
-        return $view->renderTemplate($this->_getTemplatePrefix() . '/display');
+        //content bezpośrednio wyrenderowany w aplikacji
+        if (null !== $content = $controller->displayAction($view->request)) {
+            return $content;
+        }
+        //brak layoutu lub layout wyłączony - render szablonu
+        if (null === $view->getTemplateByPath($this->_getTemplatePrefix() . '/layout') || $view->isLayoutDisabled()) {
+            return $view->renderTemplate($this->_getTemplatePrefix() . '/display');
+        }
+        //ustawianie treści w placeholder 'content' i render layoutu
+        return $view->setPlaceholder('content', $view->renderTemplate($this->_getTemplatePrefix() . '/display'))
+            ->renderTemplate($this->_getTemplatePrefix() . '/layout');
     }
 
     /**
