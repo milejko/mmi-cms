@@ -243,9 +243,9 @@ class ApiController extends \Mmi\Mvc\Controller
             return new RedirectTransport($category->redirectUri);
         }
         //kategoria posiada customUri, a wejście jest na natywny uri
-        if ($category->customUri && $request->uri != $category->customUri && $request->uri == $category->uri) {
+        if ($category->getUri() != $category->uri && $request->uri == $category->uri) {
             //przekierowanie na customUri
-            return new RedirectTransport(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $request->scope, $category->customUri));
+            return new RedirectTransport(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $request->scope, $category->getUri()));
         }
         //kategoria posiada niewłaściwy (niewspierany) template
         if (null === $templateConfig = (new SkinsetModel($this->cmsSkinsetConfig))->getTemplateConfigByKey($category->template)) {
