@@ -68,10 +68,7 @@ class CategoryMoveForm extends Form
             }
             //allow by default
             $category['allow'] = true;
-            //checking if is in the same path
-            if (substr($category['path'], 0, strlen($categoryRecord->path) + 1) == $categoryRecord->path . '/') {
-                $category['allow'] = false;
-            }
+            //target category template doesn't allow required category
             if (!in_array($categoryTemplateConfig->getKey(), $template->getCompatibleChildrenKeys())) {
                 $category['allow'] = false;
             }
