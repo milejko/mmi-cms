@@ -6,6 +6,7 @@ use Cms\Api\BreadcrumbData;
 use Cms\Api\LinkData;
 use Cms\Api\TemplateDataTransport;
 use Cms\Api\TransportInterface;
+use Cms\App\CmsRouterConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Exception\CategoryWidgetException;
 use Cms\Model\SkinsetModel;
@@ -102,8 +103,9 @@ abstract class AbstractTemplateController extends Controller
         $to->breadcrumbs = $this->getBreadcrumbs();
         $to->siblings = $this->getSiblings();
         $to->_links = [
-            (new LinkData)->setHref(ApiController::API_PREFIX . $this->cmsCategoryRecord->getScope())->setRel(LinkData::REL_MENU),
-            (new LinkData)->setHref(ApiController::API_SITEMAP_PREFIX . $this->cmsCategoryRecord->getScope())->setRel(LinkData::REL_SITEMAP)
+            (new LinkData)
+                ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $this->cmsCategoryRecord->getScope()))
+                ->setRel(LinkData::REL_CONTENTS),
         ];
         return $to;
     }
@@ -166,7 +168,7 @@ abstract class AbstractTemplateController extends Controller
                 continue;
             }
             //adding breadcrumb with modified order field
-            $breadcrumbs[] = $this->getBreadcrumbDataByRecord($record, LinkData::REL_BACK)
+            $breadcrumbs[] = $this->getBreadcrumbDataByRecord($record)
                 ->setOrder($order--);
             $record = $record->getParentRecord();
         }
@@ -188,7 +190,7 @@ abstract class AbstractTemplateController extends Controller
             //template not compatible
             if (null === $skinsetModel->getTemplateConfigByKey($record->template)) {
                 continue;
-            }            
+            }
             $children[] = $this->getBreadcrumbDataByRecord($record);
         }
         return $children;
@@ -210,13 +212,21 @@ abstract class AbstractTemplateController extends Controller
             if (null === $skinsetModel->getTemplateConfigByKey($record->template)) {
                 continue;
             }
-            $siblings[] = $this->getBreadcrumbDataByRecord($record, LinkData::REL_SIBLING);
+            $siblings[] = $this->getBreadcrumbDataByRecord($record);
         }
         return $siblings;
     }
 
-    protected function getBreadcrumbDataByRecord(CmsCategoryRecord $cmsCategoryRecord, string $linkRel = LinkData::REL_NEXT): BreadcrumbData
+    protected function getBreadcrumbDataByRecord(CmsCategoryRecord $cmsCategoryRecord): BreadcrumbData
     {
+        $link = $cmsCategoryRecord->redirectUri ? 
+            (new LinkData)
+                ->setHref($cmsCategoryRecord->redirectUri)
+                ->setMethod(LinkData::METHOD_REDIRECT)
+                ->setRel(LinkData::REL_EXTERNAL) : 
+            (new LinkData)
+                ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $cmsCategoryRecord->getScope(), $cmsCategoryRecord->getUri()))
+                ->setRel(LinkData::REL_CONTENT);
         return (new BreadcrumbData)
             ->setId($cmsCategoryRecord->id)
             ->setName($cmsCategoryRecord->name ?: '')
@@ -224,10 +234,6 @@ abstract class AbstractTemplateController extends Controller
             ->setBlank((bool) $cmsCategoryRecord->blank)
             ->setVisible((bool) $cmsCategoryRecord->visible)
             ->setOrder($cmsCategoryRecord->order)
-            ->setLinks([
-                (new LinkData)
-                    ->setHref(ApiController::API_PREFIX . $cmsCategoryRecord->getScope() . '/' . ($cmsCategoryRecord->customUri ?: $cmsCategoryRecord->uri))
-                    ->setRel($linkRel)
-            ]);
+            ->setLinks([$link]);
     }
 }

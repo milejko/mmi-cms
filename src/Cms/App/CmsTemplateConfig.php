@@ -67,7 +67,7 @@ class CmsTemplateConfig
     /**
      * Sets allowed on root option
      */
-    public function setAllowedOnRoot(bool $allowedOnRoot): self
+    public function setAllowedOnRoot(bool $allowedOnRoot = true): self
     {
         $this->allowedOnRoot = $allowedOnRoot;
         return $this;
