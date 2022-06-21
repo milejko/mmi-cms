@@ -5,20 +5,21 @@
 {$_previousLabel = '&laquo;'}
 {$_nextLabel = '&raquo;'}
 
-{if 1 >= $_pagesCount}{return}{/if}
 <ul class="pagination" data-name="{$_grid->getClass()}[_paginator_]">
-    {* pierwsza strona *}
-    {if $_page > 1}
-        {$_firstPage = (($_page - 1) > 1) ? ($_page - 1) : null}
-        <li class="page-item previous"><a class="page-link" data-page="{$_firstPage}" href="#">{$_previousLabel}</a>
-        </li>
-    {/if}
+    {if $_pagesCount > 1}
+        {* pierwsza strona *}
+        {if $_page > 1}
+            {$_firstPage = (($_page - 1) > 1) ? ($_page - 1) : null}
+            <li class="page-item previous"><a class="page-link" data-page="{$_firstPage}" href="#">{$_previousLabel}</a>
+            </li>
+        {/if}
 
-    {* generowanie strony pierwszej *}
-    {if 1 == $_page}
-        <li class="page-item active"><a class="page-link" data-page="1" href="#">1</a></li>
-    {else}
-        <li class="page-item"><a class="page-link" data-page="1" href="#">1</a></li>
+        {* generowanie strony pierwszej *}
+        {if 1 == $_page}
+            <li class="page-item active"><a class="page-link" data-page="1" href="#">1</a></li>
+        {else}
+            <li class="page-item"><a class="page-link" data-page="1" href="#">1</a></li>
+        {/if}
     {/if}
 
     {* obliczanie zakresów *}
@@ -65,7 +66,7 @@
     {if $_page < $_pagesCount}
         <li class="page-item next"><a class="page-link" data-page="{$_page + 1}" href="#">{$_nextLabel}</a></li>
     {/if}
-    {if $auth && $auth->hasRole('admin')}
+    {if $auth}
         <li class="page-item"><a class="btn btn-primary" target="_blank" href="{url([$_grid->getClass() => 'export'], false)}">CSV</a></li>
     {/if}
 </ul>
