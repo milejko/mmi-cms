@@ -22,6 +22,7 @@ use Cms\Api\TransportInterface;
 use Cms\App\CmsRouterConfig;
 use Cms\App\CmsSkinNotFoundException;
 use Cms\App\CmsSkinsetConfig;
+use Cms\App\CmsTemplateConfig;
 use Cms\Model\SkinsetModel;
 use Cms\Model\TemplateModel;
 use Cms\Orm\CmsCategoryQuery;
@@ -96,12 +97,15 @@ class ApiController extends \Mmi\Mvc\Controller
         $skinConfigTransport = new SkinConfigTransport();
         $skinConfigTransport->key = $skinConfig->getKey();
         $skinConfigTransport->attributes = $skinConfig->getAttributes();
-        $skinConfigTransport->_links = [
-            ((new LinkData())
-                ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $skinConfig->getKey()))
-                ->setRel(LinkData::REL_CONTENTS)
-            )
-        ];
+        //available templates
+        $skinConfigTransport->templates = array_map(function (CmsTemplateConfig $config) {
+            return $config->key;
+        }, $skinConfig->getTemplates());
+        //links
+        $skinConfigTransport->_links = [((new LinkData())
+            ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $skinConfig->getKey()))
+            ->setRel(LinkData::REL_CONTENTS)
+        )];
         return $this->getResponse()->setTypeJson()
             ->setCode($skinConfigTransport->getCode())
             ->setContent($skinConfigTransport->toString());
