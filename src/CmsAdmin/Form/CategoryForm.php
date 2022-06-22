@@ -187,7 +187,7 @@ class CategoryForm extends Form
         //weryfikacja unikalnosci uri
         if ($this->getRecord()->active && (new CmsCategoryQuery())->isSimilarActivePage($this->getRecord()->getUri(), $this->getRecord()->getScope(), $this->getRecord()->cmsCategoryOriginalId)
         ) {
-            $this->getElement('active')->addError('form.category.active.error');
+            $this->getElement('visibility')->addError('form.category.visibility.error');
             return false;
         }
         //commit wersji
