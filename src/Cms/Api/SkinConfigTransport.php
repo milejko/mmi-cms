@@ -9,5 +9,6 @@ class SkinConfigTransport extends HttpJsonTransport
 {
     public string   $key;
     public array    $attributes = [];
+    public array    $templates = [];
     public array    $_links = [];
 }

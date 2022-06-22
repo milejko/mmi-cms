@@ -11,6 +11,8 @@
 namespace CmsAdmin;
 
 use Cms\App\CmsScopeConfig;
+use Cms\App\CmsSkinsetConfig;
+use Cms\Model\SkinsetModel;
 use CmsAdmin\Form\CategoryAclForm;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
@@ -27,6 +29,11 @@ class CategoryAclController extends Controller
     private CmsScopeConfig $scopeConfig;
 
     /**
+     * @Inject
+     */
+    private CmsSkinsetConfig $cmsSkinsetConfig;
+
+    /**
      * Akcja ustawiania uprawnień na kategoriach
      */
     public function indexAction(Request $request)
@@ -37,7 +44,11 @@ class CategoryAclController extends Controller
             $this->getResponse()->redirect('cmsAdmin', 'categoryAcl', 'index', ['roleId' => $this->view->roles[0]->id]);
         }
         //formularz edycji uprawnień
-        $form = new CategoryAclForm(null, ['roleId' => $request->roleId, CategoryAclForm::SCOPE_CONFIG_OPTION_NAME => $this->scopeConfig->getName()]);
+        $form = new CategoryAclForm(null, [
+            'roleId' => $request->roleId,
+            CategoryAclForm::SCOPE_CONFIG_OPTION_NAME => $this->scopeConfig->getName(),
+            SkinsetModel::class => new SkinsetModel($this->cmsSkinsetConfig)
+        ]);
         //po zapisie
         if ($form->isSaved()) {
             $this->getMessenger()->addMessage('messenger.categoryAcl.permissions.saved', true);

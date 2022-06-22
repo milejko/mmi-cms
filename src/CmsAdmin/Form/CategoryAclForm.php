@@ -11,6 +11,7 @@
 namespace CmsAdmin\Form;
 
 use Cms\Form\Element;
+use Cms\Model\SkinsetModel;
 use Cms\Orm\CmsCategoryQuery;
 use CmsAdmin\Model\CategoryAclModel;
 use Mmi\App\App;
@@ -23,12 +24,16 @@ class CategoryAclForm extends \Cms\Form\Form
 {
 
     public const SCOPE_CONFIG_OPTION_NAME = 'scope';
+    private SkinsetModel $skinsetModel;
 
     public function init()
     {
-        $treeQuery = (new CmsCategoryQuery())
-            ->whereTemplate()->like($this->getOption(self::SCOPE_CONFIG_OPTION_NAME) . '%');
-        $tree = (new \Cms\Model\CategoryModel($treeQuery))->getCategoryTree();
+        $this->skinsetModel = $this->getOption(SkinsetModel::class);
+
+        $tree = (new \Cms\Model\CategoryModel((new CmsCategoryQuery())
+            ->whereTemplate()->like($this->getOption(self::SCOPE_CONFIG_OPTION_NAME) . '%')))
+            ->getCategoryTree();
+
         //drzewo kategorii (dozwolone)
         $this->addElement((new Element\Tree('allow'))
             ->setLabel('form.categoryAcl.allow.label')
@@ -37,7 +42,7 @@ class CategoryAclForm extends \Cms\Form\Form
                 ->whereCmsRoleId()->equals($this->getOption('roleId'))
                 ->andFieldAccess()->equals('allow')
                 ->findPairs('id', 'cms_category_id')))
-            ->setStructure(['children' => $tree]));
+            ->setStructure(['children' => $this->getFilteredTree($tree)]));
 
         //drzewo kategorii (zabronione)
         $this->addElement((new Element\Tree('deny'))
@@ -47,7 +52,7 @@ class CategoryAclForm extends \Cms\Form\Form
                 ->whereCmsRoleId()->equals($this->getOption('roleId'))
                 ->andFieldAccess()->equals('deny')
                 ->findPairs('id', 'cms_category_id')))
-            ->setStructure(['children' => $tree]));
+            ->setStructure(['children' => $this->getFilteredTree($tree)]));
 
         $this->addElement((new Element\Submit('submit'))
             ->setLabel('form.categoryAcl.submit.label'));
@@ -61,6 +66,8 @@ class CategoryAclForm extends \Cms\Form\Form
     {
         //czyszczenie uprawnień dla roli
         (new \Cms\Orm\CmsCategoryAclQuery)
+            ->join('cms_category')->on('cms_category_id')
+            ->where('template', 'cms_category')->like($this->getOption(self::SCOPE_CONFIG_OPTION_NAME) . '%')
             ->whereCmsRoleId()->equals($this->getOption('roleId'))
             ->delete();
         //zapis uprawnień "dozwól"
@@ -90,5 +97,22 @@ class CategoryAclForm extends \Cms\Form\Form
         //usunięcie cache
         App::$di->get(CacheInterface::class)->remove(CategoryAclModel::CACHE_KEY);
         return true;
+    }
+
+    private function getFilteredTree(array $tree)
+    {
+        $filteredTree = [];
+        foreach ($tree as $category) {
+            //checking if template is compatible
+            if (strpos($category['template'], '/') && null === $template = $this->skinsetModel->getTemplateConfigByKey($category['template'])) {
+                continue;
+            }
+            //allow by default
+            $category['allow'] = true;
+            //recursive build
+            $category['children'] = $this->getFilteredTree($category['children']);
+            $filteredTree[] = $category;
+        }
+        return $filteredTree;    
     }
 }
