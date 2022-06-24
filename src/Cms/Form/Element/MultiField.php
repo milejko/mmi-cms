@@ -383,14 +383,28 @@ class MultiField extends ElementAbstract
             return parent::setValue(null);
         }
 
+        $this->normalizeValues($value, $this->getElements());
+
+        return parent::setValue($value);
+    }
+
+    /**
+     * @param array|null $value
+     * @param array|null $elements
+     * @return void
+     */
+    private function normalizeValues(?array &$value, ?array $elements): void
+    {
         foreach ($value as $key => $itemValues) {
-            foreach ($this->getElements() as $element) {
+            foreach ($elements as $elementKey => $element) {
+                if ($element->getElements()) {
+                    $this->normalizeValues($value[$key][$elementKey], $element->getElements());
+                }
+
                 if ($element instanceof Checkbox) {
                     $value[$key][$element->getBaseName()] = (bool)($value[$key][$element->getBaseName()] ?? false);
                 }
             }
         }
-
-        return parent::setValue($value);
     }
 }
