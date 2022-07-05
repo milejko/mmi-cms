@@ -53,7 +53,7 @@ class TinyMce extends UploaderElementAbstract
             'styleselect | table | bullist numlist outdent indent blockquote | link unlink anchor | image media lioniteimages | preview fullscreen code | charmap visualchars nonbreaking inserttime hr',
         ],
         'simple'   => [
-            'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify',
+            'bold italic underline strikethrough | link unlink anchor | alignleft aligncenter alignright alignjustify',
         ],
     ];
 
