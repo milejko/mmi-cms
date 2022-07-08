@@ -96,6 +96,32 @@ class CategoryController extends Controller
     }
 
     /**
+     * Lista stron CMS - podglad strony
+     */
+    public function previewAction(Request $request)
+    {
+        //wyszukiwanie kategorii
+        if (null === $category = (new CmsCategoryQuery)
+                ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+                ->findPk($request->id)) {
+            //przekierowanie na originalId
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'redactorPreview', ['id' => $request->originalId]);
+        }
+        //pobranie przekierowania na front zdefiniowanego w skórce
+        $skinBasedPreviewUrl = $this->cmsSkinsetConfig->getSkinByKey($this->scopeConfig->getName())->getPreviewUrl();
+        //przekierowanie na skórkowy lub defaultowy adres
+        $skinBasedPreviewUrl ?
+            $this->getResponse()->redirectToUrl(
+                $skinBasedPreviewUrl .
+                '?apiUrl=' .
+                urlencode(sprintf(CmsRouterConfig::API_METHOD_PREVIEW, $category->getScope(), $category->id, $category->cmsCategoryOriginalId, $category->cmsAuthId)) .
+                '&returnUrl=' .
+                urlencode($this->view->url([], false))
+            ) :
+            $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);
+    }
+
+    /**
      * Lista stron CMS - edycja
      * //TODO: refactor!!!!!!!!!
      */
@@ -149,7 +175,7 @@ class CategoryController extends Controller
         //template niekompatybilny
         if (!$requestedTemplateAllowed) {
             $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
-        }        
+        }
         //zapisywanie oryginalnego id
         $originalId = $category->cmsCategoryOriginalId ? $category->cmsCategoryOriginalId : $category->id;
         //przygotowanie draftu (lub przekierowanie)
@@ -252,10 +278,10 @@ class CategoryController extends Controller
         $skinBasedPreviewUrl = $this->cmsSkinsetConfig->getSkinByKey($this->scopeConfig->getName())->getPreviewUrl();
         //przekierowanie na skórkowy lub defaultowy adres
         $skinBasedPreviewUrl ?
-            $this->getResponse()->redirectToUrl($skinBasedPreviewUrl . 
-                '?apiUrl=' . 
+            $this->getResponse()->redirectToUrl($skinBasedPreviewUrl .
+                '?apiUrl=' .
                 urlencode(sprintf(CmsRouterConfig::API_METHOD_PREVIEW, $category->getScope(), $category->id, $category->cmsCategoryOriginalId, $category->cmsAuthId)) .
-                '&returnUrl=' . 
+                '&returnUrl=' .
                 urlencode($this->view->url([], false))
             ) :
             $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);

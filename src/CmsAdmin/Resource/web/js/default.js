@@ -10,7 +10,7 @@ CMS.default = function () {
     initConfirms = function () {
         //linki potwierdzające
         $('body').on('click', 'a.confirm', function () {
-            return window.confirm($(this).attr('title') + '?');
+            return window.confirm(($(this).data('message') ? $(this).data('message') : $(this).attr('title')) + '?');
         });
     };
 
@@ -29,7 +29,7 @@ CMS.default = function () {
     unlockSubmits = function () {
         duringSend = false;
         $('input[type=submit]').removeClass('disabled');
-        $('button[type=submit]').removeClass('disabled');        
+        $('button[type=submit]').removeClass('disabled');
     };
 
     unlockSubmits();
