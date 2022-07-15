@@ -11,6 +11,7 @@ use Cms\App\CmsSkinsetConfig;
 use Cms\Exception\CategoryWidgetException;
 use Cms\Model\SkinsetModel;
 use Cms\Model\WidgetModel;
+use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use Cms\Orm\CmsFileQuery;
 use CmsAdmin\Form\CategoryForm;
@@ -219,14 +220,22 @@ abstract class AbstractTemplateController extends Controller
 
     protected function getBreadcrumbDataByRecord(CmsCategoryRecord $cmsCategoryRecord): BreadcrumbData
     {
-        $link = $cmsCategoryRecord->redirectUri ? 
-            (new LinkData)
+        if ($cmsCategoryRecord->redirectUri) {
+            $redirectType = LinkData::REL_EXTERNAL;
+            if (preg_match('/^internal:\/\/(\d+)/', $cmsCategoryRecord->redirectUri, $matches)) {
+                $redirectType = LinkData::REL_INTERNAL;
+                $cmsCategoryRecord = (new CmsCategoryQuery())->findPk($matches[1]);
+                $cmsCategoryRecord->redirectUri = sprintf(CmsRouterConfig::API_METHOD_CONTENT, $cmsCategoryRecord->getScope(), $cmsCategoryRecord->getUri());
+            }
+            $link = (new LinkData)
                 ->setHref($cmsCategoryRecord->redirectUri)
                 ->setMethod(LinkData::METHOD_REDIRECT)
-                ->setRel(LinkData::REL_EXTERNAL) : 
-            (new LinkData)
+                ->setRel($redirectType);
+        } else {
+            $link = (new LinkData)
                 ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $cmsCategoryRecord->getScope(), $cmsCategoryRecord->getUri()))
                 ->setRel(LinkData::REL_CONTENT);
+        }
         return (new BreadcrumbData)
             ->setId($cmsCategoryRecord->id)
             ->setName($cmsCategoryRecord->name ?: '')
