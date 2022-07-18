@@ -15,6 +15,7 @@ class LinkData implements DataInterface
     const METHOD_REDIRECT   = 'REDIRECT';
 
     const REL_EXTERNAL      = 'external';
+    const REL_INTERNAL      = 'internal';
     const REL_CONTENTS      = 'contents';
     const REL_CONTENT       = 'content';
     const REL_CONFIG        = 'config';

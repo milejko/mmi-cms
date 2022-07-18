@@ -1,5 +1,5 @@
 var CMS = CMS || {};
-var openedWindow = { closed: true };
+var openedWindow = {closed: true};
 var followScroll = false;
 
 var $elems = $("html, body");
@@ -84,7 +84,7 @@ CMS.category = function () {
             if (state > 1) {
                 state = 0;
             }
-            $.get($(this).attr('href'), { 'state': state });
+            $.get($(this).attr('href'), {'state': state});
             if (state === 1) {
                 $(this).children('i').attr('class', 'fa fa-2 fa-eye pull-right');
                 $(this).attr('title', 'aktywny');
@@ -130,4 +130,26 @@ CMS.category = function () {
 $(document).ready(function () {
     "use strict";
     CMS.category();
+});
+
+$(document).ready(function () {
+    const $redirectTypeTrigger = $('#cmsadmin-form-categoryform-redirectType-container .radio');
+    const $redirectCategoryIdElement = $('#cmsadmin-form-categoryform-redirectCategoryId-container');
+    const $redirectUriElement = $('#cmsadmin-form-categoryform-redirectUri-container');
+    const $redirectUriInput = $redirectUriElement.find('input');
+    $redirectTypeTrigger.change(function () {
+        if (!$(this).is(':checked')) {
+            return;
+        }
+        if ('internal' === $(this).val()) {
+            $redirectUriElement.hide();
+            $redirectCategoryIdElement.show();
+        } else {
+            $redirectUriElement.show();
+            $redirectCategoryIdElement.hide();
+            if (/internal:\/\//.test($redirectUriInput.val())) {
+                $redirectUriInput.val('');
+            }
+        }
+    }).change();
 });

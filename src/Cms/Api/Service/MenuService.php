@@ -43,7 +43,7 @@ class MenuService implements MenuServiceInterface
         }
         //initializing empty menu structure
         $menuStructure = [];
-        //adding items into menu 
+        //adding items into menu
         foreach ($items as $item) {
             $this->addItem($item, $menuStructure);
         }
@@ -91,7 +91,7 @@ class MenuService implements MenuServiceInterface
         }
         return $orderedMenu;
     }
-    
+
     protected function formatItem(array $item): array
     {
         return [
@@ -112,7 +112,7 @@ class MenuService implements MenuServiceInterface
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
             ->whereActive()->equals(true)
             ->whereTemplate()->like($scope . '%');
-        //scope is defined (filtering templates)        
+        //scope is defined (filtering templates)
         if (null !== $scope) {
             $query->whereTemplate()->equals([$scope => $scope] + (new SkinsetModel($this->cmsSkinsetConfig))->getAllowedTemplateKeysBySkinKey($scope));
         }
@@ -122,10 +122,18 @@ class MenuService implements MenuServiceInterface
     protected function getLinks(array $item): array
     {
         if ($item['redirectUri']) {
-            return [(new LinkData)
-                ->setHref($item['redirectUri'])
-                ->setMethod(LinkData::METHOD_REDIRECT)
-                ->setRel(LinkData::REL_EXTERNAL)];
+            $redirectType = LinkData::REL_EXTERNAL;
+            if (preg_match('/^internal:\/\/(\d+)/', $item['redirectUri'], $matches)) {
+                $redirectType = LinkData::REL_INTERNAL;
+                $cmsCategoryRecord = (new CmsCategoryQuery())->findPk($matches[1]);
+                $item['redirectUri'] = sprintf(CmsRouterConfig::API_METHOD_CONTENT, $cmsCategoryRecord->getScope(), $cmsCategoryRecord->getUri());
+            }
+            return [
+                (new LinkData)
+                    ->setHref($item['redirectUri'])
+                    ->setMethod(LinkData::METHOD_REDIRECT)
+                    ->setRel($redirectType)
+            ];
         }
         $scope = substr($item['template'], 0, strpos($item['template'], self::PATH_SEPARATOR)) ?: $item['template'];
         if ($scope) {
