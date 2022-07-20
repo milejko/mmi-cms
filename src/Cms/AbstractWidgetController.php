@@ -129,6 +129,7 @@ abstract class AbstractWidgetController extends Controller
         $to->mimeType                   = $fileRecord->mimeType;
         $to->order                      = $fileRecord->order ?: 0;
         $to->attributes['downloadUrl']  = $fileRecord->getUrl('download');
+        $to->attributes['openUrl']      = $fileRecord->getUrl('copy');
         if ('image' == $fileRecord->class) {
             $to->attributes['thumbUrl']     = $fileRecord->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE);
             $to->attributes['thumb2xUrl']   = $fileRecord->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE2X);
