@@ -157,15 +157,19 @@ class ApiController extends \Mmi\Mvc\Controller
     public function getCategoryPreviewAction(Request $request)
     {
         //search for a category
-        //findPk it is all that is needed, but other conditions secures the request
-        if (
-            null === $category = (new CmsCategoryQuery())
-            ->whereCmsCategoryOriginalId()->equals($request->originalId)
+        $query = (new CmsCategoryQuery())
             ->whereCmsAuthId()->equals($request->authId)
-            ->whereTemplate()->like($request->scope . '%')
-            ->whereDateModify()->greater(date('Y-m-d H:i:s', strtotime('-8 hours')))
-            ->findPk($request->id)
-        ) {
+            ->whereTemplate()->like($request->scope . '%');
+        if ($request->originalId) {
+            $query
+                ->whereCmsCategoryOriginalId()->equals($request->originalId)
+                ->whereDateModify()->greater(date('Y-m-d H:i:s', strtotime('-8 hours')));
+        } else {
+            $query
+                ->whereCmsCategoryOriginalId()->equals(null);
+        }
+        //findPk it is all that is needed, but other conditions secures the request
+        if (null === $category = $query->findPk($request->id)) {
             return $this->getNotFoundResponse();
         }
         //returning transport object
