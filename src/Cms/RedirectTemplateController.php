@@ -80,11 +80,6 @@ class RedirectTemplateController extends AbstractBaseTemplateController
                 ->setValue('internal://' . $categoryForm->getElement(self::REDIRECT_CATEGORY_ID)->getValue());
         }
 
-        if ($categoryForm->isValid()) {
-            $categoryForm->removeElement(self::REDIRECT_TYPE);
-            $categoryForm->removeElement(self::REDIRECT_CATEGORY_ID);
-        }
-
         parent::beforeSaveEditForm($categoryForm);
     }
 }
