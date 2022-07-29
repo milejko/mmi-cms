@@ -344,7 +344,7 @@ class ApiController extends \Mmi\Mvc\Controller
             $this->cache->save(false, CmsCategoryRecord::REDIRECT_CACHE_PREFIX . md5($scope . $uri), 0);
             return null;
         }
-        $this->cache->save($categoryId, $cacheKey, 0);
+        $this->cache->save($category->id, $cacheKey, 0);
         return $category->id;
     }
 

@@ -602,8 +602,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $this->id);
         $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->id);
         $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->cmsCategoryOriginalId);
-        //caches associated with active version
-        if (self::STATUS_ACTIVE != $this->status) {
+        //don't drop cache on draft saves
+        if (self::STATUS_DRAFT == $this->status) {
             return true;
         }
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($scope . $this->uri));
@@ -626,7 +626,14 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //usuwanie cache dzieci kategorii
         foreach ($this->_getPublishedChildren($this->id, $this->getScope()) as $childRecord) {
             $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $childRecord->getScope()) . $childRecord->id);
+            $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $childRecord->id);
         }
+        //usuwanie cache rodzeństwa
+        foreach ($this->getSiblingsRecords() as $siblingRecord) {
+            $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $siblingRecord->getScope()) . $siblingRecord->id);
+            $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $siblingRecord->id);
+        }
+        //usuwanie cache rodzica
         if (null !== $parent = $this->getParentRecord()) {
             $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $parent->getScope()) . $this->parentId);
         }
