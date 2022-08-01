@@ -249,7 +249,6 @@ class MultiField extends ElementAbstract
         $this->view->headScript()->prependFile(self::JQUERY_URL);
         $this->view->headScript()->appendScript($this->jsScript());
         $this->view->headScript()->appendFile(self::MULTIFIELD_JS_URL);
-
         $this->view->headLink()->appendStylesheet(self::MULTIFIELD_CSS_URL);
     }
 
@@ -379,10 +378,6 @@ class MultiField extends ElementAbstract
      */
     public function setValue($value): self
     {
-        if (!is_array($value)) {
-            return parent::setValue(null);
-        }
-
         $this->normalizeValues($value, $this->getElements());
 
         return parent::setValue($value);
@@ -395,6 +390,10 @@ class MultiField extends ElementAbstract
      */
     private function normalizeValues(?array &$value, ?array $elements): void
     {
+        if (!is_array($value)) {
+            return;
+        }
+
         foreach ($value as $key => $itemValues) {
             foreach ($elements as $elementKey => $element) {
                 if ($element->getElements()) {
@@ -403,6 +402,11 @@ class MultiField extends ElementAbstract
 
                 if ($element instanceof Checkbox) {
                     $value[$key][$element->getBaseName()] = (bool)($value[$key][$element->getBaseName()] ?? false);
+                    continue;
+                }
+
+                foreach ($element->getFilters() as $filter) {
+                    $value[$key][$element->getBaseName()] = $filter->filter($value[$key][$element->getBaseName()]);
                 }
             }
         }
