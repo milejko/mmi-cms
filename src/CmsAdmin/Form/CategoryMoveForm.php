@@ -33,6 +33,8 @@ class CategoryMoveForm extends Form
     private AuthInterface $auth;
     private SkinsetModel $skinsetModel;
 
+    private const PARENT_ID_KEY = 'parentId';
+
     public function init()
     {
         //injections
@@ -44,7 +46,7 @@ class CategoryMoveForm extends Form
             ->whereTemplate()->like($this->getOption(self::SCOPE_CONFIG_OPTION_NAME) . '%')
             ))->getCategoryTree();
         //drzewo kategorii (dozwolone)
-        $this->addElement((new Tree('parentId'))
+        $this->addElement((new Tree(self::PARENT_ID_KEY))
             ->setLabel('form.categoryMove.parentId.label')
             ->addFilter(new EmptyToNull())
             ->setMultiple(false)
@@ -81,6 +83,16 @@ class CategoryMoveForm extends Form
             $filteredTree[] = $category;
         }
         return $filteredTree;
+    }
+
+    public function validator()
+    {
+        //try to move up to root and root is not allowed
+        if (!$this->getElement(self::PARENT_ID_KEY)->getValue() && !$this->skinsetModel->getTemplateConfigByKey($this->getRecord()->template)->getAllowedOnRoot()) {
+            $this->getElement(self::PARENT_ID_KEY)->addError('form.categoryMove.parentId.error');
+            return false;
+        }
+        return true;
     }
 
 }
