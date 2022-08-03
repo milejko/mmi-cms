@@ -634,7 +634,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $siblingRecord->id);
         }
         //usuwanie cache rodzica
-        if (null !== $this->getParentRecord()) {
+        if (null !== $this->parentId) {
             $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope) . $this->parentId);
             $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $this->parentId);
         }
