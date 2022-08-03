@@ -615,27 +615,28 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->customUri));
         $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->getInitialStateValue('customUri')));
         if (null === $this->parentId) {
-            $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $this->getScope()));
+            $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope));
         }
         //drop skin menu cache
         $cache->remove(MenuService::CACHE_KEY);
         $cache->remove(MenuService::CACHE_KEY . $scope);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->id);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
-        $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $this->getScope()) . $this->id);
+        $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope) . $this->id);
         //usuwanie cache dzieci kategorii
-        foreach ($this->_getPublishedChildren($this->id, $this->getScope()) as $childRecord) {
-            $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $childRecord->getScope()) . $childRecord->id);
+        foreach ($this->_getPublishedChildren($this->id, $scope) as $childRecord) {
+            $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope) . $childRecord->id);
             $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $childRecord->id);
         }
         //usuwanie cache rodzeństwa
         foreach ($this->getSiblingsRecords() as $siblingRecord) {
-            $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $siblingRecord->getScope()) . $siblingRecord->id);
+            $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope) . $siblingRecord->id);
             $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $siblingRecord->id);
         }
         //usuwanie cache rodzica
-        if (null !== $parent = $this->getParentRecord()) {
-            $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $parent->getScope()) . $this->parentId);
+        if (null !== $this->getParentRecord()) {
+            $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope) . $this->parentId);
+            $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $this->parentId);
         }
         return true;
     }
