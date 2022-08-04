@@ -5,6 +5,7 @@ namespace Cms\App;
 use Mmi\App\AppEventInterceptorInterface;
 use Mmi\App\AppProfilerInterface;
 use Mmi\Http\Request;
+use Mmi\Mvc\MvcForbiddenException;
 use Mmi\Mvc\MvcNotFoundException;
 use Mmi\Mvc\View;
 use Mmi\Security\AclInterface;
@@ -68,6 +69,11 @@ class CmsAppEventInterceptor implements AppEventInterceptorInterface
         $acl = $this->container->get(AclInterface::class);
         $auth = $this->container->get(AuthInterface::class);
         $actionLabel = strtolower($this->request->getModuleName() . ':' . $this->request->getControllerName() . ':' . $this->request->getActionName());
+        //no module
+        if (!$this->request->getModuleName()) {
+            return;
+        }
+        //acl allowed
         if ($acl->isAllowed($auth->getRoles(), $actionLabel)) {
             return;
         }
@@ -77,9 +83,8 @@ class CmsAppEventInterceptor implements AppEventInterceptorInterface
             //logowanie admina
             return;
         }
-        $auth->clearIdentity();
         //zalogowany na nieuprawnioną rolę
-        throw new MvcNotFoundException('Unauthorized access');
+        throw new MvcForbiddenException('Unauthorized access');
     }
 
     public function afterDispatch(): void
