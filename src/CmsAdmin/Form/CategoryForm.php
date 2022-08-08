@@ -170,7 +170,7 @@ class CategoryForm extends Form
             case 2:
                 $this->getRecord()->visible = true;
                 $this->getRecord()->active = true;
-                return;    
+                return;
         }
     }
 
@@ -187,7 +187,7 @@ class CategoryForm extends Form
         //weryfikacja unikalnosci uri
         if ($this->getRecord()->active && (new CmsCategoryQuery())->isSimilarActivePage($this->getRecord()->getUri(), $this->getRecord()->getScope(), $this->getRecord()->cmsCategoryOriginalId)
         ) {
-            $this->getElement('visibility')->addError('form.category.visibility.error');
+            $this->getElement('visibility')->addError(['form.category.visibility.error', [$this->getRecord()->getUri()]]);
             return false;
         }
         //commit wersji
