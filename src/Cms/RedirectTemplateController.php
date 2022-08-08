@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Cms;
 
-use BaseTemplate\AbstractBaseTemplateController;
 use Cms\Api\LinkData;
 use Cms\Form\Element;
 use Cms\Model\CategoryModel;
@@ -20,7 +19,7 @@ use CmsAdmin\Form\CategoryForm;
 use Mmi\Filter;
 use Mmi\Validator;
 
-class RedirectTemplateController extends AbstractBaseTemplateController
+class RedirectTemplateController extends AbstractTemplateController
 {
     private const REDIRECT_URI = 'redirectUri';
     private const REDIRECT_CATEGORY_ID = 'redirectCategoryId';
