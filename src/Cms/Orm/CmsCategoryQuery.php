@@ -2,19 +2,15 @@
 
 namespace Cms\Orm;
 
-use Mmi\App\App;
-use Mmi\Http\Request;
-use Mmi\Orm\Query;
-
 //<editor-fold defaultstate="collapsed" desc="CmsCategoryQuery">
 /**
  * @method CmsCategoryQuery limit($limit = null)
  * @method CmsCategoryQuery offset($offset = null)
  * @method CmsCategoryQuery orderAsc($fieldName, $tableName = null)
  * @method CmsCategoryQuery orderDesc($fieldName, $tableName = null)
- * @method CmsCategoryQuery andQuery(Query $query)
- * @method CmsCategoryQuery whereQuery(Query $query)
- * @method CmsCategoryQuery orQuery(Query $query)
+ * @method CmsCategoryQuery andQuery(\Mmi\Orm\Query $query)
+ * @method CmsCategoryQuery whereQuery(\Mmi\Orm\Query $query)
+ * @method CmsCategoryQuery orQuery(\Mmi\Orm\Query $query)
  * @method CmsCategoryQuery resetOrder()
  * @method CmsCategoryQuery resetWhere()
  * @method QueryHelper\CmsCategoryQueryField whereId()
@@ -153,25 +149,10 @@ use Mmi\Orm\Query;
  * @method CmsCategoryRecord findPk($value)
  */
 //</editor-fold>
-class CmsCategoryQuery extends Query
+class CmsCategoryQuery extends \Mmi\Orm\Query
 {
 
     protected $_tableName = 'cms_category';
-
-    /**
-     * Definicje zgodne z językiem
-     * @return CmsCategoryQuery
-     */
-    public function lang()
-    {
-        if (!App::$di->get(Request::class)->lang) {
-            return (new self());
-        }
-        return $this
-            ->whereLang()->equals(App::$di->get(Request::class)->lang)
-            ->orFieldLang()->equals(null)
-            ->orderDescLang();
-    }
 
     /**
      * Zapytanie wyszukujące po uri

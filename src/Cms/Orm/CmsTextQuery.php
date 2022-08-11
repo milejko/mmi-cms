@@ -2,9 +2,6 @@
 
 namespace Cms\Orm;
 
-use Mmi\App\App;
-use Mmi\Http\Request;
-
 //<editor-fold defaultstate="collapsed" desc="CmsTextQuery">
 /**
  * @method CmsTextQuery limit($limit = null)
@@ -22,6 +19,12 @@ use Mmi\Http\Request;
  * @method CmsTextQuery orderAscId()
  * @method CmsTextQuery orderDescId()
  * @method CmsTextQuery groupById()
+ * @method QueryHelper\CmsTextQueryField whereTemplate()
+ * @method QueryHelper\CmsTextQueryField andFieldTemplate()
+ * @method QueryHelper\CmsTextQueryField orFieldTemplate()
+ * @method CmsTextQuery orderAscTemplate()
+ * @method CmsTextQuery orderDescTemplate()
+ * @method CmsTextQuery groupByTemplate()
  * @method QueryHelper\CmsTextQueryField whereLang()
  * @method QueryHelper\CmsTextQueryField andFieldLang()
  * @method QueryHelper\CmsTextQueryField orFieldLang()
@@ -60,21 +63,6 @@ class CmsTextQuery extends \Mmi\Orm\Query
 {
 
     protected $_tableName = 'cms_text';
-
-    /**
-     * Zapytanie po langu z requesta
-     * @return CmsTextQuery
-     */
-    public static function lang()
-    {
-        if (!App::$di->get(Request::class)->lang) {
-            return new self;
-        }
-        return (new self)
-                ->whereLang()->equals(App::$di->get(Request::class)->lang)
-                ->orFieldLang()->equals(null)
-                ->orderDescLang();
-    }
 
     /**
      * 

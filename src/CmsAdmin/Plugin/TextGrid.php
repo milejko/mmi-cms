@@ -11,6 +11,7 @@
 namespace CmsAdmin\Plugin;
 
 use CmsAdmin\Grid\Column;
+use CmsAdmin\Grid\Column\TextColumn;
 
 /**
  * Grid tekstów stałych
@@ -22,19 +23,21 @@ class TextGrid extends \CmsAdmin\Grid\Grid
     {
 
         //zapytanie
-        $this->setQuery(\Cms\Orm\CmsTextQuery::lang()
+        $this->setQuery((new \Cms\Orm\CmsTextQuery)
                 ->orderAscKey());
 
+        $this->addColumn((new TextColumn('lang')));
+
         //klucz
-        $this->addColumn((new Column\TextColumn('key'))
+        $this->addColumn((new TextColumn('key'))
             ->setLabel('grid.text.key.label'));
 
         //język
-        $this->addColumn((new Column\TextColumn('lang'))
+        $this->addColumn((new TextColumn('lang'))
             ->setLabel('grid.text.lang.label'));
 
         //zawartość
-        $this->addColumn((new Column\TextColumn('content'))
+        $this->addColumn((new TextColumn('content'))
             ->setLabel('grid.text.content.label'));
 
         //data modyfikacji

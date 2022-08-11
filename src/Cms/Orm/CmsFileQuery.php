@@ -4,17 +4,15 @@ namespace Cms\Orm;
 
 //<editor-fold defaultstate="collapsed" desc="CmsFileQuery">
 use Mmi\Orm\OrmException;
-use Mmi\Orm\Query;
-use Mmi\Orm\Record;
 
 /**
  * @method CmsFileQuery limit($limit = null)
  * @method CmsFileQuery offset($offset = null)
  * @method CmsFileQuery orderAsc($fieldName, $tableName = null)
  * @method CmsFileQuery orderDesc($fieldName, $tableName = null)
- * @method CmsFileQuery andQuery(Query $query)
- * @method CmsFileQuery whereQuery(Query $query)
- * @method CmsFileQuery orQuery(Query $query)
+ * @method CmsFileQuery andQuery(\Mmi\Orm\Query $query)
+ * @method CmsFileQuery whereQuery(\Mmi\Orm\Query $query)
+ * @method CmsFileQuery orQuery(\Mmi\Orm\Query $query)
  * @method CmsFileQuery resetOrder()
  * @method CmsFileQuery resetWhere()
  * @method QueryHelper\CmsFileQueryField whereId()
@@ -117,7 +115,7 @@ use Mmi\Orm\Record;
  * @method CmsFileRecord findPk($value)
  */
 //</editor-fold>
-class CmsFileQuery extends Query
+class CmsFileQuery extends \Mmi\Orm\Query
 {
 
     protected $_tableName = 'cms_file';

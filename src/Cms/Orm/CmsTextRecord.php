@@ -13,6 +13,7 @@ class CmsTextRecord extends \Mmi\Orm\Record
 {
 
     public $id;
+    public $template;
     public $lang;
     public $key;
     public $content;
