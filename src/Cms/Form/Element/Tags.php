@@ -34,6 +34,7 @@ class Tags extends Select
 
     private string $object;
     private string $objectId;
+    private string $scope;
 
     /**
      * Konstruktor
@@ -54,6 +55,12 @@ class Tags extends Select
     public function setObjectId(string $objectId): self
     {
         $this->objectId = $objectId;
+        return $this;
+    }
+
+    public function setScope(string $scope): self
+    {
+        $this->scope = $scope;
         return $this;
     }
 
@@ -194,10 +201,13 @@ class Tags extends Select
      */
     public function onRecordSaved()
     {
-        $existingTags = (new CmsTagQuery())->whereTag()->equals($this->getValue())->findPairs('tag', 'tag');
+        $existingTags = (new CmsTagQuery())
+            ->whereTemplate()->equals($this->scope)
+            ->whereTag()->equals($this->getValue())->findPairs('tag', 'tag');
         $inexistentTags = array_diff($this->getValue(), $existingTags);
         foreach ($inexistentTags as $tag) {
             $newTag = new CmsTagRecord();
+            $newTag->template = $this->scope;
             $newTag->tag = $tag;
             $newTag->save();
         }
@@ -209,7 +219,9 @@ class Tags extends Select
             ->andFieldObjectId()->equals($objecId)
             ->delete();
 
-        $tagIds = (new CmsTagQuery())->whereTag()->equals($this->getValue())->findPairs('tag', 'id');
+        $tagIds = (new CmsTagQuery())
+            ->whereTemplate()->equals($this->scope)
+            ->whereTag()->equals($this->getValue())->findPairs('tag', 'id');
         foreach($this->getValue() as $tagValue) {
             $newTagRelation = new CmsTagRelationRecord();
             $newTagRelation->object = $object;
@@ -226,7 +238,9 @@ class Tags extends Select
     public function getMultioptions()
     {
         $availableTags = [];
-        foreach ((new CmsTagQuery())->orderAscTag()->findPairs('tag', 'tag') as $tag) {
+        foreach ((new CmsTagQuery())
+            ->whereTemplate()->equals($this->scope)
+            ->orderAscTag()->findPairs('tag', 'tag') as $tag) {
             $availableTags[$tag] = $tag;
         }
         return $this->getValue() + $availableTags;
