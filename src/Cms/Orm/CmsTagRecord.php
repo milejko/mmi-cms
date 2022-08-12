@@ -9,7 +9,7 @@ class CmsTagRecord extends \Mmi\Orm\Record
 {
 
     public $id;
-    public $template;
+    public $scope;
     public $lang;
     public $tag;
 
