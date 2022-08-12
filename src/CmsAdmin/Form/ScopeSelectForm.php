@@ -10,11 +10,8 @@
 
 namespace CmsAdmin\Form;
 
-use Cms\App\CmsSkinsetConfig;
 use Cms\Form\Element\Select;
-use Cms\Form\Element\Submit;
 use Cms\Form\Form;
-use Mmi\App\App;
 
 /**
  * Formularz wyboru scope/domeny
