@@ -34,7 +34,7 @@ class Tags extends Select
 
     private string $object;
     private string $objectId;
-    private string $scope;
+    private ?string $scope = null;
 
     /**
      * Konstruktor
@@ -202,12 +202,12 @@ class Tags extends Select
     public function onRecordSaved()
     {
         $existingTags = (new CmsTagQuery())
-            ->whereTemplate()->equals($this->scope)
+            ->whereScope()->equals($this->scope)
             ->whereTag()->equals($this->getValue())->findPairs('tag', 'tag');
         $inexistentTags = array_diff($this->getValue(), $existingTags);
         foreach ($inexistentTags as $tag) {
             $newTag = new CmsTagRecord();
-            $newTag->template = $this->scope;
+            $newTag->scope = $this->scope;
             $newTag->tag = $tag;
             $newTag->save();
         }
@@ -220,7 +220,7 @@ class Tags extends Select
             ->delete();
 
         $tagIds = (new CmsTagQuery())
-            ->whereTemplate()->equals($this->scope)
+            ->whereScope()->equals($this->scope)
             ->whereTag()->equals($this->getValue())->findPairs('tag', 'id');
         foreach($this->getValue() as $tagValue) {
             $newTagRelation = new CmsTagRelationRecord();
@@ -239,7 +239,7 @@ class Tags extends Select
     {
         $availableTags = [];
         foreach ((new CmsTagQuery())
-            ->whereTemplate()->equals($this->scope)
+            ->whereScope()->equals($this->scope)
             ->orderAscTag()->findPairs('tag', 'tag') as $tag) {
             $availableTags[$tag] = $tag;
         }
