@@ -10,26 +10,33 @@
 
 namespace CmsAdmin\Plugin;
 
-use CmsAdmin\Grid\Column;
+use Cms\Orm\CmsTagQuery;
+use CmsAdmin\Grid\Column\OperationColumn;
+use CmsAdmin\Grid\Column\TextColumn;
 
 /**
  * Grid tagów
  */
 class TagGrid extends \CmsAdmin\Grid\Grid
 {
+    public const SCOPE_OPTION_NAME = 'scope';
 
     public function init()
     {
-
         //zapytanie
-        $this->setQuery((new \Cms\Orm\CmsTagQuery));
+        $this->setQuery((new CmsTagQuery())
+            ->whereTemplate()->equals($this->getOption(self::SCOPE_OPTION_NAME)));
+
+            //nazwa taga
+        $this->addColumn((new TextColumn('lang'))
+            ->setLabel('grid.tag.lang.label'));
 
         //nazwa taga
-        $this->addColumn((new Column\TextColumn('tag'))
+        $this->addColumn((new TextColumn('tag'))
             ->setLabel('grid.tag.tag.label'));
 
         //operacje
-        $this->addColumn((new Column\OperationColumn));
+        $this->addColumn((new OperationColumn)->setEditParams([]));
     }
 
 }

@@ -10,6 +10,8 @@
 
 namespace CmsAdmin;
 
+use Cms\App\CmsScopeConfig;
+use CmsAdmin\Plugin\TagGrid;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 
@@ -18,26 +20,17 @@ use Mmi\Mvc\Controller;
  */
 class TagController extends Controller
 {
+    /**
+     * @Inject
+     */
+    private CmsScopeConfig $cmsScopeConfig;
 
     /**
      * Lista tagów
      */
     public function indexAction()
     {
-        $this->view->grid = new \CmsAdmin\Plugin\TagGrid();
-    }
-
-    /**
-     * Edycja tagów
-     */
-    public function editAction(Request $request)
-    {
-        $form = new \CmsAdmin\Form\Tag(new \Cms\Orm\CmsTagRecord($request->id));
-        if ($form->isSaved()) {
-            $this->getMessenger()->addMessage('messenger.tag.saved', true);
-            $this->getResponse()->redirect('cmsAdmin', 'tag', 'index');
-        }
-        $this->view->tagForm = $form;
+        $this->view->grid = new TagGrid([TagGrid::SCOPE_OPTION_NAME => $this->cmsScopeConfig->getName()]);
     }
 
     /**
