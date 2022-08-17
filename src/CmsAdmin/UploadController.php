@@ -219,7 +219,11 @@ class UploadController extends Controller
                     $thumb = $thumbHelper->thumb($record, 'scalecrop', '300');
                     if (!empty($thumb)) {
                         return json_encode(
-                            ['result' => 'OK', 'thumb' => $thumb],
+                            [
+                                'result' => 'OK',
+                                'originalName' => $record->original,
+                                'thumb' => $thumb
+                            ],
                             JSON_THROW_ON_ERROR
                         );
                     }
