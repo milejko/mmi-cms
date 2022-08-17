@@ -63,6 +63,7 @@ function multiuploadLoadThumb(sourceInput) {
             let thumb = $(sourceInput).closest('.field-list-item').find('.thumb img');
             if ('undefined' !== typeof response.thumb) {
                 $(thumb).attr('src', response.thumb);
+                $(thumb).parent().attr('title', response.originalName);
             }
             if ('undefined' !== typeof response.class) {
                 $(thumb).attr('src', uploader.data('icons-url') + response.class + '.svg');
