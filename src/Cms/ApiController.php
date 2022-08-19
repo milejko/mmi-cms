@@ -25,6 +25,7 @@ use Cms\App\CmsSkinsetConfig;
 use Cms\App\CmsTemplateConfig;
 use Cms\Model\SkinsetModel;
 use Cms\Model\TemplateModel;
+use Cms\Orm\CmsCategoryPreviewRecord;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use Mmi\Cache\CacheInterface;
@@ -172,8 +173,10 @@ class ApiController extends \Mmi\Mvc\Controller
         if (null === $category = $query->findPk($request->id)) {
             return $this->getNotFoundResponse();
         }
+        $preview = new CmsCategoryPreviewRecord();
+        $preview->setFromCmsCategoryRecord($category);
         //returning transport object
-        $transportObject = (new TemplateModel($category, $this->cmsSkinsetConfig))->getTransportObject($request);
+        $transportObject = (new TemplateModel($preview, $this->cmsSkinsetConfig))->getTransportObject($request);
         return $this->getResponse()->setTypeJson()
             ->setCode($transportObject->getCode())
             ->setContent($transportObject->toString());
