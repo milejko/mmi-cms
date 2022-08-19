@@ -7,7 +7,7 @@ namespace Cms\Orm;
  */
 class CmsCategoryPreviewRecord extends CmsCategoryRecord
 {
-    private CmsCategoryRecord $originalCmsCategoryRecord;
+    private ?CmsCategoryRecord $originalCmsCategoryRecord = null;
 
     public function setFromCmsCategoryRecord(CmsCategoryRecord $cmsCategoryRecord): self
     {
