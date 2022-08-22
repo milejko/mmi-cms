@@ -157,17 +157,18 @@ class ApiController extends \Mmi\Mvc\Controller
      */
     public function getCategoryPreviewAction(Request $request)
     {
+        //direct uri is given so preview equals reqular getCategory()
+        if ($request->uri) {
+            $categoryResponse = $this->getCategoryAction($request);
+            return $categoryResponse->setContent($this->filterPreviewContent($categoryResponse->getContent()));
+        }
         //search for a category
         $query = (new CmsCategoryQuery())
             ->whereCmsAuthId()->equals($request->authId)
-            ->whereTemplate()->like($request->scope . '%');
+            ->whereTemplate()->like($request->scope . '%')
+            ->whereCmsCategoryOriginalId()->equals($request->originalId ? $request->originalId : null);
         if ($request->originalId) {
-            $query
-                ->whereCmsCategoryOriginalId()->equals($request->originalId)
-                ->whereDateModify()->greater(date('Y-m-d H:i:s', strtotime('-8 hours')));
-        } else {
-            $query
-                ->whereCmsCategoryOriginalId()->equals(null);
+            $query->whereDateModify()->greater(date('Y-m-d H:i:s', strtotime('-8 hours')));
         }
         //findPk it is all that is needed, but other conditions secures the request
         if (null === $category = $query->findPk($request->id)) {
@@ -179,7 +180,7 @@ class ApiController extends \Mmi\Mvc\Controller
         $transportObject = (new TemplateModel($preview, $this->cmsSkinsetConfig))->getTransportObject($request);
         return $this->getResponse()->setTypeJson()
             ->setCode($transportObject->getCode())
-            ->setContent($transportObject->toString());
+            ->setContent($this->filterPreviewContent($transportObject->toString()));
     }
 
     /**
@@ -349,6 +350,14 @@ class ApiController extends \Mmi\Mvc\Controller
         }
         $this->cache->save($category->id, $cacheKey, 0);
         return $category->id;
+    }
+
+    /**
+     * Preview url filter
+     */
+    private function filterPreviewContent(string $content): string
+    {
+        return preg_replace('%\\\/api\\\/([a-z0-9]+)\\\/contents\\\/%', '/api/$1/contents/preview/', $content);
     }
 
 }

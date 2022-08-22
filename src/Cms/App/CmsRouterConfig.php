@@ -51,8 +51,9 @@ class CmsRouterConfig extends RouterConfig
         //routa API stron cms po ID
         $this->setRoute('cms-contents-id-api', '/^api\/contents\/id\/([0-9]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'redirectId', 'id' => '$1']);
 
-        //routa API podglądu nieopublikownych stron cms
+        //routa API podglądu nieopublikownych (i opublikowanych) stron cms
         $this->setRoute('cms-contents-preview-api', '/^api\/([a-z0-9-]+)\/contents\/preview\/([0-9]+)\/([0-9]+)\/([0-9]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getCategoryPreview', 'scope' => '$1', 'id' => '$2', 'originalId' => '$3', 'authId' => '$4']);
+        $this->setRoute('cms-contents-published-preview-api', '/^api\/([a-z0-9-]+)\/contents\/preview\/([a-z0-9\/-]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getCategoryPreview', 'scope' => '$1', 'uri' => '$2']);
 
         //routa API szczegółów kategorii
         $this->setRoute('cms-contents-api', '/^api\/([a-z0-9-]+)\/contents\/([a-z0-9\/-]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getCategory', 'scope' => '$1', 'uri' => '$2']);
