@@ -64,7 +64,6 @@ class Tree extends \Mmi\Form\Element\ElementAbstract
     public function fetchField()
     {
         //powolanie widoku, CSS i JavaScriptow
-        $this->view->headLink()->appendStylesheet('/resource/cmsAdmin/css/tree.css');
         $this->view->headLink()->appendStylesheet('/resource/cmsAdmin/js/jstree/themes/default/style.min.css');
         $this->view->headScript()->prependFile('/resource/cmsAdmin/js/jquery/jquery.js');
         $this->view->headScript()->appendFile('/resource/cmsAdmin/js/jstree/jstree.min.js');
