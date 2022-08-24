@@ -77,7 +77,6 @@ class CmsAppEventInterceptor implements AppEventInterceptorInterface
             //logowanie admina
             return;
         }
-        $auth->clearIdentity();
         //zalogowany na nieuprawnioną rolę
         throw new MvcNotFoundException('Unauthorized access');
     }
