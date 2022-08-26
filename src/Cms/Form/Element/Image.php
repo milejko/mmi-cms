@@ -35,9 +35,8 @@ use Mmi\Session\SessionSpace;
  * @method self setDeleteCheckboxName($name) ustawia nazwę checkboxa
  * @method self setUploaderId($id) ustawia id uploadera
  */
-class Image extends ElementAbstract
+class Image extends ElementAbstract implements UploaderElementInterface
 {
-
     //szablon początku pola
     CONST TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
     //szablon opisu
@@ -54,8 +53,6 @@ class Image extends ElementAbstract
     //klucz z losowym id uploadera
     CONST UPLOADER_ID_KEY = 'uploaderId';
     CONST SESSION_NAMESPACE_PREFIX = 'imageuploader-';
-    //prefiks plikow tymczasowych
-    CONST TEMP_OBJECT_PREFIX = 'tmp_';
     //suffixy dodatkowych pól hidden
     CONST DELETE_FIELD_SUFFIX = '-delete';
 
