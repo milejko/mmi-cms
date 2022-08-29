@@ -2,12 +2,15 @@
 
 namespace Cms\Api;
 
+use Cms\App\CmsRouterConfig;
+use Cms\Orm\CmsCategoryQuery;
+
 /**
  * Redirect transport object
  */
 class RedirectTransport extends HttpJsonTransport
 {
-    const DEFAULT_CODE    = 301;
+    public const DEFAULT_CODE   = 301;
 
     protected   int     $code   = self::DEFAULT_CODE;
     public      array   $_links = [];
@@ -19,10 +22,18 @@ class RedirectTransport extends HttpJsonTransport
 
     public function setHref(string $href): self
     {
-        $this->_links = [(new LinkData())
-            ->setMethod(LinkData::METHOD_REDIRECT)
-            ->setRel(LinkData::REL_EXTERNAL)
-            ->setHref($href)];
+        $redirectType = LinkData::REL_EXTERNAL;
+        if (preg_match('/^internal:\/\/(\d+)/', $href, $matches)) {
+            $redirectType = LinkData::REL_INTERNAL;
+            $cmsCategoryRecord = (new CmsCategoryQuery())->findPk($matches[1]);
+            $href = sprintf(CmsRouterConfig::API_METHOD_CONTENT, $cmsCategoryRecord->getScope(), $cmsCategoryRecord->getUri());
+        }
+        $this->_links = [
+            (new LinkData())
+                ->setMethod(LinkData::METHOD_REDIRECT)
+                ->setRel($redirectType)
+                ->setHref($href)
+        ];
         return $this;
     }
 }
