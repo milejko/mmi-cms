@@ -132,8 +132,9 @@ class CategoryForm extends Form
             $this->addElement((new Element\Text('customUri'))
                 ->setLabel('form.category.customUri.label')
                 //adres domyślny (bez baseUrl)
-                ->addFilter(new Filter\StringTrim)
-                ->addFilter(new Filter\EmptyToNull)
+                ->addFilter(new Filter\Lowercase())
+                ->addFilter(new Filter\StringTrim())
+                ->addFilter(new Filter\EmptyToNull())
                 ->addValidator(new Validator\StringLength([1, 255])));
         }
 

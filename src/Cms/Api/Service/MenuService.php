@@ -3,6 +3,7 @@
 namespace Cms\Api\Service;
 
 use Cms\Api\LinkData;
+use Cms\Api\RedirectTransport;
 use Cms\App\CmsRouterConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Model\SkinsetModel;
@@ -122,27 +123,16 @@ class MenuService implements MenuServiceInterface
     protected function getLinks(array $item): array
     {
         if ($item['redirectUri']) {
-            $redirectType = LinkData::REL_EXTERNAL;
-            if (preg_match('/^internal:\/\/(\d+)/', $item['redirectUri'], $matches)) {
-                $redirectType = LinkData::REL_INTERNAL;
-                $cmsCategoryRecord = (new CmsCategoryQuery())->findPk($matches[1]);
-                $item['redirectUri'] = sprintf(CmsRouterConfig::API_METHOD_CONTENT, $cmsCategoryRecord->getScope(), $cmsCategoryRecord->getUri());
-            }
-            return [
-                (new LinkData)
-                    ->setHref($item['redirectUri'])
-                    ->setMethod(LinkData::METHOD_REDIRECT)
-                    ->setRel($redirectType)
-            ];
+            return (new RedirectTransport($item['redirectUri']))->_links;
         }
         $scope = substr($item['template'], 0, strpos($item['template'], self::PATH_SEPARATOR)) ?: $item['template'];
         if ($scope) {
-            return [(new LinkData)
-                ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $scope, $item['customUri'] ?: $item['uri']))
-                ->setRel(LinkData::REL_CONTENT)
+            return [
+                (new LinkData)
+                    ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $scope, $item['customUri'] ?: $item['uri']))
+                    ->setRel(LinkData::REL_CONTENT)
             ];
         }
         return [];
     }
-
 }

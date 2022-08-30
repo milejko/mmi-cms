@@ -4,6 +4,7 @@ namespace Cms;
 
 use Cms\Api\BreadcrumbData;
 use Cms\Api\LinkData;
+use Cms\Api\RedirectTransport;
 use Cms\Api\TemplateDataTransport;
 use Cms\Api\TransportInterface;
 use Cms\App\CmsRouterConfig;
@@ -11,7 +12,6 @@ use Cms\App\CmsSkinsetConfig;
 use Cms\Exception\CategoryWidgetException;
 use Cms\Model\SkinsetModel;
 use Cms\Model\WidgetModel;
-use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use Cms\Orm\CmsFileQuery;
 use CmsAdmin\Form\CategoryForm;
@@ -221,20 +221,13 @@ abstract class AbstractTemplateController extends Controller
     protected function getBreadcrumbDataByRecord(CmsCategoryRecord $cmsCategoryRecord): BreadcrumbData
     {
         if ($cmsCategoryRecord->redirectUri) {
-            $redirectType = LinkData::REL_EXTERNAL;
-            if (preg_match('/^internal:\/\/(\d+)/', $cmsCategoryRecord->redirectUri, $matches)) {
-                $redirectType = LinkData::REL_INTERNAL;
-                $cmsCategoryRecord = (new CmsCategoryQuery())->findPk($matches[1]);
-                $cmsCategoryRecord->redirectUri = sprintf(CmsRouterConfig::API_METHOD_CONTENT, $cmsCategoryRecord->getScope(), $cmsCategoryRecord->getUri());
-            }
-            $link = (new LinkData)
-                ->setHref($cmsCategoryRecord->redirectUri)
-                ->setMethod(LinkData::METHOD_REDIRECT)
-                ->setRel($redirectType);
+            $links = (new RedirectTransport($cmsCategoryRecord->redirectUri))->_links;
         } else {
-            $link = (new LinkData)
-                ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $cmsCategoryRecord->getScope(), $cmsCategoryRecord->getUri()))
-                ->setRel(LinkData::REL_CONTENT);
+            $links = [
+                (new LinkData())
+                    ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $cmsCategoryRecord->getScope(), $cmsCategoryRecord->getUri()))
+                    ->setRel(LinkData::REL_CONTENT)
+            ];
         }
         return (new BreadcrumbData)
             ->setId($cmsCategoryRecord->id)
@@ -243,6 +236,6 @@ abstract class AbstractTemplateController extends Controller
             ->setBlank((bool) $cmsCategoryRecord->blank)
             ->setVisible((bool) $cmsCategoryRecord->visible)
             ->setOrder($cmsCategoryRecord->order)
-            ->setLinks([$link]);
+            ->setLinks($links);
     }
 }
