@@ -602,6 +602,10 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $this->id);
         $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->id);
         $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->cmsCategoryOriginalId);
+        foreach ($this->getWidgetModel()->getWidgetRelations() as $widget) {
+            $cache->remove(CmsCategoryWidgetCategoryRecord::HTML_CACHE_PREFIX . $widget->id);
+            $cache->remove(CmsCategoryWidgetCategoryRecord::JSON_CACHE_PREFIX . $widget->id);
+        }
         //don't drop cache on draft saves
         if (self::STATUS_DRAFT == $this->status) {
             return true;
