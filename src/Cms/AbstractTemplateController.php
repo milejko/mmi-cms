@@ -229,7 +229,7 @@ abstract class AbstractTemplateController extends Controller
                     ->setRel(LinkData::REL_CONTENT)
             ];
         }
-        $attributes = json_decode((string) $this->cmsCategoryRecord->configJson, true);
+        $attributes = json_decode((string) $cmsCategoryRecord->configJson, true);
         return (new BreadcrumbData)
             ->setId($cmsCategoryRecord->id)
             ->setName($cmsCategoryRecord->name ?: '')
