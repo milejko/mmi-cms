@@ -96,14 +96,15 @@ class MenuService implements MenuServiceInterface
     protected function formatItem(array $item): array
     {
         return [
-            'id'        => $item['id'],
-            'name'      => $item['name'],
-            'template'  => $item['template'],
-            'blank'     => (bool) $item['blank'],
-            'visible'   => (bool) $item['visible'],
-            'order'     => (int) $item['order'],
-            '_links'    => $this->getLinks($item),
-            'children'  => [],
+            'id'         => $item['id'],
+            'name'       => $item['name'],
+            'template'   => $item['template'],
+            'blank'      => (bool) $item['blank'],
+            'visible'    => (bool) $item['visible'],
+            'attributes' => json_decode((string) $item['configJson'], true),
+            'order'      => (int) $item['order'],
+            '_links'     => $this->getLinks($item),
+            'children'   => [],
         ];
     }
 
@@ -117,7 +118,7 @@ class MenuService implements MenuServiceInterface
         if (null !== $scope) {
             $query->whereTemplate()->equals([$scope => $scope] + (new SkinsetModel($this->cmsSkinsetConfig))->getAllowedTemplateKeysBySkinKey($scope));
         }
-        return $query->findFields(['id', 'template', 'name', 'uri', 'blank', 'visible', 'customUri', 'redirectUri', 'path', 'order']);
+        return $query->findFields(['id', 'template', 'name', 'uri', 'blank', 'visible', 'configJson', 'customUri', 'redirectUri', 'path', 'order']);
     }
 
     protected function getLinks(array $item): array
