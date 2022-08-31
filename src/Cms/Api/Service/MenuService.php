@@ -95,13 +95,14 @@ class MenuService implements MenuServiceInterface
 
     protected function formatItem(array $item): array
     {
+        $attributes = json_decode((string) $item['configJson'], true);
         return [
             'id'         => $item['id'],
             'name'       => $item['name'],
             'template'   => $item['template'],
             'blank'      => (bool) $item['blank'],
             'visible'    => (bool) $item['visible'],
-            'attributes' => json_decode((string) $item['configJson'], true),
+            'attributes' => is_array($attributes) ? $attributes : [],
             'order'      => (int) $item['order'],
             '_links'     => $this->getLinks($item),
             'children'   => [],
