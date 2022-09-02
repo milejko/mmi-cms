@@ -5,6 +5,7 @@ namespace Cms;
 use Cms\Api\AttachmentData;
 use Cms\Api\DataInterface;
 use Cms\Api\WidgetData;
+use Cms\App\CmsWidgetConfig;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 use Cms\Orm\CmsFileQuery;
 use Cms\Orm\CmsFileRecord;
@@ -30,11 +31,25 @@ abstract class AbstractWidgetController extends Controller
     private CmsCategoryWidgetCategoryRecord $widgetRecord;
 
     /**
+     * Widget config
+     */
+    private CmsWidgetConfig $widgetConfig;
+
+    /**
      * Sets the CMS category record
      */
-    public function setWidgetRecord(CmsCategoryWidgetCategoryRecord $widgetRecord): self
+    public function setWidgetRecord(CmsCategoryWidgetCategoryRecord $cmsCategoryWidgetRecord): self
     {
-        $this->widgetRecord = $widgetRecord;
+        $this->widgetRecord = $cmsCategoryWidgetRecord;
+        return $this;
+    }
+
+    /**
+     * Sets the CMS widget config
+    */
+    public function setWidgetConfig(CmsWidgetConfig $cmsWidgetConfig): self
+    {
+        $this->widgetConfig = $cmsWidgetConfig;
         return $this;
     }
 
@@ -44,6 +59,11 @@ abstract class AbstractWidgetController extends Controller
     public final function getWidgetRecord(): CmsCategoryWidgetCategoryRecord
     {
         return $this->widgetRecord;
+    }
+
+    public final function getWidgetConfig(): CmsWidgetConfig
+    {
+        return $this->widgetConfig;
     }
 
     /**

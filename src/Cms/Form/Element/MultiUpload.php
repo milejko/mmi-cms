@@ -31,6 +31,8 @@ class MultiUpload extends MultiField implements UploaderElementInterface
     private const THUMB_URL = '/cmsAdmin/upload/multithumbnail';
     private const CURRENT_URL = '/cmsAdmin/upload/current';
 
+    private string $acceptMimeType = '*';
+
     /**
      * Konstruktor
      *
@@ -81,6 +83,15 @@ class MultiUpload extends MultiField implements UploaderElementInterface
     }
 
     /**
+     * Comma separated mime types ie. image/jpeg, image/png or application/octet-stream
+     */
+    public function setAcceptMimeType(string $acceptMimeType): self
+    {
+        $this->acceptMimeType = $acceptMimeType;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function fetchField(): string
@@ -92,6 +103,7 @@ class MultiUpload extends MultiField implements UploaderElementInterface
                 <i class="icon fa fa-5 fa-cloud-upload"></i>
                 Kliknij lub upuść pliki w tym obszarze
                 <input type="file" multiple="multiple" id="' . $this->getId() . '-add" class="upload-add" 
+                    accept=" ' . $this->acceptMimeType . '"
                     data-template="' . $this->getDeclaredName() . '" 
                     data-thumb-url="' . self::THUMB_URL . '" 
                     data-icons-url="' . self::ICONS_URL . '" 
