@@ -181,7 +181,9 @@ class WidgetModel
             throw new CategoryWidgetException($controllerName . ' should extend \Cms\AbstractWidgetController');
         }
         //injecting category record
-        $targetController->setWidgetRecord($this->_cmsWidgetRecord);
+        $targetController
+            ->setWidgetConfig($this->_widgetConfig)
+            ->setWidgetRecord($this->_cmsWidgetRecord);
         //zwrot instancji kontrolera
         return $targetController;
     }
