@@ -105,9 +105,8 @@ class CategoryForm extends Form
                 ->setLabel('form.category.redirect.label')
                 ->addValidator(new Url())
                 ->addFilter(new Filter\StringTrim));
-
         //tylko jeśli ma template (jest stroną)
-        if (strpos($this->getRecord()->template, '/')) {
+        if ($this->getRecord()->template && strpos($this->getRecord()->template, '/')) {
             //SEO
             //meta title
             $this->addElement((new Element\Text('title'))
