@@ -10,7 +10,6 @@
 
 namespace CmsAdmin;
 
-use Cms\ApiController;
 use Cms\App\CmsRouterConfig;
 use Cms\App\CmsScopeConfig;
 use Cms\App\CmsSkinsetConfig;
@@ -184,8 +183,6 @@ class CategoryController extends Controller
         if ($category->cmsAuthId != $this->auth->getId()) {
             throw new \Mmi\Mvc\MvcForbiddenException('Category not allowed');
         }
-        //sprawdzanie czy nie duplikat
-        $this->view->duplicateAlert = $this->_isCategoryDuplicate($originalId);
         //sprawdzenie uprawnień do edycji węzła kategorii
         if (!(new \CmsAdmin\Model\CategoryAclModel)->getAcl()->isAllowed($this->auth->getRoles(), $originalId)) {
             $this->getMessenger()->addMessage('messenger.category.permission.denied', false);
@@ -374,24 +371,6 @@ class CategoryController extends Controller
             $record->save();
         }
         return '';
-    }
-
-    /**
-     * Sprawdzanie czy kategoria ma duplikat
-     * @param integer $originalId
-     * @return boolean
-     */
-    protected function _isCategoryDuplicate($originalId)
-    {
-        $category = (new CmsCategoryQuery)->findPk($originalId);
-        //znaleziono kategorię o tym samym uri
-        return (null !== (new CmsCategoryQuery)
-            ->whereId()->notEquals($category->id)
-            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-            ->andFieldRedirectUri()->equals(null)
-            ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
-            ->andQuery((new CmsCategoryQuery)->searchByUri($category->uri))
-            ->findFirst()) && !$category->redirectUri && !$category->customUri;
     }
 
     /**

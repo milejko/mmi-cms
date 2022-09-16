@@ -58,7 +58,6 @@
                 <div class="tab-content">
                     {foreach $categoryForm->getOption('tabs') as $tabKey => $tab}
                         <div class="tab-pane" id="{$tabKey}" role="tabpanel" aria-expanded="true">
-                            {if $duplicateAlert}<div class="em">{#template.category.edit.duplicate.alert#}<br /><br /></div>{/if}
                             {foreach $categoryForm->getElements() as $element}
                                 {if 'submit' == $element->getBasename() || 'commit' == $element->getBasename()}
                                     {continue}
