@@ -45,28 +45,30 @@ class TinyMce extends UploaderElementAbstract
     const TEMPLATE_FIELD = 'mmi/form/element/textarea';
 
     const TOOLBARS = [
-        'default'  => [
-            'undo redo | bold italic underline strikethrough | forecolor backcolor | styleselect | bullist numlist outdent indent | fontselect fontsizeselect | alignleft aligncenter alignright alignjustify | link unlink anchor | image media lioniteimages | preview',
+        'simple'   => [
+            'bold italic underline strikethrough | link unlink anchor | alignleft aligncenter alignright alignjustify',
         ],
         'advanced' => [
             'undo redo | cut copy paste pastetext | searchreplace | bold italic underline strikethrough | subscript superscript | alignleft aligncenter alignright alignjustify | fontselect fontsizeselect | forecolor backcolor',
             'styleselect | table | bullist numlist outdent indent blockquote | link unlink anchor | image media lioniteimages | preview fullscreen code | charmap visualchars nonbreaking inserttime hr',
         ],
-        'simple'   => [
-            'bold italic underline strikethrough | link unlink anchor | alignleft aligncenter alignright alignjustify',
+        'technical' => [
+            'undo redo | cut copy paste pastetext | searchreplace | bold italic underline strikethrough | subscript superscript | alignleft aligncenter alignright alignjustify | fontselect fontsizeselect | forecolor backcolor',
+            'styleselect | table | bullist numlist outdent indent blockquote | link unlink anchor | image media lioniteimages | preview fullscreen code | charmap visualchars nonbreaking inserttime hr mathlive',
         ],
+
     ];
 
     const CONTEXT_MENU = [
-        'default'  => 'link image media inserttable | cell row column deletetable',
-        'advanced' => 'link image media inserttable | cell row column deletetable',
         'simple'   => 'link image inserttable | cell row column deletetable',
+        'advanced' => 'link image media inserttable | cell row column deletetable',
+        'technical' => 'link image media inserttable | cell row column deletetable',
     ];
 
     const PLUGINS = [
         'lioniteimages,advlist,anchor,autolink,autoresize,charmap,code,contextmenu,fullscreen',
         'hr,image,insertdatetime,link,lists,media,nonbreaking,noneditable,paste,print,preview',
-        'searchreplace,tabfocus,table,textcolor,visualblocks,visualchars,wordcount',
+        'searchreplace,tabfocus,table,textcolor,visualblocks,visualchars,wordcount,mathlive',
     ];
 
     const FONT_FORMATS = [
@@ -153,13 +155,13 @@ class TinyMce extends UploaderElementAbstract
     }
 
     /**
-     * Ustawia tryb domyślny
+     * Ustawia tryb techniczny
      *
      * @return TinyMce
      */
-    public function setModeDefault()
+    public function setModeTechnical()
     {
-        return $this->setOption('mode', null);
+        return $this->setOption('mode', 'technical');
     }
 
     /**
@@ -246,7 +248,7 @@ class TinyMce extends UploaderElementAbstract
         //bazowa wspólna konfiguracja
         $this->_baseConfig($this->view);
         //tryb edytora
-        $mode = $this->getMode() ?? 'default';
+        $mode = $this->getMode() ?? 'simple';
         //metoda konfiguracji edytora
         $modeConfigurator = '_mode' . ucfirst($mode);
         if (method_exists($this, $modeConfigurator)) {
@@ -419,15 +421,15 @@ class TinyMce extends UploaderElementAbstract
     }
 
     /**
-     * Konfiguracja dla trybu Default
+     * Konfiguracja dla trybu Technical
      */
-    protected function _modeDefault()
+    protected function _modeTechnical()
     {
         if ($this->getToolbars() === null) {
-            $this->setToolbars(self::TOOLBARS['default']);
+            $this->setToolbars(self::TOOLBARS['technical']);
         }
         if ($this->getContextMenu() === null) {
-            $this->setContextMenu(self::CONTEXT_MENU['default']);
+            $this->setContextMenu(self::CONTEXT_MENU['technical']);
         }
     }
 

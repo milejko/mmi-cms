@@ -1,0 +1,81 @@
+body {
+    background: #D1D5D9;
+}
+
+.mathfield {
+    color: #363636;
+    padding: 7px;
+    font-size: 100%;
+    margin: 10px 0 10px 0;
+    border-radius: 5px;
+    background-color: #fff;
+    min-height: 100px;
+}
+
+.mathlive-button {
+    float: right;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 10px 26px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.mathlive-button.close-mathlive {
+    background: #f44336;
+}
+
+.mathlive-button.add-to-test {
+    background: #0061AF;
+}
+.mathlive-button.add-to-test:disabled {
+    background: #8d8d8d;
+    cursor: not-allowed;
+}
+
+#ML__keyboard{
+    border: none;
+}
+
+#ML__keyboard > .keyboard-layer > .keyboard-toolbar > .left, #ML__keyboard > .keyboard-layer > .keyboard-toolbar > .right {
+    display: none !important;
+}
+
+div.ML__popover.is-visible {
+    z-index: 9999999;
+}
+
+.ML__keyboard > div > div.keyboard-toolbar > div > div {
+    background: #eee;
+    margin-right: 0px;
+    margin-left: 0px;
+    flex-direction: column;
+    align-items: center;
+}
+.ML__keyboard > div > div.keyboard-toolbar > div > div:hover {
+    background: #aaa;
+}
+.ML__keyboard > div > div.keyboard-toolbar > div > div.selected {
+    background: #fff !important;
+    padding-bottom: 0px;
+    margin-bottom: 6px;
+}
+.ne-bold {
+    font-weight: bold;
+}
+.ne-no-bold {
+    font-size: inherit !important;
+}
+.ne-italic {
+    font-style: italic;
+}
+.ne-font-small {
+    font-size: 0.85rem !important;
+}
+.arraycolsep {
+    width: 0.2em !important;
+}

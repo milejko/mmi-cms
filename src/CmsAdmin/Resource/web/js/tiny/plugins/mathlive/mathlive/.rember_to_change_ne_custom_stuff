@@ -1,0 +1,8 @@
+.ML__keyboard > div > div.keyboard-toolbar > div > div.disabled.pressed svg, .ML__keyboard > div > div.keyboard-toolbar > div > div.disabled:hover svg, .ML__keyboard > div > div.keyboard-toolbar > div > div.disabled svg {
+    color: var(--keyboard-text);
+    opacity: .8;
+}
+Thx!
+.ML__smart-fence__close {
+    opacity: 0;
+}
