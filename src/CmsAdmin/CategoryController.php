@@ -361,17 +361,18 @@ class CategoryController extends Controller
         if (!is_array($order) || empty($order)) {
             return 'Sortowanie nie powiodło się';
         }
-        //sortowanie
+        //sorting
         foreach ($order as $order => $id) {
-            //brak rekordu o danym ID
+            //record not found or order is already OK
             if (null === ($record = (new CmsCategoryQuery())
                 ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+                ->whereOrder()->notEquals($order)
                 ->findPk($id))) {
                 continue;
             }
-            //ustawianie kolejności i zapis
+            //setting order and simpleUpdate (it is enough, doesn't change paths)
             $record->order = $order;
-            $record->save();
+            $record->simpleUpdate();
         }
         return '';
     }
