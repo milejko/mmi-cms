@@ -350,25 +350,32 @@ class CategoryController extends Controller
     public function sortAction(Request $request)
     {
         $this->getResponse()->setTypePlain();
+        /*
+        *   $orderMap = [
+        *       'order'      => (int) Order number ie. 1 or 2
+        *       'categoryId' => (int) Category Id
+        *   ]
+        */
         //sprawdzanie istnienia danych sortujących
-        if (null === ($order = $this->getRequest()->getPost()->value)) {
+        if (null === ($orderMap = $this->getRequest()->getPost()->value)) {
             return 'Sortowanie nie powiodło się';
         }
         //weryfikacja danych sortujących
-        if (!is_array($order) || empty($order)) {
+        if (!is_array($orderMap) || empty($orderMap)) {
             return 'Sortowanie nie powiodło się';
         }
-        //sortowanie
-        foreach ($order as $order => $id) {
-            //brak rekordu o danym ID
+        //sorting
+        foreach ($orderMap as $order => $categoryId) {
+            //record not found or order is already OK
             if (null === ($record = (new CmsCategoryQuery())
                 ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-                ->findPk($id))) {
+                ->whereOrder()->notEquals($order)
+                ->findPk($categoryId))) {
                 continue;
             }
-            //ustawianie kolejności i zapis
+            //setting order and simpleUpdate (it is enough, doesn't change paths)
             $record->order = $order;
-            $record->save();
+            $record->simpleUpdate();
         }
         return '';
     }

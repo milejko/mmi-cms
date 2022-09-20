@@ -34,7 +34,6 @@ class DbController extends Controller
      */
     public function dumpAction()
     {
-        ob_end_clean();
         //new dumper object
         $dumper = new Mysqldump(
             'mysql:host=' . $this->container->get('db.host') . ';dbname=' . $this->container->get('db.name') . ';dbport=' . $this->container->get('db.port'),
