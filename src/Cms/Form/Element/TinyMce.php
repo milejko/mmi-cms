@@ -45,6 +45,10 @@ class TinyMce extends UploaderElementAbstract
     const TEMPLATE_FIELD = 'mmi/form/element/textarea';
 
     const TOOLBARS = [
+        'default' => [
+            'undo redo | cut copy paste pastetext | searchreplace | bold italic underline strikethrough | subscript superscript | alignleft aligncenter alignright alignjustify | fontselect fontsizeselect | forecolor backcolor',
+            'styleselect | table | bullist numlist outdent indent blockquote | link unlink anchor | image media lioniteimages | preview fullscreen code | charmap visualchars nonbreaking inserttime hr',
+        ],
         'simple'   => [
             'bold italic underline strikethrough | link unlink anchor | alignleft aligncenter alignright alignjustify',
         ],
@@ -60,6 +64,7 @@ class TinyMce extends UploaderElementAbstract
     ];
 
     const CONTEXT_MENU = [
+        'default' => 'link image media inserttable | cell row column deletetable',
         'simple'   => 'link image inserttable | cell row column deletetable',
         'advanced' => 'link image media inserttable | cell row column deletetable',
         'technical' => 'link image media inserttable | cell row column deletetable',
@@ -142,6 +147,16 @@ class TinyMce extends UploaderElementAbstract
     public function setUploaderObject($object)
     {
         return $this->setObject($object);
+    }
+
+    /**
+     * Ustawia tryb default
+     *
+     * @return TinyMce
+     */
+    public function setModeDefault()
+    {
+        return $this->setOption('mode', 'advanced');
     }
 
     /**
@@ -411,6 +426,19 @@ class TinyMce extends UploaderElementAbstract
      * Konfiguracja dla trybu Advanced
      */
     protected function _modeAdvanced()
+    {
+        if ($this->getToolbars() === null) {
+            $this->setToolbars(self::TOOLBARS['advanced']);
+        }
+        if ($this->getContextMenu() === null) {
+            $this->setContextMenu(self::CONTEXT_MENU['advanced']);
+        }
+    }
+
+    /**
+     * Konfiguracja dla trybu Default
+     */
+    protected function _modeDefault()
     {
         if ($this->getToolbars() === null) {
             $this->setToolbars(self::TOOLBARS['advanced']);
