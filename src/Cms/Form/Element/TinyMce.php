@@ -263,7 +263,7 @@ class TinyMce extends UploaderElementAbstract
         //bazowa wspólna konfiguracja
         $this->_baseConfig($this->view);
         //tryb edytora
-        $mode = $this->getMode() ?? 'simple';
+        $mode = $this->getMode() ?? 'technical';
         //metoda konfiguracji edytora
         $modeConfigurator = '_mode' . ucfirst($mode);
         if (method_exists($this, $modeConfigurator)) {
