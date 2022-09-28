@@ -46,11 +46,11 @@ class TinyMce extends UploaderElementAbstract
 
     const TOOLBARS = [
         'simple'   => [
-            'bold italic underline strikethrough | link unlink anchor | alignleft aligncenter alignright alignjustify',
+            'undo redo | bold italic underline strikethrough | link unlink anchor | alignleft aligncenter alignright alignjustify | subscript superscript | charmap visualchars nonbreaking mathlive',
         ],
         'advanced' => [
-            'undo redo | cut copy paste pastetext | searchreplace | bold italic underline strikethrough | subscript superscript | alignleft aligncenter alignright alignjustify | fontselect fontsizeselect | forecolor backcolor',
-            'styleselect | table | bullist numlist outdent indent blockquote | link unlink anchor | image media lioniteimages | fullscreen code | charmap visualchars nonbreaking inserttime hr mathlive',
+            'undo redo | cut copy paste pastetext searchreplace | bold italic underline strikethrough | subscript superscript | alignleft aligncenter alignright alignjustify | fontselect fontsizeselect | forecolor backcolor',
+            'styleselect | table | bullist numlist outdent indent blockquote | link unlink anchor | image media lioniteimages | fullscreen code | charmap visualchars nonbreaking hr mathlive',
         ],
     ];
 
