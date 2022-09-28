@@ -24,6 +24,11 @@ use Mmi\Validator\Url;
  */
 class CategoryForm extends Form
 {
+    private const SEO_PAGES = [
+        'home-page',
+        'simple-page',
+    ];
+
     /**
      * Konstruktor
      * @param CmsCategoryRecord $record
@@ -106,7 +111,10 @@ class CategoryForm extends Form
                 ->addValidator(new Url())
                 ->addFilter(new Filter\StringTrim));
         //tylko jeśli ma template (jest stroną)
-        if ($this->getRecord()->template && strpos($this->getRecord()->template, '/')) {
+
+        $page = substr($this->getRecord()->template, strrpos($this->getRecord()->template, '/') + 1);
+
+        if (in_array($page, self::SEO_PAGES)) {
             //SEO
             //meta title
             $this->addElement((new Element\Text('title'))
@@ -114,19 +122,38 @@ class CategoryForm extends Form
                 ->setLabel('form.category.title.label')
                 ->setDescription('form.category.title.description')
                 ->addFilter(new Filter\StringTrim)
-                ->addValidator(new Validator\StringLength([2, 128])));
+                ->setRequired()
+                ->addValidator(new Validator\StringLength([30, 60])));
 
             //meta description
             $this->addElement((new Element\Textarea('description'))
                 ->setOption('tab', 'seo')
-                ->setLabel('form.category.description.label'));
+                ->setLabel('form.category.description.label')
+                ->setDescription('form.category.description.description')
+                ->addFilter(new Filter\StringTrim)
+                ->setRequired()
+                ->addValidator(new Validator\StringLength([72, 152])));
+
+            $this->addElement((new Element\Text('canonical'))
+                ->setOption('tab', 'seo')
+                ->setLabel('form.category.canonical.label')
+                ->setDescription('form.category.canonical.description')
+                ->addFilter(new Filter\Lowercase())
+                ->addFilter(new Filter\StringTrim())
+                ->addFilter(new Filter\EmptyToNull())
+                ->addValidator(new Validator\Url()));
 
             //og image
             $this->addElement((new Element\Image('ogImage'))
                 ->setOption('tab', 'seo')
                 ->setObject(CmsCategoryRecord::OG_IMAGE_OBJECT)
-                ->setLabel('form.category.image.label'));
+                ->setRequired()
+                ->setLabel('form.category.image.label')
+                ->setDescription('form.category.image.description')
+                ->addValidator(new Validator\NotEmpty()));
+        }
 
+        if ($this->getRecord()->template && strpos($this->getRecord()->template, '/')) {
             //własny uri
             $this->addElement((new Element\Text('customUri'))
                 ->setLabel('form.category.customUri.label')

@@ -213,6 +213,13 @@ class CategoryController extends Controller
         if ($form->isMine()) {
             $form->setFromPost($request->getPost());
         }
+        //ustawianie z POST
+        if ($form->isMine()) {
+            //przed zapisem formularza
+            $templateModel->invokeBeforeSaveEditForm($form);
+            //zapis formularza
+            $form->save();
+        }
         //walidacja sekcji i ilości widgetów
         if ($form->isMine() && $form->getElement('commit')->getValue() && !empty($minOccurrenceWidgets)) {
             //ustawianie walidacji błędnej
@@ -221,15 +228,10 @@ class CategoryController extends Controller
             foreach ($minOccurrenceWidgets as $widgetKey) {
                 $this->getMessenger()->addMessage(self::MISSING_WIDGET_MESSENGER_PREFIX . $widgetKey, false);
             }
+
             return;
         }
-        //ustawianie z POST
-        if ($form->isMine()) {
-            //przed zapisem formularza
-            $templateModel->invokeBeforeSaveEditForm($form);
-            //zapis formularza
-            $form->save();
-        }
+
         //szablon nadal istnieje
         if ($form->isSaved() && $category->template) {
             //po zapisie forma
