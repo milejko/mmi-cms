@@ -45,28 +45,24 @@ class TinyMce extends UploaderElementAbstract
     const TEMPLATE_FIELD = 'mmi/form/element/textarea';
 
     const TOOLBARS = [
-        'default'  => [
-            'undo redo | bold italic underline strikethrough | forecolor backcolor | styleselect | bullist numlist outdent indent | fontselect fontsizeselect | alignleft aligncenter alignright alignjustify | link unlink anchor | image media lioniteimages | preview',
+        'simple'   => [
+            'undo redo | bold italic underline strikethrough | link unlink anchor | alignleft aligncenter alignright alignjustify | subscript superscript | charmap visualchars nonbreaking mathlive',
         ],
         'advanced' => [
-            'undo redo | cut copy paste pastetext | searchreplace | bold italic underline strikethrough | subscript superscript | alignleft aligncenter alignright alignjustify | fontselect fontsizeselect | forecolor backcolor',
-            'styleselect | table | bullist numlist outdent indent blockquote | link unlink anchor | image media lioniteimages | preview fullscreen code | charmap visualchars nonbreaking inserttime hr',
-        ],
-        'simple'   => [
-            'bold italic underline strikethrough | link unlink anchor | alignleft aligncenter alignright alignjustify',
+            'undo redo | cut copy paste pastetext searchreplace | bold italic underline strikethrough | subscript superscript | alignleft aligncenter alignright alignjustify | fontselect fontsizeselect | forecolor backcolor',
+            'styleselect | table | bullist numlist outdent indent blockquote | link unlink anchor | image media lioniteimages | fullscreen code | charmap visualchars nonbreaking hr mathlive',
         ],
     ];
 
     const CONTEXT_MENU = [
-        'default'  => 'link image media inserttable | cell row column deletetable',
-        'advanced' => 'link image media inserttable | cell row column deletetable',
         'simple'   => 'link image inserttable | cell row column deletetable',
+        'advanced' => 'link image media inserttable | cell row column deletetable',
     ];
 
     const PLUGINS = [
         'lioniteimages,advlist,anchor,autolink,autoresize,charmap,code,contextmenu,fullscreen',
         'hr,image,insertdatetime,link,lists,media,nonbreaking,noneditable,paste,print,preview',
-        'searchreplace,tabfocus,table,textcolor,visualblocks,visualchars,wordcount',
+        'searchreplace,tabfocus,table,textcolor,visualblocks,visualchars,wordcount,mathlive',
     ];
 
     const FONT_FORMATS = [
@@ -143,23 +139,23 @@ class TinyMce extends UploaderElementAbstract
     }
 
     /**
-     * Ustawia tryb zaawansowany
-     *
-     * @return TinyMce
-     */
-    public function setModeAdvanced()
-    {
-        return $this->setOption('mode', 'advanced');
-    }
-
-    /**
      * Ustawia tryb domyślny
      *
      * @return TinyMce
      */
     public function setModeDefault()
     {
-        return $this->setOption('mode', null);
+        return $this->setOption('mode', 'advanced');
+    }
+
+    /**
+     * Ustawia tryb zaawansowany/techniczny
+     *
+     * @return TinyMce
+     */
+    public function setModeAdvanced()
+    {
+        return $this->setOption('mode', 'advanced');
     }
 
     /**
@@ -246,13 +242,12 @@ class TinyMce extends UploaderElementAbstract
         //bazowa wspólna konfiguracja
         $this->_baseConfig($this->view);
         //tryb edytora
-        $mode = $this->getMode() ?? 'default';
+        $mode = $this->getMode() ?? 'advanced';
         //metoda konfiguracji edytora
         $modeConfigurator = '_mode' . ucfirst($mode);
         if (method_exists($this, $modeConfigurator)) {
             $this->$modeConfigurator();
         }
-
         $config = $this->_renderConfig();
         $this->setOption('data-config', $config);
         //tworzenie kopii plików załadowanych do TinyMce
@@ -307,7 +302,6 @@ class TinyMce extends UploaderElementAbstract
             'image_list'       => $this->view->baseUrl . '/?module=cms&controller=file&action=list&object=' . $object . '&objectId=' . $objectId . '&t=' . $time . '&hash=' . $hash,
             'branding'         => false,
         ];
-
         $config = array_merge($config, $this->_renderConfigOptionN('toolbar', 'toolbars'), $this->_common, $this->getCustomConfig() ?? []);
 
         return json_encode($config);
@@ -345,7 +339,7 @@ class TinyMce extends UploaderElementAbstract
     {
         $options = [];
         if (null === $optionValue = $this->getOption($optionKey)) {
-            return "";
+            return [];
         }
 
         if (!is_array($optionValue)) {
@@ -406,7 +400,7 @@ class TinyMce extends UploaderElementAbstract
     }
 
     /**
-     * Konfiguracja dla trybu Advanced
+     * Konfiguracja dla trybu Technical
      */
     protected function _modeAdvanced()
     {
@@ -415,19 +409,6 @@ class TinyMce extends UploaderElementAbstract
         }
         if ($this->getContextMenu() === null) {
             $this->setContextMenu(self::CONTEXT_MENU['advanced']);
-        }
-    }
-
-    /**
-     * Konfiguracja dla trybu Default
-     */
-    protected function _modeDefault()
-    {
-        if ($this->getToolbars() === null) {
-            $this->setToolbars(self::TOOLBARS['default']);
-        }
-        if ($this->getContextMenu() === null) {
-            $this->setContextMenu(self::CONTEXT_MENU['default']);
         }
     }
 
