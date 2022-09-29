@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -92,6 +92,8 @@ class CmsNavigationConfig extends NavigationConfig
                     ->setLabel('menu.mail.container')
                     ->setIcon('fa-envelope-o')
                     ->setUri('#')
+                    ->setModule('cmsAdmin')
+                    ->setController('mail')
                     ->addChild((new NavigationConfigElement)
                         ->setLabel('menu.mail.index')
                         ->setIcon('fa-table')
@@ -145,6 +147,8 @@ class CmsNavigationConfig extends NavigationConfig
                     ->setLabel('menu.auth.container')
                     ->setIcon('fa-users')
                     ->setUri('#')
+                    ->setModule('cmsAdmin')
+                    ->setController('auth')
                     ->addChild((new NavigationConfigElement)
                         ->setLabel('menu.auth.index')
                         ->setIcon('fa-table')
@@ -171,6 +175,8 @@ class CmsNavigationConfig extends NavigationConfig
                         ->setLabel('menu.cron.container')
                         ->setIcon('fa-calendar')
                         ->setUri('#')
+                        ->setModule('cmsAdmin')
+                        ->setController('cron')
                         ->addChild((new NavigationConfigElement)
                             ->setLabel('menu.cron.index')
                             ->setIcon('fa-table')
@@ -202,6 +208,8 @@ class CmsNavigationConfig extends NavigationConfig
                         ->setLabel('menu.tag.container')
                         ->setIcon('fa-tag')
                         ->setUri('#')
+                        ->setModule('cmsAdmin')
+                        ->setController('tag')
                         ->addChild((new NavigationConfigElement)
                             ->setLabel('menu.tag.index')
                             ->setIcon('fa-table')
