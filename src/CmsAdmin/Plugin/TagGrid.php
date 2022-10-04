@@ -25,7 +25,7 @@ class TagGrid extends \CmsAdmin\Grid\Grid
     {
         //zapytanie
         $this->setQuery((new CmsTagQuery())
-            ->whereTemplate()->equals($this->getOption(self::SCOPE_OPTION_NAME)));
+            ->whereScope()->equals($this->getOption(self::SCOPE_OPTION_NAME)));
 
             //nazwa taga
         $this->addColumn((new TextColumn('lang'))
