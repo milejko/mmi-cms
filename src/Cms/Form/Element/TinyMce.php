@@ -238,6 +238,11 @@ class TinyMce extends UploaderElementAbstract
     public function fetchField()
     {
         $this->view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/tinymce.min.js');
+        //$this->view->headScript()->prependFile('/resource/cmsAdmin/js/tiny/mathlive/tiny-matlive.js');
+        $this->view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/plugins/mathlive/tiny-mathlive.js');
+        $this->view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/plugins/mathlive/mathlive/mathlive.js');
+        $this->view->headLink()->appendStylesheet('/resource/cmsAdmin/js/tiny/plugins/mathlive/mathlive/mathlive.core.css');
+        $this->view->headLink()->appendStylesheet('/resource/cmsAdmin/js/tiny/plugins/mathlive/mathlive/mathlive.css');
 
         //bazowa wspólna konfiguracja
         $this->_baseConfig($this->view);
