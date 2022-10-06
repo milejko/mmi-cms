@@ -28,23 +28,25 @@ var params = {
   latex: '',
   mathliveConfig: {}
 };
+if (top.tinymce.activeEditor) {
+  var params = Object.assign(params, top.tinymce.activeEditor.windowManager.getParams());
+  params.config.locale = 'pl';
+  params.config.removeExtraneousParentheses = false;
+  params.config.onContentDidChange = function () {
+      if ($('.ML__fieldcontainer__field > .ML__mathlive').width() >= 550) {
+        $('#mathliveFiled').css('border', '2px solid red');
+        $('.mathlive-button.add-to-test').prop('disabled', true);
+      } else {
+        $('#mathliveFiled').css('border', '');
+        $('.mathlive-button.add-to-test').prop('disabled', false);
+      }
+    };
+    var mf = MathLive.makeMathField('mathliveFiled', params.config);
+    mf.toggleVirtualKeyboard_();
+    mf.$focus();
+    $('html').css('overflow', 'hidden');
+    $('[data-command*="copyToClipboard"]').remove();
+    resizeTinyWindow();
+    mf.$latex(params.latex);
 
-params = Object.assign(params, top.tinymce.activeEditor.windowManager.getParams());
-params.config.locale = 'pl';
-params.config.removeExtraneousParentheses = false;
-params.config.onContentDidChange = function () {
-  if ($('.ML__fieldcontainer__field > .ML__mathlive').width() >= 550) {
-    $('#mathliveFiled').css('border', '2px solid red');
-    $('.mathlive-button.add-to-test').prop('disabled', true);
-  } else {
-    $('#mathliveFiled').css('border', '');
-    $('.mathlive-button.add-to-test').prop('disabled', false);
-  }
-};
-var mf = MathLive.makeMathField('mathliveFiled', params.config);
-mf.toggleVirtualKeyboard_();
-mf.$focus();
-$('html').css('overflow', 'hidden');
-$('[data-command*="copyToClipboard"]').remove();
-resizeTinyWindow();
-mf.$latex(params.latex);
+}
