@@ -7,7 +7,17 @@ $(document).ready(function () {
         helper: function () {
             return '<li class="field-list-item border mb-3 p-3"></li>';
         },
-        handle: '.sortable-handler'
+        start: function(){
+            jQuery(this).find('section .sidenoteformelementsidenotetinymce textarea').each(function(){
+                tinyMCE.execCommand('mceRemoveEditor', false, jQuery(this).attr('id'));
+            });
+        },
+        stop: function() {
+            jQuery(this).find('section .sidenoteformelementsidenotetinymce textarea').each(function(){
+                tinyMCE.execCommand('mceAddEditor', false, jQuery(this).attr('id') );
+            });
+        },
+        handle: '.sortable-handler',
     });
 });
 
