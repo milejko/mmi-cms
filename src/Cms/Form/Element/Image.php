@@ -180,7 +180,7 @@ class Image extends ElementAbstract implements UploaderElementInterface
         //usuwanie istniejącego pliku
         FileModel::deleteByObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId());
         //zapis pliku
-        FileModel::appendFile($fileArray[$form->getBaseName()][$this->getBasename()][0], self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), ['image/jpeg', 'image/png', 'image/gif']);
+        FileModel::appendFile($fileArray[$form->getBaseName()][$this->getBasename()][0], self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
     }
 
 }
