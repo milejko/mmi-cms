@@ -111,6 +111,12 @@ CMS.category = function () {
             sessionStorage.setItem(itemName, $(this).attr("href"));
         });
         var currentTab = sessionStorage.getItem(itemName);
+        $('div.tab-content .tab-pane').each(function () {
+            if ($(this).find('.form-control-feedback li').length > 0) {
+                currentTab = $(this).attr('id');
+                return false;
+            }
+        });
         if (currentTab) {
             $('ul.nav-tabs > li > a[href$="' + currentTab + '"]').click();
             return;
