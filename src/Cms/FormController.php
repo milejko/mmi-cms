@@ -38,6 +38,7 @@ class FormController extends \Mmi\Mvc\Controller
         $className = $this->getPost()->class;
         //klasa rekordu
         $recordClassName = $this->getPost()->recordClass;
+        //walidacja poprawności formularza i rekordu
         if (!is_subclass_of($className, Form::class) || !is_subclass_of($recordClassName, RecordRo::class)) {
             return '';
         }
