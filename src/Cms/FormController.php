@@ -10,6 +10,9 @@
 
 namespace Cms;
 
+use Mmi\Form\Form;
+use Mmi\Orm\RecordRo;
+
 /**
  * Kontroler ajax formularzy
  */
@@ -35,6 +38,9 @@ class FormController extends \Mmi\Mvc\Controller
         $className = $this->getPost()->class;
         //klasa rekordu
         $recordClassName = $this->getPost()->recordClass;
+        if (!is_subclass_of($className, Form::class) || !is_subclass_of($recordClassName, RecordRo::class)) {
+            return '';
+        }
         //powoływanie forma
         $form = new $className($recordClassName ? new $recordClassName($this->getPost()->recordId ? $this->getPost()->recordId : null) : null);
         /* @var $form \Mmi\Form\Form */
