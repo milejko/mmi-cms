@@ -58,14 +58,14 @@ class JsTreeNode extends \Mmi\Mvc\ViewHelper\HelperAbstract
         foreach ($node['children'] as $child) {
             $icon = '';
             if (!$child['active']) {
-                $icon = $this->view->baseUrl . '/resource/cmsAdmin/images/folder-inactive.png';
+                $icon = '/resource/cmsAdmin/images/folder-inactive.png';
             }
             $selected = 'false';
             $disabled = 'false';
             //sprawdzenie uprawnień do węzła
             if (!$acl->isAllowed(App::$di->get(AuthInterface::class)->getRoles(), $child['id'])) {
                 $disabled = 'true';
-                $icon = $this->view->baseUrl . '/resource/cmsAdmin/images/folder-disabled.png';
+                $icon = '/resource/cmsAdmin/images/folder-disabled.png';
             }
             $type = 'default';
             if (!isset($child['children']) || !count($child['children'])) {

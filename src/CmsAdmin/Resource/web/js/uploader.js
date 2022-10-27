@@ -6,7 +6,7 @@ $(document).ready(function () {
             axis: 'x',
             update: function (event, ui) {
                 $.post(
-                        request.baseUrl + "/?module=cmsAdmin&controller=file&action=sort", $(this).sortable('serialize'),
+                        "/?module=cmsAdmin&controller=file&action=sort", $(this).sortable('serialize'),
                         function (result) {
                             if (result) {
                                 alert(result);
@@ -19,7 +19,7 @@ $(document).ready(function () {
             axis: 'x',
             update: function (event, ui) {
                 $.post(
-                        request.baseUrl + "/?module=cmsAdmin&controller=file&action=sort", $(this).sortable('serialize'),
+                        "/?module=cmsAdmin&controller=file&action=sort", $(this).sortable('serialize'),
                         function (result) {
                             if (result) {
                                 alert(result);
@@ -35,7 +35,7 @@ $(document).ready(function () {
         $('li').removeClass('editActive');
         $('#item-file-' + id[2]).addClass('editActive');
         $.getJSON(
-                request.baseUrl + '/?module=cmsAdmin&controller=file&action=edit&id=' + id[2] + '&hash=' + id[3],
+                '/?module=cmsAdmin&controller=file&action=edit&id=' + id[2] + '&hash=' + id[3],
                 function (result) {
                     if (result.error != undefined) {
                         alert(result.error);
@@ -43,7 +43,7 @@ $(document).ready(function () {
                     }
                     $('#fileUpload').hide();
                     $('#uploaderEdit').show();
-                    $('#uploaderEditForm').attr('action', request.baseUrl + '/?module=cmsAdmin&controller=file&action=edit&id=' + id[2] + '&hash=' + id[3]);
+                    $('#uploaderEditForm').attr('action', '/?module=cmsAdmin&controller=file&action=edit&id=' + id[2] + '&hash=' + id[3]);
                     $('#editTitle').val(result.title);
                     $('#editAuthor').val(result.author);
                     $('#editSource').val(result.source);
@@ -58,7 +58,7 @@ $(document).ready(function () {
         }
         var id = $(this).attr('id').split('-');
         $.get(
-                request.baseUrl + '/?module=cmsAdmin&controller=file&action=remove&id=' + id[1] + '&hash=' + id[2],
+                '/?module=cmsAdmin&controller=file&action=remove&id=' + id[1] + '&hash=' + id[2],
                 function (result) {
                     if (!result) {
                         return location.reload();

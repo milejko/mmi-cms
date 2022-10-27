@@ -303,8 +303,7 @@ class TinyMce extends UploaderElementAbstract
             'object'           => $object,
             'objectId'         => $objectId,
             'time'             => $time,
-            'baseUrl'          => $this->view->baseUrl,
-            'image_list'       => $this->view->baseUrl . '/?module=cms&controller=file&action=list&object=' . $object . '&objectId=' . $objectId . '&t=' . $time . '&hash=' . $hash,
+            'image_list'       => '/?module=cms&controller=file&action=list&object=' . $object . '&objectId=' . $objectId . '&t=' . $time . '&hash=' . $hash,
             'branding'         => false,
         ];
         $config = array_merge($config, $this->_renderConfigOptionN('toolbar', 'toolbars'), $this->_common, $this->getCustomConfig() ?? []);
@@ -374,7 +373,6 @@ class TinyMce extends UploaderElementAbstract
         }
         $this->_common = [
             "autoresize_min_height" => $this->getHeight() ?? 300,
-            "document_base_url"     => $view->baseUrl,
             "convert_urls"          => false,
             "entity_encoding"       => 'raw',
             "relative_urls"         => false,

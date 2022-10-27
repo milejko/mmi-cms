@@ -102,7 +102,7 @@ $(document).ready(function () {
             '#': { 'valid_children': ["root"] },
             'root': {
                 'valid_children': ["default", "leaf"],
-                'icon': request.baseUrl + '/resource/cmsAdmin/images/tree.png'
+                'icon': '/resource/cmsAdmin/images/tree.png'
             },
             'default': { 'valid_children': ["default", "leaf"] },
             'leaf': { 'valid_children': ["default", "leaf"] }
@@ -138,7 +138,7 @@ $(document).ready(function () {
                         var inst = $.jstree.reference(data.reference);
                         var node = inst.get_node(data.reference);
                         CATEGORYCONF.hideMessage();
-                        $.post(request.baseUrl + '/cmsAdmin/category/copy', { 'id': node.id })
+                        $.post('/cmsAdmin/category/copy', { 'id': node.id })
                             .done(function (d) {
                                 if (d.status) {
                                     CATEGORYCONF.reload = true;
@@ -186,7 +186,7 @@ $(document).ready(function () {
     })
         .on('delete_node.jstree', function (e, data) {
             CATEGORYCONF.hideMessage();
-            $.post(request.baseUrl + '/cmsAdmin/category/delete', { 'id': data.node.id })
+            $.post('/cmsAdmin/category/delete', { 'id': data.node.id })
                 .done(function (d) {
                     if (d.status) {
                         CATEGORYCONF.reload = true;
@@ -204,7 +204,7 @@ $(document).ready(function () {
         })
         .on('create_node.jstree', function (e, data) {
             CATEGORYCONF.hideMessage();
-            $.post(request.baseUrl + '/cmsAdmin/category/create', { 'parentId': data.node.parent, 'order': data.position, 'name': data.node.text })
+            $.post('/cmsAdmin/category/create', { 'parentId': data.node.parent, 'order': data.position, 'name': data.node.text })
                 .done(function (d) {
                     if (d.status) {
                         data.instance.set_id(data.node, d.id);
@@ -226,7 +226,7 @@ $(document).ready(function () {
         })
         .on('rename_node.jstree', function (e, data) {
             CATEGORYCONF.hideMessage();
-            $.post(request.baseUrl + '/cmsAdmin/category/rename', { 'id': data.node.id, 'name': data.text })
+            $.post('/cmsAdmin/category/rename', { 'id': data.node.id, 'name': data.text })
                 .done(function (d) {
                     if (d.status) {
                         CATEGORYCONF.reload = true;
@@ -246,7 +246,7 @@ $(document).ready(function () {
         .on('move_node.jstree', function (e, data) {
             CATEGORYCONF.hideMessage();
             var params = { 'id': data.node.id, 'parentId': data.parent, 'oldParentId': data.old_parent, 'order': data.position, 'oldOrder': data.old_position };
-            $.post(request.baseUrl + '/cmsAdmin/category/move', params)
+            $.post('/cmsAdmin/category/move', params)
                 .done(function (d) {
                     if (d.status) {
                         CATEGORYCONF.reload = true;
@@ -303,12 +303,12 @@ $(document).ready(function () {
 
 //przeładowanie strony
 CATEGORYCONF.loadEditUrl = function (nodeId) {
-    window.location.assign(request.baseUrl + '/cmsAdmin/category/edit?id=' + nodeId);
+    window.location.assign('/cmsAdmin/category/edit?id=' + nodeId);
 };
 
 //przeładowanie strony
 CATEGORYCONF.loadPreviewUrl = function (nodeId) {
-    window.open(request.baseUrl + '/cms-content-preview?versionId=' + nodeId, '_blank');
+    window.open('/cms-content-preview?versionId=' + nodeId, '_blank');
 };
 
 CATEGORYCONF.showMessage = function (data) {
