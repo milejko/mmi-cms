@@ -94,11 +94,9 @@ class CmsAppEventInterceptor implements AppEventInterceptorInterface
             return;
         }
         //ustawienie widoku
-        $base = $this->view->baseUrl;
         $this->view->domain = $this->request->getServer()->httpHost;
         $this->view->languages = explode(',', $this->container->get('cms.language.list'));
         $jsRequest = $this->request->toArray();
-        $jsRequest['baseUrl'] = $base;
         $jsRequest['locale'] = $this->translate->getLocale();
         unset($jsRequest['controller']);
         unset($jsRequest['action']);
