@@ -24,7 +24,7 @@ class MaxNumberMultifieldTiles extends \Mmi\Validator\ValidatorAbstract
     /**
      * Komunikat błędnej liczby kafelków
      */
-    const INVALID = 'validator.maxNumberMultifieldTiles.message';
+    public const INVALID = 'validator.maxNumberMultifieldTiles.message';
 
     /**
      * Ustawia opcje

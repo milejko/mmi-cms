@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -17,11 +17,9 @@ use CmsAdmin\Grid\Column;
  */
 class MailServerGrid extends \CmsAdmin\Grid\Grid
 {
-
     public function init()
     {
-
-        $this->setQuery((new \Cms\Orm\CmsMailServerQuery)
+        $this->setQuery((new \Cms\Orm\CmsMailServerQuery())
                 ->orderDescId());
 
         //adres serwera
@@ -53,7 +51,6 @@ class MailServerGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('grid.mailServer.dateModify.label'));
 
         //operacje
-        $this->addColumn(new Column\OperationColumn);
+        $this->addColumn(new Column\OperationColumn());
     }
-
 }

@@ -49,7 +49,5 @@ namespace Cms\Orm;
 //</editor-fold>
 class CmsTagRelationQuery extends \Mmi\Orm\Query
 {
-
     protected $_tableName = 'cms_tag_relation';
-
 }

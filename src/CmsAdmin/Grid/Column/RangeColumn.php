@@ -22,11 +22,10 @@ namespace CmsAdmin\Grid\Column;
  */
 class RangeColumn extends TextColumn
 {
-
     /**
      * Template filtra datetime
      */
-    const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/range';
+    public const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/range';
 
     /**
      * Domyślne opcje dla checkboxa
@@ -37,5 +36,4 @@ class RangeColumn extends TextColumn
         $this->setFilterMethodBetween();
         parent::__construct($name);
     }
-
 }

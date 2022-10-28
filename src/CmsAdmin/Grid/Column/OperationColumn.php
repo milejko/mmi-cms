@@ -10,7 +10,6 @@
 
 namespace CmsAdmin\Grid\Column;
 
-
 use Cms\Mvc\ViewHelper\AclAllowed;
 use Mmi\App\App;
 use Mmi\Mvc\View;
@@ -27,11 +26,10 @@ use Mmi\Mvc\View;
  */
 class OperationColumn extends ColumnAbstract
 {
-
     /**
      * Domyślny label
      */
-    const LABEL = 'grid.shared.operation.label';
+    public const LABEL = 'grid.shared.operation.label';
 
     /**
      * Konstruktor ustawia domyślny label

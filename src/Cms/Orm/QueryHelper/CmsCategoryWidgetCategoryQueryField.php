@@ -57,5 +57,4 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsCategoryWidgetCategoryQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-
 }

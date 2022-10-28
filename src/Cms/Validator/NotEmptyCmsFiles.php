@@ -36,7 +36,7 @@ class NotEmptyCmsFiles extends ValidatorAbstract
     /**
      * Komunikat błędnego kodu zabezpieczającego
      */
-    const INVALID = 'validator.notEmptyCmsFiles.message';
+    public const INVALID = 'validator.notEmptyCmsFiles.message';
 
     /**
      * Ustawia opcje
@@ -57,7 +57,7 @@ class NotEmptyCmsFiles extends ValidatorAbstract
      */
     public function isValid($value)
     {
-        $query = (new CmsFileQuery)
+        $query = (new CmsFileQuery())
             ->byObject($this->_getObjectName(), $this->getObjectId())
             ->andFieldSize()->notEquals(null);
         if ($this->getClass()) {

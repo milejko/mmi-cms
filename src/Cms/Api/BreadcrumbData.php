@@ -63,5 +63,4 @@ class BreadcrumbData implements DataInterface
         $this->_links = $links;
         return $this;
     }
-
 }

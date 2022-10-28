@@ -10,8 +10,6 @@
 
 namespace CmsAdmin\Grid\Column;
 
-
-
 /**
  * Klasa Columnu tekstowego
  *
@@ -30,12 +28,12 @@ class TextareaColumn extends ColumnAbstract
     /**
      * Template filtra textarea
      */
-    const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/text';
+    public const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/text';
 
     /**
      * Template komórki textarea
      */
-    const TEMPLATE_CELL = 'cmsAdmin/grid/cell/textarea';
+    public const TEMPLATE_CELL = 'cmsAdmin/grid/cell/textarea';
 
     /**
      * Renderuje pole tekstowe, długie
@@ -44,15 +42,14 @@ class TextareaColumn extends ColumnAbstract
      */
     public function renderCell(\Mmi\Orm\RecordRo $record)
     {
-        $value = (new \Mmi\Filter\Escape)->filter($this->getValueFromRecord($record));
+        $value = (new \Mmi\Filter\Escape())->filter($this->getValueFromRecord($record));
         $this->view->_value = $value;
         //obcinanie tekstu
-        if ('' == $truncated = (new \Mmi\Filter\Truncate)->setLength(200)->filter($value)) {
+        if ('' == $truncated = (new \Mmi\Filter\Truncate())->setLength(200)->filter($value)) {
             return;
         }
         $this->view->_truncated = $truncated;
 
         return $this->view->renderTemplate(self::TEMPLATE_CELL);
     }
-
 }

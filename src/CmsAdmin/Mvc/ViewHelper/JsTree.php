@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -16,11 +16,10 @@ use Mmi\Security\AuthInterface;
 
 class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract
 {
-
     /**
      * Nazwa sztucznego korzenia
      */
-    CONST ROOT = '';
+    public const ROOT = '';
 
     /**
      * Renderuje drzewko pod obsługę przez plugin jsTree
@@ -102,5 +101,4 @@ class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract
         $html .= '</ul>';
         return $html;
     }
-
 }

@@ -151,7 +151,6 @@ namespace Cms\Orm;
 //</editor-fold>
 class CmsCategoryQuery extends \Mmi\Orm\Query
 {
-
     protected $_tableName = 'cms_category';
 
     /**
@@ -184,8 +183,7 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
     {
         $redirectCategory = null;
         //iteracja po kategoriach
-        foreach (
-            (new self())
+        foreach ((new self())
                 ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
                 ->andFieldActive()->equals(true)
                 ->andFieldTemplate()->like($scope . '%')

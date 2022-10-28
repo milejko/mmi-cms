@@ -14,7 +14,6 @@ use Mmi\Security\AuthInterface;
  */
 class CmsFileRecord extends \Mmi\Orm\Record
 {
-
     public $id;
 
     /**
@@ -116,7 +115,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
         //@TODO: refactor (move to helper)
         $request = App::$di->get(Request::class);
         //ścieżka CDN
-        $cdnPath = rtrim(App::$di->get(View::class)->cdn ? App::$di->get(View::class)->cdn : 
+        $cdnPath = rtrim(App::$di->get(View::class)->cdn ? App::$di->get(View::class)->cdn :
             'http' . ($request->getServer()->httpSecure ? 's' : '') . '://' . $request->getServer()->httpHost . App::$di->get(View::class)->url([], true), '/');
         //zwrot ścieżki z systemu plików
         return 'download' == $scaleType ?
@@ -202,7 +201,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
         } catch (\Exception $e) {
             $data = [];
         }
-        $this->data = (new DataObject)->setParams($data);
+        $this->data = (new DataObject())->setParams($data);
         return $this;
     }
 
@@ -263,7 +262,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
             return false;
         }
         //plik jest ciągle potrzebny (ma linki)
-        if (0 != (new CmsFileQuery)->whereName()->equals($this->name)->count()) {
+        if (0 != (new CmsFileQuery())->whereName()->equals($this->name)->count()) {
             return true;
         }
         //kasowanie z systemu plików
@@ -271,5 +270,4 @@ class CmsFileRecord extends \Mmi\Orm\Record
         //usuwanie rekordu
         return true;
     }
-
 }

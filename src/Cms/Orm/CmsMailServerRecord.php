@@ -7,7 +7,6 @@ namespace Cms\Orm;
  */
 class CmsMailServerRecord extends \Mmi\Orm\Record
 {
-
     public $id;
     public $address;
     public $port;
@@ -38,5 +37,4 @@ class CmsMailServerRecord extends \Mmi\Orm\Record
         $this->dateAdd = date('Y-m-d H:i:s');
         return parent::_insert();
     }
-
 }

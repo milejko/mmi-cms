@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -19,13 +19,12 @@ use Mmi\Mvc\Controller;
  */
 class FileController extends Controller
 {
-
     /**
      * Lista plików
      */
     public function indexAction()
     {
-        $this->view->grid = new \CmsAdmin\Plugin\FileGrid;
+        $this->view->grid = new \CmsAdmin\Plugin\FileGrid();
     }
 
     /**
@@ -33,7 +32,7 @@ class FileController extends Controller
      */
     public function deleteAction(Request $request)
     {
-        $file = (new CmsFileQuery)->findPk($request->id);
+        $file = (new CmsFileQuery())->findPk($request->id);
         if ($file && $file->delete()) {
             $this->getMessenger()->addMessage('messenger.file.deleted', true);
         }
@@ -53,7 +52,7 @@ class FileController extends Controller
             return $error;
         }
         //brak pliku
-        if (null === ($file = (new CmsFileQuery)->findPk($request->id))) {
+        if (null === ($file = (new CmsFileQuery())->findPk($request->id))) {
             return $error;
         }
         //błędny plik
@@ -80,7 +79,7 @@ class FileController extends Controller
         if (!$request->id) {
             return $this->view->_('controller.fileController.delete.error');
         }
-        $file = (new CmsFileQuery)->findPk($request->id);
+        $file = (new CmsFileQuery())->findPk($request->id);
         if (!$file || $this->hash != $file->getHashName()) {
             return $this->view->_('controller.fileController.delete.error');
         }
@@ -101,5 +100,4 @@ class FileController extends Controller
         \Cms\Model\File::sortBySerial($request->getPost()->__get('item-file'));
         return '';
     }
-
 }

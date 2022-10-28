@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -20,15 +20,13 @@ use Mmi\Http\Request;
  */
 class Acl extends \Cms\Form\Form
 {
-
     public function init()
     {
-
         $this->_record->cmsRoleId = App::$di->get(Request::class)->roleId;
 
         //parametry MVC
         $this->addElement((new Element\Select('mvcParams'))
-            ->setMultioptions(array_merge([null => '---'], (new Reflection)->getOptionsWildcard())));
+            ->setMultioptions(array_merge([null => '---'], (new Reflection())->getOptionsWildcard())));
 
         //dozwolone/zabronione
         $this->addElement((new Element\Select('access'))
@@ -57,5 +55,4 @@ class Acl extends \Cms\Form\Form
         $this->getRecord()->action = isset($mvcParams['action']) ? strtolower($mvcParams['action']) : null;
         return parent::beforeSave();
     }
-
 }

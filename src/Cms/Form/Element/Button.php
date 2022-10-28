@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2017 Mariusz Miłejko (mariusz@milejko.pl)
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
@@ -15,17 +15,16 @@ namespace Cms\Form\Element;
  */
 class Button extends \Mmi\Form\Element\Button
 {
-
     //szablon początku pola
-    CONST TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    public const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
     //szablon opisu
-    CONST TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    public const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
     //szablon końca pola
-    CONST TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    public const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
     //szablon błędów
-    CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    public const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
-    CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    public const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
     /**
      * Konstruktor
@@ -36,5 +35,4 @@ class Button extends \Mmi\Form\Element\Button
         $this->addClass('form-control');
         parent::__construct($name);
     }
-
 }

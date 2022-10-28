@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -21,7 +21,6 @@ namespace CmsAdmin\Grid;
  */
 class GridStateOrder extends \Mmi\OptionObject
 {
-
     /**
      * Konstruktor, wartości domyślne
      */
@@ -39,5 +38,4 @@ class GridStateOrder extends \Mmi\OptionObject
     {
         return $this->setOption('method', $method == 'orderDesc' ? 'orderDesc' : 'orderAsc');
     }
-
 }

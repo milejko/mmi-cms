@@ -22,10 +22,8 @@ namespace CmsAdmin\Grid\Column;
  */
 class DateTimeColumn extends RangeColumn
 {
-
     /**
      * Template filtra datetime
      */
-    const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/datetime';
-
+    public const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/datetime';
 }

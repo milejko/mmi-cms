@@ -10,8 +10,7 @@ use Mmi\Cache\CacheInterface;
  */
 class CategoryAclModel
 {
-
-    const CACHE_KEY = 'mmi-cms-category-acl';
+    public const CACHE_KEY = 'mmi-cms-category-acl';
 
     /**
      * Obiekt ACL
@@ -29,9 +28,9 @@ class CategoryAclModel
             return;
         }
         //uzupełnianie ACL
-        $this->acl = new CategoryAcl;
+        $this->acl = new CategoryAcl();
         //iteracja po kolekcji rekordów categoryAcl
-        foreach ((new \Cms\Orm\CmsCategoryAclQuery)
+        foreach ((new \Cms\Orm\CmsCategoryAclQuery())
             ->join('cms_role')->on('cms_role_id')
             ->join('cms_category')->on('cms_category_id')
             ->find() as $aclRecord) {

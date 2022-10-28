@@ -15,7 +15,6 @@ namespace Cms\Mvc\ViewHelper;
  */
 class Thumb extends \Mmi\Mvc\ViewHelper\HelperAbstract
 {
-
     /**
      * Metoda główna, generuje miniaturę
      * @param \Cms\Orm\CmsFileRecord $file instancja pliku
@@ -27,5 +26,4 @@ class Thumb extends \Mmi\Mvc\ViewHelper\HelperAbstract
     {
         return $file->getUrl($type, $value);
     }
-
 }

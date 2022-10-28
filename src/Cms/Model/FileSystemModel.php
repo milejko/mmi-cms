@@ -18,7 +18,6 @@ use Psr\Log\LoggerInterface;
  */
 class FileSystemModel
 {
-
     /**
      * Nazwa pliku (MD5 z rozszerzeniem)
      * @var string
@@ -84,5 +83,4 @@ class FileSystemModel
             //@TODO: remove thumbs
         }
     }
-
 }

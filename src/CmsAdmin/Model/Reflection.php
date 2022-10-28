@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -19,7 +19,7 @@ use ReflectionMethod;
  */
 class Reflection
 {
-    const CONTROLLER_PATTERN = '/^([a-zA-Z0-9]+)\\\([a-zA-Z0-9]+)Controller$/';
+    public const CONTROLLER_PATTERN = '/^([a-zA-Z0-9]+)\\\([a-zA-Z0-9]+)Controller$/';
 
     /**
      * Pobranie modułów, kontrolerów, akcji
@@ -76,5 +76,4 @@ class Reflection
         }
         return $controllers;
     }
-
 }

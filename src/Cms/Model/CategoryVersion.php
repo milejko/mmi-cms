@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -18,7 +18,6 @@ use Cms\Orm\CmsCategoryWidgetCategoryRecord;
  */
 class CategoryVersion extends \Cms\Model\CategoryDraft
 {
-
     /**
      * Sufiks dla nazwy wersji roboczej kategorii
      * @var string
@@ -48,20 +47,19 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
     public function exchangeOriginal(\Cms\Orm\CmsCategoryRecord $draft)
     {
         //usuwanie plików tinymce i uploaderów
-        (new \Cms\Orm\CmsFileQuery)
-            ->whereQuery((new \Cms\Orm\CmsFileQuery)
+        (new \Cms\Orm\CmsFileQuery())
+            ->whereQuery((new \Cms\Orm\CmsFileQuery())
                 ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
-                ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
-            )
+                ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%'))
             ->andFieldObjectId()->equals($this->_category->id)
             ->delete();
         //usuwanie tagów
-        (new \Cms\Orm\CmsTagRelationQuery)
+        (new \Cms\Orm\CmsTagRelationQuery())
             ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
             ->andFieldObjectId()->equals($this->_category->id)
             ->delete();
         //usuwanie widgetów
-        (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
+        (new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
             ->whereCmsCategoryId()->equals($this->_category->id)
             ->delete();
         //nadpisanie danych oryginału
@@ -77,7 +75,7 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
         //czyszczenie id oryginału
         $this->_category->cmsCategoryOriginalId = null;
         //przenoszenie tagów
-        foreach ((new \Cms\Orm\CmsTagRelationQuery)
+        foreach ((new \Cms\Orm\CmsTagRelationQuery())
             //tinymce i uploadery
             ->whereObject()->like(CmsCategoryRecord::TAG_OBJECT . '%')
             ->andFieldObjectId()->equals($draft->id)
@@ -87,7 +85,7 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
             $tag->save();
         }
         //przepinanie widgetów
-        foreach ((new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
+        foreach ((new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
             ->whereCmsCategoryId()->equals($draft->id)
             ->find() as $widgetCategory) {
             //przepinanie id
@@ -95,12 +93,11 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
             $widgetCategory->save();
         }
         //przepinanie plików
-        foreach ((new \Cms\Orm\CmsFileQuery)
+        foreach ((new \Cms\Orm\CmsFileQuery())
             //tinymce i uploadery
-            ->whereQuery((new \Cms\Orm\CmsFileQuery)
+            ->whereQuery((new \Cms\Orm\CmsFileQuery())
                 ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
-                ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
-            )
+                ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%'))
             ->andFieldObjectId()->equals($draft->id)
             ->find() as $file) {
             //przepinanie id
@@ -112,5 +109,4 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
         $this->_category->dateAdd = date('Y-m-d H:i:s');
         return $this->_category->save();
     }
-
 }

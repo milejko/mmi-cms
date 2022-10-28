@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -27,7 +27,7 @@ class TagGrid extends \CmsAdmin\Grid\Grid
         $this->setQuery((new CmsTagQuery())
             ->whereScope()->equals($this->getOption(self::SCOPE_OPTION_NAME)));
 
-            //nazwa taga
+        //nazwa taga
         $this->addColumn((new TextColumn('lang'))
             ->setLabel('grid.tag.lang.label'));
 
@@ -36,7 +36,6 @@ class TagGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('grid.tag.tag.label'));
 
         //operacje
-        $this->addColumn((new OperationColumn)->setEditParams([]));
+        $this->addColumn((new OperationColumn())->setEditParams([]));
     }
-
 }

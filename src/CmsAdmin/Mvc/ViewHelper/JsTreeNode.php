@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -15,11 +15,10 @@ use Mmi\Security\AuthInterface;
 
 class JsTreeNode extends \Mmi\Mvc\ViewHelper\HelperAbstract
 {
-
     /**
      * Nazwa sztucznego korzenia
      */
-    CONST ROOT = '';
+    public const ROOT = '';
 
     /**
      * Renderuje fragment drzewka pod obsługę przez plugin jsTree
@@ -52,7 +51,7 @@ class JsTreeNode extends \Mmi\Mvc\ViewHelper\HelperAbstract
         if (!isset($node['children']) || !is_array($node['children']) || count($node['children']) == 0) {
             return $html;
         }
-        $acl = (new \CmsAdmin\Model\CategoryAclModel)->getAcl();
+        $acl = (new \CmsAdmin\Model\CategoryAclModel())->getAcl();
         $html .= '<ul>';
         //iteracja po dzieciakach i budowa węzłów drzewa
         foreach ($node['children'] as $child) {
@@ -78,5 +77,4 @@ class JsTreeNode extends \Mmi\Mvc\ViewHelper\HelperAbstract
         $html .= '</ul>';
         return $html;
     }
-
 }

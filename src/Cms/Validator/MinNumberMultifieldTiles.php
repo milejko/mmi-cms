@@ -26,7 +26,7 @@ class MinNumberMultifieldTiles extends ValidatorAbstract
     /**
      * Komunikat błędnej liczby kafelków
      */
-    const INVALID = 'validator.minNumberMultifieldTiles.message';
+    public const INVALID = 'validator.minNumberMultifieldTiles.message';
 
     /**
      * Ustawia opcje

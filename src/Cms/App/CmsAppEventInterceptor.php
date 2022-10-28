@@ -16,7 +16,7 @@ use Psr\Container\ContainerInterface;
 
 class CmsAppEventInterceptor implements AppEventInterceptorInterface
 {
-    const API_CONTROLLER_PATTERN = '/api$/i';
+    public const API_CONTROLLER_PATTERN = '/api$/i';
 
     protected ContainerInterface $container;
     protected AppProfilerInterface $profiler;
@@ -36,8 +36,7 @@ class CmsAppEventInterceptor implements AppEventInterceptorInterface
         CmsSkinsetConfig $cmsSkinsetConfig,
         View $view,
         TranslateInterface $translate
-    )
-    {
+    ) {
         $this->container = $container;
         $this->profiler = $profiler;
         $this->request = $request;

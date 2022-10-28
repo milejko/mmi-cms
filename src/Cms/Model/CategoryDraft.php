@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -16,7 +16,7 @@ namespace Cms\Model;
 class CategoryDraft extends \Cms\Model\CategoryCopy
 {
     //maksymalny czas życia draftu (format strtotime)
-    CONST DRAFT_MAX_LIFETIME = '-48 hours';
+    public const DRAFT_MAX_LIFETIME = '-48 hours';
 
     /**
      * Sufiks dla nazwy wersji roboczej kategorii
@@ -41,7 +41,7 @@ class CategoryDraft extends \Cms\Model\CategoryCopy
     public function createAndGetDraftForUser($userId, $force = false)
     {
         //wyszukiwanie najnowszego draftu (chyba że wymuszony nowy)
-        if (!$force && null !== $lastDraft = (new \Cms\Orm\CmsCategoryQuery)
+        if (!$force && null !== $lastDraft = (new \Cms\Orm\CmsCategoryQuery())
             ->whereCmsCategoryOriginalId()->equals($this->_category->id)
             ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_DRAFT)
             ->andFieldDateAdd()->greater(date('Y-m-d H:i:s', strtotime(self::DRAFT_MAX_LIFETIME)))
@@ -89,5 +89,4 @@ class CategoryDraft extends \Cms\Model\CategoryCopy
     {
         return $this->_category->name . $this->_nameSuffix;
     }
-
 }

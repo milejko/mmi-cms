@@ -19,11 +19,10 @@ use Mmi\Mvc\View;
  */
 class GridPaginator
 {
-
     /**
      * Template paginatora
      */
-    const TEMPLATE = 'cmsAdmin/grid/paginator';
+    public const TEMPLATE = 'cmsAdmin/grid/paginator';
 
     /**
      * Obiekt grida

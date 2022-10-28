@@ -7,11 +7,11 @@ namespace Cms\Api;
  */
 class HttpJsonTransport implements DataInterface, TransportInterface
 {
-    const CODE_OK        = 200;
-    const CODE_NOT_FOUND = 404;
-    const CODE_ERROR     = 500;
-    const CODE_MOVED     = 301;
-    const DEFAULT_CODE   = self::CODE_OK;
+    public const CODE_OK        = 200;
+    public const CODE_NOT_FOUND = 404;
+    public const CODE_ERROR     = 500;
+    public const CODE_MOVED     = 301;
+    public const DEFAULT_CODE   = self::CODE_OK;
 
     protected int $code = self::DEFAULT_CODE;
 

@@ -27,7 +27,6 @@ namespace CmsAdmin\Grid\Column;
  */
 class IndexColumn extends ColumnAbstract
 {
-
     /**
      * Konstruktor ustawia domyślny label
      * pole nie ma nazwy
@@ -72,5 +71,4 @@ class IndexColumn extends ColumnAbstract
         $this->setIndex($this->getIndex() + 1);
         return $this->getIndex();
     }
-
 }

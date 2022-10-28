@@ -20,7 +20,6 @@ use Mmi\Mvc\View;
  */
 class CheckboxRequestHandler
 {
-
     /**
      * Obiekt checkboxa
      * @var CheckboxColumn
@@ -90,5 +89,4 @@ class CheckboxRequestHandler
         $record->$fieldName = ($post->checked == 'true') ? 1 : 0;
         return $record->save();
     }
-
 }

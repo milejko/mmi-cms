@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -23,7 +23,6 @@ use Mmi\Session\SessionInterface;
  */
 class IndexController extends Controller
 {
-
     private const MESSENGER_LOGIN_FAILED = 'messenger.index.login.fail';
     private const MESSENGER_LOGIN_SUCCESS = 'messenger.index.login.success';
     private const MESSENGER_LOGOUT_SUCCESS = 'messenger.index.logout.success';
@@ -60,7 +59,7 @@ class IndexController extends Controller
      */
     public function indexAction()
     {
-        $this->view->user = (new \Cms\Orm\CmsAuthQuery)->findPk($this->auth->getId());
+        $this->view->user = (new \Cms\Orm\CmsAuthQuery())->findPk($this->auth->getId());
     }
 
     /**
@@ -73,7 +72,7 @@ class IndexController extends Controller
             return $this->getResponse()->redirect('cmsAdmin');
         }
         //formularz logowania
-        $form = new \CmsAdmin\Form\Login;
+        $form = new \CmsAdmin\Form\Login();
         $this->view->loginForm = $form;
         //brak wysłanych danych
         if (!$form->isMine()) {
@@ -111,7 +110,7 @@ class IndexController extends Controller
      */
     public function passwordAction()
     {
-        $form = new \CmsAdmin\Form\Password;
+        $form = new \CmsAdmin\Form\Password();
         $this->view->passwordForm = $form;
         //brak wysłanych danych
         if (!$form->isMine()) {
@@ -152,5 +151,4 @@ class IndexController extends Controller
             return $this->getResponse()->redirect('cmsAdmin');
         }
     }
-
 }

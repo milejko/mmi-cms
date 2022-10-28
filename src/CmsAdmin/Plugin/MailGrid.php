@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -17,12 +17,10 @@ use CmsAdmin\Grid\Column;
  */
 class MailGrid extends \CmsAdmin\Grid\Grid
 {
-
     public function init()
     {
-
         //zapytanie
-        $this->setQuery((new \Cms\Orm\CmsMailQuery)
+        $this->setQuery((new \Cms\Orm\CmsMailQuery())
                 ->orderDescId());
 
         //wysłany
@@ -55,8 +53,7 @@ class MailGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('grid.mail.fromName.label'));
 
         //operacje
-        $this->addColumn((new Column\OperationColumn)
+        $this->addColumn((new Column\OperationColumn())
             ->setEditParams(['module' => 'cmsAdmin', 'controller' => 'mail', 'action' => 'preview', 'id' => '%id%']));
     }
-
 }

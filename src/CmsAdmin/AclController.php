@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -19,19 +19,18 @@ use Mmi\Mvc\Controller;
  */
 class AclController extends Controller
 {
-
     /**
      * Lista uprawnień
      */
     public function indexAction(Request $request)
     {
-        $this->view->roles = (new \Cms\Orm\CmsRoleQuery)->find();
+        $this->view->roles = (new \Cms\Orm\CmsRoleQuery())->find();
         if (!$request->roleId && count($this->view->roles)) {
             $this->getResponse()->redirect('cmsAdmin', 'acl', 'index', ['roleId' => $this->view->roles[0]->id]);
         }
         if ($request->roleId) {
-            $this->view->rules = (new \Cms\Orm\CmsAclQuery)->whereCmsRoleId()->equals($request->roleId)->find();
-            $this->view->options = [null => '---'] + (new Reflection)->getOptionsWildcard();
+            $this->view->rules = (new \Cms\Orm\CmsAclQuery())->whereCmsRoleId()->equals($request->roleId)->find();
+            $this->view->options = [null => '---'] + (new Reflection())->getOptionsWildcard();
         }
         $roleForm = new \CmsAdmin\Form\Role($roleRecord = new \Cms\Orm\CmsRoleRecord());
         if ($roleForm->isMine() && $roleForm->isSaved()) {
@@ -53,7 +52,7 @@ class AclController extends Controller
     public function deleteRoleAction(Request $request)
     {
         //wyszukiwanie i usuwanie roli
-        if ((null !== $role = (new \Cms\Orm\CmsRoleQuery)->findPk($request->id))) {
+        if ((null !== $role = (new \Cms\Orm\CmsRoleQuery())->findPk($request->id))) {
             $this->getMessenger()->addMessage(($deleteResult = (bool) $role->delete()) ? 'messenger.acl.role.deleted' : 'messenger.acl.role.delete.error', $deleteResult);
         }
         //redirect
@@ -71,7 +70,7 @@ class AclController extends Controller
         if (!($request->id > 0)) {
             return 0;
         }
-        $rule = (new \Cms\Orm\CmsAclQuery)->findPk($request->id);
+        $rule = (new \Cms\Orm\CmsAclQuery())->findPk($request->id);
         //skasowane
         if ($rule && $rule->delete()) {
             return 1;
@@ -91,7 +90,7 @@ class AclController extends Controller
         if (!($request->getPost()->selected) || count($params) != 3) {
             return $this->view->_('controller.acl.update.error');
         }
-        $record = (new \Cms\Orm\CmsAclQuery)->findPk($params[2]);
+        $record = (new \Cms\Orm\CmsAclQuery())->findPk($params[2]);
         if (!$record) {
             return $this->view->_('controller.acl.update.error');
         }
@@ -109,5 +108,4 @@ class AclController extends Controller
         $record->save();
         return 1;
     }
-
 }

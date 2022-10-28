@@ -117,5 +117,4 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsCronQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-
 }

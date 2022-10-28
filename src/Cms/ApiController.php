@@ -60,16 +60,18 @@ class ApiController extends \Mmi\Mvc\Controller
         $skins = [];
         //iterating skins
         foreach ($this->cmsSkinsetConfig->getSkins() as $skin) {
-            $skinData = new SkinData;
+            $skinData = new SkinData();
             $skinData->key = $skin->getKey();
             $skinData->name = $skin->getName();
             //config link
-            $skinData->_links[] = ((new LinkData())
+            $skinData->_links[] = (
+                (new LinkData())
                 ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONFIG, $skin->getKey()))
                 ->setRel(LinkData::REL_CONFIG)
             );
             //menu link
-            $skinData->_links[] = ((new LinkData())
+            $skinData->_links[] = (
+                (new LinkData())
                 ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $skin->getKey()))
                 ->setRel(LinkData::REL_CONTENTS)
             );
@@ -103,7 +105,8 @@ class ApiController extends \Mmi\Mvc\Controller
             return $config->key;
         }, $skinConfig->getTemplates());
         //links
-        $skinConfigTransport->_links = [((new LinkData())
+        $skinConfigTransport->_links = [(
+            (new LinkData())
             ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $skinConfig->getKey()))
             ->setRel(LinkData::REL_CONTENTS)
         )];
@@ -238,7 +241,7 @@ class ApiController extends \Mmi\Mvc\Controller
         //pobranie kategorii z bufora
         if (null === $category = $this->cache->load($cacheKey = CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $categoryId)) {
             //zapis pobranej kategorii w cache
-            $this->cache->save($category = (new Orm\CmsCategoryQuery)->findPk($categoryId), $cacheKey, 0);
+            $this->cache->save($category = (new Orm\CmsCategoryQuery())->findPk($categoryId), $cacheKey, 0);
         }
         //sprawdzanie kategorii
         return $this->getCategoryTransport($category, $request);
@@ -261,7 +264,7 @@ class ApiController extends \Mmi\Mvc\Controller
         }
         //kategoria posiada niewłaściwy (niewspierany) template
         if (null === $templateConfig = (new SkinsetModel($this->cmsSkinsetConfig))->getTemplateConfigByKey($category->template)) {
-            return (new ErrorTransport)
+            return (new ErrorTransport())
                 ->setMessage('Page unsupported')
                 ->setCode(ErrorTransport::CODE_ERROR);
         }
@@ -279,7 +282,7 @@ class ApiController extends \Mmi\Mvc\Controller
      */
     private function getNotFoundResponse(string $message = 'Page not found'): Response
     {
-        $errorTransport = (new ErrorTransport)
+        $errorTransport = (new ErrorTransport())
             ->setMessage($message)
             ->setCode(ErrorTransport::CODE_NOT_FOUND);
         return $this->getResponse()->setTypeJson()
@@ -297,7 +300,7 @@ class ApiController extends \Mmi\Mvc\Controller
         //zbuforowany brak uri w historii
         if (false === ($redirectUri = $this->cache->load($cacheKey))) {
             //404
-            return (new ErrorTransport)
+            return (new ErrorTransport())
                 ->setMessage('Page not found')
                 ->setCode(ErrorTransport::CODE_NOT_FOUND);
         }
@@ -306,14 +309,13 @@ class ApiController extends \Mmi\Mvc\Controller
             return new RedirectTransport(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $scope, $redirectUri));
         }
         //wyszukiwanie bieżącej kategorii (aktywnej)
-        if (
-            null === $category = (new CmsCategoryQuery())
+        if (null === $category = (new CmsCategoryQuery())
             ->byHistoryUri($uri, $scope)->findFirst()
         ) {
             //brak kategorii w historii - buforowanie informacji
             $this->cache->save(false, $cacheKey, 0);
             //404
-            return (new ErrorTransport)
+            return (new ErrorTransport())
                 ->setMessage('Page not found')
                 ->setCode(ErrorTransport::CODE_NOT_FOUND);
         }
@@ -336,7 +338,7 @@ class ApiController extends \Mmi\Mvc\Controller
             return null;
         }
         //próba pobrania kategorii po URI
-        if (null === $category = (new Orm\CmsCategoryQuery)->getCategoryByUri($uri, $scope)) {
+        if (null === $category = (new Orm\CmsCategoryQuery())->getCategoryByUri($uri, $scope)) {
             //zapis informacji o braku kategorii w cache
             $this->cache->save(false, $cacheKey, 0);
             return null;
@@ -359,5 +361,4 @@ class ApiController extends \Mmi\Mvc\Controller
     {
         return preg_replace('%\\\/api\\\/([a-z0-9]+)\\\/contents\\\/%', '/api/$1/contents/preview/', $content);
     }
-
 }

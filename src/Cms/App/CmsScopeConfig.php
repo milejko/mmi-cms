@@ -28,5 +28,4 @@ class CmsScopeConfig
         $this->space->name = $name;
         return $this;
     }
-
 }

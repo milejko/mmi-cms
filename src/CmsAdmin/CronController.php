@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -18,13 +18,12 @@ use Mmi\Mvc\Controller;
  */
 class CronController extends Controller
 {
-
     /**
      * Lista zadań
      */
     public function indexAction()
     {
-        $grid = new \CmsAdmin\Plugin\CronGrid;
+        $grid = new \CmsAdmin\Plugin\CronGrid();
         $this->view->grid = $grid;
     }
 
@@ -46,11 +45,10 @@ class CronController extends Controller
      */
     public function deleteAction(Request $request)
     {
-        $record = (new \Cms\Orm\CmsCronQuery)->findPk($request->id);
+        $record = (new \Cms\Orm\CmsCronQuery())->findPk($request->id);
         if ($record && $record->delete()) {
             $this->getMessenger()->addMessage('messenger.cron.deleted', true);
         }
         $this->getResponse()->redirect('cmsAdmin', 'cron');
     }
-
 }

@@ -117,7 +117,6 @@ use Mmi\Orm\OrmException;
 //</editor-fold>
 class CmsFileQuery extends \Mmi\Orm\Query
 {
-
     protected $_tableName = 'cms_file';
 
     /**

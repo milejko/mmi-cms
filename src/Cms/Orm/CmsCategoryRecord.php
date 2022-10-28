@@ -14,9 +14,8 @@ use Psr\Log\LoggerInterface;
  */
 class CmsCategoryRecord extends \Mmi\Orm\Record
 {
-
     //domyślna długość bufora
-    const DEFAULT_CACHE_LIFETIME = 2592000;
+    public const DEFAULT_CACHE_LIFETIME = 2592000;
 
     /**
      * Identyfikator
@@ -135,31 +134,31 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     public $visible;
 
     //status draft
-    const STATUS_DRAFT = 0;
+    public const STATUS_DRAFT = 0;
     //status artykuł aktywny
-    const STATUS_ACTIVE = 10;
+    public const STATUS_ACTIVE = 10;
     //status historia
-    const STATUS_HISTORY = 20;
+    public const STATUS_HISTORY = 20;
     //status usunięte
-    const STATUS_DELETED = 30;
+    public const STATUS_DELETED = 30;
     //nazwa obiektu plików cms
-    const FILE_OBJECT = 'cmscategory';
+    public const FILE_OBJECT = 'cmscategory';
     //nazwa obiektu pliku OG image
-    const OG_IMAGE_OBJECT = self::FILE_OBJECT . 'ogimage';
+    public const OG_IMAGE_OBJECT = self::FILE_OBJECT . 'ogimage';
     //nazwa obiektów tagów
-    const TAG_OBJECT = 'cmscategory';
+    public const TAG_OBJECT = 'cmscategory';
     //prefiks bufora modelu widgetu
-    const WIDGET_MODEL_CACHE_PREFIX = 'category-widget-model-';
+    public const WIDGET_MODEL_CACHE_PREFIX = 'category-widget-model-';
     //prefiks bufora url->id
-    const URI_ID_CACHE_PREFIX = 'category-uri-id-';
+    public const URI_ID_CACHE_PREFIX = 'category-uri-id-';
     //prefiks bufora obiektu kategorii
-    const CATEGORY_CACHE_PREFIX = 'category-';
+    public const CATEGORY_CACHE_PREFIX = 'category-';
     //prefiks bufora obiektu transportowego kategorii
-    const CATEGORY_CACHE_TRANSPORT_PREFIX = 'category-transport-';
+    public const CATEGORY_CACHE_TRANSPORT_PREFIX = 'category-transport-';
     //prefix bufora dzieci kategorii
-    const CATEGORY_CHILDREN_CACHE_PREFIX = 'category-children-%s-';
+    public const CATEGORY_CHILDREN_CACHE_PREFIX = 'category-children-%s-';
     //prefiks bufora przekierowania
-    const REDIRECT_CACHE_PREFIX = 'category-redirect-';
+    public const REDIRECT_CACHE_PREFIX = 'category-redirect-';
 
     /**
      * Zapis rekordu
@@ -210,7 +209,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             return true;
         }
         //wyszukiwanie oryginału
-        $originalRecord = (new CmsCategoryQuery)->findPk($this->cmsCategoryOriginalId);
+        $originalRecord = (new CmsCategoryQuery())->findPk($this->cmsCategoryOriginalId);
         //tworzenie wersji
         $versionModel = new \Cms\Model\CategoryVersion($originalRecord);
         $versionModel->create();
@@ -257,7 +256,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             $this->path = trim($parent->path . '/' . $parent->id, '/');
         }
         //doklejanie do uri przefiltrowanej końcówki
-        $this->uri .= '/' . (new \Mmi\Filter\Url)->filter(strip_tags($this->name));
+        $this->uri .= '/' . (new \Mmi\Filter\Url())->filter(strip_tags($this->name));
         $this->uri = trim($this->uri, '/');
         //filtracja customUri
         $this->customUri = ($this->customUri == '/') ? '/' : trim($this->customUri, '/');
@@ -327,21 +326,20 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             return false;
         }
         //pobranie dzieci
-        $children = (new \Cms\Model\CategoryModel(new CmsCategoryQuery))->getCategoryTree($this->getPk());
+        $children = (new \Cms\Model\CategoryModel(new CmsCategoryQuery()))->getCategoryTree($this->getPk());
         if (!empty($children)) {
             throw new \Cms\Exception\ChildrenExistException();
         }
         //usuwanie historycznych, draftów i dzieci
-        (new CmsCategoryQuery)
+        (new CmsCategoryQuery())
             ->whereCmsCategoryOriginalId()->equals($this->id)
             ->orFieldParentId()->equals($this->id)
             ->delete();
         //usuwanie plików
-        (new CmsFileQuery)
-            ->whereQuery((new CmsFileQuery)
+        (new CmsFileQuery())
+            ->whereQuery((new CmsFileQuery())
                     ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
-                    ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
-            )
+                    ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%'))
             ->andFieldObjectId()->equals($this->getPk())
             ->delete();
         //usuwanie tagów
@@ -350,7 +348,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             ->andFieldObjectId()->equals($this->getPk())
             ->delete();
         //usuwanie widgetów
-        (new CmsCategoryWidgetCategoryQuery)
+        (new CmsCategoryWidgetCategoryQuery())
             ->whereCmsCategoryId()->equals($this->getPk())
             ->delete();
         //usuwanie kategorii i czyszczenie bufora
@@ -421,7 +419,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //próba pobrania rodzica z cache
         if (null === $parent = App::$di->get(CacheInterface::class)->load($cacheKey = self::CATEGORY_CACHE_PREFIX . $this->parentId)) {
             //pobieranie rodzica
-            App::$di->get(CacheInterface::class)->save($parent = (new \Cms\Orm\CmsCategoryQuery)
+            App::$di->get(CacheInterface::class)->save($parent = (new \Cms\Orm\CmsCategoryQuery())
                 ->findPk($this->parentId), $cacheKey, 0);
         }
         //zwrot rodzica
@@ -448,7 +446,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public function getSiblingsRecords()
     {
-        return (new CmsCategoryQuery)
+        return (new CmsCategoryQuery())
             ->whereParentId()->equals($this->parentId)
             ->whereActive()->equals(true)
             ->whereStatus()->equals(self::STATUS_ACTIVE)
@@ -496,7 +494,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public function hasHistoricalEntries()
     {
-        return 0 < (new CmsCategoryQuery)->whereCmsCategoryOriginalId()->equals($this->cmsCategoryOriginalId ? $this->cmsCategoryOriginalId : $this->id)
+        return 0 < (new CmsCategoryQuery())->whereCmsCategoryOriginalId()->equals($this->cmsCategoryOriginalId ? $this->cmsCategoryOriginalId : $this->id)
             ->andFieldStatus()->equals(self::STATUS_HISTORY)
             ->count();
     }
@@ -558,7 +556,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     protected function _getPublishedChildren($parentId, $scope)
     {
         //zwrot kolekcji rekordów
-        return (new CmsCategoryQuery)
+        return (new CmsCategoryQuery())
             ->whereParentId()->equals($parentId)
             ->whereTemplate()->like($scope . '%')
             ->whereStatus()->equals(self::STATUS_ACTIVE)

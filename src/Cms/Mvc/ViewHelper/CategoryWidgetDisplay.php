@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -21,7 +21,6 @@ use Mmi\Mvc\View;
  */
 class CategoryWidgetDisplay extends \Mmi\Mvc\ViewHelper\HelperAbstract
 {
-
     /**
      * @var CacheInterface
      */
@@ -36,8 +35,7 @@ class CategoryWidgetDisplay extends \Mmi\Mvc\ViewHelper\HelperAbstract
         View $view,
         CacheInterface $cache,
         CmsSkinsetConfig $cmsSkinsetConfig
-    )
-    {
+    ) {
         $this->cache            = $cache;
         $this->cmsSkinsetConfig = $cmsSkinsetConfig;
         parent::__construct($view);
@@ -65,5 +63,4 @@ class CategoryWidgetDisplay extends \Mmi\Mvc\ViewHelper\HelperAbstract
         //render szablonu
         return $output;
     }
-
 }

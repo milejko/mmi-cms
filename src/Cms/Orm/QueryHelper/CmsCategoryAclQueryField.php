@@ -39,5 +39,4 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsCategoryAclQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="./tests/data/bootstrap.php" colors="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="./tests/phpunit-bootstrap.php" colors="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd">
   <coverage>
     <include>
-      <directory suffix=".php">./src/MmiCms/</directory>
+      <directory suffix=".php">./src</directory>
     </include>
     <report>
       <html outputDirectory="./var/coverage" lowUpperBound="35" highLowerBound="70"/>
@@ -10,7 +10,7 @@
   </coverage>
   <testsuites>
     <testsuite name="MmiCMS Test Suite">
-      <directory>./tests/MmiCms</directory>
+      <directory>./tests/Unit</directory>
     </testsuite>
   </testsuites>
   <logging/>

@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -19,13 +19,12 @@ use Mmi\Mvc\Controller;
  */
 class MailServerController extends Controller
 {
-
     /**
      * Lista serwerów
      */
     public function indexAction()
     {
-        $grid = new \CmsAdmin\Plugin\MailServerGrid;
+        $grid = new \CmsAdmin\Plugin\MailServerGrid();
         $this->view->grid = $grid;
     }
 
@@ -47,7 +46,7 @@ class MailServerController extends Controller
      */
     public function deleteAction(Request $request)
     {
-        $server = (new \Cms\Orm\CmsMailServerQuery)->findPk($request->id);
+        $server = (new \Cms\Orm\CmsMailServerQuery())->findPk($request->id);
         try {
             if ($server && $server->delete()) {
                 $this->getMessenger()->addMessage('messenger.mailServer.deleted');
@@ -57,5 +56,4 @@ class MailServerController extends Controller
         }
         $this->getResponse()->redirect('cmsAdmin', 'mailServer');
     }
-
 }

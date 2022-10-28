@@ -38,7 +38,7 @@ class MinNumberCmsFiles extends ValidatorAbstract
     /**
      * Komunikat błędnego kodu zabezpieczającego
      */
-    const INVALID = 'validator.minNumberCmsFiles.message';
+    public const INVALID = 'validator.minNumberCmsFiles.message';
 
     /**
      * Ustawia opcje
@@ -60,7 +60,7 @@ class MinNumberCmsFiles extends ValidatorAbstract
      */
     public function isValid($value)
     {
-        $query = (new CmsFileQuery)
+        $query = (new CmsFileQuery())
             ->byObject($this->_getObjectName(), $this->getObjectId())
             ->andFieldSize()->notEquals(null);
         if ($this->getClass()) {

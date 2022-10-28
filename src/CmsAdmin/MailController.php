@@ -18,13 +18,12 @@ use Mmi\Mvc\Controller;
  */
 class MailController extends Controller
 {
-
     /**
      * Kolejka maili
      */
     public function indexAction()
     {
-        $this->view->grid = new \CmsAdmin\Plugin\MailGrid;
+        $this->view->grid = new \CmsAdmin\Plugin\MailGrid();
     }
 
     /**
@@ -32,7 +31,7 @@ class MailController extends Controller
      */
     public function deleteAction(Request $request)
     {
-        $mail = (new \Cms\Orm\CmsMailQuery)->findPk($request->id);
+        $mail = (new \Cms\Orm\CmsMailQuery())->findPk($request->id);
         if ($mail && $mail->delete()) {
             $this->getMessenger()->addMessage('messenger.mail.queue.deleted', true);
         }
@@ -45,7 +44,7 @@ class MailController extends Controller
     public function previewAction(Request $request)
     {
         //wyszukiwanie wiadomości
-        if (null === $mail = (new \Cms\Orm\CmsMailQuery)->findPk($request->id)) {
+        if (null === $mail = (new \Cms\Orm\CmsMailQuery())->findPk($request->id)) {
             $this->getResponse()->redirect('cmsAdmin', 'mail', 'index');
         }
         $this->view->message = $mail->message;
@@ -68,5 +67,4 @@ class MailController extends Controller
         }
         $this->getResponse()->redirect('cmsAdmin', 'mail', 'index');
     }
-
 }

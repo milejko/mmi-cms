@@ -7,9 +7,7 @@ namespace Cms\Orm;
  */
 class CmsAuthRoleRecord extends \Mmi\Orm\Record
 {
-
     public $id;
     public $cmsAuthId;
     public $cmsRoleId;
-
 }

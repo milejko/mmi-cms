@@ -25,11 +25,10 @@ namespace CmsAdmin\Grid\Column;
  */
 class TextColumn extends ColumnAbstract
 {
-
     /**
      * Template komorki text
      */
-    const TEMPLATE_CELL = 'cmsAdmin/grid/cell/text';
+    public const TEMPLATE_CELL = 'cmsAdmin/grid/cell/text';
 
     /**
      * Renderuje pole tekstowe
@@ -39,9 +38,8 @@ class TextColumn extends ColumnAbstract
      */
     public function renderCell(\Mmi\Orm\RecordRo $record)
     {
-        $this->view->_value = (new \Mmi\Filter\Escape)->filter($this->getValueFromRecord($record));
-        $this->view->_truncated = (new \Mmi\Filter\Truncate)->filter($this->view->_value);
+        $this->view->_value = (new \Mmi\Filter\Escape())->filter($this->getValueFromRecord($record));
+        $this->view->_truncated = (new \Mmi\Filter\Truncate())->filter($this->view->_value);
         return $this->view->renderTemplate(static::TEMPLATE_CELL);
     }
-
 }

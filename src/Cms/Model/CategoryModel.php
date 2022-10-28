@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -18,7 +18,6 @@ use Cms\Orm\CmsCategoryRecord;
  */
 class CategoryModel
 {
-
     /**
      * Drzewo kategorii
      * @var array
@@ -75,7 +74,7 @@ class CategoryModel
             }
             $menu = &$menu['children'][$this->orderMap[$id]];
         }
-        $menu = array_merge($item, $menu ? : []);
+        $menu = array_merge($item, $menu ?: []);
     }
 
     /**
@@ -112,5 +111,4 @@ class CategoryModel
         }
         return [];
     }
-
 }

@@ -75,5 +75,4 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsMailServerQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-
 }

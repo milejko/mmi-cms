@@ -7,7 +7,6 @@ namespace Cms\App;
  */
 class CmsSectionConfig
 {
-
     /**
      * Nazwa szablonu
      * @var string
@@ -80,5 +79,4 @@ class CmsSectionConfig
     {
         return $this->_widgets;
     }
-
 }

@@ -10,11 +10,10 @@ use Mmi\Security\AuthProviderInterface;
  */
 class LdapAccount extends \Mmi\Validator\ValidatorAbstract
 {
-
     /**
      * Treść wiadomości
      */
-    const INVALID = 'validator.ldapAccount.message';
+    public const INVALID = 'validator.ldapAccount.message';
 
     /**
      * Walidacja znaków alfanumerycznych
@@ -31,5 +30,4 @@ class LdapAccount extends \Mmi\Validator\ValidatorAbstract
         //poprawne
         return true;
     }
-
 }

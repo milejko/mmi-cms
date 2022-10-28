@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -15,7 +15,6 @@ namespace CmsAdmin\Grid;
  */
 abstract class Grid extends \Mmi\OptionObject
 {
-
     /**
      * Columny grida
      * @var array
@@ -48,9 +47,9 @@ abstract class Grid extends \Mmi\OptionObject
         //parametry wejściowe do grida
         $this->setOptions($options);
         //tworzy obiekt stanu
-        $this->_state = (new GridState)->setGrid($this);
+        $this->_state = (new GridState())->setGrid($this);
         //indeks
-        $this->addColumn(new Column\IndexColumn);
+        $this->addColumn(new Column\IndexColumn());
         $this->init();
         //obsługa zapytań JSON do grida
         (new GridRequestHandler($this))->handleRequest();
@@ -66,7 +65,7 @@ abstract class Grid extends \Mmi\OptionObject
      * @param \CmsAdmin\Grid\Column\ColumnAbstract $column
      * @return Column\ColumnAbstract
      */
-    public final function addColumn(Column\ColumnAbstract $column)
+    final public function addColumn(Column\ColumnAbstract $column)
     {
         //dodawanie Columnu (nazwa unikalna)
         return $this->_columns[$column->getName()] = $column->setGrid($this);
@@ -76,7 +75,7 @@ abstract class Grid extends \Mmi\OptionObject
      * Pobranie kolumny
      * @return \CmsAdmin\Grid\Column\ColumnAbstract[]
      */
-    public final function getColumns()
+    final public function getColumns()
     {
         return $this->_columns;
     }
@@ -86,7 +85,7 @@ abstract class Grid extends \Mmi\OptionObject
      * @param string $name
      * @return \CmsAdmin\Grid\Column\ColumnAbstract
      */
-    public final function getColumn($name)
+    final public function getColumn($name)
     {
         //iteracja po kolumnach
         foreach ($this->getColumns() as $column) {
@@ -101,7 +100,7 @@ abstract class Grid extends \Mmi\OptionObject
      * Zwraca obiekt stanu
      * @return GridState
      */
-    public final function getState()
+    final public function getState()
     {
         return $this->_state;
     }
@@ -111,7 +110,7 @@ abstract class Grid extends \Mmi\OptionObject
      * @return \Mmi\Orm\Query
      * @throws GridException
      */
-    public final function getQuery()
+    final public function getQuery()
     {
         //brak obiektu zapytania
         if (!$this->_query) {
@@ -125,7 +124,7 @@ abstract class Grid extends \Mmi\OptionObject
      * @param \Mmi\Orm\Query $query
      * @return \CmsAdmin\Grid\Grid
      */
-    public final function setQuery(\Mmi\Orm\Query $query)
+    final public function setQuery(\Mmi\Orm\Query $query)
     {
         $this->_query = $query;
         return $this;
@@ -135,7 +134,7 @@ abstract class Grid extends \Mmi\OptionObject
      * Pobiera uproszczoną nazwę klasy grida
      * @return string
      */
-    public final function getClass()
+    final public function getClass()
     {
         return str_replace('\\', '', get_class($this));
     }
@@ -144,7 +143,7 @@ abstract class Grid extends \Mmi\OptionObject
      * Pobiera kolekcję rekordów
      * @return \Mmi\Orm\RecordCollection
      */
-    public final function getDataCollection()
+    final public function getDataCollection()
     {
         if (null !== $this->_data) {
             return $this->_data;
@@ -158,7 +157,7 @@ abstract class Grid extends \Mmi\OptionObject
     /**
      * Render grida
      */
-    public final function __toString()
+    final public function __toString()
     {
         try {
             //rendering grida HTML
@@ -167,5 +166,4 @@ abstract class Grid extends \Mmi\OptionObject
             return $e->getMessage() . ' ' . $e->getTraceAsString();
         }
     }
-
 }

@@ -30,12 +30,12 @@ class CheckboxColumn extends SelectColumn
     /**
      * Template komórki checkboxa
      */
-    const TEMPLATE_CELL = 'cmsAdmin/grid/cell/checkbox';
+    public const TEMPLATE_CELL = 'cmsAdmin/grid/cell/checkbox';
 
     /**
      * Template filtra selecta
      */
-    const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/checkbox';
+    public const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/checkbox';
 
     /**
      * Domyślne opcje dla checkboxa

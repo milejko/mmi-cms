@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -17,12 +17,10 @@ use CmsAdmin\Grid\Column;
  */
 class FileGrid extends \CmsAdmin\Grid\Grid
 {
-
     public function init()
     {
-
         //źródło danych
-        $this->setQuery(new \Cms\Orm\CmsFileQuery);
+        $this->setQuery(new \Cms\Orm\CmsFileQuery());
 
         //miniatura (lub ikona)
         $this->addColumn((new Column\CustomColumn('thumb'))
@@ -56,8 +54,7 @@ class FileGrid extends \CmsAdmin\Grid\Grid
                 '{elseif $mime == \'audio/mpeg\'}' .
                 '	<img src="/resource/cmsAdmin/images/types/mp3-32.png" alt="Music File" />' .
                 '{/if}' .
-                '{/if}'
-        ));
+                '{/if}'));
 
         //rozmiar pliku
         $this->addColumn((new Column\TextColumn('size'))
@@ -87,5 +84,4 @@ class FileGrid extends \CmsAdmin\Grid\Grid
         //operacje
         $this->addColumn((new Column\OperationColumn())->setEditParams([]));
     }
-
 }

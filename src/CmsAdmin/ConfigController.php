@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2019 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -19,14 +19,13 @@ use Psr\Container\ContainerInterface;
  */
 class ConfigController extends Controller
 {
-
-    const THREE_DOTS = '(...)';
+    public const THREE_DOTS = '(...)';
 
     /**
      * @Inject
      */
     private ContainerInterface $container;
-    
+
     /**
      * Widok konfiguracji
      */

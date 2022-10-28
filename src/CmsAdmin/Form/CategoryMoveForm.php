@@ -38,13 +38,12 @@ class CategoryMoveForm extends Form
     public function init()
     {
         //injections
-        $this->acl = (new \CmsAdmin\Model\CategoryAclModel)->getAcl();
+        $this->acl = (new \CmsAdmin\Model\CategoryAclModel())->getAcl();
         $this->auth = $this->getOption(AuthInterface::class);
         $this->skinsetModel = $this->getOption(SkinsetModel::class);
 
         $tree = (new CategoryModel((new CmsCategoryQuery())
-            ->whereTemplate()->like($this->getOption(self::SCOPE_CONFIG_OPTION_NAME) . '%')
-            ))->getCategoryTree();
+            ->whereTemplate()->like($this->getOption(self::SCOPE_CONFIG_OPTION_NAME) . '%')))->getCategoryTree();
         //drzewo kategorii (dozwolone)
         $this->addElement((new Tree(self::PARENT_ID_KEY))
             ->setLabel('form.categoryMove.parentId.label')
@@ -94,5 +93,4 @@ class CategoryMoveForm extends Form
         }
         return true;
     }
-
 }

@@ -103,7 +103,6 @@ namespace Cms\Orm;
 //</editor-fold>
 class CmsAuthQuery extends \Mmi\Orm\Query
 {
-
     protected $_tableName = 'cms_auth';
 
     /**
@@ -114,10 +113,9 @@ class CmsAuthQuery extends \Mmi\Orm\Query
     public static function byRole($role)
     {
         //wyszukuje konta z podaną rolą
-        return (new self)
+        return (new self())
                 ->join('cms_auth_role')->on('id', 'cms_auth_id')
                 ->join('cms_role', 'cms_auth_role')->on('cms_role_id', 'id')
                 ->where('name', 'cms_role')->equals($role);
     }
-
 }

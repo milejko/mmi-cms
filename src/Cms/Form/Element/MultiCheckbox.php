@@ -15,17 +15,16 @@ namespace Cms\Form\Element;
  */
 class MultiCheckbox extends \Mmi\Form\Element\MultiCheckbox
 {
-
     //szablon początku pola
-    CONST TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    public const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
     //szablon opisu
-    CONST TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    public const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
     //szablon końca pola
-    CONST TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    public const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
     //szablon błędów
-    CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    public const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
-    CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    public const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
     /**
      * Konstruktor
@@ -47,7 +46,7 @@ class MultiCheckbox extends \Mmi\Form\Element\MultiCheckbox
         $values = is_array($this->getValue()) ? $this->getValue() : [$this->getValue()];
         $html = '<ul id="' . ($baseId = $this->getId()) . '-list">';
         //filtr url
-        $f = new \Mmi\Filter\Url;
+        $f = new \Mmi\Filter\Url();
         foreach ($this->getMultioptions() as $key => $caption) {
             //nowy checkbox
             $checkbox = new Checkbox($this->getBaseName());
@@ -73,5 +72,4 @@ class MultiCheckbox extends \Mmi\Form\Element\MultiCheckbox
         }
         return $html . '</ul>';
     }
-
 }
