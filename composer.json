@@ -57,7 +57,8 @@
             "@test:phpcs",
             "@test:phpstan",
             "@test:phpmd",
-            "@test:phpunit"
+            "@test:phpunit",
+            "@test:infeciton"
         ]
     },
     "require-dev": {
