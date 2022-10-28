@@ -39,11 +39,11 @@
     },
     "minimum-stability": "dev",
     "scripts": {
-        "test:infection": "infection --show-mutations --only-covered",
+        "test:infection": "infection --show-mutations --only-covered --threads=max",
         "test:security-checker": "security-checker security:check",
         "report:metrics": "phpmetrics --report-html=./web/build/metrics ./src",
         "fix:phpcbf": "phpcbf",
-        "fix:php-cs-fixer": "php-cs-fixer fix src && php-cs-fixer fix src",
+        "fix:php-cs-fixer": "php-cs-fixer fix src && php-cs-fixer fix tests",
         "fix:all": [
             "@fix:phpcbf",
             "@fix:php-cs-fixer"
@@ -58,7 +58,7 @@
             "@test:phpstan",
             "@test:phpmd",
             "@test:phpunit",
-            "@test:infeciton"
+            "@test:infection"
         ]
     },
     "require-dev": {
