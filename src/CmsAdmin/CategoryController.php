@@ -10,7 +10,6 @@
 
 namespace CmsAdmin;
 
-use Cms\App\CmsAppMvcEvents;
 use Cms\App\CmsRouterConfig;
 use Cms\App\CmsScopeConfig;
 use Cms\App\CmsSkinsetConfig;

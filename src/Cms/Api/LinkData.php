@@ -18,6 +18,7 @@ class LinkData implements DataInterface
     public const REL_INTERNAL               = 'internal';
     public const REL_CONTENTS               = 'contents';
     public const REL_CONTENT                = 'content';
+    public const REL_SEARCH                 = 'search';
     public const REL_CONFIG                 = 'config';
 
     public const INTERNAL_REDIRECT_PREFIX   = 'internal://';

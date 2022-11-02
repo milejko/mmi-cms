@@ -13,8 +13,10 @@ namespace Cms;
 use Cms\Api\ErrorTransport;
 use Cms\Api\LinkData;
 use Cms\Api\MenuDataTransport;
+use Cms\Api\SearchDataTransport;
 use Cms\Api\RedirectTransport;
 use Cms\Api\Service\MenuServiceInterface;
+use Cms\Api\Service\SearchServiceInterface;
 use Cms\Api\SkinConfigTransport;
 use Cms\Api\SkinData;
 use Cms\Api\SkinsetDataTransport;
@@ -28,14 +30,16 @@ use Cms\Model\TemplateModel;
 use Cms\Orm\CmsCategoryPreviewRecord;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
+use Exception;
 use Mmi\Cache\CacheInterface;
 use Mmi\Http\Request;
 use Mmi\Http\Response;
+use Mmi\Mvc\Controller;
 
 /**
  * Kontroler kategorii
  */
-class ApiController extends \Mmi\Mvc\Controller
+class ApiController extends Controller
 {
     /**
      * @Inject
@@ -53,6 +57,11 @@ class ApiController extends \Mmi\Mvc\Controller
     private MenuServiceInterface $menuService;
 
     /**
+     * @Inject
+     */
+    private SearchServiceInterface $searchService;
+
+    /**
      * Index action (available skins)
      */
     public function indexAction()
@@ -64,17 +73,17 @@ class ApiController extends \Mmi\Mvc\Controller
             $skinData->key = $skin->getKey();
             $skinData->name = $skin->getName();
             //config link
-            $skinData->_links[] = (
-                (new LinkData())
+            $skinData->_links[] = (new LinkData())
                 ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONFIG, $skin->getKey()))
-                ->setRel(LinkData::REL_CONFIG)
-            );
+                ->setRel(LinkData::REL_CONFIG);
             //menu link
-            $skinData->_links[] = (
-                (new LinkData())
+            $skinData->_links[] = (new LinkData())
                 ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $skin->getKey()))
-                ->setRel(LinkData::REL_CONTENTS)
-            );
+                ->setRel(LinkData::REL_CONTENTS);
+            //search link
+            $skinData->_links[] = (new LinkData())
+                ->setHref(sprintf(CmsRouterConfig::API_METHOD_SEARCH, $skin->getKey()))
+                ->setRel(LinkData::REL_SEARCH);
             $skins[] = $skinData;
         }
         //serves transport object
@@ -91,25 +100,28 @@ class ApiController extends \Mmi\Mvc\Controller
     {
         try {
             //search for skin
-            $skinConfig = $this->cmsSkinsetConfig->getSkinByKey($request->scope);
+            $skin = $this->cmsSkinsetConfig->getSkinByKey($request->scope);
         } catch (CmsSkinNotFoundException $e) {
             //404 - skin not found
             return $this->getNotFoundResponse($e->getMessage());
         }
         //setting transport object
         $skinConfigTransport = new SkinConfigTransport();
-        $skinConfigTransport->key = $skinConfig->getKey();
-        $skinConfigTransport->attributes = $skinConfig->getAttributes();
+        $skinConfigTransport->key = $skin->getKey();
+        $skinConfigTransport->attributes = $skin->getAttributes();
         //available templates
         $skinConfigTransport->templates = array_map(function (CmsTemplateConfig $config) {
             return $config->key;
-        }, $skinConfig->getTemplates());
+        }, $skin->getTemplates());
         //links
-        $skinConfigTransport->_links = [(
+        $skinConfigTransport->_links = [
             (new LinkData())
-            ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $skinConfig->getKey()))
-            ->setRel(LinkData::REL_CONTENTS)
-        )];
+                ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $skin->getKey()))
+                ->setRel(LinkData::REL_CONTENTS),
+            (new LinkData())
+                ->setHref(sprintf(CmsRouterConfig::API_METHOD_SEARCH, $skin->getKey()))
+                ->setRel(LinkData::REL_SEARCH)
+        ];
         return $this->getResponse()->setTypeJson()
             ->setCode($skinConfigTransport->getCode())
             ->setContent($skinConfigTransport->toString());
@@ -141,6 +153,52 @@ class ApiController extends \Mmi\Mvc\Controller
     }
 
     /**
+     * Akcja wyszukiwania contentu
+     */
+    public function searchAction(Request $request)
+    {
+        //scope not found - redirect to home
+        if (!$request->scope) {
+            $redirectTransportObject = new RedirectTransport(CmsRouterConfig::API_HOME);
+            return $this->getResponse()->setTypeJson()
+                ->setCode($redirectTransportObject->getCode())
+                ->setContent($redirectTransportObject->toString());
+        }
+        //checking scope availability
+        try {
+            $this->cmsSkinsetConfig->getSkinByKey($request->scope);
+        } catch (CmsSkinNotFoundException $e) {
+            //404 - skin not found
+            return $this->getNotFoundResponse($e->getMessage());
+        }
+        if (!$request->offset) {
+            $request->offset = 0;
+        }
+        if (!$request->limit) {
+            $request->limit = 10;
+        }
+        if (!$request->filterBy) {
+            $request->filterBy = [];
+        }
+        if (!$request->sortBy) {
+            $request->sortBy = [];
+        }
+        if ($request->scope && !isset($request->filterBy['scope'])) {
+            $request->filterBy = array_merge($request->filterBy, ['scope' => $request->scope]);
+        }
+        $searchTransport = (new SearchDataTransport())
+            ->setList($this->searchService->getResult($request))
+            ->setTotal($this->searchService->getTotal($request))
+            ->setFilterBy($request->filterBy)
+            ->setSortBy($request->sortBy)
+            ->setOffset($request->offset)
+            ->setLimit($request->limit);
+        return $this->getResponse()->setTypeJson()
+            ->setCode($searchTransport->getCode())
+            ->setContent($searchTransport->toString());
+    }
+
+    /**
      * Akcja dispatchera kategorii
      */
     public function getCategoryAction(Request $request)
@@ -150,7 +208,7 @@ class ApiController extends \Mmi\Mvc\Controller
             return $this->getResponse()->setTypeJson()
                 ->setCode($transportObject->getCode())
                 ->setContent($transportObject->toString());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->getNotFoundResponse($e->getMessage());
         }
     }
@@ -168,7 +226,7 @@ class ApiController extends \Mmi\Mvc\Controller
         //search for a category
         $query = (new CmsCategoryQuery())
             ->whereCmsAuthId()->equals($request->authId)
-            ->whereTemplate()->like($request->scope . '%')
+            ->whereScope($request->scope)
             ->whereCmsCategoryOriginalId()->equals($request->originalId ?: null);
         if ($request->originalId) {
             $query->andQuery(
@@ -230,8 +288,8 @@ class ApiController extends \Mmi\Mvc\Controller
 
     /**
      * Pobiera opublikowaną kategorię po uri
-     * @param string $uri
-     * @throws \Mmi\Mvc\MvcNotFoundException
+     * @param Request $request
+     * @return TransportInterface
      */
     private function getTransportObject(Request $request): TransportInterface
     {
@@ -313,7 +371,7 @@ class ApiController extends \Mmi\Mvc\Controller
         }
         //wyszukiwanie bieżącej kategorii (aktywnej)
         if (null === $category = (new CmsCategoryQuery())
-            ->byHistoryUri($uri, $scope)->findFirst()
+                ->byHistoryUri($uri, $scope)->findFirst()
         ) {
             //brak kategorii w historii - buforowanie informacji
             $this->cache->save(false, $cacheKey, 0);

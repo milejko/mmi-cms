@@ -145,6 +145,7 @@ namespace Cms\Orm;
  * @method QueryHelper\CmsCategoryQueryJoin join($tableName, $targetTableName = null, $alias = null)
  * @method QueryHelper\CmsCategoryQueryJoin joinLeft($tableName, $targetTableName = null, $alias = null)
  * @method CmsCategoryRecord[] find()
+ * @method CmsCategoryRecord[] findFields(array $fields)
  * @method CmsCategoryRecord findFirst()
  * @method CmsCategoryRecord findPk($value)
  */
@@ -154,13 +155,64 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
     protected $_tableName = 'cms_category';
 
     /**
+     * Zapytanie wyszukujące po scope
+     * @param string $scope
+     * @return CmsCategoryQuery
+     */
+    public function whereScope(string $scope): self
+    {
+        return $this->whereTemplate()->like($scope . '/%');
+    }
+
+    /**
+     * Filtruje wyniki
+     * @param array $filterBy
+     * @return $this
+     */
+    private function filterBy(array $filterBy): self
+    {
+        if (isset($filterBy['scope'])) {
+            $this->whereScope($filterBy['scope']);
+        }
+
+        if (isset($filterBy['template'])) {
+            $this->whereTemplate()->like('%/' . $filterBy['template']);
+        }
+
+        if (isset($filterBy['parentId'])) {
+            $this->whereParentId()->equals($filterBy['parentId']);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sortuje wyniki
+     * @param array $sortBy
+     * @return $this
+     */
+    public function sortBy(array $sortBy): self
+    {
+        foreach ($sortBy as $fieldName => $direction) {
+            if (in_array($direction, ['asc', 'ASC'])) {
+                $this->orderAsc($fieldName);
+            } elseif (in_array($direction, ['desc', 'DESC'])) {
+                $this->orderDesc($fieldName);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Zapytanie wyszukujące po uri
      * @param string $uri
      * @return CmsCategoryQuery
      */
-    public function searchByUri($uri)
+    public function searchByUri(string $uri): self
     {
-        return $this->whereUri()->equals($uri)
+        return $this
+            ->whereUri()->equals($uri)
             ->orFieldCustomUri()->equals($uri);
     }
 
@@ -177,6 +229,7 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
     /**
      * Wyszukuje kategorię po uri z uwzględnieniem priorytetu
      * @param string $uri
+     * @param string $scope
      * @return CmsCategoryRecord
      */
     public function getCategoryByUri(string $uri, string $scope)
@@ -186,7 +239,7 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
         foreach ((new self())
                 ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
                 ->andFieldActive()->equals(true)
-                ->andFieldTemplate()->like($scope . '%')
+                ->whereScope($scope)
                 ->andQuery((new CmsCategoryQuery())->searchByUri($uri))
                 ->find() as $category
         ) {
@@ -206,14 +259,15 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
     /**
      * Wyszukanie po historycznym uri
      * @param string $uri
+     * @param string $scope
      * @return self
      */
-    public function byHistoryUri(string $uri, string $scope)
+    public function byHistoryUri(string $uri, string $scope): self
     {
         return (new self())
             ->whereActive()->equals(true)
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
-            ->whereTemplate()->like($scope . '%')
+            ->whereScope($scope)
             ->join('cms_category', 'cms_category', 'currentCategory')->on('id', 'cms_category_original_id')
             ->where('status', 'currentCategory')->notEquals(CmsCategoryRecord::STATUS_ACTIVE)
             ->where('active', 'currentCategory')->equals(true)
@@ -227,7 +281,7 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
     /**
      * Wyszukiwanie, czy jakas strona o danym uri jest juz aktywna
      * @param string $uri
-     * @param string $scope
+     * @param string|null $scope
      * @param int|null $ignoreId
      * @return bool
      */
@@ -239,7 +293,7 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
             ->whereActive()->equals(true);
 
         if ($scope) {
-            $query->whereTemplate()->like($scope . '/%');
+            $query->whereScope($scope);
         }
 
         if ($ignoreId) {
@@ -247,5 +301,20 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
         }
 
         return $query->count() > 0;
+    }
+
+    /**
+     * Filtruje i sortuje wyniki
+     * @param array $filterBy
+     * @param array $sortBy
+     * @return $this
+     */
+    public function getFilteredQuery(array $filterBy, array $sortBy = []): self
+    {
+        return (new self())
+            ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
+            ->whereActive()->equals(true)
+            ->filterBy($filterBy)
+            ->sortBy($sortBy);
     }
 }
