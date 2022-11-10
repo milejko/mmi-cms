@@ -59,14 +59,28 @@ CREATE TABLE "cms_category" (
   "dateAdd" datetime NOT NULL,
   "dateModify" datetime DEFAULT NULL,
   "active" tinyint(4) NOT NULL DEFAULT 1,
-  "visible" tinyint(4) NOT NULL DEFAULT 1
+  "visible" tinyint(4) NOT NULL DEFAULT 1,
+  FOREIGN KEY(cms_auth_id) REFERENCES cms_auth(id),
+  FOREIGN KEY(cms_category_original_id) REFERENCES cms_category(id),
+  FOREIGN KEY(parent_id) REFERENCES cms_category(id)
 );
+CREATE INDEX cms_category_name ON cms_category(name);
+CREATE INDEX cms_category_lang ON cms_category(lang);
+CREATE INDEX cms_category_dateAdd ON cms_category(dateAdd);
+CREATE INDEX cms_category_dateModify ON cms_category(dateModify);
+CREATE INDEX cms_category_template ON cms_category(template);
+CREATE INDEX cms_category_uri ON cms_category(uri);
+CREATE INDEX cms_category_customUri ON cms_category(customUri);
+CREATE INDEX cms_category_path ON cms_category(path);
+CREATE INDEX cms_category_status ON cms_category(status);
+CREATE INDEX cms_category_active ON cms_category(active);
 
 CREATE TABLE "cms_category_acl" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "cms_role_id" INTEGER,
   "cms_category_id" INTEGER,
-  "access" varchar(8) DEFAULT 'deny'
+  "access" varchar(8) DEFAULT 'deny',
+  FOREIGN KEY(cms_category_id) REFERENCES cms_category(id)
 );
 
 CREATE TABLE "cms_category_widget_category" (
@@ -76,8 +90,13 @@ CREATE TABLE "cms_category_widget_category" (
   "cms_category_id" INTEGER,
   "configJson" longtext DEFAULT NULL,
   "order" INTEGER,
-  "active" tinyint(4) NOT NULL DEFAULT 0
+  "active" tinyint(4) NOT NULL DEFAULT 0,
+  FOREIGN KEY(cms_category_id) REFERENCES cms_category(id)
 );
+CREATE INDEX cms_category_widget_category_order ON cms_category_widget_category("order");
+CREATE INDEX cms_category_widget_category_active ON cms_category_widget_category(active);
+CREATE INDEX cms_category_widget_category_widget ON cms_category_widget_category(widget);
+CREATE INDEX cms_category_widget_category_uuid ON cms_category_widget_category(uuid);
 
 CREATE TABLE "cms_cron" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -134,8 +153,11 @@ CREATE TABLE "cms_mail" (
   "dateAdd" datetime DEFAULT NULL,
   "dateSent" datetime DEFAULT NULL,
   "dateSendAfter" datetime DEFAULT NULL,
-  "active" tinyint(4) NOT NULL DEFAULT 0
+  "active" tinyint(4) NOT NULL DEFAULT 0,
+  FOREIGN KEY(cms_mail_definition_id) REFERENCES cms_mail_definition(id)
 );
+CREATE INDEX cms_mail_active ON cms_mail(active);
+CREATE INDEX cms_mail_type ON cms_mail(type);
 
 CREATE TABLE "cms_mail_definition" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -149,8 +171,11 @@ CREATE TABLE "cms_mail_definition" (
   "html" tinyint(4) NOT NULL DEFAULT 0,
   "dateAdd" datetime DEFAULT NULL,
   "dateModify" datetime DEFAULT NULL,
-  "active" tinyint(4) NOT NULL DEFAULT 0
+  "active" tinyint(4) NOT NULL DEFAULT 0,
+  FOREIGN KEY(cms_mail_server_id) REFERENCES cms_mail_server(id)
 );
+CREATE INDEX cms_mail_definition_active ON cms_mail_definition(active);
+CREATE INDEX cms_mail_definition_lang ON cms_mail_definition(lang);
 
 CREATE TABLE "cms_mail_server" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -185,11 +210,14 @@ CREATE TABLE "cms_tag_relation" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "cms_tag_id" INTEGER,
   "object" varchar(64) NOT NULL,
-  "objectId" INTEGER
+  "objectId" INTEGER,
+  FOREIGN KEY(cms_tag_id) REFERENCES cms_tag(id)
 );
+CREATE INDEX cms_tag_relation_object ON cms_tag_relation(object);
+CREATE INDEX cms_tag_relation_objectId ON cms_tag_relation(objectId);
 
 CREATE TABLE "mmi_cache" (
-  "id" varchar(64) NOT NULL,
+  "id" varchar(64) NOT NULL PRIMARY KEY,
   "data" mediumtext DEFAULT NULL,
   "ttl" INTEGER DEFAULT NULL
 );
@@ -200,9 +228,11 @@ CREATE TABLE "mmi_changelog" (
   "md5" varchar(32) NOT NULL,
   "active" tinyint(4) NOT NULL DEFAULT 0
 );
+CREATE UNIQUE INDEX mmi_changelog_filename ON mmi_changelog(filename);
 
 CREATE TABLE "mmi_session" (
-  "id" varchar(64) NOT NULL,
+  "id" varchar(64) NOT NULL PRIMARY KEY,
   "data" mediumtext DEFAULT NULL,
   "timestamp" INTEGER
 );
+CREATE INDEX mmi_session_timestamp ON mmi_session(timestamp);
