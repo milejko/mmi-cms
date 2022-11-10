@@ -37,13 +37,13 @@ class CmsRouterConfig extends RouterConfig
 
         //moduł + kontroler + akcja np. /cmsAdmin/text/display
         $this->setRoute('cms-admin-module-controller-action', '/^cmsAdmin\/([a-zA-Z\-]+)\/([a-zA-Z]+)$/', ['module' => 'cmsAdmin', 'controller' => '$1', 'action' => '$2']);
-    
+
         //routy skalera grafik
         $this->setRoute('cms-file-copy', '/^data\/copy\/([a-f0-9]{32})-([a-f0-9]{32}\.[a-z0-9]+)$/i', ['module' => 'cms', 'controller' => 'file', 'action' => 'copy', 'hash' => '$1', 'name' => '$2']);
         $this->setRoute('cms-file-server', '/^download\/([a-f0-9]{32}\.[a-z0-9]+)-(.*)$/i', ['module' => 'cms', 'controller' => 'file', 'action' => 'server', 'name' => '$1', 'encodedName' => '$2']);
         $this->setRoute('cms-file-default', '/^data\/(default)\/([a-f0-9]{32}\.[a-z0-9]+)-([a-f0-9]{32})\.webp$/i', ['module' => 'cms', 'controller' => 'file', 'action' => 'scaler', 'operation' => '$1', 'name' => '$2', 'hash' => '$3']);
         $this->setRoute('cms-file-scaler', '/^data\/([a-z]+)-([0-9]+)x?([0-9]+)?\/([a-f0-9]{32}\.[a-z0-9]+)-([a-f0-9]{32})\.webp$/i', ['module' => 'cms', 'controller' => 'file', 'action' => 'scaler', 'operation' => '$1', 'x' => '$2', 'y' => '$3', 'name' => '$4', 'hash' => '$5']);
-        
+
         //routy API
         //routa API main
         $this->setRoute('cms-api', 'api', ['module' => 'cms', 'controller' => 'api', 'action' => 'index']);
@@ -70,5 +70,4 @@ class CmsRouterConfig extends RouterConfig
         //routa do stron cms i kategorii
         $this->setRoute('cms-category-dispatch', '/^([a-zA-Z0-9\/\-]+)$/', ['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => '$1']);
     }
-
 }

@@ -37,7 +37,5 @@ namespace Cms\Orm;
 //</editor-fold>
 class CmsRoleQuery extends \Mmi\Orm\Query
 {
-
     protected $_tableName = 'cms_role';
-
 }

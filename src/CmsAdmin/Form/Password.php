@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -21,14 +21,12 @@ use Mmi\Security\AuthProviderInterface;
  */
 class Password extends \Cms\Form\Form
 {
-
     public function init()
     {
-
         $this->addElement((new Element\Password('password'))
             ->setLabel('form.index.password.current.label')
             ->setRequired()
-            ->addValidator(new \Mmi\Validator\NotEmpty));
+            ->addValidator(new \Mmi\Validator\NotEmpty()));
 
         $this->addElement((new Element\Password('changePassword'))
             ->setLabel('form.index.password.new.label')
@@ -64,12 +62,11 @@ class Password extends \Cms\Form\Form
             return false;
         }
         //znajdowanie rekordu użytkownika
-        $authRecord = (new \Cms\Orm\CmsAuthQuery)->findPk(App::$di->get(AuthInterface::class)->getId());
+        $authRecord = (new \Cms\Orm\CmsAuthQuery())->findPk(App::$di->get(AuthInterface::class)->getId());
         if (null === $authRecord) {
             return false;
         }
         $authRecord->password = App::$di->get(AuthProviderInterface::class)->getSaltedPasswordHash($this->getElement('changePassword')->getValue());
         return $authRecord->save();
     }
-
 }

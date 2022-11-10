@@ -51,7 +51,7 @@ class CategoryTrashController extends Controller
             return $this->getResponse()->redirect('cmsAdmin', 'categoryTrash', 'index');
         }
         //niedozwolona
-        if (!(new CategoryAclModel)->getAcl()->isAllowed($this->auth->getRoles(), $category->id)) {
+        if (!(new CategoryAclModel())->getAcl()->isAllowed($this->auth->getRoles(), $category->id)) {
             $this->getMessenger()->addMessage('messenger.category.permission.denied', false);
             return $this->getResponse()->redirect('cmsAdmin', 'categoryTrash', 'index');
         }
@@ -60,5 +60,4 @@ class CategoryTrashController extends Controller
         $this->getMessenger()->addMessage('messenger.categoryTrash.success', true);
         return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
     }
-
 }

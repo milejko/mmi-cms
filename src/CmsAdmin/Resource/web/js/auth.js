@@ -6,7 +6,7 @@ $(document).ready(function () {
     'use strict';
 
     $('#cmsadmin-form-auth-username').autocomplete({
-        source: request.baseUrl + '/cmsAdmin/auth/autocomplete',
+        source: '/cmsAdmin/auth/autocomplete',
         type: "json",
         minLength: 3,
         select: function (event, ui) {

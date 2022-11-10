@@ -85,7 +85,5 @@ namespace Cms\Orm;
 //</editor-fold>
 class CmsMailServerQuery extends \Mmi\Orm\Query
 {
-
     protected $_tableName = 'cms_mail_server';
-
 }

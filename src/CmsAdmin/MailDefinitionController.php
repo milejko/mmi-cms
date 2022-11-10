@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -19,13 +19,12 @@ use Mmi\Mvc\Controller;
  */
 class MailDefinitionController extends Controller
 {
-
     /**
      * Lista szablonów
      */
     public function indexAction()
     {
-        $grid = new \CmsAdmin\Plugin\MailDefinitionGrid;
+        $grid = new \CmsAdmin\Plugin\MailDefinitionGrid();
         $this->view->grid = $grid;
     }
 
@@ -47,7 +46,7 @@ class MailDefinitionController extends Controller
      */
     public function deleteAction(Request $request)
     {
-        $definition = (new \Cms\Orm\CmsMailDefinitionQuery)->findPk($request->id);
+        $definition = (new \Cms\Orm\CmsMailDefinitionQuery())->findPk($request->id);
         try {
             if ($definition && $definition->delete()) {
                 $this->getMessenger()->addMessage('messenger.mailDefinition.deleted');
@@ -57,5 +56,4 @@ class MailDefinitionController extends Controller
         }
         $this->getResponse()->redirect('cmsAdmin', 'mailDefinition');
     }
-
 }

@@ -12,7 +12,7 @@ use Cms\App\CmsTemplateConfig;
 class SkinsetModel
 {
     //separator w kluczach
-    const SEPARATOR = '/';
+    public const SEPARATOR = '/';
 
     /**
      * Konstruktor
@@ -29,7 +29,8 @@ class SkinsetModel
         $this->_skinsetConfig = $skinsetConfig;
     }
 
-    public function getAllowedTemplateKeysBySkinKey(string $key): array {
+    public function getAllowedTemplateKeysBySkinKey(string $key): array
+    {
         if (null === $skin = $this->getSkinConfigByKey($key)) {
             return [];
         }
@@ -152,5 +153,4 @@ class SkinsetModel
             }
         }
     }
-
 }

@@ -26,9 +26,8 @@ use Mmi\Security\AuthInterface;
  */
 class CategoryController extends \Mmi\Mvc\Controller
 {
-
     //akcja weryfikująca czy użytkownik jest redaktorem
-    CONST REDACTOR_VERIFY_ACTION = 'cmsAdmin:category:index';
+    public const REDACTOR_VERIFY_ACTION = 'cmsAdmin:category:index';
 
     /**
      * @Inject
@@ -86,7 +85,7 @@ class CategoryController extends \Mmi\Mvc\Controller
             throw new \Mmi\Mvc\MvcForbiddenException('Preview not allowed');
         }
         //wyszukiwanie kategorii
-        if (null === $category = (new Orm\CmsCategoryQuery)
+        if (null === $category = (new Orm\CmsCategoryQuery())
             ->whereCmsCategoryOriginalId()->equals($request->originalId ? $request->originalId : null)
             ->findPk($request->versionId)) {
             //404
@@ -123,7 +122,7 @@ class CategoryController extends \Mmi\Mvc\Controller
         //próba mapowania uri na ID kategorii z cache
         if (null === $categoryId = $this->cache->load($cacheKey = CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($uri))) {
             //próba pobrania kategorii po URI
-            if (null === $category = (new Orm\CmsCategoryQuery)->getCategoryByUri($uri, $scope)) {
+            if (null === $category = (new Orm\CmsCategoryQuery())->getCategoryByUri($uri, $scope)) {
                 //zapis informacji o braku kategorii w cache
                 $this->cache->save(false, $cacheKey, 0);
                 //301 (o ile możliwe) lub 404
@@ -131,7 +130,7 @@ class CategoryController extends \Mmi\Mvc\Controller
             }
             //id kategorii
             $categoryId = $category->id;
-            //zapis id kategorii i kategorii w cache 
+            //zapis id kategorii i kategorii w cache
             $this->cache->save($categoryId, $cacheKey, 0) && $this->cache->save($category, CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $categoryId, 0);
         }
         //w buforze jest informacja o braku strony
@@ -146,7 +145,7 @@ class CategoryController extends \Mmi\Mvc\Controller
         //pobranie kategorii z bufora
         if (null === $category = $this->cache->load($cacheKey = CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $categoryId)) {
             //zapis pobranej kategorii w cache
-            $this->cache->save($category = (new Orm\CmsCategoryQuery)->findPk($categoryId), $cacheKey, 0);
+            $this->cache->save($category = (new Orm\CmsCategoryQuery())->findPk($categoryId), $cacheKey, 0);
         }
         //sprawdzanie kategorii
         return $this->_checkCategory($category);
@@ -255,7 +254,7 @@ class CategoryController extends \Mmi\Mvc\Controller
             return $this->getResponse()->setCode(301)->redirect('cms', 'category', 'dispatch', ['uri' => $redirectUri]);
         }
         //wyszukiwanie bieżącej kategorii (aktywnej)
-        if (null === $category = (new CmsCategoryQuery)->byHistoryUri($uri, $scope)->findFirst()) {
+        if (null === $category = (new CmsCategoryQuery())->byHistoryUri($uri, $scope)->findFirst()) {
             //brak kategorii w historii - buforowanie informacji
             $this->cache->save(false, $cacheKey, 0);
             //404
@@ -275,5 +274,4 @@ class CategoryController extends \Mmi\Mvc\Controller
     {
         return $this->acl->isAllowed($this->auth->getRoles(), 'cmsAdmin:category:index');
     }
-
 }

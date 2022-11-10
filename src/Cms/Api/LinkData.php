@@ -7,18 +7,18 @@ namespace Cms\Api;
  */
 class LinkData implements DataInterface
 {
-    const METHOD_GET        = 'GET';
-    const METHOD_PUT        = 'PUT';
-    const METHOD_POST       = 'POST';
-    const METHOD_DELETE     = 'DELETE';
-    const METHOD_PATCH      = 'PATCH';
-    const METHOD_REDIRECT   = 'REDIRECT';
+    public const METHOD_GET        = 'GET';
+    public const METHOD_PUT        = 'PUT';
+    public const METHOD_POST       = 'POST';
+    public const METHOD_DELETE     = 'DELETE';
+    public const METHOD_PATCH      = 'PATCH';
+    public const METHOD_REDIRECT   = 'REDIRECT';
 
-    const REL_EXTERNAL      = 'external';
-    const REL_INTERNAL      = 'internal';
-    const REL_CONTENTS      = 'contents';
-    const REL_CONTENT       = 'content';
-    const REL_CONFIG        = 'config';
+    public const REL_EXTERNAL      = 'external';
+    public const REL_INTERNAL      = 'internal';
+    public const REL_CONTENTS      = 'contents';
+    public const REL_CONTENT       = 'content';
+    public const REL_CONFIG        = 'config';
 
     public string   $href;
     public string   $rel;

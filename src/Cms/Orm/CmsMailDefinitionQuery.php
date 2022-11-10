@@ -100,7 +100,6 @@ use Mmi\Http\Request;
 //</editor-fold>
 class CmsMailDefinitionQuery extends \Mmi\Orm\Query
 {
-
     protected $_tableName = 'cms_mail_definition';
 
     /**
@@ -110,9 +109,9 @@ class CmsMailDefinitionQuery extends \Mmi\Orm\Query
     public static function lang()
     {
         if (!App::$di->get(Request::class)->lang) {
-            return (new self);
+            return (new self());
         }
-        return (new self)
+        return (new self())
                 ->whereLang()->equals(App::$di->get(Request::class)->lang)
                 ->orFieldLang()->equals(null)
                 ->orderDescLang();
@@ -128,5 +127,4 @@ class CmsMailDefinitionQuery extends \Mmi\Orm\Query
         return self::lang()
                 ->whereName()->equals($name);
     }
-
 }

@@ -17,13 +17,12 @@ use Mmi\Http\Request;
  */
 abstract class AbstractWidgetController extends Controller
 {
-
     /**
      * Attachment thumb width &
      */
-    const ATTACHMENT_THUMB_METHOD   = 'scale';
-    const ATTACHMENT_THUMB_SCALE    = '800';
-    const ATTACHMENT_THUMB_SCALE2X  = '1600';
+    public const ATTACHMENT_THUMB_METHOD   = 'scale';
+    public const ATTACHMENT_THUMB_SCALE    = '800';
+    public const ATTACHMENT_THUMB_SCALE2X  = '1600';
 
     /**
      * Widget relation record
@@ -56,12 +55,12 @@ abstract class AbstractWidgetController extends Controller
     /**
      * Zwraca rekord relacji widgeta
      */
-    public final function getWidgetRecord(): CmsCategoryWidgetCategoryRecord
+    final public function getWidgetRecord(): CmsCategoryWidgetCategoryRecord
     {
         return $this->widgetRecord;
     }
 
-    public final function getWidgetConfig(): CmsWidgetConfig
+    final public function getWidgetConfig(): CmsWidgetConfig
     {
         return $this->widgetConfig;
     }
@@ -70,7 +69,7 @@ abstract class AbstractWidgetController extends Controller
      * Ustawia stan zapisany
      * @return void
      */
-    public final function redirectToCategory(): void
+    final public function redirectToCategory(): void
     {
         //przekierowanie na stronę edycji
         $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', [
@@ -124,7 +123,7 @@ abstract class AbstractWidgetController extends Controller
     protected function getCmsFiles(Request $request): array
     {
         $attachments = [];
-        foreach ((new CmsFileQuery)
+        foreach ((new CmsFileQuery())
             ->whereActive()->equals(true)
             ->whereObject()->like(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
             ->andFieldObjectId()->equals($this->widgetRecord->id)
@@ -156,5 +155,4 @@ abstract class AbstractWidgetController extends Controller
         }
         return $to;
     }
-
 }

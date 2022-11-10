@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CategoryRebuildCommand extends CommandAbstract
 {
-    const TEMP_NAME_SUFFIX = '#suffix#';
+    public const TEMP_NAME_SUFFIX = '#suffix#';
 
     /**
      * Execute
@@ -17,7 +17,7 @@ class CategoryRebuildCommand extends CommandAbstract
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         //doklejanie suffixa
-        foreach ((new CmsCategoryQuery)
+        foreach ((new CmsCategoryQuery())
             ->whereParentId()->equals(null)->find() as $mainCategory) {
             $mainCategory->name .= self::TEMP_NAME_SUFFIX;
             $mainCategory->save();
@@ -27,5 +27,4 @@ class CategoryRebuildCommand extends CommandAbstract
         $output->writeln('Category uris and paths rebuilt successfully.');
         return 0;
     }
-
 }

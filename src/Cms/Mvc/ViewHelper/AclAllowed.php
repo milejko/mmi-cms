@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -15,7 +15,6 @@ namespace Cms\Mvc\ViewHelper;
  */
 class AclAllowed extends \Mmi\Mvc\ViewHelper\HelperAbstract
 {
-
     /**
      * Zwraca czy dozwolone na ACL
      * @param array $params
@@ -30,5 +29,4 @@ class AclAllowed extends \Mmi\Mvc\ViewHelper\HelperAbstract
         //zwrot z ACL
         return $this->view->getAcl()->isAllowed($this->view->getAuth()->getRoles(), strtolower($params['module'] . ':' . $params['controller'] . ':' . $params['action']));
     }
-
 }

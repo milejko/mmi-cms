@@ -141,5 +141,4 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsCategoryQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-
 }

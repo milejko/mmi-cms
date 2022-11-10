@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -14,15 +14,14 @@ use Cms\Orm\CmsAclQuery;
 
 class Acl
 {
-
     /**
      * Ustawianie ACL'a
      * @return \Mmi\Security\Acl
      */
     public static function setupAcl()
     {
-        $acl = new \Mmi\Security\Acl;
-        $aclData = (new CmsAclQuery)
+        $acl = new \Mmi\Security\Acl();
+        $aclData = (new CmsAclQuery())
             ->join('cms_role')->on('cms_role_id')
             ->find();
         foreach ($aclData as $aclRule) { /* @var $aclData \Cms\Orm\CmsAclRecord */
@@ -43,5 +42,4 @@ class Acl
         }
         return $acl;
     }
-
 }

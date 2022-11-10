@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -17,10 +17,8 @@ use CmsAdmin\Grid\Column;
  */
 class MailDefinitionGrid extends \CmsAdmin\Grid\Grid
 {
-
     public function init()
     {
-
         //zapytanie
         $this->setQuery(\Cms\Orm\CmsMailDefinitionQuery::lang());
 
@@ -50,7 +48,7 @@ class MailDefinitionGrid extends \CmsAdmin\Grid\Grid
 
         //serwer
         $this->addColumn((new Column\SelectColumn('cmsMailServerId'))
-            ->setMultioptions((new \Cms\Orm\CmsMailServerQuery)->findPairs('id', 'address'))
+            ->setMultioptions((new \Cms\Orm\CmsMailServerQuery())->findPairs('id', 'address'))
             ->setLabel('grid.mailDefinition.cmsMailServerId.label'));
 
         //data dodania
@@ -66,7 +64,6 @@ class MailDefinitionGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('grid.mailDefinition.active.label'));
 
         //operacje
-        $this->addColumn(new Column\OperationColumn);
+        $this->addColumn(new Column\OperationColumn());
     }
-
 }

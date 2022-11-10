@@ -7,7 +7,6 @@ namespace Cms\Orm;
  */
 class CmsCronRecord extends \Mmi\Orm\Record
 {
-
     /**
      * Identyfikator
      * @var integer
@@ -18,19 +17,19 @@ class CmsCronRecord extends \Mmi\Orm\Record
 
     /**
      * Minuta
-     * @var integer 
+     * @var integer
      */
     public $minute;
 
     /**
      * Godzina
-     * @var string 
+     * @var string
      */
     public $hour;
 
     /**
      * Dzień miesiąca
-     * @var type 
+     * @var type
      */
     public $dayOfMonth;
 

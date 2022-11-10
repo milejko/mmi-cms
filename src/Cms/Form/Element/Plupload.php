@@ -26,17 +26,16 @@ use Mmi\Filter\Url;
  */
 class Plupload extends UploaderElementAbstract
 {
-
     //szablon początku pola
-    CONST TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    public const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
     //szablon opisu
-    CONST TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    public const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
     //szablon końca pola
-    CONST TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    public const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
     //szablon błędów
-    CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    public const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
-    CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    public const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
     /**
      * Ustawia rozmiar chunka
@@ -364,7 +363,7 @@ class Plupload extends UploaderElementAbstract
             return;
         }
         //identyfikator pola
-        $fieldId = $this->getId() . '-' . (new Url)->filter($element['name']);
+        $fieldId = $this->getId() . '-' . (new Url())->filter($element['name']);
 
         //input poster video
         if ($element['type'] == 'poster') {
@@ -429,7 +428,6 @@ class Plupload extends UploaderElementAbstract
         }
         //lista
         if ($element['type'] == 'select') {
-
             $option = [];
             foreach ($element['options'] as $key => $value) {
                 if (is_array($value)) {
@@ -446,7 +444,6 @@ class Plupload extends UploaderElementAbstract
             //dodaje podglad obrazka
             $image = '';
             if (isset($element['preview'])) {
-
                 $this->setOption('preview', true);
 
                 $image = "
@@ -474,5 +471,4 @@ class Plupload extends UploaderElementAbstract
                 '<select id="' . $fieldId . '" name="' . $element['name'] . '" class="imprint ' . $element['type'] . ($image != '' ? ' col_9' : '') . '">' . implode($option) . '</select></div>' . $image;
         }
     }
-
 }

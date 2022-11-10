@@ -49,7 +49,7 @@ class MenuService implements MenuServiceInterface
             $this->addItem($item, $menuStructure);
         }
         //sorting menu
-        $orderedMenu = isset($menuStructure['children']) ? $this->sortMenu($menuStructure['children']): [];
+        $orderedMenu = isset($menuStructure['children']) ? $this->sortMenu($menuStructure['children']) : [];
         //cache save
         $this->cacheService->save($orderedMenu, self::CACHE_KEY . $scope, 0);
         return $orderedMenu;
@@ -69,7 +69,7 @@ class MenuService implements MenuServiceInterface
             $menu = &$menu['children'][$this->orderMap[$id] . '-' . $id];
         }
         //adding formatted item to menu
-        $menu = array_merge($this->formatItem($item), $menu ? : []);
+        $menu = array_merge($this->formatItem($item), $menu ?: []);
     }
 
     /**
@@ -111,7 +111,7 @@ class MenuService implements MenuServiceInterface
 
     protected function getFromInfrastructure(?string $scope): array
     {
-        $query = (new CmsCategoryQuery)
+        $query = (new CmsCategoryQuery())
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
             ->whereActive()->equals(true)
             ->whereTemplate()->like($scope . '%');
@@ -130,7 +130,7 @@ class MenuService implements MenuServiceInterface
         $scope = substr($item['template'], 0, strpos($item['template'], self::PATH_SEPARATOR)) ?: $item['template'];
         if ($scope) {
             return [
-                (new LinkData)
+                (new LinkData())
                     ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $scope, $item['customUri'] ?: $item['uri']))
                     ->setRel(LinkData::REL_CONTENT)
             ];

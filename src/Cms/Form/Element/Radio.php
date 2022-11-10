@@ -15,19 +15,18 @@ namespace Cms\Form\Element;
  */
 class Radio extends \Mmi\Form\Element\Radio
 {
-
     //szablon początku pola
-    const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    public const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
     //szablon opisu
-    const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    public const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
     //szablon pola
-    const TEMPLATE_FIELD = 'cmsAdmin/form/element/radio';
+    public const TEMPLATE_FIELD = 'cmsAdmin/form/element/radio';
     //szablon końca pola
-    const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    public const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
     //szablon błędów
-    const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    public const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
-    const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    public const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
     /**
      * Konstruktor
@@ -38,5 +37,4 @@ class Radio extends \Mmi\Form\Element\Radio
         parent::__construct($name);
         $this->addClass('form-check-input');
     }
-
 }

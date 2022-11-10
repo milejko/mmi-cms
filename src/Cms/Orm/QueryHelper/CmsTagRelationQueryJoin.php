@@ -7,5 +7,4 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsTagRelationQueryJoin extends \Mmi\Orm\QueryHelper\QueryJoin
 {
-
 }

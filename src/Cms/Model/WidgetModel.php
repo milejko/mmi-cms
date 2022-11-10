@@ -197,5 +197,4 @@ class WidgetModel
         $explodedControllerClass = explode('\\', $this->_widgetConfig->getControllerClassName());
         return lcfirst($explodedControllerClass[0]) . '/' . lcfirst(substr(array_pop($explodedControllerClass), 0, -10));
     }
-
 }

@@ -9,7 +9,6 @@ use Mmi\App\KernelException;
  */
 class CmsTemplateConfig
 {
-
     /**
      * Nazwa szablonu
      * @var string
@@ -190,5 +189,4 @@ class CmsTemplateConfig
     {
         return $this->cacheLifeTime;
     }
-
 }

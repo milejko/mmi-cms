@@ -27,7 +27,6 @@ namespace CmsAdmin\Grid\Column;
  */
 class CustomColumn extends ColumnAbstract
 {
-
     /**
      * Ustawia, czy kolumna eksportowalna
      * @param boolean $exporting
@@ -57,5 +56,4 @@ class CustomColumn extends ColumnAbstract
         $this->view->record = $record;
         return $this->view->renderDirectly($this->getTemplateCode());
     }
-
 }

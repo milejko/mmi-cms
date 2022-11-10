@@ -43,7 +43,6 @@ namespace Cms\Orm;
 //</editor-fold>
 class CmsAuthRoleQuery extends \Mmi\Orm\Query
 {
-
     protected $_tableName = 'cms_auth_role';
 
     /**
@@ -53,7 +52,7 @@ class CmsAuthRoleQuery extends \Mmi\Orm\Query
      */
     public static function byAuthId($authId)
     {
-        return (new self)
+        return (new self())
                 ->whereCmsAuthId()->equals($authId);
     }
 
@@ -67,5 +66,4 @@ class CmsAuthRoleQuery extends \Mmi\Orm\Query
         return self::byAuthId($authId)
                 ->join('cms_role')->on('cms_role_id');
     }
-
 }

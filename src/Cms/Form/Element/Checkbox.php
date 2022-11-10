@@ -15,19 +15,18 @@ namespace Cms\Form\Element;
  */
 class Checkbox extends \Mmi\Form\Element\Checkbox
 {
-
     //szablon początku pola
-    CONST TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    public const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
     //szablon opisu
-    CONST TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    public const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
     //szablon końca pola
-    CONST TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    public const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
     //szablon błędów
-    CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    public const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
-    CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    public const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
     //szablon pola
-    const TEMPLATE_FIELD = 'cmsAdmin/form/element/checkbox';
+    public const TEMPLATE_FIELD = 'cmsAdmin/form/element/checkbox';
 
     /**
      * Konstruktor
@@ -40,5 +39,4 @@ class Checkbox extends \Mmi\Form\Element\Checkbox
             ->addClass('form-control')
             ->setValue(true);
     }
-
 }

@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -21,10 +21,8 @@ use Mmi\Security\AuthInterface;
  */
 class Contact extends \Cms\Form\Form
 {
-
     public function init()
     {
-
         //identyfikator tematu
         if (!$this->getOption('subjectId')) {
             $this->addElement((new Element\Select('cmsContactOptionId'))
@@ -40,7 +38,7 @@ class Contact extends \Cms\Form\Form
             ->setDisabled()
             ->setLabel('form.contact.email.label')
             ->setValue(App::$di->get(AuthInterface::class)->getEmail())
-            ->addValidator(new Validator\EmailAddress));
+            ->addValidator(new Validator\EmailAddress()));
 
         //tresc zapytania
         $this->addElement((new Element\Textarea('text'))
@@ -50,7 +48,7 @@ class Contact extends \Cms\Form\Form
         //odpowiedz na zgloszenie
         $this->addElement((new Element\Textarea('reply'))
             ->setRequired()
-            ->addValidator(new Validator\NotEmpty)
+            ->addValidator(new Validator\NotEmpty())
             ->setLabel('form.contact.reply.label'));
 
         $this->addElement((new Element\Submit('submit'))
@@ -81,5 +79,4 @@ class Contact extends \Cms\Form\Form
         ]);
         return true;
     }
-
 }

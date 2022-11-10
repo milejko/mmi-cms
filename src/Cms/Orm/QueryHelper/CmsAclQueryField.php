@@ -51,5 +51,4 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsAclQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-
 }

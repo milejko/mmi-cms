@@ -27,5 +27,4 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsRoleQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-
 }

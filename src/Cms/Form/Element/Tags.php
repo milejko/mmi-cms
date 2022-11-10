@@ -20,17 +20,16 @@ use Cms\Orm\CmsTagRelationRecord;
  */
 class Tags extends Select
 {
-
     //szablon początku pola
-    const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    public const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
     //szablon opisu
-    const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    public const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
     //szablon końca pola
-    const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    public const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
     //szablon błędów
-    const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    public const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
-    const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    public const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
     private string $object;
     private string $objectId;
@@ -222,7 +221,7 @@ class Tags extends Select
         $tagIds = (new CmsTagQuery())
             ->whereScope()->equals($this->scope)
             ->whereTag()->equals($this->getValue())->findPairs('tag', 'id');
-        foreach($this->getValue() as $tagValue) {
+        foreach ($this->getValue() as $tagValue) {
             $newTagRelation = new CmsTagRelationRecord();
             $newTagRelation->object = $object;
             $newTagRelation->objectId = $objecId;

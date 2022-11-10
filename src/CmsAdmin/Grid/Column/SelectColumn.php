@@ -29,12 +29,12 @@ class SelectColumn extends ColumnAbstract
     /**
      * Template filtra selecta
      */
-    const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/select';
+    public const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/select';
 
     /**
      * Template komórki selecta
      */
-    const TEMPLATE_CELL = 'cmsAdmin/grid/cell/select';
+    public const TEMPLATE_CELL = 'cmsAdmin/grid/cell/select';
 
     /**
      * Ustawia opcje selecta
@@ -84,5 +84,4 @@ class SelectColumn extends ColumnAbstract
         $this->view->_value = $this->getMultioptionByKey($this->getValueFromRecord($record));
         return $this->view->renderTemplate(self::TEMPLATE_CELL);
     }
-
 }
