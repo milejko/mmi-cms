@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -23,21 +23,18 @@ use Mmi\App\App;
  */
 class CategoryGrid extends \CmsAdmin\Grid\Grid
 {
-
     public const SCOPE_CONFIG_OPTION_NAME = 'scope';
 
     public function init()
     {
         //query
-        $this->setQuery((new CmsCategoryQuery)
+        $this->setQuery((new CmsCategoryQuery())
                 ->whereStatus()->equals(CmsCategoryRecord::STATUS_DELETED)
                 ->whereTemplate()->like($this->getOption(self::SCOPE_CONFIG_OPTION_NAME)->getName() . '%')
                 ->orQuery((new CmsCategoryQuery())
                         ->whereTemplate()->like($this->getOption(self::SCOPE_CONFIG_OPTION_NAME)->getName() . '%')
                         ->whereCmsCategoryOriginalId()->equals(null)
-                        ->whereStatus()->equals(CmsCategoryRecord::STATUS_DRAFT)
-                )
-        );
+                        ->whereStatus()->equals(CmsCategoryRecord::STATUS_DRAFT)));
 
         //nazwa
         $this->addColumn((new Column\TextColumn('name'))
@@ -56,14 +53,12 @@ class CategoryGrid extends \CmsAdmin\Grid\Grid
                 ->setMultioptions([
                     CmsCategoryRecord::STATUS_DELETED => 'grid.categoryTrash.status.option.deleted',
                     CmsCategoryRecord::STATUS_DRAFT => 'grid.categoryTrash.status.option.draft',
-                ])
-        );
+                ]));
 
         //operacje
-        $this->addColumn((new OperationColumn)
+        $this->addColumn((new OperationColumn())
                 ->addCustomButton('fa-2 fa-history', ['module' => 'cmsAdmin', 'controller' => 'categoryTrash', 'action' => 'restore', 'id' => '%id%'])
                 ->setDeleteParams([])
-                ->setEditParams([])
-        );
+                ->setEditParams([]));
     }
 }

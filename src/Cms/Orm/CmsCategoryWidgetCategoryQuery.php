@@ -67,7 +67,5 @@ namespace Cms\Orm;
 //</editor-fold>
 class CmsCategoryWidgetCategoryQuery extends \Mmi\Orm\Query
 {
-
     protected $_tableName = 'cms_category_widget_category';
-
 }

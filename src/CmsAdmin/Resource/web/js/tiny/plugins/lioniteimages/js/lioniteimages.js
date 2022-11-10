@@ -5,15 +5,14 @@
 
     var LioniteImages = window.LioniteImages = {
         options: {
-            baseUrl: parentEditor.settings.baseUrl,
-            uploadUrl: parentEditor.settings.baseUrl + '/cmsAdmin/upload/plupload',
+            uploadUrl: '/cmsAdmin/upload/plupload',
             params: {
                 formObject: parentEditor.settings.object,
                 formObjectId: parentEditor.settings.objectId,
                 cmsFileId: 0
             },
-            removeUrl: parentEditor.settings.baseUrl + '/cmsAdmin/upload/delete',
-            galleryUrl: parentEditor.settings.baseUrl + '/?module=cms&controller=file&action=listLayout&class=' + config.dataTyp + '&object=' + parentEditor.settings.object + '&objectId=' + parentEditor.settings.objectId + '&t=' + parentEditor.settings.time + '&hash=' + parentEditor.settings.hash,
+            removeUrl: '/cmsAdmin/upload/delete',
+            galleryUrl: '/?module=cms&controller=file&action=listLayout&class=' + config.dataTyp + '&object=' + parentEditor.settings.object + '&objectId=' + parentEditor.settings.objectId + '&t=' + parentEditor.settings.time + '&hash=' + parentEditor.settings.hash,
             dataTyp: config.dataTyp,
             dataAccept: config.dataAccept,
             maxFileSize: config.maxFileSize,
@@ -136,7 +135,7 @@
                     $("div#dialog-edit #img-edit").attr('src', 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
 
                     //okienko edycji - pobieramy dane rekordu z bazy
-                    $.post(o.baseUrl + '/cmsAdmin/upload/details', {cmsFileId: el.attr('data-id')}, 'json')
+                    $.post('/cmsAdmin/upload/details', {cmsFileId: el.attr('data-id')}, 'json')
                             .done(function (data) {
                                 if (data.result === 'OK' && data.record) {
                                     //przygotowujemy zawartość okienka edycji i pokazujemy go
@@ -179,7 +178,7 @@
                                             'Zapisz': function () {
                                                 //trigger odświeżający dane
                                                 //tinymce.triggerSave();
-                                                $.post(o.baseUrl + '/cmsAdmin/upload/describe',
+                                                $.post('/cmsAdmin/upload/describe',
                                                         {cmsFileId: el.attr('data-id'),
                                                             form: $(edit + ' input,' + edit + ' select,' + edit + ' textarea').serializeArray()
                                                         }, 'json')

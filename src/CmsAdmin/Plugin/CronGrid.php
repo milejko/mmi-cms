@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -17,12 +17,10 @@ use CmsAdmin\Grid\Column;
  */
 class CronGrid extends \CmsAdmin\Grid\Grid
 {
-
     public function init()
     {
-
         //zapytanie
-        $this->setQuery(new \Cms\Orm\CmsCronQuery);
+        $this->setQuery(new \Cms\Orm\CmsCronQuery());
 
         //nazwa
         $this->addColumn((new Column\TextColumn('name'))
@@ -55,7 +53,6 @@ class CronGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('grid.cron.active.label'));
 
         //operacje
-        $this->addColumn(new Column\OperationColumn);
+        $this->addColumn(new Column\OperationColumn());
     }
-
 }

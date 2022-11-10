@@ -66,7 +66,7 @@ CMS.category = function () {
                 },
                 handle: '.handle-widget',
                 update: function (event, ui) {
-                    $.post(request.baseUrl + "/?module=cmsAdmin&controller=categoryWidgetRelation&action=sort&categoryId=" + $(this).attr('data-category-id'), $(this).sortable('serialize'),
+                    $.post("/?module=cmsAdmin&controller=categoryWidgetRelation&action=sort&categoryId=" + $(this).attr('data-category-id'), $(this).sortable('serialize'),
                         function (result) {
                             if (result) {
                                 alert(result);

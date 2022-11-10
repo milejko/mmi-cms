@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2017 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -22,7 +22,6 @@ use Mmi\Mvc\Controller;
  */
 class CategoryAclController extends Controller
 {
-
     /**
      * @Inject
      */
@@ -38,7 +37,7 @@ class CategoryAclController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $this->view->roles = (new \Cms\Orm\CmsRoleQuery)->find();
+        $this->view->roles = (new \Cms\Orm\CmsRoleQuery())->find();
         //jeśli niewybrana rola - przekierowanie na pierwszą istniejącą
         if (!$request->roleId && count($this->view->roles)) {
             $this->getResponse()->redirect('cmsAdmin', 'categoryAcl', 'index', ['roleId' => $this->view->roles[0]->id]);
@@ -57,5 +56,4 @@ class CategoryAclController extends Controller
         }
         $this->view->categoryAclForm = $form;
     }
-
 }

@@ -30,21 +30,20 @@ use Mmi\Session\SessionInterface;
  */
 class TinyMce extends UploaderElementAbstract
 {
-
     //szablon początku pola
-    const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    public const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
     //szablon opisu
-    const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    public const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
     //szablon końca pola
-    const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    public const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
     //szablon błędów
-    const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    public const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
-    const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    public const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
     //szablon pola textarea
-    const TEMPLATE_FIELD = 'mmi/form/element/textarea';
+    public const TEMPLATE_FIELD = 'mmi/form/element/textarea';
 
-    const TOOLBARS = [
+    public const TOOLBARS = [
         'simple'   => [
             'undo redo | bold italic underline strikethrough | link unlink anchor | alignleft aligncenter alignright alignjustify | subscript superscript | charmap visualchars nonbreaking mathlive',
         ],
@@ -54,18 +53,18 @@ class TinyMce extends UploaderElementAbstract
         ],
     ];
 
-    const CONTEXT_MENU = [
+    public const CONTEXT_MENU = [
         'simple'   => 'link image inserttable | cell row column deletetable',
         'advanced' => 'link image media inserttable | cell row column deletetable',
     ];
 
-    const PLUGINS = [
+    public const PLUGINS = [
         'lioniteimages,advlist,anchor,autolink,autoresize,charmap,code,contextmenu,fullscreen',
         'hr,image,insertdatetime,link,lists,media,nonbreaking,noneditable,paste,print,preview',
         'searchreplace,tabfocus,table,textcolor,visualblocks,visualchars,wordcount,mathlive',
     ];
 
-    const FONT_FORMATS = [
+    public const FONT_FORMATS = [
         'Andale Mono=andale mono,times',
         'Arial=arial,helvetica,sans-serif',
         'Arial Black=arial black,avant garde',
@@ -85,9 +84,9 @@ class TinyMce extends UploaderElementAbstract
         'Wingdings=wingdings,zapf dingbats',
     ];
 
-    const FONT_SIZES = '4px 6px 8px 9px 10px 11px 12px 13px 14px 16px 18px 20px 22px 24px 26px 28px 36px 48px 50px 72px 100px';
+    public const FONT_SIZES = '4px 6px 8px 9px 10px 11px 12px 13px 14px 16px 18px 20px 22px 24px 26px 28px 36px 48px 50px 72px 100px';
 
-    const IMAGE_CLASS_LIST      = [
+    public const IMAGE_CLASS_LIST      = [
         [
             'title' => 'Obrazek do lewej',
             'value' => 'image-left',
@@ -101,8 +100,8 @@ class TinyMce extends UploaderElementAbstract
             'value' => 'image-zoom',
         ],
     ];
-    const PLUGIN_PREVIEW_HEIGHT = 700;
-    const PLUGIN_PREVIEW_WIDTH  = 1100;
+    public const PLUGIN_PREVIEW_HEIGHT = 700;
+    public const PLUGIN_PREVIEW_WIDTH  = 1100;
 
     /**
      * Wspóle ustawienia dla wszystkich trybów
@@ -303,8 +302,7 @@ class TinyMce extends UploaderElementAbstract
             'object'           => $object,
             'objectId'         => $objectId,
             'time'             => $time,
-            'baseUrl'          => $this->view->baseUrl,
-            'image_list'       => $this->view->baseUrl . '/?module=cms&controller=file&action=list&object=' . $object . '&objectId=' . $objectId . '&t=' . $time . '&hash=' . $hash,
+            'image_list'       => '/?module=cms&controller=file&action=list&object=' . $object . '&objectId=' . $objectId . '&t=' . $time . '&hash=' . $hash,
             'branding'         => false,
         ];
         $config = array_merge($config, $this->_renderConfigOptionN('toolbar', 'toolbars'), $this->_common, $this->getCustomConfig() ?? []);
@@ -374,7 +372,6 @@ class TinyMce extends UploaderElementAbstract
         }
         $this->_common = [
             "autoresize_min_height" => $this->getHeight() ?? 300,
-            "document_base_url"     => $view->baseUrl,
             "convert_urls"          => false,
             "entity_encoding"       => 'raw',
             "relative_urls"         => false,
@@ -416,5 +413,4 @@ class TinyMce extends UploaderElementAbstract
             $this->setContextMenu(self::CONTEXT_MENU['advanced']);
         }
     }
-
 }

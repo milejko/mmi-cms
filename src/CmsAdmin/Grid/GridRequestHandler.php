@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -19,7 +19,6 @@ use Mmi\Http\Response;
  */
 class GridRequestHandler
 {
-
     /**
      * Obiekt grida
      * @var Grid
@@ -144,7 +143,7 @@ class GridRequestHandler
             //poprzednia metoda to DESC - usuwanie sortowania
             case 'orderDesc':
                 return $gso->unsetMethod();
-            //poprzednia metoda to ASC - zmiana na DESC
+                //poprzednia metoda to ASC - zmiana na DESC
             case 'orderAsc':
                 return $gso->setMethod('orderDesc');
         }
@@ -200,5 +199,4 @@ class GridRequestHandler
             ->send();
         exit;
     }
-
 }

@@ -15,24 +15,23 @@ namespace Cms\Form\Element;
  */
 class Select extends \Mmi\Form\Element\Select
 {
-
     //szablon początku pola
-    const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    public const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
     //szablon opisu
-    const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    public const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
     //szablon końca pola
-    const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    public const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
     //szablon błędów
-    const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    public const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
-    const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    public const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
     //biblioteka Select2
-    const SELECT2_JS_URL  = '/resource/cmsAdmin/js/select2.min.js';
-    const SELECT2_CSS_URL = '/resource/cmsAdmin/css/select2.min.css';
+    public const SELECT2_JS_URL  = '/resource/cmsAdmin/js/select2.min.js';
+    public const SELECT2_CSS_URL = '/resource/cmsAdmin/css/select2.min.css';
     //pliki js i css
-    const SELECT_JS_URL   = '/resource/cmsAdmin/js/select2.js';
-    const SELECT_CSS_URL  = '/resource/cmsAdmin/css/select2.css';
+    public const SELECT_JS_URL   = '/resource/cmsAdmin/js/select2.js';
+    public const SELECT_CSS_URL  = '/resource/cmsAdmin/css/select2.css';
 
     /**
      * Konstruktor

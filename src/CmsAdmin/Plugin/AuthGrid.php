@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -17,12 +17,10 @@ use CmsAdmin\Grid\Column;
  */
 class AuthGrid extends \CmsAdmin\Grid\Grid
 {
-
     public function init()
     {
-
         //domyślne zapytanie
-        $this->setQuery((new \Cms\Orm\CmsAuthQuery)->orderAscUsername());
+        $this->setQuery((new \Cms\Orm\CmsAuthQuery())->orderAscUsername());
 
         //nazwa
         $this->addColumn((new Column\TextColumn('username'))
@@ -62,7 +60,6 @@ class AuthGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('grid.auth.active.label'));
 
         //operacje
-        $this->addColumn(new Column\OperationColumn);
+        $this->addColumn(new Column\OperationColumn());
     }
-
 }

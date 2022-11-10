@@ -51,7 +51,7 @@ abstract class AbstractTemplateController extends Controller
     /**
      * Gets the CMS category record
      */
-    public final function getCategoryRecord(): CmsCategoryRecord
+    final public function getCategoryRecord(): CmsCategoryRecord
     {
         return $this->cmsCategoryRecord;
     }
@@ -59,7 +59,7 @@ abstract class AbstractTemplateController extends Controller
     /**
      * Gets the CMS category record
      */
-    public final function getSkinsetConfig(): CmsSkinsetConfig
+    final public function getSkinsetConfig(): CmsSkinsetConfig
     {
         return $this->cmsSkinsetConfig;
     }
@@ -83,7 +83,7 @@ abstract class AbstractTemplateController extends Controller
      */
     public function getTransportObject(Request $request): TransportInterface
     {
-        $to = new TemplateDataTransport;
+        $to = new TemplateDataTransport();
         $to->id = (int) $this->cmsCategoryRecord->id;
         $to->template = $this->cmsCategoryRecord->template;
         $to->name = (string) $this->cmsCategoryRecord->name;
@@ -104,7 +104,7 @@ abstract class AbstractTemplateController extends Controller
         $to->breadcrumbs = $this->getBreadcrumbs();
         $to->siblings = $this->getSiblings();
         $to->_links = [
-            (new LinkData)
+            (new LinkData())
                 ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $this->cmsCategoryRecord->getScope()))
                 ->setRel(LinkData::REL_CONTENTS),
         ];
@@ -230,7 +230,7 @@ abstract class AbstractTemplateController extends Controller
             ];
         }
         $attributes = json_decode((string) $cmsCategoryRecord->configJson, true);
-        return (new BreadcrumbData)
+        return (new BreadcrumbData())
             ->setId($cmsCategoryRecord->id)
             ->setName($cmsCategoryRecord->name ?: '')
             ->setTemplate($cmsCategoryRecord->template)

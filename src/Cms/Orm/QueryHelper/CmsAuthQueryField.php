@@ -93,5 +93,4 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsAuthQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-
 }

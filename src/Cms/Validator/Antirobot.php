@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -12,16 +12,15 @@ namespace Cms\Validator;
 
 /**
  * Walidator dla elementu formularza antirobot
- * 
+ *
  * @see \Cms\Form\Element\Antirobot
  */
 class Antirobot extends \Mmi\Validator\ValidatorAbstract
 {
-
     /**
      * Komunikat błędnego kodu zabezpieczającego
      */
-    const INVALID = 'validator.antirobot.message';
+    public const INVALID = 'validator.antirobot.message';
 
     /**
      * Waliduje poprawność antirobot
@@ -44,5 +43,4 @@ class Antirobot extends \Mmi\Validator\ValidatorAbstract
     {
         return crc32(date('Y-m-d') . 'antirobot-crc');
     }
-
 }

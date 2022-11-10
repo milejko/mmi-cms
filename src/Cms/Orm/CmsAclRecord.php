@@ -10,7 +10,6 @@ use Mmi\Cache\CacheInterface;
  */
 class CmsAclRecord extends \Mmi\Orm\Record
 {
-
     public $id;
     public $cmsRoleId;
     public $module;
@@ -63,5 +62,4 @@ class CmsAclRecord extends \Mmi\Orm\Record
         App::$di->get(CacheInterface::class)->remove('mmi-cms-acl');
         return true;
     }
-
 }

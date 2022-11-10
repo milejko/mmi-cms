@@ -25,7 +25,6 @@ use Psr\Log\LoggerInterface;
  */
 class File
 {
-
     /**
      * Dołącza pliki dla danego object i id
      * @param string $object obiekt
@@ -255,7 +254,7 @@ class File
     {
         foreach ($serial as $order => $id) {
             //brak rekordu o danym ID
-            if (null === ($record = (new CmsFileQuery)->findPk($id))) {
+            if (null === ($record = (new CmsFileQuery())->findPk($id))) {
                 continue;
             }
             //ustawianie kolejności i zapis
@@ -322,10 +321,9 @@ class File
         if (empty($modifiedDate)) {
             $modifiedDate = date('Y-m-d H:i:s', strtotime('-1 week'));
         }
-        (new CmsFileQuery)->whereObject()->like(UploaderElementInterface::TEMP_OBJECT_PREFIX . '%')
+        (new CmsFileQuery())->whereObject()->like(UploaderElementInterface::TEMP_OBJECT_PREFIX . '%')
             ->andFieldDateModify()->less($modifiedDate)
             ->find()
             ->delete();
     }
-
 }

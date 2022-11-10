@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -19,8 +19,8 @@ use Psr\Container\ContainerInterface;
  */
 class DbController extends Controller
 {
-    const PATH      = BASE_PATH . '/var/data/dump.sql';
-    const OPTIONS   = [
+    public const PATH      = BASE_PATH . '/var/data/dump.sql';
+    public const OPTIONS   = [
         'compress' => Mysqldump::GZIP,
     ];
 

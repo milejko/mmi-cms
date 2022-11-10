@@ -105,5 +105,4 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsFileQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-
 }

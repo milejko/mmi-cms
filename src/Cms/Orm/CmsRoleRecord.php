@@ -11,7 +11,6 @@ use Mmi\Db\DbException;
  */
 class CmsRoleRecord extends \Mmi\Orm\Record
 {
-
     public $id;
     public $name;
 
@@ -25,7 +24,7 @@ class CmsRoleRecord extends \Mmi\Orm\Record
             return false;
         }
         //zapis reguły dostępu do defaulta dla zapisanej roli
-        $rule = new \Cms\Orm\CmsAclRecord;
+        $rule = new \Cms\Orm\CmsAclRecord();
         $rule->cmsRoleId = $this->id;
         $rule->module = 'mmi';
         $rule->access = 'allow';
@@ -46,7 +45,7 @@ class CmsRoleRecord extends \Mmi\Orm\Record
         $db = App::$di->get(DbInterface::class);
         $db->beginTransaction();
         //usuwanie uprawnień ról
-        (new CmsAclQuery)->whereCmsRoleId()->equals($this->id)
+        (new CmsAclQuery())->whereCmsRoleId()->equals($this->id)
             ->delete();
         try {
             $result = parent::delete();
@@ -57,5 +56,4 @@ class CmsRoleRecord extends \Mmi\Orm\Record
         $db->commit();
         return $result;
     }
-
 }

@@ -83,7 +83,7 @@ class CategoryForm extends Form
         $this->addElement((new Element\Text('name'))
             ->setLabel('form.category.name.label')
             ->setRequired()
-            ->addFilter(new Filter\StringTrim)
+            ->addFilter(new Filter\StringTrim())
             ->addValidator(new Validator\StringLength([2, 128])));
 
         $this->addElement((new Element\Radio('visibility'))
@@ -93,8 +93,7 @@ class CategoryForm extends Form
                 2 => 'form.category.visibility.on.label',
                 1 => 'form.category.visibility.off.label',
                 0 => 'form.category.visibility.disabled.label',
-            ])
-        );
+            ]));
 
         //blank
         $this->addElement((new Element\Checkbox('blank'))
@@ -104,7 +103,7 @@ class CategoryForm extends Form
         $this->addElement((new Element\Text('redirectUri'))
                 ->setLabel('form.category.redirect.label')
                 ->addValidator(new Url())
-                ->addFilter(new Filter\StringTrim));
+                ->addFilter(new Filter\StringTrim()));
         //tylko jeśli ma template (jest stroną)
         if ($this->getRecord()->template && strpos($this->getRecord()->template, '/')) {
             //SEO
@@ -113,7 +112,7 @@ class CategoryForm extends Form
                 ->setOption('tab', 'seo')
                 ->setLabel('form.category.title.label')
                 ->setDescription('form.category.title.description')
-                ->addFilter(new Filter\StringTrim)
+                ->addFilter(new Filter\StringTrim())
                 ->addValidator(new Validator\StringLength([2, 128])));
 
             //meta description
@@ -130,7 +129,6 @@ class CategoryForm extends Form
             //własny uri
             $this->addElement((new Element\Text('customUri'))
                 ->setLabel('form.category.customUri.label')
-                //adres domyślny (bez baseUrl)
                 ->addFilter(new Filter\Lowercase())
                 ->addFilter(new Filter\StringTrim())
                 ->addFilter(new Filter\EmptyToNull())

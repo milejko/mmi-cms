@@ -8,7 +8,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CronExecuteCommand extends CommandAbstract
 {
-
     /**
      * Execute
      */
@@ -17,5 +16,4 @@ class CronExecuteCommand extends CommandAbstract
         \Cms\Model\Cron::run();
         return 0;
     }
-
 }

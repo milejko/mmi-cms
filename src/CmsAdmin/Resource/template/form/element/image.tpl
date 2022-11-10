@@ -9,7 +9,7 @@
     </div>
     <div class="mb-2">
         <input accept="image/jpeg,image/gif,image/png" type="file" onchange="
-            document.getElementById('{$_element->getId()}_img').src='{$baseUrl}/resource/topicAdmin/placeholder.jpg';
+            document.getElementById('{$_element->getId()}_img').src='/resource/topicAdmin/placeholder.jpg';
             if (undefined !== this.files[0]) {
                 document.getElementById('{$_element->getId()}_img').src = window.URL.createObjectURL(this.files[0]);
                 document.getElementById('{$_element->getId()}_size').innerHTML = (this.files[0].size / 1048576).toFixed(2) + ' MB';

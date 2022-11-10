@@ -49,7 +49,6 @@ namespace Cms\Orm;
 //</editor-fold>
 class CmsTagQuery extends \Mmi\Orm\Query
 {
-
     protected $_tableName = 'cms_tag';
 
     /**
@@ -59,8 +58,7 @@ class CmsTagQuery extends \Mmi\Orm\Query
      */
     public static function byName($tagName)
     {
-        return (new self)
+        return (new self())
                 ->whereTag()->equals($tagName);
     }
-
 }

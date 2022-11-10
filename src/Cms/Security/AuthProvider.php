@@ -26,7 +26,6 @@ use Psr\Log\LoggerInterface;
  */
 class AuthProvider implements AuthProviderInterface
 {
-
     /**
      * @var LoggerInterface
      */
@@ -46,8 +45,7 @@ class AuthProvider implements AuthProviderInterface
         LoggerInterface $logger,
         Request $request,
         ContainerInterface $container
-    )
-    {
+    ) {
         $this->logger       = $logger;
         $this->request      = $request;
         $this->container    = $container;
@@ -64,8 +62,7 @@ class AuthProvider implements AuthProviderInterface
         }
 
         //próby logowania lokalnie i ldap
-        if (
-            !$this->_localAuthenticate($record, $credential) && 
+        if (!$this->_localAuthenticate($record, $credential) &&
             !$this->_ldapAuthenticate($record, $credential)
         ) {
             $this->_updateUserFailedLogin($record);
@@ -92,7 +89,8 @@ class AuthProvider implements AuthProviderInterface
      * Wylogowanie
      */
     public function deauthenticate(): void
-    {}
+    {
+    }
 
     /**
      * Zwraca hash hasła zakodowany z "solą"
@@ -159,7 +157,7 @@ class AuthProvider implements AuthProviderInterface
         $record->save();
         $this->logger->info('Logged in: ' . $record->username);
         //nowy obiekt autoryzacji
-        $authRecord = new \Mmi\Security\AuthRecord;
+        $authRecord = new \Mmi\Security\AuthRecord();
         //ustawianie pól rekordu
         $authRecord->id = $record->id;
         $authRecord->name = $record->name;
@@ -222,12 +220,12 @@ class AuthProvider implements AuthProviderInterface
     protected function _findUserByIdentity($identity)
     {
         try {
-            return (new CmsAuthQuery)
+            return (new CmsAuthQuery())
                 ->whereActive()->equals(true)
-                ->andQuery((new CmsAuthQuery)
+                ->andQuery((new CmsAuthQuery())
                     ->whereUsername()->equals($identity)
                     ->orFieldEmail()->equals($identity)
-                    ->orFieldId()->equals((integer)$identity))
+                    ->orFieldId()->equals((int)$identity))
                 ->findFirst();
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());

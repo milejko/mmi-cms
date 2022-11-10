@@ -7,7 +7,6 @@ namespace Cms\Orm;
  */
 class CmsAuthRecord extends \Mmi\Orm\Record
 {
-
     public $id;
     public $lang;
     public $name;
@@ -48,5 +47,4 @@ class CmsAuthRecord extends \Mmi\Orm\Record
     {
         return implode(', ', $this->getRoles());
     }
-
 }

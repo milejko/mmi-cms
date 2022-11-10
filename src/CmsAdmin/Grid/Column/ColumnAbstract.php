@@ -29,9 +29,8 @@ use Mmi\Mvc\View;
  */
 abstract class ColumnAbstract extends \Mmi\OptionObject
 {
-
-    const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/text';
-    const TEMPLATE_LABEL = 'cmsAdmin/grid/label';
+    public const TEMPLATE_FILTER = 'cmsAdmin/grid/filter/text';
+    public const TEMPLATE_LABEL = 'cmsAdmin/grid/label';
 
     /**
      * Obiekt grida
@@ -208,5 +207,4 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
         }
         return parent::__call($name, $params);
     }
-
 }

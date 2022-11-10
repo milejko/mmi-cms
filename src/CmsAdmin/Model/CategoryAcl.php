@@ -50,5 +50,4 @@ class CategoryAcl extends Acl
         $this->pathPermissions[$role][$path] = $allow;
         return $this;
     }
-
 }

@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -18,7 +18,6 @@ use Cms\Orm\CmsAuthRoleRecord;
  */
 class Role
 {
-
     /**
      * Nadaje (i opcjonalnie usuwa) uprawnienia
      * @param integer $cmsAuthId id użytkownika cms
@@ -36,18 +35,17 @@ class Role
         //iteracja po rolach
         foreach ($roles as $roleId) {
             //rola istnieje
-            if (null !== (new CmsAuthRoleQuery)
+            if (null !== (new CmsAuthRoleQuery())
                     ->whereCmsRoleId()->equals($roleId)
                     ->andFieldCmsAuthId()->equals($cmsAuthId)
                     ->findFirst()) {
                 continue;
             }
             //zapis rekordu
-            $record = new CmsAuthRoleRecord;
+            $record = new CmsAuthRoleRecord();
             $record->cmsAuthId = $cmsAuthId;
             $record->cmsRoleId = $roleId;
             $record->save();
         }
     }
-
 }

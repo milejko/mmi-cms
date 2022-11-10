@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -38,11 +38,10 @@ class TagController extends Controller
      */
     public function deleteAction(Request $request)
     {
-        $tag = (new \Cms\Orm\CmsTagQuery)->findPk($request->id);
+        $tag = (new \Cms\Orm\CmsTagQuery())->findPk($request->id);
         if ($tag && $tag->delete()) {
             $this->getMessenger()->addMessage('messenger.tag.deleted', true);
         }
         $this->getResponse()->redirect('cmsAdmin', 'tag', 'index');
     }
-
 }

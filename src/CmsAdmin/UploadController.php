@@ -26,7 +26,6 @@ use Mmi\Mvc\Controller;
  */
 class UploadController extends Controller
 {
-
     /**
      * @Inject
      * @var ActionHelper
@@ -102,15 +101,15 @@ class UploadController extends Controller
     {
         $objectId = !empty($request->getPost()->objectId) ? $request->getPost()->objectId : null;
         switch ($request->getPost()->fileTypes) {
-            case 'images' :
+            case 'images':
                 //zapytanie o obrazki
                 $query = CmsFileQuery::imagesByObject($request->getPost()->object, $objectId);
                 break;
-            case 'notImages' :
+            case 'notImages':
                 //wszystkie pliki bez obrazków
                 $query = CmsFileQuery::notImagesByObject($request->getPost()->object, $objectId);
                 break;
-            default :
+            default:
                 //domyślne zapytanie o wszystkie pliki
                 $query = CmsFileQuery::byObject($request->getPost()->object, $objectId);
         }
@@ -465,5 +464,4 @@ class UploadController extends Controller
 
         return $posterFileName;
     }
-
 }

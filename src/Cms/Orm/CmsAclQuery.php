@@ -61,7 +61,5 @@ namespace Cms\Orm;
 //</editor-fold>
 class CmsAclQuery extends \Mmi\Orm\Query
 {
-
     protected $_tableName = 'cms_acl';
-
 }

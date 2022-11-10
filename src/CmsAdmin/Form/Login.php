@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -16,14 +16,12 @@ use Mmi\Security\AuthInterface;
 
 class Login extends \Cms\Form\Form
 {
-
     public function init()
     {
-
         $this->addElement((new Element\Text('username'))
             ->setLabel('form.login.username.label')
             ->setDescription('form.login.username.description')
-            ->addFilter(new \Mmi\Filter\StringTrim));
+            ->addFilter(new \Mmi\Filter\StringTrim()));
 
         $this->addElement((new Element\Password('password'))
             ->setLabel('form.login.password.label')
@@ -49,5 +47,4 @@ class Login extends \Cms\Form\Form
         $auth->setCredential($this->getElement('password')->getValue());
         return $auth->authenticate();
     }
-
 }

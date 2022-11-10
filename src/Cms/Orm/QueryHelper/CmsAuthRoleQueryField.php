@@ -33,5 +33,4 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsAuthRoleQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-
 }

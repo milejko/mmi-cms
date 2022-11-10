@@ -18,23 +18,22 @@ use Mmi\Form\Element\ElementAbstract;
  */
 class SelectColor extends ElementAbstract
 {
-
     //szablon początku pola
-    const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    public const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
     //szablon opisu
-    const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    public const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
     //szablon końca pola
-    const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    public const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
     //szablon błędów
-    const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    public const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
-    const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    public const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
     //field
-    const TEMPLATE_FIELD = 'cmsAdmin/form/element/selectColor';
+    public const TEMPLATE_FIELD = 'cmsAdmin/form/element/selectColor';
 
     //pliki js i css
-    const SELECT_COLOR_JS_URL  = '/resource/cmsAdmin/js/select-color.js';
-    const SELECT_COLOR_CSS_URL  = '/resource/cmsAdmin/css/select-color.css';
+    public const SELECT_COLOR_JS_URL  = '/resource/cmsAdmin/js/select-color.js';
+    public const SELECT_COLOR_CSS_URL  = '/resource/cmsAdmin/css/select-color.css';
 
     /**
      * Konstruktor

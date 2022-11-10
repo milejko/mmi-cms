@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -18,9 +18,9 @@ use Psr\Log\LoggerInterface;
 
 class Cron
 {
-    const MIN_EXECUTION_OFFSET = 200000;
-    const MAX_EXECUTION_OFFSET = 500000;
-    const SECONDS_PER_MINUTE = 60;
+    public const MIN_EXECUTION_OFFSET = 200000;
+    public const MAX_EXECUTION_OFFSET = 500000;
+    public const SECONDS_PER_MINUTE = 60;
 
     /**
      * Pobiera zadania crona
@@ -28,13 +28,13 @@ class Cron
     public static function run()
     {
         //czyszczenie zablokowanych rekordów
-        foreach ((new CmsCronQuery)
+        foreach ((new CmsCronQuery())
             ->activeLockExpired()
             ->find() as $lockedCronRecord) {
             $lockedCronRecord->unlockAfterExecution();
         }
         //iteracja po liście zadań do wykonania
-        foreach ((new CmsCronQuery)->activeUnlocked()->find() as $listedCronRecord) {
+        foreach ((new CmsCronQuery())->activeUnlocked()->find() as $listedCronRecord) {
             //sprawdzanie warunku wykonania np. */3 * * * *
             if (!self::_getToExecute($listedCronRecord)) {
                 continue;
@@ -44,7 +44,7 @@ class Cron
             //ponowne łączenie - mogło upłynąć sporo czasu przy procesowaniu poprzedniego crona
             App::$di->get(DbInterface::class)->connect();
             //sprawdzenie czy rekord jest odblokowany
-            if (null === ($cronRecord = (new CmsCronQuery)->activeUnlocked()->findPk($listedCronRecord->id))) {
+            if (null === ($cronRecord = (new CmsCronQuery())->activeUnlocked()->findPk($listedCronRecord->id))) {
                 continue;
             }
             //wykonany juz w tej minucie
@@ -88,7 +88,7 @@ class Cron
     }
 
     /**
-     * Dopasowuje 
+     * Dopasowuje
      * @param integer $current
      * @param integer $value
      * @return boolean

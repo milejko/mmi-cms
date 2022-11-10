@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2017 Mariusz Miłejko (mariusz@milejko.pl)
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
@@ -15,9 +15,8 @@ namespace CmsAdmin\Mvc\ViewHelper;
  */
 class AdminMessenger extends \Mmi\Mvc\ViewHelper\Messenger
 {
-
     //szablon menu
-    CONST TEMPLATE = 'cmsAdmin/mvc/view-helper/admin-messenger';
+    public const TEMPLATE = 'cmsAdmin/mvc/view-helper/admin-messenger';
 
     /**
      * Metoda renderingu
@@ -27,5 +26,4 @@ class AdminMessenger extends \Mmi\Mvc\ViewHelper\Messenger
     {
         return parent::messenger();
     }
-
 }

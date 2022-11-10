@@ -103,7 +103,5 @@ namespace Cms\Orm;
 //</editor-fold>
 class CmsMailQuery extends \Mmi\Orm\Query
 {
-
     protected $_tableName = 'cms_mail';
-
 }

@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -16,11 +16,10 @@ use Mmi\Security\AuthInterface;
 
 class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract
 {
-
     /**
      * Nazwa sztucznego korzenia
      */
-    CONST ROOT = '';
+    public const ROOT = '';
 
     /**
      * Renderuje drzewko pod obsługę przez plugin jsTree
@@ -80,14 +79,14 @@ class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract
         foreach ($node['children'] as $child) {
             $icon = '';
             if (!$child['active']) {
-                $icon = $this->view->baseUrl . '/resource/cmsAdmin/images/folder-inactive.png';
+                $icon = '/resource/cmsAdmin/images/folder-inactive.png';
             }
             $selected = 'false';
             $disabled = 'false';
             //sprawdzenie uprawnień do węzła
             if (!$acl->isAllowed($auth->getRoles(), $child['id'])) {
                 $disabled = 'true';
-                $icon = $this->view->baseUrl . '/resource/cmsAdmin/images/folder-disabled.png';
+                $icon = '/resource/cmsAdmin/images/folder-disabled.png';
             }
             $type = 'default';
             if (!isset($child['children']) || !count($child['children'])) {
@@ -102,5 +101,4 @@ class JsTree extends \Mmi\Mvc\ViewHelper\HelperAbstract
         $html .= '</ul>';
         return $html;
     }
-
 }

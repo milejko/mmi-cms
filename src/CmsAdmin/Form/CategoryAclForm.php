@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -22,7 +22,6 @@ use Mmi\Cache\CacheInterface;
  */
 class CategoryAclForm extends \Cms\Form\Form
 {
-
     public const SCOPE_CONFIG_OPTION_NAME = 'scope';
     private SkinsetModel $skinsetModel;
 
@@ -38,7 +37,7 @@ class CategoryAclForm extends \Cms\Form\Form
         $this->addElement((new Element\Tree('allow'))
             ->setLabel('form.categoryAcl.allow.label')
             ->setMultiple()
-            ->setValue(implode(';', (new \Cms\Orm\CmsCategoryAclQuery)
+            ->setValue(implode(';', (new \Cms\Orm\CmsCategoryAclQuery())
                 ->whereCmsRoleId()->equals($this->getOption('roleId'))
                 ->andFieldAccess()->equals('allow')
                 ->findPairs('id', 'cms_category_id')))
@@ -48,7 +47,7 @@ class CategoryAclForm extends \Cms\Form\Form
         $this->addElement((new Element\Tree('deny'))
             ->setLabel('form.categoryAcl.deny.label')
             ->setMultiple()
-            ->setValue(implode(';', (new \Cms\Orm\CmsCategoryAclQuery)
+            ->setValue(implode(';', (new \Cms\Orm\CmsCategoryAclQuery())
                 ->whereCmsRoleId()->equals($this->getOption('roleId'))
                 ->andFieldAccess()->equals('deny')
                 ->findPairs('id', 'cms_category_id')))
@@ -65,7 +64,7 @@ class CategoryAclForm extends \Cms\Form\Form
     public function beforeSave()
     {
         //czyszczenie uprawnień dla roli
-        (new \Cms\Orm\CmsCategoryAclQuery)
+        (new \Cms\Orm\CmsCategoryAclQuery())
             ->join('cms_category')->on('cms_category_id')
             ->where('template', 'cms_category')->like($this->getOption(self::SCOPE_CONFIG_OPTION_NAME) . '%')
             ->whereCmsRoleId()->equals($this->getOption('roleId'))
@@ -76,7 +75,7 @@ class CategoryAclForm extends \Cms\Form\Form
             if (!$categoryId) {
                 continue;
             }
-            $aclRecord = new \Cms\Orm\CmsCategoryAclRecord;
+            $aclRecord = new \Cms\Orm\CmsCategoryAclRecord();
             $aclRecord->access = 'allow';
             $aclRecord->cmsCategoryId = $categoryId;
             $aclRecord->cmsRoleId = $this->getOption('roleId');
@@ -88,7 +87,7 @@ class CategoryAclForm extends \Cms\Form\Form
             if (!$categoryId) {
                 continue;
             }
-            $aclRecord = new \Cms\Orm\CmsCategoryAclRecord;
+            $aclRecord = new \Cms\Orm\CmsCategoryAclRecord();
             $aclRecord->access = 'deny';
             $aclRecord->cmsCategoryId = $categoryId;
             $aclRecord->cmsRoleId = $this->getOption('roleId');
@@ -113,6 +112,6 @@ class CategoryAclForm extends \Cms\Form\Form
             $category['children'] = $this->getFilteredTree($category['children']);
             $filteredTree[] = $category;
         }
-        return $filteredTree;    
+        return $filteredTree;
     }
 }

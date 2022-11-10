@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -10,21 +10,20 @@
 
 namespace CmsAdmin\Form;
 
-use \Mmi\Orm\CacheRecord,
-    \Mmi\Orm\CacheQuery;
+use Mmi\Orm\CacheRecord;
+use Mmi\Orm\CacheQuery;
 
 /**
  * Model blokad zapisu treści
  */
 class CategoryLockModel
 {
-
     //prefix w buforze
-    const CACHE_PREFIX = 'category-lock';
+    public const CACHE_PREFIX = 'category-lock';
     //czas blokady (na transakcję)
-    const LOCK_TIMEOUT = 5;
+    public const LOCK_TIMEOUT = 5;
     //dodatkowa blokada po zapisie
-    const RELEASE_TIMEOUT = 3;
+    public const RELEASE_TIMEOUT = 3;
 
     /**
      * Identyfikator kategorii
@@ -49,8 +48,8 @@ class CategoryLockModel
     public function lock()
     {
         //wyszukiwanie blokady dla kategorii
-        if (null === $lockRecord = (new CacheQuery)->findPk($lockKey = self::CACHE_PREFIX . $this->_categoryId)) {
-            $lockRecord = new CacheRecord;
+        if (null === $lockRecord = (new CacheQuery())->findPk($lockKey = self::CACHE_PREFIX . $this->_categoryId)) {
+            $lockRecord = new CacheRecord();
             $lockRecord->id = $lockKey;
             $lockRecord->data = true;
         }
@@ -70,7 +69,7 @@ class CategoryLockModel
     public function releaseLock()
     {
         //wyszukiwanie blokady dla kategorii
-        if (null === $lockRecord = (new CacheQuery)->findPk($lockKey = self::CACHE_PREFIX . $this->_categoryId)) {
+        if (null === $lockRecord = (new CacheQuery())->findPk($lockKey = self::CACHE_PREFIX . $this->_categoryId)) {
             //brak blokady
             return true;
         }
@@ -78,5 +77,4 @@ class CategoryLockModel
         $lockRecord->ttl = time() + self::RELEASE_TIMEOUT;
         return $lockRecord->save();
     }
-
 }

@@ -7,7 +7,7 @@ var plupload = plupload || {};
 
 PLUPLOADCONF.settings = {
     runtimes: 'html5',
-    url: request.baseUrl + '/cmsAdmin/upload/plupload',
+    url: '/cmsAdmin/upload/plupload',
     file_data_name: 'file',
     chunk_size: '2mb',
     rename: false,
@@ -17,8 +17,8 @@ PLUPLOADCONF.settings = {
     multiple_queues: true,
     multipart: true,
     max_retries: 3,
-    flash_swf_url: request.baseUrl + '/resource/cmsAdmin/js/plupload/Moxie.swf',
-    silverlight_xap_url: request.baseUrl + '/resource/cmsAdmin/js/plupload/Moxie.xap',
+    flash_swf_url: '/resource/cmsAdmin/js/plupload/Moxie.swf',
+    silverlight_xap_url: '/resource/cmsAdmin/js/plupload/Moxie.xap',
     max_file_size: 0,
     max_file_cnt: 0,
     filters: {
@@ -88,7 +88,7 @@ PLUPLOADCONF.settings.init = {
                     PLUPLOADCONF.editable(up, file);
                 }
             } else if (file.type.indexOf('image') >= 0) { //plik odtworzony z serwera - pobranie minaiturki
-                $.post(request.baseUrl + '/cmsAdmin/upload/thumbnail', { cmsFileId: file.cmsFileId }, 'json')
+                $.post('/cmsAdmin/upload/thumbnail', { cmsFileId: file.cmsFileId }, 'json')
                     .done(function (data) {
                         if (data.result === 'OK' && data.url) {
                             $('div#' + up.getOption('form_element_id') + ' li#' + file.id + ' div.plupload_file_dummy').html('<img src="' + data.url + '" alt="" />');
@@ -129,7 +129,7 @@ PLUPLOADCONF.settings.init = {
                         title: 'Usunąć plik?',
                         buttons: {
                             'Usuń': function () {
-                                $.post(request.baseUrl + '/cmsAdmin/upload/delete', { cmsFileId: file.cmsFileId, object: up.getOption('form_object'), objectId: up.getOption('form_object_id'), afterDelete: up.getOption('after_delete') }, 'json')
+                                $.post('/cmsAdmin/upload/delete', { cmsFileId: file.cmsFileId, object: up.getOption('form_object'), objectId: up.getOption('form_object_id'), afterDelete: up.getOption('after_delete') }, 'json')
                                     .done(function (data) {
                                         if (data.result === 'OK') {
                                             $('div#' + up.getOption('form_element_id') + ' li#' + file.id).remove();
@@ -225,13 +225,13 @@ PLUPLOADCONF.settings.ready = function (event, args) {
             var editIcon = $(this);
             editIcon.removeClass('ui-icon-pencil').addClass('ui-icon-gear');
             //okienko edycji - pobieramy dane rekordu z bazy
-            $.post(request.baseUrl + '/cmsAdmin/upload/details', { cmsFileId: file.cmsFileId }, 'json')
+            $.post('/cmsAdmin/upload/details', { cmsFileId: file.cmsFileId }, 'json')
                 .done(function (data) {
                     if (data.result === 'OK' && data.record) {
 
                         //refresh background select
                         if (args.up.getOption('preview')) {
-                            $.post(request.baseUrl + '/?module=commonAdmin&controller=widget&action=multimediaBackgroundJson', { idrecord: args.up.getOption('form_object_id') }, 'json')
+                            $.post('/?module=commonAdmin&controller=widget&action=multimediaBackgroundJson', { idrecord: args.up.getOption('form_object_id') }, 'json')
                                 .done(function (dane) {
                                     var selBackground = $('#commonadmin-form-multimediaeditform-uploadMultimedia-background');
                                     selBackground.empty();
@@ -295,7 +295,7 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                                     if (typeof tinymce !== "undefined") {
                                         tinymce.triggerSave();
                                     }
-                                    $.post(request.baseUrl + '/cmsAdmin/upload/describe', { cmsFileId: file.cmsFileId, form: $(edit + ' input,' + edit + ' textarea,' + edit + ' select').serializeArray(), afterEdit: args.up.getOption('after_edit') }, 'json')
+                                    $.post('/cmsAdmin/upload/describe', { cmsFileId: file.cmsFileId, form: $(edit + ' input,' + edit + ' textarea,' + edit + ' select').serializeArray(), afterEdit: args.up.getOption('after_edit') }, 'json')
                                         .done(function (data) {
                                             if (data.result === 'OK') {
                                                 //pobranie i odtworzenie aktualnej listy z serwera
@@ -312,7 +312,7 @@ PLUPLOADCONF.settings.ready = function (event, args) {
                                         });
                                 },
                                 'Pobierz plik': function () {
-                                    window.open(request.baseUrl + '/cmsAdmin/upload/download?id=' + file.cmsFileId + '&object=' + args.up.getOption('form_object') + '&objectId=' + args.up.getOption('form_object_id'), '_blank');
+                                    window.open('/cmsAdmin/upload/download?id=' + file.cmsFileId + '&object=' + args.up.getOption('form_object') + '&objectId=' + args.up.getOption('form_object_id'), '_blank');
                                 },
                                 'Anuluj': function () {
                                     $(this).dialog('close');
@@ -446,7 +446,7 @@ PLUPLOADCONF.getCurrent = function (up, pluploadObject) {
             return;
         }
     }
-    $.post(request.baseUrl + '/cmsAdmin/upload/current', { object: up.getOption('form_object'), objectId: up.getOption('form_object_id'), fileTypes: up.getOption('file_types') }, 'json')
+    $.post('/cmsAdmin/upload/current', { object: up.getOption('form_object'), objectId: up.getOption('form_object_id'), fileTypes: up.getOption('file_types') }, 'json')
         .done(function (data) {
             if (data.result === 'OK') {
                 var i, cf;
@@ -498,7 +498,7 @@ PLUPLOADCONF.sortable = function (up) {
                     files[files.length] = file.cmsFileId;
                 }
             });
-            $.post(request.baseUrl + '/cmsAdmin/upload/sort', { order: files }, 'json')
+            $.post('/cmsAdmin/upload/sort', { order: files }, 'json')
                 .done(function (data) {
                     if (data.result !== 'OK') {
                         up.trigger("Error", { code: 180, message: 'Zapis kolejności plików nie powiódł się' });

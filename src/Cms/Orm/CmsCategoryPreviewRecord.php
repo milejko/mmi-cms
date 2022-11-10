@@ -13,7 +13,7 @@ class CmsCategoryPreviewRecord extends CmsCategoryRecord
     {
         $this->setFromArray($cmsCategoryRecord->toArray());
         if ($this->cmsCategoryOriginalId) {
-            $this->originalCmsCategoryRecord = (new CmsCategoryQuery)->findPk($this->cmsCategoryOriginalId);
+            $this->originalCmsCategoryRecord = (new CmsCategoryQuery())->findPk($this->cmsCategoryOriginalId);
         }
         return $this;
     }
@@ -33,5 +33,4 @@ class CmsCategoryPreviewRecord extends CmsCategoryRecord
         }
         return $this->originalCmsCategoryRecord->getChildrenRecords();
     }
-
 }

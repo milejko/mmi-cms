@@ -9,7 +9,6 @@ use Mmi\App\KernelException;
  */
 class CmsWidgetConfig
 {
-
     /**
      * Nazwa widgeta
      * @var string
@@ -177,5 +176,4 @@ class CmsWidgetConfig
     {
         return $this->_controllerClassName;
     }
-
 }

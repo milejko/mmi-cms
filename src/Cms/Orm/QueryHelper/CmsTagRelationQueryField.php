@@ -39,5 +39,4 @@ namespace Cms\Orm\QueryHelper;
  */
 class CmsTagRelationQueryField extends \Mmi\Orm\QueryHelper\QueryField
 {
-
 }

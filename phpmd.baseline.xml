@@ -1,0 +1,438 @@
+<?xml version="1.0"?>
+<phpmd-baseline>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Cms/AbstractTemplateController.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Cms/AbstractTemplateController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/AbstractTemplateController.php" method="getTransportObject"/>
+  <violation rule="PHPMD\Rule\CleanCode\ElseExpression" file="src/Cms/AbstractTemplateController.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Cms/AbstractWidgetController.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Api/BreadcrumbData.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Cms/Api/BreadcrumbData.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Api/RedirectTransport.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Api/Service/MenuService.php" method="getMenus"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Api/SkinConfigTransport.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Api/SkinData.php"/>
+  <violation rule="PHPMD\Rule\Design\TooManyFields" file="src/Cms/Api/TemplateDataTransport.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Api/TemplateDataTransport.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Cms/ApiController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/ApiController.php" method="getCategoryPreviewAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/ApiController.php" method="redirectIdAction"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Cms/ApiController.php" method="redirectIdAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/ApiController.php" method="getTransportObject"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/ApiController.php" method="getCategoryTransport"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/ApiController.php" method="getRedirectOrErrorTransport"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/ApiController.php" method="getCategoryId"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/App/CmsAppEventInterceptor.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/App/CmsSectionConfig.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Cms/App/CmsTemplateConfig.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/App/CmsWidgetConfig.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Cms/CategoryController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/CategoryController.php" method="redactorPreviewAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/CategoryController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/CategoryController.php" method="_getPublishedCategoryByUri"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/CategoryController.php" method="_getPublishedCategoryByUri"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/CategoryController.php" method="_checkCategory"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/CategoryController.php" method="_renderHtml"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/CategoryController.php" method="_decorateHtmlWithEditButton"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/CategoryController.php" method="_getCategoryCacheLifetime"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/CategoryController.php" method="_getCategoryCacheLifetime"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/CategoryController.php" method="_redirectOrNotFound"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/CategoryController.php" method="_redirectOrNotFound"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/CategoryController.php" method="_hasRedactorRole"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Cms/Command/CategoryRebuildCommand.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Cms/Command/CronExecuteCommand.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Cms/Command/CronExecuteCommand.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Command/FileGarbageCollectorCommand.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Cms/Command/FileGarbageCollectorCommand.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Command/FileGarbageCollectorCommand.php" method="_scanDir"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Command/FileGarbageCollectorCommand.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Command/FileGarbageCollectorCommand.php" method="_checkForFile"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Command/FileGarbageCollectorCommand.php" method="_checkForFile"/>
+  <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/Cms/Command/FileGarbageCollectorCommand.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Command/FileGarbageCollectorCommand.php" method="_reportLine"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Cms/CronController.php"/>
+  <violation rule="PHPMD\Rule\UnusedPrivateField" file="src/Cms/FileController.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Cms/FileController.php" method="scalerAction"/>
+  <violation rule="PHPMD\Rule\Design\EmptyCatchBlock" file="src/Cms/FileController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Cms/FileController.php"/>
+  <violation rule="PHPMD\Rule\Design\ExitExpression" file="src/Cms/FileController.php"/>
+  <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/Cms/FileController.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Cms/FileController.php" method="listLayoutAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Form/Element/Antirobot.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Cms/Form/Element/Antirobot.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Form/Element/DateTimePicker.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/DateTimePicker.php" method="_formatDate"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Form/Element/Image.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Cms/Form/Element/Image.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/Image.php" method="_handlePost"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Form/Element/MultiCheckbox.php"/>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Cms/Form/Element/MultiCheckbox.php"/>
+  <violation rule="PHPMD\Rule\Design\WeightedMethodCount" file="src/Cms/Form/Element/MultiField.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Form/Element/MultiField.php"/>
+  <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/Cms/Form/Element/MultiField.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Form/Element/MultiUpload.php" method="onFormSaved"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Cms/Form/Element/MultiUpload.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/MultiUpload.php" method="_createTempFiles"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/MultiUpload.php" method="_getFileObjectByClassName"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Cms/Form/Element/MultiUploadLegacy.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/MultiUploadLegacy.php" method="_getFileObjectByClassName"/>
+  <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="src/Cms/Form/Element/Plupload.php"/>
+  <violation rule="PHPMD\Rule\Design\WeightedMethodCount" file="src/Cms/Form/Element/Plupload.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Cms/Form/Element/Plupload.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Cms/Form/Element/Plupload.php" method="fetchField"/>
+  <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/Cms/Form/Element/Plupload.php" method="fetchField"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/Plupload.php" method="_renderImprintElements"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Cms/Form/Element/Plupload.php" method="_renderImprintElement"/>
+  <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/Cms/Form/Element/Plupload.php" method="_renderImprintElement"/>
+  <violation rule="PHPMD\Rule\Design\LongMethod" file="src/Cms/Form/Element/Plupload.php" method="_renderImprintElement"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseVariableName" file="src/Cms/Form/Element/Plupload.php" method="_renderImprintElement"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/Plupload.php" method="_renderImprintElement"/>
+  <violation rule="PHPMD\Rule\CleanCode\ElseExpression" file="src/Cms/Form/Element/Plupload.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Form/Element/TinyMce.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/TinyMce.php" method="_renderConfig"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Form/Element/TinyMce.php" method="_renderConfigOption"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/TinyMce.php" method="_renderConfigOption"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Form/Element/TinyMce.php" method="_renderConfigOptionN"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/TinyMce.php" method="_renderConfigOptionN"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/TinyMce.php" method="_baseConfig"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Cms/Form/Element/TinyMce.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/TinyMce.php" method="_modeSimple"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/TinyMce.php" method="_modeAdvanced"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Form/Element/Tree.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Cms/Form/Element/Tree.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/Tree.php" method="_getHtmlTree"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Cms/Form/Element/Tree.php" method="_generateTree"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/Tree.php" method="_generateTree"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/Tree.php" method="_generateJs"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Form/Element/UploaderElementAbstract.php" method="onFormSaved"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Cms/Form/Element/UploaderElementAbstract.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/UploaderElementAbstract.php" method="_createTempFiles"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/UploaderElementAbstract.php" method="_getFileObjectByClassName"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Model/Acl.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Model/CategoryCopy.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/CategoryCopy.php" method="_clear"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/CategoryCopy.php" method="_copyAll"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/CategoryCopy.php" method="_copyCategory"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/CategoryCopy.php" method="_createCopyRecord"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Model/CategoryCopy.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/CategoryCopy.php" method="_generateCategoryName"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/CategoryCopy.php" method="_generateCategoryName"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/CategoryCopy.php" method="_copyCategoryFiles"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Cms/Model/CategoryCopy.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/CategoryCopy.php" method="_copyWidgetRelationFiles"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/CategoryCopy.php" method="_copyTagRelations"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/CategoryCopy.php" method="_copyWidgetRelations"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Model/CategoryDraft.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Cms/Model/CategoryDraft.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/CategoryDraft.php" method="createAndGetDraftForUser"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Model/CategoryDraft.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/CategoryDraft.php" method="_copyCategory"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/CategoryDraft.php" method="_generateCategoryName"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Model/CategoryModel.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/CategoryModel.php" method="searchChildren"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Model/CategoryValidationModel.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Model/CategoryVersion.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/CategoryVersion.php" method="_copyCategory"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Model/CategoryVersion.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Model/CategoryWidgetModel.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/CategoryWidgetModel.php" method="__construct"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Cms/Model/CategoryWidgetModel.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Model/CategoryWidgetModel.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/CategoryWidgetModel.php" method="sortBySerial"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/Cron.php" method="run"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Model/Cron.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/Cron.php" method="_getToExecute"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Cms/Model/Cron.php" method="_valueMatch"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/Cron.php" method="_valueMatch"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/File.php" method="appendFile"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/File.php" method="_checkAndCopyFile"/>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Cms/Model/File.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/File.php" method="_copyFile"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/File.php" method="_copyFile"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/File.php" method="sortBySerial"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/File.php" method="_updateRecordFromRequestFile"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Model/FileSystemModel.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Model/FileSystemModel.php"/>
+  <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/Cms/Model/FileSystemModel.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/Mail.php" method="pushEmail"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Cms/Model/Mail.php" method="pushEmail"/>
+  <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/Cms/Model/Mail.php" method="pushEmail"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Model/Mail.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Cms/Model/Mail.php" method="send"/>
+  <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/Cms/Model/Mail.php" method="send"/>
+  <violation rule="PHPMD\Rule\Design\LongMethod" file="src/Cms/Model/Mail.php" method="send"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Cms/Model/Mail.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Cms/Model/Role.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Model/SectionModel.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Model/SkinsetModel.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/SkinsetModel.php" method="getAllowedTemplateKeysBySkinKey"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/SkinsetModel.php" method="getSectionsByKey"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/SkinsetModel.php" method="getTemplateConfigByKey"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/SkinsetModel.php" method="getSectionConfigByKey"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/SkinsetModel.php" method="getWidgetConfigByKey"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Model/TemplateModel.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Cms/Model/TemplateModel.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/TemplateModel.php" method="renderDisplayAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/TemplateModel.php" method="getTransportObject"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/TemplateModel.php" method="invokeDeleteAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/TemplateModel.php" method="invokeDecorateEditForm"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/TemplateModel.php" method="invokeBeforeSaveEditForm"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/TemplateModel.php" method="invokeAfterSaveEditForm"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/TemplateModel.php" method="_createController"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/TemplateModel.php" method="_getTemplatePrefix"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Model/WidgetModel.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Cms/Model/WidgetModel.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/WidgetModel.php" method="__construct"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/WidgetModel.php" method="getDataObject"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/WidgetModel.php" method="_createController"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/WidgetModel.php" method="_getTemplatePrefix"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Mvc/ViewHelper/CategoryAclAllowed.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Mvc/ViewHelper/CategoryWidgetDisplay.php" method="categoryWidgetDisplay"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsAclQuery.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsAuthQuery.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsAuthRecord.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsAuthRoleQuery.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsCategoryAclQuery.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsCategoryQuery.php"/>
+  <violation rule="PHPMD\Rule\Design\TooManyFields" file="src/Cms/Orm/CmsCategoryRecord.php"/>
+  <violation rule="PHPMD\Rule\Design\WeightedMethodCount" file="src/Cms/Orm/CmsCategoryRecord.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Cms/Orm/CmsCategoryRecord.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Orm/CmsCategoryRecord.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Orm/CmsCategoryRecord.php" method="_calculatePathAndUri"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsCategoryRecord.php" method="_calculatePathAndUri"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsCategoryRecord.php" method="_insert"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsCategoryRecord.php" method="_update"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Orm/CmsCategoryRecord.php" method="getWidgetModel"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Orm/CmsCategoryRecord.php" method="getParentRecord"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Orm/CmsCategoryRecord.php" method="getChildrenRecords"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsCategoryRecord.php" method="_rebuildChildren"/>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Cms/Orm/CmsCategoryRecord.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsCategoryRecord.php" method="_softDeleteChildren"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsCategoryRecord.php" method="_getPublishedChildren"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsCategoryRecord.php" method="_sortChildren"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsCategoryWidgetCategoryQuery.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Orm/CmsCategoryWidgetCategoryRecord.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsCategoryWidgetCategoryRecord.php" method="_generateUuid"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsCronQuery.php"/>
+  <violation rule="PHPMD\Rule\Design\TooManyFields" file="src/Cms/Orm/CmsCronRecord.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsCronRecord.php" method="_insert"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsFileQuery.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Orm/CmsFileRecord.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsFileRecord.php" method="_insert"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsFileRecord.php" method="_update"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsMailDefinitionQuery.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsMailDefinitionRecord.php" method="_update"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsMailDefinitionRecord.php" method="_insert"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsMailQuery.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsMailRecord.php" method="_insert"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsMailServerQuery.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsMailServerRecord.php" method="_update"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsMailServerRecord.php" method="_insert"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsRoleQuery.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Orm/CmsRoleRecord.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsTagQuery.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsTagRelationQuery.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Security/AuthProvider.php" method="authenticate"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Security/AuthProvider.php" method="idAuthenticate"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Security/AuthProvider.php" method="_authFailed"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Security/AuthProvider.php" method="_authSuccess"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Security/AuthProvider.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Security/AuthProvider.php" method="_localAuthenticate"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Security/AuthProvider.php" method="_ldapAuthenticate"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Security/AuthProvider.php" method="_findUserByIdentity"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Security/AuthProvider.php" method="_updateUserFailedLogin"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Cms/Validator/MaxNumberCmsFiles.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Cms/Validator/MaxNumberCmsFiles.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Validator/MaxNumberCmsFiles.php" method="_getObjectName"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Cms/Validator/MaxNumberMultifieldTiles.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Cms/Validator/MaxNumberMultifieldTiles.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Cms/Validator/MinNumberCmsFiles.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Cms/Validator/MinNumberCmsFiles.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Validator/MinNumberCmsFiles.php" method="_getObjectName"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Cms/Validator/MinNumberMultifieldTiles.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Cms/Validator/MinNumberMultifieldTiles.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Cms/Validator/NotEmptyCmsFiles.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Cms/Validator/NotEmptyCmsFiles.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Validator/NotEmptyCmsFiles.php" method="_getObjectName"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/AclController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/AclController.php" method="deleteRoleAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\ElseExpression" file="src/CmsAdmin/AclController.php"/>
+  <violation rule="PHPMD\Rule\Design\LongMethod" file="src/CmsAdmin/App/CmsNavigationConfig.php" method="__construct"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/AuthController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/CategoryAclController.php"/>
+  <violation rule="PHPMD\Rule\Design\WeightedMethodCount" file="src/CmsAdmin/CategoryController.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/CmsAdmin/CategoryController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryController.php" method="indexAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/CategoryController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryController.php" method="previewAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryController.php" method="editAction"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/CmsAdmin/CategoryController.php" method="editAction"/>
+  <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/CmsAdmin/CategoryController.php" method="editAction"/>
+  <violation rule="PHPMD\Rule\Design\LongMethod" file="src/CmsAdmin/CategoryController.php" method="editAction"/>
+  <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/CmsAdmin/CategoryController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryController.php" method="moveAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryController.php" method="deleteAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryController.php" method="copyAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryController.php" method="sortAction"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/CmsAdmin/CategoryController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryController.php" method="_prepareDraft"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/CategoryController.php" method="_prepareDraft"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryTrashController.php" method="restoreAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryWidgetRelationController.php" method="editAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/CategoryWidgetRelationController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryWidgetRelationController.php" method="deleteAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryWidgetRelationController.php" method="toggleAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryWidgetRelationController.php" method="sortAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryWidgetRelationController.php" method="getCategoryOrRedirect"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/CmsAdmin/ConfigController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/CronController.php"/>
+  <violation rule="PHPMD\Rule\Design\ExitExpression" file="src/CmsAdmin/DbController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/FileController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/FileController.php" method="editAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/CmsAdmin/FileController.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/CmsAdmin/Form/Auth.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Form/Auth.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Form/Auth.php" method="beforeSave"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/CmsAdmin/Form/Auth.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Form/CategoryAclForm.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Form/CategoryAclForm.php" method="getFilteredTree"/>
+  <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/CmsAdmin/Form/CategoryAclForm.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/CmsAdmin/Form/CategoryForm.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/CmsAdmin/Form/CategoryLockModel.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Form/CategoryLockModel.php" method="lock"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Form/CategoryLockModel.php" method="releaseLock"/>
+  <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/CmsAdmin/Form/CategoryLockModel.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Form/CategoryMoveForm.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Form/CategoryMoveForm.php" method="getFilteredTree"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/CmsAdmin/Form/Contact.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Form/Cron.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Form/Login.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Form/Mail/Definition.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/CmsAdmin/Form/Mail/Definition.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Form/Mail/Server.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Form/Password.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Form/Role.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/CmsAdmin/Grid/Column/CheckboxColumn.php"/>
+  <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/CmsAdmin/Grid/Column/CheckboxColumn.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/CmsAdmin/Grid/Column/CheckboxRequestHandler.php"/>
+  <violation rule="PHPMD\Rule\Design\ExitExpression" file="src/CmsAdmin/Grid/Column/CheckboxRequestHandler.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Grid/Column/CheckboxRequestHandler.php" method="_changeRecord"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Grid/Column/CheckboxRequestHandler.php" method="_changeRecord"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/CmsAdmin/Grid/Column/ColumnAbstract.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\ElseExpression" file="src/CmsAdmin/Grid/Column/ColumnAbstract.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/CmsAdmin/Grid/Column/CustomColumn.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Grid/Column/JsonColumn.php" method="renderCell"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Grid/Column/JsonColumn.php" method="_renderRecursive"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Grid/Column/JsonColumn.php" method="_filterField"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Grid/Column/JsonColumn.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Grid/Column/OperationColumn.php" method="renderCell"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Grid/Column/OperationColumn.php" method="_parseParams"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Grid/Column/TextColumn.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Grid/Column/TextareaColumn.php" method="renderCell"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Grid/Column/TextareaColumn.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/CmsAdmin/Grid/Grid.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/CmsAdmin/Grid/GridExporter.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Grid/GridExporter.php" method="_getHeader"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Grid/GridExporter.php" method="_getData"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Grid/GridExporter.php" method="_getData"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/CmsAdmin/Grid/GridPaginator.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/CmsAdmin/Grid/GridRenderer.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/CmsAdmin/Grid/GridRequestHandler.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Grid/GridRequestHandler.php" method="_handleCsvExporter"/>
+  <violation rule="PHPMD\Rule\Design\ExitExpression" file="src/CmsAdmin/Grid/GridRequestHandler.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Grid/GridRequestHandler.php" method="_retrievePostFilter"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Grid/GridRequestHandler.php" method="_retrievePostOrder"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Grid/GridRequestHandler.php" method="_rebuildFilter"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Grid/GridRequestHandler.php" method="_rebuildFilter"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Grid/GridRequestHandler.php" method="_rebuildOrder"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Grid/GridRequestHandler.php" method="_rebuildOrder"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Grid/GridRequestHandler.php" method="_render"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/CmsAdmin/Grid/GridState.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Grid/GridState.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/CmsAdmin/Grid/GridState.php" method="_applyFilters"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Grid/GridState.php" method="_applyFilters"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Grid/GridState.php" method="_applyOrder"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/IndexController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/MailController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/MailController.php" method="previewAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/CmsAdmin/MailController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/MailDefinitionController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/MailServerController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Model/CategoryAcl.php" method="isRoleAllowed"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Model/CategoryAclModel.php" method="__construct"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Model/CategoryAclModel.php"/>
+  <violation rule="PHPMD\Rule\Design\TooManyFields" file="src/CmsAdmin/Model/PluploadHandler.php"/>
+  <violation rule="PHPMD\Rule\Design\WeightedMethodCount" file="src/CmsAdmin/Model/PluploadHandler.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/CmsAdmin/Model/PluploadHandler.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/CmsAdmin/Model/PluploadHandler.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\ElseExpression" file="src/CmsAdmin/Model/PluploadHandler.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Model/PluploadHandler.php" method="_setRequestAndResponse"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/CmsAdmin/Model/PluploadHandler.php" method="_prepareUploadData"/>
+  <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/CmsAdmin/Model/PluploadHandler.php" method="_prepareUploadData"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Model/PluploadHandler.php" method="_prepareUploadData"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Model/PluploadHandler.php" method="_setResponseHeaders"/>
+  <violation rule="PHPMD\Rule\CleanCode\ErrorControlOperator" file="src/CmsAdmin/Model/PluploadHandler.php" method="_createTargetDir"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Model/PluploadHandler.php" method="_createTargetDir"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseVariableName" file="src/CmsAdmin/Model/PluploadHandler.php" method="_setError"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Model/PluploadHandler.php" method="_setError"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Model/PluploadHandler.php" method="_multipart"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Model/PluploadHandler.php" method="_input"/>
+  <violation rule="PHPMD\Rule\CleanCode\ErrorControlOperator" file="src/CmsAdmin/Model/PluploadHandler.php" method="_readWrite"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Model/PluploadHandler.php" method="_readWrite"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Model/PluploadHandler.php" method="_ifComplete"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Model/PluploadHandler.php" method="_saveFile"/>
+  <violation rule="PHPMD\Rule\CleanCode\ErrorControlOperator" file="src/CmsAdmin/Model/PluploadHandler.php" method="_saveFile"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Model/PluploadHandler.php" method="_saveFile"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Model/PluploadHandler.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Model/PluploadHandler.php" method="_getRequestFile"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/CmsAdmin/Model/PluploadHandler.php" method="_filterFile"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Model/PluploadHandler.php" method="_filterFile"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Model/PluploadHandler.php" method="_createNewFile"/>
+  <violation rule="PHPMD\Rule\CleanCode\ErrorControlOperator" file="src/CmsAdmin/Model/PluploadHandler.php" method="_createNewFile"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Model/PluploadHandler.php" method="_createNewFile"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/CmsAdmin/Model/PluploadHandler.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\ErrorControlOperator" file="src/CmsAdmin/Model/PluploadHandler.php" method="_replaceFile"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Model/PluploadHandler.php" method="_replaceFile"/>
+  <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/CmsAdmin/Model/Reflection.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/CmsAdmin/Model/Reflection.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/CmsAdmin/Mvc/ViewHelper/AdminNavigation.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/CmsAdmin/Mvc/ViewHelper/AdminNavigation.php" method="_buildBreadcrumbs"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Mvc/ViewHelper/AdminNavigation.php" method="_buildBreadcrumbs"/>
+  <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/CmsAdmin/Mvc/ViewHelper/AdminNavigation.php"/>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/CmsAdmin/Mvc/ViewHelper/AdminNavigation.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/CmsAdmin/Mvc/ViewHelper/AdminNavigation.php" method="_getHtml"/>
+  <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/CmsAdmin/Mvc/ViewHelper/AdminNavigation.php" method="_getHtml"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Mvc/ViewHelper/AdminNavigation.php" method="_getHtml"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Mvc/ViewHelper/JsTree.php" method="_getHtmlTree"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/CmsAdmin/Mvc/ViewHelper/JsTree.php" method="_generateTree"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Mvc/ViewHelper/JsTree.php" method="_generateTree"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/CmsAdmin/Mvc/ViewHelper/JsTreeNode.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\ElseExpression" file="src/CmsAdmin/Mvc/ViewHelper/JsTreeNode.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/CmsAdmin/Mvc/ViewHelper/JsTreeNode.php" method="_generateNode"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Mvc/ViewHelper/JsTreeNode.php" method="_generateNode"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Mvc/ViewHelper/JsTreeNode.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Plugin/AuthGrid.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Plugin/CategoryHistoryGrid.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Plugin/CronGrid.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Plugin/FileGrid.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/CmsAdmin/Plugin/MailDefinitionGrid.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Plugin/MailDefinitionGrid.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Plugin/MailGrid.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Plugin/MailServerGrid.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/TagController.php"/>
+  <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="src/CmsAdmin/UploadController.php"/>
+  <violation rule="PHPMD\Rule\Design\WeightedMethodCount" file="src/CmsAdmin/UploadController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/UploadController.php" method="pluploadAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/UploadController.php" method="multiuploadAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/CmsAdmin/UploadController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/UploadController.php" method="deleteAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/UploadController.php" method="thumbnailAction"/>
+  <violation rule="PHPMD\Rule\Design\EmptyCatchBlock" file="src/CmsAdmin/UploadController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/UploadController.php" method="detailsAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/UploadController.php" method="describeAction"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/CmsAdmin/UploadController.php" method="describeAction"/>
+  <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/CmsAdmin/UploadController.php" method="describeAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/UploadController.php" method="downloadAction"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/UploadController.php" method="_jsonError"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/UploadController.php" method="_operationAfter"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/UploadController.php" method="_savePoster"/>
+</phpmd-baseline>

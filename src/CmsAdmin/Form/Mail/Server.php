@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -17,13 +17,11 @@ use Cms\Form\Element;
  */
 class Server extends \Cms\Form\Form
 {
-
     /**
      * Konfiguracja formularza
      */
     public function init()
     {
-
         //adres
         $this->addElement((new Element\Text('address'))
             ->setLabel('form.mail.server.address.label'));
@@ -32,7 +30,7 @@ class Server extends \Cms\Form\Form
         $this->addElement((new Element\Select('ssl'))
             ->setLabel('form.mail.server.ssl.label')
             ->setRequired()
-            ->addValidator(new \Mmi\Validator\NotEmpty)
+            ->addValidator(new \Mmi\Validator\NotEmpty())
             ->setMultioptions(['plain' => 'plain', 'tls' => 'tls', 'ssl' => 'ssl']));
 
         //port
@@ -59,5 +57,4 @@ class Server extends \Cms\Form\Form
         $this->addElement((new Element\Submit('submit'))
             ->setLabel('form.mail.server.submit.label'));
     }
-
 }

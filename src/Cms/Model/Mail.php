@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -18,7 +18,6 @@ use Psr\Log\LoggerInterface;
 
 class Mail
 {
-
     /**
      * Czyści wysłane starsze niż tydzień
      * @return integer ilość usuniętych
@@ -51,12 +50,12 @@ class Mail
             return false;
         }
         //walidacja listy adresów "do"
-        $email = new \Mmi\Validator\EmailAddressList;
+        $email = new \Mmi\Validator\EmailAddressList();
         if (!$email->isValid($to)) {
             return false;
         }
         //nowy rekord maila
-        $mailRecord = new Orm\CmsMailRecord;
+        $mailRecord = new Orm\CmsMailRecord();
         $mailRecord->cmsMailDefinitionId = $def->id;
         $mailRecord->to = $to;
         $mailRecord->fromName = $fromName ? $fromName : $def->fromName;
@@ -96,7 +95,7 @@ class Mail
         //rezultat wysyłania
         $result = ['error' => 0, 'success' => 0];
         //pobieranie maili
-        $emails = (new Orm\CmsMailQuery)
+        $emails = (new Orm\CmsMailQuery())
             ->join('cms_mail_definition')->on('cms_mail_definition_id')
             ->join('cms_mail_server', 'cms_mail_definition')->on('cms_mail_server_id')
             ->whereActive()->equals(0)
@@ -200,7 +199,7 @@ class Mail
      */
     public static function getMultioptions()
     {
-        $rows = (new Orm\CmsMailServerQuery)
+        $rows = (new Orm\CmsMailServerQuery())
             ->whereActive()->equals(1)
             ->find();
         $pairs = [];
@@ -209,5 +208,4 @@ class Mail
         }
         return $pairs;
     }
-
 }

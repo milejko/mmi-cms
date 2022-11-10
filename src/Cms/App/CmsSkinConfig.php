@@ -7,7 +7,6 @@ namespace Cms\App;
  */
 class CmsSkinConfig
 {
-
     /**
      * Nazwa skóry
      */
@@ -118,5 +117,4 @@ class CmsSkinConfig
     {
         return $this->attributes;
     }
-
 }

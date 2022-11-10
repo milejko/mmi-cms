@@ -32,7 +32,7 @@ function fieldValidationOnBlur(element) {
     if ('checkbox' === $(element).attr('type') && !$(element).is(':checked')) {
         fieldValue = '0';
     }
-    var newXhr = $.post(request.baseUrl + '/?module=cms&controller=form&action=validate', {
+    var newXhr = $.post('/?module=cms&controller=form&action=validate', {
         field: name,
         class: formClass,
         recordClass: recordClass,

@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2017 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -12,12 +12,12 @@ namespace CmsAdmin\Grid\Column;
 
 /**
  * Klasa Columnu tekstowego
- * 
+ *
  * @method self setName($name) ustawia nazwę pola
  * @method string getName() pobiera nazwę pola
  * @method self setLabel($label) ustawia labelkę
  * @method string getLabel() pobiera labelkę
- * 
+ *
  * @method self setFilterMethodEquals() ustawia metodę filtracji na równość
  * @method self setFilterMethodLike() ustawia metodę filtracji na podobny
  * @method self setFilterMethodSearch() ustawia metodę filtracji na wyszukaj
@@ -25,7 +25,6 @@ namespace CmsAdmin\Grid\Column;
  */
 class JsonColumn extends ColumnAbstract
 {
-
     /**
      * Renderuje pole tekstowe
      * @param \Mmi\Orm\RecordRo $record
@@ -74,7 +73,6 @@ class JsonColumn extends ColumnAbstract
     protected function _filterField($fieldValue)
     {
         //usuwanie html i obcinanie zbyt długich ciągów
-        return (new \Mmi\Filter\Truncate)->filter((new \Mmi\Filter\Escape)->filter($fieldValue));
+        return (new \Mmi\Filter\Truncate())->filter((new \Mmi\Filter\Escape())->filter($fieldValue));
     }
-
 }

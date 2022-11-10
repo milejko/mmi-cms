@@ -19,7 +19,6 @@ define('PLUPLOAD_UNKNOWN_ERR', 111);
  */
 class PluploadHandler
 {
-
     /**
      * Opisy możliwych błędów
      * @var array
@@ -157,7 +156,7 @@ class PluploadHandler
     /**
      * Konstruktor
      */
-    function __construct($path = '')
+    public function __construct($path = '')
     {
         if (!$path) {
             $path = BASE_PATH . '/var/data/plupload/';
@@ -495,7 +494,7 @@ class PluploadHandler
         }
         //jeśli przesłano plik dla konkretnego id w bazie
         if ($this->_cmsFileId) {
-            if (null !== $this->_cmsFileRecord = (new \Cms\Orm\CmsFileQuery)->findPk($this->_cmsFileId)) {
+            if (null !== $this->_cmsFileRecord = (new \Cms\Orm\CmsFileQuery())->findPk($this->_cmsFileId)) {
                 return $this->_replaceFile($requestFile);
             }
         }

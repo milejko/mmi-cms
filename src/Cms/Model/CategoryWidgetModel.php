@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -18,7 +18,6 @@ use Cms\Orm\CmsCategoryWidgetCategoryQuery;
  */
 class CategoryWidgetModel
 {
-
     /**
      * Rekordy relacji widget - kategoria
      * @var \Cms\Orm\CmsCategoryWidgetCategoryRecord[]
@@ -42,7 +41,7 @@ class CategoryWidgetModel
         //przypisanie kategorii opakowującej
         $this->_categoryId = $categoryId;
         //wyszukiwanie relacji
-        if (null === $this->_widgetCollection = (new CmsCategoryWidgetCategoryQuery)
+        if (null === $this->_widgetCollection = (new CmsCategoryWidgetCategoryQuery())
             ->join('cms_category')->on('cms_category_id')
             ->whereCmsCategoryId()->equals($this->_categoryId)
             ->andFieldWidget()->notEquals(null)
@@ -90,7 +89,7 @@ class CategoryWidgetModel
     public function countWidgetRelationsByWidgetKey($widgetKey)
     {
         $count = 0;
-        //iteracja po widgetach w sekcji  
+        //iteracja po widgetach w sekcji
         foreach ($this->getWidgetRelationsBySectionKey($widgetKey) as $widgetRelationRecord) {
             if ($widgetKey == $widgetRelationRecord->widget) {
                 $count++;
@@ -108,7 +107,7 @@ class CategoryWidgetModel
         //iteracja po order => id
         foreach ($serial as $order => $id) {
             //wyszukanie rekordu (z obcięciem do kategorii)
-            if (null === $record = (new CmsCategoryWidgetCategoryQuery)
+            if (null === $record = (new CmsCategoryWidgetCategoryQuery())
                 ->whereCmsCategoryId()->equals($this->_categoryId)
                 ->findPk($id)) {
                 continue;
@@ -118,5 +117,4 @@ class CategoryWidgetModel
             $record->save();
         }
     }
-
 }

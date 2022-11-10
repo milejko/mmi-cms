@@ -7,7 +7,6 @@ use Cms\Orm\CmsCategoryRecord;
 
 class CategoryValidationModel
 {
-
     /**
      * Klucze widgetów koniecznych jeszcze do dodania
      * @var array
@@ -50,7 +49,7 @@ class CategoryValidationModel
      */
     public function getMinOccurenceWidgets()
     {
-        return $this->_minOccurrenceKeys;    
+        return $this->_minOccurrenceKeys;
     }
 
     /**
@@ -58,7 +57,8 @@ class CategoryValidationModel
      * @param string $key
      * @return boolean
      */
-    public function isWidgetAvailable($key) {
+    public function isWidgetAvailable($key)
+    {
         foreach ($this->_maxOccurrenceKeys as $widgetKey) {
             if ($key == $widgetKey) {
                 return false;
@@ -66,5 +66,4 @@ class CategoryValidationModel
         }
         return true;
     }
-
 }

@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -15,11 +15,10 @@ use Mmi\Security\AuthInterface;
 
 class JsTreeNode extends \Mmi\Mvc\ViewHelper\HelperAbstract
 {
-
     /**
      * Nazwa sztucznego korzenia
      */
-    CONST ROOT = '';
+    public const ROOT = '';
 
     /**
      * Renderuje fragment drzewka pod obsługę przez plugin jsTree
@@ -52,20 +51,20 @@ class JsTreeNode extends \Mmi\Mvc\ViewHelper\HelperAbstract
         if (!isset($node['children']) || !is_array($node['children']) || count($node['children']) == 0) {
             return $html;
         }
-        $acl = (new \CmsAdmin\Model\CategoryAclModel)->getAcl();
+        $acl = (new \CmsAdmin\Model\CategoryAclModel())->getAcl();
         $html .= '<ul>';
         //iteracja po dzieciakach i budowa węzłów drzewa
         foreach ($node['children'] as $child) {
             $icon = '';
             if (!$child['active']) {
-                $icon = $this->view->baseUrl . '/resource/cmsAdmin/images/folder-inactive.png';
+                $icon = '/resource/cmsAdmin/images/folder-inactive.png';
             }
             $selected = 'false';
             $disabled = 'false';
             //sprawdzenie uprawnień do węzła
             if (!$acl->isAllowed(App::$di->get(AuthInterface::class)->getRoles(), $child['id'])) {
                 $disabled = 'true';
-                $icon = $this->view->baseUrl . '/resource/cmsAdmin/images/folder-disabled.png';
+                $icon = '/resource/cmsAdmin/images/folder-disabled.png';
             }
             $type = 'default';
             if (!isset($child['children']) || !count($child['children'])) {
@@ -78,5 +77,4 @@ class JsTreeNode extends \Mmi\Mvc\ViewHelper\HelperAbstract
         $html .= '</ul>';
         return $html;
     }
-
 }

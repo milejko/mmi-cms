@@ -10,7 +10,7 @@ use Cms\App\CmsSectionConfig;
 class SectionModel
 {
     //separator
-    const SEPARATOR = '/';
+    public const SEPARATOR = '/';
 
     private $_templateKey;
     private $_sectionConfig;
@@ -43,5 +43,4 @@ class SectionModel
         }
         return $availableWidges;
     }
-
 }

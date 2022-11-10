@@ -8,7 +8,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class FileGarbageCollectorCommand extends CommandAbstract
 {
-
     /**
      * Rormiar plików niepowiązanych
      * @var integer
@@ -77,7 +76,7 @@ class FileGarbageCollectorCommand extends CommandAbstract
             return;
         }
         //brak pliku w plikach CMS
-        if (null === $fr = (new \Cms\Orm\CmsFileQuery)
+        if (null === $fr = (new \Cms\Orm\CmsFileQuery())
                 ->whereName()->equals($file)
                 ->findFirst()
         ) {
@@ -94,8 +93,9 @@ class FileGarbageCollectorCommand extends CommandAbstract
      */
     protected function _reportLine($fileName)
     {
-        echo $fileName . ' - ' . round($this->_size / 1024 / 1024,
-                2) . 'MB in ' . $this->_count . ' files - found: ' . $this->_found . "\n";
+        echo $fileName . ' - ' . round(
+            $this->_size / 1024 / 1024,
+            2
+        ) . 'MB in ' . $this->_count . ' files - found: ' . $this->_found . "\n";
     }
-
 }

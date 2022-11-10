@@ -55,7 +55,7 @@
     </div>
     {if $auth->hasIdentity()}
         <footer class="app-footer">
-            <a href="{$baseUrl}/">{$domain}</a> &copy; {system_date('Y')}
+            <a href="/">{$domain}</a> &copy; {system_date('Y')}
             <span class="float-right">Powered by
                 <a href="https://github.com/milejko/mmi-cms">MMi CMS</a>
             </span>

@@ -25,7 +25,6 @@ use Mmi\Mvc\Controller;
  */
 class CategoryWidgetRelationController extends Controller
 {
-
     /**
      * @Inject
      * @var CmsSkinsetConfig
@@ -56,13 +55,13 @@ class CategoryWidgetRelationController extends Controller
             $widgetRelationRecord->widget = $request->widget;
             $widgetRelationRecord->cmsCategoryId = $request->categoryId;
             //maksymalna wartość posortowania
-            $maxOrder = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
+            $maxOrder = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
                 ->whereCmsCategoryId()->equals($request->categoryId)
                 ->findMax('order');
             $widgetRelationRecord->order = $maxOrder !== null ? $maxOrder + 1 : 0;
         }
         //wyszukiwanie relacji do edycji
-        if ($request->id && null === $widgetRelationRecord = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
+        if ($request->id && null === $widgetRelationRecord = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
             ->join('cms_category')->on('cms_category_id')
             ->whereCmsCategoryId()->equals($request->categoryId)
             ->whereWidget()->equals($request->widget)
@@ -105,7 +104,7 @@ class CategoryWidgetRelationController extends Controller
     {
         $category = $this->getCategoryOrRedirect($request->categoryId);
         //wyszukiwanie relacji do edycji
-        if (null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
+        if (null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
             ->whereCmsCategoryId()->equals($category->id)
             ->findPk($this->id)) {
             return '';
@@ -128,7 +127,7 @@ class CategoryWidgetRelationController extends Controller
     {
         $category = $this->getCategoryOrRedirect($request->categoryId);
         //wyszukiwanie relacji do edycji
-        if (null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery)
+        if (null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
             ->whereCmsCategoryId()->equals($category->id)
             ->findPk($request->id)) {
             return '';
@@ -161,7 +160,7 @@ class CategoryWidgetRelationController extends Controller
     private function getCategoryOrRedirect(int $categoryId): CmsCategoryRecord
     {
         //wyszukiwanie kategorii
-        if ((null === $category = (new \Cms\Orm\CmsCategoryQuery)
+        if ((null === $category = (new \Cms\Orm\CmsCategoryQuery())
             ->whereTemplate()->like($this->scopeConfig->getName() . '%')
             ->findPk($categoryId)) || $category->status != \Cms\Orm\CmsCategoryRecord::STATUS_DRAFT) {
             //brak kategorii
@@ -169,5 +168,4 @@ class CategoryWidgetRelationController extends Controller
         }
         return $category;
     }
-
 }

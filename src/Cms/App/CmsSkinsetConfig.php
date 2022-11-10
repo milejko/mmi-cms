@@ -7,7 +7,7 @@ namespace Cms\App;
  */
 class CmsSkinsetConfig
 {
-    const SKIN_NOT_FOND_MESSAGE = 'Skin not found';
+    public const SKIN_NOT_FOND_MESSAGE = 'Skin not found';
 
     /**
      * Dostępne szablony
@@ -44,5 +44,4 @@ class CmsSkinsetConfig
     {
         return $this->skins;
     }
-
 }

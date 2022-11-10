@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -18,7 +18,6 @@ use Mmi\Mvc\View;
  */
 class GridRenderer
 {
-
     /**
      * Obiekt grida
      * @var Grid
@@ -26,13 +25,13 @@ class GridRenderer
     private $_grid;
 
     //szablon scalający grida
-    const TEMPLATE_GRID = 'cmsAdmin/grid/grid';
+    public const TEMPLATE_GRID = 'cmsAdmin/grid/grid';
 
     //szablon nagłówka grida (filtrów)
-    const TEMPLATE_HEADER = 'cmsAdmin/grid/header';
+    public const TEMPLATE_HEADER = 'cmsAdmin/grid/header';
 
     //szablon wnętrza grida (danych)
-    const TEMPLATE_BODY = 'cmsAdmin/grid/body';
+    public const TEMPLATE_BODY = 'cmsAdmin/grid/body';
 
     /**
      * Konstruktror
@@ -87,5 +86,4 @@ class GridRenderer
         //render nagłówka, ciała i stopki
         return App::$di->get(View::class)->renderTemplate(self::TEMPLATE_GRID);
     }
-
 }

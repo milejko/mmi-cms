@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -22,7 +22,6 @@ use Mmi\Db\DbInterface;
  */
 class CategoryCopy
 {
-
     /**
      * Obiekt kategorii Cms do skopiowania
      * @var \Cms\Orm\CmsCategoryRecord
@@ -191,10 +190,10 @@ class CategoryCopy
     protected function _generateCategoryName()
     {
         //filtr Url
-        $filterUrl = new \Mmi\Filter\Url;
+        $filterUrl = new \Mmi\Filter\Url();
         //bazowe Uri skopiowanej kategorii na podstawie rodzica
         $baseUri = '';
-        if ($this->_category->parentId && (null !== $parent = (new CmsCategoryQuery)->findPk($this->_category->parentId))) {
+        if ($this->_category->parentId && (null !== $parent = (new CmsCategoryQuery())->findPk($this->_category->parentId))) {
             //nieaktywny rodzic -> nie wlicza się do ścieżki
             if (!$parent->active) {
                 $parent->uri = substr($parent->uri, 0, strrpos($parent->uri, '/'));
@@ -208,7 +207,7 @@ class CategoryCopy
             $number++;
             $copyName = $baseName . (($number > 1) ? '_' . $number : '');
             $copyUri = $baseUri . $filterUrl->filter($copyName);
-        } while ((new CmsCategoryQuery)->searchByUri($copyUri)->count());
+        } while ((new CmsCategoryQuery())->searchByUri($copyUri)->count());
         return $copyName;
     }
 
@@ -223,7 +222,7 @@ class CategoryCopy
             return false;
         }
         //dla każdego pliku powiązanego z kategorią
-        foreach ((new \Cms\Orm\CmsFileQuery)
+        foreach ((new \Cms\Orm\CmsFileQuery())
             ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
             ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
             ->andFieldObjectId()->equals($this->_category->id)
@@ -247,7 +246,7 @@ class CategoryCopy
             return false;
         }
         //kopiowanie plików ze starej relacji do nowej
-        foreach ((new \Cms\Orm\CmsFileQuery)
+        foreach ((new \Cms\Orm\CmsFileQuery())
             //obiekt podobny do categoryWidgetRelation
             ->whereObject()->like(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
             ->andFieldObjectId()->equals($relationId)
@@ -292,7 +291,7 @@ class CategoryCopy
         //dla każdego widgetu
         foreach ($this->_category->getWidgetModel()->getWidgetRelations() as $widgetRelation) {
             //nowa relacja
-            $relation = new \Cms\Orm\CmsCategoryWidgetCategoryRecord();            
+            $relation = new \Cms\Orm\CmsCategoryWidgetCategoryRecord();
             $relation->uuid = $widgetRelation->uuid;
             $relation->widget = $widgetRelation->widget;
             $relation->configJson = $widgetRelation->configJson;
@@ -309,5 +308,4 @@ class CategoryCopy
         }
         return true;
     }
-
 }

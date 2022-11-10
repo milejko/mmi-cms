@@ -38,23 +38,23 @@ use Mmi\Session\SessionSpace;
 class Image extends ElementAbstract implements UploaderElementInterface
 {
     //szablon początku pola
-    CONST TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
+    public const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
     //szablon opisu
-    CONST TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
+    public const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
     //szablon pola
-    const TEMPLATE_FIELD = 'cmsAdmin/form/element/image';
+    public const TEMPLATE_FIELD = 'cmsAdmin/form/element/image';
     //szablon końca pola
-    CONST TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
+    public const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
     //szablon błędów
-    CONST TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
+    public const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
-    CONST TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+    public const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
     //klucz z losowym id uploadera
-    CONST UPLOADER_ID_KEY = 'uploaderId';
-    CONST SESSION_NAMESPACE_PREFIX = 'imageuploader-';
+    public const UPLOADER_ID_KEY = 'uploaderId';
+    public const SESSION_NAMESPACE_PREFIX = 'imageuploader-';
     //suffixy dodatkowych pól hidden
-    CONST DELETE_FIELD_SUFFIX = '-delete';
+    public const DELETE_FIELD_SUFFIX = '-delete';
 
     /**
      * Załadowany plik
@@ -182,5 +182,4 @@ class Image extends ElementAbstract implements UploaderElementInterface
         //zapis pliku
         FileModel::appendFile($fileArray[$form->getBaseName()][$this->getBasename()][0], self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
     }
-
 }
