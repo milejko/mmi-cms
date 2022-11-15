@@ -135,8 +135,12 @@ class MultiUpload extends MultiField implements UploaderElementInterface
                     <i class="fa fa-angle-down fa-6"></i>
                 </a>
             </div>
-            <div class="thumb">
-                <img src="/resource/cmsAdmin/images/loader.gif">
+            <div>
+                <div class="thumb">
+                    <img src="/resource/cmsAdmin/images/loader.gif">
+                </div>
+                <a class="edit" href="#">' . $this->view->_('template.file.uploader.edit') . '</a>
+                <a class="download">' . $this->view->_('template.file.uploader.download') . '</a>
             </div>
         <section>';
 

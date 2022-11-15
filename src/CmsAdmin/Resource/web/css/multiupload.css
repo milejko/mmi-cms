@@ -87,6 +87,7 @@
 .form-control.multiupload > .field-list > .field-list-item .thumb {
   margin-left: 1rem;
   width: 68px;
+  height: 68px;
 }
 
 .form-control.multiupload > .field-list > .field-list-item .thumb img {
@@ -109,6 +110,17 @@
 .form-control.multiupload > .field-list > .field-list-item .thumb:hover img {
   transform: scale(3);
   z-index: 2;
+}
+
+.form-control.multiupload > .field-list > .field-list-item .edit {
+  display: inline-block;
+  font-size: 10px;
+  margin-left: 1rem;
+}
+
+.form-control.multiupload > .field-list > .field-list-item .download {
+  display: inline-block;
+  font-size: 10px;
 }
 
 .multiupload-progress-bar {
