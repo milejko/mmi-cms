@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Form;
 
+use Cms\Api\LinkData;
+use Cms\Api\RedirectTransport;
 use Cms\Form\Element;
 use Cms\Form\Form;
 use Cms\Orm\CmsCategoryQuery;
@@ -187,6 +189,17 @@ class CategoryForm extends Form
         ) {
             $this->getElement('visibility')->addError(['form.category.visibility.error', [$this->getRecord()->getUri()]]);
             return false;
+        }
+        //weryfikacja zapetlenia przekierowania
+        $redirectUri = $this->getElement('redirectUri')->getValue();
+        if ($redirectUri) {
+            $elementRedirectUrl = parse_url((new RedirectTransport($redirectUri))->_links[0]->href, PHP_URL_PATH);
+            $currentRedirectUrl = (new RedirectTransport(LinkData::INTERNAL_REDIRECT_PREFIX . $this->getRecord()->id))->_links[0]->href;
+            if ($elementRedirectUrl === $currentRedirectUrl) {
+                $elementError = LinkData::REL_INTERNAL === $this->getElement('redirectType') && $this->getElement('redirectType')->getValue() ? 'redirectCategoryId' : 'redirectUri';
+                $this->getElement($elementError)->addError('form.category.redirectUri.error');
+                return false;
+            }
         }
         //commit wersji
         if ($this->getElement('commit')->getValue()) {

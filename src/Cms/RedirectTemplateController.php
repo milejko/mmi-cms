@@ -37,7 +37,7 @@ class RedirectTemplateController extends AbstractTemplateController
         $redirectType = LinkData::REL_EXTERNAL;
         $redirectCategoryId = null;
 
-        if ($redirectUri && preg_match('/^internal:\/\/(\d+)/', $redirectUri, $matches)) {
+        if ($redirectUri && preg_match('/^' . str_replace('/', '\/', LinkData::INTERNAL_REDIRECT_PREFIX) . '(\d+)/', $redirectUri, $matches)) {
             $redirectType = LinkData::REL_INTERNAL;
             $redirectCategoryId = $matches[1];
         }
@@ -76,7 +76,7 @@ class RedirectTemplateController extends AbstractTemplateController
         if (LinkData::REL_INTERNAL === $categoryForm->getElement(self::REDIRECT_TYPE)->getValue()) {
             $categoryForm->getElement(self::REDIRECT_URI)
                 ->removeValidator(Validator\Url::class)
-                ->setValue('internal://' . $categoryForm->getElement(self::REDIRECT_CATEGORY_ID)->getValue());
+                ->setValue(LinkData::INTERNAL_REDIRECT_PREFIX . $categoryForm->getElement(self::REDIRECT_CATEGORY_ID)->getValue());
         }
 
         parent::beforeSaveEditForm($categoryForm);
