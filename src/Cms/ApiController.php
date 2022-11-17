@@ -169,9 +169,13 @@ class ApiController extends \Mmi\Mvc\Controller
         $query = (new CmsCategoryQuery())
             ->whereCmsAuthId()->equals($request->authId)
             ->whereTemplate()->like($request->scope . '%')
-            ->whereCmsCategoryOriginalId()->equals($request->originalId ? $request->originalId : null);
+            ->whereCmsCategoryOriginalId()->equals($request->originalId ?: null);
         if ($request->originalId) {
-            $query->whereDateModify()->greater(date('Y-m-d H:i:s', strtotime('-8 hours')));
+            $query->andQuery(
+                (new CmsCategoryQuery())
+                    ->whereDateModify()->greater(date('Y-m-d H:i:s', strtotime('-8 hours')))
+                    ->orFieldDateModify()->equals(null)
+            );
         }
         //findPk it is all that is needed, but other conditions secures the request
         if (null === $category = $query->findPk($request->id)) {
