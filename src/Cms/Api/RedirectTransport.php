@@ -23,7 +23,7 @@ class RedirectTransport extends HttpJsonTransport
     public function setHref(string $href): self
     {
         $redirectType = LinkData::REL_EXTERNAL;
-        if (preg_match('/^internal:\/\/(\d+)/', $href, $matches)) {
+        if (preg_match('/^' . str_replace('/', '\/', LinkData::INTERNAL_REDIRECT_PREFIX) . '(\d+)/', $href, $matches)) {
             $redirectType = LinkData::REL_INTERNAL;
             $cmsCategoryRecord = (new CmsCategoryQuery())->findPk($matches[1]);
             $href = sprintf(CmsRouterConfig::API_METHOD_CONTENT, $cmsCategoryRecord->getScope(), $cmsCategoryRecord->getUri());
