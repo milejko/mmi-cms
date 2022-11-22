@@ -191,7 +191,7 @@ class CategoryForm extends Form
             return false;
         }
         //weryfikacja zapetlenia przekierowania
-        $redirectUri = $this->getElement('redirectUri')->getValue();
+        $redirectUri = $this->getElement('redirectUri') ? $this->getElement('redirectUri')->getValue() : '';
         if ($redirectUri) {
             $elementRedirectUrl = parse_url((new RedirectTransport($redirectUri))->_links[0]->href, PHP_URL_PATH);
             $currentRedirectUrl = (new RedirectTransport(LinkData::INTERNAL_REDIRECT_PREFIX . $this->getRecord()->id))->_links[0]->href;
