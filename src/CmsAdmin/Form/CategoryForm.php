@@ -217,5 +217,4 @@ class CategoryForm extends Form
         }
         return true;
     }
-
 }
