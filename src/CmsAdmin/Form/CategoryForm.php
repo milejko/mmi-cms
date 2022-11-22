@@ -191,15 +191,8 @@ class CategoryForm extends Form
             return false;
         }
         //weryfikacja zapetlenia przekierowania
-        $redirectUri = $this->getElement('redirectUri')->getValue();
-        if ($redirectUri) {
-            $elementRedirectUrl = parse_url((new RedirectTransport($redirectUri))->_links[0]->href, PHP_URL_PATH);
-            $currentRedirectUrl = (new RedirectTransport(LinkData::INTERNAL_REDIRECT_PREFIX . $this->getRecord()->id))->_links[0]->href;
-            if ($elementRedirectUrl === $currentRedirectUrl) {
-                $elementError = LinkData::REL_INTERNAL === $this->getElement('redirectType') && $this->getElement('redirectType')->getValue() ? 'redirectCategoryId' : 'redirectUri';
-                $this->getElement($elementError)->addError('form.category.redirectUri.error');
-                return false;
-            }
+        if (!$this->validateRedirect()) {
+            return false;
         }
         //commit wersji
         if ($this->getElement('commit')->getValue()) {
@@ -207,5 +200,21 @@ class CategoryForm extends Form
         }
         //usunięcie locka
         return (new CategoryLockModel($this->getRecord()->cmsCategoryOriginalId))->releaseLock();
+    }
+
+    private function validateRedirect(): bool
+    {
+        $redirectUri = $this->getElement('redirectUri') ? $this->getElement('redirectUri')->getValue() : null;
+        if (!$redirectUri) {
+            return true;
+        }
+        $elementRedirectUrl = parse_url((new RedirectTransport($redirectUri))->_links[0]->href, PHP_URL_PATH);
+        $currentRedirectUrl = (new RedirectTransport(LinkData::INTERNAL_REDIRECT_PREFIX . $this->getRecord()->id))->_links[0]->href;
+        if ($elementRedirectUrl === $currentRedirectUrl) {
+            $elementError = LinkData::REL_INTERNAL === $this->getElement('redirectType') && $this->getElement('redirectType')->getValue() ? 'redirectCategoryId' : 'redirectUri';
+            $this->getElement($elementError)->addError('form.category.redirectUri.error');
+            return false;
+        }
+        return true;
     }
 }
