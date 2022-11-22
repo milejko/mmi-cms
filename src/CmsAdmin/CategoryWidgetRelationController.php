@@ -27,9 +27,8 @@ class CategoryWidgetRelationController extends Controller
 {
     /**
      * @Inject
-     * @var CmsSkinsetConfig
      */
-    private $cmsSkinsetConfig;
+    private CmsSkinsetConfig $cmsSkinsetConfig;
 
     /**
      * @Inject
