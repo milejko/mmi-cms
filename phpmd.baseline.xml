@@ -21,7 +21,7 @@
   <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/ApiController.php" method="getCategoryTransport"/>
   <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/ApiController.php" method="getRedirectOrErrorTransport"/>
   <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/ApiController.php" method="getCategoryId"/>
-  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/App/CmsAppEventInterceptor.php"/>
+  <violation rule="PHPMD\Rule\Design\LongParameterList" file="src/Cms/App/CmsAppEventInterceptor.php" method="__construct"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/App/CmsSectionConfig.php"/>
   <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Cms/App/CmsTemplateConfig.php"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/App/CmsWidgetConfig.php"/>
@@ -73,8 +73,6 @@
   <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Cms/Form/Element/MultiUpload.php"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/MultiUpload.php" method="_createTempFiles"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/MultiUpload.php" method="_getFileObjectByClassName"/>
-  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Cms/Form/Element/MultiUploadLegacy.php"/>
-  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/MultiUploadLegacy.php" method="_getFileObjectByClassName"/>
   <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="src/Cms/Form/Element/Plupload.php"/>
   <violation rule="PHPMD\Rule\Design\WeightedMethodCount" file="src/Cms/Form/Element/Plupload.php"/>
   <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Cms/Form/Element/Plupload.php"/>
@@ -268,7 +266,6 @@
   <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/CmsAdmin/CategoryController.php" method="editAction"/>
   <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/CmsAdmin/CategoryController.php" method="editAction"/>
   <violation rule="PHPMD\Rule\Design\LongMethod" file="src/CmsAdmin/CategoryController.php" method="editAction"/>
-  <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/CmsAdmin/CategoryController.php"/>
   <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryController.php" method="moveAction"/>
   <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryController.php" method="deleteAction"/>
   <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryController.php" method="copyAction"/>
@@ -411,7 +408,6 @@
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Mvc/ViewHelper/JsTreeNode.php" method="_generateNode"/>
   <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Mvc/ViewHelper/JsTreeNode.php"/>
   <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Plugin/AuthGrid.php"/>
-  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Plugin/CategoryHistoryGrid.php"/>
   <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Plugin/CronGrid.php"/>
   <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Plugin/FileGrid.php"/>
   <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/CmsAdmin/Plugin/MailDefinitionGrid.php"/>
