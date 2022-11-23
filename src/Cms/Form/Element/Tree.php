@@ -136,7 +136,7 @@ class Tree extends \Mmi\Form\Element\ElementAbstract
                 $disabled = 'true';
             }
             $html .= '<li id="' . $child['id'] . '"';
-            $html .= ' data-jstree=\'{"type":"default", "disabled":' . $disabled . ', "selected":' . $select . '}\'>' . $child['name'];
+            $html .= ' data-jstree=\'{"type":"default", "disabled":' . $disabled . ', "selected":' . $select . '}\'>' . strip_tags($child['name']);
             $html = self::_generateTree($child, $html);
             $html .= '</li>';
         }
