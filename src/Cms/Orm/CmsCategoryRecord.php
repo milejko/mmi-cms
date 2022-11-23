@@ -675,12 +675,16 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     {
         //triggering named event with "this"
         App::$di->get(EventManager::class)->trigger($eventName, $this);
-        //triggering update events with parent category
-        App::$di->get(EventManager::class)->trigger(CmsAppMvcEvents::CATEGORY_UPDATE, $this->getParentRecord());
         //triggering update events with sibling categories
         foreach ($this->getSiblingsRecords() as $siblingRecord) {
             App::$di->get(EventManager::class)->trigger(CmsAppMvcEvents::CATEGORY_UPDATE, $siblingRecord);
         }
+        //looking for a parent
+        if (null === $this->getParentRecord()) {
+            return true;
+        }
+        //triggering events with parent category
+        App::$di->get(EventManager::class)->trigger(CmsAppMvcEvents::CATEGORY_UPDATE, $this->getParentRecord());
         return true;
     }
 }
