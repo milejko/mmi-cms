@@ -6,7 +6,7 @@
                 {if $categoryForm}
                 {$categoryForm->start()}
                 {$category = $categoryForm->getRecord()}
-                <h5>{$categoryForm->getRecord()->name}{if $template && _($template->getName())} ({_($template->getName())}){/if}</h5>
+                <h5>{$category->name|stripTags}{if $template && _($template->getName())} ({_($template->getName())}){/if}</h5>
                 <div class="floating-buttons">
                     <a style="color: #fff;" href="{@module=cmsAdmin&controller=category&action=index&parentId={$category->parentId}@}" class="btn btn-secondary confirm" title="{#template.category.edit.cancel.alert#}">
                         <i class="icon-close"></i>

@@ -26,11 +26,11 @@
                                             {foreach name="breadcrumbs" $breadcrumbs as $breadcrumbCategory}
                                                 {if !$_breadcrumbsLast}
                                                     <a href="{@module=cmsAdmin&controller=category&action=index&parentId={$breadcrumbCategory->id}@}">
-                                                        {if $breadcrumbCategory->name}{$breadcrumbCategory->name}{else}({#template.category.index.label.default#}){/if}
+                                                        {if $breadcrumbCategory->name}{$breadcrumbCategory->name|stripTags}{else}({#template.category.index.label.default#}){/if}
                                                     </a>
                                                     <i class="icon-arrow-right small"></i>
                                                 {else}
-                                                    {if $breadcrumbCategory->name}{$breadcrumbCategory->name}{else}({#template.category.index.label.default#}){/if}
+                                                    {if $breadcrumbCategory->name}{$breadcrumbCategory->name|stripTags}{else}({#template.category.index.label.default#}){/if}
                                                 {/if}
                                             {/foreach}
                                         </th>
@@ -55,7 +55,7 @@
                                         <td class="align-middle">
                                             <i class="icon-{if $nestingEnabled}folder{else}doc{/if} p-1 mr-2 {if !$category->active}alert-danger{elseif $category->visible}alert-success{else}alert-warning{/if}"></i>
                                             {if $nestingEnabled}<a href="{@module=cmsAdmin&controller=category&action=index&parentId={$category->id}@}">{/if}
-                                                {if $category->name}{$category->name}{else}({#template.category.index.label.default#}){/if}{if $nestingEnabled}</a>{/if}
+                                                {if $category->name}{$category->name|stripTags}{else}({#template.category.index.label.default#}){/if}{if $nestingEnabled}</a>{/if}
                                             <small>
                                                 {$templateConfig = $skinset->getTemplateConfigByKey($category->template)}
                                                 ({if $templateConfig}{_($templateConfig->getName())}{/if})
