@@ -674,17 +674,18 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     protected function triggeCascadeUpdateEventSet(string $eventName): bool
     {
         //triggering named event with "this"
-        App::$di->get(EventManager::class)->trigger($eventName, $this);
+        $eventManager = App::$di->get(EventManager::class);
+        $eventManager->trigger($eventName, $this);
         //triggering update events with sibling categories
         foreach ($this->getSiblingsRecords() as $siblingRecord) {
-            App::$di->get(EventManager::class)->trigger(CmsAppMvcEvents::CATEGORY_UPDATE, $siblingRecord);
+            $eventManager->trigger(CmsAppMvcEvents::CATEGORY_UPDATE, $siblingRecord);
         }
         //looking for a parent
         if (null === $this->getParentRecord()) {
             return true;
         }
         //triggering events with parent category
-        App::$di->get(EventManager::class)->trigger(CmsAppMvcEvents::CATEGORY_UPDATE, $this->getParentRecord());
+        $eventManager->trigger(CmsAppMvcEvents::CATEGORY_UPDATE, $this->getParentRecord());
         return true;
     }
 }
