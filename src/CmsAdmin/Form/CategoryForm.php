@@ -185,8 +185,7 @@ class CategoryForm extends Form
             return false;
         }
         //weryfikacja unikalnosci uri
-        if ($this->getRecord()->active && (new CmsCategoryQuery())->isSimilarActivePage($this->getRecord()->getUri(), $this->getRecord()->getScope(), $this->getRecord()->cmsCategoryOriginalId)
-        ) {
+        if ($this->getRecord()->active && (new CmsCategoryQuery())->isSimilarActivePage($this->getRecord()->getUri(), $this->getRecord()->getScope(), $this->getRecord()->cmsCategoryOriginalId)) {
             $this->getElement('visibility')->addError(['form.category.visibility.error', [$this->getRecord()->getUri()]]);
             return false;
         }

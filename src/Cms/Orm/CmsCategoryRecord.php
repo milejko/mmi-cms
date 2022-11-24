@@ -3,9 +3,11 @@
 namespace Cms\Orm;
 
 use Cms\Api\Service\MenuService;
+use Cms\App\CmsAppMvcEvents;
 use Cms\App\CmsSkinsetConfig;
 use Mmi\App\App;
 use Mmi\Cache\CacheInterface;
+use Mmi\EventManager\EventManager;
 use Mmi\Mvc\View;
 use Psr\Log\LoggerInterface;
 
@@ -175,7 +177,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //uzupełnia path i uri
         $this->_calculatePathAndUri();
         //zapis
-        return parent::save() && $this->clearCache();
+        return parent::save() && $this->clearCache() && $this->triggerEvent();
     }
 
     /**
@@ -185,7 +187,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public function simpleUpdate()
     {
-        return parent::_update() && $this->clearCache();
+        return parent::_update() && $this->clearCache() && $this->triggerEvent();
     }
 
     /**
@@ -362,6 +364,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     {
         $this->status = self::STATUS_DELETED;
         $this->_softDeleteChildren($this->id);
+        //trigger delete event
+        $this->triggerEvent();
         return $this->save();
     }
 
@@ -640,6 +644,48 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope) . $this->parentId);
             $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $this->parentId);
         }
+        return true;
+    }
+
+    /**
+     * Triggers events using EventManager
+     */
+    protected function triggerEvent(): bool
+    {
+        //deleted - send delete event and update event
+        if (self::STATUS_DELETED === $this->status) {
+            return $this->triggeCascadeUpdateEventSet(CmsAppMvcEvents::CATEGORY_DELETE);
+        }
+        //other statuses like DRAFT, HISTORY don't trigger events
+        if (self::STATUS_ACTIVE !== $this->status) {
+            return true;
+        }
+        //inactive record triggers deletion event
+        if (!$this->isActive()) {
+            return $this->triggeCascadeUpdateEventSet(CmsAppMvcEvents::CATEGORY_DELETE);
+        }
+        //trigger update event
+        return $this->triggeCascadeUpdateEventSet(CmsAppMvcEvents::CATEGORY_UPDATE);
+    }
+
+    /**
+     * Triggers update events for parents and siblings
+     */
+    protected function triggeCascadeUpdateEventSet(string $eventName): bool
+    {
+        //triggering named event with "this"
+        $eventManager = App::$di->get(EventManager::class);
+        $eventManager->trigger($eventName, $this);
+        //triggering update events with sibling categories
+        foreach ($this->getSiblingsRecords() as $siblingRecord) {
+            $eventManager->trigger(CmsAppMvcEvents::CATEGORY_UPDATE, $siblingRecord);
+        }
+        //looking for a parent
+        if (null === $this->getParentRecord()) {
+            return true;
+        }
+        //triggering events with parent category
+        $eventManager->trigger(CmsAppMvcEvents::CATEGORY_UPDATE, $this->getParentRecord());
         return true;
     }
 }

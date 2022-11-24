@@ -18,33 +18,21 @@ class CmsAppEventInterceptor implements AppEventInterceptorInterface
 {
     public const API_CONTROLLER_PATTERN = '/api$/i';
 
-    protected ContainerInterface $container;
-    protected AppProfilerInterface $profiler;
-    protected CmsScopeConfig $cmsScopeConfig;
-    protected Request $request;
-    protected SessionInterface $session;
-    protected CmsSkinsetConfig $cmsSkinsetConfig;
-    protected View $view;
-    protected TranslateInterface $translate;
-
+    /**
+     * @Inject({"cmsLanguageList" = "cms.language.list", "cmsLanguageDefault" = "cms.language.default"})
+     */
     public function __construct(
-        ContainerInterface $container,
-        AppProfilerInterface $profiler,
-        Request $request,
-        CmsScopeConfig $cmsScopeConfig,
-        SessionInterface $session,
-        CmsSkinsetConfig $cmsSkinsetConfig,
-        View $view,
-        TranslateInterface $translate
+        protected ContainerInterface $container,
+        protected AppProfilerInterface $profiler,
+        protected Request $request,
+        protected CmsScopeConfig $cmsScopeConfig,
+        protected SessionInterface $session,
+        protected CmsSkinsetConfig $cmsSkinsetConfig,
+        protected View $view,
+        protected TranslateInterface $translate,
+        protected string $cmsLanguageList,
+        protected string $cmsLanguageDefault
     ) {
-        $this->container = $container;
-        $this->profiler = $profiler;
-        $this->request = $request;
-        $this->cmsScopeConfig = $cmsScopeConfig;
-        $this->session = $session;
-        $this->cmsSkinsetConfig = $cmsSkinsetConfig;
-        $this->view = $view;
-        $this->translate = $translate;
     }
 
     public function init(): void
@@ -94,7 +82,7 @@ class CmsAppEventInterceptor implements AppEventInterceptorInterface
         }
         //ustawienie widoku
         $this->view->domain = $this->request->getServer()->httpHost;
-        $this->view->languages = explode(',', $this->container->get('cms.language.list'));
+        $this->view->languages = explode(',', $this->cmsLanguageList);
         $jsRequest = $this->request->toArray();
         $jsRequest['locale'] = $this->translate->getLocale();
         unset($jsRequest['controller']);
@@ -112,15 +100,15 @@ class CmsAppEventInterceptor implements AppEventInterceptorInterface
      */
     protected function initTranslation(): void
     {
-        $this->translate->setLocale($this->container->get('cms.language.default'));
-        $availableLanguages = explode(',', $this->container->get('cms.language.list'));
+        $this->translate->setLocale($this->cmsLanguageDefault);
+        $availableLanguages = explode(',', $this->cmsLanguageList);
         //języki nie zdefiniowane
         if (empty($availableLanguages)) {
             return;
         }
         //niepoprawny język
         if ($this->request->lang && !in_array($this->request->lang, $availableLanguages)) {
-            throw new \Mmi\Mvc\MvcNotFoundException('Language not found');
+            throw new MvcNotFoundException('Language not found');
         }
         //ustawianie języka z requesta
         if ($this->request->lang) {

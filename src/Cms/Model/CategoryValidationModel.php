@@ -45,7 +45,7 @@ class CategoryValidationModel
 
     /**
      * Pobiera klucze widgetów, które należy dodać do sekcji
-     * @return integer
+     * @return array
      */
     public function getMinOccurenceWidgets()
     {

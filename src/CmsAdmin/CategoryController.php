@@ -10,6 +10,7 @@
 
 namespace CmsAdmin;
 
+use Cms\App\CmsAppMvcEvents;
 use Cms\App\CmsRouterConfig;
 use Cms\App\CmsScopeConfig;
 use Cms\App\CmsSkinsetConfig;
@@ -35,7 +36,6 @@ class CategoryController extends Controller
 {
     //przedrostek brakującego widgeta
     public const MISSING_WIDGET_MESSENGER_PREFIX = 'messenger.widget.missing.';
-    private const RETURN_URL_PREFIX = '/cmsAdmin/category/edit/?';
 
     /**
      * @Inject
@@ -131,8 +131,7 @@ class CategoryController extends Controller
             //nowy artykuł bez template
             $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
-        $parentCategory = null;
-        if ($request->parentId && (null === $parentCategory = (new CmsCategoryQuery())
+        if ($request->parentId && (null === (new CmsCategoryQuery())
             ->whereTemplate()->like($this->scopeConfig->getName() . '%')
             ->findPk($request->parentId))) {
             //nowy artykuł bez template
@@ -255,7 +254,7 @@ class CategoryController extends Controller
         }
         //zatwierdzenie zmian - commit
         if ($form->isSaved() && $form->getElement('commit')->getValue()) {
-            //zmiany zapisane
+            //messenger + redirect
             $this->getMessenger()->addMessage('messenger.category.category.saved', true);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
         }
@@ -298,7 +297,7 @@ class CategoryController extends Controller
         //powołanie formularza
         $form = new CategoryMoveForm($category, [AuthInterface::class => $this->auth, CategoryMoveForm::SCOPE_CONFIG_OPTION_NAME => $this->scopeConfig->getName(), SkinsetModel::class => new SkinsetModel($this->cmsSkinsetConfig)]);
         if ($form->isSaved()) {
-            //brak strony
+            //messenger + redirct
             $this->getMessenger()->addMessage('controller.category.move.message', true);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $form->getRecord()->parentId]);
         }
@@ -321,6 +320,7 @@ class CategoryController extends Controller
         (new TemplateModel($category, $this->cmsSkinsetConfig))->invokeDeleteAction();
         //miękkie usuwanie rekordu
         $category->softDelete();
+        //messenger + redirect
         $this->getMessenger()->addMessage('controller.category.delete.message', true);
         $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
     }
