@@ -106,21 +106,21 @@ abstract class AbstractWidgetController extends Controller
     /**
      * Pobiera obiekt transportowy (na potrzeby API)
      */
-    public function getDataObject(Request $request): DataInterface
+    public function getDataObject(): DataInterface
     {
         $to             = new WidgetData();
         $to->id         = $this->widgetRecord->uuid;
         $to->widget     = substr($this->widgetRecord->widget, strrpos($this->widgetRecord->widget, '/') + 1);
         $to->attributes = json_decode($this->widgetRecord->configJson, true);
         $to->order      = $this->widgetRecord->order;
-        $to->files      = $this->getCmsFiles($request);
+        $to->files      = $this->getCmsFiles();
         return $to;
     }
 
     /**
      * Pobiera załączniki
      */
-    protected function getCmsFiles(Request $request): array
+    protected function getCmsFiles(): array
     {
         $attachments = [];
         foreach ((new CmsFileQuery())
