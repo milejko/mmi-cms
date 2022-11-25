@@ -275,7 +275,7 @@ class ApiController extends \Mmi\Mvc\Controller
         //ładowanie obiektu transportowego z bufora
         if (null === $transportObject = $this->cache->load($cacheKey = CmsCategoryRecord::CATEGORY_CACHE_TRANSPORT_PREFIX . $category->id)) {
             //generowanie obiektu transportowego i zapis do cache
-            $transportObject = (new TemplateModel($category, $this->cmsSkinsetConfig))->getTransportObject($request);
+            $transportObject = (new TemplateModel($category, $this->cmsSkinsetConfig))->getTransportObject();
             $this->cache->save($transportObject, $cacheKey, $templateConfig->getCacheLifeTime());
         }
         return $transportObject;

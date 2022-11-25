@@ -13,7 +13,6 @@ use Cms\App\CmsSkinsetConfig;
 use Cms\App\CmsTemplateConfig;
 use Mmi\App\App;
 use Mmi\Cache\CacheInterface;
-use Mmi\Http\Request;
 
 /**
  * Model widgeta
@@ -139,12 +138,12 @@ class WidgetModel
     /**
      * Pobiera obiekt transportowy z kontrolera (na potrzeby API)
      */
-    public function getDataObject(Request $request): DataInterface
+    public function getDataObject(): DataInterface
     {
         //pobranie z cache
         if (null === $dataObject = $this->_cacheService->load($cacheKey = CmsCategoryWidgetCategoryRecord::JSON_CACHE_PREFIX . $this->_cmsWidgetRecord->id)) {
             //pobranie obiektu z kontrolera
-            $this->_cacheService->save($dataObject = $this->_createController()->getDataObject($request), $cacheKey, $this->_widgetConfig->getCacheLifeTime());
+            $this->_cacheService->save($dataObject = $this->_createController()->getDataObject(), $cacheKey, $this->_widgetConfig->getCacheLifeTime());
         }
         return $dataObject;
     }

@@ -8,7 +8,6 @@ use Cms\App\CmsSkinsetConfig;
 use Cms\Orm\CmsCategoryRecord;
 use Mmi\App\KernelException;
 use Mmi\Mvc\View;
-use Mmi\Http\Request;
 use Cms\App\CmsTemplateConfig;
 use Cms\AbstractTemplateController;
 use CmsAdmin\Form\CategoryForm;
@@ -90,13 +89,13 @@ class TemplateModel
     /**
      * Pobiera obiekt transportowy
      */
-    public function getTransportObject(Request $request): TransportInterface
+    public function getTransportObject(): TransportInterface
     {
         //pobranie obiektu transportowego szablonu
         if (null === $controller = $this->_createController()) {
             return (new ErrorTransport())->setMessage('Controller not found');
         }
-        return $controller->getTransportObject($request);
+        return $controller->getTransportObject();
     }
 
     /**

@@ -81,7 +81,7 @@ abstract class AbstractTemplateController extends Controller
     /**
      * Zwraca obiekt transportowy (na potrzeby API)
      */
-    public function getTransportObject(Request $request): TransportInterface
+    public function getTransportObject(): TransportInterface
     {
         $to = new TemplateDataTransport();
         $to->id = (int) $this->cmsCategoryRecord->id;
@@ -100,7 +100,7 @@ abstract class AbstractTemplateController extends Controller
         //attributes
         $attributes = json_decode((string) $this->cmsCategoryRecord->configJson, true);
         $to->attributes = is_array($attributes) ? $attributes : [];
-        $to->sections = $this->getSections($request);
+        $to->sections = $this->getSections();
         $to->breadcrumbs = $this->getBreadcrumbs();
         $to->siblings = $this->getSiblings();
         $to->_links = [
@@ -135,7 +135,7 @@ abstract class AbstractTemplateController extends Controller
     /**
      * Pobiera obiekty transportowe widgetów (podzielone na sekcje)
      */
-    protected function getSections(Request $request): array
+    protected function getSections(): array
     {
         $widgets = [];
         //getting section skinsets
@@ -146,7 +146,7 @@ abstract class AbstractTemplateController extends Controller
             }
             try {
                 //adding widgets to section
-                $widgets[substr($fullSectionPath = substr($widgetRelationRecord->widget, 0, strrpos($widgetRelationRecord->widget, '/')), strrpos($fullSectionPath, '/') + 1)][] = (new WidgetModel($widgetRelationRecord, $this->getSkinsetConfig()))->getDataObject($request);
+                $widgets[substr($fullSectionPath = substr($widgetRelationRecord->widget, 0, strrpos($widgetRelationRecord->widget, '/')), strrpos($fullSectionPath, '/') + 1)][] = (new WidgetModel($widgetRelationRecord, $this->getSkinsetConfig()))->getDataObject();
             } catch (CategoryWidgetException $e) {
                 //ignoring failed widgets
             }
