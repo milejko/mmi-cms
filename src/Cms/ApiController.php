@@ -231,7 +231,6 @@ class ApiController extends \Mmi\Mvc\Controller
     /**
      * Pobiera opublikowaną kategorię po uri
      * @param string $uri
-     * @return CmsCategoryRecord
      * @throws \Mmi\Mvc\MvcNotFoundException
      */
     private function getTransportObject(Request $request): TransportInterface
