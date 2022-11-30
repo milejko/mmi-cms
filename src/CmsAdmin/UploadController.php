@@ -220,7 +220,9 @@ class UploadController extends Controller
                         return json_encode(
                             [
                                 'result' => 'OK',
+                                'name' => $record->name,
                                 'originalName' => $record->original,
+                                'original' => $record->getUrl(),
                                 'thumb' => $thumb
                             ],
                             JSON_THROW_ON_ERROR
