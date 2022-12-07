@@ -169,12 +169,6 @@
   <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/SkinsetModel.php" method="getWidgetConfigByKey"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Model/TemplateModel.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Cms/Model/TemplateModel.php"/>
-  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/TemplateModel.php" method="renderDisplayAction"/>
-  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/TemplateModel.php" method="getTransportObject"/>
-  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/TemplateModel.php" method="invokeDeleteAction"/>
-  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/TemplateModel.php" method="invokeDecorateEditForm"/>
-  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/TemplateModel.php" method="invokeBeforeSaveEditForm"/>
-  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Model/TemplateModel.php" method="invokeAfterSaveEditForm"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/TemplateModel.php" method="_createController"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/TemplateModel.php" method="_getTemplatePrefix"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Model/WidgetModel.php"/>
