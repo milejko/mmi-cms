@@ -99,6 +99,17 @@ class TemplateModel
     }
 
     /**
+     * Pobiera atrybuty
+     */
+    public function getAttributes(): array
+    {
+        if (null === $controller = $this->_createController()) {
+            return (new ErrorTransport())->setMessage('Controller not found');
+        }
+        return $controller->getAttributes();
+    }
+
+    /**
      * Wywołanie akcji usuwania
      * @param View $view
      * @return void

@@ -11,6 +11,7 @@ use Cms\App\CmsRouterConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Exception\CategoryWidgetException;
 use Cms\Model\SkinsetModel;
+use Cms\Model\TemplateModel;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryRecord;
 use Cms\Orm\CmsFileQuery;
@@ -97,9 +98,7 @@ abstract class AbstractTemplateController extends Controller
         $to->opensNewWindow = (bool) $this->cmsCategoryRecord->blank;
         $to->visible = (bool) $this->cmsCategoryRecord->visible;
         $to->children = $this->getChildren();
-        //attributes
-        $attributes = json_decode((string) $this->cmsCategoryRecord->configJson, true);
-        $to->attributes = is_array($attributes) ? $attributes : [];
+        $to->attributes = $this->getAttributes();
         $to->sections = $this->getSections();
         $to->breadcrumbs = $this->getBreadcrumbs();
         $to->siblings = $this->getSiblings();
@@ -109,6 +108,15 @@ abstract class AbstractTemplateController extends Controller
                 ->setRel(LinkData::REL_CONTENTS),
         ];
         return $to;
+    }
+
+    /**
+     * Zwraca atrybuty (z ewentualnym formatowaniem)
+     */
+    public function getAttributes(): array
+    {
+        $attributes = json_decode((string) $this->cmsCategoryRecord->configJson, true);
+        return is_array($attributes) ? $attributes : [];
     }
 
     /**
@@ -229,14 +237,13 @@ abstract class AbstractTemplateController extends Controller
                     ->setRel(LinkData::REL_CONTENT)
             ];
         }
-        $attributes = json_decode((string) $cmsCategoryRecord->configJson, true);
         return (new BreadcrumbData())
             ->setId($cmsCategoryRecord->id)
             ->setName($cmsCategoryRecord->name ?: '')
             ->setTemplate($cmsCategoryRecord->template)
             ->setBlank((bool) $cmsCategoryRecord->blank)
             ->setVisible((bool) $cmsCategoryRecord->visible)
-            ->setAttributes(is_array($attributes) ? $attributes : [])
+            ->setAttributes((new TemplateModel($cmsCategoryRecord, $this->cmsSkinsetConfig))->getAttributes())
             ->setOrder($cmsCategoryRecord->order)
             ->setLinks($links);
     }

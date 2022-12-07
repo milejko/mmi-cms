@@ -7,6 +7,7 @@ use Cms\Api\RedirectTransport;
 use Cms\App\CmsRouterConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Model\SkinsetModel;
+use Cms\Model\TemplateModel;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use Mmi\Cache\CacheInterface;
@@ -46,7 +47,10 @@ class MenuService implements MenuServiceInterface
         $menuStructure = [];
         //adding items into menu
         foreach ($items as $item) {
-            $this->addItem($item, $menuStructure);
+            //record is created here (from array), it helps optimizing memory usage for large structures
+            $cmsCategoryRecord = new CmsCategoryRecord();
+            $cmsCategoryRecord->setFromArray($item);
+            $this->addItem($cmsCategoryRecord, $menuStructure);
         }
         //sorting menu
         $orderedMenu = isset($menuStructure['children']) ? $this->sortMenu($menuStructure['children']) : [];
@@ -58,10 +62,10 @@ class MenuService implements MenuServiceInterface
     /**
      * Adding item with direct nesting (unfortunately not sorted)
      */
-    protected function addItem(array $item, array &$menu): void
+    protected function addItem(CmsCategoryRecord $cmsCategoryRecord, array &$menu): void
     {
         //using orderMap and id to determine target table nesting
-        foreach (explode('/', trim($item['path'] . '/' . $item['id'], '/')) as $id) {
+        foreach (explode('/', trim($cmsCategoryRecord->path . '/' . $cmsCategoryRecord->id, '/')) as $id) {
             //some objects in the path are deleted
             if (!isset($this->orderMap[$id])) {
                 return;
@@ -69,7 +73,7 @@ class MenuService implements MenuServiceInterface
             $menu = &$menu['children'][$this->orderMap[$id] . '-' . $id];
         }
         //adding formatted item to menu
-        $menu = array_merge($this->formatItem($item), $menu ?: []);
+        $menu = array_merge($this->formatItem($cmsCategoryRecord), $menu ?: []);
     }
 
     /**
@@ -93,18 +97,17 @@ class MenuService implements MenuServiceInterface
         return $orderedMenu;
     }
 
-    protected function formatItem(array $item): array
+    protected function formatItem(CmsCategoryRecord $cmsCategoryRecord): array
     {
-        $attributes = json_decode((string) $item['configJson'], true);
         return [
-            'id'         => $item['id'],
-            'name'       => $item['name'],
-            'template'   => $item['template'],
-            'blank'      => (bool) $item['blank'],
-            'visible'    => (bool) $item['visible'],
-            'attributes' => is_array($attributes) ? $attributes : [],
-            'order'      => (int) $item['order'],
-            '_links'     => $this->getLinks($item),
+            'id'         => $cmsCategoryRecord->id,
+            'name'       => $cmsCategoryRecord->name,
+            'template'   => $cmsCategoryRecord->template,
+            'blank'      => (bool) $cmsCategoryRecord->blank,
+            'visible'    => (bool) $cmsCategoryRecord->visible,
+            'attributes' => (new TemplateModel($cmsCategoryRecord, $this->cmsSkinsetConfig))->getAttributes(),
+            'order'      => (int) $cmsCategoryRecord->order,
+            '_links'     => $this->getLinks($cmsCategoryRecord),
             'children'   => [],
         ];
     }
@@ -122,16 +125,16 @@ class MenuService implements MenuServiceInterface
         return $query->findFields(['id', 'template', 'name', 'uri', 'blank', 'visible', 'configJson', 'customUri', 'redirectUri', 'path', 'order']);
     }
 
-    protected function getLinks(array $item): array
+    protected function getLinks(CmsCategoryRecord $cmsCategoryRecord): array
     {
-        if ($item['redirectUri']) {
-            return (new RedirectTransport($item['redirectUri']))->_links;
+        if ($cmsCategoryRecord->redirectUri) {
+            return (new RedirectTransport($cmsCategoryRecord->redirectUri))->_links;
         }
-        $scope = substr($item['template'], 0, strpos($item['template'], self::PATH_SEPARATOR)) ?: $item['template'];
+        $scope = substr($cmsCategoryRecord->template, 0, strpos($cmsCategoryRecord->template, self::PATH_SEPARATOR)) ?: $cmsCategoryRecord->template;
         if ($scope) {
             return [
                 (new LinkData())
-                    ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $scope, $item['customUri'] ?: $item['uri']))
+                    ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $scope, $cmsCategoryRecord->customUri ?: $cmsCategoryRecord->uri))
                     ->setRel(LinkData::REL_CONTENT)
             ];
         }
