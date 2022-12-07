@@ -69,12 +69,14 @@ class TemplateModel
      */
     public function renderDisplayAction(View $view)
     {
+        $controller = $this->_createController();
         //wywołanie akcji wyświetlenia
-        if (null === $controller = $this->_createController()) {
+        if (null === $controller) {
             return;
         }
+        $content = $controller->displayAction($view->request);
         //content bezpośrednio wyrenderowany w aplikacji
-        if (null !== $content = $controller->displayAction($view->request)) {
+        if (null !== $content) {
             return $content;
         }
         //brak layoutu lub layout wyłączony - render szablonu
@@ -91,11 +93,24 @@ class TemplateModel
      */
     public function getTransportObject(): TransportInterface
     {
+        $controller = $this->_createController();
         //pobranie obiektu transportowego szablonu
-        if (null === $controller = $this->_createController()) {
+        if (null === $controller) {
             return (new ErrorTransport())->setMessage('Controller not found');
         }
         return $controller->getTransportObject();
+    }
+
+    /**
+     * Pobiera atrybuty
+     */
+    public function getAttributes(): array
+    {
+        $controller = $this->_createController();
+        if (null === $controller) {
+            return (new ErrorTransport())->setMessage('Controller not found');
+        }
+        return $controller->getAttributes();
     }
 
     /**
@@ -105,8 +120,9 @@ class TemplateModel
      */
     public function invokeDeleteAction()
     {
+        $controller = $this->_createController();
         //wywołanie akcji usuwania
-        if (null === $controller = $this->_createController()) {
+        if (null === $controller) {
             return;
         }
         $controller->deleteAction();
@@ -120,8 +136,9 @@ class TemplateModel
      */
     public function invokeDecorateEditForm(CategoryForm $categoryForm)
     {
+        $controller = $this->_createController();
         //wywołanie akcji dekoracji
-        if (null === $controller = $this->_createController()) {
+        if (null === $controller) {
             return;
         }
         $controller->decorateEditForm($categoryForm);
@@ -135,8 +152,9 @@ class TemplateModel
      */
     public function invokeBeforeSaveEditForm(CategoryForm $categoryForm)
     {
+        $controller = $this->_createController();
         //wywołanie akcji po zapisie
-        if (null === $controller = $this->_createController()) {
+        if (null === $controller) {
             return;
         }
         $controller->beforeSaveEditForm($categoryForm);
@@ -150,8 +168,9 @@ class TemplateModel
      */
     public function invokeAfterSaveEditForm(CategoryForm $categoryForm)
     {
+        $controller = $this->_createController();
         //wywołanie akcji po zapisie
-        if (null === $controller = $this->_createController()) {
+        if (null === $controller) {
             return;
         }
         $controller->afterSaveEditForm($categoryForm);
