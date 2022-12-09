@@ -10,7 +10,7 @@
 
 namespace CmsAdmin;
 
-use Cms\App\CmsSkinsetConfig;
+use Mmi\Http\ResponseDebugger;
 use Mmi\Mvc\Controller;
 use Psr\Container\ContainerInterface;
 
@@ -27,6 +27,11 @@ class ConfigController extends Controller
     private ContainerInterface $container;
 
     /**
+     * @Inject
+     */
+    private ResponseDebugger $responseDebugger;
+
+    /**
      * Widok konfiguracji
      */
     public function indexAction()
@@ -41,5 +46,7 @@ class ConfigController extends Controller
         }
         $this->view->config = \Mmi\Http\ResponseDebugger\Colorify::colorify(print_r($containerEntries, true));
         $this->view->server = \Mmi\Http\ResponseDebugger\Colorify::colorify(print_r(\getenv(), true));
+        $this->view->phpconfig = \Mmi\Http\ResponseDebugger\Colorify::colorify(print_r(ini_get_all(), true));
+        $this->view->debugger = \Mmi\Http\ResponseDebugger\Colorify::colorify(print_r($this->responseDebugger->getArray(), true));
     }
 }
