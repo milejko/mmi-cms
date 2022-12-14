@@ -237,13 +237,19 @@ abstract class AbstractTemplateController extends Controller
                     ->setRel(LinkData::REL_CONTENT)
             ];
         }
+        //CAREFUL! You are inside an instance of Controller stored in DI container, template model can change your own fields like (cmsCategoryRecord and cmsSkinsetConfig)
+        //backuping original categoryRecord (from controller), as it can be replaced by TemplateModel, cause Controllers come from DI container
+        $originalCategoryRecord = $this->cmsCategoryRecord;
+        $attributes = (new TemplateModel($cmsCategoryRecord, $this->cmsSkinsetConfig))->getAttributes();
+        //restoring original category
+        $this->cmsCategoryRecord = $originalCategoryRecord;
         return (new BreadcrumbData())
             ->setId($cmsCategoryRecord->id)
             ->setName($cmsCategoryRecord->name ?: '')
             ->setTemplate($cmsCategoryRecord->template)
             ->setBlank((bool) $cmsCategoryRecord->blank)
             ->setVisible((bool) $cmsCategoryRecord->visible)
-            ->setAttributes((new TemplateModel($cmsCategoryRecord, $this->cmsSkinsetConfig))->getAttributes())
+            ->setAttributes($attributes)
             ->setOrder($cmsCategoryRecord->order)
             ->setLinks($links);
     }

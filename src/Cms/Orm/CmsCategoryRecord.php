@@ -404,7 +404,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //próba pobrania modelu widgetu z cache
         if (null === $widgetModel = App::$di->get(CacheInterface::class)->load($cacheKey = self::WIDGET_MODEL_CACHE_PREFIX . $this->id)) {
             //pobieranie modelu widgetu
-            App::$di->get(CacheInterface::class)->save($widgetModel = new \Cms\Model\CategoryWidgetModel($this->id, App::$di->get(CmsSkinsetConfig::class)), $cacheKey, 0);
+            App::$di->get(CacheInterface::class)->save($widgetModel = new \Cms\Model\CategoryWidgetModel($this->id), $cacheKey, 0);
         }
         //zwrot atrybutów
         return $widgetModel;
