@@ -150,7 +150,7 @@ class CategoryWidgetRelationController extends Controller
             return $this->view->_('controller.categoryWidgetRelation.move.error');
         }
         //sortowanie
-        (new \Cms\Model\CategoryWidgetModel($category->id, $this->cmsSkinsetConfig))
+        (new \Cms\Model\CategoryWidgetModel($category->id))
             ->sortBySerial($serial);
         //pusty zwrot
         return '';

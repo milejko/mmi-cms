@@ -10,7 +10,6 @@
 
 namespace Cms\Model;
 
-use Cms\App\CmsSkinsetConfig;
 use Cms\Orm\CmsCategoryWidgetCategoryQuery;
 
 /**
@@ -33,10 +32,9 @@ class CategoryWidgetModel
     /**
      * Identyfikator relacji
      * @param integer $categoryId
-     * @param CmsSkinsetConfig $skinsetConfig
      * @throws \Cms\Exception\CategoryWidgetException
      */
-    public function __construct($categoryId, CmsSkinsetConfig $skinsetConfig)
+    public function __construct($categoryId)
     {
         //przypisanie kategorii opakowującej
         $this->_categoryId = $categoryId;
