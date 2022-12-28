@@ -224,6 +224,7 @@ class TinyMce extends UploaderElementAbstract
     public function __construct($name)
     {
         $this->addClass('form-control');
+        $this->addClass('tinymce');
         parent::__construct($name);
         //wyłączenie CDN
         $this->view->setCdn(null);
