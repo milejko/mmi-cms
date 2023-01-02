@@ -13,7 +13,7 @@
             {/if}
         </div>
         <div class="section-widgets card-body">
-            <div class="available-widgets" style="overflow-x: auto; white-space:nowrap;">
+            <div class="available-widgets">
                 {foreach $section->getAvailableWidgets() as $availableWidgetKey => $availableWidget}
                     {if $widgetValidator->isWidgetAvailable($availableWidgetKey)}
                         <button id="{$section->getKey()}/{$availableWidget->getKey()}" class="button btn btn-primary btn-inline-block" type="submit" name="cmsadmin-form-categoryform[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&widget={$availableWidgetKey}&action=edit&categoryId={$category->id}&originalId={$category->cmsCategoryOriginalId}@}">
@@ -26,6 +26,7 @@
                     {/if}
                 {/foreach}
             </div>
+            <a href="#" class="toggle-widgets"></a>
             <ul class="wlist ui-sortable widget-list" data-category-id="{$category->id}">
                 {foreach $widgetRelations as $widgetRelation}
                     {$widgetContent = categoryWidgetPreview($widgetRelation)}

@@ -159,3 +159,17 @@ $(document).ready(function () {
         }
     }).change();
 });
+
+$(document).ready(function () {
+    $('.toggle-widgets').click(function (e) {
+        e.preventDefault();
+        let $availableWidgets = $(this).siblings('.available-widgets');
+        if ($availableWidgets.hasClass('short')) {
+            $availableWidgets.removeClass('short');
+            $(this).text('Zwiń');
+        } else {
+            $availableWidgets.addClass('short');
+            $(this).text('Wszystkie widgety');
+        }
+    }).click();
+});

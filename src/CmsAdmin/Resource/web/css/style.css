@@ -11998,3 +11998,12 @@ div.grid .chosen-container .chosen-drop {
     display: inline-block;
     margin: 2px;
 }
+
+.available-widgets.short {
+    height: 40px;
+    overflow: hidden;
+}
+
+.available-widgets button {
+  margin-bottom: 5px;
+}
