@@ -37,13 +37,25 @@ CMS.category = function () {
     };
 
     initSectionFolding = function () {
-        $('a.fold').click(function () {
-            $(this).parents('div.boxSection').addClass('folded');
+
+        $('a.show-all').click(function () {
+            $('ul.wlist li').removeClass('folded');
         });
-        $('a.unfold').click(function () {
-            $(this).parents('div.boxSection').removeClass('folded');
+
+        $('a.hide-all').click(function () {
+            $('ul.wlist li').addClass('folded');
         });
-    };
+
+        $('.toogleWidget').click(function () {
+            var el = $(this).parents('li');
+            if (el.hasClass('folded')) {
+                el.removeClass('folded')
+            } else {
+                el.addClass('folded')
+            }
+
+        });
+    }
 
     initScrollPositioning = function () {
         var key = 'scrollPosition-' + window.location.href;
