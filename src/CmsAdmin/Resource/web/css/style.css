@@ -11441,6 +11441,10 @@ ul.wlist li.folded {
     padding: 0;
 }
 
+ul.wlist li.folded .handle-widget {
+    cursor: grab;
+}
+
 div.boxSection a.fold {
     display: inline;
 }
@@ -11454,22 +11458,22 @@ div.sort-preview {
     padding: 10px;
 }
 
-div.folded ul.wlist li div.sort-preview {
-    display: block;
-}
-
-
 ul.wlist li h6 i {
     font-size: smaller;
 }
 
-li.folded div.operation2, li.folded div.preview {
+li.folded div.preview {
     display: none;
+}
+
+ul.wlist .toogleWidget {
+    cursor: pointer;
 }
 
 li.folded div.sort-preview {
     display: block;
     float: left;
+    width: calc(100% - 100px);
 }
 
 li.folded div.operation {

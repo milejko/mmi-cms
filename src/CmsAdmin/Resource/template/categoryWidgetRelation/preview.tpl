@@ -36,12 +36,12 @@
                         {/if}
                     {/foreach}
                     <li id="widget-item-{$widgetRelation->id}" class="ui-sortable-handle folded">
-                        <div class="handle-widget">
+                        <div{if $widgetsCount > 1} class="handle-widget"{/if}>
                             <div class="sort-preview">
-                                <i class="fa fa2 fa-sort"></i> <strong class="toogleWidget">{$widgetName}</strong> <i class="fa fa-caret-right"></i>
+                                {if $widgetsCount > 1}<i class="fa fa2 fa-sort"></i> {/if}<strong class="toogleWidget">{$widgetName}</strong> <i class="fa fa-caret-right"></i>
                             </div>
                             <div class="preview">
-                                <i class="fa fa2 fa-sort"></i> <strong class="toogleWidget">{$widgetName}</strong> <i class="fa fa-caret-down"></i>
+                                {if $widgetsCount > 1}<i class="fa fa2 fa-sort"></i> {/if} <strong class="toogleWidget">{$widgetName}</strong> <i class="fa fa-caret-down"></i>
                                 <div>{$widgetContent}</div>
                             </div>
                             <div class="operation">

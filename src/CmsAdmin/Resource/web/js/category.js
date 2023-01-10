@@ -37,7 +37,6 @@ CMS.category = function () {
     };
 
     initSectionFolding = function () {
-
         $('a.show-all').click(function () {
             $('ul.wlist li').removeClass('folded');
         });
