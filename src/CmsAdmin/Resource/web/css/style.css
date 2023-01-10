@@ -11436,7 +11436,7 @@ ul.wlist li {
     clear: both;
 }
 
-div.folded ul.wlist li {
+ul.wlist li.folded {
     background: #e4e5e6;
     padding: 0;
 }
@@ -11449,14 +11449,6 @@ div.boxSection a.unfold {
     display: none;
 }
 
-div.boxSection.folded a.fold {
-    display: none;
-}
-
-div.boxSection.folded a.unfold {
-    display: inline;
-}
-
 div.sort-preview {
     display: none;
     padding: 10px;
@@ -11466,8 +11458,32 @@ div.folded ul.wlist li div.sort-preview {
     display: block;
 }
 
-div.folded ul.wlist li div.preview, div.folded ul.wlist li div.operation, div.folded div.available-widgets {
+
+ul.wlist li h6 i {
+    font-size: smaller;
+}
+
+li.folded div.operation2, li.folded div.preview {
     display: none;
+}
+
+li.folded div.sort-preview {
+    display: block;
+    float: left;
+}
+
+li.folded div.operation {
+    padding-top: 10px;
+    padding-right: 10px;
+}
+
+ul.wlist li.folded div.operation button,
+ul.wlist li.folded div.operation a {
+    display: inline;
+}
+
+ul.wlist table {
+    margin-top:10px;
 }
 
 ul.wlist li ul {
