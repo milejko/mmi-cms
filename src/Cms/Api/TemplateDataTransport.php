@@ -10,6 +10,7 @@ class TemplateDataTransport extends HttpJsonTransport
     public int      $id;
     public string   $template;
     public string   $name;
+    public string   $path;
     public string   $dateAdd;
     public ?string  $dateModify;
     public string   $title;

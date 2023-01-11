@@ -87,6 +87,7 @@ abstract class AbstractTemplateController extends Controller
         $to = new TemplateDataTransport();
         $to->id = (int) $this->cmsCategoryRecord->id;
         $to->template = $this->cmsCategoryRecord->template;
+        $to->path = $this->cmsCategoryRecord->getUri();
         $to->name = (string) $this->cmsCategoryRecord->name;
         $to->dateAdd = $this->cmsCategoryRecord->dateAdd;
         $to->dateModify = $this->cmsCategoryRecord->dateModify;
@@ -106,6 +107,9 @@ abstract class AbstractTemplateController extends Controller
             (new LinkData())
                 ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $this->cmsCategoryRecord->getScope()))
                 ->setRel(LinkData::REL_CONTENTS),
+            (new LinkData())
+                ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $this->cmsCategoryRecord->getScope(), $this->cmsCategoryRecord->getUri()))
+                ->setRel(LinkData::REL_SELF),
         ];
         return $to;
     }
@@ -246,6 +250,7 @@ abstract class AbstractTemplateController extends Controller
         return (new BreadcrumbData())
             ->setId($cmsCategoryRecord->id)
             ->setName($cmsCategoryRecord->name ?: '')
+            ->setPath($cmsCategoryRecord->getUri())
             ->setTemplate($cmsCategoryRecord->template)
             ->setBlank((bool) $cmsCategoryRecord->blank)
             ->setVisible((bool) $cmsCategoryRecord->visible)

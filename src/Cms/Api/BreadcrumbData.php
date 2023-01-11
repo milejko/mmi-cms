@@ -9,6 +9,7 @@ class BreadcrumbData implements DataInterface
 {
     public int      $id;
     public string   $name;
+    public string   $path;
     public string   $template;
     public bool     $blank = false;
     public bool     $visible = true;
@@ -25,6 +26,12 @@ class BreadcrumbData implements DataInterface
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function setPath(string $path): self
+    {
+        $this->path = $path;
         return $this;
     }
 
