@@ -5,7 +5,7 @@
         <div class="card-header">
             <strong>{_($section->getName())}</strong>
             {* zwija sekcje do sortowania *}
-            {if $widgetsCount > 1 && aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'sort'])}
+            {if $widgetsCount > 0 && aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'sort'])}
                 <small class="ml-2">
                     <a class="show-all" href="#"><i class="icon-layers"></i> {#template.categoryWidgetRelation.showAll#}</i></a>
                     <a class="hide-all" href="#"><i class="icon-layers"></i> {#template.categoryWidgetRelation.hideAll#}</i></a>

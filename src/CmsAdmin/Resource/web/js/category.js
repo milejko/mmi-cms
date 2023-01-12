@@ -38,11 +38,11 @@ CMS.category = function () {
 
     initSectionFolding = function () {
         $('a.show-all').click(function () {
-            $('ul.wlist li').removeClass('folded');
+            $(this).parents('.boxSection').find('ul.wlist li').removeClass('folded');
         });
 
         $('a.hide-all').click(function () {
-            $('ul.wlist li').addClass('folded');
+            $(this).parents('.boxSection').find('ul.wlist li').addClass('folded');
         });
 
         $('.toogleWidget').click(function () {
