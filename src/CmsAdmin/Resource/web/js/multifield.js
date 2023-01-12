@@ -54,7 +54,6 @@ function multifieldInitContainer(containerId) {
     multifieldInitToggleAll(containerId);
     multifieldInitAdd(containerId);
     multifieldInitToggleAuto(containerId);
-    multifieldInitTinyMce(containerId);
     multifieldInitLists('#' + containerId + ' .multifield');
 }
 
@@ -75,7 +74,9 @@ function multifieldInitRemove(containerId) {
     $(document).on('click', '#' + containerId + ' > .field-list > li > .icons > .btn-remove', function (e) {
         e.preventDefault();
         if (confirm('Czy na pewno usunąć?')) {
-            $(this).closest('.field-list-item').remove();
+            let element = $(this).closest('.field-list-item');
+            multifieldRemoveTinyMce(element);
+            element.remove();
         }
     });
 }
@@ -111,6 +112,8 @@ function multifieldInitAdd(containerId) {
         let newItem = $(list).children('.field-list-item').last();
         newItem.find('.select2').select2();
         multifieldInitContainer(containerId);
+        multifieldRemoveTinyMce(newItem);
+        multifieldInitTinyMce(newItem);
         multifieldToggleActive(newItem);
     });
 }
@@ -124,15 +127,25 @@ function multifieldInitToggleAuto(containerId) {
     });
 }
 
-function multifieldInitTinyMce(containerId) {
+function multifieldInitTinyMce(listItem) {
     if (typeof tinyMCE === "undefined") {
         return;
     }
-    const editors = $('#' + containerId).find('.tinymce');
+    const editors = listItem.find('.tinymce');
     editors.each(function () {
-        var configJson = $(this).data('config');
+        let configJson = $(this).data('config');
         configJson.language = request.locale;
         tinyMCE.init(configJson);
+    });
+}
+
+function multifieldRemoveTinyMce(listItem) {
+    if (typeof tinyMCE === "undefined") {
+        return;
+    }
+    const editors = listItem.find('.tinymce');
+    editors.each(function () {
+        tinyMCE.remove('#' + $(this).attr("id"));
     });
 }
 
