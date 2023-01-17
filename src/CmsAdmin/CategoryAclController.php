@@ -16,6 +16,7 @@ use Cms\Model\SkinsetModel;
 use CmsAdmin\Form\CategoryAclForm;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
+use Mmi\Security\AclInterface;
 
 /**
  * Kontroler kontaktów
@@ -33,18 +34,23 @@ class CategoryAclController extends Controller
     private CmsSkinsetConfig $cmsSkinsetConfig;
 
     /**
+     * @Inject
+     */
+    private AclInterface $acl;
+
+    /**
      * Akcja ustawiania uprawnień na kategoriach
      */
     public function indexAction(Request $request)
     {
-        $this->view->roles = (new \Cms\Orm\CmsRoleQuery())->find();
+        $this->view->roles = $this->acl->getRoles();
         //jeśli niewybrana rola - przekierowanie na pierwszą istniejącą
-        if (!$request->roleId && count($this->view->roles)) {
-            $this->getResponse()->redirect('cmsAdmin', 'categoryAcl', 'index', ['roleId' => $this->view->roles[0]->id]);
+        if (!$request->role && count($this->view->roles)) {
+            $this->getResponse()->redirect('cmsAdmin', 'categoryAcl', 'index', ['role' => $this->view->roles[0]]);
         }
         //formularz edycji uprawnień
         $form = new CategoryAclForm(null, [
-            'roleId' => $request->roleId,
+            'role' => $request->role,
             CategoryAclForm::SCOPE_CONFIG_OPTION_NAME => $this->scopeConfig->getName(),
             SkinsetModel::class => new SkinsetModel($this->cmsSkinsetConfig)
         ]);

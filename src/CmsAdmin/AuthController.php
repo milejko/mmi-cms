@@ -10,10 +10,14 @@
 
 namespace CmsAdmin;
 
+use Cms\Orm\CmsAuthQuery;
+use Cms\Orm\CmsAuthRecord;
+use CmsAdmin\Form\Auth;
 use Mmi\App\App;
 use Mmi\Http\Request;
 use Mmi\Ldap\LdapConfig;
 use Mmi\Mvc\Controller;
+use Mmi\Security\AclInterface;
 use Mmi\Security\AuthProviderInterface;
 
 /**
@@ -23,9 +27,18 @@ class AuthController extends Controller
 {
     /**
      * @Inject
-     * @var LdapConfig
      */
-    private $ldapConfig;
+    private LdapConfig $ldapConfig;
+
+    /**
+     * @Inject
+     */
+    private AclInterface $acl;
+
+    /**
+     * @Inject
+     */
+    private AuthProviderInterface $authProvider;
 
     /**
      * Lista użytkowników
@@ -42,7 +55,7 @@ class AuthController extends Controller
     {
         $this->view->ldap = $this->ldapConfig;
 
-        $form = new \CmsAdmin\Form\Auth(new \Cms\Orm\CmsAuthRecord($request->id));
+        $form = new Auth(new CmsAuthRecord($request->id), [AclInterface::class => $this->acl]);
         if ($form->isSaved()) {
             $this->getMessenger()->addMessage('messenger.auth.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'auth');
@@ -55,7 +68,7 @@ class AuthController extends Controller
      */
     public function deleteAction(Request $request)
     {
-        $auth = (new \Cms\Orm\CmsAuthQuery())->findPk($request->id);
+        $auth = (new CmsAuthQuery())->findPk($request->id);
         if ($auth && $auth->delete()) {
             $this->getMessenger()->addMessage('messenger.auth.deleted', true);
         }
@@ -74,6 +87,6 @@ class AuthController extends Controller
             return json_encode([]);
         }
         //zwraca odpowiedz JSON
-        return json_encode(App::$di->get(AuthProviderInterface::class)->ldapAutocomplete($request->term . '*'));
+        return json_encode($this->authProvider->ldapAutocomplete($request->term . '*'));
     }
 }

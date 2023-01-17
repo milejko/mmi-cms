@@ -5,7 +5,7 @@ namespace Cms\Orm;
 class CmsCategoryAclRecord extends \Mmi\Orm\Record
 {
     public $id;
-    public $cmsRoleId;
+    public $role;
     public $cmsCategoryId;
     public $access;
 }

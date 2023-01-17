@@ -38,7 +38,7 @@ class CategoryAclForm extends \Cms\Form\Form
             ->setLabel('form.categoryAcl.allow.label')
             ->setMultiple()
             ->setValue(implode(';', (new \Cms\Orm\CmsCategoryAclQuery())
-                ->whereCmsRoleId()->equals($this->getOption('roleId'))
+                ->whereRole()->equals($this->getOption('role'))
                 ->andFieldAccess()->equals('allow')
                 ->findPairs('id', 'cms_category_id')))
             ->setStructure(['children' => $this->getFilteredTree($tree)]));
@@ -48,7 +48,7 @@ class CategoryAclForm extends \Cms\Form\Form
             ->setLabel('form.categoryAcl.deny.label')
             ->setMultiple()
             ->setValue(implode(';', (new \Cms\Orm\CmsCategoryAclQuery())
-                ->whereCmsRoleId()->equals($this->getOption('roleId'))
+                ->whereRole()->equals($this->getOption('role'))
                 ->andFieldAccess()->equals('deny')
                 ->findPairs('id', 'cms_category_id')))
             ->setStructure(['children' => $this->getFilteredTree($tree)]));

@@ -13,6 +13,7 @@ class CmsAuthRecord extends \Mmi\Orm\Record
     public $username;
     public $email;
     public $password;
+    public $roles;
     public $lastIp;
     public $lastLog;
     public $lastFailIp;
@@ -20,7 +21,6 @@ class CmsAuthRecord extends \Mmi\Orm\Record
     public $failLogCount;
     public $logged;
     public $active;
-    protected $_roles;
 
     /**
      * Zwraca role użytkownika jako tablicę
@@ -28,23 +28,6 @@ class CmsAuthRecord extends \Mmi\Orm\Record
      */
     public function getRoles()
     {
-        if (is_array($this->_roles)) {
-            return $this->_roles;
-        }
-        if (!$this->id) {
-            return $this->_roles = [];
-        }
-        return $this->_roles = \Cms\Orm\CmsAuthRoleQuery::joinedRoleByAuthId($this->id)
-            ->orderAsc('name', 'cms_role')
-            ->findPairs('cms_role_id', 'cms_role.name');
-    }
-
-    /**
-     * Zwraca role użytkownika jako napis
-     * @return string
-     */
-    public function getRolesAsString()
-    {
-        return implode(', ', $this->getRoles());
+        return explode(',', $this->roles);
     }
 }
