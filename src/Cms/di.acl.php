@@ -10,7 +10,7 @@ return [
 
     AclInterface::class => function (ContainerInterface $container) {
         $acl = new Acl();
-        //basic 
+        //basic
         $acl->allow('admin', '')
             ->allow('guest', 'mmi')
             ->allow('guest', 'cms')
