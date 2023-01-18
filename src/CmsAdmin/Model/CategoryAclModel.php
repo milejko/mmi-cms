@@ -31,13 +31,11 @@ class CategoryAclModel
         $this->acl = new CategoryAcl();
         //iteracja po kolekcji rekordów categoryAcl
         foreach ((new \Cms\Orm\CmsCategoryAclQuery())
-            ->join('cms_role')->on('cms_role_id')
             ->join('cms_category')->on('cms_category_id')
             ->find() as $aclRecord) {
             //dodawanie ściezek
-            $role = $aclRecord->getJoined('cms_role')->name;
             $path = trim($aclRecord->getJoined('cms_category')->path . '/' . $aclRecord->getJoined('cms_category')->id, '/');
-            $this->acl->addPathPermission($role, $path, 'allow' === $aclRecord->access);
+            $this->acl->addPathPermission($aclRecord->role, $path, 'allow' === $aclRecord->access);
         }
         //zapis cache
         App::$di->get(CacheInterface::class)->save($this->acl, $cacheKey);

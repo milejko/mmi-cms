@@ -4,9 +4,9 @@ namespace Cms\Orm;
 
 use Cms\Api\Service\MenuService;
 use Cms\App\CmsAppMvcEvents;
-use Cms\App\CmsSkinsetConfig;
 use Mmi\App\App;
 use Mmi\Cache\CacheInterface;
+use Mmi\DataObject;
 use Mmi\EventManager\EventManager;
 use Mmi\Mvc\View;
 use Psr\Log\LoggerInterface;
@@ -258,10 +258,10 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             $this->path = trim($parent->path . '/' . $parent->id, '/');
         }
         //doklejanie do uri przefiltrowanej końcówki
-        $this->uri .= '/' . (new \Mmi\Filter\Url())->filter(strip_tags($this->name));
+        $this->uri .= '/' . (new \Mmi\Filter\Url())->filter(strip_tags($this->name ?? ''));
         $this->uri = trim($this->uri, '/');
         //filtracja customUri
-        $this->customUri = ($this->customUri == '/') ? '/' : trim($this->customUri, '/');
+        $this->customUri = ($this->customUri == '/') ? '/' : trim(($this->customUri ?? ''), '/');
     }
 
     /**
@@ -466,6 +466,9 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public function getConfig()
     {
+        if (null === $this->configJson) {
+            return new DataObject();
+        }
         //próba dekodowania konfiguracji json
         try {
             $configArr = \json_decode($this->configJson, true);
@@ -476,7 +479,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         if (!isset($configArr)) {
             $configArr = [];
         }
-        return (new \Mmi\DataObject())->setParams($configArr);
+        return (new DataObject())->setParams($configArr);
     }
 
     /**
