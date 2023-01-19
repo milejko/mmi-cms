@@ -4,27 +4,31 @@
     <div id="{$section->getKey()}" class="card boxSection" style="margin-bottom: 15px">
         <div class="card-header">
             <strong>{_($section->getName())}</strong>
-            {* zwija sekcje do sortowania *}
-            {if $widgetsCount > 0 && aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'sort'])}
-                <small class="ml-2">
-                    <a class="show-all" href="#"><i class="icon-layers"></i> {#template.categoryWidgetRelation.showAll#}</i></a>
-                    <a class="hide-all" href="#"><i class="icon-layers"></i> {#template.categoryWidgetRelation.hideAll#}</i></a>
-                </small>
-            {/if}
         </div>
         <div class="section-widgets card-body">
             <div class="available-widgets">
+                <h6>{#template.categoryWidgetRelation.addWidget#}</h6>
                 {foreach $section->getAvailableWidgets() as $availableWidgetKey => $availableWidget}
                     {if $widgetValidator->isWidgetAvailable($availableWidgetKey)}
                         <button id="{$section->getKey()}/{$availableWidget->getKey()}" class="button btn btn-primary btn-inline-block" type="submit" name="cmsadmin-form-categoryform[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&widget={$availableWidgetKey}&action=edit&categoryId={$category->id}&originalId={$category->cmsCategoryOriginalId}@}">
-                            <i class="icon-plus"></i> {_($availableWidget->getName())}
+                            {_($availableWidget->getName())}
                         </button>
                     {else}
                         <button class="button btn btn-inline-block" disabled>
-                            <i class="icon-plus"></i> {_($availableWidget->getName())}
+                            {_($availableWidget->getName())}
                         </button>
                     {/if}
                 {/foreach}
+                <h6 class="mt-3">
+                    {#template.categoryWidgetRelation.widgetList#}
+                    {* zwija sekcje do sortowania *}
+                    {if $widgetsCount > 0 && aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'sort'])}
+                        <small class="ml-2">
+                            <a class="show-all" href="#"><i class="fa fa-caret-down"></i> {#template.categoryWidgetRelation.showAll#}</i></a>
+                            <a class="hide-all hidden" href="#"><i class="fa fa-caret-right"></i> {#template.categoryWidgetRelation.hideAll#}</i></a>
+                        </small>
+                    {/if}
+                </h6>
             </div>
             <a href="#" class="toggle-widgets"></a>
             <ul class="wlist ui-sortable widget-list" data-category-id="{$category->id}">
@@ -38,10 +42,10 @@
                     <li id="widget-item-{$widgetRelation->id}" class="ui-sortable-handle folded">
                         <div{if $widgetsCount > 1} class="handle-widget"{/if}>
                             <div class="sort-preview">
-                                {if $widgetsCount > 1}<i class="fa fa2 fa-sort"></i> {/if}<strong class="toogleWidget">{$widgetName}</strong> <i class="fa fa-caret-right"></i>
+                                {if $widgetsCount > 1}{/if}<strong class="toogleWidget">{$widgetName}</strong>&nbsp;&nbsp;<i class="fa fa-caret-right"></i>
                             </div>
                             <div class="preview">
-                                {if $widgetsCount > 1}<i class="fa fa2 fa-sort"></i> {/if} <strong class="toogleWidget">{$widgetName}</strong> <i class="fa fa-caret-down"></i>
+                                {if $widgetsCount > 1}{/if} <strong class="toogleWidget">{$widgetName}</strong>&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
                                 <div>{$widgetContent}</div>
                             </div>
                             <div class="operation">
