@@ -11,17 +11,19 @@
 namespace CmsAdmin\Form;
 
 use Cms\Form\Element;
+use Cms\Form\Form;
 use Cms\Orm\CmsAuthQuery;
 use Mmi\Validator;
 use Mmi\Filter;
 use Mmi\App\App;
+use Mmi\Security\AclInterface;
 use Mmi\Security\AuthProviderInterface;
 
 /**
  * Formularz dodawania i edycji użytkowników CMS
  * @method \Cms\Orm\CmsAuthRecord getRecord()
  */
-class Auth extends \Cms\Form\Form
+class Auth extends Form
 {
     public function init()
     {
@@ -50,8 +52,8 @@ class Auth extends \Cms\Form\Form
         $this->addElement((new Element\MultiCheckbox('cmsRoles'))
             ->setLabel('form.auth.cmsRoles.label')
             ->setDescription('form.auth.cmsRoles.description')
-            ->setMultioptions((new \Cms\Orm\CmsRoleQuery())->findPairs('id', 'name'))
-            ->setValue(\Cms\Orm\CmsAuthRoleQuery::byAuthId($this->_record->id)->findPairs('cms_role_id', 'cms_role_id'))
+            ->setMultioptions($this->getRolesMultioptions())
+            ->setValue($this->getRolesValue())
             ->addValidator(new Validator\NotEmpty(['form.auth.cmsRoles.validator'])));
 
         //aktywny
@@ -74,9 +76,12 @@ class Auth extends \Cms\Form\Form
      */
     public function beforeSave()
     {
-        if ('' !== $password = $this->getElement('changePassword')->getValue()) {
-            $this->getRecord()->password = App::$di->get(AuthProviderInterface::class)->getSaltedPasswordHash($password);
+        $this->getRecord()->roles = implode(',', $this->getElement('cmsRoles')->getValue());
+        $changedPassword = $this->getElement('changePassword')->getValue();
+        if ('' == $changedPassword) {
+            return true;
         }
+        $this->getRecord()->password = App::$di->get(AuthProviderInterface::class)->getSaltedPasswordHash($changedPassword);
         return true;
     }
 
@@ -86,11 +91,23 @@ class Auth extends \Cms\Form\Form
      */
     public function afterSave()
     {
-        //nadawanie uprawnień
-        \Cms\Model\Role::grant($this->getRecord()->id, $this->getElement('cmsRoles')->getValue());
         //usunięcie języka z sesji
         $session = new \Mmi\Session\SessionSpace('cms-language');
         $session->unsetAll();
         return true;
+    }
+
+    private function getRolesMultioptions(): array
+    {
+        $multioptions = [];
+        foreach (App::$di->get(AclInterface::class)->getRoles() as $roleName) {
+            $multioptions[$roleName] = $roleName;
+        }
+        return $multioptions;
+    }
+
+    private function getRolesValue(): array
+    {
+        return explode(',', $this->getRecord()->roles);
     }
 }

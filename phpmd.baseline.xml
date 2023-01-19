@@ -105,7 +105,6 @@
   <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Cms/Form/Element/UploaderElementAbstract.php"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/UploaderElementAbstract.php" method="_createTempFiles"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/UploaderElementAbstract.php" method="_getFileObjectByClassName"/>
-  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Model/Acl.php"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Model/CategoryCopy.php"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/CategoryCopy.php" method="_clear"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/CategoryCopy.php" method="_copyAll"/>
@@ -179,7 +178,6 @@
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Model/WidgetModel.php" method="_getTemplatePrefix"/>
   <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Mvc/ViewHelper/CategoryAclAllowed.php"/>
   <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/Mvc/ViewHelper/CategoryWidgetDisplay.php" method="categoryWidgetDisplay"/>
-  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsAclQuery.php"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsAuthQuery.php"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsAuthRecord.php"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsAuthRoleQuery.php"/>
@@ -245,9 +243,6 @@
   <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Cms/Validator/NotEmptyCmsFiles.php"/>
   <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Cms/Validator/NotEmptyCmsFiles.php"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Validator/NotEmptyCmsFiles.php" method="_getObjectName"/>
-  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/AclController.php"/>
-  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/AclController.php" method="deleteRoleAction"/>
-  <violation rule="PHPMD\Rule\CleanCode\ElseExpression" file="src/CmsAdmin/AclController.php"/>
   <violation rule="PHPMD\Rule\Design\LongMethod" file="src/CmsAdmin/App/CmsNavigationConfig.php" method="__construct"/>
   <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/AuthController.php"/>
   <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/CategoryAclController.php"/>

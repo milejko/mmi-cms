@@ -146,10 +146,10 @@ class CategoryController extends Controller
             $category->cmsAuthId = $this->auth->getId();
             $category->save();
             $request->id = $category->id;
-            if (null === $category->parentId && null !== ($adminRole = (new CmsRoleQuery())->whereName()->equals('admin')->findFirst())) {
+            if (null === $category->parentId) {
                 $aclRecord = new CmsCategoryAclRecord();
                 $aclRecord->cmsCategoryId = $category->id;
-                $aclRecord->cmsRoleId = $adminRole->id;
+                $aclRecord->role = 'admin';
                 $aclRecord->access = 'allow';
                 $aclRecord->save();
                 $this->cache->remove(CategoryAclModel::CACHE_KEY);

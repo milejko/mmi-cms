@@ -1,17 +1,3 @@
-CREATE TABLE "cms_acl" (
-  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-  "cms_role_id" INTEGER,
-  "module" varchar(32) DEFAULT NULL,
-  "controller" varchar(32) DEFAULT NULL,
-  "action" varchar(32) DEFAULT NULL,
-  "access" varchar(8) DEFAULT 'deny'
-);
-
-INSERT INTO "cms_acl" VALUES (1,3,NULL,NULL,NULL,'allow');
-INSERT INTO "cms_acl" VALUES (2,1,'mmi',NULL,NULL,'allow');
-INSERT INTO "cms_acl" VALUES (3,1,'cmsAdmin','index','login','allow');
-INSERT INTO "cms_acl" VALUES (4,1,'cms',NULL,NULL,'allow');
-
 CREATE TABLE "cms_auth" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "lang" varchar(2) DEFAULT NULL,
@@ -19,6 +5,7 @@ CREATE TABLE "cms_auth" (
   "username" varchar(128) NOT NULL,
   "email" varchar(128) NOT NULL,
   "password" varchar(128) DEFAULT NULL,
+  "roles" text DEFAULT '',
   "lastIp" varchar(16) DEFAULT NULL,
   "lastLog" datetime DEFAULT NULL,
   "lastFailIp" varchar(16) DEFAULT NULL,
@@ -28,15 +15,7 @@ CREATE TABLE "cms_auth" (
   "active" tinyint(4) NOT NULL DEFAULT 0
 );
 
-INSERT INTO "cms_auth" VALUES (1,'pl',NULL,'admin','admin@example.com','d033e22ae348aeb5660fc2140aec35850c4da997','127.0.0.1','2012-02-23 15:41:12','89.231.108.27','2011-12-20 19:42:01',8,0,1);
-
-CREATE TABLE "cms_auth_role" (
-  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-  "cms_auth_id" INTEGER,
-  "cms_role_id" INTEGER
-);
-
-INSERT INTO "cms_auth_role" VALUES (1,1,3);
+INSERT INTO "cms_auth" VALUES (1,'pl',NULL,'admin','admin@example.com','d033e22ae348aeb5660fc2140aec35850c4da997','admin','127.0.0.1','2012-02-23 15:41:12','89.231.108.27','2011-12-20 19:42:01',8,0,1);
 
 CREATE TABLE "cms_category" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -77,7 +56,7 @@ CREATE INDEX cms_category_active ON cms_category(active);
 
 CREATE TABLE "cms_category_acl" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-  "cms_role_id" INTEGER,
+  "role" varchar(255) DEFAULT 'guest',
   "cms_category_id" INTEGER,
   "access" varchar(8) DEFAULT 'deny',
   FOREIGN KEY(cms_category_id) REFERENCES cms_category(id)

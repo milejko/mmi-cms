@@ -12,7 +12,7 @@
                         {if $roles|count}
                             <div class="tabs btn-group" id="roles-list">
                                 {foreach $roles as $role}
-                                    <a class="btn btn-outline-primary{if $request->roleId && $request->roleId == $role->id} active{/if}" href="{@module=cmsAdmin&controller=categoryAcl&action=index&roleId={$role->id}@}">{$role->name}</a>
+                                    <a class="btn btn-outline-primary{if $request->role && $request->role == $role} active{/if}" href="{@module=cmsAdmin&controller=categoryAcl&action=index&role={$role}@}">{$role}</a>
                                 {/foreach}
                             </div>
                             <div id="rules">

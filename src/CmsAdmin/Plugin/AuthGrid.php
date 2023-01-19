@@ -35,9 +35,8 @@ class AuthGrid extends \CmsAdmin\Grid\Grid
             ->setLabel('grid.auth.name.label'));
 
         //przypisane role użytkownika
-        $this->addColumn((new Column\CustomColumn('roles'))
-            ->setLabel('grid.auth.roles.label')
-            ->setTemplateCode('{$record->getRolesAsString()}'));
+        $this->addColumn((new Column\TextColumn('roles'))
+            ->setLabel('grid.auth.roles.label'));
 
         //ostatnie logowanie
         $this->addColumn((new Column\TextColumn('lastLog'))

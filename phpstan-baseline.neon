@@ -71,11 +71,6 @@ parameters:
 			path: src/Cms/Security/AuthProvider.php
 
 		-
-			message: "#^Method CmsAdmin\\\\AclController\\:\\:deleteAction\\(\\) should return int but return statement is missing\\.$#"
-			count: 1
-			path: src/CmsAdmin/AclController.php
-
-		-
 			message: "#^Method CmsAdmin\\\\Form\\\\CategoryForm\\:\\:beforeSave\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: src/CmsAdmin/Form/CategoryForm.php
