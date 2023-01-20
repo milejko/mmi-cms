@@ -12,7 +12,7 @@
                             <div class="available-templates" style="overflow-x: auto; white-space:nowrap;">
                                 {foreach $allowedTemplates as $templateConfig}
                                     <a class="button btn btn-primary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=edit&parentId={$request->parentId}&template={$scopeName}/{$templateConfig->getKey()}@}">
-                                        <i class="icon-plus"></i> {_($templateConfig->getName())}
+                                        {_($templateConfig->getName())}
                                     </a>
                                 {/foreach}
                             </div>

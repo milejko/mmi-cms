@@ -12024,7 +12024,7 @@ div.grid .chosen-container .chosen-drop {
     overflow: hidden;
 }
 
-.available-widgets button {
-  margin-bottom: 4px;
-  padding: 8px;
+.available-widgets button, .available-templates a {
+    margin-bottom: 4px;
+    padding: 8px;
 }
