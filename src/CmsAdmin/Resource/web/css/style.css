@@ -12025,5 +12025,6 @@ div.grid .chosen-container .chosen-drop {
 }
 
 .available-widgets button {
-  margin-bottom: 5px;
+  margin-bottom: 4px;
+  padding: 8px;
 }
