@@ -19,16 +19,16 @@
                         </button>
                     {/if}
                 {/foreach}
+                {if $widgetsCount > 0 && aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'sort'])}
                 <h6 class="mt-3">
-                    {#template.categoryWidgetRelation.widgetList#}
                     {* zwija sekcje do sortowania *}
-                    {if $widgetsCount > 0 && aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'sort'])}
+                        {#template.categoryWidgetRelation.widgetList#}
                         <small class="ml-2">
                             <a class="show-all" href="#"><i class="fa fa-caret-down"></i> {#template.categoryWidgetRelation.showAll#}</i></a>
                             <a class="hide-all hidden" href="#"><i class="fa fa-caret-right"></i> {#template.categoryWidgetRelation.hideAll#}</i></a>
                         </small>
-                    {/if}
                 </h6>
+                {/if}
             </div>
             <a href="#" class="toggle-widgets"></a>
             <ul class="wlist ui-sortable widget-list" data-category-id="{$category->id}">
