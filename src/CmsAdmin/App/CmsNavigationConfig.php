@@ -18,13 +18,20 @@ use Mmi\Navigation\NavigationConfigElement;
  */
 class CmsNavigationConfig extends NavigationConfig
 {
+    public const MAIN_MENU_ID = 'admin-menu';
+    public const CMS_ELEMENT_ID = 'admin-menu-cms';
+    public const CONTENT_ELEMENT_ID = 'admin-menu-content';
+    public const MAIL_ELEMENT_ID = 'admin-menu-mail';
+    public const USER_ELEMENT_ID = 'admin-menu-user';
+    public const SYSTEM_ELEMENT_ID = 'admin-menu-system';
+
     /**
      * Pobiera menu
      * @return NavigationConfigElement
      */
     public function __construct()
     {
-        $this->addElement((new NavigationConfigElement('admin-menu'))
+        $this->addElement((new NavigationConfigElement(self::MAIN_MENU_ID))
             ->setLabel('menu.index.index')
             ->setModule('cmsAdmin')
             ->addChild((new NavigationConfigElement())
@@ -38,11 +45,11 @@ class CmsNavigationConfig extends NavigationConfig
                 ->setIcon('fa-unlock-alt')
                 ->setLabel('menu.index.login')
                 ->setDisabled())
-            ->addChild((new NavigationConfigElement())
+            ->addChild((new NavigationConfigElement(self::CMS_ELEMENT_ID))
                 ->setLabel('menu.container')
                 ->setIcon('fa-cog')
                 ->setUri('#')
-                ->addChild((new NavigationConfigElement())
+                ->addChild((new NavigationConfigElement(self::CONTENT_ELEMENT_ID))
                     ->setLabel('menu.category.container')
                     ->setIcon('fa-image')
                     ->setUri('#')
@@ -87,7 +94,7 @@ class CmsNavigationConfig extends NavigationConfig
                         ->setIcon('fa-key')
                         ->setModule('cmsAdmin')
                         ->setController('categoryAcl')))
-                ->addChild((new NavigationConfigElement())
+                ->addChild((new NavigationConfigElement(self::MAIL_ELEMENT_ID))
                     ->setLabel('menu.mail.container')
                     ->setIcon('fa-envelope-o')
                     ->setUri('#')
@@ -142,7 +149,7 @@ class CmsNavigationConfig extends NavigationConfig
                             ->setModule('cmsAdmin')
                             ->setController('mailServer')
                             ->setAction('edit'))))
-                ->addChild((new NavigationConfigElement())
+                ->addChild((new NavigationConfigElement(self::USER_ELEMENT_ID))
                     ->setLabel('menu.auth.container')
                     ->setIcon('fa-users')
                     ->setUri('#')
@@ -159,7 +166,7 @@ class CmsNavigationConfig extends NavigationConfig
                         ->setModule('cmsAdmin')
                         ->setController('auth')
                         ->setAction('edit')))
-                ->addChild((new NavigationConfigElement())
+                ->addChild((new NavigationConfigElement(self::SYSTEM_ELEMENT_ID))
                     ->setLabel('menu.system.container')
                     ->setIcon('fa-cogs')
                     ->setUri('#')
