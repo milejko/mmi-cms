@@ -8,8 +8,9 @@
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
-namespace Cms\App;
+namespace Tests\Unit\Cms\App;
 
+use Cms\App\CmsRouterConfig;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -22,9 +23,21 @@ class CmsRouterConfigTest extends TestCase
         $routerConfig = new CmsRouterConfig();
         $routes = $routerConfig->getRoutes();
         self::assertCount(17, $routes);
-        /*self::assertArrayNotHasKey('cms-category-admin-preview', $routes);
-        self::assertArrayNotHasKey('cms-admin-module', $routes);
-        self::assertArrayNotHasKey('cms-admin-module-controller', $routes);
-        self::assertArrayNotHasKey('cms-admin-module-controller-action', $routes);*/
+        self::assertArrayHasKey('cms-category-admin-preview', $routes);
+        self::assertArrayHasKey('cms-admin-module', $routes);
+        self::assertArrayHasKey('cms-admin-module-controller', $routes);
+        self::assertArrayHasKey('cms-admin-module-controller-action', $routes);
+        self::assertArrayHasKey('cms-file-copy', $routes);
+        self::assertArrayHasKey('cms-file-server', $routes);
+        self::assertArrayHasKey('cms-file-default', $routes);
+        self::assertArrayHasKey('cms-file-scaler', $routes);
+        self::assertArrayHasKey('cms-api', $routes);
+        self::assertArrayHasKey('cms-contents-preview-api', $routes);
+        self::assertArrayHasKey('cms-contents-published-preview-api', $routes);
+        self::assertArrayHasKey('cms-contents-api', $routes);
+        self::assertArrayHasKey('cms-contents-scopes-api', $routes);
+        self::assertArrayHasKey('cms-api-config', $routes);
+        self::assertArrayHasKey('cms-category-home', $routes);
+        self::assertArrayHasKey('cms-category-dispatch', $routes);
     }
 }
