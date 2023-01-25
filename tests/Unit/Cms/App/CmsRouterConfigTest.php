@@ -4,7 +4,7 @@
  * Mmi Framework (https://github.com/milejko/mmi.git)
  *
  * @link       https://github.com/milejko/mmi.git
- * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
+ * @copyright  Copyright (c) 2010-2023 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
@@ -13,9 +13,6 @@ namespace Tests\Unit\Cms\App;
 use Cms\App\CmsRouterConfig;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Klasa konfiguracji routera
- */
 class CmsRouterConfigTest extends TestCase
 {
     public function testIfRouterContainsValidRoutes(): void
