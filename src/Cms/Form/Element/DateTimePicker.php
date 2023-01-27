@@ -13,7 +13,7 @@ namespace Cms\Form\Element;
 /**
  * Element DateTimePicker
  * @method self setTimepicker(string $timepicker)
- * 
+ *
  * @method ?string getDateMin()
  * @method ?string getDateMax()
  * @method ?string getDateMinField()
