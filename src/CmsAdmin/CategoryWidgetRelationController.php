@@ -22,6 +22,7 @@ use Mmi\Mvc\Controller;
 
 /**
  * Kontroler konfiguracji kategorii - stron CMS
+ * @property int $id
  */
 class CategoryWidgetRelationController extends Controller
 {
@@ -59,12 +60,13 @@ class CategoryWidgetRelationController extends Controller
                 ->findMax('order');
             $widgetRelationRecord->order = $maxOrder !== null ? $maxOrder + 1 : 0;
         }
-        //wyszukiwanie relacji do edycji
-        if ($request->id && null === $widgetRelationRecord = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
+        $widgetRelationRecord = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
             ->join('cms_category')->on('cms_category_id')
             ->whereCmsCategoryId()->equals($request->categoryId)
             ->whereWidget()->equals($request->widget)
-            ->findPk($request->id)) {
+            ->findPk($request->id);
+        //wyszukiwanie relacji do edycji
+        if ($request->id && null === $widgetRelationRecord) {
             //brak relacji
             $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id]);
         }

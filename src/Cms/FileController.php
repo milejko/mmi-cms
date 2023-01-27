@@ -15,10 +15,11 @@ use Mmi\Http\Request;
 use Mmi\Http\ResponseTypes;
 use Mmi\Mvc\MvcForbiddenException;
 use Mmi\Session\SessionInterface;
-use Psr\Container\ContainerInterface;
 
 /**
  * Kontroler plików
+ * @property string $name
+ * @property string $hash
  */
 class FileController extends \Mmi\Mvc\Controller
 {
@@ -26,11 +27,6 @@ class FileController extends \Mmi\Mvc\Controller
      * @Inject
      */
     private SessionInterface $session;
-
-    /**
-     * @Inject
-     */
-    private ContainerInterface $container;
 
     /**
      * Akcja skalera
@@ -53,7 +49,7 @@ class FileController extends \Mmi\Mvc\Controller
         //wybór skalowania do wykonania
         switch ($request->operation) {
             case 'scale':
-                $resource = \Mmi\Image\Image::scalex($fs->getRealPath(), $request->x, $request->y ?: $request->x);
+                $resource = \Mmi\Image\Image::scale($fs->getRealPath(), $request->x, $request->y ?: $request->x);
                 break;
             case 'scalex':
                 $resource = \Mmi\Image\Image::scalex($fs->getRealPath(), $request->x);
@@ -155,6 +151,7 @@ class FileController extends \Mmi\Mvc\Controller
         $files = [];
         foreach (\Cms\Orm\CmsFileQuery::byObjectAndClass($request->object, $request->objectId, $request->class)->find() as $file) {
             $full = $file->getUrl();
+            $small = $poster = '';
             switch ($file->class) {
                 case 'image':
                     $small = $file->getUrl('scalecrop', '100x70');

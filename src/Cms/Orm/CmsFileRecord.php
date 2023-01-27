@@ -219,7 +219,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
             }
         }
         //zapis json'a
-        $this->data = empty($data) ? null : json_encode($data);
+        $this->data = '' == $data ? null : json_encode($data);
         return parent::save();
     }
 

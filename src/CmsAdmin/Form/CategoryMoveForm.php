@@ -59,8 +59,9 @@ class CategoryMoveForm extends Form
         $filteredTree = [];
         $categoryTemplateConfig = $this->skinsetModel->getTemplateConfigByKey($categoryRecord->template);
         foreach ($tree as $category) {
+            $template = $this->skinsetModel->getTemplateConfigByKey($category['template']);
             //checking if template is compatible
-            if (strpos($category['template'], '/') && null === $template = $this->skinsetModel->getTemplateConfigByKey($category['template'])) {
+            if (strpos($category['template'], '/') && null === $template) {
                 continue;
             }
             //checking if category isn't self

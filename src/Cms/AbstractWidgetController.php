@@ -14,6 +14,10 @@ use Mmi\Http\Request;
 
 /**
  * Abstrakcyjna klasa kontrolera widgetów
+ * Property z Requesta:
+ * @property int $categoryId
+ * @property int $originalId
+ * @property int $uploaderId
  */
 abstract class AbstractWidgetController extends Controller
 {

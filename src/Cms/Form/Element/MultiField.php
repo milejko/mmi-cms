@@ -15,6 +15,7 @@ use Mmi\Form\Form;
 
 /**
  * Element wielokrotny checkbox
+ * @method ?string getClass()
  */
 class MultiField extends ElementAbstract
 {

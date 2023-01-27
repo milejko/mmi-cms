@@ -15,9 +15,10 @@ use Mmi\Filter\Url;
 /**
  * Element Plupload
  * Gettery
- * @method string getObject() pobiera obiekt
- * @method int getObjectId() pobiera identyfikator obiektu
- * @method int getUploaderId() pobiera identyfikator uploadera
+ * @method ?string getObject() pobiera obiekt
+ * @method ?int getObjectId() pobiera identyfikator obiektu
+ * @method ?int getUploaderId() pobiera identyfikator uploadera
+ * @method ?string getImprint()
  *
  * Settery
  * @method self setObject($object) ustawia obiekt

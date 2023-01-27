@@ -20,6 +20,14 @@ use Mmi\Validator\StringLength;
 
 /**
  * Element wielokrotny upload
+ * @method ?string getObject()
+ * @method ?string getObjectId()
+ * @method ?int getUploaderId()
+ * @method ?string getClass()
+ *
+ * @method self setObject(string $object)
+ * @method self setObjectId(int $objectId)
+ * @method self setUploaderId(int $objectId)
  */
 class MultiUpload extends MultiField implements UploaderElementInterface
 {
