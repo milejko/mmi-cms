@@ -37,7 +37,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
 
     /**
      * Json z danymi opisowymi
-     * @var string
+     * @var string|DataObject
      */
     public $data;
 
@@ -81,7 +81,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
 
     /**
      * Pobiera fizyczną ścieżkę do pliku
-     * @return type
+     * @return string
      */
     public function getRealPath()
     {

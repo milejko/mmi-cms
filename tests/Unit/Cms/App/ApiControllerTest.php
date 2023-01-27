@@ -25,8 +25,7 @@ class ApiControllerTest extends TestCase
 
     public function testSomeTest(): void
     {
-        $request = new Request();
-        $request->scope = 'test';
+        $request = new Request(['scope' => 'test']);
 
         $apiController = $this->getFromContainer();
         $response = $apiController->configAction($request);
