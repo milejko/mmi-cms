@@ -12,6 +12,8 @@ namespace Cms\Form\Element;
 
 /**
  * Wybór koloru
+ * @property string $value
+ * @property string $readonly
  */
 class ColorPicker extends Text
 {

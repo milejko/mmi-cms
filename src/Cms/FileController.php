@@ -142,7 +142,6 @@ class FileController extends \Mmi\Mvc\Controller
 
     /**
      * Lista obrazów (na potrzeby tinymce)
-     * @return view layout
      */
     public function listLayoutAction(Request $request)
     {

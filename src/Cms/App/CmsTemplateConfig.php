@@ -11,19 +11,21 @@ class CmsTemplateConfig
 {
     /**
      * Nazwa szablonu
-     * @var string
      */
     private string $name;
 
     /**
+     * Klucz
+     */
+    private string $key;
+
+    /**
      * Nazwa klasy kontrolera
-     * @var string
      */
     private string $controllerClassName;
 
     /**
      * Długość bufora
-     * @var integer
      */
     private int $cacheLifeTime = 2592000;
 
@@ -39,16 +41,13 @@ class CmsTemplateConfig
 
     /**
      * Sekcje
-     * @var array
      */
     private array $sections = [];
 
     /**
      * Ustawia nazwę
-     * @param string $name
-     * @return CmsTemplateConfig
      */
-    public function setName($name): self
+    public function setName(string $name): self
     {
         $this->name = $name;
         return $this;
@@ -98,19 +97,11 @@ class CmsTemplateConfig
     }
 
     /**
-     * Gets compatible nesting levels
-     */
-    public function getCompatibleNestingLevels(): array
-    {
-        return $this->compatibleNestingLevels;
-    }
-
-    /**
      * Ustawia klucz
      * @param string $name
      * @return CmsTemplateConfig
      */
-    public function setKey($key): self
+    public function setKey(string $key): self
     {
         $this->key = $key;
         return $this;
@@ -127,10 +118,8 @@ class CmsTemplateConfig
 
     /**
      * Ustawia nazwę klasy kontrolera
-     * @param string $controllerClassName
-     * @return CmsTemplateConfig
      */
-    public function setControllerClassName($controllerClassName): self
+    public function setControllerClassName(string $controllerClassName): self
     {
         $this->controllerClassName = $controllerClassName;
         return $this;
@@ -147,9 +136,6 @@ class CmsTemplateConfig
 
     /**
      * Dodawanie sekcji
-     * @param string $name
-     * @param CmsSectionConfig $sectionConfig
-     * @return CmsTemplateConfig
      */
     public function addSection(CmsSectionConfig $sectionConfig): self
     {
@@ -168,22 +154,15 @@ class CmsTemplateConfig
 
     /**
      * Ustawia czas bufora
-     * @param integer $cacheLifeTime
-     * @return CmsWidgetConfig
      */
-    public function setCacheLifeTime($cacheLifeTime): self
+    public function setCacheLifeTime(int $cacheLifeTime): self
     {
-        //walidacja
-        if (!is_int($cacheLifeTime)) {
-            throw new KernelException('Cache lifetime invalid');
-        }
         $this->cacheLifeTime = $cacheLifeTime;
         return $this;
     }
 
     /**
      * Pobiera czas bufora
-     * @return integer
      */
     public function getCacheLifeTime(): int
     {

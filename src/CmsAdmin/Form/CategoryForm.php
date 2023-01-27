@@ -152,8 +152,9 @@ class CategoryForm extends Form
     public function validator()
     {
         if ($this->getElement('commit')->getValue()) {
-            return !(new CategoryLockModel($this->getRecord()->cmsCategoryOriginalId))->isLocked();
+            return false === (new CategoryLockModel($this->getRecord()->cmsCategoryOriginalId))->isLocked();
         }
+        return true;
     }
 
     /**

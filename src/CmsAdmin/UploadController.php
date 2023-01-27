@@ -361,8 +361,6 @@ class UploadController extends Controller
 
     /**
      * Przekierowanie na plik
-     *
-     * @return string
      */
     public function downloadAction(Request $request)
     {

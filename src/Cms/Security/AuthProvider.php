@@ -12,7 +12,6 @@ namespace Cms\Security;
 
 use Cms\Orm\CmsAuthQuery;
 use Cms\Orm\CmsAuthRecord;
-use Mmi\App\App;
 use Mmi\Http\Request;
 use Mmi\Ldap\LdapClient;
 use Mmi\Ldap\LdapConfig;
@@ -214,10 +213,8 @@ class AuthProvider implements AuthProviderInterface
 
     /**
      * Znajduje użytkownika po nazwie lub mailu
-     * @param string $identity
-     * @return CmsAuthRecord
      */
-    protected function _findUserByIdentity($identity)
+    protected function _findUserByIdentity(string $identity): ?CmsAuthRecord
     {
         try {
             return (new CmsAuthQuery())
@@ -230,6 +227,7 @@ class AuthProvider implements AuthProviderInterface
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
+        return null;
     }
 
     /**

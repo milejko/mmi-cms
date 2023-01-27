@@ -152,6 +152,7 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
                 return $filter->getValue();
             }
         }
+        return '';
     }
 
     /**
@@ -170,9 +171,8 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
 
     /**
      * Zwraca sortowanie dla pola
-     * @return string
      */
-    public function getOrderMethod()
+    public function getOrderMethod(): string
     {
         //iteracja po sortowaniach w gridzie
         foreach ($this->_grid->getState()->getOrder() as $order) {
@@ -190,6 +190,7 @@ abstract class ColumnAbstract extends \Mmi\OptionObject
                 }
             }
         }
+        return '';
     }
 
     /**

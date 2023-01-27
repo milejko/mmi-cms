@@ -26,13 +26,10 @@ class Tree extends \Mmi\Form\Element\ElementAbstract
     //szablon etykiety
     public const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
-    /**
-     * Funkcja użytkownika, jest wykonywana na końcu konstruktora
-     */
-    public function init()
+    public function __construct($name)
     {
+        parent::__construct($name);
         $this->addFilter(new \Mmi\Filter\EmptyToNull());
-        return parent::init();
     }
 
     /**
