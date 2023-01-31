@@ -10,7 +10,6 @@
 
 namespace CmsAdmin;
 
-use Cms\App\CmsAppMvcEvents;
 use Cms\App\CmsRouterConfig;
 use Cms\App\CmsScopeConfig;
 use Cms\App\CmsSkinsetConfig;
@@ -20,8 +19,8 @@ use Cms\Model\TemplateModel;
 use Cms\Orm\CmsCategoryAclRecord;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
-use Cms\Orm\CmsRoleQuery;
 use CmsAdmin\Form\CategoryForm;
+use CmsAdmin\Form\CategoryLockModel;
 use CmsAdmin\Form\CategoryMoveForm;
 use CmsAdmin\Model\CategoryAclModel;
 use Mmi\Cache\CacheInterface;
@@ -138,7 +137,7 @@ class CategoryController extends Controller
             $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
         //brak id - tworzenie nowej kategorii
-        if (!$request->id) {
+        if (!$request->id && $request->template) {
             $category = new CmsCategoryRecord();
             $category->status = CmsCategoryRecord::STATUS_DRAFT;
             $category->template = $request->template;
@@ -388,6 +387,10 @@ class CategoryController extends Controller
         //jeśli to nie był DRAFT
         if (null !== $category->cmsCategoryOriginalId && CmsCategoryRecord::STATUS_DRAFT == $category->status) {
             return;
+        }
+        //czeka do zwolnienia blokady
+        while ((new CategoryLockModel($category->id))->isLocked()) {
+            sleep(1);
         }
         //wymuszony świeży draft jeśli informacja przyszła w url, lub kategoria jest z archiwum
         $force = $request->force || (\Cms\Orm\CmsCategoryRecord::STATUS_HISTORY == $category->status);

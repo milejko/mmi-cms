@@ -15,9 +15,10 @@ use Mmi\Filter\Url;
 /**
  * Element Plupload
  * Gettery
- * @method string getObject() pobiera obiekt
- * @method int getObjectId() pobiera identyfikator obiektu
- * @method int getUploaderId() pobiera identyfikator uploadera
+ * @method ?string getObject() pobiera obiekt
+ * @method ?int getObjectId() pobiera identyfikator obiektu
+ * @method ?int getUploaderId() pobiera identyfikator uploadera
+ * @method ?string getImprint()
  *
  * Settery
  * @method self setObject($object) ustawia obiekt
@@ -360,7 +361,7 @@ class Plupload extends UploaderElementAbstract
     {
         //walidacja
         if (!isset($element['type']) || !isset($element['name'])) {
-            return;
+            return '';
         }
         //identyfikator pola
         $fieldId = $this->getId() . '-' . (new Url())->filter($element['name']);
@@ -403,8 +404,9 @@ class Plupload extends UploaderElementAbstract
 
         //walidacja
         if (!isset($element['label'])) {
-            return;
+            return '';
         }
+
         //element label
         $label = '<div class="plupload-edit-buttons"><label for="' . $fieldId . '">' . $element['label'] . (($element['type'] != 'checkbox') ? ':' : '') . '</label>';
         //input text
@@ -470,5 +472,6 @@ class Plupload extends UploaderElementAbstract
             return $label .
                 '<select id="' . $fieldId . '" name="' . $element['name'] . '" class="imprint ' . $element['type'] . ($image != '' ? ' col_9' : '') . '">' . implode($option) . '</select></div>' . $image;
         }
+        return '';
     }
 }

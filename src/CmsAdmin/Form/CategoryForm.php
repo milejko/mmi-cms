@@ -147,31 +147,29 @@ class CategoryForm extends Form
     }
 
     /**
-     * Walidator sprawdzający możliwość zablokowania kategorii na czas edycji
-     * @return type
+     * Walidator istnienia blokady
      */
     public function validator()
     {
-        //wynik założenia blokady zapisu
-        return (new CategoryLockModel($this->getRecord()->cmsCategoryOriginalId))->lock();
+        if ($this->getElement('commit')->getValue()) {
+            return false === (new CategoryLockModel($this->getRecord()->cmsCategoryOriginalId))->isLocked();
+        }
+        return true;
     }
 
-    public function beforeSave()
+    /**
+     * Przed zapisem
+     */
+    public function beforeSave(): bool
     {
-        switch ($this->getElement('visibility')->getValue()) {
-            case 0:
-                $this->getRecord()->visible = false;
-                $this->getRecord()->active = false;
-                return;
-            case 1:
-                $this->getRecord()->visible = false;
-                $this->getRecord()->active = true;
-                return;
-            case 2:
-                $this->getRecord()->visible = true;
-                $this->getRecord()->active = true;
-                return;
+        //zakładanie blokady na czas podmieniania wersji roboczej z aktywną
+        if ($this->getElement('commit')->getValue()) {
+            (new CategoryLockModel($this->getRecord()->cmsCategoryOriginalId))->lock();
         }
+        $visibility = $this->getElement('visibility')->getValue();
+        $this->getRecord()->active = $visibility > 0;
+        $this->getRecord()->visible = $visibility == 2;
+        return true;
     }
 
     /**
@@ -196,9 +194,9 @@ class CategoryForm extends Form
         //commit wersji
         if ($this->getElement('commit')->getValue()) {
             $this->getRecord()->commitVersion();
+            (new CategoryLockModel($this->getRecord()->cmsCategoryOriginalId))->release();
         }
-        //usunięcie locka
-        return (new CategoryLockModel($this->getRecord()->cmsCategoryOriginalId))->releaseLock();
+        return true;
     }
 
     private function validateRedirect(): bool

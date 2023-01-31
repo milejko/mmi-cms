@@ -9,65 +9,60 @@ class CmsSectionConfig
 {
     /**
      * Nazwa szablonu
-     * @var string
      */
-    private $_name;
+    private string $name;
+
+    /**
+     * Klucz szablonu
+     */
+    private string $key;
 
     /**
      * Kompatybilne widgety
      * @var array
      */
-    private $_widgets = [];
+    private array $widgets = [];
 
     /**
      * Ustawia nazwę szablonu
-     * @param string $name
-     * @return CmsSectionConfig
      */
-    public function setName($name)
+    public function setName(string $name): self
     {
-        $this->_name = $name;
+        $this->name = $name;
         return $this;
     }
 
     /**
      * Pobiera nazwę
-     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
-        return $this->_name;
+        return $this->name;
     }
 
     /**
      * Ustawia klucz
-     * @param string $name
-     * @return CmsSectionConfig
      */
-    public function setKey($key)
+    public function setKey(string $key): self
     {
-        $this->_key = $key;
+        $this->key = $key;
         return $this;
     }
 
     /**
      * Pobiera klucz
-     * @return string
      */
-    public function getKey()
+    public function getKey(): string
     {
-        return $this->_key;
+        return $this->key;
     }
 
     /**
-     * Dodawanie sekcji
-     * @param string $name
-     * @param CmsWidgetConfig $widgetConfig
-     * @return CmsSectionConfig
+     * Dodawanie widgeta
      */
-    public function addWidget(CmsWidgetConfig $widgetConfig)
+    public function addWidget(CmsWidgetConfig $widgetConfig): self
     {
-        $this->_widgets[] = $widgetConfig;
+        $this->widgets[] = $widgetConfig;
         return $this;
     }
 
@@ -75,8 +70,8 @@ class CmsSectionConfig
      * Zwraca listę kompatybilnych widgetów
      * @return CmsWidgetConfig[]
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
-        return $this->_widgets;
+        return $this->widgets;
     }
 }

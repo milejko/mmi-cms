@@ -23,6 +23,7 @@ use Mmi\Security\AuthInterface;
 
 /**
  * Kontroler kategorii
+ * @property string $uri
  */
 class CategoryController extends \Mmi\Mvc\Controller
 {
@@ -67,7 +68,7 @@ class CategoryController extends \Mmi\Mvc\Controller
         //pobranie kategorii
         $category = $this->_getPublishedCategoryByUri($request->uri, (string) $request->scope);
         //renderowanie docelowej akcji
-        $html = $this->_renderHtml($category, $request);
+        $html = $this->_renderHtml($category);
         //zwrot html
         return $this->_decorateHtmlWithEditButton($html, $category);
     }
@@ -97,7 +98,7 @@ class CategoryController extends \Mmi\Mvc\Controller
         $this->view->navigation()->setTitle($category->title)
             ->setDescription($category->description);
         //renderowanie docelowej akcji
-        return $this->_decorateHtmlWithEditButton($this->_renderHtml($category, $request), $category);
+        return $this->_decorateHtmlWithEditButton($this->_renderHtml($category), $category);
     }
 
     /**

@@ -112,9 +112,8 @@ class Cron extends \Cms\Form\Form
 
     /**
      * Parsowanie parametrów przed zapisem
-     * @return boolean
      */
-    public function beforeSave()
+    public function beforeSave(): bool
     {
         $mvcParams = [];
         //parsowanie mvcParams
@@ -123,5 +122,6 @@ class Cron extends \Cms\Form\Form
         $this->getRecord()->module = isset($mvcParams['module']) ? $mvcParams['module'] : null;
         $this->getRecord()->controller = isset($mvcParams['controller']) ? $mvcParams['controller'] : null;
         $this->getRecord()->action = isset($mvcParams['action']) ? $mvcParams['action'] : null;
+        return true;
     }
 }

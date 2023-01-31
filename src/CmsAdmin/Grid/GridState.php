@@ -12,7 +12,7 @@ namespace CmsAdmin\Grid;
 
 /**
  * Klasa stanu grida
- * @method GridState setFilters()
+ * @method GridState setFilters(array $filters)
  * @method GridStateFilter[] getFilters()
  * @method GridState setOrder(array $order)
  * @method GridStateOrder[] getOrder()

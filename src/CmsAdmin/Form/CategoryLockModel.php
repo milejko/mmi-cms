@@ -19,11 +19,11 @@ use Mmi\Orm\CacheQuery;
 class CategoryLockModel
 {
     //prefix w buforze
-    public const CACHE_PREFIX = 'category-lock';
-    //czas blokady (na transakcję)
-    public const LOCK_TIMEOUT = 5;
-    //dodatkowa blokada po zapisie
-    public const RELEASE_TIMEOUT = 3;
+    public const CACHE_PREFIX = 'category-lock-';
+    //czas blokady (maksymalny czas przeznaczony na zapis) - domyślnie 5 minut
+    public const LOCK_TIMEOUT = 300;
+    //dodatkowy czas po transakcji (propagacja po klastrze itp.) - domyślnie 2 sekundy
+    public const RELEASE_TIMEOUT = 2;
 
     /**
      * Identyfikator kategorii
@@ -45,36 +45,47 @@ class CategoryLockModel
      * Zakłada blokadę
      * @return boolean
      */
-    public function lock()
+    public function lock(): void
     {
-        //wyszukiwanie blokady dla kategorii
-        if (null === $lockRecord = (new CacheQuery())->findPk($lockKey = self::CACHE_PREFIX . $this->_categoryId)) {
-            $lockRecord = new CacheRecord();
-            $lockRecord->id = $lockKey;
-            $lockRecord->data = true;
-        }
-        //brak możliwości założenia blokady
-        if ($lockRecord->ttl > time()) {
-            return false;
-        }
-        //zakładanie blokady
-        $lockRecord->ttl = time() + self::LOCK_TIMEOUT;
-        return $lockRecord->save();
+        $this->addLockRecord(time() + self::LOCK_TIMEOUT);
     }
 
-    /**
-     * Zwalnia blokadę
-     * @return boolean
-     */
-    public function releaseLock()
+    public function release(): void
+    {
+        $this->addLockRecord(time() + self::RELEASE_TIMEOUT);
+    }
+
+    public function isLocked(): bool
+    {
+        $lockRecord = $this->getLockRecord();
+        if (null === $lockRecord) {
+            return false;
+        }
+        //blokada ciągle aktywna jeśli czas jest przed ttl
+        return time() < $lockRecord->ttl;
+    }
+
+    private function addLockRecord(int $ttl): void
     {
         //wyszukiwanie blokady dla kategorii
-        if (null === $lockRecord = (new CacheQuery())->findPk($lockKey = self::CACHE_PREFIX . $this->_categoryId)) {
-            //brak blokady
-            return true;
+        $lockRecord = $this->getLockRecord();
+        if (null === $lockRecord) {
+            $lockRecord = new CacheRecord();
+            $lockRecord->id = $this->getLockRecordId();
+            $lockRecord->data = true;
         }
-        //zwalnianie blokady z opóźnieniem
-        $lockRecord->ttl = time() + self::RELEASE_TIMEOUT;
-        return $lockRecord->save();
+        //zakładanie blokady
+        $lockRecord->ttl = $ttl;
+        $lockRecord->save();
+    }
+
+    private function getLockRecord(): ?CacheRecord
+    {
+        return (new CacheQuery())->findPk($this->getLockRecordId());
+    }
+
+    private function getLockRecordId(): string
+    {
+        return self::CACHE_PREFIX . $this->_categoryId;
     }
 }

@@ -17,6 +17,8 @@ use Cms\Orm\CmsTagRelationRecord;
 
 /**
  * Element tagi
+ * @method self setClass(string $class)
+ * @method self setAutoTagValue()
  */
 class Tags extends Select
 {

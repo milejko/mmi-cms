@@ -16,6 +16,8 @@ use Mmi\Mvc\Controller;
 
 /**
  * Kontroler plików
+ * @property int $id
+ * @property string $hash
  */
 class FileController extends Controller
 {

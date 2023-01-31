@@ -12,6 +12,14 @@ namespace Cms\Form\Element;
 
 /**
  * Element DateTimePicker
+ * @method self setTimepicker(string $timepicker)
+ *
+ * @method ?string getDateMin()
+ * @method ?string getDateMax()
+ * @method ?string getDateMinField()
+ * @method ?string getDateMaxField()
+ * @method ?string getDatepicker()
+ * @method ?string getTimepicker()
  */
 class DateTimePicker extends \Mmi\Form\Element\ElementAbstract
 {

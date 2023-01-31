@@ -10,6 +10,8 @@
 
 namespace CmsAdmin\Grid;
 
+use CmsAdmin\Grid\Column\ColumnAbstract;
+
 /**
  * Abstrakcyjna klasa grida
  */
@@ -82,10 +84,8 @@ abstract class Grid extends \Mmi\OptionObject
 
     /**
      * Pobiera kolumnę po nazwie
-     * @param string $name
-     * @return \CmsAdmin\Grid\Column\ColumnAbstract
      */
-    final public function getColumn($name)
+    final public function getColumn(string $name): ?ColumnAbstract
     {
         //iteracja po kolumnach
         foreach ($this->getColumns() as $column) {
@@ -94,6 +94,7 @@ abstract class Grid extends \Mmi\OptionObject
                 return $column;
             }
         }
+        return null;
     }
 
     /**

@@ -34,7 +34,6 @@ class FileSystemModel
         if (strlen($fileName) < 4) {
             throw new \Mmi\App\KernelException('File name invalid');
         }
-        $this->logger = App::$di->get(LoggerInterface::class);
         $this->_name = $fileName;
     }
 

@@ -66,7 +66,7 @@ class CmsAppEventInterceptor implements AppEventInterceptorInterface
         }
         //brak autoryzacji
         if (!$auth->hasIdentity()) {
-            $this->setLoginRequest($this->request, strpos($this->request->getModuleName(), 'Admin'));
+            $this->setLoginRequest($this->request);
             //logowanie admina
             return;
         }
@@ -103,7 +103,7 @@ class CmsAppEventInterceptor implements AppEventInterceptorInterface
         $this->translate->setLocale($this->cmsLanguageDefault);
         $availableLanguages = explode(',', $this->cmsLanguageList);
         //języki nie zdefiniowane
-        if (empty($availableLanguages)) {
+        if ('' == $availableLanguages) {
             return;
         }
         //niepoprawny język
@@ -118,8 +118,6 @@ class CmsAppEventInterceptor implements AppEventInterceptorInterface
 
     /**
      * Ustawia request na logowanie admina
-     * @param \Mmi\Http\Request $request
-     * @return \Mmi\Http\Request
      */
     protected function setLoginRequest(Request $request): void
     {

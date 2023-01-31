@@ -76,14 +76,12 @@ class GridRequestHandler
 
     /**
      * Zwraca obiekt filtra na podstawie post
-     * @param \Mmi\Http\RequestPost $post
-     * @return GridStateFilter
      */
-    protected function _retrievePostFilter(\Mmi\Http\RequestPost $post)
+    protected function _retrievePostFilter(\Mmi\Http\RequestPost $post): ?GridStateFilter
     {
         //brak filtracji dla tego grida
         if (false === strpos($post->filter, $this->_grid->getClass())) {
-            return;
+            return null;
         }
         $columnName = substr($post->filter, strpos($post->filter, '[') + 1, -1);
         $tableName = null;
@@ -113,6 +111,7 @@ class GridRequestHandler
                     ->setMethod($column->getMethod())
                     ->setValue($post->value);
         }
+        return null;
     }
 
     /**

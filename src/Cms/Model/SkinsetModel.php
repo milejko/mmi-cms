@@ -2,9 +2,11 @@
 
 namespace Cms\Model;
 
+use Cms\App\CmsSectionConfig;
 use Cms\App\CmsSkinConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\App\CmsTemplateConfig;
+use Cms\App\CmsWidgetConfig;
 
 /**
  * Model zestawu skór
@@ -18,15 +20,11 @@ class SkinsetModel
      * Konstruktor
      * @var CmsSkinsetConfig
      */
-    private $_skinsetConfig;
+    private $skinsetConfig;
 
-    /**
-     * Konstruktor
-     * @param CmsSkinsetConfig $skinsetConfig
-     */
     public function __construct(CmsSkinsetConfig $skinsetConfig)
     {
-        $this->_skinsetConfig = $skinsetConfig;
+        $this->skinsetConfig = $skinsetConfig;
     }
 
     public function getAllowedTemplateKeysBySkinKey(string $key): array
@@ -43,10 +41,9 @@ class SkinsetModel
 
     /**
      * Zwraca sekcje po szablonie
-     * @param string $key
      * @return SectionModel[]
      */
-    public function getSectionsByKey($key)
+    public function getSectionsByKey(string $key): array
     {
         //wyszukiwanie skóry
         if (null === $skinConfig = $this->getSkinConfigByKey($key)) {
@@ -65,30 +62,27 @@ class SkinsetModel
 
     /**
      * Wybiera skórę po kluczu
-     * @param string $key
-     * @return CmsSkinConfig
      */
-    public function getSkinConfigByKey($key)
+    public function getSkinConfigByKey(string $key): ?CmsSkinConfig
     {
         //iteracja po skórach
-        foreach ($this->_skinsetConfig->getSkins() as $skinConfig) {
+        foreach ($this->skinsetConfig->getSkins() as $skinConfig) {
             //porównanie klucza do klucza skóry
             if ($skinConfig->getKey() == substr($key, 0, strlen($skinConfig->getKey()))) {
                 return $skinConfig;
             }
         }
+        return null;
     }
 
     /**
      * Wybiera template po kluczu
-     * @param string $key
-     * @return CmsTemplateConfig
      */
-    public function getTemplateConfigByKey($key)
+    public function getTemplateConfigByKey(string $key): ?CmsTemplateConfig
     {
         //wyszukiwanie skóry
         if (null === $skinConfig = $this->getSkinConfigByKey($key)) {
-            return;
+            return null;
         }
         //iteracja po szablonach
         foreach ($skinConfig->getTemplates() as $templateConfig) {
@@ -99,22 +93,21 @@ class SkinsetModel
                 return $templateConfig;
             }
         }
+        return null;
     }
 
     /**
      * Pobiera sekcję po kluczu
-     * @param string $key
-     * @return CmsSectionConfig
      */
-    public function getSectionConfigByKey($key)
+    public function getSectionConfigByKey(string $key): ?CmsSectionConfig
     {
         //wyszukiwanie skóry
         if (null === $skinConfig = $this->getSkinConfigByKey($key)) {
-            return;
+            return null;
         }
         //wyszukiwanie szablonu
         if (null === $templateConfig = $this->getTemplateConfigByKey($key)) {
-            return;
+            return null;
         }
         //wyszukiwanie sekcji
         foreach ($templateConfig->getSections() as $sectionConfig) {
@@ -125,25 +118,24 @@ class SkinsetModel
                 return $sectionConfig;
             }
         }
+        return null;
     }
 
     /**
      * Pobiera widget po kluczu
-     * @param string $key
-     * @return CmsWidgetConfig
      */
-    public function getWidgetConfigByKey($key)
+    public function getWidgetConfigByKey(string $key): ?CmsWidgetConfig
     {
         //wyszukiwanie skóry
         if (null === $skinConfig = $this->getSkinConfigByKey($key)) {
-            return;
+            return null;
         }
         //wyszukiwanie szablonu
         if (null === $templateConfig = $this->getTemplateConfigByKey($key)) {
-            return;
+            return null;
         }
         if (null === $sectionConfig = $this->getSectionConfigByKey($key)) {
-            return;
+            return null;
         }
         //iteracja po szablonach
         foreach ($sectionConfig->getWidgets() as $widgetConfig) {
@@ -152,5 +144,6 @@ class SkinsetModel
                 return $widgetConfig;
             }
         }
+        return null;
     }
 }

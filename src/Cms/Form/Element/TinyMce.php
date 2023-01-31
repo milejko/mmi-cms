@@ -22,11 +22,32 @@ use Mmi\Session\SessionInterface;
  * @method string getObject() pobiera obiekt
  * @method int getObjectId() pobiera identyfikator obiektu
  * @method int getUploaderId() pobiera identyfikator uploadera
+ * @method ?bool getResize()
+ * @method ?int getHeight()
+ * @method ?int getWidth()
+ * @method ?string getToolbars()
+ * @method ?string getContextMenu()
+ * @method ?string getMenubar()
+ * @method ?string getFontSizeFormats()
+ * @method ?string getMode()
+ * @method ?string getFontFormats()
+ * @method ?string getPlugins()
+ * @method ?string getCustomConfig()
  *
  * Settery
  * @method self setObject($object) ustawia obiekt
  * @method self setObjectId($id) ustawia identyfikator obiektu
  * @method self setUploaderId($id) ustawia id uploadera
+ * @method self setContextMenu(string $value)
+ * @method self setToolbars(string $value)
+ * @method self setMenubar(string $value)
+ * @method self setPlugins(string $value)
+ * @method self setHeight(int $value)
+ * @method self setWidth(int $value)
+ * @method self setFontFormats(string $value)
+ * @method self setResize(string $value)
+ * @method self setFontSizeFormats(string $value)
+ * @method self unsetMode()
  */
 class TinyMce extends UploaderElementAbstract
 {
