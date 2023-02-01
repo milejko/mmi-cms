@@ -47,28 +47,23 @@ class CategoryWidgetRelationController extends Controller
         if (!$this->id && !(new CategoryValidationModel($category, $this->cmsSkinsetConfig))->isWidgetAvailable($request->widget)) {
             $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $request->categoryId, 'originalId' => $request->originalId, 'uploaderId' => $category->id]);
         }
-        //brak ID - nowy rekord
-        if (!$this->id) {
-            //nowy rekord relacji
-            $widgetRelationRecord = new \Cms\Orm\CmsCategoryWidgetCategoryRecord();
-            //parametry relacji
-            $widgetRelationRecord->widget = $request->widget;
-            $widgetRelationRecord->cmsCategoryId = $request->categoryId;
-            //maksymalna wartość posortowania
-            $maxOrder = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
+        //nowy rekord relacji
+        $widgetRelationRecord = new \Cms\Orm\CmsCategoryWidgetCategoryRecord();
+        //parametry relacji
+        $widgetRelationRecord->widget = $request->widget;
+        $widgetRelationRecord->cmsCategoryId = $request->categoryId;
+        $widgetRelationRecord->order = time();
+        //istnieje ID
+        if ($request->id) {
+            $widgetRelationRecord = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
+                ->join('cms_category')->on('cms_category_id')
                 ->whereCmsCategoryId()->equals($request->categoryId)
-                ->findMax('order');
-            $widgetRelationRecord->order = $maxOrder !== null ? $maxOrder + 1 : 0;
+                ->whereWidget()->equals($request->widget)
+                ->findPk($request->id);
         }
-        $widgetRelationRecord = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
-            ->join('cms_category')->on('cms_category_id')
-            ->whereCmsCategoryId()->equals($request->categoryId)
-            ->whereWidget()->equals($request->widget)
-            ->findPk($request->id);
-        //wyszukiwanie relacji do edycji
-        if ($request->id && null === $widgetRelationRecord) {
+        if (null === $widgetRelationRecord) {
             //brak relacji
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id]);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id]);
         }
         //modyfikacja breadcrumbów
         $this->view->adminNavigation()->removeLastBreadcrumb()->removeLastBreadcrumb();
@@ -105,9 +100,11 @@ class CategoryWidgetRelationController extends Controller
     {
         $category = $this->getCategoryOrRedirect($request->categoryId);
         //wyszukiwanie relacji do edycji
-        if (null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
+        if (
+            null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
             ->whereCmsCategoryId()->equals($category->id)
-            ->findPk($this->id)) {
+            ->findPk($this->id)
+        ) {
             return '';
         }
         //usuwanie - logika widgeta
@@ -128,9 +125,11 @@ class CategoryWidgetRelationController extends Controller
     {
         $category = $this->getCategoryOrRedirect($request->categoryId);
         //wyszukiwanie relacji do edycji
-        if (null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
+        if (
+            null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
             ->whereCmsCategoryId()->equals($category->id)
-            ->findPk($request->id)) {
+            ->findPk($request->id)
+        ) {
             return '';
         }
         //zmiana widoczności relacji
