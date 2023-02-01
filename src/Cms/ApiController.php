@@ -31,11 +31,12 @@ use Cms\Orm\CmsCategoryRecord;
 use Mmi\Cache\CacheInterface;
 use Mmi\Http\Request;
 use Mmi\Http\Response;
+use Mmi\Mvc\Controller;
 
 /**
  * Kontroler kategorii
  */
-class ApiController extends \Mmi\Mvc\Controller
+class ApiController extends Controller
 {
     /**
      * @Inject
@@ -102,7 +103,7 @@ class ApiController extends \Mmi\Mvc\Controller
         $skinConfigTransport->attributes = $skinConfig->getAttributes();
         //available templates
         $skinConfigTransport->templates = array_map(function (CmsTemplateConfig $config) {
-            return $config->getKey();
+            return $config->key;
         }, $skinConfig->getTemplates());
         //links
         $skinConfigTransport->_links = [(
