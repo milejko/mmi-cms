@@ -102,7 +102,7 @@ class ApiController extends \Mmi\Mvc\Controller
         $skinConfigTransport->attributes = $skinConfig->getAttributes();
         //available templates
         $skinConfigTransport->templates = array_map(function (CmsTemplateConfig $config) {
-            return $config->key;
+            return $config->getKey();
         }, $skinConfig->getTemplates());
         //links
         $skinConfigTransport->_links = [(
