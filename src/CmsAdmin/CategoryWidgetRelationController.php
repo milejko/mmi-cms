@@ -100,8 +100,7 @@ class CategoryWidgetRelationController extends Controller
     {
         $category = $this->getCategoryOrRedirect($request->categoryId);
         //wyszukiwanie relacji do edycji
-        if (
-            null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
+        if (null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
             ->whereCmsCategoryId()->equals($category->id)
             ->findPk($this->id)
         ) {
@@ -125,8 +124,7 @@ class CategoryWidgetRelationController extends Controller
     {
         $category = $this->getCategoryOrRedirect($request->categoryId);
         //wyszukiwanie relacji do edycji
-        if (
-            null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
+        if (null === $widgetRelation = (new \Cms\Orm\CmsCategoryWidgetCategoryQuery())
             ->whereCmsCategoryId()->equals($category->id)
             ->findPk($request->id)
         ) {
