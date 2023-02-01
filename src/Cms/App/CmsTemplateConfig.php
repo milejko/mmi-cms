@@ -2,8 +2,6 @@
 
 namespace Cms\App;
 
-use Mmi\App\KernelException;
-
 /**
  * Konfiguracja szablonu
  */
