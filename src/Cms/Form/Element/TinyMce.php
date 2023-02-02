@@ -281,9 +281,11 @@ class TinyMce extends UploaderElementAbstract
         //dołączanie skryptu
         $this->view->headScript()->appendScript(
             "
-            var configJson = $config;
-            configJson.language = request.locale;
-            tinyMCE.init(configJson);
+            $('.tinymce').each(function () {
+                let configJson = $(this).data('config');
+                configJson.language = request.locale;
+                tinyMCE.init(configJson);
+            });
         "
         );
 
@@ -291,7 +293,7 @@ class TinyMce extends UploaderElementAbstract
         $this->unsetMode()->unsetCustomConfig()->unsetCss()->unsetTheme()->unsetSkin()
             ->unsetPlugins()->unsetContextMenu()->unsetResize()->unsetMenubar()
             ->unsetImageAdvanceTab()->unsetFontFormats()->unsetFontSizeFormats()
-            ->unsetToolbars()->unsetImageCaption();
+            ->unsetImageCaption();
 
         return parent::fetchField();
     }
