@@ -11,9 +11,6 @@
 namespace Tests\Unit\Cms;
 
 use Cms\ApiController;
-use Cms\App\CmsSkinConfig;
-use Cms\App\CmsSkinsetConfig;
-use Cms\App\CmsTemplateConfig;
 use Mmi\App\AppTesting;
 use Mmi\Http\Request;
 use PHPUnit\Framework\TestCase;
@@ -25,28 +22,7 @@ class ApiControllerTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         self::$apiController = AppTesting::$di->get(ApiController::class);
-        /**
-         * @var CmsSkinsetConfig $skinset
-         */
-        $skinset = AppTesting::$di->get(CmsSkinsetConfig::class);
-        $sampleSkin = (new CmsSkinConfig)
-            ->setKey('sample')
-            ->addTemplate((new CmsTemplateConfig)
-                ->setAllowedOnRoot()
-                ->setKey('sampletpl')
-                ->setName('Sample template')
-            )
-            ->setName('Sample Skin')
-            ->setPreviewUrl('https://somesamplefrontenddomain.com/preview')
-            ->setAttributes(['sample-attribute' => 'value']);
-        $skinset->addSkin($sampleSkin);
     }
-
-    public static function tearDownAfterClass(): void
-    {
-        AppTesting::$di->set(CmsSkinsetConfig::class, new CmsSkinsetConfig());
-    }
-
 
     public function testIfInexistentScopeGives404(): void
     {
@@ -87,12 +63,4 @@ class ApiControllerTest extends TestCase
         self::assertEquals('application/json', $response->getType());
         self::assertEquals('{"message":"Skin not found"}', $response->getContent());
     }
-
-    public function testIfInexistentPageGives404(): void
-    {
-        $response = self::$apiController->getCategoryAction(new Request(['scope' => 'sample', 'uri' => 'inexistent']));
-        self::assertEquals(404, $response->getCode());
-        self::assertEquals('application/json', $response->getType());
-    }
-
 }

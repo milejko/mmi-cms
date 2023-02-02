@@ -9,7 +9,9 @@
 
 declare(strict_types=1);
 
+use Cms\App\CmsSkinsetConfig;
 use Mmi\App\AppTesting;
+use Tests\Mock\Cms\SampleSkinConfigMock;
 
 //definicja katalogu bazowego
 define('BASE_PATH', __DIR__ . '/../');
@@ -19,6 +21,8 @@ require BASE_PATH . 'vendor/autoload.php';
 
 //zmienne testowe
 putenv('APP_DEBUG_ENABLED=0');
+putenv('CACHE_SYSTEM_ENABLED=0');
+putenv('CACHE_PUBLIC_ENABLED=0');
 putenv('DB_HOST=' . BASE_PATH . '/var/test-db.sqlite');
 putenv('DB_DRIVER=sqlite');
 
@@ -29,7 +33,10 @@ foreach (['var/cache', 'var/compile', 'var/coverage', 'var/data', 'var/log', 'va
 }
 
 //kopiowanie testowej bazy danych do tmp
-#copy(BASE_PATH . '/tests/data/db.sqlite', BASE_PATH . '/var/test-db.sqlite');
+copy(BASE_PATH . '/tests/Mock/test-db.sqlite', BASE_PATH . '/var/test-db.sqlite');
 
 //run application
 (new AppTesting())->run();
+
+//skinset configuration
+AppTesting::$di->get(CmsSkinsetConfig::class)->addSkin(new SampleSkinConfigMock());
