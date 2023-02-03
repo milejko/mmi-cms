@@ -19,12 +19,18 @@ class SampleSkinConfigMock extends CmsSkinConfig
     {
         $this
             ->setKey('sample')
-            ->addTemplate((new CmsTemplateConfig)
+            ->addTemplate((new CmsTemplateConfig())
                 ->setAllowedOnRoot()
                 ->setControllerClassName(SampleTplControllerClassMock::class)
                 ->setCompatibleChildrenKeys(['sampletpl'])
                 ->setKey('sampletpl')
                 ->setName('Sample template'))
+            ->addTemplate((new CmsTemplateConfig())
+                ->setAllowedOnRoot()
+                ->setControllerClassName(SampleTplInvalidControllerClassMock::class)
+                ->setCompatibleChildrenKeys([])
+                ->setKey('invalidsampletpl')
+                ->setName('Invalid template'))
             ->setName('Sample Skin')
             ->setPreviewUrl('https://somesamplefrontenddomain.com/preview')
             ->setAttributes(['sample-attribute' => 'value']);

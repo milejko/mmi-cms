@@ -33,8 +33,7 @@ class ApiControllerTest extends TestCase
         self::assertEquals('application/json', $response->getType());
         $contentArray = json_decode($response->getContent(), true);
 
-        self::assertCount(3, $contentArray['children']);
-        
+        self::assertCount(4, $contentArray['children']);
         $parentElement = $contentArray['children'][0];
         self::assertEquals('sample name (also a title)', $parentElement['name']);
         self::assertEquals('sample/sampletpl', $parentElement['template']);
@@ -82,7 +81,7 @@ class ApiControllerTest extends TestCase
         $response = self::$apiController->getCategoryAction(new Request(['scope' => 'sample', 'uri' => 'sample-name-also-a-title']));
         self::assertEquals(200, $response->getCode());
         self::assertEquals('application/json', $response->getType());
-        
+
         $contentArray = json_decode($response->getContent(), true);
         self::assertNotNull($contentArray['id']);
         self::assertEquals('sample/sampletpl', $contentArray['template']);
@@ -96,8 +95,8 @@ class ApiControllerTest extends TestCase
         self::assertEquals('self', $contentArray['_links'][1]['rel']);
 
         self::assertEmpty($contentArray['breadcrumbs']);
-        
-        self::assertCount(2, $contentArray['siblings']);
+
+        self::assertCount(3, $contentArray['siblings']);
         $firstSibling = $contentArray['siblings'][0];
         self::assertEquals('Sample redirect', $firstSibling['name']);
         self::assertEquals('https://www.google.com', $firstSibling['_links'][0]['href']);
@@ -126,7 +125,7 @@ class ApiControllerTest extends TestCase
         $response = self::$apiController->getCategoryAction(new Request(['scope' => 'sample', 'uri' => 'sample-name-also-a-title/another-name']));
         self::assertEquals(200, $response->getCode());
         self::assertEquals('application/json', $response->getType());
-        
+
         $contentArray = json_decode($response->getContent(), true);
         self::assertNotNull($contentArray['id']);
         self::assertEquals('sample/sampletpl', $contentArray['template']);
@@ -181,7 +180,7 @@ class ApiControllerTest extends TestCase
         self::assertEquals('self', $contentArray['_links'][1]['rel']);
 
         self::assertEmpty($contentArray['sections']);
-        self::assertEmpty($contentArray['children']);
+        self::assertCount(1, $contentArray['children']);
 
         self::assertCount(1, $contentArray['breadcrumbs']);
         $breadcrumb = $contentArray['breadcrumbs'][0];
@@ -192,5 +191,126 @@ class ApiControllerTest extends TestCase
         $sibling = $contentArray['siblings'][0];
         self::assertEquals('another name', $sibling['name']);
         self::assertEquals('/api/sample/contents/sample-name-also-a-title/another-name', $sibling['_links'][0]['href']);
+    }
+
+    public function testIfCategoryCanBeReceivedByCustomUri(): void
+    {
+        $response = self::$apiController->getCategoryAction(new Request(['scope' => 'sample', 'uri' => 'get-me-by-this-address']));
+        self::assertEquals(200, $response->getCode());
+        self::assertEquals('application/json', $response->getType());
+
+        $contentArray = json_decode($response->getContent(), true);
+        self::assertEquals('unimportant', $contentArray['name']);
+        self::assertEquals('get-me-by-this-address', $contentArray['path']);
+        self::assertEmpty($contentArray['attributes']);
+        self::assertEquals('sample/sampletpl', $contentArray['template']);
+        self::assertEquals('/api/sample/contents', $contentArray['_links'][0]['href']);
+        self::assertEquals('contents', $contentArray['_links'][0]['rel']);
+        self::assertEquals('/api/sample/contents/get-me-by-this-address', $contentArray['_links'][1]['href']);
+        self::assertEquals('self', $contentArray['_links'][1]['rel']);
+    }
+
+    public function testRedirectingUriToCustomUriIfPresent(): void
+    {
+        $response = self::$apiController->getCategoryAction(new Request(['scope' => 'sample', 'uri' => 'sample-name-also-a-title/unimportant']));
+        self::assertEquals(301, $response->getCode());
+        self::assertEquals('application/json', $response->getType());
+        self::assertEquals('{"_links":[{"href":"\/api\/sample\/contents\/get-me-by-this-address","rel":"external","method":"REDIRECT"}]}', $response->getContent());
+    }
+
+    public function testIfHistoricalSlugWorksAsARedirect(): void
+    {
+        $response = self::$apiController->getCategoryAction(new Request(['scope' => 'sample', 'uri' => 'sample-name']));
+        self::assertEquals(301, $response->getCode());
+        self::assertEquals('application/json', $response->getType());
+        self::assertEquals('{"_links":[{"href":"\/api\/sample\/contents\/sample-name-also-a-title","rel":"external","method":"REDIRECT"}]}', $response->getContent());
+    }
+
+    public function testIfRedirectCategoryGivessProperRedirect(): void
+    {
+        $response = self::$apiController->getCategoryAction(new Request(['scope' => 'sample', 'uri' => 'sample-redirect']));
+        self::assertEquals(301, $response->getCode());
+        self::assertEquals('application/json', $response->getType());
+        self::assertEquals('{"_links":[{"href":"https:\/\/www.google.com","rel":"external","method":"REDIRECT"}]}', $response->getContent());
+    }
+
+    public function testIfRecordWithInvalidTemplateCanNotBeReceived(): void
+    {
+        $response = self::$apiController->getCategoryAction(new Request(['scope' => 'sample', 'uri' => 'invalid']));
+        self::assertEquals(404, $response->getCode());
+    }
+
+    public function testIfRecordWithBuggedTemplateCanNotBeReceived(): void
+    {
+        $response = self::$apiController->getCategoryAction(new Request(['scope' => 'sample', 'uri' => 'bugged-template']));
+        self::assertEquals(404, $response->getCode());
+        self::assertEquals('{"message":"some bug"}', $response->getContent());
+    }
+
+    public function testIfIdCanBeRedirectedToUri(): void
+    {
+        $response = self::$apiController->redirectIdAction(new Request(['id' => 1]));
+        self::assertEquals(301, $response->getCode());
+        self::assertEquals('application/json', $response->getType());
+        self::assertEquals('{"_links":[{"href":"\/api\/sample\/contents\/sample-name-also-a-title","rel":"external","method":"REDIRECT"}]}', $response->getContent());
+    }
+
+    public function testIfInvalidTemplateRedirectGivesUnsupportedError(): void
+    {
+        $response = self::$apiController->redirectIdAction(new Request(['id' => 9]));
+        self::assertEquals(404, $response->getCode());
+        self::assertEquals('application/json', $response->getType());
+        self::assertEquals('{"message":"Page unsupported"}', $response->getContent());
+    }
+
+    public function testIfIdCanNotBeRedirectedIfInactive(): void
+    {
+        $response = self::$apiController->redirectIdAction(new Request(['id' => 6]));
+        self::assertEquals(404, $response->getCode());
+        self::assertEquals('application/json', $response->getType());
+        self::assertEquals('{"message":"Page not found"}', $response->getContent());
+    }
+
+    public function testPublishedCategoryPreview(): void
+    {
+        $response = self::$apiController->getCategoryPreviewAction(new Request(['scope' => 'sample', 'uri' => 'sample-name-also-a-title/yet-another-name']));
+        self::assertEquals(200, $response->getCode());
+
+        $contentArray = json_decode($response->getContent(), true);
+
+        self::assertEquals('yet another name', $contentArray['name']);
+        self::assertEquals('sample/sampletpl', $contentArray['template']);
+        self::assertFalse($contentArray['visible']);
+        self::assertEquals(['some-other-attribute' => 'some-other-value'], $contentArray['attributes']);
+        self::assertEquals('/api/sample/contents', $contentArray['_links'][0]['href']);
+        self::assertEquals('contents', $contentArray['_links'][0]['rel']);
+        self::assertEquals('/api/sample/contents/preview/sample-name-also-a-title/yet-another-name', $contentArray['_links'][1]['href']);
+        self::assertEquals('self', $contentArray['_links'][1]['rel']);
+    }
+
+    public function testDraftCategoryPreview(): void
+    {
+        $response = self::$apiController->getCategoryPreviewAction(new Request(['scope' => 'sample', 'id' => 8, 'originalId' => 1, 'authId' => 1]));
+        self::assertEquals(200, $response->getCode());
+        $contentArray = json_decode($response->getContent(), true);
+        self::assertEquals('sample name', $contentArray['name']);
+        self::assertEquals('sample/sampletpl', $contentArray['template']);
+        self::assertEquals('sample-name', $contentArray['path']);
+        self::assertEmpty($contentArray['attributes']);
+        self::assertCount(2, $contentArray['children']);
+        self::assertEmpty($contentArray['breadcrumbs']);
+        self::assertCount(2, $contentArray['siblings']);
+        self::assertEquals('/api/sample/contents/preview/sample-name', $contentArray['_links'][1]['href']);
+        self::assertEquals('self', $contentArray['_links'][1]['rel']);
+    }
+
+    public function testDraftCategoryPreviewWithMessedUpParams(): void
+    {
+        $response = self::$apiController->getCategoryPreviewAction(new Request(['scope' => 'sample', 'id' => 8, 'originalId' => 1, 'authId' => 2]));
+        self::assertEquals(404, $response->getCode());
+        $response = self::$apiController->getCategoryPreviewAction(new Request(['scope' => 'sample', 'id' => 8, 'originalId' => 2, 'authId' => 2]));
+        self::assertEquals(404, $response->getCode());
+        $response = self::$apiController->getCategoryPreviewAction(new Request(['scope' => 'sample', 'id' => 7, 'originalId' => 1, 'authId' => 2]));
+        self::assertEquals(404, $response->getCode());
     }
 }
