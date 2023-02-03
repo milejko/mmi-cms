@@ -10,20 +10,23 @@
 
 namespace Cms\Mvc\ViewHelper;
 
+use Cms\Orm\CmsFileRecord;
+use Mmi\Mvc\ViewHelper\HelperAbstract;
+
 /**
  * Helper miniatur
  */
-class Thumb extends \Mmi\Mvc\ViewHelper\HelperAbstract
+class Thumb extends HelperAbstract
 {
     /**
-     * Metoda główna, generuje miniaturę
-     * @param \Cms\Orm\CmsFileRecord $file instancja pliku
-     * @param string $type skala
-     * @param string $value
+     * Metoda główna generuje miniaturę
+     * @param CmsFileRecord|null $file instancja pliku
+     * @param string|null $type skala
+     * @param int|string|null $value
      * @return string
      */
-    public function thumb(\Cms\Orm\CmsFileRecord $file, $type = null, $value = null)
+    public function thumb(?CmsFileRecord $file, ?string $type = null, $value = null): string
     {
-        return $file->getUrl($type, $value);
+        return $file instanceof CmsFileRecord ? $file->getUrl($type, $value) : '/resource/cmsAdmin/images/no-file.png';
     }
 }
