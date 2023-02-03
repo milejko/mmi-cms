@@ -180,6 +180,8 @@ function multiuploadInitAdd(containerId) {
                                 newItem.find('.select2').select2();
                                 multifieldInitContainer(containerId);
                                 multiuploadInitContainer(containerId);
+                                multifieldRemoveTinyMce(newItem);
+                                multifieldInitTinyMce(newItem);
                                 multifieldToggleActive(newItem);
                             }
 
