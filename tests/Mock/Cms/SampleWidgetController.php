@@ -10,8 +10,15 @@
 
 namespace Tests\Mock\Cms;
 
-use Cms\AbstractTemplateController;
+use Cms\AbstractWidgetController;
 
-class SampleTplControllerClassMock extends AbstractTemplateController
+class SampleWidgetController extends AbstractWidgetController
 {
+    public function editAction()
+    {
+    }
+
+    public function previewAction()
+    {
+    }
 }

@@ -11,6 +11,7 @@
 namespace Tests\Mock\Cms;
 
 use Cms\Orm\CmsCategoryRecord;
+use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 
 class SampleCategoryData
 {
@@ -58,6 +59,34 @@ class SampleCategoryData
         $yetAnotherRecord->configJson = json_encode(['some-other-attribute' => 'some-other-value']);
         $yetAnotherRecord->status = CmsCategoryRecord::STATUS_ACTIVE;
         $yetAnotherRecord->save();
+
+        $yetAnotherRecordWidget1 = new CmsCategoryWidgetCategoryRecord();
+        $yetAnotherRecordWidget1->id = 1;
+        $yetAnotherRecordWidget1->uuid = '11234-uuid';
+        $yetAnotherRecordWidget1->cmsCategoryId = $yetAnotherRecord->id;
+        $yetAnotherRecordWidget1->configJson = json_encode(['test' => 'value']);
+        $yetAnotherRecordWidget1->order = 1;
+        $yetAnotherRecordWidget1->widget = 'sample/sampletpl/main/samplewidget';
+        $yetAnotherRecordWidget1->save();
+
+        $yetAnotherRecordWidget2 = new CmsCategoryWidgetCategoryRecord();
+        $yetAnotherRecordWidget2->id = 2;
+        $yetAnotherRecordWidget2->uuid = '21234-uuid';
+        $yetAnotherRecordWidget2->cmsCategoryId = $yetAnotherRecord->id;
+        $yetAnotherRecordWidget2->configJson = json_encode(['test2' => 'value2']);
+        $yetAnotherRecordWidget2->order = 2;
+        $yetAnotherRecordWidget2->widget = 'sample/sampletpl/main/anothersamplewidget';
+        $yetAnotherRecordWidget2->save();
+
+        $yetAnotherRecordWidget3Invalid = new CmsCategoryWidgetCategoryRecord();
+        $yetAnotherRecordWidget3Invalid->id = 3;
+        $yetAnotherRecordWidget3Invalid->uuid = '31234-uuid';
+        $yetAnotherRecordWidget3Invalid->cmsCategoryId = $yetAnotherRecord->id;
+        $yetAnotherRecordWidget3Invalid->configJson = json_encode(['test3' => 'value3']);
+        $yetAnotherRecordWidget3Invalid->order = 3;
+        $yetAnotherRecordWidget3Invalid->widget = 'nothing/matches/here/oh-no';
+        $yetAnotherRecordWidget3Invalid->save();
+
 
         $redirectRecord = new CmsCategoryRecord();
         $redirectRecord->id = 4;

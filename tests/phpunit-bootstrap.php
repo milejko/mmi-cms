@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 use Cms\App\CmsSkinsetConfig;
 use Mmi\App\AppTesting;
-use Tests\Mock\Cms\SampleSkinConfigMock;
+use Tests\Mock\Cms\SampleSkinConfig;
 
 //definicja katalogu bazowego
 define('BASE_PATH', __DIR__ . '/../');
@@ -39,4 +39,4 @@ copy(BASE_PATH . '/tests/Mock/test-db.sqlite', BASE_PATH . '/var/test-db.sqlite'
 (new AppTesting())->run();
 
 //skinset configuration
-AppTesting::$di->get(CmsSkinsetConfig::class)->addSkin(new SampleSkinConfigMock());
+AppTesting::$di->get(CmsSkinsetConfig::class)->addSkin(new SampleSkinConfig());

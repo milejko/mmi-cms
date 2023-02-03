@@ -158,13 +158,20 @@ class ApiControllerTest extends TestCase
         self::assertEquals('/api/sample/contents/sample-name-also-a-title/yet-another-name', $sibling['_links'][0]['href']);
     }
 
-    public function testIfExternalRedirectWorksProperly(): void
+    public function testIfCategoryWithWidgetsIsProperlyRendered(): void
     {
         $response = self::$apiController->getCategoryAction(new Request(['scope' => 'sample', 'uri' => 'sample-name-also-a-title/yet-another-name']));
         self::assertEquals(200, $response->getCode());
         self::assertEquals('application/json', $response->getType());
 
         $contentArray = json_decode($response->getContent(), true);
+
+        self::assertCount(1, $contentArray['sections']);
+        self::assertCount(2, $contentArray['sections']['main']);
+        self::assertEquals([
+            ['id' => '11234-uuid', 'widget' => 'samplewidget', 'order' => 1, 'files' => [], 'attributes' => ['test' => 'value']],
+            ['id' => '21234-uuid', 'widget' => 'anothersamplewidget', 'order' => 2, 'files' => [], 'attributes' => ['test2' => 'value2']],
+        ], $contentArray['sections']['main']);
 
         self::assertNotNull($contentArray['id']);
         self::assertEquals('yet another name', $contentArray['name']);
@@ -179,7 +186,6 @@ class ApiControllerTest extends TestCase
         self::assertEquals('/api/sample/contents/sample-name-also-a-title/yet-another-name', $contentArray['_links'][1]['href']);
         self::assertEquals('self', $contentArray['_links'][1]['rel']);
 
-        self::assertEmpty($contentArray['sections']);
         self::assertCount(1, $contentArray['children']);
 
         self::assertCount(1, $contentArray['breadcrumbs']);
@@ -226,7 +232,7 @@ class ApiControllerTest extends TestCase
         self::assertEquals('{"_links":[{"href":"\/api\/sample\/contents\/sample-name-also-a-title","rel":"external","method":"REDIRECT"}]}', $response->getContent());
     }
 
-    public function testIfRedirectCategoryGivessProperRedirect(): void
+    public function testIfRedirectCategoryGivesProperRedirect(): void
     {
         $response = self::$apiController->getCategoryAction(new Request(['scope' => 'sample', 'uri' => 'sample-redirect']));
         self::assertEquals(301, $response->getCode());

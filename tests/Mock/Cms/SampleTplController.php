@@ -11,13 +11,7 @@
 namespace Tests\Mock\Cms;
 
 use Cms\AbstractTemplateController;
-use Cms\Api\TransportInterface;
 
-class SampleTplInvalidControllerClassMock extends AbstractTemplateController
+class SampleTplController extends AbstractTemplateController
 {
-    public function getTransportObject(): TransportInterface
-    {
-        throw new \Exception('some bug');
-        return parent::getTransportObject();
-    }
 }
