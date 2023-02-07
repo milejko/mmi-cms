@@ -67,7 +67,7 @@ class CategoryAclForm extends \Cms\Form\Form
         (new \Cms\Orm\CmsCategoryAclQuery())
             ->join('cms_category')->on('cms_category_id')
             ->where('template', 'cms_category')->like($this->getOption(self::SCOPE_CONFIG_OPTION_NAME) . '%')
-            ->whereCmsRoleId()->equals($this->getOption('roleId'))
+            ->whereRole()->equals($this->getOption('role'))
             ->delete();
         //zapis uprawnień "dozwól"
         foreach (explode(';', $this->getElement('allow')->getValue()) as $categoryId) {
@@ -78,7 +78,7 @@ class CategoryAclForm extends \Cms\Form\Form
             $aclRecord = new \Cms\Orm\CmsCategoryAclRecord();
             $aclRecord->access = 'allow';
             $aclRecord->cmsCategoryId = $categoryId;
-            $aclRecord->cmsRoleId = $this->getOption('roleId');
+            $aclRecord->role = $this->getOption('role');
             $aclRecord->save();
         }
         //zapis uprawnień "zabroń"
@@ -90,7 +90,7 @@ class CategoryAclForm extends \Cms\Form\Form
             $aclRecord = new \Cms\Orm\CmsCategoryAclRecord();
             $aclRecord->access = 'deny';
             $aclRecord->cmsCategoryId = $categoryId;
-            $aclRecord->cmsRoleId = $this->getOption('roleId');
+            $aclRecord->role = $this->getOption('role');
             $aclRecord->save();
         }
         //usunięcie cache

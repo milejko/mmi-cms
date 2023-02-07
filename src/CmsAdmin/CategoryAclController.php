@@ -58,7 +58,7 @@ class CategoryAclController extends Controller
         if ($form->isSaved()) {
             $this->getMessenger()->addMessage('messenger.categoryAcl.permissions.saved', true);
             //przekierowanie na zapisaną stronę
-            $this->getResponse()->redirect('cmsAdmin', 'categoryAcl', 'index', ['roleId' => $request->roleId]);
+            $this->getResponse()->redirect('cmsAdmin', 'categoryAcl', 'index', ['role' => $request->role]);
         }
         $this->view->categoryAclForm = $form;
     }
