@@ -85,10 +85,6 @@ class MenuService implements MenuServiceInterface
         //sorting menu by key
         ksort($menu);
         foreach ($menu as $item) {
-            //invalid item
-            if (!isset($item['id'])) {
-                continue;
-            }
             //sorting children
             $item['children'] = $this->sortMenu($item['children']);
             //adding item with sorted children

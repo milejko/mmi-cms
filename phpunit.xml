@@ -11,6 +11,7 @@
   <testsuites>
     <testsuite name="MmiCMS Test Suite">
       <directory>./tests/Unit</directory>
+      <directory>./tests/Integration</directory>
     </testsuite>
   </testsuites>
   <logging/>

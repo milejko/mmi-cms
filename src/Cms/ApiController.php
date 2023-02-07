@@ -31,11 +31,12 @@ use Cms\Orm\CmsCategoryRecord;
 use Mmi\Cache\CacheInterface;
 use Mmi\Http\Request;
 use Mmi\Http\Response;
+use Mmi\Mvc\Controller;
 
 /**
  * Kontroler kategorii
  */
-class ApiController extends \Mmi\Mvc\Controller
+class ApiController extends Controller
 {
     /**
      * @Inject
@@ -221,6 +222,10 @@ class ApiController extends \Mmi\Mvc\Controller
             //404
             return $this->getNotFoundResponse();
         }
+        //kategoria posiada niewłaściwy (niewspierany) template
+        if (null === (new SkinsetModel($this->cmsSkinsetConfig))->getTemplateConfigByKey($categoryRecord->template)) {
+            return $this->getNotFoundResponse('Page unsupported');
+        }
         //obiekt transportowy
         $redirectTransportObject = new RedirectTransport(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $categoryRecord->getScope(), $categoryRecord->getUri()));
         return $this->getResponse()->setTypeJson()
@@ -269,7 +274,7 @@ class ApiController extends \Mmi\Mvc\Controller
         if (null === $templateConfig = (new SkinsetModel($this->cmsSkinsetConfig))->getTemplateConfigByKey($category->template)) {
             return (new ErrorTransport())
                 ->setMessage('Page unsupported')
-                ->setCode(ErrorTransport::CODE_ERROR);
+                ->setCode(ErrorTransport::CODE_NOT_FOUND);
         }
         //ładowanie obiektu transportowego z bufora
         if (null === $transportObject = $this->cache->load($cacheKey = CmsCategoryRecord::CATEGORY_CACHE_TRANSPORT_PREFIX . $category->id)) {
