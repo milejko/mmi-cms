@@ -108,6 +108,6 @@ class Auth extends Form
 
     private function getRolesValue(): array
     {
-        return explode(',', $this->getRecord()->roles);
+        return explode(',', (string) $this->getRecord()->roles);
     }
 }
