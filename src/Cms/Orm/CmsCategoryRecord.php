@@ -681,14 +681,15 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $eventManager->trigger($eventName, $this);
         //triggering update events with sibling categories
         foreach ($this->getSiblingsRecords() as $siblingRecord) {
-            $eventManager->trigger(CmsAppMvcEvents::CATEGORY_UPDATE, $siblingRecord);
+            $eventManager->trigger($siblingRecord->isActive() ? CmsAppMvcEvents::CATEGORY_UPDATE : CmsAppMvcEvents::CATEGORY_DELETE, $siblingRecord);
         }
         //looking for a parent
-        if (null === $this->getParentRecord()) {
+        $parentRecord = $this->getParentRecord();
+        if (null === $parentRecord) {
             return true;
         }
         //triggering events with parent category
-        $eventManager->trigger(CmsAppMvcEvents::CATEGORY_UPDATE, $this->getParentRecord());
+        $eventManager->trigger($parentRecord->isActive() ? CmsAppMvcEvents::CATEGORY_UPDATE : CmsAppMvcEvents::CATEGORY_DELETE, $parentRecord);
         return true;
     }
 }
