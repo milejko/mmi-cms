@@ -354,7 +354,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             ->whereCmsCategoryId()->equals($this->getPk())
             ->delete();
         //usuwanie kategorii i czyszczenie bufora
-        return parent::delete() && $this->clearCache();
+        return parent::delete() && $this->clearCache() && $this->triggerEvent();
     }
 
     /**
@@ -364,9 +364,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     {
         $this->status = self::STATUS_DELETED;
         $this->_softDeleteChildren($this->id);
-        //trigger delete event
-        $this->triggerEvent();
-        return $this->save();
+        return $this->save() && $this->triggerEvent();
     }
 
     /**
@@ -379,9 +377,9 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //przywracanie rodziców
         while ($parent = $parent->getParentRecord()) {
             $parent->status = self::STATUS_ACTIVE;
-            $parent->save();
+            $parent->save() && $parent->triggerEvent();
         }
-        return $this->save();
+        return $this->save() && $this->triggerEvent();
     }
 
     /**
@@ -653,43 +651,15 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     /**
      * Triggers events using EventManager
      */
-    protected function triggerEvent(): bool
+    public function triggerEvent(): bool
     {
-        //deleted - send delete event and update event
-        if (self::STATUS_DELETED === $this->status) {
-            return $this->triggeCascadeUpdateEventSet(CmsAppMvcEvents::CATEGORY_DELETE);
-        }
-        //other statuses like DRAFT, HISTORY don't trigger events
-        if (self::STATUS_ACTIVE !== $this->status) {
+        //drafts and history don't trigger events
+        if (in_array($this->status, [self::STATUS_DRAFT, self::STATUS_HISTORY])) {
             return true;
         }
-        //inactive record triggers deletion event
-        if (!$this->isActive()) {
-            return $this->triggeCascadeUpdateEventSet(CmsAppMvcEvents::CATEGORY_DELETE);
-        }
-        //trigger update event
-        return $this->triggeCascadeUpdateEventSet(CmsAppMvcEvents::CATEGORY_UPDATE);
-    }
-
-    /**
-     * Triggers update events for parents and siblings
-     */
-    protected function triggeCascadeUpdateEventSet(string $eventName): bool
-    {
-        //triggering named event with "this"
+        //triggering events
         $eventManager = App::$di->get(EventManager::class);
-        $eventManager->trigger($eventName, $this);
-        //triggering update events with sibling categories
-        foreach ($this->getSiblingsRecords() as $siblingRecord) {
-            $eventManager->trigger($siblingRecord->isActive() ? CmsAppMvcEvents::CATEGORY_UPDATE : CmsAppMvcEvents::CATEGORY_DELETE, $siblingRecord);
-        }
-        //looking for a parent
-        $parentRecord = $this->getParentRecord();
-        if (null === $parentRecord) {
-            return true;
-        }
-        //triggering events with parent category
-        $eventManager->trigger($parentRecord->isActive() ? CmsAppMvcEvents::CATEGORY_UPDATE : CmsAppMvcEvents::CATEGORY_DELETE, $parentRecord);
+        $eventManager->trigger($this->isActive() ? CmsAppMvcEvents::CATEGORY_UPDATE : CmsAppMvcEvents::CATEGORY_DELETE, $this);
         return true;
     }
 }
