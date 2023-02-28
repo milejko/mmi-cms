@@ -3,11 +3,10 @@
 namespace Cms\Orm;
 
 use Cms\Api\Service\MenuService;
-use Cms\App\CmsAppMvcEvents;
+use Cms\Model\CategoryEventCollector;
 use Mmi\App\App;
 use Mmi\Cache\CacheInterface;
 use Mmi\DataObject;
-use Mmi\EventManager\EventManager;
 use Mmi\Mvc\View;
 use Psr\Log\LoggerInterface;
 
@@ -216,7 +215,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $versionModel = new \Cms\Model\CategoryVersion($originalRecord);
         $versionModel->create();
         //zmiana miejscami draftu z oryginałem
-        return $versionModel->exchangeOriginal($this);
+        return $versionModel->exchangeOriginal($this) && $this->sendEvents();
     }
 
     /**
@@ -354,7 +353,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             ->whereCmsCategoryId()->equals($this->getPk())
             ->delete();
         //usuwanie kategorii i czyszczenie bufora
-        return parent::delete() && $this->clearCache() && $this->triggerEvent();
+        return parent::delete() && $this->clearCache() && $this->triggerEvent() && $this->sendEvents();
     }
 
     /**
@@ -364,7 +363,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     {
         $this->status = self::STATUS_DELETED;
         $this->_softDeleteChildren($this->id);
-        return $this->save() && $this->triggerEvent();
+        return $this->save() && $this->sendEvents();
     }
 
     /**
@@ -377,9 +376,9 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //przywracanie rodziców
         while ($parent = $parent->getParentRecord()) {
             $parent->status = self::STATUS_ACTIVE;
-            $parent->save() && $parent->triggerEvent();
+            $parent->save();
         }
-        return $this->save() && $this->triggerEvent();
+        return $this->save() && $this->sendEvents();
     }
 
     /**
@@ -547,7 +546,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     protected function _softDeleteChildren($parentId)
     {
         foreach ($this->_getPublishedChildren($parentId, $this->getScope()) as $categoryRecord) {
-            $categoryRecord->softDelete();
+            $categoryRecord->status = self::STATUS_DELETED;
+            $categoryRecord->save();
             $this->_softDeleteChildren($categoryRecord->id);
         }
     }
@@ -653,13 +653,26 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public function triggerEvent(): bool
     {
-        //drafts and history don't trigger events
-        if (in_array($this->status, [self::STATUS_DRAFT, self::STATUS_HISTORY])) {
+        //triggering events
+        $eventCollector = App::$di->get(CategoryEventCollector::class);
+        $eventCollector->collectCategory($this);
+        foreach ($this->getChildrenRecords() as $childRecord) {
+            $eventCollector->collectCategory($childRecord);
+        }
+        foreach ($this->getSiblingsRecords() as $siblingRecord) {
+            $eventCollector->collectCategory($siblingRecord);
+        }
+        $parentRecord = $this->getParentRecord();
+        if (null === $parentRecord) {
             return true;
         }
-        //triggering events
-        $eventManager = App::$di->get(EventManager::class);
-        $eventManager->trigger($this->isActive() ? CmsAppMvcEvents::CATEGORY_UPDATE : CmsAppMvcEvents::CATEGORY_DELETE, $this);
+        $eventCollector->collectCategory($parentRecord);
+        return true;
+    }
+
+    public function sendEvents(): bool
+    {
+        App::$di->get(CategoryEventCollector::class)->triggerEvents();
         return true;
     }
 }
