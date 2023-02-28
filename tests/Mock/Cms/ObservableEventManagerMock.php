@@ -29,7 +29,7 @@ class ObservableEventManagerMock implements EventManagerInterface
 
     public function attach(string $event, object $callback = null, int $priority = 1): object
     {
-        return new stdClass;
+        return new stdClass();
     }
 
     public function detach(mixed $listener, string $eventName, bool $force): void

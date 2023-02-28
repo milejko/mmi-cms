@@ -20,7 +20,7 @@ class CategoryEventCollectorTest extends TestCase
 {
     public function testIfEmptyCollectorDoesNotTriggerAnyEvents(): void
     {
-        $collector = new CategoryEventCollector($eventManager = new ObservableEventManagerMock);
+        $collector = new CategoryEventCollector($eventManager = new ObservableEventManagerMock());
         self::assertCount(0, $eventManager->getEvents());
         $collector->triggerEvents();
         self::assertCount(0, $eventManager->getEvents());
@@ -28,7 +28,7 @@ class CategoryEventCollectorTest extends TestCase
 
     public function testIfCollectorIgnoresDraftsAndHistoryRecords(): void
     {
-        $collector = new CategoryEventCollector($eventManager = new ObservableEventManagerMock);
+        $collector = new CategoryEventCollector($eventManager = new ObservableEventManagerMock());
 
         $draft = new CmsCategoryRecord();
         $draft->id = 1;
@@ -52,7 +52,7 @@ class CategoryEventCollectorTest extends TestCase
 
     public function testIfCollectorTriggersNecessaryEventsAtTheRightTime(): void
     {
-        $collector = new CategoryEventCollector($eventManager = new ObservableEventManagerMock);
+        $collector = new CategoryEventCollector($eventManager = new ObservableEventManagerMock());
 
         $sampleCategory = new CmsCategoryRecord();
         $sampleCategory->id = 1;
@@ -89,7 +89,7 @@ class CategoryEventCollectorTest extends TestCase
 
     public function testIfCollectorTriggersOnlyLastEvent(): void
     {
-        $collector = new CategoryEventCollector($eventManager = new ObservableEventManagerMock);
+        $collector = new CategoryEventCollector($eventManager = new ObservableEventManagerMock());
 
         $sampleCategory = new CmsCategoryRecord();
         $sampleCategory->id = 1;
