@@ -3,11 +3,10 @@
 namespace Cms\Orm;
 
 use Cms\Api\Service\MenuService;
-use Cms\App\CmsAppMvcEvents;
+use Cms\Model\CategoryEventCollector;
 use Mmi\App\App;
 use Mmi\Cache\CacheInterface;
 use Mmi\DataObject;
-use Mmi\EventManager\EventManager;
 use Mmi\Mvc\View;
 use Psr\Log\LoggerInterface;
 
@@ -216,7 +215,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $versionModel = new \Cms\Model\CategoryVersion($originalRecord);
         $versionModel->create();
         //zmiana miejscami draftu z oryginałem
-        return $versionModel->exchangeOriginal($this);
+        return $versionModel->exchangeOriginal($this) && $this->sendEvents();
     }
 
     /**
@@ -354,7 +353,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             ->whereCmsCategoryId()->equals($this->getPk())
             ->delete();
         //usuwanie kategorii i czyszczenie bufora
-        return parent::delete() && $this->clearCache();
+        return parent::delete() && $this->clearCache() && $this->triggerEvent() && $this->sendEvents();
     }
 
     /**
@@ -364,9 +363,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     {
         $this->status = self::STATUS_DELETED;
         $this->_softDeleteChildren($this->id);
-        //trigger delete event
-        $this->triggerEvent();
-        return $this->save();
+        return $this->save() && $this->sendEvents();
     }
 
     /**
@@ -381,7 +378,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             $parent->status = self::STATUS_ACTIVE;
             $parent->save();
         }
-        return $this->save();
+        return $this->save() && $this->sendEvents();
     }
 
     /**
@@ -549,7 +546,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     protected function _softDeleteChildren($parentId)
     {
         foreach ($this->_getPublishedChildren($parentId, $this->getScope()) as $categoryRecord) {
-            $categoryRecord->softDelete();
+            $categoryRecord->status = self::STATUS_DELETED;
+            $categoryRecord->save();
             $this->_softDeleteChildren($categoryRecord->id);
         }
     }
@@ -653,42 +651,28 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     /**
      * Triggers events using EventManager
      */
-    protected function triggerEvent(): bool
+    public function triggerEvent(): bool
     {
-        //deleted - send delete event and update event
-        if (self::STATUS_DELETED === $this->status) {
-            return $this->triggeCascadeUpdateEventSet(CmsAppMvcEvents::CATEGORY_DELETE);
+        //triggering events
+        $eventCollector = App::$di->get(CategoryEventCollector::class);
+        $eventCollector->collectCategory($this);
+        foreach ($this->getChildrenRecords() as $childRecord) {
+            $eventCollector->collectCategory($childRecord);
         }
-        //other statuses like DRAFT, HISTORY don't trigger events
-        if (self::STATUS_ACTIVE !== $this->status) {
+        foreach ($this->getSiblingsRecords() as $siblingRecord) {
+            $eventCollector->collectCategory($siblingRecord);
+        }
+        $parentRecord = $this->getParentRecord();
+        if (null === $parentRecord) {
             return true;
         }
-        //inactive record triggers deletion event
-        if (!$this->isActive()) {
-            return $this->triggeCascadeUpdateEventSet(CmsAppMvcEvents::CATEGORY_DELETE);
-        }
-        //trigger update event
-        return $this->triggeCascadeUpdateEventSet(CmsAppMvcEvents::CATEGORY_UPDATE);
+        $eventCollector->collectCategory($parentRecord);
+        return true;
     }
 
-    /**
-     * Triggers update events for parents and siblings
-     */
-    protected function triggeCascadeUpdateEventSet(string $eventName): bool
+    public function sendEvents(): bool
     {
-        //triggering named event with "this"
-        $eventManager = App::$di->get(EventManager::class);
-        $eventManager->trigger($eventName, $this);
-        //triggering update events with sibling categories
-        foreach ($this->getSiblingsRecords() as $siblingRecord) {
-            $eventManager->trigger(CmsAppMvcEvents::CATEGORY_UPDATE, $siblingRecord);
-        }
-        //looking for a parent
-        if (null === $this->getParentRecord()) {
-            return true;
-        }
-        //triggering events with parent category
-        $eventManager->trigger(CmsAppMvcEvents::CATEGORY_UPDATE, $this->getParentRecord());
+        App::$di->get(CategoryEventCollector::class)->triggerEvents();
         return true;
     }
 }
