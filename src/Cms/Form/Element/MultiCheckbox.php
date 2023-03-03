@@ -54,7 +54,7 @@ class MultiCheckbox extends \Mmi\Form\Element\MultiCheckbox
             $checkbox
                 ->setLabel($caption)
                 ->setForm($this->_form)
-                ->setName($this->getBaseName() . '[]')
+                ->setName($this->getName() . '[]')
                 ->setValue($key)
                 ->setId($baseId . '-' . $f->filter($key))
                 ->setRenderingOrder(['fetchField']);
