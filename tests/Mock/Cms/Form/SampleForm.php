@@ -16,6 +16,5 @@ class SampleForm extends Form
 {
     public function init()
     {
-        
     }
 }
