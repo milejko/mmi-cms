@@ -1,4 +1,5 @@
 /*jslint unparam: true */
+
 /*global document, $, jQuery, id, request */
 
 function urlencode(str) {
@@ -77,4 +78,13 @@ $(document).ready(function () {
     //pola do przeciwdziałania robotom bez JS
     $('div.antirobot > input').val('js-' + $('div.antirobot > input').val() + '-js');
 
+    //licznik znaków
+    $('.form-control.field.text,.form-control.field.textarea')
+        .after('<small class="text-counter mt-1 float-right"></small>')
+        .keyup(function () {
+            $(this).siblings('.text-counter').text('liczba znaków: ' + $(this).val().length);
+        })
+        .focusout(function () {
+            $(this).siblings('.text-counter').text('');
+        });
 });
