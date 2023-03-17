@@ -41,18 +41,6 @@ class CategoryCopy
     protected $_nameSuffix = '_kopia';
 
     /**
-     * Mapowanie plików powiązanych z kategorią: oryginałów na kopie
-     * @var array
-     */
-    private $_categoryFiles = [];
-
-    /**
-     * Mapowanie plików powiązanych z widgetem: oryginałów na kopie
-     * @var array
-     */
-    private $_categoryWidgetFiles = [];
-
-    /**
      * Konstruktor
      * @param \Cms\Orm\CmsCategoryRecord $category
      */
@@ -128,8 +116,6 @@ class CategoryCopy
     protected function _clear()
     {
         $this->_copy = null;
-        $this->_categoryFiles = [];
-        $this->_categoryWidgetFiles = [];
         return $this;
     }
 
@@ -240,7 +226,6 @@ class CategoryCopy
      */
     protected function _copyWidgetRelationFiles($relationId, \Cms\Orm\CmsCategoryWidgetCategoryRecord $newRelation)
     {
-        $this->_categoryWidgetFiles = [];
         //jeśli rekord relacji jest niezapisany
         if (!$newRelation->getPk()) {
             return false;

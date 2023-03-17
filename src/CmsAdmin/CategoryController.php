@@ -399,6 +399,8 @@ class CategoryController extends Controller
             $this->getMessenger()->addMessage('messenger.category.draft.fail', false);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
         }
+        //czas dla bazy - by się rozpropagowało
+        usleep(250000);
         //przekierowanie do edycji DRAFTu - nowego ID
         $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draft->id, 'originalId' => $originalId, 'uploaderId' => $draft->id]);
     }
