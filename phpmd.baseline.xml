@@ -283,10 +283,6 @@
   <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Form/CategoryAclForm.php" method="getFilteredTree"/>
   <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/CmsAdmin/Form/CategoryAclForm.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/CmsAdmin/Form/CategoryForm.php"/>
-  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/CmsAdmin/Form/CategoryLockModel.php"/>
-  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Form/CategoryLockModel.php" method="lock"/>
-  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Form/CategoryLockModel.php" method="releaseLock"/>
-  <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/CmsAdmin/Form/CategoryLockModel.php"/>
   <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/CmsAdmin/Form/CategoryMoveForm.php"/>
   <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/Form/CategoryMoveForm.php" method="getFilteredTree"/>
   <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/CmsAdmin/Form/Contact.php"/>

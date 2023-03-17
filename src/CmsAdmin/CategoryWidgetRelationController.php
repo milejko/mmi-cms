@@ -14,6 +14,7 @@ use Cms\App\CmsScopeConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Exception\CategoryWidgetException;
 use Cms\Model\CategoryValidationModel;
+use Cms\Model\CategoryWidgetModel;
 use Cms\Model\SkinsetModel;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryRecord;
@@ -87,6 +88,7 @@ class CategoryWidgetRelationController extends Controller
         if (!$this->cmsSkinsetConfig) {
             return;
         }
+        $this->view->widgetModel = new CategoryWidgetModel($category->id);
         //sekcje do widoku
         $this->view->sections = (new SkinsetModel($this->cmsSkinsetConfig))->getSectionsByKey($category->template);
         //walidator możliwości dodawania widgetów

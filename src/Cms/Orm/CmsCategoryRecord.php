@@ -4,6 +4,7 @@ namespace Cms\Orm;
 
 use Cms\Api\Service\MenuService;
 use Cms\Model\CategoryEventCollector;
+use Cms\Model\CategoryWidgetModel;
 use Mmi\App\App;
 use Mmi\Cache\CacheInterface;
 use Mmi\DataObject;
@@ -604,8 +605,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $cache = App::$di->get(CacheInterface::class);
         $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $this->id);
         $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->id);
-        $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->cmsCategoryOriginalId);
-        foreach ($this->getWidgetModel()->getWidgetRelations() as $widget) {
+        foreach ((new CategoryWidgetModel($this->id))->getWidgetRelations() as $widget) {
             $cache->remove(CmsCategoryWidgetCategoryRecord::HTML_CACHE_PREFIX . $widget->id);
             $cache->remove(CmsCategoryWidgetCategoryRecord::JSON_CACHE_PREFIX . $widget->id);
         }
@@ -613,6 +613,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         if (self::STATUS_DRAFT == $this->status) {
             return true;
         }
+        $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->cmsCategoryOriginalId);
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($scope . $this->uri));
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($scope . $this->getInitialStateValue('uri')));
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($scope . $this->customUri));

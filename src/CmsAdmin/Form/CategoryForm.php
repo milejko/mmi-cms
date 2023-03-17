@@ -147,25 +147,10 @@ class CategoryForm extends Form
     }
 
     /**
-     * Walidator istnienia blokady
-     */
-    public function validator()
-    {
-        if ($this->getElement('commit')->getValue()) {
-            return false === (new CategoryLockModel($this->getRecord()->cmsCategoryOriginalId))->isLocked();
-        }
-        return true;
-    }
-
-    /**
      * Przed zapisem
      */
     public function beforeSave(): bool
     {
-        //zakładanie blokady na czas podmieniania wersji roboczej z aktywną
-        if ($this->getElement('commit')->getValue()) {
-            (new CategoryLockModel($this->getRecord()->cmsCategoryOriginalId))->lock();
-        }
         $visibility = $this->getElement('visibility')->getValue();
         $this->getRecord()->active = $visibility > 0;
         $this->getRecord()->visible = $visibility == 2;
@@ -194,7 +179,6 @@ class CategoryForm extends Form
         //commit wersji
         if ($this->getElement('commit')->getValue()) {
             $this->getRecord()->commitVersion();
-            (new CategoryLockModel($this->getRecord()->cmsCategoryOriginalId))->release();
         }
         return true;
     }

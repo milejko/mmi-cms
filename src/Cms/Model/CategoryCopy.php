@@ -274,7 +274,7 @@ class CategoryCopy
     protected function _copyWidgetRelations()
     {
         //dla każdego widgetu
-        foreach ($this->_category->getWidgetModel()->getWidgetRelations() as $widgetRelation) {
+        foreach ((new \Cms\Model\CategoryWidgetModel($this->_category->id))->getWidgetRelations() as $widgetRelation) {
             //nowa relacja
             $relation = new \Cms\Orm\CmsCategoryWidgetCategoryRecord();
             $relation->uuid = $widgetRelation->uuid;

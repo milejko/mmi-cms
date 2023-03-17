@@ -220,7 +220,7 @@ class CategoryController extends \Mmi\Mvc\Controller
             return 0;
         }
         //iteracja po widgetach
-        foreach ($category->getWidgetModel()->getWidgetRelations() as $widgetRelation) {
+        foreach ((new \Cms\Model\CategoryWidgetModel($category->id))->getWidgetRelations() as $widgetRelation) {
             //model widgeta
             $widgetModel = new WidgetModel($widgetRelation, $this->cmsSkinsetConfig);
             //bufor wyłączony przez widget

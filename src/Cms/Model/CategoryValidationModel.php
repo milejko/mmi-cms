@@ -25,7 +25,7 @@ class CategoryValidationModel
      */
     public function __construct(CmsCategoryRecord $categoryRecord, CmsSkinsetConfig $skinsetConfig)
     {
-        $widgetModel = $categoryRecord->getWidgetModel();
+        $widgetModel = new CategoryWidgetModel($categoryRecord->id);
         //iteracja po sekcjach szablonu
         foreach ((new SkinsetModel($skinsetConfig))->getSectionsByKey($categoryRecord->template) as $section) {
             //iteracja po dostępnych widgetach

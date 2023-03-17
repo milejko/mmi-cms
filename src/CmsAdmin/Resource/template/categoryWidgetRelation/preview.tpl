@@ -1,5 +1,5 @@
 {foreach $sections as $section}
-    {$widgetRelations = $category->getWidgetModel()->getWidgetRelationsBySectionKey($section->getKey())}
+    {$widgetRelations = $widgetModel->getWidgetRelationsBySectionKey($section->getKey())}
     {$widgetsCount = $widgetRelations|count}
     <div id="{$section->getKey()}" class="card boxSection" style="margin-bottom: 15px">
         <div class="card-header">

@@ -20,7 +20,6 @@ use Cms\Orm\CmsCategoryAclRecord;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use CmsAdmin\Form\CategoryForm;
-use CmsAdmin\Form\CategoryLockModel;
 use CmsAdmin\Form\CategoryMoveForm;
 use CmsAdmin\Model\CategoryAclModel;
 use Mmi\Cache\CacheInterface;
@@ -186,6 +185,8 @@ class CategoryController extends Controller
             $this->getMessenger()->addMessage('messenger.category.permission.denied', false);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
         }
+        //likwidacja potencjalnie uszkodzonego cache
+        //$category->clearCache();
         //modyfikacja breadcrumbów
         $this->view->adminNavigation()
             ->removeLastBreadcrumb()
@@ -388,10 +389,6 @@ class CategoryController extends Controller
         if (null !== $category->cmsCategoryOriginalId && CmsCategoryRecord::STATUS_DRAFT == $category->status) {
             return;
         }
-        //czeka do zwolnienia blokady
-        while ((new CategoryLockModel($category->id))->isLocked()) {
-            sleep(1);
-        }
         //wymuszony świeży draft jeśli informacja przyszła w url, lub kategoria jest z archiwum
         $force = $request->force || (\Cms\Orm\CmsCategoryRecord::STATUS_HISTORY == $category->status);
         //draft nie może być utworzony, ani wczytany
@@ -399,8 +396,6 @@ class CategoryController extends Controller
             $this->getMessenger()->addMessage('messenger.category.draft.fail', false);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
         }
-        //czas dla bazy - by się rozpropagowało
-        usleep(250000);
         //przekierowanie do edycji DRAFTu - nowego ID
         $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draft->id, 'originalId' => $originalId, 'uploaderId' => $draft->id]);
     }
