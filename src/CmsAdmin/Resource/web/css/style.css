@@ -11579,7 +11579,7 @@ ul.wlist li div.operation a:hover, ul.wlist li div.operation button:hover {
     padding-left: 23px !important;
 }
 
-#cmsadmin-form-auth-cmsRoles-list, .multi-checkbox ul {
+div.cmsformelementmulticheckbox ul {
     padding: 0;
     list-style-type: none;
 }
