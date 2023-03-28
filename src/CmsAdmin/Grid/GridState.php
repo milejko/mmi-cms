@@ -62,8 +62,8 @@ class GridState extends \Mmi\OptionObject
     public function setGrid(Grid $grid)
     {
         $this->_grid = $grid;
-        //przypinanie przestrzeni w sesji
-        $this->_space = new \Mmi\Session\SessionSpace($grid->getClass());
+        //przypinanie przestrzeni w sesji (z kontekstem usera)
+        $this->_space = new \Mmi\Session\SessionSpace((new \Mmi\Session\SessionSpace('Auth'))->username . $grid->getClass());
         //ustawia opcje z sesji jeśli nie puste
         $spaceArray = $this->_space->toArray();
         if (!empty($spaceArray)) {
