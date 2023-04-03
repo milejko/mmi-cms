@@ -19,7 +19,7 @@
                         </button>
                     {/if}
                 {/foreach}
-                {if $widgetsCount > 0 && aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'sort'])}
+                {if $widgetsCount > 1 && aclAllowed(['module' => 'cmsAdmin', 'controller' => 'categoryWidgetRelation', 'action' => 'sort'])}
                 <h6 class="mt-3">
                     {* zwija sekcje do sortowania *}
                         {#template.categoryWidgetRelation.widgetList#}
