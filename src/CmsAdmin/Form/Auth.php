@@ -48,17 +48,16 @@ class Auth extends Form
             ->addValidator(new Validator\EmailAddress())
             ->addValidator(new Validator\RecordUnique([new CmsAuthQuery(), 'email', $this->getRecord()->id])));
 
-        //role
-        $this->addElement((new Element\MultiCheckbox('cmsRoles'))
-            ->setLabel('form.auth.cmsRoles.label')
-            ->setDescription('form.auth.cmsRoles.description')
-            ->setMultioptions($this->getRolesMultioptions())
-            ->setValue($this->getRolesValue())
-            ->addValidator(new Validator\NotEmpty(['form.auth.cmsRoles.validator'])));
-
         //aktywny
         $this->addElement((new Element\Checkbox('active'))
             ->setLabel('form.auth.active.label'));
+
+        //role
+        $this->addElement((new Element\MultiCheckbox('cmsRoles'))
+            ->setLabel('form.auth.cmsRoles.label')
+            ->setMultioptions($this->getRolesMultioptions())
+            ->setValue($this->getRolesValue())
+            ->addValidator(new Validator\NotEmpty(['form.auth.cmsRoles.validator'])));
 
         //zmiana hasła
         $this->addElement((new Element\Text('changePassword'))
