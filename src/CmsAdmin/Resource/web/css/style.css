@@ -282,6 +282,7 @@ button::-moz-focus-inner, [type="button"]::-moz-focus-inner, [type="reset"]::-mo
 
 ul.form-radio {
     padding-inline-start: 20px;
+    list-style-type: none;
 }
 
 ul.form-radio label {
