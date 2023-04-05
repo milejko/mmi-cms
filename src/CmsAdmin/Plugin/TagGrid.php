@@ -31,6 +31,10 @@ class TagGrid extends \CmsAdmin\Grid\Grid
         $this->addColumn((new TextColumn('lang'))
             ->setLabel('grid.tag.lang.label'));
 
+        //scope taga
+        $this->addColumn((new TextColumn('scope'))
+        ->setLabel('grid.tag.scope.label'));
+
         //nazwa taga
         $this->addColumn((new TextColumn('tag'))
             ->setLabel('grid.tag.tag.label'));
