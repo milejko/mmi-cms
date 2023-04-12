@@ -290,6 +290,7 @@ ul.form-radio label {
 }
 
 input[type="radio"], input[type="checkbox"] {
+    position: relative;
     box-sizing: border-box;
     padding: 0;
 }
