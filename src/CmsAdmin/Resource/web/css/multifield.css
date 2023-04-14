@@ -68,6 +68,11 @@
   text-align: center;
 }
 
+.form-control.multifield > .field-list > .field-list-item > .icons a.sortable-handler,
+.form-control.multifield > .field-list > .field-list-item > .icons a.btn-active {
+  margin-bottom: 0.1rem;
+}
+
 .form-control.multifield > .field-list > .field-list-item > .icons > a.sortable-handler {
   cursor: move;
 }
