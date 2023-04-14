@@ -53,6 +53,8 @@ class ApiController extends Controller
      */
     private MenuServiceInterface $menuService;
 
+    private const MENU_MAX_LEVEL = 5;
+
     /**
      * Index action (available skins)
      */
@@ -135,7 +137,9 @@ class ApiController extends Controller
             //404 - skin not found
             return $this->getNotFoundResponse($e->getMessage());
         }
-        $menuTransport = (new MenuDataTransport())->setMenu($this->menuService->getMenus($request->scope));
+        $menuTransport = (new MenuDataTransport())->setMenu($this->menuService->getMenus(
+            $request->scope, self::MENU_MAX_LEVEL
+        ));
         return $this->getResponse()->setTypeJson()
             ->setCode($menuTransport->getCode())
             ->setContent($menuTransport->toString());

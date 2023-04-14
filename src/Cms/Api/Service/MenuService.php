@@ -11,18 +11,20 @@ use Cms\Model\TemplateModel;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use Mmi\Cache\CacheInterface;
+use Mmi\Orm\RecordCollection;
 
 /**
  * Menu service
  */
 class MenuService implements MenuServiceInterface
 {
-    public const CACHE_KEY = 'cms-api-navigation-';
+    public const MENU_CACHE_PREFIX = 'menu-';
+    public const MENU_CATEGORY_CACHE_PREFIX = 'category-menu-';
+    private const CACHE_TTL = 0;
     private const PATH_SEPARATOR = '/';
 
     private CacheInterface $cacheService;
     private CmsSkinsetConfig $cmsSkinsetConfig;
-    private array $orderMap = [];
 
     public function __construct(CacheInterface $cacheService, CmsSkinsetConfig $cmsSkinsetConfig)
     {
@@ -33,69 +35,30 @@ class MenuService implements MenuServiceInterface
     /**
      * Public menu getter
      */
-    public function getMenus(?string $scope): array
+    public function getMenus(?string $scope, int $maxLevel = 0): array
     {
         //loading from cache
-        if (null !== $menuStructure = $this->cacheService->load(self::CACHE_KEY . $scope)) {
+        $cacheKey = self::MENU_CACHE_PREFIX . $scope;
+        if (null !== $menuStructure = $this->cacheService->load($cacheKey)) {
             return $menuStructure;
         }
+        $menuStructure = ['children' => []];
         //getting from infrastructure + writing down item order
-        foreach ($items = $this->getFromInfrastructure($scope) as $item) {
-            $this->orderMap[$item['id']] = str_pad($item['order'], 10, "0", \STR_PAD_LEFT);
+        foreach ($this->getTopLevelFromInfrastructure($scope) as $cmsCategoryRecord) {
+            $menuStructure['children'][] = $this->formatItem($cmsCategoryRecord, 0, $maxLevel);
         }
-        //initializing empty menu structure
-        $menuStructure = [];
-        //adding items into menu
-        foreach ($items as $item) {
-            //record is created here (from array), it helps optimizing memory usage for large structures
-            $cmsCategoryRecord = new CmsCategoryRecord();
-            $cmsCategoryRecord->setFromArray($item);
-            $this->addItem($cmsCategoryRecord, $menuStructure);
-        }
-        //sorting menu
-        $orderedMenu = isset($menuStructure['children']) ? $this->sortMenu($menuStructure['children']) : [];
-        //cache save
-        $this->cacheService->save($orderedMenu, self::CACHE_KEY . $scope, 0);
-        return $orderedMenu;
+        $this->cacheService->save($menuStructure, $cacheKey, self::CACHE_TTL);
+        return $menuStructure;
     }
 
-    /**
-     * Adding item with direct nesting (unfortunately not sorted)
-     */
-    protected function addItem(CmsCategoryRecord $cmsCategoryRecord, array &$menu): void
+    private function formatItem(CmsCategoryRecord $cmsCategoryRecord, int $currentLevel, int $maxLevel): array
     {
-        //using orderMap and id to determine target table nesting
-        foreach (explode('/', trim($cmsCategoryRecord->path . '/' . $cmsCategoryRecord->id, '/')) as $id) {
-            //some objects in the path are deleted
-            if (!isset($this->orderMap[$id])) {
-                return;
-            }
-            $menu = &$menu['children'][$this->orderMap[$id] . '-' . $id];
+        //loading from cache
+        $cacheKey = self::MENU_CATEGORY_CACHE_PREFIX . $cmsCategoryRecord->id;
+        if (null !== $formattedItem = $this->cacheService->load($cacheKey)) {
+            return $formattedItem;
         }
-        //adding formatted item to menu
-        $menu = array_merge($this->formatItem($cmsCategoryRecord), $menu ?: []);
-    }
-
-    /**
-     * Menu sorter
-     */
-    protected function sortMenu(array $menu): array
-    {
-        $orderedMenu = [];
-        //sorting menu by key
-        ksort($menu);
-        foreach ($menu as $item) {
-            //sorting children
-            $item['children'] = $this->sortMenu($item['children']);
-            //adding item with sorted children
-            $orderedMenu[] = $item;
-        }
-        return $orderedMenu;
-    }
-
-    protected function formatItem(CmsCategoryRecord $cmsCategoryRecord): array
-    {
-        return [
+        $formattedItem = [
             'id'         => $cmsCategoryRecord->id,
             'name'       => $cmsCategoryRecord->name,
             'template'   => $cmsCategoryRecord->template,
@@ -106,22 +69,29 @@ class MenuService implements MenuServiceInterface
             '_links'     => $this->getLinks($cmsCategoryRecord),
             'children'   => [],
         ];
+        //attaching children
+        if ($currentLevel < $maxLevel) {
+            foreach ($cmsCategoryRecord->getChildrenRecords() as $childRecord) {
+                $formattedItem['children'][] = $this->formatItem($childRecord, $currentLevel + 1, $maxLevel);
+            }
+        }
+        $this->cacheService->save($formattedItem, $cacheKey, self::CACHE_TTL);
+        return $formattedItem;
     }
 
-    protected function getFromInfrastructure(?string $scope): array
+    private function getTopLevelFromInfrastructure(?string $scope): RecordCollection
     {
-        $query = (new CmsCategoryQuery())
+        return (new CmsCategoryQuery())
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
             ->whereActive()->equals(true)
-            ->whereTemplate()->like($scope . '%');
-        //scope is defined (filtering templates)
-        if (null !== $scope) {
-            $query->whereTemplate()->equals([$scope => $scope] + (new SkinsetModel($this->cmsSkinsetConfig))->getAllowedTemplateKeysBySkinKey($scope));
-        }
-        return $query->findFields(['id', 'template', 'name', 'uri', 'blank', 'visible', 'configJson', 'customUri', 'redirectUri', 'path', 'order']);
+            ->whereParentId()->equals(null)
+            ->whereTemplate()->equals([$scope => $scope] + (new SkinsetModel($this->cmsSkinsetConfig))->getAllowedTemplateKeysBySkinKey($scope))
+            ->orderAscOrder()
+            ->orderAscId()
+            ->find();
     }
 
-    protected function getLinks(CmsCategoryRecord $cmsCategoryRecord): array
+    private function getLinks(CmsCategoryRecord $cmsCategoryRecord): array
     {
         if ($cmsCategoryRecord->redirectUri) {
             return (new RedirectTransport($cmsCategoryRecord->redirectUri))->_links;

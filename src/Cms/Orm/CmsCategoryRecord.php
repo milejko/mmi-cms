@@ -626,8 +626,9 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope));
         }
         //drop skin menu cache
-        $cache->remove(MenuService::CACHE_KEY);
-        $cache->remove(MenuService::CACHE_KEY . $scope);
+        $cache->remove(MenuService::MENU_CACHE_PREFIX . $scope);
+        $cache->remove(MenuService::MENU_CATEGORY_CACHE_PREFIX . $this->id);
+        $cache->remove(MenuService::MENU_CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->id);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
         $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope) . $this->id);
