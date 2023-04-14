@@ -33,7 +33,7 @@ class MenuService implements MenuServiceInterface
     /**
      * Public menu getter
      */
-    public function getMenus(?string $scope): array
+    public function getMenus(string $scope): array
     {
         //loading from cache
         if (null !== $menuStructure = $this->cacheService->load(self::CACHE_KEY . $scope)) {
@@ -98,6 +98,7 @@ class MenuService implements MenuServiceInterface
         return [
             'id'         => $cmsCategoryRecord->id,
             'name'       => $cmsCategoryRecord->name,
+            'path'       => $cmsCategoryRecord->uri,
             'template'   => $cmsCategoryRecord->template,
             'blank'      => (bool) $cmsCategoryRecord->blank,
             'visible'    => (bool) $cmsCategoryRecord->visible,

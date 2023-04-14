@@ -38,21 +38,10 @@ class CategoryDraft extends \Cms\Model\CategoryCopy
      * obejmując wszystko transakcją na bazie danych
      * @return \Cms\Orm\CmsCategoryRecord
      */
-    public function createAndGetDraftForUser($userId, $force = false)
+    public function createAndGetDraftForUser($userId)
     {
-        //wyszukiwanie najnowszego draftu (chyba że wymuszony nowy)
-        if (!$force && null !== $lastDraft = (new \Cms\Orm\CmsCategoryQuery())
-            ->whereCmsCategoryOriginalId()->equals($this->_category->id)
-            ->andFieldStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_DRAFT)
-            ->andFieldDateAdd()->greater(date('Y-m-d H:i:s', strtotime(self::DRAFT_MAX_LIFETIME)))
-            ->andFieldCmsAuthId()->equals($userId)
-            ->orderDescId()
-            ->findFirst()) {
-            //zwrot ostatniego draftu
-            return $lastDraft;
-        }
         //próba kopiowania
-        if (!parent::copyWithTransaction()) {
+        if (!$this->copyWithTransaction()) {
             return;
         }
         //pobranie drafta
