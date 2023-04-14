@@ -18,7 +18,7 @@ class MultiCheckboxTest extends TestCase
 {
     public function test(): void
     {
-        $sampleForm = new SampleForm;
+        $sampleForm = new SampleForm();
         $element = (new MultiCheckbox('test'))
             ->setLabel('test label')
             ->setMultioptions(['test' => 'test']);
