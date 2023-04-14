@@ -262,7 +262,7 @@ class ApiController extends Controller
             return new RedirectTransport(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $request->scope, $category->getUri()));
         }
         //sprawdzanie kategorii
-        return $this->getCategoryTransport($category, $request);
+        return $this->getCategoryTransport($category);
     }
 
     /**
