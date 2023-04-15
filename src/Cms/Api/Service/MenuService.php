@@ -18,7 +18,7 @@ use Mmi\Orm\RecordCollection;
  */
 class MenuService implements MenuServiceInterface
 {
-    public const MENU_CACHE_PREFIX = 'menu-';
+    public const MENU_TOP_LEVEL_PREFIX = 'category-menu-top-level-';
     public const MENU_CATEGORY_CACHE_PREFIX = 'category-menu-';
     private const CACHE_TTL = 0;
     private const PATH_SEPARATOR = '/';
@@ -37,17 +37,11 @@ class MenuService implements MenuServiceInterface
      */
     public function getMenus(?string $scope, int $maxLevel = 0): array
     {
-        //loading from cache
-        $cacheKey = self::MENU_CACHE_PREFIX . $scope;
-        if (null !== $menuStructure = $this->cacheService->load($cacheKey)) {
-            return $menuStructure;
-        }
         $menuStructure = ['children' => []];
         //getting from infrastructure + writing down item order
         foreach ($this->getTopLevelFromInfrastructure($scope) as $cmsCategoryRecord) {
             $menuStructure['children'][] = $this->formatItem($cmsCategoryRecord, 0, $maxLevel);
         }
-        $this->cacheService->save($menuStructure, $cacheKey, self::CACHE_TTL);
         return $menuStructure;
     }
 
@@ -69,7 +63,7 @@ class MenuService implements MenuServiceInterface
             '_links'     => $this->getLinks($cmsCategoryRecord),
             'children'   => [],
         ];
-        //attaching children
+        //max level reached
         if ($currentLevel < $maxLevel) {
             foreach ($cmsCategoryRecord->getChildrenRecords() as $childRecord) {
                 $formattedItem['children'][] = $this->formatItem($childRecord, $currentLevel + 1, $maxLevel);
@@ -81,7 +75,12 @@ class MenuService implements MenuServiceInterface
 
     private function getTopLevelFromInfrastructure(?string $scope): RecordCollection
     {
-        return (new CmsCategoryQuery())
+        //loading from cache
+        $cacheKey = self::MENU_TOP_LEVEL_PREFIX . $scope;
+        if (null !== $topLevelCategories = $this->cacheService->load($cacheKey)) {
+            return $topLevelCategories;
+        }
+        $topLevelCategories = (new CmsCategoryQuery())
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
             ->whereActive()->equals(true)
             ->whereParentId()->equals(null)
@@ -89,6 +88,8 @@ class MenuService implements MenuServiceInterface
             ->orderAscOrder()
             ->orderAscId()
             ->find();
+        $this->cacheService->save($topLevelCategories, $cacheKey, self::CACHE_TTL);
+        return $topLevelCategories;
     }
 
     private function getLinks(CmsCategoryRecord $cmsCategoryRecord): array
