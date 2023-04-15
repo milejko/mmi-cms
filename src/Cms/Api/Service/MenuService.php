@@ -37,10 +37,10 @@ class MenuService implements MenuServiceInterface
      */
     public function getMenus(?string $scope, int $maxLevel = 0): array
     {
-        $menuStructure = ['children' => []];
+        $menuStructure = [];
         //getting from infrastructure + writing down item order
         foreach ($this->getTopLevelFromInfrastructure($scope) as $cmsCategoryRecord) {
-            $menuStructure['children'][] = $this->formatItem($cmsCategoryRecord, 0, $maxLevel);
+            $menuStructure[] = $this->formatItem($cmsCategoryRecord, 0, $maxLevel);
         }
         return $menuStructure;
     }

@@ -53,7 +53,7 @@ class ApiController extends Controller
      */
     private MenuServiceInterface $menuService;
 
-    private const MENU_MAX_LEVEL = 5;
+    private const MENU_MAX_LEVEL = 3;
 
     /**
      * Index action (available skins)

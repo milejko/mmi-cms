@@ -32,7 +32,6 @@ class ApiControllerTest extends TestCase
         self::assertEquals(200, $response->getCode());
         self::assertEquals('application/json', $response->getType());
         $contentArray = json_decode($response->getContent(), true);
-
         self::assertCount(4, $contentArray['children']);
         $parentElement = $contentArray['children'][0];
         self::assertEquals('sample name (also a title)', $parentElement['name']);
