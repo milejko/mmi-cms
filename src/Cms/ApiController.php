@@ -138,7 +138,8 @@ class ApiController extends Controller
             return $this->getNotFoundResponse($e->getMessage());
         }
         $menuTransport = (new MenuDataTransport())->setMenu($this->menuService->getMenus(
-            $request->scope, self::MENU_MAX_LEVEL
+            $request->scope,
+            self::MENU_MAX_LEVEL
         ));
         return $this->getResponse()->setTypeJson()
             ->setCode($menuTransport->getCode())
