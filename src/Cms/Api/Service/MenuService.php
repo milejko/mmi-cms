@@ -49,7 +49,8 @@ class MenuService implements MenuServiceInterface
     {
         //loading from cache
         $cacheKey = self::MENU_CATEGORY_CACHE_PREFIX . $cmsCategoryRecord->id;
-        if (null !== $formattedItem = $this->cacheService->load($cacheKey)) {
+        $formattedItem = $this->cacheService->load($cacheKey);
+        if (null !== $formattedItem) {
             return $formattedItem;
         }
         $formattedItem = [
@@ -78,7 +79,8 @@ class MenuService implements MenuServiceInterface
     {
         //loading from cache
         $cacheKey = self::MENU_TOP_LEVEL_PREFIX . $scope;
-        if (null !== $topLevelCategories = $this->cacheService->load($cacheKey)) {
+        $topLevelCategories = $this->cacheService->load($cacheKey);
+        if (null !== $topLevelCategories) {
             return $topLevelCategories;
         }
         $topLevelCategories = (new CmsCategoryQuery())
