@@ -256,15 +256,6 @@ class ApiController extends Controller
             //zapis pobranej kategorii w cache
             $this->cache->save($category = (new Orm\CmsCategoryQuery())->findPk($categoryId), $cacheKey, 0);
         }
-        //sprawdzanie kategorii
-        return $this->getCategoryTransport($category, $request);
-    }
-
-    /**
-     * Pobiera obiekt transportowy kategorii
-     */
-    private function getCategoryTransport(CmsCategoryRecord $category, Request $request): TransportInterface
-    {
         //kategoria to przekierowanie
         if ($category->redirectUri) {
             //przekierowanie na uri
@@ -275,6 +266,15 @@ class ApiController extends Controller
             //przekierowanie na customUri
             return new RedirectTransport(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $request->scope, $category->getUri()));
         }
+        //sprawdzanie kategorii
+        return $this->getCategoryTransport($category);
+    }
+
+    /**
+     * Pobiera obiekt transportowy kategorii
+     */
+    private function getCategoryTransport(CmsCategoryRecord $category): TransportInterface
+    {
         //kategoria posiada niewłaściwy (niewspierany) template
         if (null === $templateConfig = (new SkinsetModel($this->cmsSkinsetConfig))->getTemplateConfigByKey($category->template)) {
             return (new ErrorTransport())
