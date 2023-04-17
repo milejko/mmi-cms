@@ -207,7 +207,7 @@ class ApiControllerTest extends TestCase
 
         $contentArray = json_decode($response->getContent(), true);
         self::assertEquals('unimportant', $contentArray['name']);
-        self::assertEquals('get-me-by-this-address', $contentArray['path']);
+        self::assertEquals('sample-name-also-a-title/unimportant', $contentArray['path']);
         self::assertEmpty($contentArray['attributes']);
         self::assertEquals('sample/sampletpl', $contentArray['template']);
         self::assertEquals('/api/sample/contents', $contentArray['_links'][0]['href']);

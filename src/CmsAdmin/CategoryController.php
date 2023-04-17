@@ -175,18 +175,17 @@ class CategoryController extends Controller
         //zapisywanie oryginalnego id
         $originalId = $category->cmsCategoryOriginalId ? $category->cmsCategoryOriginalId : $category->id;
         //przygotowanie draftu (lub przekierowanie)
-        $this->_prepareDraft($category, $request, $originalId);
+        $this->_prepareDraft($category, $originalId);
         //draft ma obcego właściciela
         if ($category->cmsAuthId != $this->auth->getId()) {
-            throw new \Mmi\Mvc\MvcForbiddenException('Category not allowed');
+            $this->getMessenger()->addMessage('messenger.category.permission.denied', false);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
         //sprawdzenie uprawnień do edycji węzła kategorii
         if (!(new \CmsAdmin\Model\CategoryAclModel())->getAcl()->isAllowed($this->auth->getRoles(), $originalId)) {
             $this->getMessenger()->addMessage('messenger.category.permission.denied', false);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
         }
-        //likwidacja potencjalnie uszkodzonego cache
-        //$category->clearCache();
         //modyfikacja breadcrumbów
         $this->view->adminNavigation()
             ->removeLastBreadcrumb()
@@ -257,18 +256,6 @@ class CategoryController extends Controller
             //messenger + redirect
             $this->getMessenger()->addMessage('messenger.category.category.saved', true);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
-        }
-        //zapisany form ze zmianą kategorii
-        if ($form->isSaved() && 'type' == $form->getElement('submit')->getValue()) {
-            //zmiany zapisane
-            $this->getMessenger()->addMessage('messenger.category.categoryType.saved', true);
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $category->id, 'originalId' => $category->cmsCategoryOriginalId, 'uploaderId' => $category->id]);
-        }
-        //przekierowanie po zapisie kopii roboczej
-        //format redirect:url
-        if ($form->isSaved() && 'redirect' == substr($form->getElement('submit')->getValue(), 0, 8)) {
-            //zmiany zapisane
-            $this->getResponse()->redirectToUrl(substr($form->getElement('submit')->getValue(), 9));
         }
         //pobranie przekierowania na front zdefiniowanego w skórce
         $skinBasedPreviewUrl = $this->cmsSkinsetConfig->getSkinByKey($this->scopeConfig->getName())->getPreviewUrl();
@@ -383,16 +370,14 @@ class CategoryController extends Controller
      * Przygotowanie drafta
      * @param integer $originalId
      */
-    protected function _prepareDraft(CmsCategoryRecord $category, Request $request, $originalId)
+    protected function _prepareDraft(CmsCategoryRecord $category, $originalId)
     {
         //jeśli to nie był DRAFT
         if (null !== $category->cmsCategoryOriginalId && CmsCategoryRecord::STATUS_DRAFT == $category->status) {
             return;
         }
-        //wymuszony świeży draft jeśli informacja przyszła w url, lub kategoria jest z archiwum
-        $force = $request->force || (\Cms\Orm\CmsCategoryRecord::STATUS_HISTORY == $category->status);
         //draft nie może być utworzony, ani wczytany
-        if (null === $draft = (new \Cms\Model\CategoryDraft($category))->createAndGetDraftForUser($this->auth->getId(), $force)) {
+        if (null === $draft = (new \Cms\Model\CategoryDraft($category))->createAndGetDraftForUser($this->auth->getId())) {
             $this->getMessenger()->addMessage('messenger.category.draft.fail', false);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
         }
