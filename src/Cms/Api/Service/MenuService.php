@@ -63,10 +63,10 @@ class MenuService implements MenuServiceInterface
             'attributes' => (new TemplateModel($cmsCategoryRecord, $this->cmsSkinsetConfig))->getAttributes(),
             'order'      => (int) $cmsCategoryRecord->order,
             '_links'     => $this->getLinks($cmsCategoryRecord),
-            'children'   => [],
         ];
         //max level reached
         if ($currentLevel < $maxLevel) {
+            $formattedItem['children'] = [];
             foreach ($cmsCategoryRecord->getChildrenRecords() as $childRecord) {
                 $formattedItem['children'][] = $this->formatItem($childRecord, $currentLevel + 1, $maxLevel);
             }

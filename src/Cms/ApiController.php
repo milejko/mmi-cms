@@ -53,8 +53,6 @@ class ApiController extends Controller
      */
     private MenuServiceInterface $menuService;
 
-    private const MENU_MAX_LEVEL = 3;
-
     /**
      * Index action (available skins)
      */
@@ -132,14 +130,14 @@ class ApiController extends Controller
         }
         //checking scope availability
         try {
-            $this->cmsSkinsetConfig->getSkinByKey($request->scope);
+            $skinConfig = $this->cmsSkinsetConfig->getSkinByKey($request->scope);
         } catch (CmsSkinNotFoundException $e) {
             //404 - skin not found
             return $this->getNotFoundResponse($e->getMessage());
         }
         $menuTransport = (new MenuDataTransport())->setMenu($this->menuService->getMenus(
             $request->scope,
-            self::MENU_MAX_LEVEL
+            $skinConfig->getMenuMaxDepthReturned()
         ));
         return $this->getResponse()->setTypeJson()
             ->setCode($menuTransport->getCode())
