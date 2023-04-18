@@ -21,6 +21,7 @@ class SampleSkinConfig extends CmsSkinConfig
     {
         $this
             ->setKey('sample')
+            ->setMenuMaxDepthReturned(1)
             ->addTemplate((new CmsTemplateConfig())
                 ->setAllowedOnRoot()
                 ->setControllerClassName(SampleTplController::class)

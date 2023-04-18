@@ -130,12 +130,15 @@ class ApiController extends Controller
         }
         //checking scope availability
         try {
-            $this->cmsSkinsetConfig->getSkinByKey($request->scope);
+            $skinConfig = $this->cmsSkinsetConfig->getSkinByKey($request->scope);
         } catch (CmsSkinNotFoundException $e) {
             //404 - skin not found
             return $this->getNotFoundResponse($e->getMessage());
         }
-        $menuTransport = (new MenuDataTransport())->setMenu($this->menuService->getMenus($request->scope));
+        $menuTransport = (new MenuDataTransport())->setMenu($this->menuService->getMenus(
+            $request->scope,
+            $skinConfig->getMenuMaxDepthReturned()
+        ));
         return $this->getResponse()->setTypeJson()
             ->setCode($menuTransport->getCode())
             ->setContent($menuTransport->toString());

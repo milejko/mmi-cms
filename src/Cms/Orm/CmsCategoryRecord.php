@@ -624,10 +624,11 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->getInitialStateValue('customUri')));
         if (null === $this->parentId) {
             $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope));
+            $cache->remove(MenuService::MENU_TOP_LEVEL_PREFIX . $scope);
         }
         //drop skin menu cache
-        $cache->remove(MenuService::CACHE_KEY);
-        $cache->remove(MenuService::CACHE_KEY . $scope);
+        $cache->remove(MenuService::MENU_CATEGORY_CACHE_PREFIX . $this->id);
+        $cache->remove(MenuService::MENU_CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->id);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
         $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope) . $this->id);
@@ -645,6 +646,10 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         if (null !== $this->parentId) {
             $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope) . $this->parentId);
             $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $this->parentId);
+            $parent = $this;
+            while (null !== $parent = $parent->getParentRecord()) {
+                $cache->remove(MenuService::MENU_CATEGORY_CACHE_PREFIX . $parent->id);
+            }
         }
         return true;
     }

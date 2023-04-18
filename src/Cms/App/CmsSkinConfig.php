@@ -18,6 +18,11 @@ class CmsSkinConfig
     private string $key;
 
     /**
+     * Maksymalna głębokość zwracanego menu
+     */
+    private int $menuMaxDepthReturned = 0;
+
+    /**
      * Preview frontu
      */
     private string $previewUrl = '';
@@ -35,7 +40,7 @@ class CmsSkinConfig
     /**
      * Ustawia nazwę
      */
-    public function setName(string $name): CmsSkinConfig
+    public function setName(string $name): self
     {
         $this->name = $name;
         return $this;
@@ -52,7 +57,7 @@ class CmsSkinConfig
     /**
      * Ustawia klucz
      */
-    public function setKey(string $key): CmsSkinConfig
+    public function setKey(string $key): self
     {
         $this->key = $key;
         return $this;
@@ -66,10 +71,21 @@ class CmsSkinConfig
         return $this->key;
     }
 
+    public function setMenuMaxDepthReturned(int $menuMaxDepthReturned): self
+    {
+        $this->menuMaxDepthReturned = $menuMaxDepthReturned;
+        return $this;
+    }
+
+    public function getMenuMaxDepthReturned(): int
+    {
+        return $this->menuMaxDepthReturned;
+    }
+
     /**
      * Ustawia url podglądu
      */
-    public function setPreviewUrl(string $previewUrl): CmsSkinConfig
+    public function setPreviewUrl(string $previewUrl): self
     {
         $this->previewUrl = $previewUrl;
         return $this;
