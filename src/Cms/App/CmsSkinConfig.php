@@ -20,7 +20,7 @@ class CmsSkinConfig
     /**
      * Maksymalna głębokość zwracanego menu
      */
-    private int $menuMaxDepthReturned = 1;
+    private int $menuMaxDepthReturned = 0;
 
     /**
      * Preview frontu
