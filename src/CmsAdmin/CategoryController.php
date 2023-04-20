@@ -99,8 +99,9 @@ class CategoryController extends Controller
     {
         //wyszukiwanie kategorii
         if (null === $category = (new CmsCategoryQuery())
-                ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-                ->findPk($request->id)) {
+            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+            ->findPk($request->id)
+        ) {
             //przekierowanie na originalId
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'redactorPreview', ['id' => $request->originalId]);
         }
@@ -110,10 +111,10 @@ class CategoryController extends Controller
         $skinBasedPreviewUrl ?
             $this->getResponse()->redirectToUrl(
                 $skinBasedPreviewUrl .
-                '?apiUrl=' .
-                urlencode(sprintf(CmsRouterConfig::API_METHOD_PREVIEW, $category->getScope(), $category->id, $category->cmsCategoryOriginalId ?? 0, $category->cmsAuthId)) .
-                '&returnUrl=' .
-                urlencode('/cmsAdmin/category/' . ($category->parentId ? '?parentId=' . $category->parentId : ''))
+                    '?apiUrl=' .
+                    urlencode(sprintf(CmsRouterConfig::API_METHOD_PREVIEW, $category->getScope(), $category->id, $category->cmsCategoryOriginalId ?? 0, $category->cmsAuthId)) .
+                    '&returnUrl=' .
+                    urlencode('/cmsAdmin/category/' . ($category->parentId ? '?parentId=' . $category->parentId : ''))
             ) :
             $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);
     }
@@ -156,7 +157,8 @@ class CategoryController extends Controller
         //wyszukiwanie kategorii
         if (null === $category = (new CmsCategoryQuery())
             ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-            ->findPk($request->id)) {
+            ->findPk($request->id)
+        ) {
             //przekierowanie na originalId
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $request->originalId]);
         }
@@ -257,6 +259,11 @@ class CategoryController extends Controller
             $this->getMessenger()->addMessage('messenger.category.category.saved', true);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
         }
+        //format redirect:url
+        if ($form->isSaved() && 'redirect' == substr($form->getElement('submit')->getValue(), 0, 8)) {
+            //zmiany zapisane
+            $this->getResponse()->redirectToUrl(substr($form->getElement('submit')->getValue(), 9));
+        }
         //pobranie przekierowania na front zdefiniowanego w skórce
         $skinBasedPreviewUrl = $this->cmsSkinsetConfig->getSkinByKey($this->scopeConfig->getName())->getPreviewUrl();
         //przekierowanie na skórkowy lub defaultowy adres
@@ -276,7 +283,8 @@ class CategoryController extends Controller
     {
         if (null === $category = (new CmsCategoryQuery())
             ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-            ->findPk($request->id)) {
+            ->findPk($request->id)
+        ) {
             //brak strony
             $this->getMessenger()->addMessage('controller.category.move.error', false);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
@@ -298,7 +306,8 @@ class CategoryController extends Controller
     {
         if (null === $category = (new CmsCategoryQuery())
             ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-            ->findPk($request->id)) {
+            ->findPk($request->id)
+        ) {
             //brak strony
             $this->getMessenger()->addMessage('controller.category.delete.error', false);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
@@ -319,7 +328,8 @@ class CategoryController extends Controller
     {
         if (null === $category = (new CmsCategoryQuery())
             ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-            ->findPk($request->id)) {
+            ->findPk($request->id)
+        ) {
             //brak strony
             $this->getMessenger()->addMessage('controller.category.copy.error', false);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
