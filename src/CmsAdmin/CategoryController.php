@@ -10,6 +10,7 @@
 
 namespace CmsAdmin;
 
+use Cms\App\CmsAppMvcEvents;
 use Cms\App\CmsRouterConfig;
 use Cms\App\CmsScopeConfig;
 use Cms\App\CmsSkinsetConfig;
@@ -23,6 +24,7 @@ use CmsAdmin\Form\CategoryForm;
 use CmsAdmin\Form\CategoryMoveForm;
 use CmsAdmin\Model\CategoryAclModel;
 use Mmi\Cache\CacheInterface;
+use Mmi\EventManager\EventManager;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 use Mmi\Security\AuthInterface;
@@ -54,6 +56,11 @@ class CategoryController extends Controller
      * @Inject
      */
     private CmsSkinsetConfig $cmsSkinsetConfig;
+
+    /**
+     * @Inject
+     */
+    private EventManager $eventManager;
 
     /**
      * Lista stron CMS - prezentacja w formie katalogów
@@ -255,6 +262,8 @@ class CategoryController extends Controller
         }
         //zatwierdzenie zmian - commit
         if ($form->isSaved() && $form->getElement('commit')->getValue()) {
+            $this->eventManager->trigger(CmsAppMvcEvents::CATEGORY_SAVE, $category);
+
             //messenger + redirect
             $this->getMessenger()->addMessage('messenger.category.category.saved', true);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
