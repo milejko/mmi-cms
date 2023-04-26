@@ -263,7 +263,6 @@ class CategoryController extends Controller
         //zatwierdzenie zmian - commit
         if ($form->isSaved() && $form->getElement('commit')->getValue()) {
             $this->eventManager->trigger(CmsAppMvcEvents::CATEGORY_SAVE, $category);
-
             //messenger + redirect
             $this->getMessenger()->addMessage('messenger.category.category.saved', true);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
