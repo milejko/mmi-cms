@@ -60,6 +60,21 @@ class CategoryHistoryGrid extends Grid
         //operacje
         $this->addColumn((new Column\CustomColumn('operation'))
                 ->setLabel('grid.shared.operation.label')
-                ->setTemplateCode('{if categoryAclAllowed($record->cmsCategoryOriginalId ? $record->cmsCategoryOriginalId : $record->id)}<a target="_blank" href="{@module=cmsAdmin&controller=category&action=preview&id={$record->id}@}" id="category-preview-{$record->id}"><i class="fa fa-2 fa-eye"></i></a>{if $record->status > 0}&nbsp;&nbsp;<a title="{if $record->status == 10}utwórz kopię roboczą{elseif $record->status == 20}przywróć{else}kontynuuj edycję{/if}" href="{@module=cmsAdmin&controller=category&action=edit&id={$record->id}@}{if $record->cmsCategoryOriginalId}&originalId={$record->cmsCategoryOriginalId}{else}&force=1{/if}" id="category-restore-{$record->id}"><i class="fa fa-2 {if $record->status == 10}fa-clone{elseif $record->status == 20}fa-history{else}fa-pencil{/if}"></i></a>{/if}{else}-{/if}'));
+                ->setTemplateCode('
+                    {if categoryAclAllowed($record->cmsCategoryOriginalId ? $record->cmsCategoryOriginalId : $record->id)}
+                        {if $previewUrl}
+                        <a target="_blank" href="{@module=cmsAdmin&controller=category&action=preview&id={$record->id}@}" id="category-preview-{$record->id}">
+                            <i class="fa fa-2 fa-eye"></i>
+                        </a>
+                        &nbsp;&nbsp;
+                        {/if}
+                        <a title="{if $record->status == 10}utwórz kopię roboczą{elseif $record->status == 20}przywróć{else}kontynuuj edycję{/if}" href="{@module=cmsAdmin&controller=category&action=edit&id={$record->id}@}
+                        {if $record->cmsCategoryOriginalId}&originalId={$record->cmsCategoryOriginalId}{else}&force=1{/if}" 
+                        id="category-restore-{$record->id}">
+                        <i class="fa fa-2 {if $record->status == 10}fa-clone{elseif $record->status == 20}fa-history{else}fa-pencil{/if}">
+                        </i>
+                        </a>
+                    {else}-{/if}
+                '));
     }
 }

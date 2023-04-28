@@ -188,6 +188,8 @@ class CategoryController extends Controller
             $this->getMessenger()->addMessage('messenger.category.permission.denied', false);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
         }
+        //adres podglądu do widoku
+        $this->view->previewUrl = $this->cmsSkinsetConfig->getSkinByKey($this->scopeConfig->getName())->getPreviewUrl();
         //modyfikacja breadcrumbów
         $this->view->adminNavigation()
             ->removeLastBreadcrumb()
@@ -264,16 +266,8 @@ class CategoryController extends Controller
             //zmiany zapisane
             $this->getResponse()->redirectToUrl(substr($form->getElement('submit')->getValue(), 9));
         }
-        //pobranie przekierowania na front zdefiniowanego w skórce
-        $skinBasedPreviewUrl = $this->cmsSkinsetConfig->getSkinByKey($this->scopeConfig->getName())->getPreviewUrl();
-        //przekierowanie na skórkowy lub defaultowy adres
-        $skinBasedPreviewUrl ?
-            $this->getResponse()->redirectToUrl($skinBasedPreviewUrl .
-                '?apiUrl=' .
-                urlencode(sprintf(CmsRouterConfig::API_METHOD_PREVIEW, $category->getScope(), $category->id, $category->cmsCategoryOriginalId, $category->cmsAuthId)) .
-                '&returnUrl=' .
-                urlencode($this->view->url([], false))) :
-            $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);
+        //preview
+        $this->getResponse()->redirect('cmsAdmin', 'category', 'preview', ['id' => $category->id]);
     }
 
     /**
