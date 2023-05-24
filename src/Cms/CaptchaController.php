@@ -2,7 +2,7 @@
 
 /**
  * Mmi Framework (https://github.com/milejko/mmi.git)
- * 
+ *
  * @link       https://github.com/milejko/mmi.git
  * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
@@ -10,10 +10,13 @@
 
 namespace Cms;
 
+use Mmi\Mvc\Controller;
+use Mmi\Session\SessionSpace;
+
 /**
  * Kontroler captcha
  */
-class CaptchaController extends \Mmi\Mvc\Controller
+class CaptchaController extends Controller
 {
 
     /**
@@ -44,18 +47,18 @@ class CaptchaController extends \Mmi\Mvc\Controller
         $darkGray = imagecolorallocate($img, 0x99, 0x99, 0x99);
 
         //czcionka
-        $font = BASE_PATH . '/web/resource/cmsAdmin/ttf/dejavu.ttf';
+        $font = BASE_PATH . '/web/resource/cmsAdmin/fonts/dejavu.ttf';
 
         //ramka
         imagefilledrectangle($img, 0, 0, 129, 49, $darkGray);
         imagefilledrectangle($img, 1, 1, 128, 48, $gray);
 
         $prevSpace = -5;
-        $prevAngle = 0;
+        $length = strlen($word);
 
         //przesunięcia i obroty
-        for ($i = 0; $i < strlen($word); $i++) {
-            if ($i % 2 != 0) {
+        for ($i = 0; $i < $length; $i++) {
+            if ($i % 2 !== 0) {
                 $size = rand(32, 36);
                 $height = rand(42, 46);
                 $angle = rand(5, 15);
@@ -67,12 +70,11 @@ class CaptchaController extends \Mmi\Mvc\Controller
                 $space = 13 + $prevSpace;
             }
             $prevSpace = $space;
-            $prevAngle = $angle;
             imagefttext($img, $size, $angle, $space, $height, $green, $font, $word[$i]);
         }
 
         //zapis do sesji
-        $formSession = new \Mmi\Session\SessionSpace('captcha');
+        $formSession = new SessionSpace('captcha');
         //filtracja nazwy pola z nazwy formularza + pola
         $name = strpos($this->name, '[') === false ? $this->name : substr($this->name, strpos($this->name, '[') + 1, -1);
         $formSession->$name = $word;
@@ -87,8 +89,7 @@ class CaptchaController extends \Mmi\Mvc\Controller
             ->setTypeJpeg();
 
         //zwrot obrazu
-        imagejpeg($img, NULL, 25);
+        imagejpeg($img, null, 25);
         return '';
     }
-
 }
