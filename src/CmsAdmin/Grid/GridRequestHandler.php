@@ -80,10 +80,10 @@ class GridRequestHandler
     protected function _retrievePostFilter(\Mmi\Http\RequestPost $post): ?GridStateFilter
     {
         //brak filtracji dla tego grida
-        if (false === strpos($post->filter, $this->_grid->getClass())) {
+        if (false === strpos((string) $post->filter, $this->_grid->getClass())) {
             return null;
         }
-        $columnName = substr($post->filter, strpos($post->filter, '[') + 1, -1);
+        $columnName = substr((string) $post->filter, strpos((string) $post->filter, '[') + 1, -1);
         $tableName = null;
         $fieldName = $columnName;
         //obsługa joinowanych
@@ -122,11 +122,11 @@ class GridRequestHandler
     protected function _retrievePostOrder(\Mmi\Http\RequestPost $post)
     {
         //brak zmian sortowania dla tego grida
-        if (false === strpos($post->order, $this->_grid->getClass())) {
+        if (false === strpos((string) $post->order, $this->_grid->getClass())) {
             return;
         }
         //obsługa joinowanych
-        $fieldName = substr($post->order, strpos($post->order, '[') + 1, -1);
+        $fieldName = substr((string) $post->order, strpos($post->order, '[') + 1, -1);
         $tableName = null;
         if (strpos($fieldName, '.')) {
             $fieldTable = explode('.', $fieldName);
