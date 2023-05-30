@@ -95,8 +95,7 @@ class Cron extends \Cms\Form\Form
         $this->addElement((new Element\Checkbox('lock'))
             ->setLabel('form.cron.lock.label')
             ->setDescription('form.cron.lock.description')
-            ->setRequired()
-            ->addValidator(new \Mmi\Validator\NotEmpty()));
+            ->setRequired());
 
         //aktywny
         $this->addElement((new Element\Checkbox('active'))
