@@ -6,7 +6,7 @@
 
 .form-control.multifield > .field-list > .field-list-item {
   background-color: #fff;
-  transition: max-height 0.8s;
+  transition: max-height 0.5s;
   transition-timing-function: ease-in-out;
   max-height: 6.7rem;
   overflow: hidden;
