@@ -21,7 +21,7 @@ class CmsRouterConfig extends RouterConfig
     public const API_METHOD_CONFIG = self::API_HOME . '/%s';
     public const API_METHOD_CONTENT = self::API_HOME . '/%s/contents/%s';
     public const API_METHOD_CONTENTS = self::API_HOME . '/%s/contents';
-    public const API_METHOD_PREVIEW = self::API_HOME . '/%s/contents/preview/%s/%s/%s';
+    public const API_METHOD_PREVIEW = self::API_HOME . '/%s/contents/preview/%s/%s/%s/%s';
 
     public function __construct()
     {

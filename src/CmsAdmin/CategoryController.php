@@ -112,7 +112,7 @@ class CategoryController extends Controller
             $this->getResponse()->redirectToUrl(
                 $skinBasedPreviewUrl .
                     '?apiUrl=' .
-                    urlencode(sprintf(CmsRouterConfig::API_METHOD_PREVIEW, $category->getScope(), $category->id, $category->cmsCategoryOriginalId ?? 0, $category->cmsAuthId)) .
+                    urlencode(sprintf(CmsRouterConfig::API_METHOD_PREVIEW, $category->getScope(), $category->id, $category->cmsCategoryOriginalId ?? 0, $category->cmsAuthId, time())) .
                     '&returnUrl=' .
                     urlencode('/cmsAdmin/category/' . ($category->parentId ? '?parentId=' . $category->parentId : ''))
             ) :
