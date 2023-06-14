@@ -53,12 +53,49 @@ function fieldValidationOnBlur(element) {
     blurXhrs.push(newXhr);
 }
 
+function fieldValidation($element) {
+    "use strict";
+    let fid = $element.attr('id'),
+        name = fid.substr(fid.lastIndexOf('-') + 1),
+        url = window.location.href + (window.location.href.indexOf('?') === -1 ? '?' : '&') + 'validationField=' + name;
+    let newXhr = $.post(url, $element.parents('form').serialize(),
+        function (result) {
+            if (result) {
+                addValidationFeedback($element, result);
+            } else {
+                removeValidationFeedback($element);
+            }
+        });
+    blurXhrs.push(newXhr);
+}
+
+function addValidationFeedback($element, result) {
+    $element
+        .addClass('error')
+        .parent().addClass('error')
+        .find('.form-control-feedback').html(result);
+}
+
+function removeValidationFeedback($element) {
+    $element
+        .removeClass('error')
+        .parent().removeClass('error')
+        .find('.form-control-feedback').empty();
+}
+
 $(document).ready(function () {
     "use strict";
 
     //podłączenie walidacji na blurze
-    $('.validate').on('blur', function () {
+    $('form:not(.cmsadmin-form-categoryform) .validate').on('blur', function () {
         fieldValidationOnBlur(this);
+    });
+
+    //podłączenie walidacji tylko na category formach i widgetach
+    $('form.cmsadmin-form-categoryform .validate').on('blur', function () {
+        fieldValidation($(this));
+    }).on('focus', function () {
+        removeValidationFeedback($(this));
     });
 
     //checkbox na change robi blur (walidacja)

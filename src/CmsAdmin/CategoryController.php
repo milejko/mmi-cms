@@ -23,6 +23,7 @@ use CmsAdmin\Form\CategoryForm;
 use CmsAdmin\Form\CategoryMoveForm;
 use CmsAdmin\Model\CategoryAclModel;
 use Mmi\Cache\CacheInterface;
+use Mmi\Form\Element\ElementAbstract;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 use Mmi\Security\AuthInterface;
@@ -143,14 +144,18 @@ class CategoryController extends Controller
             $category->template = $request->template;
             $category->parentId = $request->parentId ? $request->parentId : null;
             $category->cmsAuthId = $this->auth->getId();
-            $category->save();
+            if (!$request->validationField) {
+                $category->save();
+            }
             $request->id = $category->id;
             if (null === $category->parentId) {
                 $aclRecord = new CmsCategoryAclRecord();
                 $aclRecord->cmsCategoryId = $category->id;
                 $aclRecord->role = 'admin';
                 $aclRecord->access = 'allow';
-                $aclRecord->save();
+                if (!$request->validationField) {
+                    $aclRecord->save();
+                }
                 $this->cache->remove(CategoryAclModel::CACHE_KEY);
             }
         }
@@ -230,7 +235,20 @@ class CategoryController extends Controller
             //przed zapisem formularza
             $templateModel->invokeBeforeSaveEditForm($form);
             //zapis formularza
-            $form->save();
+            if (!$request->validationField) {
+                $form->save();
+            }
+        }
+        if ($request->validationField) {
+            $element = $form->getElement($request->validationField);
+            if (!$element instanceof ElementAbstract) {
+                return '';
+            }
+            if (!$element->isValid()) {
+                $this->view->errors = $element->getErrors();
+                return $this->view->renderTemplate('cms/form/validate');
+            }
+            return '';
         }
         //szablon nadal istnieje
         if ($form->isSaved() && $category->template) {
