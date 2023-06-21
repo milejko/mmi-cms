@@ -285,7 +285,18 @@ class CategoryController extends Controller
             $this->getResponse()->redirectToUrl(substr($form->getElement('submit')->getValue(), 9));
         }
         //preview
-        $this->getResponse()->redirect('cmsAdmin', 'category', 'preview', ['id' => $category->id]);
+        //pobranie przekierowania na front zdefiniowanego w skórce
+        $skinBasedPreviewUrl = $this->cmsSkinsetConfig->getSkinByKey($this->scopeConfig->getName())->getPreviewUrl();
+        //przekierowanie na skórkowy lub defaultowy adres
+        $skinBasedPreviewUrl ?
+            $this->getResponse()->redirectToUrl(
+                $skinBasedPreviewUrl .
+                    '?apiUrl=' .
+                    urlencode(sprintf(CmsRouterConfig::API_METHOD_PREVIEW, $category->getScope(), $category->id, $category->cmsCategoryOriginalId ?? 0, $category->cmsAuthId, time())) .
+                    '&returnUrl=' .
+                    urlencode('/cmsAdmin/category/edit?id=' . $category->id . '&originalId=' . $category->cmsCategoryOriginalId . '&uploaderId=' . $category->id)
+            ) :
+            $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);
     }
 
     /**
