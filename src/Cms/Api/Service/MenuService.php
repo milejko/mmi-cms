@@ -68,6 +68,9 @@ class MenuService implements MenuServiceInterface
         if ($currentLevel < $maxLevel) {
             $formattedItem['children'] = [];
             foreach ($cmsCategoryRecord->getChildrenRecords() as $childRecord) {
+                if (!$childRecord->active) {
+                    continue;
+                }
                 $formattedItem['children'][] = $this->formatItem($childRecord, $currentLevel + 1, $maxLevel);
             }
         }
