@@ -87,7 +87,7 @@ abstract class AbstractTemplateController extends Controller
         $to = new TemplateDataTransport();
         $to->id = (int) $this->cmsCategoryRecord->id;
         $to->template = $this->cmsCategoryRecord->template;
-        $to->path = $this->cmsCategoryRecord->uri;
+        $to->path = $this->cmsCategoryRecord->getUri();
         $to->name = (string) $this->cmsCategoryRecord->name;
         $to->dateAdd = $this->cmsCategoryRecord->dateAdd;
         $to->dateModify = $this->cmsCategoryRecord->dateModify;
