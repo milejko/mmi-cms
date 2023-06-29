@@ -56,7 +56,7 @@ class MenuService implements MenuServiceInterface
         $formattedItem = [
             'id'         => $cmsCategoryRecord->id,
             'name'       => $cmsCategoryRecord->name,
-            'path'       => $cmsCategoryRecord->uri,
+            'path'       => $cmsCategoryRecord->getUri(),
             'template'   => $cmsCategoryRecord->template,
             'blank'      => (bool) $cmsCategoryRecord->blank,
             'visible'    => (bool) $cmsCategoryRecord->visible,
