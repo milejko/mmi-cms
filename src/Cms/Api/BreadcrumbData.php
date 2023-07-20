@@ -14,7 +14,7 @@ class BreadcrumbData implements DataInterface
     public bool     $blank = false;
     public bool     $visible = true;
     public array    $attributes = [];
-    public int      $order;
+    public string   $order;
     public array    $_links = [];
 
     public function setId(int $id): self
@@ -59,7 +59,7 @@ class BreadcrumbData implements DataInterface
         return $this;
     }
 
-    public function setOrder(int $order): self
+    public function setOrder(string $order): self
     {
         $this->order = $order;
         return $this;
