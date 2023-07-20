@@ -86,6 +86,7 @@ abstract class AbstractTemplateController extends Controller
     {
         $to = new TemplateDataTransport();
         $to->id = (int) $this->cmsCategoryRecord->id;
+        $to->order = $this->cmsCategoryRecord->getAbsoluteOrder();
         $to->template = $this->cmsCategoryRecord->template;
         $to->path = $this->cmsCategoryRecord->getUri();
         $to->name = (string) $this->cmsCategoryRecord->name;
@@ -173,7 +174,6 @@ abstract class AbstractTemplateController extends Controller
     {
         $breadcrumbs = [];
         $record = $this->cmsCategoryRecord->getParentRecord();
-        $order = count(explode('/', $this->cmsCategoryRecord->path));
         $skinsetModel = new SkinsetModel($this->cmsSkinsetConfig);
         while (null !== $record) {
             //template not compatible
@@ -182,7 +182,7 @@ abstract class AbstractTemplateController extends Controller
             }
             //adding breadcrumb with modified order field
             $breadcrumbs[] = $this->getBreadcrumbDataByRecord($record)
-                ->setOrder($order--);
+                ->setOrder($record->getAbsoluteOrder());
             $record = $record->getParentRecord();
         }
         return array_reverse($breadcrumbs);
@@ -255,7 +255,7 @@ abstract class AbstractTemplateController extends Controller
             ->setBlank((bool) $cmsCategoryRecord->blank)
             ->setVisible((bool) $cmsCategoryRecord->visible)
             ->setAttributes($attributes)
-            ->setOrder($cmsCategoryRecord->order)
+            ->setOrder($cmsCategoryRecord->getAbsoluteOrder())
             ->setLinks($links);
     }
 }

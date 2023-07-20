@@ -170,7 +170,13 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     {
         //domyślnie wstawienie na koniec (znacznik time dba o to, później się przesortuje)
         if (null === $this->order) {
-            $this->order = time();
+            $maxSiblingOrder = (new CmsCategoryQuery())
+                ->whereParentId()->equals($this->parentId)
+                ->whereActive()->equals(true)
+                ->whereStatus()->equals(self::STATUS_ACTIVE)
+                ->whereTemplate()->like($this->getScope() . '%')
+                ->findMax('order');
+            $this->order = $maxSiblingOrder + 1;
         }
         //zapis configJson
         $this->setConfigFromArray(array_merge($this->getConfig()->toArray(), $this->getOptions()));
@@ -391,6 +397,23 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     {
         //pobranie linku z widoku
         return App::$di->get(View::class)->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->getUri()], true, $https);
+    }
+
+    /**
+     * Pobiera bezwzględną kolejność (uwzględnia rodziców)
+     */
+    public function getAbsoluteOrder(): string
+    {
+        $parentRecords = [$this];
+        $parentRecord = $this;
+        while (null !== $parentRecord = $parentRecord->getParentRecord()) {
+            $parentRecords[] = $parentRecord;
+        }
+        $path = '';
+        foreach (array_reverse($parentRecords) as $parentRecord) {
+            $path .= str_pad($parentRecord->order, 10, '0', STR_PAD_LEFT);
+        }
+        return $path;
     }
 
     /**
