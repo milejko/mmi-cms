@@ -61,7 +61,7 @@ class MenuService implements MenuServiceInterface
             'blank'      => (bool) $cmsCategoryRecord->blank,
             'visible'    => (bool) $cmsCategoryRecord->visible,
             'attributes' => (new TemplateModel($cmsCategoryRecord, $this->cmsSkinsetConfig))->getAttributes(),
-            'order'      => (string) $cmsCategoryRecord->getAbsoluteOrder(),
+            'order'      => $cmsCategoryRecord->getAbsoluteOrder(),
             '_links'     => $this->getLinks($cmsCategoryRecord),
         ];
         //max level reached
