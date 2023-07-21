@@ -198,11 +198,11 @@ class MultiField extends ElementAbstract
 
             // dodawanie wiadomości z walidatora
             if (null !== $parentIndex) {
-                $this->_elementNestedErrors[$parentIndex][$index][$element->getBaseName()][] = $validator->getMessage() ? $validator->getMessage() : $validator->getError();
+                $this->_elementNestedErrors[$parentIndex][$index][$element->getBaseName()][] = $validator->getError();
                 continue;
             }
 
-            $this->_elementErrors[$index][$element->getBaseName()][] = $validator->getMessage() ? $validator->getMessage() : $validator->getError();
+            $this->_elementErrors[$index][$element->getBaseName()][] = $validator->getError();
         }
     }
 

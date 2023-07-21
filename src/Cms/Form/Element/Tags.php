@@ -22,17 +22,6 @@ use Cms\Orm\CmsTagRelationRecord;
  */
 class Tags extends Select
 {
-    //szablon początku pola
-    public const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
-    //szablon opisu
-    public const TEMPLATE_DESCRIPTION = 'cmsAdmin/form/element/element-abstract/description';
-    //szablon końca pola
-    public const TEMPLATE_END = 'cmsAdmin/form/element/element-abstract/end';
-    //szablon błędów
-    public const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
-    //szablon etykiety
-    public const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
-
     private string $object;
     private string $objectId;
     private ?string $scope = null;
@@ -75,6 +64,15 @@ class Tags extends Select
     }
 
     /**
+     * Ustawia maksymalna mozliwa ilosc tagow
+     * @return \Cms\Form\Element\Tags
+     */
+    public function setMaxTags(?int $number)
+    {
+        return $this->setOption('maxTags', $number);
+    }
+
+    /**
      * Ustawia rozwijanie do gory
      * @return mixed
      */
@@ -94,13 +92,15 @@ class Tags extends Select
         //ustawianie wartości
         $this->setAutoTagValue();
         //pobranie czy mozna dodac tag
-        $addTags = !$this->getOption('addTags') ? 'true' : 'false';
+        $addTags = $this->getOption('addTags') ? 'true' : 'false';
+        $maxTags = $this->getOption('maxTags');
         $this->view->headLink()->appendStylesheet('/resource/cmsAdmin/css/chosen.min.css');
         $this->view->headScript()->appendFile('/resource/cmsAdmin/js/chosen.jquery.min.js');
         $this->view->headScript()->appendScript("
 			$(document).ready(function ($) {
 				$('#" . $id . "').chosen({			    
 				disable_search_threshold:10,
+				" . (is_int($maxTags) ? 'max_selected_options:' . $maxTags . ',' : '') . "
 				placeholder_text_multiple:'Wpisz lub wybierz tagi',
 				no_results_text:'Tag nieodnaleziony'
 			});

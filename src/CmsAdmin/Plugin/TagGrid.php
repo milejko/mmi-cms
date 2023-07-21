@@ -27,19 +27,15 @@ class TagGrid extends \CmsAdmin\Grid\Grid
         $this->setQuery((new CmsTagQuery())
             ->whereScope()->equals($this->getOption(self::SCOPE_OPTION_NAME)));
 
-        //nazwa taga
+        //język
         $this->addColumn((new TextColumn('lang'))
             ->setLabel('grid.tag.lang.label'));
-
-        //scope taga
-        $this->addColumn((new TextColumn('scope'))
-        ->setLabel('grid.tag.scope.label'));
 
         //nazwa taga
         $this->addColumn((new TextColumn('tag'))
             ->setLabel('grid.tag.tag.label'));
 
         //operacje
-        $this->addColumn((new OperationColumn())->setEditParams([]));
+        $this->addColumn((new OperationColumn())->setEditParams(['action' => 'edit', 'id' => '%id%']));
     }
 }
