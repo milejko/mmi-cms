@@ -11,15 +11,26 @@
 namespace CmsAdmin;
 
 use Cms\App\CmsScopeConfig;
+use Cms\Orm\CmsTagQuery;
+use Cms\Orm\CmsTagRecord;
+use CmsAdmin\Form\Tag;
 use CmsAdmin\Plugin\TagGrid;
+use DI\Annotation\Inject;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
+use Psr\Container\ContainerInterface;
 
 /**
  * Kontroler tagów
+ * @property int $id
  */
 class TagController extends Controller
 {
+    /**
+     * @Inject
+     */
+    private ContainerInterface $container;
+
     /**
      * @Inject
      */
@@ -34,11 +45,26 @@ class TagController extends Controller
     }
 
     /**
+     * Edycja tagów
+     */
+    public function editAction()
+    {
+        $tag = new CmsTagRecord($this->id);
+        $tag->scope = $this->cmsScopeConfig->getName();
+        $form = new Tag($tag, [ContainerInterface::class => $this->container]);
+        if ($form->isSaved()) {
+            $this->getMessenger()->addMessage('messenger.tag.saved', true);
+            $this->getResponse()->redirect('cmsAdmin', 'tag', 'index');
+        }
+        $this->view->tagForm = $form;
+    }
+
+    /**
      * Usuwanie tagu
      */
     public function deleteAction(Request $request)
     {
-        $tag = (new \Cms\Orm\CmsTagQuery())->findPk($request->id);
+        $tag = (new CmsTagQuery())->findPk($request->id);
         if ($tag && $tag->delete()) {
             $this->getMessenger()->addMessage('messenger.tag.deleted', true);
         }

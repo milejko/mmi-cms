@@ -39,11 +39,11 @@ class MinNumberMultifieldTiles extends ValidatorAbstract
     {
         return $this
             ->setNumber(current($options))
-            ->setMessage(next($options));
+            ->setMessage(next($options) ?: self::INVALID);
     }
 
     /**
-     * Waliduje czy w cms_file znajduje się wystarczająca liczba plików dla danego rekordu
+     * Waliduje czy w multifieldzie znajduje się wystarczająca liczba kafelkow dla danego rekordu
      *
      * @param mixed $value
      *
@@ -52,7 +52,7 @@ class MinNumberMultifieldTiles extends ValidatorAbstract
     public function isValid($value)
     {
         if (false === is_array($value) || count($value) < $this->getNumber()) {
-            $this->_error([self::INVALID, [$this->getNumber()]]);
+            $this->_error([$this->getMessage(), [$this->getNumber()]]);
 
             return false;
         }

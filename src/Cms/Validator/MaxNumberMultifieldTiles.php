@@ -37,11 +37,11 @@ class MaxNumberMultifieldTiles extends \Mmi\Validator\ValidatorAbstract
     {
         return $this
             ->setNumber(current($options))
-            ->setMessage(next($options));
+            ->setMessage(next($options) ?: self::INVALID);
     }
 
     /**
-     * Waliduje czy w cms_file znajduje się dopuszczalna liczba plików dla danego rekordu
+     * Waliduje czy w multifieldzie znajduje się dopuszczalna liczba kafelkow dla danego rekordu
      *
      * @param mixed $value
      *
@@ -50,7 +50,7 @@ class MaxNumberMultifieldTiles extends \Mmi\Validator\ValidatorAbstract
     public function isValid($value)
     {
         if (is_array($value) && count($value) > $this->getNumber()) {
-            $this->_error([self::INVALID, [$this->getNumber()]]);
+            $this->_error([$this->getMessage(), [$this->getNumber()]]);
 
             return false;
         }
