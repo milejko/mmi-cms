@@ -54,6 +54,14 @@ div.ML__popover.is-visible {
     font-weight: bold;
 }
 
+.ML__keyboard > div > div.keyboard-toolbar > div > div.disabled.pressed svg, .ML__keyboard > div > div.keyboard-toolbar > div > div.disabled:hover svg, .ML__keyboard > div > div.keyboard-toolbar > div > div.disabled svg {
+    color: var(--keyboard-text);
+    opacity: .8;
+}
+.ML__smart-fence__close {
+    opacity: 0;
+}
+
 .ne-bold {
     font-weight: bold;
 }
