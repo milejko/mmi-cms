@@ -13,9 +13,9 @@ function resizeTinyWindow () {
   if (needPositionFix) {
     var editorId = top.tinymce.activeEditor.windowManager.windows[0]._id;
     var bodyId = '#' + editorId + '-body';
-    var sumHeight = $('#mathliveFiled').height() + 100 + $('.ML__keyboard').height();
+    var sumHeight = $('#mathliveFiled').height() + 80 + $('.ML__keyboard').height();
     top.$(bodyId).height(sumHeight);
-    top.$('#' + editorId).css('top', '10%');
+    top.$('#' + editorId).css('top', '116px');
     needPositionFix = false;
   }
 }
