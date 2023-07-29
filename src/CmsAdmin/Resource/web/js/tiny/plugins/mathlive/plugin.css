@@ -4,10 +4,9 @@ body {
 
 .mathfield {
     color: #363636;
-    padding: 7px;
+    padding: 5px;
     font-size: 100%;
-    margin: 10px 0 10px 0;
-    border-radius: 5px;
+    margin: 10px 0;
     background-color: #fff;
     min-height: 100px;
 }
@@ -17,12 +16,12 @@ body {
     border: none;
     color: white;
     cursor: pointer;
-    padding: 10px 26px;
+    padding: 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .mathlive-button.close-mathlive {
@@ -37,33 +36,32 @@ body {
     cursor: not-allowed;
 }
 
-#ML__keyboard{
-    border: none;
-}
-
-#ML__keyboard > .keyboard-layer > .keyboard-toolbar > .left, #ML__keyboard > .keyboard-layer > .keyboard-toolbar > .right {
-    display: none !important;
-}
-
 div.ML__popover.is-visible {
     z-index: 9999999;
 }
 
-.ML__keyboard > div > div.keyboard-toolbar > div > div {
-    background: #eee;
-    margin-right: 0px;
-    margin-left: 0px;
-    flex-direction: column;
-    align-items: center;
+.ML__keyboard {
+    margin: 0!important;
+    padding: 0;
 }
-.ML__keyboard > div > div.keyboard-toolbar > div > div:hover {
-    background: #aaa;
+
+.ML__keyboard > div > div.keyboard-toolbar {
+    padding-bottom: 10px;
 }
+
 .ML__keyboard > div > div.keyboard-toolbar > div > div.selected {
-    background: #fff !important;
-    padding-bottom: 0px;
-    margin-bottom: 6px;
+    color: #fff!important;
+    font-weight: bold;
 }
+
+.ML__keyboard > div > div.keyboard-toolbar > div > div.disabled.pressed svg, .ML__keyboard > div > div.keyboard-toolbar > div > div.disabled:hover svg, .ML__keyboard > div > div.keyboard-toolbar > div > div.disabled svg {
+    color: var(--keyboard-text);
+    opacity: .8;
+}
+.ML__smart-fence__close {
+    opacity: 0;
+}
+
 .ne-bold {
     font-weight: bold;
 }

@@ -259,11 +259,6 @@ class TinyMce extends UploaderElementAbstract
     public function fetchField()
     {
         $this->view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/tinymce.min.js');
-        //$this->view->headScript()->prependFile('/resource/cmsAdmin/js/tiny/mathlive/tiny-matlive.js');
-        $this->view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/plugins/mathlive/mathlive/mathlive.js');
-        $this->view->headScript()->appendFile('/resource/cmsAdmin/js/tiny/plugins/mathlive/tiny-mathlive.js');
-        $this->view->headLink()->appendStylesheet('/resource/cmsAdmin/js/tiny/plugins/mathlive/mathlive/mathlive.core.css');
-        $this->view->headLink()->appendStylesheet('/resource/cmsAdmin/js/tiny/plugins/mathlive/mathlive/mathlive.css');
 
         //bazowa wspólna konfiguracja
         $this->_baseConfig($this->view);
@@ -320,7 +315,10 @@ class TinyMce extends UploaderElementAbstract
             'image_advtab'     => $this->_renderConfigOption('imageAdvanceTab', true),
             'font_formats'     => $this->_renderConfigOption('fontFormats'),
             'fontsize_formats' => $this->_renderConfigOption('fontSizeFormats'),
-            'content_css'      => $this->_renderConfigOption('css'),
+            'content_css'      => [
+                '/resource/cmsAdmin/js/tiny/plugins/mathlive/mathlive/mathlive.css',
+            ],
+            'extended_valid_elements' => 'span[*]',
             'image_caption'    => $this->_renderConfigOption('imageCaption', false),
             'hash'             => $hash,
             'object'           => $object,
@@ -330,7 +328,6 @@ class TinyMce extends UploaderElementAbstract
             'branding'         => false,
         ];
         $config = array_merge($config, $this->_renderConfigOptionN('toolbar', 'toolbars'), $this->_common, $this->getCustomConfig() ?? []);
-
         return json_encode($config);
     }
 
