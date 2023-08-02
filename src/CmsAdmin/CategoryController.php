@@ -319,6 +319,7 @@ class CategoryController extends Controller
             $this->getMessenger()->addMessage('controller.category.move.message', true);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $form->getRecord()->parentId]);
         }
+        $category->sendEvents();
         $this->view->form = $form;
     }
 
