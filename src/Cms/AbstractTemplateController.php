@@ -214,20 +214,28 @@ abstract class AbstractTemplateController extends Controller
      */
     protected function getSiblings(): array
     {
-        $siblings = [];
+        $beforeMeSiblings = [];
+        $afterMeSiblings = [];
+        $beforeMe = true;
         $skinsetModel = new SkinsetModel($this->cmsSkinsetConfig);
         foreach ($this->cmsCategoryRecord->getSiblingsRecords() as $record) {
-            //if self
+            //ifself
             if ($record->id == $this->cmsCategoryRecord->id || $record->id == $this->cmsCategoryRecord->cmsCategoryOriginalId) {
+                $beforeMe = false;
                 continue;
             }
             //template not compatible
             if (null === $skinsetModel->getTemplateConfigByKey($record->template)) {
                 continue;
             }
-            $siblings[] = $this->getBreadcrumbDataByRecord($record);
+            if ($beforeMe) {
+                $beforeMeSiblings[] = $this->getBreadcrumbDataByRecord($record);
+                continue;
+            }
+            $afterMeSiblings[] = $this->getBreadcrumbDataByRecord($record);
         }
-        return $siblings;
+        //after me comes first
+        return array_merge($afterMeSiblings, $beforeMeSiblings);
     }
 
     protected function getBreadcrumbDataByRecord(CmsCategoryRecord $cmsCategoryRecord): BreadcrumbData
