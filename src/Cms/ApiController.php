@@ -333,7 +333,7 @@ class ApiController extends Controller
         //zapis uri przekierowania do bufora
         $this->cache->save($scope . '/' . $category->uri, $cacheKey, 0);
         //przekierowanie 301
-        return new RedirectTransport(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $scope, $category->uri));
+        return new RedirectTransport(LinkData::INTERNAL_REDIRECT_PREFIX . $category->id);
     }
 
     /**

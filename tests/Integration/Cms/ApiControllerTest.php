@@ -228,7 +228,7 @@ class ApiControllerTest extends TestCase
         $response = self::$apiController->getCategoryAction(new Request(['scope' => 'sample', 'uri' => 'sample-name']));
         self::assertEquals(301, $response->getCode());
         self::assertEquals('application/json', $response->getType());
-        self::assertEquals('{"_links":[{"href":"\/api\/sample\/contents\/sample-name-also-a-title","rel":"external","method":"REDIRECT"}]}', $response->getContent());
+        self::assertEquals('{"_links":[{"href":"\/api\/sample\/contents\/sample-name-also-a-title","rel":"internal","method":"REDIRECT"}]}', $response->getContent());
     }
 
     public function testIfRedirectCategoryGivesProperRedirect(): void
