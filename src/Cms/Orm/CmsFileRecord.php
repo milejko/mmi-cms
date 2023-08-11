@@ -5,8 +5,6 @@ namespace Cms\Orm;
 use Cms\Model\FileSystemModel;
 use Mmi\App\App;
 use Mmi\DataObject;
-use Mmi\Http\Request;
-use Mmi\Mvc\View;
 use Mmi\Security\AuthInterface;
 
 /**
@@ -76,7 +74,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
         if ($this->id === null) {
             return;
         }
-        return substr(md5($this->name . App::$di->get('app.view.cdn')), 0, 8);
+        return substr(md5($this->name), 0, 8);
     }
 
     /**
@@ -104,7 +102,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
      * Pobiera adres pliku
      * @param string $scaleType default, original, scale, scalex, scaley, scalecrop
      * @param int|string $scale 320, 320x240
-     * @return string adres publiczny pliku
+     * @return string adres publiczny (relatywny) pliku
      */
     public function getUrl($scaleType = 'default', $scale = null)
     {
@@ -112,11 +110,8 @@ class CmsFileRecord extends \Mmi\Orm\Record
         if ($this->id === null) {
             return;
         }
-        //@TODO: refactor (move to helper)
-        $request = App::$di->get(Request::class);
         //ścieżka CDN
-        $cdnPath = rtrim(App::$di->get(View::class)->cdn ? App::$di->get(View::class)->cdn :
-            'http' . ($request->getServer()->httpSecure ? 's' : '') . '://' . $request->getServer()->httpHost . App::$di->get(View::class)->url([], true), '/');
+        $cdnPath = rtrim(App::$di->get('app.view.cdn'), '/');
         //zwrot ścieżki z systemu plików
         return 'download' == $scaleType ?
             $cdnPath . '/download/' . $this->name . '-' . base64_encode($this->original) :
@@ -136,7 +131,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
             return;
         }
         //ścieżka CDN
-        $cdnPath = rtrim(App::$di->get(View::class)->cdn ? App::$di->get(View::class)->cdn : App::$di->get(View::class)->url([], true), '/');
+        $cdnPath = rtrim(App::$di->get('app.view.cdn'), '/');
         //zwrot ścieżki z systemu plików
         return $cdnPath . (new FileSystemModel($this->data->posterFileName))->getPublicPath($scaleType, $scale);
     }
