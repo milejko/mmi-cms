@@ -84,12 +84,11 @@ class SkinsetModel
         if (null === $skinConfig = $this->getSkinConfigByKey($key)) {
             return null;
         }
+        $keyElements = explode('/', $key);
         //iteracja po szablonach
         foreach ($skinConfig->getTemplates() as $templateConfig) {
-            //klucz szablonu
-            $templateKey = $skinConfig->getKey() . self::SEPARATOR . $templateConfig->getKey();
-            //porównanie klucza szablonu z odpowiadającym fragmentem klucza
-            if ($templateKey == substr($key, 0, strlen($templateKey))) {
+            //porównanie klucza skorki i szablonu z odpowiadającym elementem klucza
+            if ($skinConfig->getKey() === $keyElements[0] && $templateConfig->getKey() === $keyElements[1]) {
                 return $templateConfig;
             }
         }
