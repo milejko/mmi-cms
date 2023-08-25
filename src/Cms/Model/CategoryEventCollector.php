@@ -22,6 +22,11 @@ class CategoryEventCollector
     {
     }
 
+    public function getEvents(): array
+    {
+        return $this->categoryEvents;
+    }
+
     public function collectCategory(CmsCategoryRecord $cmsCategoryRecord): void
     {
         if (in_array($cmsCategoryRecord->status, [CmsCategoryRecord::STATUS_DRAFT, CmsCategoryRecord::STATUS_HISTORY])) {
@@ -32,8 +37,9 @@ class CategoryEventCollector
 
     public function triggerEvents(): void
     {
-        foreach ($this->categoryEvents as $categoryRecord) {
+        foreach ($this->categoryEvents as $key => $categoryRecord) {
             $this->eventManager->trigger($categoryRecord->isActive() ? CmsAppMvcEvents::CATEGORY_UPDATE : CmsAppMvcEvents::CATEGORY_DELETE, $categoryRecord);
+            unset($this->categoryEvents[$key]);
         }
     }
 }

@@ -13,11 +13,13 @@ namespace CmsAdmin\Form;
 use Cms\Form\Element\Submit;
 use Cms\Form\Element\Tree;
 use Cms\Form\Form;
+use Cms\Model\CategoryEventCollector;
 use Cms\Model\CategoryModel;
 use Cms\Model\SkinsetModel;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use CmsAdmin\Model\CategoryAcl;
+use Mmi\App\App;
 use Mmi\Filter\EmptyToNull;
 use Mmi\Security\AuthInterface;
 
@@ -83,6 +85,19 @@ class CategoryMoveForm extends Form
             $filteredTree[] = $category;
         }
         return $filteredTree;
+    }
+
+    public function beforeSave()
+    {
+        //triggering events with original parentId
+        $this->getRecord()->clearCache() && $this->getRecord()->triggerEvent();
+        return parent::beforeSave();
+    }
+
+    public function afterSave()
+    {
+        $this->getRecord()->sendEvents();
+        return parent::afterSave();
     }
 
     public function validator()

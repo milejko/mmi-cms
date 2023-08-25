@@ -98,7 +98,7 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
     {
         //próba dekodowania konfiguracji json
         try {
-            $configArr = \json_decode($this->configJson, true);
+            $configArr = \json_decode((string) $this->configJson, true);
         } catch (\Exception $e) {
             App::$di->get(LoggerInterface::class)->warning('Unable to decode widget configJson #' . $this->id);
         }
