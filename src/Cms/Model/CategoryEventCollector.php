@@ -22,11 +22,6 @@ class CategoryEventCollector
     {
     }
 
-    public function getEvents(): array
-    {
-        return $this->categoryEvents;
-    }
-
     public function collectCategory(CmsCategoryRecord $cmsCategoryRecord): void
     {
         if (in_array($cmsCategoryRecord->status, [CmsCategoryRecord::STATUS_DRAFT, CmsCategoryRecord::STATUS_HISTORY])) {
