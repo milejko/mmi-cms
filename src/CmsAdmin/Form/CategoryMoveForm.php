@@ -85,6 +85,19 @@ class CategoryMoveForm extends Form
         return $filteredTree;
     }
 
+    public function beforeSave()
+    {
+        //triggering events with original parentId
+        $this->getRecord()->clearCache() && $this->getRecord()->triggerEvent();
+        return parent::beforeSave();
+    }
+
+    public function afterSave()
+    {
+        $this->getRecord()->sendEvents();
+        return parent::afterSave();
+    }
+
     public function validator()
     {
         //try to move up to root and root is not allowed
