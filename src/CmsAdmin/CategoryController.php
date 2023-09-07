@@ -315,8 +315,6 @@ class CategoryController extends Controller
         //powołanie formularza
         $form = new CategoryMoveForm($category, [AuthInterface::class => $this->auth, CategoryMoveForm::SCOPE_CONFIG_OPTION_NAME => $this->scopeConfig->getName(), SkinsetModel::class => new SkinsetModel($this->cmsSkinsetConfig)]);
         if ($form->isSaved()) {
-            //send update events
-            $category->sendEvents();
             //messenger + redirct
             $this->getMessenger()->addMessage('controller.category.move.message', true);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $form->getRecord()->parentId]);
