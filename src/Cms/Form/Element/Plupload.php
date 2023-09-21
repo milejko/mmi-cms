@@ -434,8 +434,8 @@ class Plupload extends UploaderElementAbstract
             foreach ($element['options'] as $key => $value) {
                 if (is_array($value)) {
                     $data = '';
-                    foreach ($value['data'] as $data_key => $data_val) {
-                        $data .= str_replace('_', '-', $data_key) . '="' . $data_val . '"';
+                    foreach ($value['data'] as $dataKey => $dataVal) {
+                        $data .= str_replace('_', '-', $dataKey) . '="' . $dataVal . '"';
                     }
                     array_push($option, '<option value="' . $key . '" ' . $data . '>' . $value['value'] . '</option>');
                 } else {
