@@ -544,6 +544,14 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     }
 
     /**
+     * Pobiera typ strony
+     */
+    public function getType(): string
+    {
+        return substr($this->template, strpos($this->template, '/') + 1);
+    }
+
+    /**
      * Przebudowuje dzieci (wywołuje save)
      * @param integer $parentId rodzic
      */

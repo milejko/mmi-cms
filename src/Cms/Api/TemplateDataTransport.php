@@ -8,6 +8,8 @@ namespace Cms\Api;
 class TemplateDataTransport extends HttpJsonTransport
 {
     public int      $id;
+    public string   $scope;
+    public string   $type;
     public string   $template;
     public string   $name;
     public string   $path;
