@@ -28,6 +28,9 @@ class ColorPicker extends Text
     //szablon etykiety
     public const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
+    public string $readonly = '';
+    public string $value = '';
+
     /**
      * Buduje pole
      * @return string
