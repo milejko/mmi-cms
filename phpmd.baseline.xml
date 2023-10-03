@@ -374,6 +374,7 @@
   <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/CmsAdmin/Model/PluploadHandler.php"/>
   <violation rule="PHPMD\Rule\CleanCode\ErrorControlOperator" file="src/CmsAdmin/Model/PluploadHandler.php" method="_replaceFile"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/Model/PluploadHandler.php" method="_replaceFile"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseVariableName" file="src/CmsAdmin/Model/PluploadHandler.php" method="_errors"/>
   <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/CmsAdmin/Model/Reflection.php"/>
   <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/CmsAdmin/Model/Reflection.php"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/CmsAdmin/Mvc/ViewHelper/AdminNavigation.php"/>

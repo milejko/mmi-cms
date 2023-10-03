@@ -407,7 +407,7 @@ class MultiField extends ElementAbstract
                 }
 
                 foreach ($element->getFilters() as $filter) {
-                    $value[$key][$element->getBaseName()] = $filter->filter($value[$key][$element->getBaseName()]);
+                    $value[$key][$element->getBaseName()] = $filter->filter($value[$key][$element->getBaseName()] ?? null);
                 }
             }
         }
