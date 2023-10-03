@@ -12,10 +12,9 @@ namespace CmsAdmin\Form;
 
 use Cms\Form\Element;
 use Cms\Form\Form;
-use Cms\Orm\CmsTagQuery;
+use Cms\Validator\TagUnique;
 use Mmi\Filter\StringTrim;
 use Mmi\Validator\NotEmpty;
-use Mmi\Validator\RecordUnique;
 use Mmi\Validator\StringLength;
 use Psr\Container\ContainerInterface;
 
@@ -52,7 +51,7 @@ class Tag extends Form
                 ->setRequired()
                 ->addFilter(new StringTrim())
                 ->addValidator(new StringLength(self::TAG_STRING_LENGTH))
-                ->addValidator(new RecordUnique([(new CmsTagQuery()), 'tag', $this->getRecord()->id]))
+                ->addValidator(new TagUnique([$this]))
         );
 
         //zapis

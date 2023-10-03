@@ -2,15 +2,17 @@
 
 namespace Cms\Orm;
 
+use Mmi\Orm\Query;
+
 //<editor-fold defaultstate="collapsed" desc="CmsTagQuery">
 /**
  * @method CmsTagQuery limit($limit = null)
  * @method CmsTagQuery offset($offset = null)
  * @method CmsTagQuery orderAsc($fieldName, $tableName = null)
  * @method CmsTagQuery orderDesc($fieldName, $tableName = null)
- * @method CmsTagQuery andQuery(\Mmi\Orm\Query $query)
- * @method CmsTagQuery whereQuery(\Mmi\Orm\Query $query)
- * @method CmsTagQuery orQuery(\Mmi\Orm\Query $query)
+ * @method CmsTagQuery andQuery(Query $query)
+ * @method CmsTagQuery whereQuery(Query $query)
+ * @method CmsTagQuery orQuery(Query $query)
  * @method CmsTagQuery resetOrder()
  * @method CmsTagQuery resetWhere()
  * @method QueryHelper\CmsTagQueryField whereId()
@@ -47,18 +49,22 @@ namespace Cms\Orm;
  * @method CmsTagRecord findPk($value)
  */
 //</editor-fold>
-class CmsTagQuery extends \Mmi\Orm\Query
+class CmsTagQuery extends Query
 {
     protected $_tableName = 'cms_tag';
 
     /**
      * Po nazwie
      * @param string $tagName
+     * @param string|null $lang
+     * @param string|null $scope
      * @return CmsTagQuery
      */
-    public static function byName($tagName)
+    public static function byName(string $tagName, ?string $lang = null, ?string $scope = null): CmsTagQuery
     {
         return (new self())
-                ->whereTag()->equals($tagName);
+            ->whereTag()->equals($tagName)
+            ->whereLang()->equals($lang)
+            ->whereScope()->equals($scope);
     }
 }
