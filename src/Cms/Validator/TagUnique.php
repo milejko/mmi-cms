@@ -57,7 +57,8 @@ class TagUnique extends ValidatorAbstract
             throw new ValidatorException('No current form object provided.');
         }
         $tagQuery = CmsTagQuery::byName($value, $this->getCurrentForm()->getElement('lang')->getValue(), $this->getCurrentForm()->getCurrentScope());
-        if ($id = (int)$this->getCurrentForm()->getRecord()->id) {
+        $id = $this->getCurrentForm()->getRecord()->id;
+        if (null !== $id) {
             $tagQuery->andFieldId()->notEquals($id);
         }
         //rekord istnieje

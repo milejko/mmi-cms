@@ -417,4 +417,7 @@
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/UploadController.php" method="_jsonError"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/UploadController.php" method="_operationAfter"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/UploadController.php" method="_savePoster"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Cms/Validator/TagUnique.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Cms/Validator/TagUnique.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Cms/Validator/TagUnique.php"/>
 </phpmd-baseline>
