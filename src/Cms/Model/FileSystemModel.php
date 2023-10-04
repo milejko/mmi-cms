@@ -11,7 +11,6 @@
 namespace Cms\Model;
 
 use Mmi\App\App;
-use Psr\Log\LoggerInterface;
 
 /**
  * Model
@@ -23,6 +22,8 @@ class FileSystemModel
      * @var string
      */
     private $_name;
+
+    private const UNKNOWN_EXTENSION = 'bin';
 
     /**
      * Konstruktor
@@ -59,8 +60,15 @@ class FileSystemModel
      */
     public function getPublicPath($scaleType = 'default', $scale = null): ?string
     {
-        //rozszerzenie
-        list($name, $extension) = explode('.', $this->_name);
+        //calculating file name and extension
+        $explodedFileName = explode('.', $this->_name);
+        //default values
+        $name = $this->_name;
+        $extension = self::UNKNOWN_EXTENSION;
+        if (2 == count($explodedFileName)) {
+            //rozszerzenie
+            list($name, $extension) = $explodedFileName;
+        }
         //override extension only if thumb and supported extension
         if (!in_array(strtolower($extension), ['jpg', 'png', 'jpeg', 'jfif', 'jif', 'bmp', 'webp'])) {
             //copy
