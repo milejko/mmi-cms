@@ -35,7 +35,7 @@ use Mmi\Session\SessionSpace;
  * @method self setDeleteCheckboxName($name) ustawia nazwę checkboxa
  * @method self setUploaderId($id) ustawia id uploadera
  */
-class Image extends ElementAbstract implements UploaderElementInterface
+class Image extends UploaderElementAbstract
 {
     //szablon początku pola
     public const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
@@ -50,8 +50,7 @@ class Image extends ElementAbstract implements UploaderElementInterface
     //szablon etykiety
     public const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
-    //klucz z losowym id uploadera
-    public const UPLOADER_ID_KEY = 'uploaderId';
+    //prefix dla klucza sesyjnego
     public const SESSION_NAMESPACE_PREFIX = 'imageuploader-';
     //suffixy dodatkowych pól hidden
     public const DELETE_FIELD_SUFFIX = '-delete';
@@ -79,8 +78,6 @@ class Image extends ElementAbstract implements UploaderElementInterface
         //parent
         parent::setForm($form);
         $this->setIgnore();
-        //nazwa pola
-        $this->setDeleteCheckboxName($form->getBaseName() . '[' . $this->getBasename() . self::DELETE_FIELD_SUFFIX . ']');
         //obiekt niezdefiniowany
         if (!$this->getObject()) {
             //ustawianie obiektu
@@ -107,27 +104,24 @@ class Image extends ElementAbstract implements UploaderElementInterface
         //sprawdzenie czy pliki tymczasowe są już utworzone
         if (!$this->_sessionSpace->tempFilesCreated && $this->getObjectId()) {
             //przygotowanie plikow tymczasowych
-            FileModel::link($this->getObject(), $this->getObjectId(), self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId());
+            FileModel::link($this->getObject(), $this->getObjectId(), $this->getUploader(), $this->getUploaderId());
             $this->_sessionSpace->tempFilesCreated = true;
         }
         //obsługa POST
         $this->_handlePost($form, $request->getPost(), $request->getFiles());
         //przypisanie zuploadowanego pliku (worek tymczasowy)
-        $this->_uploadedFile = CmsFileQuery::byObjectAndClass(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), 'image')->findFirst();
+        $this->_uploadedFile = CmsFileQuery::byObjectAndClass($this->getUploader(), $this->getUploaderId(), 'image')->findFirst();
         return $this;
     }
 
     /**
-     * Po zapisie rekordu
+     * Metoda ustawia nazwę dla checkboxa do usuwania grafiki
      */
-    public function onRecordSaved()
+    public function setName($name)
     {
-        //brak zdefiniowanego objectId
-        if (!$this->getObjectId()) {
-            //pobranie id z rekordu
-            $this->setObjectId($this->_form->getRecord()->id);
-        }
-        parent::onRecordSaved();
+        $this->setDeleteCheckboxName(preg_replace('/(.*\[?)' . $this->getBaseName() . '(\]?)$/', '$1' . $this->getBaseName() . self::DELETE_FIELD_SUFFIX . '$2', $name));
+
+        return parent::setName($name);
     }
 
     /**
@@ -138,7 +132,7 @@ class Image extends ElementAbstract implements UploaderElementInterface
         //usuwanie z docelowego "worka"
         FileModel::deleteByObject($this->getObject(), $this->getObjectId());
         //przenoszenie plikow z tymczasowego "worka" do docelowego
-        FileModel::move(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), $this->getObject(), $this->getObjectId());
+        FileModel::move($this->getUploader(), $this->getUploaderId(), $this->getObject(), $this->getObjectId());
         //czyszczenie przestrzeni sesyjnej
         $this->_sessionSpace->unsetAll();
         return parent::onRecordSaved();
@@ -168,7 +162,7 @@ class Image extends ElementAbstract implements UploaderElementInterface
         //zaznaczony checkbox usuwania
         if (isset($post->{$form->getBaseName()}[$this->getBasename() . self::DELETE_FIELD_SUFFIX])) {
             //usuwanie istniejącego pliku
-            FileModel::deleteByObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId());
+            FileModel::deleteByObject($this->getUploader(), $this->getUploaderId());
             //koniec metody - plik miał być usunięty (checkbox zaznaczony), nawet jeśli podany
             return;
         }
@@ -178,8 +172,8 @@ class Image extends ElementAbstract implements UploaderElementInterface
             return;
         }
         //usuwanie istniejącego pliku
-        FileModel::deleteByObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId());
+        FileModel::deleteByObject($this->getUploader(), $this->getUploaderId());
         //zapis pliku
-        FileModel::appendFile($fileArray[$form->getBaseName()][$this->getBasename()][0], self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+        FileModel::appendFile($fileArray[$form->getBaseName()][$this->getBasename()][0], $this->getUploader(), $this->getUploaderId(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
     }
 }
