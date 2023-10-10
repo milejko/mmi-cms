@@ -29,6 +29,11 @@ class FileController extends \Mmi\Mvc\Controller
     private SessionInterface $session;
 
     /**
+     * @Inject("cms.thumb.quality")
+     */
+    private int $imageQuality;
+
+    /**
      * Akcja skalera
      */
     public function scalerAction(Request $request)
@@ -67,7 +72,7 @@ class FileController extends \Mmi\Mvc\Controller
                 throw new MvcForbiddenException('Scaler type invalid');
         }
         //webp generation
-        imagewebp($resource, $targetFilePath, 80);
+        imagewebp($resource, $targetFilePath, $this->imageQuality);
         return $this->getResponse()->redirectToUrl($this->view->cdn . $publicPath);
     }
 
