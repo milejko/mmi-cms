@@ -1,9 +1,9 @@
-name: "Code analysis and tests"
+name: "Code analysis and tests using PHP 8.2"
 on:
   pull_request:
   push:
 jobs:
-  mmi-build-toolkit:
+  php82-testing:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -13,5 +13,5 @@ jobs:
       with:
         push: false
         tags: mmi-cms:latest
-    - name: Run tests
+    - name: Run tests      
       run: docker run mmi-cms composer test:phpunit
