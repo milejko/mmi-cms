@@ -20,7 +20,8 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     composer
 
 COPY --link . /app
+COPY --link --chmod=777 ./entrypoint.sh entrypoint.sh
 
 WORKDIR /app
 
-ENTRYPOINT [ "/usr/bin/composer" "install" ]
+RUN composer install
