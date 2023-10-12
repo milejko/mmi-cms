@@ -1,4 +1,4 @@
-name: "Code analysis and tests using PHP 8.2"
+name: "Code analysis and tests"
 on:
   pull_request:
   push:
@@ -12,9 +12,11 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         push: false
-        tags: mmi-cms:latest
-    - name: Run tests      
-      run: docker run mmi-cms composer test:phpunit
+        tags: mmi-cms82
+    - name: Install dependencies
+      run: docker run mmi-cms82 composer install
+    - name: Run tests
+      run: docker run mmi-cms82 composer test:phpunit
   php81-testing:
     runs-on: ubuntu-latest
     steps:
@@ -25,6 +27,8 @@ jobs:
       with:
         push: false
         file: Dockerfile@8.1
-        tags: mmi-cms:latest
+        tags: mmi-cms81
+    - name: Install dependencies
+      run: docker run mmi-cms81 composer install
     - name: Run tests      
-      run: docker run mmi-cms composer test:phpunit
+      run: docker run mmi-cms81 composer test:phpunit

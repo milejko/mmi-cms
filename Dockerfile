@@ -20,5 +20,3 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
 COPY --link . /app
 
 WORKDIR /app
-
-RUN composer install
