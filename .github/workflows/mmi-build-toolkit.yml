@@ -6,10 +6,8 @@ jobs:
   mmi-build-toolkit:
     runs-on: ubuntu-latest
     steps:
-    - name: Check out code
+    - name: Checkout code
       uses: actions/checkout@v4
-    #- name: Build docker image
-    #  run: docker build -t mmi-cms .
     - name: Build docker image
       uses: docker/build-push-action@v5
       with:
