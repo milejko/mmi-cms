@@ -7,8 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+    #- name: Build docker image
+    #  run: docker build -t mmi-cms .
     - name: Build docker image
-      run: docker build -t mmi-cms .
+      uses: docker/build-push-action@v5
+      with:
+        push: false
+        tags: mmi-cms:latest
     - name: Run tests
       run: docker run mmi-cms composer test:phpunit
