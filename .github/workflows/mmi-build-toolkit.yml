@@ -1,23 +1,13 @@
-name: "Code analysis and tests"
+name: "Code analysis and checks"
+
 on:
+
   pull_request:
   push:
+
 jobs:
-  php82-testing:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    - name: Build docker image
-      uses: docker/build-push-action@v5
-      with:
-        push: false
-        tags: mmi-cms82
-    - name: Install dependencies
-      run: docker run mmi-cms82 composer install
-    - name: Run tests
-      run: docker run mmi-cms82 composer test:phpunit
-  php81-testing:
+
+  php81-checks:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -30,5 +20,18 @@ jobs:
         tags: mmi-cms81
     - name: Install dependencies
       run: docker run mmi-cms81 composer install
-    - name: Run tests      
-      run: docker run mmi-cms81 composer test:phpunit
+    - name: Run tests
+      run: docker run mmi-cms81 sh -c "composer install && composer test:all"
+
+  php82-checks:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Build docker image
+      uses: docker/build-push-action@v5
+      with:
+        push: false
+        tags: mmi-cms82
+    - name: Run tests
+      run: docker run mmi-cms82 sh -c "composer install && composer test:all"
