@@ -314,7 +314,7 @@ class Plupload extends UploaderElementAbstract
 				'use strict';
 				var conf = $.extend(true, {}, PLUPLOADCONF.settings);
 				conf.form_element_id = '" . $this->getId() . "';
-				conf.form_object = '" . self::TEMP_OBJECT_PREFIX . $this->getObject() . "';
+				conf.form_object = '" . $this->getUploader() . "';
 				conf.form_object_id = '" . $this->getUploaderId() . "';
 				" . ($this->getOption('showConsole') ? "conf.log_element = '" . $this->getId() . "-console';" : "") . "
 				" . ($this->getOption('chunkSize') ? "conf.chunk_size = '" . $this->getOption('chunkSize') . "';" : "") . "
@@ -434,8 +434,8 @@ class Plupload extends UploaderElementAbstract
             foreach ($element['options'] as $key => $value) {
                 if (is_array($value)) {
                     $data = '';
-                    foreach ($value['data'] as $data_key => $data_val) {
-                        $data .= str_replace('_', '-', $data_key) . '="' . $data_val . '"';
+                    foreach ($value['data'] as $dataKey => $dataVal) {
+                        $data .= str_replace('_', '-', $dataKey) . '="' . $dataVal . '"';
                     }
                     array_push($option, '<option value="' . $key . '" ' . $data . '>' . $value['value'] . '</option>');
                 } else {

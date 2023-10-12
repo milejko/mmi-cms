@@ -25,8 +25,9 @@ abstract class AbstractWidgetController extends Controller
      * Attachment thumb width &
      */
     public const ATTACHMENT_THUMB_METHOD   = 'scale';
-    public const ATTACHMENT_THUMB_SCALE    = '800';
-    public const ATTACHMENT_THUMB_SCALE2X  = '1600';
+    public const ATTACHMENT_THUMB_MOBILE   = '450';
+    public const ATTACHMENT_THUMB_TABLET   = '900';
+    public const ATTACHMENT_THUMB_DESKTOP  = '1920';
 
     /**
      * Widget relation record
@@ -153,9 +154,12 @@ abstract class AbstractWidgetController extends Controller
         $to->order                      = $fileRecord->order ?: 0;
         $to->attributes['downloadUrl']  = $fileRecord->getUrl('download');
         $to->attributes['openUrl']      = $fileRecord->getUrl('copy');
-        if ('image' == $fileRecord->class) {
-            $to->attributes['thumbUrl']     = $fileRecord->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE);
-            $to->attributes['thumb2xUrl']   = $fileRecord->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_SCALE2X);
+        if ('image' === $fileRecord->class) {
+            $to->attributes['thumbMobileUrl'] = $fileRecord->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_MOBILE);
+            $to->attributes['thumbTabletUrl'] = $fileRecord->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_TABLET);
+            $to->attributes['thumbDesktop']   = $fileRecord->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_DESKTOP);
+            $to->attributes['thumbUrl']       = $fileRecord->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_TABLET);
+            $to->attributes['thumb2xUrl']     = $fileRecord->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_DESKTOP);
         }
         return $to;
     }

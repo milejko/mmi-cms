@@ -181,20 +181,36 @@ class Tags extends Select
         return $html;
     }
 
-    /**
-     * przerobienie tablicy + klucz
-     * @return array
-     */
     public function getValue()
     {
-        $arr = [];
-        if (!is_array($this->_options['value'])) {
-            return [];
+        return is_array($this->_options['value']) ? $this->_options['value'] : [];
+    }
+
+    /**
+     * Po przed zapisem rekordu
+     */
+    public function beforeFormSave()
+    {
+        if (!$this->getOption('addTags')) {
+            return;
         }
-        foreach ($this->_options['value'] as $key) {
-            $arr[$key] = $key;
+
+        $nonExistentTags = array_diff($this->getValue(), array_flip($this->getMultioptions()));
+        $lang = $this->_form->getRecord()->lang;
+        $value = $this->getValue();
+
+        foreach ($nonExistentTags as $id => $tag) {
+            $newTag = new CmsTagRecord();
+            $newTag->scope = $this->scope;
+            $newTag->tag = $tag;
+            $newTag->lang = $lang;
+            $newTag->save();
+
+            unset($value[$id]);
+            $value[] = $newTag->id;
         }
-        return $arr;
+
+        $this->setValue($value);
     }
 
     /**
@@ -202,16 +218,6 @@ class Tags extends Select
      */
     public function onRecordSaved()
     {
-        $existingTags = (new CmsTagQuery())
-            ->whereScope()->equals($this->scope)
-            ->whereTag()->equals($this->getValue())->findPairs('tag', 'tag');
-        $inexistentTags = array_diff($this->getValue(), $existingTags);
-        foreach ($inexistentTags as $tag) {
-            $newTag = new CmsTagRecord();
-            $newTag->scope = $this->scope;
-            $newTag->tag = $tag;
-            $newTag->save();
-        }
         $object = $this->object ?? $this->_form->getRecordClass();
         $objecId = $this->objectId ?? $this->_form->getRecord()->id;
         //tag relations cleanup
@@ -219,15 +225,11 @@ class Tags extends Select
             ->whereObject()->equals($object)
             ->andFieldObjectId()->equals($objecId)
             ->delete();
-
-        $tagIds = (new CmsTagQuery())
-            ->whereScope()->equals($this->scope)
-            ->whereTag()->equals($this->getValue())->findPairs('tag', 'id');
         foreach ($this->getValue() as $tagValue) {
             $newTagRelation = new CmsTagRelationRecord();
             $newTagRelation->object = $object;
             $newTagRelation->objectId = $objecId;
-            $newTagRelation->cmsTagId = $tagIds[$tagValue];
+            $newTagRelation->cmsTagId = $tagValue;
             $newTagRelation->save();
         }
     }
@@ -238,12 +240,8 @@ class Tags extends Select
      */
     public function getMultioptions()
     {
-        $availableTags = [];
-        foreach ((new CmsTagQuery())
+        return (new CmsTagQuery())
             ->whereScope()->equals($this->scope)
-            ->orderAscTag()->findPairs('tag', 'tag') as $tag) {
-            $availableTags[$tag] = $tag;
-        }
-        return $this->getValue() + $availableTags;
+            ->orderAscTag()->findPairs('id', 'tag');
     }
 }

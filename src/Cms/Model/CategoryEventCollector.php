@@ -32,8 +32,9 @@ class CategoryEventCollector
 
     public function triggerEvents(): void
     {
-        foreach ($this->categoryEvents as $categoryRecord) {
+        foreach ($this->categoryEvents as $key => $categoryRecord) {
             $this->eventManager->trigger($categoryRecord->isActive() ? CmsAppMvcEvents::CATEGORY_UPDATE : CmsAppMvcEvents::CATEGORY_DELETE, $categoryRecord);
+            unset($this->categoryEvents[$key]);
         }
     }
 }
