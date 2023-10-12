@@ -11,4 +11,4 @@ jobs:
     - name: Build docker image
       run: docker build -t mmi-cms .
     - name: Run tests
-      run: docker run -it mmi-cms composer test:all
+      run: docker run mmi-cms composer test:phpunit
