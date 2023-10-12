@@ -3,20 +3,15 @@
 FROM debian:bookworm-slim
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
-    php-fpm \
+    php-cli \
     php-ldap \
-    php-redis \
-    php-opcache \
-    php-mysql \
     php-pdo \
     php-pdo-mysql \
     php-pdo-sqlite \
     php-dom \
     php-bcmath \
     php-xdebug \
-    php-curl \
     php-gd \
-    php-zip \
     composer
 
 COPY --link . /app
