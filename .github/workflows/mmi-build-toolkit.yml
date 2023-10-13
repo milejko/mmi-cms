@@ -30,6 +30,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         push: false
+        file: php82.Dockerfile
         tags: php82-checks
     - name: Run tests
       run: docker run php82-checks sh -c "composer install && composer test:all"
