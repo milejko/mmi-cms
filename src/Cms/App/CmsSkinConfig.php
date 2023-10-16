@@ -23,9 +23,14 @@ class CmsSkinConfig
     private int $menuMaxDepthReturned = 0;
 
     /**
-     * Preview frontu
+     * Url frontu
      */
-    private string $previewUrl = '';
+    private string $frontUrl = '';
+
+    /**
+     * Path do preview frontu
+     */
+    private string $previewPath = '';
 
     /**
      * Opcje
@@ -83,12 +88,37 @@ class CmsSkinConfig
     }
 
     /**
-     * Ustawia url podglądu
+     * Ustawia url frontu
      */
-    public function setPreviewUrl(string $previewUrl): self
+    public function setFrontUrl(string $frontUrl): self
     {
-        $this->previewUrl = $previewUrl;
+        $this->frontUrl = $frontUrl;
         return $this;
+    }
+
+    /**
+     * Pobiera url frontu
+     */
+    public function getFrontUrl(): string
+    {
+        return $this->frontUrl;
+    }
+
+    /**
+     * Ustawia path podglądu
+     */
+    public function setPreviewPath(string $previewPath): self
+    {
+        $this->previewPath = $previewPath;
+        return $this;
+    }
+
+    /**
+     * Pobiera path podglądu
+     */
+    public function getPreviewPath(): string
+    {
+        return $this->previewPath;
     }
 
     /**
@@ -96,7 +126,7 @@ class CmsSkinConfig
      */
     public function getPreviewUrl(): string
     {
-        return $this->previewUrl;
+        return $this->getFrontUrl() . $this->getPreviewPath();
     }
 
     /**
