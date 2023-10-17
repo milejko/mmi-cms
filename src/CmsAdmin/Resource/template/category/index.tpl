@@ -44,7 +44,7 @@
                                 <tbody class="ui-sortable">
                                 {foreach $categories as $category}
                                     {$allowed = categoryAclAllowed($category->id)}
-                                    {$previewUrl = $skinset->getSkinConfigByKey($scopeName)->getPreviewUrl()}
+                                    {$frontUrl = $skinset->getSkinConfigByKey($scopeName)->getFrontUrl()}
                                     {$templateConfig = $skinset->getTemplateConfigByKey($category->template)}
                                     {if $templateConfig}
                                         {$compatibleChildrenKeys = $templateConfig->getCompatibleChildrenKeys()}
@@ -62,16 +62,17 @@
                                                 ({if $templateConfig}{_($templateConfig->getName())}{/if})
                                             </small>
                                         </td>
+                                        <td class="align-middle">
+                                            {$frontUrl}/{$category->getUri()}
+                                        </td>
                                         <td align="right" {if !$allowed}class="inactive"{/if}>
                                             {if $allowed}
                                                 <a class="button btn btn-primary btn-inline-block" title="{#template.category.index.edit#}" href="{@module=cmsAdmin&controller=category&action=edit&id={$category->id}&force=1@}">
                                                     <i class="icon-pencil"></i>
                                                 </a>
-                                                {if $previewUrl}
                                                 <a class="button btn btn-primary btn-inline-block" title="{#template.category.index.preview#}" href="{@module=cmsAdmin&controller=category&action=preview&id={$category->id}@}" target="_blank">
                                                     <i class="icon-eyeglass"></i>
                                                 </a>
-                                                {/if}
                                                 <a class="button btn btn-primary btn-inline-block operation-button sort-row ui-sortable-handle" title="{#template.category.index.reorder#}" href="#">
                                                     <i class="icon-cursor-move"></i>
                                                 </a>

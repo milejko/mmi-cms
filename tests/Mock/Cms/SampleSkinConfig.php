@@ -48,7 +48,8 @@ class SampleSkinConfig extends CmsSkinConfig
                 ->setKey('invalidsampletpl')
                 ->setName('Invalid template'))
             ->setName('Sample Skin')
-            ->setPreviewUrl('https://somesamplefrontenddomain.com/preview')
+            ->setFrontUrl('https://somesamplefrontenddomain.com')
+            ->setPreviewPath('/preview')
             ->setAttributes(['sample-attribute' => 'value']);
     }
 }
