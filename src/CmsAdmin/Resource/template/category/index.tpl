@@ -62,7 +62,8 @@
                                             </small>
                                         </td>
                                         <td class="align-middle">
-                                            {$frontUrl}/{$category->getUri()}
+                                            {$categoryUri = $category->getUri()}
+                                            <a href="{$frontUrl}/{$categoryUri}">/{$categoryUri|truncate:50}</a>
                                         </td>
                                         <td align="right" {if !$allowed}class="inactive"{/if}>
                                             {if $allowed}
