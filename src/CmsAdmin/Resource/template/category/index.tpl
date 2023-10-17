@@ -19,10 +19,11 @@
                             <br/>
                             <table class="table table-striped table-sort" data-sort-url="{@module=cmsAdmin&controller=category&action=sort@}">
                                 <thead>
-                                {if $breadcrumbs}
-                                    <tr>
-                                        <th colspan="2">
-                                            <a href="{@module=cmsAdmin&controller=category&action=index@}"><i class="icon-home"></i></a> <i class="icon-arrow-right small"></i>
+                                <tr>
+                                    <th colspan="3">
+                                        {if $breadcrumbs}
+                                            <a href="{@module=cmsAdmin&controller=category&action=index@}"><i class="icon-home"></i></a>
+                                            <i class="icon-arrow-right small"></i>
                                             {foreach name="breadcrumbs" $breadcrumbs as $breadcrumbCategory}
                                                 {if !$_breadcrumbsLast}
                                                     <a href="{@module=cmsAdmin&controller=category&action=index&parentId={$breadcrumbCategory->id}@}">
@@ -33,13 +34,11 @@
                                                     {if $breadcrumbCategory->name}{$breadcrumbCategory->name|stripTags}{else}({#template.category.index.label.default#}){/if}
                                                 {/if}
                                             {/foreach}
-                                        </th>
-                                    </tr>
-                                {else}
-                                    <tr>
-                                        <th colspan="2"><i class="icon-home"></i></th>
-                                    </tr>
-                                {/if}
+                                        {else}
+                                            <i class="icon-home"></i>
+                                        {/if}
+                                    </th>
+                                </tr>
                                 </thead>
                                 <tbody class="ui-sortable">
                                 {foreach $categories as $category}
