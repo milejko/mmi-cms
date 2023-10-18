@@ -17,7 +17,7 @@ jobs:
       with:
         push: false
         tags: php81-checks
-        args: PHP_VERSION=8.1
+        build-args: PHP_VERSION=8.1
     - name: Run tests
       run: docker run php81-checks sh -c "composer install && composer test:all"
 
