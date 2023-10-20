@@ -20,7 +20,7 @@
                             <table class="table table-striped table-sort" data-sort-url="{@module=cmsAdmin&controller=category&action=sort@}">
                                 <thead>
                                 <tr>
-                                    <th colspan="3">
+                                    <th colspan="2">
                                         {if $breadcrumbs}
                                             <a href="{@module=cmsAdmin&controller=category&action=index@}"><i class="icon-home"></i></a>
                                             <i class="icon-arrow-right small"></i>
@@ -61,18 +61,20 @@
                                                 ({if $templateConfig}{_($templateConfig->getName())}{/if})
                                             </small>
                                         </td>
-                                        <td class="align-middle">
-                                            {$categoryUri = $category->getUri()}
-                                            <a href="{$frontUrl}/{$categoryUri}">/{$categoryUri|truncate:50}</a>
-                                        </td>
                                         <td align="right" {if !$allowed}class="inactive"{/if}>
                                             {if $allowed}
                                                 <a class="button btn btn-primary btn-inline-block" title="{#template.category.index.edit#}" href="{@module=cmsAdmin&controller=category&action=edit&id={$category->id}&force=1@}">
                                                     <i class="icon-pencil"></i>
                                                 </a>
-                                                <a class="button btn btn-primary btn-inline-block" title="{#template.category.index.preview#}" href="{@module=cmsAdmin&controller=category&action=preview&id={$category->id}@}" target="_blank">
-                                                    <i class="icon-eyeglass"></i>
-                                                </a>
+                                                {if $category->active}
+                                                    <a class="button btn btn-primary btn-inline-block" title="{#template.category.index.show#}" href="{$frontUrl}/{$category->getUri()}" target="_blank">
+                                                        <i class="icon-globe"></i>
+                                                    </a>
+                                                {else}
+                                                    <a class="button btn btn-primary btn-inline-block" title="{#template.category.index.preview#}" href="{@module=cmsAdmin&controller=category&action=preview&id={$category->id}@}" target="_blank">
+                                                        <i class="icon-eyeglass"></i>
+                                                    </a>
+                                                {/if}
                                                 <a class="button btn btn-primary btn-inline-block operation-button sort-row ui-sortable-handle" title="{#template.category.index.reorder#}" href="#">
                                                     <i class="icon-cursor-move"></i>
                                                 </a>
