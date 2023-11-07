@@ -10,7 +10,6 @@
 
 namespace Cms\Model;
 
-use Cms\Form\Element\UploaderElementInterface;
 use Cms\Orm\CmsCategoryRecord;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 
@@ -99,7 +98,6 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
             ->whereQuery((new \Cms\Orm\CmsFileQuery())
                 ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
                 ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%'))
-            ->andFieldName()->notEquals(UploaderElementInterface::PLACEHOLDER_NAME)
             ->andFieldObjectId()->equals($draft->id)
             ->find() as $file) {
             //przepinanie id
