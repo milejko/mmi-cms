@@ -13,8 +13,6 @@ namespace Cms\Form\Element;
 use Cms\Model\File;
 use Cms\Orm\CmsFileQuery;
 use Cms\Orm\CmsFileRecord;
-use DI\DependencyException;
-use DI\NotFoundException;
 use Mmi\App\App;
 use Mmi\Form\Element\ElementAbstract;
 use Mmi\Form\Form;
@@ -40,8 +38,6 @@ abstract class UploaderElementAbstract extends ElementAbstract implements Upload
      * Ustawia form macierzysty
      * @param Form $form
      * @return self
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     public function setForm(Form $form)
     {
@@ -71,7 +67,7 @@ abstract class UploaderElementAbstract extends ElementAbstract implements Upload
             return $this;
         }
         //przekierowanie na url zawierający nowowygenerowany uploaderId
-        $response->redirectToUrl($this->view->url($request->toArray() + [self::UPLOADER_ID_KEY => mt_rand(1000000, 9999999)]));
+        $response->redirectToUrl($this->view->url($request->toArray() + ['uploaderId' => mt_rand(1000000, 9999999)]));
         return $this;
     }
 
@@ -102,13 +98,13 @@ abstract class UploaderElementAbstract extends ElementAbstract implements Upload
         //usuwanie z docelowego "worka"
         File::deleteByObject($this->getObject(), $this->getObjectId());
         //usuwanie placeholdera
-        if (null !== $placeholder = CmsFileQuery::byObject($this->getUploader(), $this->getUploaderId())
+        if (null !== $placeholder = CmsFileQuery::byObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId())
             ->whereName()->equals(self::PLACEHOLDER_NAME)
             ->findFirst()) {
             $placeholder->delete();
         }
         //przenoszenie plikow z tymczasowego "worka" do docelowego
-        File::move($this->getUploader(), $this->getUploaderId(), $this->getObject(), $this->getObjectId());
+        File::move(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), $this->getObject(), $this->getObjectId());
         return parent::onFormSaved();
     }
 
@@ -120,15 +116,15 @@ abstract class UploaderElementAbstract extends ElementAbstract implements Upload
     {
         //jeśli już są pliki tymczasowe, to wychodzimy
         if ((new CmsFileQuery())
-                ->byObject($this->getUploader(), $this->getUploaderId())
+                ->byObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId())
                 ->count()) {
             return true;
         }
         //tworzymy pliki tymczasowe - kopie oryginałów
-        File::link($this->getObject(), $this->getObjectId(), $this->getUploader(), $this->getUploaderId());
+        File::link($this->getObject(), $this->getObjectId(), self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId());
         $placeholder = new CmsFileRecord();
         $placeholder->name = self::PLACEHOLDER_NAME;
-        $placeholder->object = $this->getUploader();
+        $placeholder->object = self::TEMP_OBJECT_PREFIX . $this->getObject();
         $placeholder->objectId = $this->getUploaderId();
         $placeholder->save();
         return true;
@@ -143,13 +139,5 @@ abstract class UploaderElementAbstract extends ElementAbstract implements Upload
     {
         $parts = \explode('\\', strtolower($name));
         return substr(end($parts), 0, -6);
-    }
-
-    /**
-     * @return string
-     */
-    protected function getUploader(): string
-    {
-        return self::TEMP_OBJECT_PREFIX . $this->getObject();
     }
 }

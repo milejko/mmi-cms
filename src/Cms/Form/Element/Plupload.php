@@ -314,7 +314,7 @@ class Plupload extends UploaderElementAbstract
 				'use strict';
 				var conf = $.extend(true, {}, PLUPLOADCONF.settings);
 				conf.form_element_id = '" . $this->getId() . "';
-				conf.form_object = '" . $this->getUploader() . "';
+				conf.form_object = '" . self::TEMP_OBJECT_PREFIX . $this->getObject() . "';
 				conf.form_object_id = '" . $this->getUploaderId() . "';
 				" . ($this->getOption('showConsole') ? "conf.log_element = '" . $this->getId() . "-console';" : "") . "
 				" . ($this->getOption('chunkSize') ? "conf.chunk_size = '" . $this->getOption('chunkSize') . "';" : "") . "

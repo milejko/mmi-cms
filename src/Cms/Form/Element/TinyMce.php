@@ -42,6 +42,8 @@ use Mmi\Session\SessionInterface;
  * @method self setToolbars(string $value)
  * @method self setMenubar(string $value)
  * @method self setPlugins(string $value)
+ * @method self setHeight(int $value)
+ * @method self setWidth(int $value)
  * @method self setFontFormats(string $value)
  * @method self setResize(string $value)
  * @method self setFontSizeFormats(string $value)
@@ -295,7 +297,7 @@ class TinyMce extends UploaderElementAbstract
     {
         $class = $this->getOption('id');
         $this->setOption('class', trim($this->getOption('class') . ' ' . $class));
-        $object   = $this->getUploader();
+        $object   = self::TEMP_OBJECT_PREFIX . $this->getObject();
         $objectId = $this->getUploaderId();
         $time     = round(microtime(true));
         $hash     = md5(App::$di->get(SessionInterface::class)->getId() . '+' . $time . '+' . $objectId);
