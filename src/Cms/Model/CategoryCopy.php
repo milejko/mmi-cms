@@ -10,6 +10,7 @@
 
 namespace Cms\Model;
 
+use Cms\Form\Element\UploaderElementInterface;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
@@ -212,6 +213,7 @@ class CategoryCopy
             ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
             ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
             ->andFieldObjectId()->equals($this->_category->id)
+            ->andFieldName()->notEquals(UploaderElementInterface::PLACEHOLDER_NAME)
             ->findUnique('object') as $object) {
             \Cms\Model\File::link($object, $this->_category->id, $object, $this->_copy->getPk());
         }
@@ -235,6 +237,7 @@ class CategoryCopy
             //obiekt podobny do categoryWidgetRelation
             ->whereObject()->like(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%')
             ->andFieldObjectId()->equals($relationId)
+            ->andFieldName()->notEquals(UploaderElementInterface::PLACEHOLDER_NAME)
             ->findUnique('object') as $object) {
             \Cms\Model\File::link($object, $relationId, $object, $newRelation->id);
         }

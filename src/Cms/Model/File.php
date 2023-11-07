@@ -184,7 +184,7 @@ class File
         $i = 0;
         //kopiowanie plików (pomijanie placeholderów)
         foreach (CmsFileQuery::byObject($srcObject, $srcId)
-            ->whereName()->notEquals(UploaderElementInterface::PLACEHOLDER_NAME)
+            ->andFieldName()->notEquals(UploaderElementInterface::PLACEHOLDER_NAME)
             ->find() as $file) {
             $newFile = clone $file;
             $newFile->object = $destObject;
