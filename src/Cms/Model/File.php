@@ -182,8 +182,10 @@ class File
     public static function link($srcObject, $srcId, $destObject, $destId)
     {
         $i = 0;
-        //kopiowanie plików
-        foreach (CmsFileQuery::byObject($srcObject, $srcId)->find() as $file) {
+        //kopiowanie plików (pomijanie placeholderów)
+        foreach (CmsFileQuery::byObject($srcObject, $srcId)
+            ->whereName()->notEquals(UploaderElementInterface::PLACEHOLDER_NAME)
+            ->find() as $file) {
             $newFile = clone $file;
             $newFile->object = $destObject;
             $newFile->objectId = $destId;
