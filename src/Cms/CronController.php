@@ -76,15 +76,16 @@ class CronController extends \Mmi\Mvc\Controller
         //pobranie identyfikatorów aktywnych kategorii
         $activeCategoryRecordIds = (new CmsCategoryQuery())
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
+            ->orderAsc('RAND()')
+            ->limit(self::HISTORICAL_PACKAGE_SIZE)
             ->findPairs('id', 'id');
-        shuffle($activeCategoryRecordIds);
         //iteracja po identyfikatorach kategorii
-        foreach (array_slice($activeCategoryRecordIds, 0, self::HISTORICAL_PACKAGE_SIZE) as $categoryRecordId) {
+        foreach ($activeCategoryRecordIds as $categoryRecordId) {
             //wyszukiwanie wersji historycznych danego artykułu
             $versions = (new CmsCategoryQuery())
                 ->whereCmsCategoryOriginalId()->equals($categoryRecordId)
                 ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_HISTORY)
-                ->andFieldDateAdd()->greater(date('Y-m-d H:i:s', strtotime('-6 months')))
+                ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-6 months')))
                 ->orderAscDateAdd()
                 ->find();
             //zliczanie wersji historycznych
@@ -103,7 +104,7 @@ class CronController extends \Mmi\Mvc\Controller
             $deletedArticles += $counter;
         }
         //komunikat o zakończeniu
-        return 'Deleted drafts & historical versions: ' . $deletedArticles;
+        return 'Deleted historical versions: ' . $deletedArticles;
     }
 
     /**
