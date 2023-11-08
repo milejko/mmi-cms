@@ -44,9 +44,24 @@ class CronController extends \Mmi\Mvc\Controller
     /**
      * Czyszczenie kolejki mailowej
      */
-    public function cleanMailQueueAction()
+    public function mailQueueCleanupAction()
     {
         $this->view->cleared = \Cms\Model\Mail::clean();
+    }
+
+    public function draftCleanupAction()
+    {
+        //dłuższy czas i więcej pamięci
+        ini_set('max_execution_time', 3600);
+        ini_set('memory_limit', '1G');
+        //usuwanie draftów starszych niz 3 dni
+        $deletedArticles = (new CmsCategoryQuery())
+            ->whereCmsCategoryOriginalId()->notEquals(null)
+            ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_DRAFT)
+            ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-3 days')))
+            ->limit(self::DRAFTS_PACKAGE_SIZE)
+            ->delete();
+        return 'Deleted drafts: ' . $deletedArticles;
     }
 
     /**
@@ -55,23 +70,16 @@ class CronController extends \Mmi\Mvc\Controller
     public function versionCleanupAction()
     {
         //dłuższy czas i więcej pamięci
-        ini_set('max_execution_time', 12 * 3600);
+        ini_set('max_execution_time', 3600);
         ini_set('memory_limit', '2G');
-        //usuwanie draftów starszych niz 3 dni
-        $deletedArticles = (new CmsCategoryQuery())
-            ->whereCmsCategoryOriginalId()->notEquals(null)
-            ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_DRAFT)
-            ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-3 days')))
-            ->limit(self::DRAFTS_PACKAGE_SIZE)
-            ->delete();
+        $deletedArticles = 0;
         //pobranie identyfikatorów aktywnych kategorii
         $activeCategoryRecordIds = (new CmsCategoryQuery())
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
-            ->orderAsc('RAND()')
-            ->limit(self::HISTORICAL_PACKAGE_SIZE)
             ->findPairs('id', 'id');
+        shuffle($activeCategoryRecordIds);
         //iteracja po identyfikatorach kategorii
-        foreach ($activeCategoryRecordIds as $categoryRecordId) {
+        foreach (array_slice($activeCategoryRecordIds, 0, self::HISTORICAL_PACKAGE_SIZE) as $categoryRecordId) {
             //wyszukiwanie wersji historycznych danego artykułu
             $versions = (new CmsCategoryQuery())
                 ->whereCmsCategoryOriginalId()->equals($categoryRecordId)
@@ -101,7 +109,7 @@ class CronController extends \Mmi\Mvc\Controller
     /**
      * Usuwa pliki tymczasowe Cms File
      */
-    public function deleteOrphansAction()
+    public function temporaryFilesCleanupAction()
     {
         //usuwanie plików tmp
         return 'Temporary files deleted: ' . \Cms\Model\File::deleteOrphans(self::ORPHANS_PACKAGE_SIZE);
