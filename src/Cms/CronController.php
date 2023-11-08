@@ -18,7 +18,10 @@ use Cms\Orm\CmsCategoryRecord;
  */
 class CronController extends \Mmi\Mvc\Controller
 {
-    public const MIN_HISTORICAL_VERSIONS = 1;
+    private const RETAIN_HISTORICAL_VERSIONS = 3;
+    private const HISTORICAL_PACKAGE_SIZE = 1000;
+    private const DRAFTS_PACKAGE_SIZE = 1000;
+    private const ORPHANS_PACKAGE_SIZE = 1000;
 
     /**
      * Uruchomienie crona
@@ -59,11 +62,13 @@ class CronController extends \Mmi\Mvc\Controller
             ->whereCmsCategoryOriginalId()->notEquals(null)
             ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_DRAFT)
             ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-3 days')))
+            ->limit(self::DRAFTS_PACKAGE_SIZE)
             ->delete();
         //pobranie identyfikatorów aktywnych kategorii
         $activeCategoryRecordIds = (new CmsCategoryQuery())
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
-            ->orderAscId()
+            ->orderAsc('RAND()')
+            ->limit(self::HISTORICAL_PACKAGE_SIZE)
             ->findPairs('id', 'id');
         //iteracja po identyfikatorach kategorii
         foreach ($activeCategoryRecordIds as $categoryRecordId) {
@@ -71,6 +76,7 @@ class CronController extends \Mmi\Mvc\Controller
             $versions = (new CmsCategoryQuery())
                 ->whereCmsCategoryOriginalId()->equals($categoryRecordId)
                 ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_HISTORY)
+                ->andFieldDateAdd()->greater(date('Y-m-d H:i:s', strtotime('-6 months')))
                 ->orderAscDateAdd()
                 ->find();
             //zliczanie wersji historycznych
@@ -79,12 +85,8 @@ class CronController extends \Mmi\Mvc\Controller
             //iteracja po wersjach
             foreach ($versions as $versionRecord) {
                 //pozostało nie więcej wersji niz wymagana do pozostawienia
-                if ($versionCount - $counter <= self::MIN_HISTORICAL_VERSIONS) {
+                if ($versionCount - $counter <= self::RETAIN_HISTORICAL_VERSIONS) {
                     break;
-                }
-                //zbyt nowa wersja
-                if ($versionRecord->dateAdd > date('Y-m-d H:i:s', strtotime('-6 months'))) {
-                    continue;
                 }
                 //usuwanie wersji historycznej
                 $versionRecord->delete();
@@ -102,6 +104,6 @@ class CronController extends \Mmi\Mvc\Controller
     public function deleteOrphansAction()
     {
         //usuwanie plików tmp
-        return 'Temporary files deleted: ' . \Cms\Model\File::deleteOrphans();
+        return 'Temporary files deleted: ' . \Cms\Model\File::deleteOrphans(self::ORPHANS_PACKAGE_SIZE);
     }
 }

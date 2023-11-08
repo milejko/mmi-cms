@@ -182,15 +182,10 @@ class File
     public static function link($srcObject, $srcId, $destObject, $destId)
     {
         $i = 0;
-        //@TODO: remove after DB cleanups
-        $uniqueFiles = [];
-        //kopiowanie plików (pomijanie placeholderów)
-        foreach (CmsFileQuery::byObject($srcObject, $srcId)->find() as $file) {
-            if (isset($uniqueFiles[$file->name])) {
-                continue;
-            }
-            //@TODO: remove after DB cleanups
-            $uniqueFiles[$file->name] = true;
+        //kopiowanie plików (unikalne - zgrupowane po hashu)
+        foreach (CmsFileQuery::byObject($srcObject, $srcId)
+            ->groupByName()
+            ->find() as $file) {
             $file->getHashName();
             $newFile = clone $file;
             $newFile->object = $destObject;
@@ -316,7 +311,6 @@ class File
         //wybieramy kolekcję i usuwamy całą
         return CmsFileQuery::byObject($object, $objectId)
             ->andFieldName()->notEquals($ignoreFileNames)
-            ->find()
             ->delete();
     }
 
@@ -324,14 +318,11 @@ class File
      * Usuwanie nieużywanych plików przypiętych do tmp-XXX
      * @param string $modifiedDate graniczna data modyfikacji
      */
-    public static function deleteOrphans($modifiedDate = '')
+    public static function deleteOrphans($limit = 1000)
     {
-        if (empty($modifiedDate)) {
-            $modifiedDate = date('Y-m-d H:i:s', strtotime('-1 week'));
-        }
         (new CmsFileQuery())->whereObject()->like(UploaderElementInterface::TEMP_OBJECT_PREFIX . '%')
-            ->andFieldDateModify()->less($modifiedDate)
-            ->find()
+            ->andFieldDateModify()->less(date('Y-m-d H:i:s', strtotime('-1 week')))
+            ->limit($limit)
             ->delete();
     }
 }
