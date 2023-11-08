@@ -447,6 +447,10 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             App::$di->get(CacheInterface::class)->save($parent = (new \Cms\Orm\CmsCategoryQuery())
                 ->findPk($this->parentId), $cacheKey, 0);
         }
+        //info w cache o braku kategorii
+        if (false === $parent) {
+            return;
+        }
         //zwrot rodzica
         return $parent;
     }
