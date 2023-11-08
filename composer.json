@@ -41,7 +41,6 @@
             "Tests\\": "tests/"
         }
     },
-    "minimum-stability": "dev",
     "scripts": {
         "fix:phpcbf": "phpcbf",
         "fix:php-cs-fixer": "php-cs-fixer fix src && php-cs-fixer fix tests",
@@ -65,7 +64,7 @@
         ]
     },
     "require-dev": {
-        "mmi/mmi-build-toolkit": "dev-main"
+        "mmi/mmi-build-toolkit": "^1.0"
     },
     "config": {
         "allow-plugins": {
