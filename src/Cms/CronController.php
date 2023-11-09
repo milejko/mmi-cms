@@ -19,9 +19,16 @@ use Cms\Orm\CmsCategoryRecord;
 class CronController extends \Mmi\Mvc\Controller
 {
     private const RETAIN_HISTORICAL_VERSIONS = 3;
-    private const HISTORICAL_PACKAGE_SIZE = 1000;
-    private const DRAFTS_PACKAGE_SIZE = 1000;
-    private const ORPHANS_PACKAGE_SIZE = 1000;
+    private const BATCH_SIZE = 1000;
+    private const DRAFT_MAX_AGE = '-7 days';
+    private const TRASH_MAX_AGE = '-6 months';
+    private const VERSION_MAX_AGE = '-6 months';
+
+    public function init() {
+        //dłuższy czas i więcej pamięci
+        ini_set('max_execution_time', 3600);
+        ini_set('memory_limit', '1G');        
+    }
 
     /**
      * Uruchomienie crona
@@ -51,33 +58,42 @@ class CronController extends \Mmi\Mvc\Controller
 
     public function draftCleanupAction()
     {
-        //dłuższy czas i więcej pamięci
-        ini_set('max_execution_time', 3600);
-        ini_set('memory_limit', '1G');
         //usuwanie draftów starszych niz 3 dni
         $deletedArticles = (new CmsCategoryQuery())
             ->whereCmsCategoryOriginalId()->notEquals(null)
             ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_DRAFT)
-            ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-3 days')))
-            ->limit(self::DRAFTS_PACKAGE_SIZE)
+            ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime(self::DRAFT_MAX_AGE)))
+            ->limit(self::BATCH_SIZE)
             ->delete();
-        return 'Deleted drafts: ' . $deletedArticles;
+        return 'Deleted drafts: ' . (int) $deletedArticles;
     }
 
     /**
-     * Czyści stare wersje
+     * Usuwa stare artykuły z kosza
+     */
+    public function trashCleanupAction()
+    {
+        //usuwanie z kosza starszych niz 6 miesięcy
+        $deletedArticles = (new CmsCategoryQuery())
+            ->whereCmsCategoryOriginalId()->notEquals(null)
+            ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_DELETED)
+            ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime(self::TRASH_MAX_AGE)))
+            ->limit(self::BATCH_SIZE)
+            ->delete();
+        return 'Deleted trash items: ' . (int) $deletedArticles;
+    }
+
+    /**
+     * Czyści historyczne wersje aktywnych artykułów
      */
     public function versionCleanupAction()
     {
-        //dłuższy czas i więcej pamięci
-        ini_set('max_execution_time', 3600);
-        ini_set('memory_limit', '2G');
         $deletedArticles = 0;
-        //pobranie identyfikatorów aktywnych kategorii
+        //pobranie identyfikatorów aktywnych i usuniętych kategorii w losowej kolejności
         $activeCategoryRecordIds = (new CmsCategoryQuery())
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
             ->orderAsc('RAND()')
-            ->limit(self::HISTORICAL_PACKAGE_SIZE)
+            ->limit(self::BATCH_SIZE)
             ->findPairs('id', 'id');
         //iteracja po identyfikatorach kategorii
         foreach ($activeCategoryRecordIds as $categoryRecordId) {
@@ -85,7 +101,7 @@ class CronController extends \Mmi\Mvc\Controller
             $versions = (new CmsCategoryQuery())
                 ->whereCmsCategoryOriginalId()->equals($categoryRecordId)
                 ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_HISTORY)
-                ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime('-6 months')))
+                ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime(self::VERSION_MAX_AGE)))
                 ->orderAscDateAdd()
                 ->find();
             //zliczanie wersji historycznych
@@ -102,17 +118,21 @@ class CronController extends \Mmi\Mvc\Controller
                 $counter++;
             }
             $deletedArticles += $counter;
+            //przekroczona ilość jednorazowo kasowanych artykułów
+            if ($deletedArticles > self::BATCH_SIZE) {
+                break;
+            }
         }
         //komunikat o zakończeniu
-        return 'Deleted historical versions: ' . $deletedArticles;
+        return 'Deleted historical versions: ' . (int) $deletedArticles;
     }
 
     /**
      * Usuwa pliki tymczasowe Cms File
      */
-    public function temporaryFilesCleanupAction()
+    public function tempCleanupAction()
     {
         //usuwanie plików tmp
-        return 'Temporary files deleted: ' . \Cms\Model\File::deleteOrphans(self::ORPHANS_PACKAGE_SIZE);
+        return 'Temporary files deleted: ' . (int) \Cms\Model\File::deleteOrphans(self::BATCH_SIZE);
     }
 }
