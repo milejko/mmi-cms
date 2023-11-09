@@ -59,9 +59,8 @@ class CronController extends \Mmi\Mvc\Controller
 
     public function draftCleanupAction()
     {
-        //usuwanie draftów starszych niz 3 dni
+        //usuwanie draftów
         $deletedArticles = (new CmsCategoryQuery())
-            ->whereCmsCategoryOriginalId()->notEquals(null)
             ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_DRAFT)
             ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime(self::DRAFT_MAX_AGE)))
             ->limit(self::BATCH_SIZE)
@@ -74,7 +73,7 @@ class CronController extends \Mmi\Mvc\Controller
      */
     public function trashCleanupAction()
     {
-        //usuwanie z kosza starszych niz 6 miesięcy
+        //usuwanie z kosza
         $deletedArticles = (new CmsCategoryQuery())
             ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_DELETED)
             ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime(self::TRASH_MAX_AGE)))
