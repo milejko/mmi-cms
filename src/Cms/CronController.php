@@ -24,10 +24,11 @@ class CronController extends \Mmi\Mvc\Controller
     private const TRASH_MAX_AGE = '-6 months';
     private const VERSION_MAX_AGE = '-6 months';
 
-    public function init() {
+    public function init()
+    {
         //dłuższy czas i więcej pamięci
         ini_set('max_execution_time', 3600);
-        ini_set('memory_limit', '1G');        
+        ini_set('memory_limit', '1G');
     }
 
     /**
