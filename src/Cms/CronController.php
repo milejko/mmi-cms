@@ -76,7 +76,6 @@ class CronController extends \Mmi\Mvc\Controller
     {
         //usuwanie z kosza starszych niz 6 miesięcy
         $deletedArticles = (new CmsCategoryQuery())
-            ->whereCmsCategoryOriginalId()->notEquals(null)
             ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_DELETED)
             ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime(self::TRASH_MAX_AGE)))
             ->limit(self::BATCH_SIZE)
