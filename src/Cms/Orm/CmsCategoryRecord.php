@@ -548,6 +548,22 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     }
 
     /**
+     * Pobiera klucz szablonu
+     */
+    public function getTemplateKey(): string
+    {
+        return substr($this->template, strpos($this->template, '/') + 1);
+    }
+
+    /**
+     * Pobiera numer poziomu zagnieżdżenia
+     */
+    public function getLevel(): int
+    {
+        return count(explode('/', $this->path));
+    }
+
+    /**
      * Przebudowuje dzieci (wywołuje save)
      * @param integer $parentId rodzic
      */
