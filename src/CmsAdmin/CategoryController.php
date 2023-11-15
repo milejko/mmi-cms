@@ -426,15 +426,17 @@ class CategoryController extends Controller
         $skinsetModel = new SkinsetModel($this->cmsSkinsetConfig);
         $allowedTemplates = [];
         foreach ($skinsetModel->getSkinConfigByKey($this->scopeConfig->getName())->getTemplates() as $templateConfig) {
-            if (null === $parentCategory && $templateConfig->getAllowedOnRoot()) {
-                $allowedTemplates[] = $templateConfig;
+            if (null === $parentCategory) {
+                if ($templateConfig->getAllowedOnRoot()) {
+                    $allowedTemplates[] = $templateConfig;
+                }
                 continue;
             }
-            if (null === $parentCategory) {
+            if (!$templateConfig->vaidateCustomAllowedConditions($parentCategory)) {
                 continue;
             }
             $parentTemplateConfig = $skinsetModel->getTemplateConfigByKey($parentCategory->template);
-            if (in_array($templateConfig->getKey(), $parentTemplateConfig->getCompatibleChildrenKeys())) {
+            if ($parentTemplateConfig && in_array($templateConfig->getKey(), $parentTemplateConfig->getCompatibleChildrenKeys(), true)) {
                 $allowedTemplates[] = $templateConfig;
             }
         }

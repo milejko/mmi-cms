@@ -420,4 +420,6 @@
   <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Cms/Validator/TagUnique.php"/>
   <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Cms/Validator/TagUnique.php"/>
   <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Cms/Validator/TagUnique.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Cms/App/CmsTemplateConfig.php"/>
+  <violation rule="PHPMD\Rule\ExcessivePublicCount" file="src/Cms/Orm/CmsCategoryRecord.php"/>
 </phpmd-baseline>

@@ -2,6 +2,8 @@
 
 namespace Cms\App;
 
+use Cms\Orm\CmsCategoryRecord;
+
 /**
  * Konfiguracja szablonu
  */
@@ -165,5 +167,13 @@ class CmsTemplateConfig
     public function getCacheLifeTime(): int
     {
         return $this->cacheLifeTime;
+    }
+
+    /**
+     * Sprawdza dodatkowe warunki dostępności
+     */
+    public function vaidateCustomAllowedConditions(CmsCategoryRecord $parentCategory): bool
+    {
+        return true;
     }
 }
