@@ -26,7 +26,7 @@ class RedirectTransport extends HttpJsonTransport
         if (preg_match('/^' . str_replace('/', '\/', LinkData::INTERNAL_REDIRECT_PREFIX) . '(\d+)/', $href, $matches)) {
             $redirectType = LinkData::REL_INTERNAL;
             $cmsCategoryRecord = (new CmsCategoryQuery())->findPk($matches[1]);
-            $href = sprintf(CmsRouterConfig::API_METHOD_CONTENT, $cmsCategoryRecord->getScope(), $cmsCategoryRecord->getUri());
+            $href = $cmsCategoryRecord ? sprintf(CmsRouterConfig::API_METHOD_CONTENT, $cmsCategoryRecord->getScope(), $cmsCategoryRecord->getUri()) : '';
         }
         $this->_links = [
             (new LinkData())
