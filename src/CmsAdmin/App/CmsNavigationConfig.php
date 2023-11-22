@@ -103,6 +103,14 @@ class CmsNavigationConfig extends NavigationConfig
                                 )
                                 ->addChild(
                                     (new NavigationConfigElement())
+                                        ->setLabel('menu.category.search')
+                                        ->setIcon('fa-search')
+                                        ->setModule('cmsAdmin')
+                                        ->setController('category')
+                                        ->setAction('search')
+                                )
+                                ->addChild(
+                                    (new NavigationConfigElement())
                                         ->setLabel('menu.categoryTrash')
                                         ->setIcon('fa-trash')
                                         ->setModule('cmsAdmin')
