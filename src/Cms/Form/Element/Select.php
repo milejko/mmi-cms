@@ -12,6 +12,7 @@ namespace Cms\Form\Element;
 
 /**
  * Element select
+ * @inheritDoc
  */
 class Select extends \Mmi\Form\Element\Select
 {

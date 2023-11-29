@@ -4,7 +4,7 @@
  * Mmi Framework (https://github.com/milejko/mmi.git)
  *
  * @link       https://github.com/milejko/mmi.git
- * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
+ * @copyright  Copyright (c) 2010-2023 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
@@ -13,6 +13,8 @@ namespace CmsAdmin;
 use Cms\App\CmsRouterConfig;
 use Cms\App\CmsScopeConfig;
 use Cms\App\CmsSkinsetConfig;
+use Cms\Model\CategoryCopy;
+use Cms\Model\CategoryDraft;
 use Cms\Model\CategoryValidationModel;
 use Cms\Model\SkinsetModel;
 use Cms\Model\TemplateModel;
@@ -21,12 +23,18 @@ use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use CmsAdmin\Form\CategoryForm;
 use CmsAdmin\Form\CategoryMoveForm;
+use CmsAdmin\Form\CategorySearch;
 use CmsAdmin\Model\CategoryAclModel;
+use CmsAdmin\Plugin\CategoryHistoryGrid;
+use DI\Annotation\Inject;
 use Mmi\Cache\CacheInterface;
 use Mmi\Form\Element\ElementAbstract;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
+use Mmi\Orm\RecordCollection;
 use Mmi\Security\AuthInterface;
+
+use function array_reverse;
 
 /**
  * Kontroler kategorii - stron CMS
@@ -64,8 +72,8 @@ class CategoryController extends Controller
         $parentCategory = null;
         //wyszukiwanie parenta
         if ($request->parentId && (null === $parentCategory = (new CmsCategoryQuery())
-            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-            ->findPk($request->parentId))) {
+                    ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+                    ->findPk($request->parentId))) {
             //błędny parent
             $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
@@ -78,19 +86,35 @@ class CategoryController extends Controller
             $parentCategory = $parentCategory->getParentRecord();
         }
         //breadcrumby
-        $this->view->breadcrumbs = \array_reverse($breadcrumbs);
+        $this->view->breadcrumbs = array_reverse($breadcrumbs);
         //model skóry skinset do widoku
         $this->view->skinset = $skinsetModel = new SkinsetModel($this->cmsSkinsetConfig);
         //scope do widoku
         $this->view->scopeName = $this->scopeConfig->getName();
         //znalezione kategorie do widoku
-        $this->view->categories = (new \Cms\Orm\CmsCategoryQuery())
-            ->whereStatus()->equals(\Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE)
-            ->whereParentId()->equals($request->parentId ? $request->parentId : null)
+        $this->view->categories = (new CmsCategoryQuery())
+            ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
+            ->whereParentId()->equals($request->parentId ?: null)
             ->whereTemplate()->like($this->scopeConfig->getName() . '%')
             ->whereTemplate()->equals([$this->scopeConfig->getName() => $this->scopeConfig->getName()] + $skinsetModel->getAllowedTemplateKeysBySkinKey($this->scopeConfig->getName()))
             ->orderAscOrder()
             ->find();
+    }
+
+    /**
+     * Lista stron CMS - wyszukiwarka
+     */
+    public function searchAction(Request $request)
+    {
+        $this->view->filterOptions = CategorySearch::FIELD_FILTER_OPTIONS;
+        //model skóry skinset do widoku
+        $this->view->skinset = new SkinsetModel($this->cmsSkinsetConfig);
+        //scope do widoku
+        $this->view->scopeName = $this->scopeConfig->getName();
+        //form do widoku
+        $this->view->categorySearch = $form = new CategorySearch();
+        //wyniki wyszukiwania do widoku
+        $this->view->result = $form->isMine() && $form->isValid() ? $this->getSearchResult($form) : null;
     }
 
     /**
@@ -100,8 +124,8 @@ class CategoryController extends Controller
     {
         //wyszukiwanie kategorii
         if (null === $category = (new CmsCategoryQuery())
-            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-            ->findPk($request->id)
+                ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+                ->findPk($request->id)
         ) {
             //przekierowanie na originalId
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'redactorPreview', ['id' => $request->originalId]);
@@ -112,10 +136,10 @@ class CategoryController extends Controller
         $skinBasedPreviewUrl ?
             $this->getResponse()->redirectToUrl(
                 $skinBasedPreviewUrl .
-                    '?apiUrl=' .
-                    urlencode(sprintf(CmsRouterConfig::API_METHOD_PREVIEW, $category->getScope(), $category->id, $category->cmsCategoryOriginalId ?? 0, $category->cmsAuthId, time())) .
-                    '&returnUrl=' .
-                    urlencode('/cmsAdmin/category/' . ($category->parentId ? '?parentId=' . $category->parentId : ''))
+                '?apiUrl=' .
+                urlencode(sprintf(CmsRouterConfig::API_METHOD_PREVIEW, $category->getScope(), $category->id, $category->cmsCategoryOriginalId ?? 0, $category->cmsAuthId, time())) .
+                '&returnUrl=' .
+                urlencode('/cmsAdmin/category/' . ($category->parentId ? '?parentId=' . $category->parentId : ''))
             ) :
             $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);
     }
@@ -132,8 +156,8 @@ class CategoryController extends Controller
             $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
         if ($request->parentId && (null === (new CmsCategoryQuery())
-            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-            ->findPk($request->parentId))) {
+                    ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+                    ->findPk($request->parentId))) {
             //nowy artykuł bez template
             $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
@@ -161,8 +185,8 @@ class CategoryController extends Controller
         }
         //wyszukiwanie kategorii
         if (null === $category = (new CmsCategoryQuery())
-            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-            ->findPk($request->id)
+                ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+                ->findPk($request->id)
         ) {
             //przekierowanie na originalId
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $request->originalId]);
@@ -189,7 +213,7 @@ class CategoryController extends Controller
             $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
         //sprawdzenie uprawnień do edycji węzła kategorii
-        if (!(new \CmsAdmin\Model\CategoryAclModel())->getAcl()->isAllowed($this->auth->getRoles(), $originalId)) {
+        if (!(new CategoryAclModel())->getAcl()->isAllowed($this->auth->getRoles(), $originalId)) {
             $this->getMessenger()->addMessage('messenger.category.permission.denied', false);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
         }
@@ -263,14 +287,14 @@ class CategoryController extends Controller
         //jeśli nie było posta
         if (!$form->isMine()) {
             //grid z listą wersji historycznych
-            $this->view->historyGrid = new \CmsAdmin\Plugin\CategoryHistoryGrid(['originalId' => $category->cmsCategoryOriginalId]);
+            $this->view->historyGrid = new CategoryHistoryGrid(['originalId' => $category->cmsCategoryOriginalId]);
             return;
         }
         //błędy zapisu
         if ($form->isMine() && !$form->isSaved()) {
             $this->getMessenger()->addMessage('messenger.category.form.errors', false);
             //grid z listą wersji historycznych
-            $this->view->historyGrid = new \CmsAdmin\Plugin\CategoryHistoryGrid(['originalId' => $category->cmsCategoryOriginalId]);
+            $this->view->historyGrid = new CategoryHistoryGrid(['originalId' => $category->cmsCategoryOriginalId]);
             return;
         }
         //zatwierdzenie zmian - commit
@@ -291,10 +315,10 @@ class CategoryController extends Controller
         $skinBasedPreviewUrl ?
             $this->getResponse()->redirectToUrl(
                 $skinBasedPreviewUrl .
-                    '?apiUrl=' .
-                    urlencode(sprintf(CmsRouterConfig::API_METHOD_PREVIEW, $category->getScope(), $category->id, $category->cmsCategoryOriginalId ?? 0, $category->cmsAuthId, time())) .
-                    '&returnUrl=' .
-                    urlencode('/cmsAdmin/category/edit?id=' . $category->id . '&originalId=' . $category->cmsCategoryOriginalId . '&uploaderId=' . $category->id)
+                '?apiUrl=' .
+                urlencode(sprintf(CmsRouterConfig::API_METHOD_PREVIEW, $category->getScope(), $category->id, $category->cmsCategoryOriginalId ?? 0, $category->cmsAuthId, time())) .
+                '&returnUrl=' .
+                urlencode('/cmsAdmin/category/edit?id=' . $category->id . '&originalId=' . $category->cmsCategoryOriginalId . '&uploaderId=' . $category->id)
             ) :
             $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);
     }
@@ -305,8 +329,8 @@ class CategoryController extends Controller
     public function moveAction(Request $request)
     {
         if (null === $category = (new CmsCategoryQuery())
-            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-            ->findPk($request->id)
+                ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+                ->findPk($request->id)
         ) {
             //brak strony
             $this->getMessenger()->addMessage('controller.category.move.error', false);
@@ -328,8 +352,8 @@ class CategoryController extends Controller
     public function deleteAction(Request $request)
     {
         if (null === $category = (new CmsCategoryQuery())
-            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-            ->findPk($request->id)
+                ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+                ->findPk($request->id)
         ) {
             //brak strony
             $this->getMessenger()->addMessage('controller.category.delete.error', false);
@@ -350,15 +374,15 @@ class CategoryController extends Controller
     public function copyAction(Request $request)
     {
         if (null === $category = (new CmsCategoryQuery())
-            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-            ->findPk($request->id)
+                ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+                ->findPk($request->id)
         ) {
             //brak strony
             $this->getMessenger()->addMessage('controller.category.copy.error', false);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
         //model do kopiowania kategorii
-        $copyModel = new \Cms\Model\CategoryCopy($category);
+        $copyModel = new CategoryCopy($category);
         //kopiowanie z transakcją
         $copyModel->copyWithTransaction() ?
             $this->getMessenger()->addMessage('controller.category.copy.message', true) :
@@ -387,9 +411,9 @@ class CategoryController extends Controller
         foreach ($orderMap as $order => $categoryId) {
             //record not found or order is already OK
             if (null === ($record = (new CmsCategoryQuery())
-                ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-                ->whereOrder()->notEquals($order)
-                ->findPk($categoryId))) {
+                    ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+                    ->whereOrder()->notEquals($order)
+                    ->findPk($categoryId))) {
                 continue;
             }
             //setting order and simpleUpdate (it is enough, doesn't change paths)
@@ -401,7 +425,7 @@ class CategoryController extends Controller
 
     /**
      * Przygotowanie drafta
-     * @param integer $originalId
+     * @param int $originalId
      */
     protected function _prepareDraft(CmsCategoryRecord $category, $originalId)
     {
@@ -410,7 +434,7 @@ class CategoryController extends Controller
             return;
         }
         //draft nie może być utworzony, ani wczytany
-        if (null === $draft = (new \Cms\Model\CategoryDraft($category))->createAndGetDraftForUser($this->auth->getId())) {
+        if (null === $draft = (new CategoryDraft($category))->createAndGetDraftForUser($this->auth->getId())) {
             $this->getMessenger()->addMessage('messenger.category.draft.fail', false);
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
         }
@@ -419,7 +443,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Pobiera dozwolone szablony do dodania pod podaną kategorią
+     * Pobiera dozwolone szablony do dodania pod podaną kategorią
      */
     protected function getAllowedTemplates(?CmsCategoryRecord $parentCategory): array
     {
@@ -441,5 +465,49 @@ class CategoryController extends Controller
             }
         }
         return $allowedTemplates;
+    }
+
+    private function getSearchResult(CategorySearch $form): RecordCollection
+    {
+        $cmsCategoryQuery = (new CmsCategoryQuery())
+            ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
+            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+            ->orderAscOrder()
+            ->offset(0)
+            ->limit(10);
+
+        $fieldQuery = $form->getElement(CategorySearch::FIELD_QUERY_NAME);
+        $fieldFilter = $form->getElement(CategorySearch::FIELD_FILTER_NAME);
+
+        $searchString = '%' . str_replace('%', '', $fieldQuery->getValue() ?? '') . '%';
+        $searchPath = trim(parse_url($fieldQuery->getValue(), PHP_URL_PATH), '/');
+
+        if (CategorySearch::FIELD_FILTER_OPTION_ALL === $fieldFilter->getValue()) {
+            $cmsCategoryQuery->andQuery(
+                (new CmsCategoryQuery())
+                    ->whereUri()->equals($searchPath)
+                    ->orFieldCustomUri()->equals($searchPath)
+                    ->orFieldUri()->like($searchString)
+                    ->orFieldName()->like($searchString)
+            );
+        }
+
+        if (CategorySearch::FIELD_FILTER_OPTION_NAME === $fieldFilter->getValue()) {
+            $cmsCategoryQuery->whereName()->like($searchString);
+        }
+
+        if (CategorySearch::FIELD_FILTER_OPTION_URI === $fieldFilter->getValue()) {
+            $cmsCategoryQuery->andQuery(
+                (new CmsCategoryQuery())
+                    ->whereUri()->equals($searchPath)
+                    ->orFieldCustomUri()->equals($searchPath)
+            );
+        }
+
+        if (CategorySearch::FIELD_FILTER_OPTION_BREADCRUMBS === $fieldFilter->getValue()) {
+            $cmsCategoryQuery->whereUri()->like($searchString);
+        }
+
+        return $cmsCategoryQuery->find();
     }
 }
