@@ -54,21 +54,21 @@ class FileController extends \Mmi\Mvc\Controller
             throw new KernelException('Unable to create directory: ' . dirname($targetFilePath));
         }
         $scale = explode('x', $request->scale);
-        $x = $scale[0];
-        $y = isset($scale[1]) ? $scale[1] : null;
+        $width = $scale[0];
+        $height = isset($scale[1]) ? $scale[1] : null;
         //wybór skalowania do wykonania
         switch ($request->scaleType) {
             case 'scale':
-                $resource = \Mmi\Image\Image::scale($fs->getRealPath(), $x, $y);
+                $resource = \Mmi\Image\Image::scale($fs->getRealPath(), $width, $height);
                 break;
             case 'scalex':
-                $resource = \Mmi\Image\Image::scalex($fs->getRealPath(), $x);
+                $resource = \Mmi\Image\Image::scalex($fs->getRealPath(), $width);
                 break;
             case 'scaley':
-                $resource = \Mmi\Image\Image::scaley($fs->getRealPath(), $x);
+                $resource = \Mmi\Image\Image::scaley($fs->getRealPath(), $width);
                 break;
             case 'scalecrop':
-                $resource = \Mmi\Image\Image::scaleCrop($fs->getRealPath(), $x, $y ?: $x);
+                $resource = \Mmi\Image\Image::scaleCrop($fs->getRealPath(), $width, $height ?: $width);
                 break;
             case 'default':
                 $resource = \Mmi\Image\Image::inputToResource($fs->getRealPath());
