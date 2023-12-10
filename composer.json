@@ -67,6 +67,7 @@
     },
     "config": {
         "allow-plugins": {
+            "infection/extension-installer": true,
             "php-http/discovery": true
         }
     }
