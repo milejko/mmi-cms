@@ -1,11 +1,8 @@
 {
     "name": "mmi/mmi-cms",
+    "type": "library",
     "description": "The CMS written with MMi Framework",
-    "keywords": [
-        "cms",
-        "mmi",
-        "framework"
-    ],
+    "keywords": ["cms", "mmi"],
     "license": "MIT",
     "authors": [
         {
@@ -23,6 +20,10 @@
         {
             "name": "Krystian Gapski",
             "email": "k.gapski@nowaera.pl"
+        },
+        {
+            "name": "Robert Pawłowski",
+            "email": "r.pawlowski@nowaera.pl"
         }
     ],
     "require": {
@@ -39,6 +40,11 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "5.7-dev"
         }
     },
     "scripts": {
@@ -64,7 +70,7 @@
         ]
     },
     "require-dev": {
-        "mmi/mmi-build-toolkit": "^1.0"
+        "mmi/mmi-build-toolkit": "*"
     },
     "config": {
         "allow-plugins": {

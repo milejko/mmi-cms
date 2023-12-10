@@ -11,6 +11,7 @@
 namespace Cms;
 
 use Cms\Model\FileSystemModel;
+use Mmi\App\KernelException;
 use Mmi\Http\Request;
 use Mmi\Http\ResponseTypes;
 use Mmi\Mvc\MvcForbiddenException;
@@ -40,7 +41,7 @@ class FileController extends \Mmi\Mvc\Controller
     {
         $fs = new FileSystemModel($request->name);
         //public path
-        $publicPath = $fs->getPublicPath($request->operation, trim($request->x . 'x' . $request->y, 'x'));
+        $publicPath = $fs->getThumbPath($request->scaleType, $request->scale);
         //hash check
         if (false === strpos($publicPath, $request->hash)) {
             throw new MvcForbiddenException('Scaler hash invalid');
@@ -50,20 +51,24 @@ class FileController extends \Mmi\Mvc\Controller
         try {
             mkdir(dirname($targetFilePath), 0777, true);
         } catch (\Exception $e) {
+            throw new KernelException('Unable to create directory: ' . dirname($targetFilePath));
         }
+        $scale = explode('x', $request->scale);
+        $width = $scale[0];
+        $height = isset($scale[1]) ? $scale[1] : null;
         //wybór skalowania do wykonania
-        switch ($request->operation) {
+        switch ($request->scaleType) {
             case 'scale':
-                $resource = \Mmi\Image\Image::scale($fs->getRealPath(), $request->x, $request->y ?: $request->x);
+                $resource = \Mmi\Image\Image::scale($fs->getRealPath(), $width, $height);
                 break;
             case 'scalex':
-                $resource = \Mmi\Image\Image::scalex($fs->getRealPath(), $request->x);
+                $resource = \Mmi\Image\Image::scalex($fs->getRealPath(), $width);
                 break;
             case 'scaley':
-                $resource = \Mmi\Image\Image::scaley($fs->getRealPath(), $request->x);
+                $resource = \Mmi\Image\Image::scaley($fs->getRealPath(), $width);
                 break;
             case 'scalecrop':
-                $resource = \Mmi\Image\Image::scaleCrop($fs->getRealPath(), $request->x, $request->y ?: $request->x);
+                $resource = \Mmi\Image\Image::scaleCrop($fs->getRealPath(), $width, $height ?: $width);
                 break;
             case 'default':
                 $resource = \Mmi\Image\Image::inputToResource($fs->getRealPath());
@@ -76,49 +81,28 @@ class FileController extends \Mmi\Mvc\Controller
         return $this->getResponse()->redirectToUrl($this->view->cdn . $publicPath);
     }
 
-    public function serverAction(Request $request)
-    {
-        $fs = new FileSystemModel($request->name);
-        $this->getResponse()
-            ->setHeader('Content-Disposition', 'attachment; filename=' . base64_decode($request->encodedName))
-            ->setHeader('Content-Type', 'application/octet-stream')
-            ->setHeader('Content-Transfer-Encoding', 'binary')
-            ->setHeader('Content-Length', filesize($fs->getRealPath()))
-            ->setHeader('Cache-Control', 'public')
-            ->setHeader('Expires', 'max')
-            ->sendHeaders();
-        readfile($fs->getRealPath());
-        exit;
-    }
-
     /**
      * Akcja kopiowania
      */
-    public function copyAction()
+    public function downloadAction(Request $request)
     {
-        $fs = new FileSystemModel($this->name);
+        $fs = new FileSystemModel($request->name);
         //public path
-        $publicPath = $fs->getPublicPath();
+        $publicPath = $fs->getDownloadPath($request->targetName);
         //hash check
-        if (false === strpos($publicPath, $this->hash)) {
-            throw new MvcForbiddenException('Scaler hash invalid');
+        if (false === strpos($publicPath, $request->hash)) {
+            throw new MvcForbiddenException('Download hash invalid');
         }
         //target file calculation
         $targetFilePath = BASE_PATH . '/web' . $publicPath;
         try {
             mkdir(dirname($targetFilePath), 0777, true);
         } catch (\Exception $e) {
+            throw new KernelException('Unable to create directory: ' . dirname($targetFilePath));
         }
         list($name, $extension) = explode('.', $this->name);
         copy($fs->getRealPath(), $targetFilePath);
-        $this->getResponse()
-            ->setHeader('Content-Length', filesize($fs->getRealPath()))
-            ->setType(ResponseTypes::searchType($extension))
-            ->setHeader('Cache-Control', 'public')
-            ->setHeader('Expires', 'max')
-            ->sendHeaders();
-        readfile($fs->getRealPath());
-        exit;
+        return $this->getResponse()->redirectToUrl($this->view->cdn . $publicPath);
     }
 
     /**
@@ -136,7 +120,7 @@ class FileController extends \Mmi\Mvc\Controller
         }
         $files = [];
         foreach (\Cms\Orm\CmsFileQuery::imagesByObject($request->object, $request->objectId)->find() as $file) {
-            $files[] = ['title' => $file->original, 'value' => $file->getUrl('default', '')];
+            $files[] = ['title' => $file->original, 'value' => $file->getThumbUrl()];
         }
         return json_encode($files);
     }
@@ -155,18 +139,18 @@ class FileController extends \Mmi\Mvc\Controller
         }
         $files = [];
         foreach (\Cms\Orm\CmsFileQuery::byObjectAndClass($request->object, $request->objectId, $request->class)->find() as $file) {
-            $full = $file->getUrl();
+            $full = $file->getThumbUrl();
             $small = $poster = '';
             switch ($file->class) {
                 case 'image':
-                    $small = $file->getUrl('scalecrop', '100x70');
-                    $full = $file->getUrl();
+                    $small = $file->getThumbUrl('scalecrop', '100x70');
+                    $full = $file->getThumbUrl();
                     $poster = null;
                     break;
                 case 'audio':
                 case 'video':
                     $small = '';
-                    $poster = $file->data->posterFileName ? (new FileSystemModel($file->data->posterFileName))->getPublicPath() : null;
+                    $poster = $file->data->posterFileName ? (new FileSystemModel($file->data->posterFileName))->getThumbPath() : null;
                     break;
             }
             $files[] = [

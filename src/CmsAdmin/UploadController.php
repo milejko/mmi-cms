@@ -222,7 +222,7 @@ class UploadController extends Controller
                                 'result' => 'OK',
                                 'name' => $record->name,
                                 'originalName' => $record->original,
-                                'original' => $record->getUrl(),
+                                'original' => $record->getThumbUrl(),
                                 'thumb' => $thumb
                             ],
                             JSON_THROW_ON_ERROR
@@ -278,7 +278,7 @@ class UploadController extends Controller
             //parametry
             $data = $record->data->toArray();
         }
-        $data['urlFile'] = $record->getUrl();
+        $data['urlFile'] = $record->getThumbUrl();
         if ($record->data->posterFileName) {
             $data['poster'] = $record->getPosterUrl();
         }
@@ -368,7 +368,7 @@ class UploadController extends Controller
                 ->findPk($request->id)) {
             return '';
         }
-        $this->getResponse()->redirectToUrl($file->getUrl('download'));
+        $this->getResponse()->redirectToUrl($file->getThumbUrl());
     }
 
     /**

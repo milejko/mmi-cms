@@ -19,15 +19,14 @@ class CmsRouterConfigTest extends TestCase
     {
         $routerConfig = new CmsRouterConfig();
         $routes = $routerConfig->getRoutes();
-        self::assertCount(17, $routes);
+        self::assertCount(16, $routes);
         self::assertArrayHasKey('cms-category-admin-preview', $routes);
         self::assertArrayHasKey('cms-admin-module', $routes);
         self::assertArrayHasKey('cms-admin-module-controller', $routes);
         self::assertArrayHasKey('cms-admin-module-controller-action', $routes);
-        self::assertArrayHasKey('cms-file-copy', $routes);
-        self::assertArrayHasKey('cms-file-server', $routes);
-        self::assertArrayHasKey('cms-file-default', $routes);
-        self::assertArrayHasKey('cms-file-scaler', $routes);
+        self::assertArrayHasKey('cms-file-default-thumb', $routes);
+        self::assertArrayHasKey('cms-file-thumb', $routes);
+        self::assertArrayHasKey('cms-file-download', $routes);
         self::assertArrayHasKey('cms-api', $routes);
         self::assertArrayHasKey('cms-contents-preview-api', $routes);
         self::assertArrayHasKey('cms-contents-published-preview-api', $routes);

@@ -11,6 +11,7 @@
 namespace Cms\Model;
 
 use Mmi\App\App;
+use Mmi\App\KernelException;
 
 /**
  * Model
@@ -23,17 +24,16 @@ class FileSystemModel
      */
     private $_name;
 
-    private const UNKNOWN_EXTENSION = 'bin';
+    public const THUMB_EXTENSION = '.webp';
+    public const PATH_SEPARATOR = '/';
+    public const DATA_PATH = 'data';
+    public const DOWNLOAD_PATH = 'download';
+    private const ALLOWED_SCALER_METHOD = ['scale', 'scalex', 'scaley', 'scalecrop'];
 
-    /**
-     * Konstruktor
-     * @param string $fileName
-     * @throws \Mmi\App\KernelException
-     */
-    public function __construct($fileName)
+    public function __construct(string $fileName)
     {
         if (strlen($fileName) < 4) {
-            throw new \Mmi\App\KernelException('File name invalid');
+            throw new KernelException('File name invalid');
         }
         $this->_name = $fileName;
     }
@@ -58,25 +58,44 @@ class FileSystemModel
      * @param string $scale
      * @return string
      */
-    public function getPublicPath($scaleType = 'default', $scale = null): ?string
+    public function getThumbPath(string $scaleType = 'default', string $scale = ''): string
     {
-        //calculating file name and extension
-        $explodedFileName = explode('.', $this->_name);
-        //default values
-        $name = $this->_name;
-        $extension = self::UNKNOWN_EXTENSION;
-        if (2 == count($explodedFileName)) {
-            //rozszerzenie
-            list($name, $extension) = $explodedFileName;
+        if (!in_array($scaleType, self::ALLOWED_SCALER_METHOD)) {
+            throw new KernelException('Invalid scaler method: ' . $scaleType);
         }
-        //override extension only if thumb and supported extension
-        if (!in_array(strtolower($extension), ['jpg', 'png', 'jpeg', 'jfif', 'jif', 'bmp', 'webp'])) {
-            //copy
-            return '/data/copy/'  . md5($name . App::$di->get('cms.auth.salt')) . '-' . $this->_name;
-        }
-        //obliczanie hasha
-        $hash = md5($scaleType . $scale . $name . App::$di->get('cms.auth.salt'));
-        return '/data/' . trim($scaleType . '-' . $scale, '-x') . '/' . $this->_name . '-' . $hash . '.webp';
+        return self::PATH_SEPARATOR .
+            self::DATA_PATH .
+            self::PATH_SEPARATOR .
+            $scaleType . ($scale ? self::PATH_SEPARATOR . $scale : '') .
+            self::PATH_SEPARATOR .
+            $this->_name[0] .
+            $this->_name[1] .
+            self::PATH_SEPARATOR .
+            $this->_name[2] .
+            $this->_name[3] .
+            self::PATH_SEPARATOR .
+            md5($scaleType . $scale . $this->_name . App::$di->get('cms.auth.salt')) .
+            $this->_name .
+            self::THUMB_EXTENSION;
+    }
+
+    public function getDownloadPath(string $targetName): string
+    {
+        return self::PATH_SEPARATOR .
+            self::DATA_PATH .
+            self::PATH_SEPARATOR .
+            self::DOWNLOAD_PATH .
+            self::PATH_SEPARATOR .
+            $this->_name[0] .
+            $this->_name[1] .
+            self::PATH_SEPARATOR .
+            $this->_name[2] .
+            $this->_name[3] .
+            self::PATH_SEPARATOR .
+            md5($targetName . $this->_name . App::$di->get('cms.auth.salt')) .
+            $this->_name .
+            self::PATH_SEPARATOR .
+            $targetName;
     }
 
     public function unlink()
