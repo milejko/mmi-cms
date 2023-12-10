@@ -393,10 +393,10 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      * @param boolean $https true - tak, false - nie, null - bez zmiany protokołu
      * @return string
      */
-    public function getUrl($https = null)
+    public function getUrl()
     {
         //pobranie linku z widoku
-        return App::$di->get(View::class)->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->getUri()], true, $https);
+        return App::$di->get(View::class)->url(['module' => 'cms', 'controller' => 'category', 'action' => 'dispatch', 'uri' => $this->getUri()], true);
     }
 
     /**

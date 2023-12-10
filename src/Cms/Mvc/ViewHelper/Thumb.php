@@ -25,8 +25,8 @@ class Thumb extends HelperAbstract
      * @param int|string|null $value
      * @return string
      */
-    public function thumb(?CmsFileRecord $file, ?string $type = null, $value = null): string
+    public function thumb(?CmsFileRecord $file, string $type = 'default', string $value = ''): string
     {
-        return $file instanceof CmsFileRecord ? $file->getUrl($type, $value) : '/resource/cmsAdmin/images/no-file.png';
+        return $file instanceof CmsFileRecord ? $file->getThumbUrl($type, $value) : '/resource/cmsAdmin/images/no-file.png';
     }
 }

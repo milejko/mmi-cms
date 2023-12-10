@@ -60,6 +60,9 @@ class FileGrid extends \CmsAdmin\Grid\Grid
         $this->addColumn((new Column\TextColumn('size'))
             ->setLabel('grid.file.size.label'));
 
+        $this->addColumn((new Column\TextColumn('dateAdd'))
+            ->setLabel('grid.file.dateAdd.label'));
+
         //nazwa pliku
         $this->addColumn((new Column\TextColumn('original'))
             ->setLabel('grid.file.original.label'));
@@ -79,7 +82,7 @@ class FileGrid extends \CmsAdmin\Grid\Grid
 
         $this->addColumn((new Column\CustomColumn('download'))
             ->setLabel('<i class="fa fa-2 fa-download"></i>')
-            ->setTemplateCode('<a class="button small" href="{$record->getUrl()}"><i class="fa fa-2 fa-download"></i></a>'));
+            ->setTemplateCode('<a class="button small" href="{$record->getDownloadUrl()}"><i class="fa fa-2 fa-download"></i></a>'));
 
         //operacje
         $this->addColumn((new Column\OperationColumn())->setEditParams([]));

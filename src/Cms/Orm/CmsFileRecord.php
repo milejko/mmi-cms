@@ -4,6 +4,7 @@ namespace Cms\Orm;
 
 use Cms\Model\FileSystemModel;
 use Mmi\App\App;
+use Mmi\App\KernelException;
 use Mmi\DataObject;
 use Mmi\Security\AuthInterface;
 
@@ -102,20 +103,28 @@ class CmsFileRecord extends \Mmi\Orm\Record
      * Pobiera adres pliku
      * @param string $scaleType default, original, scale, scalex, scaley, scalecrop
      * @param int|string $scale 320, 320x240
-     * @return string adres publiczny (relatywny) pliku
      */
-    public function getUrl($scaleType = 'default', $scale = null)
+    public function getThumbUrl(string $scaleType = 'default', string $scale = ''): string
     {
         //brak pliku
         if ($this->id === null) {
-            return;
+            throw new KernelException('File not initialized');
         }
         //ścieżka CDN
         $cdnPath = rtrim(App::$di->get('app.view.cdn'), '/');
         //zwrot ścieżki z systemu plików
-        return 'download' == $scaleType ?
-            $cdnPath . '/download/' . $this->name . '-' . base64_encode($this->original) :
-            $cdnPath . (new FileSystemModel($this->name))->getPublicPath($scaleType, $scale);
+        return $cdnPath . (new FileSystemModel($this->name))->getThumbPath($scaleType, $scale);
+    }
+
+    public function getDownloadUrl(): string
+    {
+        //brak pliku
+        if ($this->id === null) {
+            throw new KernelException('File not initialized');
+        }        
+        //ścieżka CDN
+        $cdnPath = rtrim(App::$di->get('app.view.cdn'), '/');
+        return $cdnPath . (new FileSystemModel($this->name))->getDownloadPath($this->original ? : $this->name);
     }
 
     /**
@@ -133,7 +142,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
         //ścieżka CDN
         $cdnPath = rtrim(App::$di->get('app.view.cdn'), '/');
         //zwrot ścieżki z systemu plików
-        return $cdnPath . (new FileSystemModel($this->data->posterFileName))->getPublicPath($scaleType, $scale);
+        return $cdnPath . (new FileSystemModel($this->data->posterFileName))->getThumbPath($scaleType, $scale);
     }
 
     /**

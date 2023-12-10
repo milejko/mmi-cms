@@ -152,14 +152,14 @@ abstract class AbstractWidgetController extends Controller
         $to->size                       = $fileRecord->size;
         $to->mimeType                   = $fileRecord->mimeType;
         $to->order                      = $fileRecord->order ?: 0;
-        $to->attributes['downloadUrl']  = $fileRecord->getUrl('download');
-        $to->attributes['openUrl']      = $fileRecord->getUrl('copy');
+        $to->attributes['downloadUrl']  = $fileRecord->getDownloadUrl();
+        $to->attributes['openUrl']      = $fileRecord->getDownloadUrl();
         if ('image' === $fileRecord->class) {
-            $to->attributes['thumbMobileUrl'] = $fileRecord->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_MOBILE);
-            $to->attributes['thumbTabletUrl'] = $fileRecord->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_TABLET);
-            $to->attributes['thumbDesktop']   = $fileRecord->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_DESKTOP);
-            $to->attributes['thumbUrl']       = $fileRecord->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_TABLET);
-            $to->attributes['thumb2xUrl']     = $fileRecord->getUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_DESKTOP);
+            $to->attributes['thumbMobileUrl'] = $fileRecord->getThumbUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_MOBILE);
+            $to->attributes['thumbTabletUrl'] = $fileRecord->getThumbUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_TABLET);
+            $to->attributes['thumbDesktop']   = $fileRecord->getThumbUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_DESKTOP);
+            $to->attributes['thumbUrl']       = $fileRecord->getThumbUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_TABLET);
+            $to->attributes['thumb2xUrl']     = $fileRecord->getThumbUrl(static::ATTACHMENT_THUMB_METHOD, static::ATTACHMENT_THUMB_DESKTOP);
         }
         return $to;
     }

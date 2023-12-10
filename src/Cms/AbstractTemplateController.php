@@ -94,7 +94,7 @@ abstract class AbstractTemplateController extends Controller
         $to->dateModify = $this->cmsCategoryRecord->dateModify;
         $to->title = (string) ($this->cmsCategoryRecord->title ?: $this->cmsCategoryRecord->name);
         if (null !== $ogImageRecord = CmsFileQuery::imagesByObject(CmsCategoryRecord::OG_IMAGE_OBJECT, $this->cmsCategoryRecord->id)->findFirst()) {
-            $to->ogImageUrl = $ogImageRecord->getUrl('scalecrop', '1200x630');
+            $to->ogImageUrl = $ogImageRecord->getThumbUrl('scalecrop', '1200x630');
         }
         $to->description = (string) $this->cmsCategoryRecord->description;
         $to->opensNewWindow = (bool) $this->cmsCategoryRecord->blank;
