@@ -10,6 +10,7 @@
 
 namespace CmsAdmin\Plugin;
 
+use Cms\Form\Element\UploaderElementInterface;
 use CmsAdmin\Grid\Column;
 
 /**
@@ -20,7 +21,9 @@ class FileGrid extends \CmsAdmin\Grid\Grid
     public function init()
     {
         //źródło danych
-        $this->setQuery(new \Cms\Orm\CmsFileQuery());
+        $this->setQuery((new \Cms\Orm\CmsFileQuery())
+            ->whereName()->notEquals(UploaderElementInterface::PLACEHOLDER_NAME)
+        );
 
         //miniatura (lub ikona)
         $this->addColumn((new Column\CustomColumn('thumb'))
