@@ -28,7 +28,7 @@ class FileSystemModel
     public const PATH_SEPARATOR = '/';
     public const DATA_PATH = 'data';
     public const DOWNLOAD_PATH = 'download';
-    private const ALLOWED_SCALER_METHOD = ['scale', 'scalex', 'scaley', 'scalecrop'];
+    private const ALLOWED_SCALER_METHOD = ['default', 'scale', 'scalex', 'scaley', 'scalecrop'];
 
     public function __construct(string $fileName)
     {
