@@ -1,11 +1,8 @@
 {
     "name": "mmi/mmi-cms",
+    "type": "library",
     "description": "The CMS written with MMi Framework",
-    "keywords": [
-        "cms",
-        "mmi",
-        "framework"
-    ],
+    "keywords": ["cms", "mmi"],
     "license": "MIT",
     "authors": [
         {
@@ -23,6 +20,10 @@
         {
             "name": "Krystian Gapski",
             "email": "k.gapski@nowaera.pl"
+        },
+        {
+            "name": "Robert Pawłowski",
+            "email": "r.pawlowski@nowaera.pl"
         }
     ],
     "require": {
@@ -38,7 +39,12 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\MmiCms": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "5.7-dev"
         }
     },
     "scripts": {
@@ -54,10 +60,12 @@
         "test:phpcs": "phpcs",
         "test:phpmd": "phpmd ./src text phpmd.xml.dist",
         "test:phpunit": "XDEBUG_MODE=coverage phpunit --coverage-clover ./.phpunit.coverage.clover.xml --coverage-html ./web/build/phpunit",
+        "test:infection": "XDEBUG_MODE=off infection --no-progress --only-covered --threads=max",
         "test:all": [
             "@test:security-checker",
             "@test:phpcs",
             "@test:phpstan",
+            "@test:phpmd",
             "@test:phpunit"
         ]
     },
