@@ -54,7 +54,6 @@
         "test:phpcs": "phpcs",
         "test:phpmd": "phpmd ./src text phpmd.xml.dist",
         "test:phpunit": "XDEBUG_MODE=coverage phpunit --coverage-clover ./.phpunit.coverage.clover.xml --coverage-html ./web/build/phpunit",
-        "test:infection": "XDEBUG_MODE=off infection --no-progress --only-covered --threads=max",
         "test:all": [
             "@test:security-checker",
             "@test:phpcs",
@@ -64,12 +63,6 @@
         ]
     },
     "require-dev": {
-        "mmi/mmi-build-toolkit": "^1.0"
-    },
-    "config": {
-        "allow-plugins": {
-            "infection/extension-installer": true,
-            "php-http/discovery": true
-        }
+        "mmi/mmi-build-toolkit": "*"
     }
 }
