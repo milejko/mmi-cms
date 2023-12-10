@@ -121,7 +121,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
         //brak pliku
         if ($this->id === null) {
             throw new KernelException('File not initialized');
-        }        
+        }
         //ścieżka CDN
         $cdnPath = rtrim(App::$di->get('app.view.cdn'), '/');
         return $cdnPath . (new FileSystemModel($this->name))->getDownloadPath($this->original ? : $this->name);
