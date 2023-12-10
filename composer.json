@@ -64,5 +64,10 @@
     },
     "require-dev": {
         "mmi/mmi-build-toolkit": "*"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     }
 }
