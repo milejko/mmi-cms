@@ -58,7 +58,6 @@
             "@test:security-checker",
             "@test:phpcs",
             "@test:phpstan",
-            "@test:phpmd",
             "@test:phpunit"
         ]
     },
