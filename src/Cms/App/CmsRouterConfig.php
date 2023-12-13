@@ -39,7 +39,7 @@ class CmsRouterConfig extends RouterConfig
         $this->setRoute('cms-admin-module-controller-action', '/^cmsAdmin\/([a-zA-Z\-]+)\/([a-zA-Z]+)$/', ['module' => 'cmsAdmin', 'controller' => '$1', 'action' => '$2']);
 
         //routy skalera grafik
-        $this->setRoute('cms-file-default-thumb', '/^data\/default\/([a-f0-9]{32})([a-f0-9]{32}\.[a-z0-9]+)\.webp$/i', ['module' => 'cms', 'controller' => 'file', 'action' => 'scaler', 'scaleType' => 'default', 'hash' => '$1', 'name' => '$2']);
+        $this->setRoute('cms-file-default-thumb', '/^data\/default\/[a-f0-9]{2}+\/[a-f0-9]{2}\/([a-f0-9]{32})([a-f0-9]{32}\.[a-z0-9]+)\.webp$/i', ['module' => 'cms', 'controller' => 'file', 'action' => 'scaler', 'scaleType' => 'default', 'hash' => '$1', 'name' => '$2']);
         $this->setRoute('cms-file-thumb', '/^data\/(scale|scalex|scaley|scalecrop)\/([0-9x]+)\/[a-f0-9]{2}+\/[a-f0-9]{2}\/([a-f0-9]{32})([a-f0-9]{32}\.[a-z0-9]+)\.webp$/i', ['module' => 'cms', 'controller' => 'file', 'action' => 'scaler', 'scaleType' => '$1', 'scale' => '$2', 'hash' => '$3', 'name' => '$4']);
         $this->setRoute('cms-file-download', '/^data\/download\/[a-f0-9]{2}+\/[a-f0-9]{2}\/([a-f0-9]{32})([a-f0-9]{32}\.[a-z0-9]+)\/(.*)$/i', ['module' => 'cms', 'controller' => 'file', 'action' => 'download', 'hash' => '$1', 'name' => '$2', 'targetName' => '$3']);
 
