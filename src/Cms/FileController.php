@@ -40,8 +40,9 @@ class FileController extends \Mmi\Mvc\Controller
     public function scalerAction(Request $request)
     {
         $fs = new FileSystemModel($request->name);
+        $scale = isset($request->scale) ? explode('x', $request->scale) : '';
         //public path
-        $publicPath = $fs->getThumbPath($request->scaleType, $request->scale);
+        $publicPath = $fs->getThumbPath($request->scaleType, (string) $request->scale);
         //hash check
         if (false === strpos($publicPath, $request->hash)) {
             throw new MvcForbiddenException('Scaler hash invalid');
@@ -51,11 +52,12 @@ class FileController extends \Mmi\Mvc\Controller
         try {
             mkdir(dirname($targetFilePath), 0777, true);
         } catch (\Exception $e) {
-            throw new KernelException('Unable to create directory: ' . dirname($targetFilePath));
+            //nothing to do - directory already exist
         }
-        $scale = explode('x', $request->scale);
-        $width = $scale[0];
-        $height = isset($scale[1]) ? $scale[1] : null;
+        if (is_array($scale)) {
+            $width = $scale[0];
+            $height = isset($scale[1]) ? $scale[1] : null;
+        }
         //wybór skalowania do wykonania
         switch ($request->scaleType) {
             case 'scale':
