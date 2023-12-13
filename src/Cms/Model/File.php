@@ -190,6 +190,7 @@ class File
             $newFile = clone $file;
             $newFile->object = $destObject;
             $newFile->objectId = $destId;
+            $newFile->dateAdd = null;
             $newFile->id = null;
             $newFile->save();
             $i++;

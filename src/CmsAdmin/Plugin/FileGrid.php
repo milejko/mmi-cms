@@ -4,31 +4,28 @@
  * Mmi Framework (https://github.com/milejko/mmi.git)
  *
  * @link       https://github.com/milejko/mmi.git
- * @copyright  Copyright (c) 2010-2016 Mariusz Miłejko (http://milejko.com)
+ * @copyright  Copyright (c) 2010-2023 Mariusz Miłejko (http://milejko.com)
  * @license    http://milejko.com/new-bsd.txt New BSD License
  */
 
 namespace CmsAdmin\Plugin;
 
-use Cms\Form\Element\UploaderElementInterface;
 use CmsAdmin\Grid\Column;
 
 /**
- * Grid plików
+ * File grid
  */
 class FileGrid extends \CmsAdmin\Grid\Grid
 {
     public function init()
     {
-        //źródło danych
         $this->setQuery((new \Cms\Orm\CmsFileQuery())
-            ->whereName()->notEquals(UploaderElementInterface::PLACEHOLDER_NAME)
+            //->whereName()->notEquals(UploaderElementInterface::PLACEHOLDER_NAME)
         );
 
-        //miniatura (lub ikona)
         $this->addColumn((new Column\CustomColumn('thumb'))
-            ->setLabel('miniatura')
-            ->setTemplateCode('{if ($record->class ==\'image\')}<img src="{thumb($record, \'scaley\', \'30\')}" />{else}' .
+            ->setLabel('grid.file.thumb.label')
+            ->setTemplateCode('{if ($record->class ==\'image\')}<img src="{thumb($record, \'scalecrop\', \'30x30\')}" />{else}' .
                 '{$mime = $record->mimeType}' .
                 '{if $mime == \'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\'}' .
                 '	<img src="/resource/cmsAdmin/images/types/xlsx-32.png" alt="Microsoft Office - OOXML - Spreadsheet" />' .
@@ -56,38 +53,35 @@ class FileGrid extends \CmsAdmin\Grid\Grid
                 '	<img src="/resource/cmsAdmin/images/types/txt-32.png" alt="Text File" />' .
                 '{elseif $mime == \'audio/mpeg\'}' .
                 '	<img src="/resource/cmsAdmin/images/types/mp3-32.png" alt="Music File" />' .
+                '{elseif $mime == \'video/mpeg\'}' .
+                '	<img src="/resource/cmsAdmin/images/types/mp4-32.png" alt="Video File" />' .
                 '{/if}' .
                 '{/if}'));
-
-        //rozmiar pliku
-        $this->addColumn((new Column\TextColumn('size'))
-            ->setLabel('grid.file.size.label'));
 
         $this->addColumn((new Column\TextColumn('dateAdd'))
             ->setLabel('grid.file.dateAdd.label'));
 
-        //nazwa pliku
+        $this->addColumn((new Column\TextColumn('mimeType'))
+            ->setLabel('grid.file.mimeType.label'));
+
+        $this->addColumn((new Column\TextColumn('size'))
+            ->setLabel('grid.file.size.label'));
+
         $this->addColumn((new Column\TextColumn('original'))
             ->setLabel('grid.file.original.label'));
 
-        //zasób
         $this->addColumn((new Column\TextColumn('object'))
             ->setLabel('grid.file.object.label'));
 
-        //id zasobu
         $this->addColumn((new Column\TextColumn('objectId'))
             ->setLabel('grid.file.objectId.label'));
 
-        //checkbox aktywności
         $this->addColumn((new Column\CheckboxColumn('active'))
             ->setLabel('grid.file.active.label')
             ->setDisabled());
 
-        $this->addColumn((new Column\CustomColumn('download'))
-            ->setLabel('<i class="fa fa-2 fa-download"></i>')
+        $this->addColumn((new Column\CustomColumn('operations'))
+            ->setLabel('<i class="fa fa-2 fa-gears"></i>')
             ->setTemplateCode('<a class="button small" href="{$record->getDownloadUrl()}"><i class="fa fa-2 fa-download"></i></a>'));
-
-        //operacje
-        $this->addColumn((new Column\OperationColumn())->setEditParams([]));
     }
 }

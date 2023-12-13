@@ -86,17 +86,22 @@
 
 .form-control.multiupload > .field-list > .field-list-item .thumb {
   margin-left: 1rem;
-  width: 68px;
-  height: 68px;
+  width: 64px;
+  height: 64px;
 }
 
 .form-control.multiupload > .field-list > .field-list-item .thumb img {
   width: auto;
-  max-height: 68px;
+  border-radius: 3px;
+  max-height: 64px;
   position: absolute;
   transition: transform 0.5s ease;
   pointer-events: none;
   z-index: 1;
+}
+
+.form-control.multiupload > .field-list > .field-list-item .operations {
+  margin-left: 2rem;
 }
 
 .form-control.multiupload > .field-list > .field-list-item .thumb img.file-icon {
@@ -114,13 +119,12 @@
 
 .form-control.multiupload > .field-list > .field-list-item .edit {
   display: inline-block;
-  font-size: 10px;
-  margin-left: 1rem;
+  font-size: 14px;
 }
 
 .form-control.multiupload > .field-list > .field-list-item .download {
   display: inline-block;
-  font-size: 10px;
+  font-size: 14px;
 }
 
 .multiupload-progress-bar {

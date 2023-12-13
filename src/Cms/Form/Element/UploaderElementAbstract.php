@@ -41,33 +41,25 @@ abstract class UploaderElementAbstract extends ElementAbstract implements Upload
      */
     public function setForm(Form $form)
     {
-        //parent
         parent::setForm($form);
-        //no value
         $this->setIgnore();
-        //obiekt niezdefiniowany
         if (!$this->getObject() && $form->hasRecord()) {
-            //ustawianie obiektu
             $this->setObject($this->_getFileObjectByClassName(get_class($form->getRecord())));
         }
-        //ustawienie ID
         if (!$this->getObjectId() && $form->hasRecord()) {
-            //pobranie id z rekordu
             $this->setObjectId($form->getRecord()->id);
         }
         //instancja front controllera
         $request = App::$di->get(Request::class);
         $response = App::$di->get(Response::class);
         //uploaderId znajduje się w requescie
-        if ($request->uploaderId) {
-            //ustawianie id uploadera
-            $this->setUploaderId($request->uploaderId);
-            //tworzenie plików tymczasowych
-            $this->_createTempFiles();
-            return $this;
+        if (!$request->uploaderId) {
+            $response->redirectToUrl($this->view->url($request->toArray() + [self::REQUEST_UPLOADER_ID => mt_rand(1000000, 9999999)]));
         }
-        //przekierowanie na url zawierający nowowygenerowany uploaderId
-        $response->redirectToUrl($this->view->url($request->toArray() + ['uploaderId' => mt_rand(1000000, 9999999)]));
+        //ustawianie id uploadera
+        $this->setUploaderId($request->uploaderId);
+        //tworzenie plików tymczasowych
+        $this->_createTempFiles();        
         return $this;
     }
 
@@ -124,6 +116,7 @@ abstract class UploaderElementAbstract extends ElementAbstract implements Upload
         File::link($this->getObject(), $this->getObjectId(), self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId());
         $placeholder = new CmsFileRecord();
         $placeholder->name = self::PLACEHOLDER_NAME;
+        $placeholder->original = self::PLACEHOLDER_NAME;
         $placeholder->object = self::TEMP_OBJECT_PREFIX . $this->getObject();
         $placeholder->objectId = $this->getUploaderId();
         $placeholder->save();

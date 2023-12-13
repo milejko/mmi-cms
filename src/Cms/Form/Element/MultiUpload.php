@@ -16,7 +16,9 @@ use Cms\Orm\CmsFileRecord;
 use Mmi\App\App;
 use Mmi\Form\Form;
 use Mmi\Http\Request;
+use Mmi\Http\Response;
 use Mmi\Validator\StringLength;
+use Mmi\Mvc\View;
 
 /**
  * Element wielokrotny upload
@@ -42,8 +44,6 @@ class MultiUpload extends MultiField implements UploaderElementInterface
     private string $acceptMimeType = '*';
 
     /**
-     * Konstruktor
-     *
      * @param string $name
      */
     public function __construct($name)
@@ -76,17 +76,18 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         if (!$this->getObject() && $form->hasRecord()) {
             $this->setObject($this->_getFileObjectByClassName(get_class($form->getRecord())));
         }
-
         if (!$this->getObjectId() && $form->hasRecord()) {
             $this->setObjectId($form->getRecord()->id);
         }
 
         $request = App::$di->get(Request::class);
-        if ($request->uploaderId) {
-            $this->setUploaderId($request->uploaderId);
-            $this->_createTempFiles();
-        }
+        $response = App::$di->get(Response::class);
 
+        if (!$request->uploaderId) {
+            return $response->redirectToUrl(App::$di->get(View::class)->url($request->toArray() + [self::REQUEST_UPLOADER_ID => mt_rand(1000000, 9999999)]));
+        }
+        $this->setUploaderId($request->uploaderId);
+        $this->_createTempFiles();
         return parent::setForm($form);
     }
 
@@ -105,7 +106,6 @@ class MultiUpload extends MultiField implements UploaderElementInterface
     public function fetchField(): string
     {
         $this->addScriptsAndLinks();
-
         return '<div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">
             <label for="' . $this->getId() . '-add" class="upload-add-label">
                 <i class="icon fa fa-5 fa-cloud-upload"></i>
@@ -147,8 +147,10 @@ class MultiUpload extends MultiField implements UploaderElementInterface
                 <div class="thumb">
                     <img src="/resource/cmsAdmin/images/loader.gif">
                 </div>
-                <a class="edit" href="#">' . $this->view->_('template.file.uploader.edit') . '</a>
-                <a class="download">' . $this->view->_('template.file.uploader.download') . '</a>
+                <div class="operations">
+                    <a class="edit" href="#"><i class="fa fa-pencil"></i></a>
+                    <a class="download"><i class="fa fa-download"></i></a>
+                </div>
             </div>
         <section>';
 
@@ -222,14 +224,14 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         File::deleteByObject($this->getObject(), $this->getObjectId());
         //usuwanie niepotrzebnych plikow
         File::deleteByObject($this->getUploader(), $this->getUploaderId(), $this->getFileNames());
-        //przenoszenie plikow z tymczasowego "worka" do docelowego
-        File::move($this->getUploader(), $this->getUploaderId(), $this->getObject(), $this->getObjectId());
         //usuwanie placeholdera
         if (null !== $placeholder = CmsFileQuery::byObject($this->getUploader(), $this->getUploaderId())
                 ->whereName()->equals(self::PLACEHOLDER_NAME)
                 ->findFirst()) {
             $placeholder->delete();
         }
+        //przenoszenie plikow z tymczasowego "worka" do docelowego
+        File::move($this->getUploader(), $this->getUploaderId(), $this->getObject(), $this->getObjectId());
         return parent::onFormSaved();
     }
 
@@ -249,6 +251,7 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         File::link($this->getObject(), $this->getObjectId(), $this->getUploader(), $this->getUploaderId());
         $placeholder = new CmsFileRecord();
         $placeholder->name = self::PLACEHOLDER_NAME;
+        $placeholder->original = self::PLACEHOLDER_NAME;
         $placeholder->object = $this->getUploader();
         $placeholder->objectId = $this->getUploaderId();
         $placeholder->save();
