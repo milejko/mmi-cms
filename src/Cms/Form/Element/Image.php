@@ -28,7 +28,6 @@ use Mmi\Http\RequestPost;
  * Settery
  * @method self setObject($object) ustawia obiekt
  * @method self setObjectId($id) ustawia identyfikator obiektu
- * @method self setDeleteCheckboxName($name) ustawia nazwę checkboxa
  */
 class Image extends UploaderElementAbstract implements UploaderElementInterface
 {
@@ -75,43 +74,31 @@ class Image extends UploaderElementAbstract implements UploaderElementInterface
         return ElementAbstract::fetchField();
     }
 
-    /**
-     * Pobiera zuploadowany plik
-     * @return CmsFileRecord
-     */
-    public function getUploadedFile()
+    public function getUploadedFile(): ?CmsFileRecord
     {
         return $this->_uploadedFile;
     }
 
-    /**
-     * Obsługa uploadu pliku i checkboxa do kasowania
-     * @param $form
-     * @param RequestPost $post
-     * @param RequestFiles $files
-     */
     protected function _handlePost($form, RequestPost $post, RequestFiles $files)
     {
-        //brak danych dotyczących pliku
         if (!isset($post->{$form->getBaseName()})) {
             return;
         }
-        //zaznaczony checkbox usuwania
+        //delete checkbox
         if (isset($post->{$form->getBaseName()}[$this->getBasename() . self::DELETE_FIELD_SUFFIX])) {
-            //usuwanie istniejącego pliku
-            File::deleteByObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId());
-            //koniec metody - plik miał być usunięty (checkbox zaznaczony), nawet jeśli podany
+            File::deleteByObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), [self::PLACEHOLDER_NAME]);
             return;
         }
         $fileArray = $files->getAsArray();
-        //brak pliku
         if (!isset($fileArray[$form->getBaseName()]) || !isset($fileArray[$form->getBaseName()][$this->getBasename()][0])) {
             return;
         }
-        //usuwanie istniejącego pliku
         File::deleteByObject( self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId());
-        //zapis pliku
         File::appendFile($fileArray[$form->getBaseName()][$this->getBasename()][0], self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+    }
+
+    public function getDeleteCheckboxName(): string {
+        return $this->_form ? $this->_form->getBaseName() . '[' . $this->getBasename() . self::DELETE_FIELD_SUFFIX . ']' : '';
     }
 
 }

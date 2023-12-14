@@ -261,6 +261,7 @@ class Plupload extends UploaderElementAbstract
      */
     public function fetchField()
     {
+        parent::_createTempFiles();
         $this->view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.min.css');
         $this->view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.structure.min.css');
         $this->view->headLink()->appendStyleSheet('/resource/cmsAdmin/js/jquery-ui/jquery-ui.theme.min.css');
