@@ -30,7 +30,7 @@ use Mmi\Http\RequestPost;
  * @method self setObjectId($id) ustawia identyfikator obiektu
  * @method self setDeleteCheckboxName($name) ustawia nazwę checkboxa
  */
-class Image extends ElementAbstract implements UploaderElementInterface
+class Image extends UploaderElementAbstract implements UploaderElementInterface
 {
     //szablon początku pola
     public const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
@@ -63,19 +63,16 @@ class Image extends ElementAbstract implements UploaderElementInterface
     public function setForm(\Mmi\Form\Form $form)
     {
         parent::setForm($form);
-        $this->setIgnore();
-        $this->setDeleteCheckboxName($form->getBaseName() . '[' . $this->getBasename() . self::DELETE_FIELD_SUFFIX . ']');
-        if (!$this->getObject() && $form->hasRecord()) {
-            $this->setObject($this->_getFileObjectByClassName(get_class($form->getRecord())));
-        }
-        if (!$this->getObjectId() && $form->hasRecord()) {
-            $this->setObjectId($form->getRecord()->id);
-        }
         $request = App::$di->get(Request::class);
-        //przypisanie zuploadowanego pliku (worek tymczasowy)
-        $this->_uploadedFile = CmsFileQuery::byObjectAndClass($this->getObject(), $this->getObjectId(), 'image')->findFirst();
         $this->_handlePost($form, $request->getPost(), $request->getFiles());
         return $this;
+    }
+
+    public function fetchField()
+    {
+        $this->_createTempFiles();
+        $this->_uploadedFile = CmsFileQuery::byObjectAndClass(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), 'image')->findFirst();
+        return ElementAbstract::fetchField();
     }
 
     /**
@@ -102,7 +99,7 @@ class Image extends ElementAbstract implements UploaderElementInterface
         //zaznaczony checkbox usuwania
         if (isset($post->{$form->getBaseName()}[$this->getBasename() . self::DELETE_FIELD_SUFFIX])) {
             //usuwanie istniejącego pliku
-            File::deleteByObject($this->getObject(), $this->getObjectId());
+            File::deleteByObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId());
             //koniec metody - plik miał być usunięty (checkbox zaznaczony), nawet jeśli podany
             return;
         }
@@ -112,9 +109,9 @@ class Image extends ElementAbstract implements UploaderElementInterface
             return;
         }
         //usuwanie istniejącego pliku
-        File::deleteByObject($this->getObject(), $this->getObjectId());
+        File::deleteByObject( self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId());
         //zapis pliku
-        File::appendFile($fileArray[$form->getBaseName()][$this->getBasename()][0], $this->getObject(), $this->getObjectId(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+        File::appendFile($fileArray[$form->getBaseName()][$this->getBasename()][0], self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
     }
 
 }

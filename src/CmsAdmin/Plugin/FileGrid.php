@@ -19,9 +19,7 @@ class FileGrid extends \CmsAdmin\Grid\Grid
 {
     public function init()
     {
-        $this->setQuery((new \Cms\Orm\CmsFileQuery())
-            //->whereName()->notEquals(UploaderElementInterface::PLACEHOLDER_NAME)
-        );
+        $this->setQuery(new \Cms\Orm\CmsFileQuery());
 
         $this->addColumn((new Column\CustomColumn('thumb'))
             ->setLabel('grid.file.thumb.label')
@@ -82,6 +80,6 @@ class FileGrid extends \CmsAdmin\Grid\Grid
 
         $this->addColumn((new Column\CustomColumn('operations'))
             ->setLabel('<i class="fa fa-2 fa-gears"></i>')
-            ->setTemplateCode('<a class="button small" href="{$record->getDownloadUrl()}"><i class="fa fa-2 fa-download"></i></a>'));
+            ->setTemplateCode('<a class="button small" href="{$record->getDownloadUrl()}" download><i class="fa fa-2 fa-download"></i></a>'));
     }
 }

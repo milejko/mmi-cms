@@ -17,7 +17,7 @@ function multiuploadInitLists(lists) {
 function multiuploadInitContainer(containerId) {
     multiuploadInitThumbs(containerId);
     multiuploadInitScroll(containerId);
-    multiuploadInitToggleAuto(containerId)
+    multiuploadInitToggleAuto(containerId);
 }
 
 function multiuploadInitScroll(containerId) {
@@ -61,12 +61,14 @@ function multiuploadLoadThumb(sourceInput) {
                 'object': uploader.data('object'), 'objectId': uploader.data('object-id'), 'cmsFileName': sourceInput.attr('value')
             }
         }).done(function (response) {
-            if ('undefined' !== typeof response.thumb) {
-                $listItem.find('.thumb').attr('id', response.name).attr('title', response.originalName).find('img').attr('src', response.thumb);
-                $listItem.find('.download').attr('href', response.original).attr('download', response.originalName);
-            }
             if ('undefined' !== typeof response.class) {
                 $listItem.find('.thumb img').attr('src', uploader.data('icons-url') + response.class + '.svg').addClass('file-icon');
+            }
+            if ('undefined' !== typeof response.thumb) {
+                $listItem.find('.thumb img').attr('src', response.thumb).removeClass('file-icon');
+            }
+            if ('undefined' !== typeof response.downloadUrl) {
+                $listItem.find('.download').attr('href', response.downloadUrl);
             }
         });
     }
