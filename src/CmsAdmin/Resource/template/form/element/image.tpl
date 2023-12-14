@@ -17,9 +17,9 @@
             }" {$_htmlOptions} />
     </div>
     <div>
-        <label>Rozmiar: <span id="{$_element->getId()}_size">{if $_element->getUploadedFile()}{php_round($_element->getUploadedFile()->size / 1048576, 2)} MB{else}(brak pliku){/if}</span></label><br />
+        <label>{#form.element.image.size.label#}: <span id="{$_element->getId()}_size">{if $_element->getUploadedFile()}{php_round($_element->getUploadedFile()->size / 1048576, 2)} MB{else}({#form.element.image.missing.label#}){/if}</span></label><br />
         <input type="checkbox" id="{$_element->getId()}_checkbox" name="{$_element->getDeleteCheckboxName()}">
-        <label for="{$_element->getId()}_checkbox">usuń plik</label>
+        <label for="{$_element->getId()}_checkbox">{#form.element.image.delete.label#}</label>
     </div>
     <div class="clearfix"></div>
 </div>
