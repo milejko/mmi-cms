@@ -13,7 +13,6 @@ namespace Cms;
 use Cms\Model\FileSystemModel;
 use Mmi\App\KernelException;
 use Mmi\Http\Request;
-use Mmi\Http\ResponseTypes;
 use Mmi\Mvc\MvcForbiddenException;
 use Mmi\Session\SessionInterface;
 
@@ -54,6 +53,7 @@ class FileController extends \Mmi\Mvc\Controller
         } catch (\Exception $e) {
             //nothing to do - directory already exist
         }
+        $width = $height = null;
         if (is_array($scale)) {
             $width = $scale[0];
             $height = isset($scale[1]) ? $scale[1] : null;

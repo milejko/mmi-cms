@@ -16,7 +16,9 @@ use Cms\Orm\CmsFileRecord;
 use Mmi\App\App;
 use Mmi\Form\Form;
 use Mmi\Http\Request;
+use Mmi\Http\Response;
 use Mmi\Validator\StringLength;
+use Mmi\Mvc\View;
 
 /**
  * Element wielokrotny upload
@@ -36,14 +38,13 @@ class MultiUpload extends MultiField implements UploaderElementInterface
     private const MULTIUPLOAD_JS_URL = '/resource/cmsAdmin/js/multiupload.js';
     private const ICONS_URL = '/resource/cmsAdmin/images/upload/';
     private const UPLOAD_URL = '/cmsAdmin/upload/multiupload';
+    private const DELETE_URL = '/cmsAdmin/upload/deleteByName';
     private const THUMB_URL = '/cmsAdmin/upload/multithumbnail';
     private const CURRENT_URL = '/cmsAdmin/upload/current';
 
     private string $acceptMimeType = '*';
 
     /**
-     * Konstruktor
-     *
      * @param string $name
      */
     public function __construct($name)
@@ -76,17 +77,17 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         if (!$this->getObject() && $form->hasRecord()) {
             $this->setObject($this->_getFileObjectByClassName(get_class($form->getRecord())));
         }
-
         if (!$this->getObjectId() && $form->hasRecord()) {
             $this->setObjectId($form->getRecord()->id);
         }
 
         $request = App::$di->get(Request::class);
-        if ($request->uploaderId) {
-            $this->setUploaderId($request->uploaderId);
-            $this->_createTempFiles();
-        }
+        $response = App::$di->get(Response::class);
 
+        if (!$request->uploaderId) {
+            return $response->redirectToUrl(App::$di->get(View::class)->url($request->toArray() + [self::REQUEST_UPLOADER_ID => mt_rand(1000000, 9999999)]));
+        }
+        $this->setUploaderId($request->uploaderId);
         return parent::setForm($form);
     }
 
@@ -104,8 +105,8 @@ class MultiUpload extends MultiField implements UploaderElementInterface
      */
     public function fetchField(): string
     {
+        $this->_createTempFiles();
         $this->addScriptsAndLinks();
-
         return '<div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">
             <label for="' . $this->getId() . '-add" class="upload-add-label">
                 <i class="icon fa fa-5 fa-cloud-upload"></i>
@@ -113,11 +114,12 @@ class MultiUpload extends MultiField implements UploaderElementInterface
                 <input type="file" multiple="multiple" id="' . $this->getId() . '-add" class="upload-add" 
                     accept=" ' . $this->acceptMimeType . '"
                     data-template="' . $this->getDeclaredName() . '" 
-                    data-thumb-url="' . self::THUMB_URL . '" 
+                    data-thumb-url="' . self::THUMB_URL . '"
                     data-icons-url="' . self::ICONS_URL . '" 
                     data-current-url="' . self::CURRENT_URL . '" 
                     data-upload-url="' . self::UPLOAD_URL . '"
-                    data-object="' . $this->getUploader() . '"
+                    data-delete-url="' . self::DELETE_URL . '" 
+                    data-object="' . $this->getTemporaryObject() . '"
                     data-object-id="' . $this->getUploaderId() . '"
                     data-file-id="' . $this->getId() . '"
                 >                
@@ -147,8 +149,10 @@ class MultiUpload extends MultiField implements UploaderElementInterface
                 <div class="thumb">
                     <img src="/resource/cmsAdmin/images/loader.gif">
                 </div>
-                <a class="edit" href="#">' . $this->view->_('template.file.uploader.edit') . '</a>
-                <a class="download">' . $this->view->_('template.file.uploader.download') . '</a>
+                <div class="operations">
+                    <a class="edit" href="#"><i class="fa fa-pencil"></i></a>
+                    <a class="download" download><i class="fa fa-download"></i></a>
+                </div>
             </div>
         <section>';
 
@@ -199,9 +203,7 @@ class MultiUpload extends MultiField implements UploaderElementInterface
      */
     public function onRecordSaved()
     {
-        //brak zdefiniowanego objectId
         if (!$this->getObjectId()) {
-            //pobranie id z rekordu
             $this->setObjectId($this->_form->getRecord()->id);
         }
         parent::onRecordSaved();
@@ -221,15 +223,13 @@ class MultiUpload extends MultiField implements UploaderElementInterface
         //usuwanie z docelowego "worka"
         File::deleteByObject($this->getObject(), $this->getObjectId());
         //usuwanie niepotrzebnych plikow
-        File::deleteByObject($this->getUploader(), $this->getUploaderId(), $this->getFileNames());
-        //przenoszenie plikow z tymczasowego "worka" do docelowego
-        File::move($this->getUploader(), $this->getUploaderId(), $this->getObject(), $this->getObjectId());
+        File::deleteByObject($this->getTemporaryObject(), $this->getUploaderId(), $this->getFileNames());
         //usuwanie placeholdera
-        if (null !== $placeholder = CmsFileQuery::byObject($this->getUploader(), $this->getUploaderId())
-                ->whereName()->equals(self::PLACEHOLDER_NAME)
-                ->findFirst()) {
-            $placeholder->delete();
-        }
+        CmsFileQuery::byObject($this->getTemporaryObject(), $this->getUploaderId())
+            ->whereName()->equals(self::PLACEHOLDER_NAME)
+            ->delete();
+        //przenoszenie plikow z tymczasowego "worka" do docelowego
+        File::move($this->getTemporaryObject(), $this->getUploaderId(), $this->getObject(), $this->getObjectId());
         return parent::onFormSaved();
     }
 
@@ -241,15 +241,15 @@ class MultiUpload extends MultiField implements UploaderElementInterface
     {
         //jeśli już są pliki tymczasowe, to wychodzimy
         if ((new CmsFileQuery())
-            ->byObject($this->getUploader(), $this->getUploaderId())
+            ->byObject($this->getTemporaryObject(), $this->getUploaderId())
             ->count()) {
             return true;
         }
         //tworzymy pliki tymczasowe - kopie oryginałów
-        File::link($this->getObject(), $this->getObjectId(), $this->getUploader(), $this->getUploaderId());
+        File::link($this->getObject(), $this->getObjectId(), $this->getTemporaryObject(), $this->getUploaderId());
         $placeholder = new CmsFileRecord();
-        $placeholder->name = self::PLACEHOLDER_NAME;
-        $placeholder->object = $this->getUploader();
+        $placeholder->name = $placeholder->original = self::PLACEHOLDER_NAME;
+        $placeholder->object = $this->getTemporaryObject();
         $placeholder->objectId = $this->getUploaderId();
         $placeholder->save();
         return true;
@@ -285,7 +285,7 @@ class MultiUpload extends MultiField implements UploaderElementInterface
     /**
      * @return string
      */
-    private function getUploader(): string
+    private function getTemporaryObject(): string
     {
         return self::TEMP_OBJECT_PREFIX . $this->getObject();
     }
