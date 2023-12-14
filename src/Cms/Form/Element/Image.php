@@ -93,12 +93,12 @@ class Image extends UploaderElementAbstract implements UploaderElementInterface
         if (!isset($fileArray[$form->getBaseName()]) || !isset($fileArray[$form->getBaseName()][$this->getBasename()][0])) {
             return;
         }
-        File::deleteByObject( self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId());
+        File::deleteByObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId());
         File::appendFile($fileArray[$form->getBaseName()][$this->getBasename()][0], self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
     }
 
-    public function getDeleteCheckboxName(): string {
-        return $this->_form ? $this->_form->getBaseName() . '[' . $this->getBasename() . self::DELETE_FIELD_SUFFIX . ']' : '';
+    public function getDeleteCheckboxName(): string
+    {
+        return $this->_form ? ($this->_form->getBaseName() . '[' . $this->getBasename() . self::DELETE_FIELD_SUFFIX . ']') : '';
     }
-
 }
