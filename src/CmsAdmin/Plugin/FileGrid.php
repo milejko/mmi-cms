@@ -51,7 +51,7 @@ class FileGrid extends \CmsAdmin\Grid\Grid
                 '	<img src="/resource/cmsAdmin/images/types/txt-32.png" alt="Text File" />' .
                 '{elseif $mime == \'audio/mpeg\'}' .
                 '	<img src="/resource/cmsAdmin/images/types/mp3-32.png" alt="Music File" />' .
-                '{elseif $mime == \'video/mpeg\'}' .
+                '{elseif $mime == \'video/mp4\'}' .
                 '	<img src="/resource/cmsAdmin/images/types/mp4-32.png" alt="Video File" />' .
                 '{/if}' .
                 '{/if}'));

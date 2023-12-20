@@ -202,6 +202,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
         parent::setFromArray($row);
         try {
             $data = $this->data ? json_decode($this->data, true) : [];
+            $data = is_array($data) ? $data : [];
         } catch (\Exception $e) {
             $data = [];
         }

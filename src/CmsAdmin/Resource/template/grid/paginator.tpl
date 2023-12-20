@@ -36,9 +36,7 @@
 
     {* pierwsza strona w zakresie *}
     {if $_rangeBegin > 2}
-        <li class="page-item">
-            <a data-page="{php_floor((1 + $_rangeBegin) / 2)}" href="#">...</a>
-        </li>
+        <li class="page-item dots"><a class="page-link" data-page="{php_floor((1 + $_rangeBegin) / 2)}" href="#">...</a></li>
     {/if}
 
     {* generowanie stron w zakresie *}
