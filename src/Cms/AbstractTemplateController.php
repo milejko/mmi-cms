@@ -103,7 +103,6 @@ abstract class AbstractTemplateController extends Controller
         $to->attributes = $this->getAttributes();
         $to->sections = $this->getSections();
         $to->breadcrumbs = $this->getBreadcrumbs();
-        $to->siblings = $this->getSiblings();
         $to->_links = [
             (new LinkData())
                 ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $this->cmsCategoryRecord->getScope()))
@@ -207,35 +206,6 @@ abstract class AbstractTemplateController extends Controller
             $children[] = $this->getBreadcrumbDataByRecord($record);
         }
         return $children;
-    }
-
-    /**
-     * Pobiera rodzeństwo
-     */
-    protected function getSiblings(): array
-    {
-        $beforeMeSiblings = [];
-        $afterMeSiblings = [];
-        $beforeMe = true;
-        $skinsetModel = new SkinsetModel($this->cmsSkinsetConfig);
-        foreach ($this->cmsCategoryRecord->getSiblingsRecords() as $record) {
-            //ifself
-            if ($record->id == $this->cmsCategoryRecord->id || $record->id == $this->cmsCategoryRecord->cmsCategoryOriginalId) {
-                $beforeMe = false;
-                continue;
-            }
-            //template not compatible
-            if (null === $skinsetModel->getTemplateConfigByKey($record->template)) {
-                continue;
-            }
-            if ($beforeMe) {
-                $beforeMeSiblings[] = $this->getBreadcrumbDataByRecord($record);
-                continue;
-            }
-            $afterMeSiblings[] = $this->getBreadcrumbDataByRecord($record);
-        }
-        //after me comes first
-        return array_merge($afterMeSiblings, $beforeMeSiblings);
     }
 
     protected function getBreadcrumbDataByRecord(CmsCategoryRecord $cmsCategoryRecord): BreadcrumbData

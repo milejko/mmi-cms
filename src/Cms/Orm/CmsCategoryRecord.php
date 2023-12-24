@@ -470,22 +470,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     }
 
     /**
-     * Pobiera rekordy tego samego poziomu
-     * @return array
-     */
-    public function getSiblingsRecords()
-    {
-        return (new CmsCategoryQuery())
-            ->whereParentId()->equals($this->parentId)
-            ->whereActive()->equals(true)
-            ->whereStatus()->equals(self::STATUS_ACTIVE)
-            ->whereTemplate()->like($this->getScope() . '%')
-            ->orderAscOrder()
-            ->orderAscId()
-            ->find();
-    }
-
-    /**
      * Zwraca konfigurację
      * @return \Mmi\DataObject
      */
@@ -680,11 +664,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope) . $childRecord->id);
             $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $childRecord->id);
         }
-        //usuwanie cache rodzeństwa
-        foreach ($this->getSiblingsRecords() as $siblingRecord) {
-            $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope) . $siblingRecord->id);
-            $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $siblingRecord->id);
-        }
         //usuwanie cache rodzica
         if (null !== $this->parentId) {
             $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope) . $this->parentId);
@@ -707,9 +686,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $eventCollector->collectCategory($this);
         foreach ($this->getChildrenRecords() as $childRecord) {
             $eventCollector->collectCategory($childRecord);
-        }
-        foreach ($this->getSiblingsRecords() as $siblingRecord) {
-            $eventCollector->collectCategory($siblingRecord);
         }
         $parentRecord = $this->getParentRecord();
         if (null === $parentRecord) {
