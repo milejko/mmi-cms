@@ -145,6 +145,37 @@ class ApiController extends Controller
     }
 
     /**
+     * Sitemap
+     */
+    public function getSitemapAction(Request $request)
+    {
+        //scope not found - redirect to home
+        if (!$request->scope) {
+            $redirectTransportObject = new RedirectTransport(CmsRouterConfig::API_HOME);
+            return $this->getResponse()->setTypeJson()
+                ->setCode($redirectTransportObject->getCode())
+                ->setContent($redirectTransportObject->toString());
+        }
+        //checking scope availability
+        try {
+            $skinConfig = $this->cmsSkinsetConfig->getSkinByKey($request->scope);
+        } catch (CmsSkinNotFoundException $e) {
+            //404 - skin not found
+            return $this->getNotFoundResponse($e->getMessage());
+        }
+        $menuTransport = (new MenuDataTransport())->setMenu($this->menuService
+            ->setFormatter()
+            ->getMenus(
+                $request->scope,
+                $skinConfig->getMenuMaxDepthReturned()
+            )
+        );
+        return $this->getResponse()->setTypeJson()
+            ->setCode($menuTransport->getCode())
+            ->setContent($menuTransport->toString());
+    }
+
+    /**
      * Akcja dispatchera kategorii
      */
     public function getCategoryAction(Request $request)

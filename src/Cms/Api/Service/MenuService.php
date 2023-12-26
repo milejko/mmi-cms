@@ -6,6 +6,7 @@ use Cms\Api\LinkData;
 use Cms\Api\RedirectTransport;
 use Cms\App\CmsRouterConfig;
 use Cms\App\CmsSkinsetConfig;
+use Cms\Model\JsonObjectTruncate;
 use Cms\Model\SkinsetModel;
 use Cms\Model\TemplateModel;
 use Cms\Orm\CmsCategoryQuery;
@@ -22,6 +23,9 @@ class MenuService implements MenuServiceInterface
     public const MENU_CATEGORY_CACHE_PREFIX = 'category-menu-';
     private const CACHE_TTL = 0;
     private const PATH_SEPARATOR = '/';
+    private const EXTENDED_FORMATTER = 'extended';
+
+    private ?string $formatter = self::EXTENDED_FORMATTER;
 
     private CacheInterface $cacheService;
     private CmsSkinsetConfig $cmsSkinsetConfig;
@@ -30,6 +34,12 @@ class MenuService implements MenuServiceInterface
     {
         $this->cacheService = $cacheService;
         $this->cmsSkinsetConfig = $cmsSkinsetConfig;
+    }
+
+    public function setFormatter(?string $formatterName = null): MenuServiceInterface
+    {
+        $this->formatter = $formatterName;
+        return $this;
     }
 
     /**
@@ -56,14 +66,18 @@ class MenuService implements MenuServiceInterface
         $formattedItem = [
             'id'         => $cmsCategoryRecord->id,
             'name'       => $cmsCategoryRecord->name,
-            'path'       => $cmsCategoryRecord->getUri(),
-            'template'   => $cmsCategoryRecord->template,
-            'blank'      => (bool) $cmsCategoryRecord->blank,
             'visible'    => (bool) $cmsCategoryRecord->visible,
-            'attributes' => (new TemplateModel($cmsCategoryRecord, $this->cmsSkinsetConfig))->getAttributes(),
-            'order'      => $cmsCategoryRecord->getAbsoluteOrder(),
-            '_links'     => $this->getLinks($cmsCategoryRecord),
         ];
+        if (self::EXTENDED_FORMATTER == $this->formatter) {
+            $attributes = (new TemplateModel($cmsCategoryRecord, $this->cmsSkinsetConfig))->getAttributes();
+            $truncatedAttributes = (new JsonObjectTruncate())->setInputFromJsonArray($attributes)->getAsArray();
+            $formattedItem['order'] = $cmsCategoryRecord->getAbsoluteOrder();
+            $formattedItem['path'] = $cmsCategoryRecord->getUri();
+            $formattedItem['template'] = $cmsCategoryRecord->template;
+            $formattedItem['blank'] = (bool) $cmsCategoryRecord->blank;
+            $formattedItem['attributes'] = (array) $truncatedAttributes;
+        }
+        $formattedItem['_links'] = $this->getLinks($cmsCategoryRecord);
         //max level reached
         if ($currentLevel < $maxLevel) {
             $formattedItem['children'] = [];

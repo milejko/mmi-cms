@@ -10,6 +10,7 @@ use Cms\Api\TransportInterface;
 use Cms\App\CmsRouterConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Exception\CategoryWidgetException;
+use Cms\Model\JsonObjectTruncate;
 use Cms\Model\SkinsetModel;
 use Cms\Model\TemplateModel;
 use Cms\Model\WidgetModel;
@@ -223,6 +224,7 @@ abstract class AbstractTemplateController extends Controller
         //backuping original categoryRecord (from controller), as it can be replaced by TemplateModel, cause Controllers come from DI container
         $originalCategoryRecord = $this->cmsCategoryRecord;
         $attributes = (new TemplateModel($cmsCategoryRecord, $this->cmsSkinsetConfig))->getAttributes();
+        $truncatedAttributes = (new JsonObjectTruncate())->setInputFromJsonArray($attributes)->getAsArray();
         //restoring original category
         $this->cmsCategoryRecord = $originalCategoryRecord;
         return (new BreadcrumbData())
@@ -232,7 +234,7 @@ abstract class AbstractTemplateController extends Controller
             ->setTemplate($cmsCategoryRecord->template)
             ->setBlank((bool) $cmsCategoryRecord->blank)
             ->setVisible((bool) $cmsCategoryRecord->visible)
-            ->setAttributes($attributes)
+            ->setAttributes($truncatedAttributes)
             ->setOrder($cmsCategoryRecord->getAbsoluteOrder())
             ->setLinks($links);
     }
