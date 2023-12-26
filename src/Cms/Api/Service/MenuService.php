@@ -64,16 +64,16 @@ class MenuService implements MenuServiceInterface
             return $formattedItem;
         }
         $formattedItem = [
-            'id'         => $cmsCategoryRecord->id,
-            'name'       => $cmsCategoryRecord->name,
-            'visible'    => (bool) $cmsCategoryRecord->visible,
+            'id'        => $cmsCategoryRecord->id,
+            'name'      => $cmsCategoryRecord->name,
+            'template'  => $cmsCategoryRecord->template,
+            'visible'   => (bool) $cmsCategoryRecord->visible,
         ];
         if (self::EXTENDED_FORMATTER == $this->formatter) {
             $attributes = (new TemplateModel($cmsCategoryRecord, $this->cmsSkinsetConfig))->getAttributes();
             $truncatedAttributes = (new JsonObjectTruncate())->setInputFromJsonArray($attributes)->getAsArray();
             $formattedItem['order'] = $cmsCategoryRecord->getAbsoluteOrder();
             $formattedItem['path'] = $cmsCategoryRecord->getUri();
-            $formattedItem['template'] = $cmsCategoryRecord->template;
             $formattedItem['blank'] = (bool) $cmsCategoryRecord->blank;
             $formattedItem['attributes'] = (array) $truncatedAttributes;
         }

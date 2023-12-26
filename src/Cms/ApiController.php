@@ -76,6 +76,12 @@ class ApiController extends Controller
                 ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $skin->getKey()))
                 ->setRel(LinkData::REL_CONTENTS)
             );
+            //sitemap link
+            $skinData->_links[] = (
+                (new LinkData())
+                ->setHref(sprintf(CmsRouterConfig::API_METHOD_SITEMAP, $skin->getKey()))
+                ->setRel(LinkData::REL_SITEMAP)
+            );
             $skins[] = $skinData;
         }
         //serves transport object
@@ -106,11 +112,14 @@ class ApiController extends Controller
             return $config->getKey();
         }, $skinConfig->getTemplates());
         //links
-        $skinConfigTransport->_links = [(
+        $skinConfigTransport->_links = [
             (new LinkData())
             ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $skinConfig->getKey()))
-            ->setRel(LinkData::REL_CONTENTS)
-        )];
+            ->setRel(LinkData::REL_CONTENTS),
+            (new LinkData())
+            ->setHref(sprintf(CmsRouterConfig::API_METHOD_SITEMAP, $skinConfig->getKey()))
+            ->setRel(LinkData::REL_SITEMAP),
+        ];
         return $this->getResponse()->setTypeJson()
             ->setCode($skinConfigTransport->getCode())
             ->setContent($skinConfigTransport->toString());
