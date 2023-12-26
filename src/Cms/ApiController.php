@@ -174,11 +174,7 @@ class ApiController extends Controller
         }
         $menuTransport = (new MenuDataTransport())->setMenu($this->menuService
             ->setFormatter()
-            ->getMenus(
-                $request->scope,
-                $skinConfig->getMenuMaxDepthReturned()
-            )
-        );
+            ->getMenus($request->scope, $skinConfig->getMenuMaxDepthReturned()));
         return $this->getResponse()->setTypeJson()
             ->setCode($menuTransport->getCode())
             ->setContent($menuTransport->toString());

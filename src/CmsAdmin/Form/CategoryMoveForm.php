@@ -49,7 +49,7 @@ class CategoryMoveForm extends Form
             ->setLabel('form.categoryMove.parentId.label')
             ->addFilter(new EmptyToNull())
             ->setMultiple(false)
-            ->setStructure(['children' => [['id'=> '0', 'name' => '', 'allow' => $this->skinsetModel->getTemplateConfigByKey($this->getRecord()->template)->getAllowedOnRoot(), 'children' => $this->getFilteredTree($tree, $this->getRecord())]]]));
+            ->setStructure(['children' => [['id' => '0', 'name' => '', 'allow' => $this->skinsetModel->getTemplateConfigByKey($this->getRecord()->template)->getAllowedOnRoot(), 'children' => $this->getFilteredTree($tree, $this->getRecord())]]]));
 
         $this->addElement((new Submit('submit'))->setLabel('form.categoryMove.save.label'));
     }
