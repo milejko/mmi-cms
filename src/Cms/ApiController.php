@@ -129,7 +129,7 @@ class ApiController extends Controller
     {
         //checking scope availability
         try {
-            $skinConfig = $this->cmsSkinsetConfig->getSkinByKey((string) $request->scope);
+            $skinConfig = $this->cmsSkinsetConfig->getSkinByKey($request->scope);
         } catch (CmsSkinNotFoundException $e) {
             //404 - skin not found
             return $this->getNotFoundResponse($e->getMessage());
