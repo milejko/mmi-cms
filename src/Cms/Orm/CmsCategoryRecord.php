@@ -648,5 +648,4 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         App::$di->get(EventManagerInterface::class)->trigger($this->isActive() ? CmsAppMvcEvents::CATEGORY_UPDATE : CmsAppMvcEvents::CATEGORY_DELETE, $this);
         return true;
     }
-
 }
