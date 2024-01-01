@@ -365,9 +365,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             $childRecord->softDelete();
         }
         $this->status = self::STATUS_DELETED;
-        if (!$this->simpleUpdate()) {
-            return false;
-        }
+        $this->simpleUpdate();
         $parent = $this->getParentRecord();
         if (null !== $parent) {
             $parent->clearCache();

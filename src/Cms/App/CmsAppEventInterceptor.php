@@ -91,6 +91,10 @@ class CmsAppEventInterceptor implements AppEventInterceptorInterface
         $this->view->headScript()->prependScript('var request = ' . json_encode($jsRequest));
     }
 
+    public function beforeSend(): void
+    {
+    }
+
     /**
      * Inicjalizacja tłumaczeń
      */
