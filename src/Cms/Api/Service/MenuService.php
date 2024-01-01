@@ -19,13 +19,8 @@ use Mmi\Orm\RecordCollection;
  */
 class MenuService implements MenuServiceInterface
 {
-    public const MENU_TOP_LEVEL_PREFIX = 'category-menu-top-level-';
-    public const MENU_CATEGORY_CACHE_PREFIX = 'category-menu-';
     private const CACHE_TTL = 0;
     private const PATH_SEPARATOR = '/';
-    private const EXTENDED_FORMATTER = 'extended';
-
-    private ?string $formatter = self::EXTENDED_FORMATTER;
 
     private CacheInterface $cacheService;
     private CmsSkinsetConfig $cmsSkinsetConfig;
@@ -36,48 +31,42 @@ class MenuService implements MenuServiceInterface
         $this->cmsSkinsetConfig = $cmsSkinsetConfig;
     }
 
-    public function setFormatter(?string $formatterName = null): MenuServiceInterface
-    {
-        $this->formatter = $formatterName;
-        return $this;
-    }
-
     /**
      * Public menu getter
      */
     public function getMenus(?string $scope, int $maxLevel = 0): array
     {
         $menuStructure = [];
+        //loading from cache
+        $cacheKey = CmsCategoryRecord::CATEGORY_CACHE_TRANSPORT_PREFIX . $scope;
+        $menuStructure = $this->cacheService->load($cacheKey);
+        if (null !== $menuStructure) {
+            return $menuStructure;
+        }
         //getting from infrastructure + writing down item order
         foreach ($this->getTopLevelFromInfrastructure($scope) as $cmsCategoryRecord) {
             $menuStructure[] = $this->formatItem($cmsCategoryRecord, 0, $maxLevel);
         }
+        $this->cacheService->save($menuStructure, $cacheKey, self::CACHE_TTL);
         return $menuStructure;
     }
 
     private function formatItem(CmsCategoryRecord $cmsCategoryRecord, int $currentLevel, int $maxLevel): array
     {
-        //loading from cache
-        $cacheKey = self::MENU_CATEGORY_CACHE_PREFIX . $cmsCategoryRecord->id;
-        $formattedItem = $this->cacheService->load($cacheKey);
-        if (null !== $formattedItem) {
-            return $formattedItem;
-        }
+        $attributes = (new TemplateModel($cmsCategoryRecord, $this->cmsSkinsetConfig))->getAttributes();
+        $truncatedAttributes = (new JsonObjectTruncate())->setInputFromJsonArray($attributes)->getAsArray();
+
         $formattedItem = [
-            'id'        => $cmsCategoryRecord->id,
-            'name'      => $cmsCategoryRecord->name,
-            'template'  => $cmsCategoryRecord->template,
-            'visible'   => (bool) $cmsCategoryRecord->visible,
+            'id'            => $cmsCategoryRecord->id,
+            'name'          => $cmsCategoryRecord->name,
+            'template'      => $cmsCategoryRecord->template,
+            'visible'       => (bool) $cmsCategoryRecord->visible,
+            'order'         => $cmsCategoryRecord->getAbsoluteOrder(),
+            'path'          => $cmsCategoryRecord->getUri(),
+            'blank'         => (bool) $cmsCategoryRecord->blank,
+            'attributes'    => $truncatedAttributes,
+            '_links'        => $this->getLinks($cmsCategoryRecord),
         ];
-        if (self::EXTENDED_FORMATTER == $this->formatter) {
-            $attributes = (new TemplateModel($cmsCategoryRecord, $this->cmsSkinsetConfig))->getAttributes();
-            $truncatedAttributes = (new JsonObjectTruncate())->setInputFromJsonArray($attributes)->getAsArray();
-            $formattedItem['order'] = $cmsCategoryRecord->getAbsoluteOrder();
-            $formattedItem['path'] = $cmsCategoryRecord->getUri();
-            $formattedItem['blank'] = (bool) $cmsCategoryRecord->blank;
-            $formattedItem['attributes'] = (array) $truncatedAttributes;
-        }
-        $formattedItem['_links'] = $this->getLinks($cmsCategoryRecord);
         //max level reached
         if ($currentLevel < $maxLevel) {
             $formattedItem['children'] = [];
@@ -88,19 +77,12 @@ class MenuService implements MenuServiceInterface
                 $formattedItem['children'][] = $this->formatItem($childRecord, $currentLevel + 1, $maxLevel);
             }
         }
-        $this->cacheService->save($formattedItem, $cacheKey, self::CACHE_TTL);
         return $formattedItem;
     }
 
     private function getTopLevelFromInfrastructure(?string $scope): RecordCollection
     {
-        //loading from cache
-        $cacheKey = self::MENU_TOP_LEVEL_PREFIX . $scope;
-        $topLevelCategories = $this->cacheService->load($cacheKey);
-        if (null !== $topLevelCategories) {
-            return $topLevelCategories;
-        }
-        $topLevelCategories = (new CmsCategoryQuery())
+        return (new CmsCategoryQuery())
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
             ->whereActive()->equals(true)
             ->whereParentId()->equals(null)
@@ -108,8 +90,6 @@ class MenuService implements MenuServiceInterface
             ->orderAscOrder()
             ->orderAscId()
             ->find();
-        $this->cacheService->save($topLevelCategories, $cacheKey, self::CACHE_TTL);
-        return $topLevelCategories;
     }
 
     private function getLinks(CmsCategoryRecord $cmsCategoryRecord): array

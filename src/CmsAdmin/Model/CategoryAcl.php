@@ -2,10 +2,8 @@
 
 namespace CmsAdmin\Model;
 
-use Cms\Orm\CmsCategoryQuery;
-use Cms\Orm\CmsCategoryRecord;
+use Cms\Orm\CmsCategoryRepository;
 use Mmi\App\App;
-use Mmi\Cache\CacheInterface;
 use Mmi\Security\Acl;
 
 class CategoryAcl extends Acl
@@ -17,11 +15,10 @@ class CategoryAcl extends Acl
      */
     public function isRoleAllowed(string $role, string $resource): bool
     {
-        $cache = App::$di->get(CacheInterface::class);
-        //pobranie ketegorii z cache lub bazy
-        if (null === $category = $cache->load($cacheKey = CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $resource)) {
-            //zapis pobranej kategorii w cache
-            $cache->save($category = (new CmsCategoryQuery())->findPk($resource), $cacheKey, 0);
+        $cmsCategoryRepository = App::$di->get(CmsCategoryRepository::class);
+        $category = $cmsCategoryRepository->getCategoryRecordById($resource);
+        if (null === $category) {
+            return false;
         }
         return $this->isPathPermitted($role, trim($category->path . '/' . $category->id, '/'));
     }

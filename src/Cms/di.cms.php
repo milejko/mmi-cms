@@ -2,7 +2,7 @@
 
 use Cms\App\CmsAppEventInterceptor;
 use Cms\App\CmsScopeConfig;
-use Cms\Model\CategoryEventCollector;
+use Cms\Orm\CmsCategoryRepository;
 use Cms\Security\AuthProvider;
 use Mmi\App\AppEventInterceptorInterface;
 use Mmi\Security\AuthProviderInterface;
@@ -20,5 +20,6 @@ return [
     AppEventInterceptorInterface::class => autowire(CmsAppEventInterceptor::class),
     AuthProviderInterface::class        => autowire(AuthProvider::class),
     CmsScopeConfig::class               => autowire(CmsScopeConfig::class),
-    CategoryEventCollector::class       => autowire(CategoryEventCollector::class),
+    //repositories
+    CmsCategoryRepository::class        => autowire(CmsCategoryRepository::class),
 ];

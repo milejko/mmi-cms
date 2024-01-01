@@ -15,6 +15,7 @@ use Cms\Model\TemplateModel;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
+use Cms\Orm\CmsCategoryRepository;
 use Mmi\Cache\CacheInterface;
 use Mmi\Http\Request;
 use Mmi\Mvc\ActionHelper;
@@ -59,6 +60,11 @@ class CategoryController extends \Mmi\Mvc\Controller
      * @var ActionHelper
      */
     private $actionHelper;
+
+    /**
+     * @Inject
+     */
+    private CmsCategoryRepository $cmsCategoryRepository;
 
     /**
      * Akcja dispatchera kategorii
@@ -118,8 +124,6 @@ class CategoryController extends \Mmi\Mvc\Controller
      */
     protected function _getPublishedCategoryByUri($uri, $scope)
     {
-        //inicjalizacja zmiennej
-        $category = null;
         //próba mapowania uri na ID kategorii z cache
         if (null === $categoryId = $this->cache->load($cacheKey = CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($uri))) {
             //próba pobrania kategorii po URI
@@ -132,23 +136,17 @@ class CategoryController extends \Mmi\Mvc\Controller
             //id kategorii
             $categoryId = $category->id;
             //zapis id kategorii i kategorii w cache
-            $this->cache->save($categoryId, $cacheKey, 0) && $this->cache->save($category, CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $categoryId, 0);
+            $this->cache->save($categoryId, $cacheKey, 0);
         }
         //w buforze jest informacja o braku strony
         if (false === $categoryId) {
             //301 (o ile możliwe) lub 404
             $this->_redirectOrNotFound($uri, $scope);
         }
-        //kategoria
-        if ($category) {
-            return $this->_checkCategory($category);
+        $category = $this->cmsCategoryRepository->getCategoryRecordById($categoryId);
+        if (null === $category) {
+            $this->_redirectOrNotFound($uri, $scope);
         }
-        //pobranie kategorii z bufora
-        if (null === $category = $this->cache->load($cacheKey = CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $categoryId)) {
-            //zapis pobranej kategorii w cache
-            $this->cache->save($category = (new Orm\CmsCategoryQuery())->findPk($categoryId), $cacheKey, 0);
-        }
-        //sprawdzanie kategorii
         return $this->_checkCategory($category);
     }
 

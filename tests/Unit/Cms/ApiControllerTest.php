@@ -37,7 +37,7 @@ class ApiControllerTest extends TestCase
         $response = self::$apiController->indexAction(new Request());
         self::assertEquals(200, $response->getCode());
         self::assertEquals('application/json', $response->getType());
-        self::assertEquals('{"scopes":[{"key":"sample","name":"Sample Skin","_links":[{"href":"\/api\/sample","rel":"config"},{"href":"\/api\/sample\/contents","rel":"contents"},{"href":"\/api\/sample\/sitemap","rel":"sitemap"}]}]}', $response->getContent());
+        self::assertEquals('{"scopes":[{"key":"sample","name":"Sample Skin","_links":[{"href":"\/api\/sample","rel":"config"},{"href":"\/api\/sample\/contents","rel":"contents"}]}]}', $response->getContent());
     }
 
     public function testIfSampleConfigIsVisible(): void
@@ -45,7 +45,7 @@ class ApiControllerTest extends TestCase
         $response = self::$apiController->configAction(new Request(['scope' => 'sample']));
         self::assertEquals(200, $response->getCode());
         self::assertEquals('application/json', $response->getType());
-        self::assertEquals('{"key":"sample","attributes":{"sample-attribute":"value"},"templates":["sampletpl","invalidsampletpl"],"_links":[{"href":"\/api\/sample\/contents","rel":"contents"},{"href":"\/api\/sample\/sitemap","rel":"sitemap"}]}', $response->getContent());
+        self::assertEquals('{"key":"sample","attributes":{"sample-attribute":"value"},"templates":["sampletpl","invalidsampletpl"],"_links":[{"href":"\/api\/sample\/contents","rel":"contents"}]}', $response->getContent());
     }
 
     public function testIfMissingScopeGivesRedirect(): void

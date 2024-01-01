@@ -21,6 +21,7 @@ use Cms\Model\TemplateModel;
 use Cms\Orm\CmsCategoryAclRecord;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
+use Cms\Orm\CmsCategoryRepository;
 use CmsAdmin\Form\CategoryForm;
 use CmsAdmin\Form\CategoryMoveForm;
 use CmsAdmin\Form\CategorySearch;
@@ -65,16 +66,23 @@ class CategoryController extends Controller
     private CmsSkinsetConfig $cmsSkinsetConfig;
 
     /**
-     * Lista stron CMS - prezentacja w formie katalogów
+     * @Inject
+     */
+    private CmsCategoryRepository $cmsCategoryRepository;
+
+    /**
+     * Cms pages list
      */
     public function indexAction(Request $request)
     {
         $parentCategory = null;
         //wyszukiwanie parenta
-        if ($request->parentId && (null === $parentCategory = (new CmsCategoryQuery())
-                    ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-                    ->findPk($request->parentId))) {
-            //błędny parent
+        if ($request->parentId && (null === $parentCategory = $this->cmsCategoryRepository->getCategoryRecordById($request->parentId))) {
+            //missing parent
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
+        }
+        if ($parentCategory && ($this->scopeConfig->getName() != $parentCategory->getScope())) {
+            //template incompatible
             $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
         //dostępne szablony
@@ -419,7 +427,12 @@ class CategoryController extends Controller
             //setting order and simpleUpdate (it is enough, doesn't change paths)
             $record->order = $order;
             $record->simpleUpdate();
+            $parent = $record->getParentRecord();
         }
+        if (!$parent) {
+            return '';
+        }
+        $parent->clearCache();
         return '';
     }
 

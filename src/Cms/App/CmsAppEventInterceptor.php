@@ -93,6 +93,7 @@ class CmsAppEventInterceptor implements AppEventInterceptorInterface
 
     public function beforeSend(): void
     {
+        
     }
 
     /**
