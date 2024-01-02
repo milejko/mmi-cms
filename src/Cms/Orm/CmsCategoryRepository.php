@@ -10,8 +10,11 @@ class CmsCategoryRepository
     {
     }
 
-    public function getCategoryRecordById(int $id): ?CmsCategoryRecord
+    public function getCategoryRecordById(?int $id): ?CmsCategoryRecord
     {
+        if (null === $id) {
+            return null;
+        }
         $cacheKey = CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $id;
         $cmsCategoryRecord = $this->cache->load($cacheKey);
         if (false === $cmsCategoryRecord) {
@@ -29,7 +32,7 @@ class CmsCategoryRepository
         return $cmsCategoryRecord;
     }
 
-    public function getChildrenCategoryIds(int $id): array
+    public function getChildrenCategoryIds(?int $id): array
     {
         $categoryRecord = $this->getCategoryRecordById($id);
         if (null === $categoryRecord) {
@@ -50,8 +53,11 @@ class CmsCategoryRepository
         return $childrenIds;
     }
 
-    public function getChildrenMaxOrder(int $id): int
+    public function getChildrenMaxOrder(?int $id): int
     {
+        if (null === $id) {
+            return 0;
+        }
         $categoryRecord = $this->getCategoryRecordById($id);
         $maxOrder = (new CmsCategoryQuery())
                 ->whereParentId()->equals($id)
