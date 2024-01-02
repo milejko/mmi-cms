@@ -182,12 +182,12 @@ class Mail
                 $email->dateSent = date('Y-m-d H:i:s');
                 $email->save();
                 //podwyzszenie licznika udanych
-                $result['success'] ++;
+                $result['success']++;
             } catch (\Exception $e) {
                 //bład wysyłki
                 App::$di->get(LoggerInterface::class)->warning($e->getMessage());
                 //podwyzszenie licznika nieudanych
-                $result['error'] ++;
+                $result['error']++;
             }
         }
         return $result;

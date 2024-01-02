@@ -10,6 +10,7 @@ use Cms\Api\TransportInterface;
 use Cms\App\CmsRouterConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Exception\CategoryWidgetException;
+use Cms\Model\JsonObjectTruncate;
 use Cms\Model\SkinsetModel;
 use Cms\Model\TemplateModel;
 use Cms\Model\WidgetModel;
@@ -103,7 +104,6 @@ abstract class AbstractTemplateController extends Controller
         $to->attributes = $this->getAttributes();
         $to->sections = $this->getSections();
         $to->breadcrumbs = $this->getBreadcrumbs();
-        $to->siblings = $this->getSiblings();
         $to->_links = [
             (new LinkData())
                 ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $this->cmsCategoryRecord->getScope()))
@@ -209,35 +209,6 @@ abstract class AbstractTemplateController extends Controller
         return $children;
     }
 
-    /**
-     * Pobiera rodzeństwo
-     */
-    protected function getSiblings(): array
-    {
-        $beforeMeSiblings = [];
-        $afterMeSiblings = [];
-        $beforeMe = true;
-        $skinsetModel = new SkinsetModel($this->cmsSkinsetConfig);
-        foreach ($this->cmsCategoryRecord->getSiblingsRecords() as $record) {
-            //ifself
-            if ($record->id == $this->cmsCategoryRecord->id || $record->id == $this->cmsCategoryRecord->cmsCategoryOriginalId) {
-                $beforeMe = false;
-                continue;
-            }
-            //template not compatible
-            if (null === $skinsetModel->getTemplateConfigByKey($record->template)) {
-                continue;
-            }
-            if ($beforeMe) {
-                $beforeMeSiblings[] = $this->getBreadcrumbDataByRecord($record);
-                continue;
-            }
-            $afterMeSiblings[] = $this->getBreadcrumbDataByRecord($record);
-        }
-        //after me comes first
-        return array_merge($afterMeSiblings, $beforeMeSiblings);
-    }
-
     protected function getBreadcrumbDataByRecord(CmsCategoryRecord $cmsCategoryRecord): BreadcrumbData
     {
         if ($cmsCategoryRecord->redirectUri) {
@@ -253,6 +224,7 @@ abstract class AbstractTemplateController extends Controller
         //backuping original categoryRecord (from controller), as it can be replaced by TemplateModel, cause Controllers come from DI container
         $originalCategoryRecord = $this->cmsCategoryRecord;
         $attributes = (new TemplateModel($cmsCategoryRecord, $this->cmsSkinsetConfig))->getAttributes();
+        $truncatedAttributes = (new JsonObjectTruncate())->setInputFromJsonArray($attributes)->getAsArray();
         //restoring original category
         $this->cmsCategoryRecord = $originalCategoryRecord;
         return (new BreadcrumbData())
@@ -262,7 +234,7 @@ abstract class AbstractTemplateController extends Controller
             ->setTemplate($cmsCategoryRecord->template)
             ->setBlank((bool) $cmsCategoryRecord->blank)
             ->setVisible((bool) $cmsCategoryRecord->visible)
-            ->setAttributes($attributes)
+            ->setAttributes($truncatedAttributes)
             ->setOrder($cmsCategoryRecord->getAbsoluteOrder())
             ->setLinks($links);
     }

@@ -49,7 +49,7 @@ class CategoryMoveForm extends Form
             ->setLabel('form.categoryMove.parentId.label')
             ->addFilter(new EmptyToNull())
             ->setMultiple(false)
-            ->setStructure(['children' => [['id'=> '0', 'name' => '', 'allow' => $this->skinsetModel->getTemplateConfigByKey($this->getRecord()->template)->getAllowedOnRoot(), 'children' => $this->getFilteredTree($tree, $this->getRecord())]]]));
+            ->setStructure(['children' => [['id' => '0', 'name' => '', 'allow' => $this->skinsetModel->getTemplateConfigByKey($this->getRecord()->template)->getAllowedOnRoot(), 'children' => $this->getFilteredTree($tree, $this->getRecord())]]]));
 
         $this->addElement((new Submit('submit'))->setLabel('form.categoryMove.save.label'));
     }
@@ -87,14 +87,22 @@ class CategoryMoveForm extends Form
 
     public function beforeSave()
     {
-        //triggering events with original parentId
-        $this->getRecord()->clearCache() && $this->getRecord()->triggerEvent();
+        //clear old parent cache
+        $parent = $this->getRecord()->getParentRecord();
+        if (null !== $parent) {
+            $parent->clearCache();
+        }
         return parent::beforeSave();
     }
 
     public function afterSave()
     {
-        $this->getRecord()->sendEvents();
+        //clear new parent cache
+        $parent = $this->getRecord()->getParentRecord();
+        if (null !== $parent) {
+            $parent->clearCache();
+        }
+        $this->getRecord()->clearCache();
         return parent::afterSave();
     }
 

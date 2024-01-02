@@ -95,18 +95,6 @@ class ApiControllerTest extends TestCase
 
         self::assertEmpty($contentArray['breadcrumbs']);
 
-        self::assertCount(3, $contentArray['siblings']);
-        $firstSibling = $contentArray['siblings'][0];
-        self::assertEquals('Sample redirect', $firstSibling['name']);
-        self::assertEquals('https://www.google.com', $firstSibling['_links'][0]['href']);
-        self::assertEquals('external', $firstSibling['_links'][0]['rel']);
-        self::assertEquals('REDIRECT', $firstSibling['_links'][0]['method']);
-        $secondSibling = $contentArray['siblings'][1];
-        self::assertEquals('Sample internal redirect', $secondSibling['name']);
-        self::assertEquals('/api/sample/contents/sample-name-also-a-title/yet-another-name', $secondSibling['_links'][0]['href']);
-        self::assertEquals('internal', $secondSibling['_links'][0]['rel']);
-        self::assertEquals('REDIRECT', $secondSibling['_links'][0]['method']);
-
         self::assertCount(2, $contentArray['children']);
         $firstChild = $contentArray['children'][0];
         self::assertEquals('another name', $firstChild['name']);
@@ -145,16 +133,6 @@ class ApiControllerTest extends TestCase
         self::assertEquals(false, $breadcrumb['blank']);
         self::assertTrue($breadcrumb['visible']);
         self::assertEquals('/api/sample/contents/sample-name-also-a-title', $breadcrumb['_links'][0]['href']);
-
-        self::assertCount(1, $contentArray['siblings']);
-
-        $sibling = $contentArray['siblings'][0];
-        self::assertNotNull($sibling['id']);
-        self::assertEquals('yet another name', $sibling['name']);
-        self::assertEquals('sample/sampletpl', $sibling['template']);
-        self::assertFalse($sibling['visible']);
-        self::assertEquals('sample-name-also-a-title/yet-another-name', $sibling['path']);
-        self::assertEquals('/api/sample/contents/sample-name-also-a-title/yet-another-name', $sibling['_links'][0]['href']);
     }
 
     public function testIfCategoryWithWidgetsIsProperlyRendered(): void
@@ -191,11 +169,6 @@ class ApiControllerTest extends TestCase
         $breadcrumb = $contentArray['breadcrumbs'][0];
         self::assertEquals('sample name (also a title)', $breadcrumb['name']);
         self::assertEquals('/api/sample/contents/sample-name-also-a-title', $breadcrumb['_links'][0]['href']);
-
-        self::assertCount(1, $contentArray['siblings']);
-        $sibling = $contentArray['siblings'][0];
-        self::assertEquals('another name', $sibling['name']);
-        self::assertEquals('/api/sample/contents/sample-name-also-a-title/another-name', $sibling['_links'][0]['href']);
     }
 
     public function testIfCategoryCanBeReceivedByCustomUri(): void
@@ -304,7 +277,6 @@ class ApiControllerTest extends TestCase
         self::assertEmpty($contentArray['attributes']);
         self::assertCount(2, $contentArray['children']);
         self::assertEmpty($contentArray['breadcrumbs']);
-        self::assertCount(2, $contentArray['siblings']);
         self::assertEquals('/api/sample/contents/preview/sample-name', $contentArray['_links'][1]['href']);
         self::assertEquals('self', $contentArray['_links'][1]['rel']);
     }

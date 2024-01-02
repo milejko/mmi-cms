@@ -25,12 +25,4 @@ class CmsCategoryPreviewRecord extends CmsCategoryRecord
         }
         return $this->originalCmsCategoryRecord->getChildrenRecords();
     }
-
-    public function getSiblingsRecords()
-    {
-        if (null === $this->originalCmsCategoryRecord) {
-            return parent::getSiblingsRecords();
-        }
-        return $this->originalCmsCategoryRecord->getChildrenRecords();
-    }
 }

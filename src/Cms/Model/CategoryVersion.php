@@ -106,7 +106,14 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
         }
         //usuwanie draftu
         $draft->delete();
-        $this->_category->dateAdd = date('Y-m-d H:i:s');
-        return $this->_category->save();
+        //$this->_category->dateAdd = date('Y-m-d H:i:s');
+        if (!$this->_category->save()) {
+            return false;
+        }
+        $parent = $this->_category->getParentRecord();
+        if (null === $parent) {
+            return true;
+        }
+        return $parent->clearCache();
     }
 }

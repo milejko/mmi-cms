@@ -124,7 +124,7 @@ class CmsFileRecord extends \Mmi\Orm\Record
         }
         //ścieżka CDN
         $cdnPath = rtrim(App::$di->get('app.view.cdn'), '/');
-        return $cdnPath . (new FileSystemModel($this->name))->getDownloadPath($this->original ? : $this->name);
+        return $cdnPath . (new FileSystemModel($this->name))->getDownloadPath($this->original ?: $this->name);
     }
 
     /**

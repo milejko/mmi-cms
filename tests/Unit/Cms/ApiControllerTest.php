@@ -48,14 +48,6 @@ class ApiControllerTest extends TestCase
         self::assertEquals('{"key":"sample","attributes":{"sample-attribute":"value"},"templates":["sampletpl","invalidsampletpl"],"_links":[{"href":"\/api\/sample\/contents","rel":"contents"}]}', $response->getContent());
     }
 
-    public function testIfMissingScopeGivesRedirect(): void
-    {
-        $response = self::$apiController->getContentsAction(new Request());
-        self::assertEquals(301, $response->getCode());
-        self::assertEquals('application/json', $response->getType());
-        self::assertEquals('{"_links":[{"href":"\/api","rel":"external","method":"REDIRECT"}]}', $response->getContent());
-    }
-
     public function testIfInvalidScopeGivesRedirect(): void
     {
         $response = self::$apiController->getContentsAction(new Request(['scope' => 'inexistent']));

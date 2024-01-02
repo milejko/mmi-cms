@@ -2,12 +2,12 @@
 
 namespace Cms\Orm;
 
-use Cms\Api\Service\MenuService;
-use Cms\Model\CategoryEventCollector;
+use Cms\App\CmsAppMvcEvents;
 use Cms\Model\CategoryWidgetModel;
 use Mmi\App\App;
 use Mmi\Cache\CacheInterface;
 use Mmi\DataObject;
+use Mmi\EventManager\EventManagerInterface;
 use Mmi\Mvc\View;
 use Psr\Log\LoggerInterface;
 
@@ -16,9 +16,6 @@ use Psr\Log\LoggerInterface;
  */
 class CmsCategoryRecord extends \Mmi\Orm\Record
 {
-    //domyślna długość bufora
-    public const DEFAULT_CACHE_LIFETIME = 2592000;
-
     /**
      * Identyfikator
      * @var integer
@@ -158,7 +155,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     //prefiks bufora obiektu transportowego kategorii
     public const CATEGORY_CACHE_TRANSPORT_PREFIX = 'category-transport-';
     //prefix bufora dzieci kategorii
-    public const CATEGORY_CHILDREN_CACHE_PREFIX = 'category-children-%s-';
+    public const CATEGORY_CHILDREN_CACHE_PREFIX = 'category-children-ids-';
     //prefiks bufora przekierowania
     public const REDIRECT_CACHE_PREFIX = 'category-redirect-';
 
@@ -168,22 +165,15 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public function save()
     {
-        //domyślnie wstawienie na koniec (znacznik time dba o to, później się przesortuje)
         if (null === $this->order) {
-            $maxSiblingOrder = (new CmsCategoryQuery())
-                ->whereParentId()->equals($this->parentId)
-                ->whereActive()->equals(true)
-                ->whereStatus()->equals(self::STATUS_ACTIVE)
-                ->whereTemplate()->like($this->getScope() . '%')
-                ->findMax('order');
-            $this->order = $maxSiblingOrder + 1;
+            $this->order = App::$di->get(CmsCategoryRepository::class)->getChildrenMaxOrder($this->parentId) + 1;
         }
         //zapis configJson
         $this->setConfigFromArray(array_merge($this->getConfig()->toArray(), $this->getOptions()));
         //uzupełnia path i uri
         $this->_calculatePathAndUri();
         //zapis
-        return parent::save() && $this->clearCache() && $this->triggerEvent();
+        return parent::save();
     }
 
     /**
@@ -193,7 +183,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public function simpleUpdate()
     {
-        return parent::_update() && $this->clearCache() && $this->triggerEvent();
+        return parent::_update() && $this->clearCache();
     }
 
     /**
@@ -217,12 +207,15 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             return true;
         }
         //wyszukiwanie oryginału
-        $originalRecord = (new CmsCategoryQuery())->findPk($this->cmsCategoryOriginalId);
+        $originalRecord = App::$di->get(CmsCategoryRepository::class)->getCategoryRecordById($this->cmsCategoryOriginalId);
+        if (null === $originalRecord) {
+            return true;
+        }
         //tworzenie wersji
         $versionModel = new \Cms\Model\CategoryVersion($originalRecord);
         $versionModel->create();
         //zmiana miejscami draftu z oryginałem
-        return $versionModel->exchangeOriginal($this) && $this->sendEvents();
+        return $versionModel->exchangeOriginal($this);
     }
 
     /**
@@ -257,7 +250,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //usunięcie uri i path
         $this->uri = $this->path = '';
         //ustawiamy uri na podstawie rodzica
-        if ($this->parentId && (null !== $parent = $this->getParentRecord())) {
+        $parent = $this->getParentRecord();
+        if (null !== $parent) {
             //nieaktywny nie jest ujawniony w uri
             $this->uri = $parent->visible ? $parent->uri : substr($parent->uri, 0, strrpos($parent->uri, '/'));
             //bez względu na aktywność jest w ścieżce - path
@@ -310,7 +304,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             //sortuje dzieci
             $this->_sortChildren();
         }
-        //przebudowa dzieci tylko dla aktywnych
         if (self::STATUS_ACTIVE != $this->status) {
             return true;
         }
@@ -319,7 +312,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             //przebudowa dzieci
             $this->_rebuildChildren($this->id);
         }
-        return true;
+        return $this->clearCache();
     }
 
     /**
@@ -360,7 +353,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             ->whereCmsCategoryId()->equals($this->getPk())
             ->delete();
         //usuwanie kategorii i czyszczenie bufora
-        return parent::delete() && $this->clearCache() && $this->triggerEvent() && $this->sendEvents();
+        return parent::delete() && $this->clearCache();
     }
 
     /**
@@ -368,9 +361,16 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public function softDelete()
     {
+        foreach ($this->_getPublishedChildren($this->id, $this->getScope()) as $childRecord) {
+            $childRecord->softDelete();
+        }
         $this->status = self::STATUS_DELETED;
-        $this->_softDeleteChildren($this->id);
-        return $this->save() && $this->sendEvents();
+        $this->simpleUpdate();
+        $parent = $this->getParentRecord();
+        if (null !== $parent) {
+            $parent->clearCache();
+        }
+        return true;
     }
 
     /**
@@ -380,12 +380,15 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     {
         $this->status = self::STATUS_ACTIVE;
         $parent = $this;
-        //przywracanie rodziców
         while ($parent = $parent->getParentRecord()) {
+            if (self::STATUS_ACTIVE == $parent->status) {
+                $parent->clearCache();
+                continue;
+            }
             $parent->status = self::STATUS_ACTIVE;
-            $parent->save();
+            $parent->simpleUpdate();
         }
-        return $this->save() && $this->sendEvents();
+        return $this->save();
     }
 
     /**
@@ -441,18 +444,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         if (!$this->parentId) {
             return;
         }
-        //próba pobrania rodzica z cache
-        if (null === $parent = App::$di->get(CacheInterface::class)->load($cacheKey = self::CATEGORY_CACHE_PREFIX . $this->parentId)) {
-            //pobieranie rodzica
-            App::$di->get(CacheInterface::class)->save($parent = (new \Cms\Orm\CmsCategoryQuery())
-                ->findPk($this->parentId), $cacheKey, 0);
-        }
-        //info w cache o braku kategorii
-        if (false === $parent) {
-            return;
-        }
-        //zwrot rodzica
-        return $parent;
+        return App::$di->get(CmsCategoryRepository::class)
+            ->getCategoryRecordById($this->parentId);
     }
 
     /**
@@ -461,28 +454,17 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
      */
     public function getChildrenRecords()
     {
-        //próba pobrania dzieci z cache
-        if (null === $children = App::$di->get(CacheInterface::class)->load($cacheKey = sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $this->getScope()) . $this->id)) {
-            //pobieranie dzieci
-            App::$di->get(CacheInterface::class)->save($children = $this->_getPublishedChildren($this->id, $this->getScope()), $cacheKey, 0);
+        $childrenIds = App::$di->get(CmsCategoryRepository::class)->getChildrenCategoryIds($this->id);
+        $children = [];
+        foreach ($childrenIds as $childId) {
+            $child = App::$di->get(CmsCategoryRepository::class)
+                ->getCategoryRecordById($childId);
+            if (null === $child) {
+                continue;
+            }
+            $children[] = $child;
         }
         return $children;
-    }
-
-    /**
-     * Pobiera rekordy tego samego poziomu
-     * @return array
-     */
-    public function getSiblingsRecords()
-    {
-        return (new CmsCategoryQuery())
-            ->whereParentId()->equals($this->parentId)
-            ->whereActive()->equals(true)
-            ->whereStatus()->equals(self::STATUS_ACTIVE)
-            ->whereTemplate()->like($this->getScope() . '%')
-            ->orderAscOrder()
-            ->orderAscId()
-            ->find();
     }
 
     /**
@@ -585,18 +567,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     }
 
     /**
-     * Miękkie usuwanie dzieci
-     */
-    protected function _softDeleteChildren($parentId)
-    {
-        foreach ($this->_getPublishedChildren($parentId, $this->getScope()) as $categoryRecord) {
-            $categoryRecord->status = self::STATUS_DELETED;
-            $categoryRecord->save();
-            $this->_softDeleteChildren($categoryRecord->id);
-        }
-    }
-
-    /**
      * Zwraca dzieci danego rodzica
      * @param integer $parentId id rodzica
      * @param boolean $activeOnly tylko aktywne
@@ -665,63 +635,15 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->getInitialStateValue('uri')));
         $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->customUri));
         $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->getInitialStateValue('customUri')));
-        if (null === $this->parentId) {
-            $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope));
-            $cache->remove(MenuService::MENU_TOP_LEVEL_PREFIX . $scope);
-        }
         //drop skin menu cache
-        $cache->remove(MenuService::MENU_CATEGORY_CACHE_PREFIX . $this->id);
-        $cache->remove(MenuService::MENU_CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
+        $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $scope);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->id);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
-        $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope) . $this->id);
-        //usuwanie cache dzieci kategorii
-        foreach ($this->_getPublishedChildren($this->id, $scope) as $childRecord) {
-            $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope) . $childRecord->id);
-            $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $childRecord->id);
-        }
-        //usuwanie cache rodzeństwa
-        foreach ($this->getSiblingsRecords() as $siblingRecord) {
-            $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope) . $siblingRecord->id);
-            $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $siblingRecord->id);
-        }
-        //usuwanie cache rodzica
-        if (null !== $this->parentId) {
-            $cache->remove(sprintf(self::CATEGORY_CHILDREN_CACHE_PREFIX, $scope) . $this->parentId);
-            $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $this->parentId);
-            $parent = $this;
-            while (null !== $parent = $parent->getParentRecord()) {
-                $cache->remove(MenuService::MENU_CATEGORY_CACHE_PREFIX . $parent->id);
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Triggers events using EventManager
-     */
-    public function triggerEvent(): bool
-    {
-        //triggering events
-        $eventCollector = App::$di->get(CategoryEventCollector::class);
-        $eventCollector->collectCategory($this);
-        foreach ($this->getChildrenRecords() as $childRecord) {
-            $eventCollector->collectCategory($childRecord);
-        }
-        foreach ($this->getSiblingsRecords() as $siblingRecord) {
-            $eventCollector->collectCategory($siblingRecord);
-        }
-        $parentRecord = $this->getParentRecord();
-        if (null === $parentRecord) {
-            return true;
-        }
-        $eventCollector->collectCategory($parentRecord);
-        return true;
-    }
-
-    public function sendEvents(): bool
-    {
-        App::$di->get(CategoryEventCollector::class)->triggerEvents();
+        $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $this->id);
+        $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $this->cmsCategoryOriginalId);
+        $cache->remove(self::CATEGORY_CHILDREN_CACHE_PREFIX . $this->id);
+        $cache->remove(self::CATEGORY_CHILDREN_CACHE_PREFIX . $this->cmsCategoryOriginalId);
+        App::$di->get(EventManagerInterface::class)->trigger($this->isActive() ? CmsAppMvcEvents::CATEGORY_UPDATE : CmsAppMvcEvents::CATEGORY_DELETE, $this);
         return true;
     }
 }

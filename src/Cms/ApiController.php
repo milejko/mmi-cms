@@ -28,6 +28,7 @@ use Cms\Model\TemplateModel;
 use Cms\Orm\CmsCategoryPreviewRecord;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
+use Cms\Orm\CmsCategoryRepository;
 use Mmi\Cache\CacheInterface;
 use Mmi\Http\Request;
 use Mmi\Http\Response;
@@ -52,6 +53,11 @@ class ApiController extends Controller
      * @Inject
      */
     private MenuServiceInterface $menuService;
+
+    /**
+     * @Inject
+     */
+    private CmsCategoryRepository $cmsCategoryRepository;
 
     /**
      * Index action (available skins)
@@ -106,11 +112,11 @@ class ApiController extends Controller
             return $config->getKey();
         }, $skinConfig->getTemplates());
         //links
-        $skinConfigTransport->_links = [(
+        $skinConfigTransport->_links = [
             (new LinkData())
             ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $skinConfig->getKey()))
-            ->setRel(LinkData::REL_CONTENTS)
-        )];
+            ->setRel(LinkData::REL_CONTENTS),
+        ];
         return $this->getResponse()->setTypeJson()
             ->setCode($skinConfigTransport->getCode())
             ->setContent($skinConfigTransport->toString());
@@ -121,13 +127,6 @@ class ApiController extends Controller
      */
     public function getContentsAction(Request $request)
     {
-        //scope not found - redirect to home
-        if (!$request->scope) {
-            $redirectTransportObject = new RedirectTransport(CmsRouterConfig::API_HOME);
-            return $this->getResponse()->setTypeJson()
-                ->setCode($redirectTransportObject->getCode())
-                ->setContent($redirectTransportObject->toString());
-        }
         //checking scope availability
         try {
             $skinConfig = $this->cmsSkinsetConfig->getSkinByKey($request->scope);
@@ -200,25 +199,9 @@ class ApiController extends Controller
     public function redirectIdAction(Request $request)
     {
         $this->getResponse()->setTypeJson();
-        $cacheKey = CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $request->id;
-        //wyszukiwanie kategorii w cache
-        if (null === $categoryRecord = $this->cache->load($cacheKey)) {
-            //wyszukiwanie kategorii w db
-            if (null === $categoryRecord = (new CmsCategoryQuery())->publishedActive()->findPk($request->id)) {
-                //zapis informacji o braku kategorii
-                $this->cache->save(false, $cacheKey, 0);
-            }
-            //kategoria nieaktywna
-            if ($categoryRecord && !$categoryRecord->isActive()) {
-                //zapis informacji o braku aktywności kategorii
-                $this->cache->save(false, $cacheKey, 0);
-            }
-            //jeśli znaleziony rekord
-            if ($categoryRecord && $categoryRecord->isActive()) {
-                //zapis pobranej kategorii w cache i mapowania uri->id
-                $this->cache->save($categoryRecord, $cacheKey, 0);
-                $this->cache->save($categoryRecord->id, CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($categoryRecord->getScope() . $categoryRecord->getUri()));
-            }
+        $categoryRecord = $this->cmsCategoryRepository->getCategoryRecordById($request->id);
+        if ($categoryRecord && $categoryRecord->isActive()) {
+            $this->cache->save($categoryRecord->id, CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($categoryRecord->getScope() . $categoryRecord->getUri()));
         }
         //brak kategorii lub szablonu
         if (!$categoryRecord || !$categoryRecord->isActive() || $categoryRecord->template == $categoryRecord->getScope()) {
@@ -249,10 +232,9 @@ class ApiController extends Controller
             //301 (o ile możliwe) lub 404
             return $this->getRedirectOrErrorTransport($request->scope, $request->uri);
         }
-        //pobranie kategorii z bufora
-        if (null === $category = $this->cache->load($cacheKey = CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $categoryId)) {
-            //zapis pobranej kategorii w cache
-            $this->cache->save($category = (new Orm\CmsCategoryQuery())->findPk($categoryId), $cacheKey, 0);
+        $category = $this->cmsCategoryRepository->getCategoryRecordById($categoryId);
+        if ($request->uri != $category->getUri()) {
+            return new RedirectTransport(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $request->scope, $category->getUri()));
         }
         //kategoria to przekierowanie
         if ($category->redirectUri) {
