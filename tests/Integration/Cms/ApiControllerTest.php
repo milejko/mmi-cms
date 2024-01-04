@@ -90,8 +90,8 @@ class ApiControllerTest extends TestCase
         self::assertEquals('/api/sample/contents', $contentArray['_links'][0]['href']);
         self::assertEquals('contents', $contentArray['_links'][0]['rel']);
         self::assertTrue($contentArray['visible']);
-        self::assertEquals('/api/sample/contents/sample-name-also-a-title', $contentArray['_links'][1]['href']);
-        self::assertEquals('self', $contentArray['_links'][1]['rel']);
+        self::assertEquals('/api/sample/contents/sample-name-also-a-title', $contentArray['_links'][3]['href']);
+        self::assertEquals('self', $contentArray['_links'][3]['rel']);
 
         self::assertEmpty($contentArray['breadcrumbs']);
 
@@ -160,8 +160,8 @@ class ApiControllerTest extends TestCase
         self::assertFalse($contentArray['visible']);
         self::assertEquals('/api/sample/contents', $contentArray['_links'][0]['href']);
         self::assertEquals('contents', $contentArray['_links'][0]['rel']);
-        self::assertEquals('/api/sample/contents/sample-name-also-a-title/yet-another-name', $contentArray['_links'][1]['href']);
-        self::assertEquals('self', $contentArray['_links'][1]['rel']);
+        self::assertEquals('/api/sample/contents/sample-name-also-a-title/yet-another-name', $contentArray['_links'][3]['href']);
+        self::assertEquals('self', $contentArray['_links'][3]['rel']);
 
         self::assertCount(1, $contentArray['children']);
 
@@ -184,8 +184,8 @@ class ApiControllerTest extends TestCase
         self::assertEquals('sample/sampletpl', $contentArray['template']);
         self::assertEquals('/api/sample/contents', $contentArray['_links'][0]['href']);
         self::assertEquals('contents', $contentArray['_links'][0]['rel']);
-        self::assertEquals('/api/sample/contents/get-me-by-this-address', $contentArray['_links'][1]['href']);
-        self::assertEquals('self', $contentArray['_links'][1]['rel']);
+        self::assertEquals('/api/sample/contents/get-me-by-this-address', $contentArray['_links'][3]['href']);
+        self::assertEquals('self', $contentArray['_links'][3]['rel']);
     }
 
     public function testRedirectingUriToCustomUriIfPresent(): void
@@ -262,8 +262,8 @@ class ApiControllerTest extends TestCase
         self::assertEquals(['some-other-attribute' => 'some-other-value'], $contentArray['attributes']);
         self::assertEquals('/api/sample/contents', $contentArray['_links'][0]['href']);
         self::assertEquals('contents', $contentArray['_links'][0]['rel']);
-        self::assertEquals('/api/sample/contents/preview/sample-name-also-a-title/yet-another-name', $contentArray['_links'][1]['href']);
-        self::assertEquals('self', $contentArray['_links'][1]['rel']);
+        self::assertEquals('/api/sample/contents/preview/sample-name-also-a-title/yet-another-name', $contentArray['_links'][3]['href']);
+        self::assertEquals('self', $contentArray['_links'][3]['rel']);
     }
 
     public function testDraftCategoryPreview(): void
@@ -277,8 +277,8 @@ class ApiControllerTest extends TestCase
         self::assertEmpty($contentArray['attributes']);
         self::assertCount(2, $contentArray['children']);
         self::assertEmpty($contentArray['breadcrumbs']);
-        self::assertEquals('/api/sample/contents/preview/sample-name', $contentArray['_links'][1]['href']);
-        self::assertEquals('self', $contentArray['_links'][1]['rel']);
+        self::assertEquals('/api/sample/contents/preview/sample-name', $contentArray['_links'][3]['href']);
+        self::assertEquals('self', $contentArray['_links'][3]['rel']);
     }
 
     public function testDraftCategoryPreviewWithMessedUpParams(): void

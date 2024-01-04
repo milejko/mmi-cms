@@ -12,6 +12,7 @@ use Cms\Model\TemplateModel;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use Mmi\Cache\CacheInterface;
+use Mmi\Orm\RecordCollection;
 
 /**
  * Menu service
@@ -42,16 +43,15 @@ class MenuService implements MenuServiceInterface
         if (null !== $menuStructure) {
             return $menuStructure;
         }
-        $flatArray = $this->getFromInfrastructure($scope);
-        $treeData = [];
-        foreach ($flatArray[''] as $categoryRecord) {
-            $treeData[] = $this->formatItem($categoryRecord, $flatArray, 0, $maxLevel);
+        //getting from infrastructure + writing down item order
+        foreach ($this->getTopLevelFromInfrastructure($scope) as $cmsCategoryRecord) {
+            $menuStructure[] = $this->formatItem($cmsCategoryRecord, 0, $maxLevel);
         }
-        $this->cacheService->save($treeData, $cacheKey, self::CACHE_TTL);
-        return $treeData;
+        $this->cacheService->save($menuStructure, $cacheKey, self::CACHE_TTL);
+        return $menuStructure;
     }
 
-    private function formatItem(CmsCategoryRecord $cmsCategoryRecord, array $flatArray, int $currentLevel, int $maxLevel): array
+    private function formatItem(CmsCategoryRecord $cmsCategoryRecord, int $currentLevel, int $maxLevel): array
     {
         $attributes = (new TemplateModel($cmsCategoryRecord, $this->cmsSkinsetConfig))->getAttributes();
         $truncatedAttributes = (new JsonObjectTruncate())->setInputFromJsonArray($attributes)->getAsArray();
@@ -67,30 +67,29 @@ class MenuService implements MenuServiceInterface
             'attributes'    => $truncatedAttributes,
             '_links'        => $this->getLinks($cmsCategoryRecord),
         ];
+        //max level reached
         if ($currentLevel < $maxLevel) {
             $formattedItem['children'] = [];
-            $directChildren = isset($flatArray[$cmsCategoryRecord->id]) ? $flatArray[$cmsCategoryRecord->id] : [];
-            foreach ($directChildren as $childRecord) {
-                $formattedItem['children'][] = $this->formatItem($childRecord, $flatArray, $currentLevel + 1, $maxLevel);
+            foreach ($cmsCategoryRecord->getChildrenRecords() as $childRecord) {
+                if (!$childRecord->active) {
+                    continue;
+                }
+                $formattedItem['children'][] = $this->formatItem($childRecord, $currentLevel + 1, $maxLevel);
             }
         }
         return $formattedItem;
     }
 
-    private function getFromInfrastructure(?string $scope): array
+    private function getTopLevelFromInfrastructure(?string $scope): RecordCollection
     {
-        $rawData = (new CmsCategoryQuery())
+        return (new CmsCategoryQuery())
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
             ->whereActive()->equals(true)
+            ->whereParentId()->equals(null)
             ->whereTemplate()->equals([$scope => $scope] + (new SkinsetModel($this->cmsSkinsetConfig))->getAllowedTemplateKeysBySkinKey($scope))
             ->orderAscOrder()
             ->orderAscId()
             ->find();
-        $directParentData = [];
-        foreach ($rawData as $categoryRecord) {
-            $directParentData[$categoryRecord->parentId][] = $categoryRecord;
-        }
-        return $directParentData;
     }
 
     private function getLinks(CmsCategoryRecord $cmsCategoryRecord): array
