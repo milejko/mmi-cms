@@ -50,18 +50,6 @@
                                                             <i class="icon-eyeglass"></i>
                                                         </a>
                                                     {/if}
-                                                    <a class="button btn btn-primary btn-inline-block operation-button sort-row ui-sortable-handle" title="{#template.category.index.reorder#}" href="#">
-                                                        <i class="icon-cursor-move"></i>
-                                                    </a>
-                                                    <a class="button btn btn-secondary btn-inline-block" title="{#template.category.index.move#}" href="{@module=cmsAdmin&controller=category&action=move&id={$category->id}@}">
-                                                        <i class="icon-share-alt"></i>
-                                                    </a>
-                                                    <a class="button btn btn-secondary btn-inline-block" title="{#template.category.index.copy#}" href="{@module=cmsAdmin&controller=category&action=copy&id={$category->id}@}">
-                                                        <i class="icon-docs"></i>
-                                                    </a>
-                                                    <a class="button btn btn-danger btn-inline-block confirm" title="{#template.category.index.delete#}" data-message="{if $category->template}{#template.category.index.delete.page#}{else}{#template.category.index.delete.folder#}{/if}" href="{@module=cmsAdmin&controller=category&action=delete&id={$category->id}@}">
-                                                        <i class="icon-trash"></i>
-                                                    </a>
                                                 {/if}
                                             </td>
                                         </tr>
