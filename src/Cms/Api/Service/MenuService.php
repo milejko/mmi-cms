@@ -37,7 +37,7 @@ class MenuService implements MenuServiceInterface
     {
         $menuStructure = [];
         //loading from cache
-        $cacheKey = CmsCategoryRecord::CATEGORY_CACHE_TRANSPORT_PREFIX . $scope . $maxLevel;
+        $cacheKey = CmsCategoryRecord::CATEGORY_CACHE_TRANSPORT_PREFIX . $scope;
         $menuStructure = $this->cacheService->load($cacheKey);
         if (null !== $menuStructure) {
             return $menuStructure;
