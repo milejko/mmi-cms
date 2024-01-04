@@ -60,6 +60,9 @@ class CmsRouterConfig extends RouterConfig
         //routy API listy kategorii
         $this->setRoute('cms-contents-scopes-api', '/^api\/([a-z0-9-]+)\/contents$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getContents', 'scope' => '$1']);
 
+        //routy API struktury kategorii
+        $this->setRoute('cms-contents-structure-scopes-api', '/^api\/([a-z0-9-]+)\/structure$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getStructure', 'scope' => '$1']);
+
         //routa API config
         $this->setRoute('cms-api-config', '/^api\/([a-z0-9-]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'config', 'scope' => '$1']);
 

@@ -15,6 +15,7 @@ use Cms\Api\LinkData;
 use Cms\Api\MenuDataTransport;
 use Cms\Api\RedirectTransport;
 use Cms\Api\Service\MenuServiceInterface;
+use Cms\Api\Service\StructureServiceInterface;
 use Cms\Api\SkinConfigTransport;
 use Cms\Api\SkinData;
 use Cms\Api\SkinsetDataTransport;
@@ -53,6 +54,11 @@ class ApiController extends Controller
      * @Inject
      */
     private MenuServiceInterface $menuService;
+
+    /**
+     * @Inject
+     */
+    private StructureServiceInterface $structureService;
 
     /**
      * @Inject
@@ -120,6 +126,14 @@ class ApiController extends Controller
         return $this->getResponse()->setTypeJson()
             ->setCode($skinConfigTransport->getCode())
             ->setContent($skinConfigTransport->toString());
+    }
+
+    public function getStructureAction(Request $request)
+    {
+        $menuTransport = (new MenuDataTransport())->setMenu($this->structureService->getStructure($request->scope));
+        return $this->getResponse()->setTypeJson()
+            ->setCode($menuTransport->getCode())
+            ->setContent($menuTransport->toString());
     }
 
     /**
