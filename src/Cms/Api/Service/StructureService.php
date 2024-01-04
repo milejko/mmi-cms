@@ -33,15 +33,17 @@ class StructureService implements StructureServiceInterface
      */
     public function getStructure(?string $scope): array
     {
-        //$menuStructure = [];
-        //loading from cache
-        //$cacheKey = CmsCategoryRecord::CATEGORY_CACHE_TRANSPORT_PREFIX . $scope;
-        //$menuStructure = $this->cacheService->load($cacheKey);
+        $cacheKey = CmsCategoryRecord::CATEGORY_CACHE_STRUCTURE_PREFIX . $scope;
+        $treeData = $this->cacheService->load($cacheKey);
+        if (null !== $treeData) {
+            return $treeData;
+        }
         $flatArray = $this->getFromInfrastructure($scope);
         $treeData = [];
         foreach ($flatArray[''] as $categoryRow) {
             $treeData[] = $this->formatItem($categoryRow, $flatArray);
         }
+        $this->cacheService->save($treeData, $cacheKey, self::CACHE_TTL);
         return $treeData;
     }
 
@@ -89,6 +91,7 @@ class StructureService implements StructureServiceInterface
             return [
                 (new LinkData())
                     ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $scope, $cmsCategoryRow['customUri'] ?: $cmsCategoryRow['uri']))
+                    ->setRel(LinkData::REL_CONTENT)
             ];
         }
         return [];
