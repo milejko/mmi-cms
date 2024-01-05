@@ -21,6 +21,7 @@ class CmsRouterConfig extends RouterConfig
     public const API_METHOD_CONFIG = self::API_HOME . '/%s';
     public const API_METHOD_CONTENT = self::API_HOME . '/%s/contents/%s';
     public const API_METHOD_CONTENTS = self::API_HOME . '/%s/contents';
+    public const API_METHOD_STRUCTURE = self::API_HOME . '/%s/structure';
     public const API_METHOD_PREVIEW = self::API_HOME . '/%s/contents/preview/%s/%s/%s/%s';
 
     public function __construct()
@@ -59,6 +60,9 @@ class CmsRouterConfig extends RouterConfig
 
         //routy API listy kategorii
         $this->setRoute('cms-contents-scopes-api', '/^api\/([a-z0-9-]+)\/contents$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getContents', 'scope' => '$1']);
+
+        //routy API struktury kategorii
+        $this->setRoute('cms-contents-structure-scopes-api', '/^api\/([a-z0-9-]+)\/structure$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getStructure', 'scope' => '$1']);
 
         //routa API config
         $this->setRoute('cms-api-config', '/^api\/([a-z0-9-]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'config', 'scope' => '$1']);

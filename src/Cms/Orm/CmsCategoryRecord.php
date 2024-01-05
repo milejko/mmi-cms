@@ -154,6 +154,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     public const CATEGORY_CACHE_PREFIX = 'category-';
     //prefiks bufora obiektu transportowego kategorii
     public const CATEGORY_CACHE_TRANSPORT_PREFIX = 'category-transport-';
+    //prefiks bufora obiektu transportowego kategorii
+    public const CATEGORY_CACHE_STRUCTURE_PREFIX = 'category-structure-';
     //prefix bufora dzieci kategorii
     public const CATEGORY_CHILDREN_CACHE_PREFIX = 'category-children-ids-';
     //prefiks bufora przekierowania
@@ -637,6 +639,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->getInitialStateValue('customUri')));
         //drop skin menu cache
         $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $scope);
+        $cache->remove(self::CATEGORY_CACHE_STRUCTURE_PREFIX . $scope);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->id);
         $cache->remove(self::CATEGORY_CACHE_PREFIX . $this->cmsCategoryOriginalId);
         $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $this->id);

@@ -138,8 +138,6 @@ class CmsCategoryWidgetCategoryRecord extends \Mmi\Orm\Record
      */
     public function clearCache()
     {
-        //usuwanie cache
-        App::$di->get(CacheInterface::class)->remove(CmsCategoryRecord::CATEGORY_CACHE_TRANSPORT_PREFIX . $this->cmsCategoryId);
         App::$di->get(CacheInterface::class)->remove(CmsCategoryRecord::WIDGET_MODEL_CACHE_PREFIX . $this->cmsCategoryId);
         App::$di->get(CacheInterface::class)->remove(self::HTML_CACHE_PREFIX . $this->id);
         App::$di->get(CacheInterface::class)->remove(self::JSON_CACHE_PREFIX . $this->id);

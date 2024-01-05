@@ -12,6 +12,7 @@
   <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Api/SkinConfigTransport.php"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Api/SkinData.php"/>
   <violation rule="PHPMD\Rule\Design\TooManyFields" file="src/Cms/Api/TemplateDataTransport.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Api/MenuDataTransport.php"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Api/TemplateDataTransport.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Cms/ApiController.php"/>
   <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/ApiController.php" method="getCategoryPreviewAction"/>

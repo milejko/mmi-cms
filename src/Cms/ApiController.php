@@ -15,6 +15,7 @@ use Cms\Api\LinkData;
 use Cms\Api\MenuDataTransport;
 use Cms\Api\RedirectTransport;
 use Cms\Api\Service\MenuServiceInterface;
+use Cms\Api\Service\StructureServiceInterface;
 use Cms\Api\SkinConfigTransport;
 use Cms\Api\SkinData;
 use Cms\Api\SkinsetDataTransport;
@@ -57,6 +58,11 @@ class ApiController extends Controller
     /**
      * @Inject
      */
+    private StructureServiceInterface $structureService;
+
+    /**
+     * @Inject
+     */
     private CmsCategoryRepository $cmsCategoryRepository;
 
     /**
@@ -81,6 +87,12 @@ class ApiController extends Controller
                 (new LinkData())
                 ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $skin->getKey()))
                 ->setRel(LinkData::REL_CONTENTS)
+            );
+            //structure link
+            $skinData->_links[] = (
+                (new LinkData())
+                ->setHref(sprintf(CmsRouterConfig::API_METHOD_STRUCTURE, $skin->getKey()))
+                ->setRel(LinkData::REL_STRUCTURE)
             );
             $skins[] = $skinData;
         }
@@ -116,10 +128,36 @@ class ApiController extends Controller
             (new LinkData())
             ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $skinConfig->getKey()))
             ->setRel(LinkData::REL_CONTENTS),
+            (new LinkData())
+            ->setHref(sprintf(CmsRouterConfig::API_METHOD_STRUCTURE, $skinConfig->getKey()))
+            ->setRel(LinkData::REL_STRUCTURE),
         ];
         return $this->getResponse()->setTypeJson()
             ->setCode($skinConfigTransport->getCode())
             ->setContent($skinConfigTransport->toString());
+    }
+
+    public function getStructureAction(Request $request)
+    {
+        try {
+            //search for skin
+            $skinConfig = $this->cmsSkinsetConfig->getSkinByKey($request->scope);
+        } catch (CmsSkinNotFoundException $e) {
+            //404 - skin not found
+            return $this->getNotFoundResponse($e->getMessage());
+        }
+        $menuTransport = (new MenuDataTransport())->setMenu($this->structureService->getStructure($skinConfig->getKey()));
+        $menuTransport->_links = [
+            (new LinkData())
+            ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $skinConfig->getKey()))
+            ->setRel(LinkData::REL_CONTENTS),
+            (new LinkData())
+            ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONFIG, $skinConfig->getKey()))
+            ->setRel(LinkData::REL_CONFIG)
+        ];
+        return $this->getResponse()->setTypeJson()
+            ->setCode($menuTransport->getCode())
+            ->setContent($menuTransport->toString());
     }
 
     /**
@@ -138,6 +176,14 @@ class ApiController extends Controller
             $request->scope,
             $skinConfig->getMenuMaxDepthReturned()
         ));
+        $menuTransport->_links = [
+            (new LinkData())
+            ->setHref(sprintf(CmsRouterConfig::API_METHOD_STRUCTURE, $skinConfig->getKey()))
+            ->setRel(LinkData::REL_STRUCTURE),
+            (new LinkData())
+            ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONFIG, $skinConfig->getKey()))
+            ->setRel(LinkData::REL_CONFIG)
+        ];
         return $this->getResponse()->setTypeJson()
             ->setCode($menuTransport->getCode())
             ->setContent($menuTransport->toString());
