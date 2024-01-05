@@ -15,8 +15,18 @@
                         {if($result)}
                             <div class="content-box-content clearfix" style="margin-top: 30px">
                                 <table class="table table-striped table-sort" data-sort-url="{@module=cmsAdmin&controller=category&action=sort@}">
+                                    <thead>
+                                    <tr>
+                                        <th>{#template.category.search.column.name#}</th>
+                                        <th>{#template.category.search.column.address#}</th>
+                                        <th>{#template.category.search.column.breadcrumbs#}</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
                                     <tbody class="ui-sortable">
-                                    {foreach $result as $category}
+                                    {foreach $result as $extendedCategory}
+                                        {$category = $extendedCategory['category']}
+                                        {$extension = $extendedCategory['extension']}
                                         {$allowed = categoryAclAllowed($category->id)}
                                         {$frontUrl = $skinset->getSkinConfigByKey($scopeName)->getFrontUrl()}
                                         {$templateConfig = $skinset->getTemplateConfigByKey($category->template)}
@@ -35,6 +45,19 @@
                                                     {$templateConfig = $skinset->getTemplateConfigByKey($category->template)}
                                                     ({if $templateConfig}{_($templateConfig->getName())}{/if})
                                                 </small>
+                                            </td>
+                                            <td class="align-middle">
+                                                {$category->getUri()}
+                                            </td>
+                                            <td class="align-middle">
+                                                {foreach name="breadcrumbs" $extension['breadcrumbs'] as $breadcrumbCategory}
+                                                    {if !$_breadcrumbsLast}
+                                                        {if $breadcrumbCategory->name}{$breadcrumbCategory->name|stripTags}{else}({#template.category.index.label.default#}){/if}
+                                                        &gt;
+                                                    {else}
+                                                        {if $breadcrumbCategory->name}{$breadcrumbCategory->name|stripTags}{else}({#template.category.index.label.default#}){/if}
+                                                    {/if}
+                                                {/foreach}
                                             </td>
                                             <td align="right" {if !$allowed}class="inactive"{/if}>
                                                 {if $allowed}
