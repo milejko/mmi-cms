@@ -136,7 +136,8 @@ class CategoryController extends Controller
                 ->findPk($request->id)
         ) {
             //przekierowanie na originalId
-            return $this->getResponse()->redirect('cmsAdmin', 'category', 'redactorPreview', ['id' => $request->originalId]);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'redactorPreview',
+                ['id' => $request->originalId]);
         }
         //pobranie przekierowania na front zdefiniowanego w skórce
         $skinBasedPreviewUrl = $this->cmsSkinsetConfig->getSkinByKey($this->scopeConfig->getName())->getPreviewUrl();
@@ -145,11 +146,13 @@ class CategoryController extends Controller
             $this->getResponse()->redirectToUrl(
                 $skinBasedPreviewUrl .
                 '?apiUrl=' .
-                urlencode(sprintf(CmsRouterConfig::API_METHOD_PREVIEW, $category->getScope(), $category->id, $category->cmsCategoryOriginalId ?? 0, $category->cmsAuthId, time())) .
+                urlencode(sprintf(CmsRouterConfig::API_METHOD_PREVIEW, $category->getScope(), $category->id,
+                    $category->cmsCategoryOriginalId ?? 0, $category->cmsAuthId, time())) .
                 '&returnUrl=' .
                 urlencode('/cmsAdmin/category/' . ($category->parentId ? '?parentId=' . $category->parentId : ''))
             ) :
-            $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);
+            $this->getResponse()->redirect('cms', 'category', 'redactorPreview',
+                ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);
     }
 
     /**
@@ -230,10 +233,16 @@ class CategoryController extends Controller
         //modyfikacja breadcrumbów
         $this->view->adminNavigation()
             ->removeLastBreadcrumb()
-            ->modifyLastBreadcrumb('menu.category.index', $this->view->url(['module' => 'cmsAdmin', 'controller' => 'category', 'action' => 'index', 'parentId' => $category->parentId]))
+            ->modifyLastBreadcrumb('menu.category.index', $this->view->url([
+                'module' => 'cmsAdmin',
+                'controller' => 'category',
+                'action' => 'index',
+                'parentId' => $category->parentId
+            ]))
             ->appendBreadcrumb('menu.category.edit', '#');
         //pobranie listy widgetów koniecznych do dodania przed zapisem
-        $minOccurrenceWidgets = (new CategoryValidationModel($category, $this->cmsSkinsetConfig))->getMinOccurenceWidgets();
+        $minOccurrenceWidgets = (new CategoryValidationModel($category,
+            $this->cmsSkinsetConfig))->getMinOccurenceWidgets();
         //konfiguracja kategorii
         $form = new CategoryForm($category);
         //form do widoku
@@ -324,11 +333,13 @@ class CategoryController extends Controller
             $this->getResponse()->redirectToUrl(
                 $skinBasedPreviewUrl .
                 '?apiUrl=' .
-                urlencode(sprintf(CmsRouterConfig::API_METHOD_PREVIEW, $category->getScope(), $category->id, $category->cmsCategoryOriginalId ?? 0, $category->cmsAuthId, time())) .
+                urlencode(sprintf(CmsRouterConfig::API_METHOD_PREVIEW, $category->getScope(), $category->id,
+                    $category->cmsCategoryOriginalId ?? 0, $category->cmsAuthId, time())) .
                 '&returnUrl=' .
                 urlencode('/cmsAdmin/category/edit?id=' . $category->id . '&originalId=' . $category->cmsCategoryOriginalId . '&uploaderId=' . $category->id)
             ) :
-            $this->getResponse()->redirect('cms', 'category', 'redactorPreview', ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);
+            $this->getResponse()->redirect('cms', 'category', 'redactorPreview',
+                ['originalId' => $category->cmsCategoryOriginalId, 'versionId' => $category->id]);
     }
 
     /**
@@ -345,11 +356,16 @@ class CategoryController extends Controller
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
         //powołanie formularza
-        $form = new CategoryMoveForm($category, [AuthInterface::class => $this->auth, CategoryMoveForm::SCOPE_CONFIG_OPTION_NAME => $this->scopeConfig->getName(), SkinsetModel::class => new SkinsetModel($this->cmsSkinsetConfig)]);
+        $form = new CategoryMoveForm($category, [
+            AuthInterface::class => $this->auth,
+            CategoryMoveForm::SCOPE_CONFIG_OPTION_NAME => $this->scopeConfig->getName(),
+            SkinsetModel::class => new SkinsetModel($this->cmsSkinsetConfig)
+        ]);
         if ($form->isSaved()) {
             //messenger + redirct
             $this->getMessenger()->addMessage('controller.category.move.message', true);
-            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $form->getRecord()->parentId]);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index',
+                ['parentId' => $form->getRecord()->parentId]);
         }
         $this->view->form = $form;
     }
@@ -452,7 +468,8 @@ class CategoryController extends Controller
             return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
         }
         //przekierowanie do edycji DRAFTu - nowego ID
-        $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $draft->id, 'originalId' => $originalId, 'uploaderId' => $draft->id]);
+        $this->getResponse()->redirect('cmsAdmin', 'category', 'edit',
+            ['id' => $draft->id, 'originalId' => $originalId, 'uploaderId' => $draft->id]);
     }
 
     /**
@@ -473,14 +490,25 @@ class CategoryController extends Controller
                 continue;
             }
             $parentTemplateConfig = $skinsetModel->getTemplateConfigByKey($parentCategory->template);
-            if ($parentTemplateConfig && in_array($templateConfig->getKey(), $parentTemplateConfig->getCompatibleChildrenKeys(), true)) {
+            if ($parentTemplateConfig && in_array($templateConfig->getKey(),
+                    $parentTemplateConfig->getCompatibleChildrenKeys(), true)) {
                 $allowedTemplates[] = $templateConfig;
             }
         }
         return $allowedTemplates;
     }
 
-    private function getSearchResult(CategorySearch $form): RecordCollection
+    private function getSearchResult(CategorySearch $form): array
+    {
+        $resultBase = $this->getSearchResultBase($form);
+        $result = [];
+        foreach ($resultBase as $categoryRecord) {
+            $result[] = ['category' => $categoryRecord, 'extension' => $this->getCategoryExtension($categoryRecord)];
+        }
+        return $result;
+    }
+
+    private function getSearchResultBase(CategorySearch $form): RecordCollection
     {
         $cmsCategoryQuery = (new CmsCategoryQuery())
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
@@ -522,5 +550,22 @@ class CategoryController extends Controller
         }
 
         return $cmsCategoryQuery->find();
+    }
+
+    private function getCategoryExtension(CmsCategoryRecord $category): array
+    {
+        return ['breadcrumbs' => $this->getCategoryBreadcrumbs($category)];
+    }
+
+    private function getCategoryBreadcrumbs(CmsCategoryRecord $category): array
+    {
+        $breadcrumbs = [];
+        $parentCategory = $category->getParentRecord();
+
+        while ($parentCategory) {
+            $breadcrumbs[] = $parentCategory;
+            $parentCategory = $parentCategory->getParentRecord();
+        }
+        return array_reverse($breadcrumbs);
     }
 }
