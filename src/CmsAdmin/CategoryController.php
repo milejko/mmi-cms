@@ -33,8 +33,10 @@ use Mmi\Form\Element\ElementAbstract;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 use Mmi\Orm\RecordCollection;
+use Mmi\Paginator\Paginator;
 use Mmi\Security\AuthInterface;
 
+use Mmi\Session\SessionSpace;
 use function array_reverse;
 
 /**
@@ -121,10 +123,55 @@ class CategoryController extends Controller
         $this->view->scopeName = $this->scopeConfig->getName();
         //form do widoku
         $this->view->categorySearch = $form = new CategorySearch();
+        if(!$form->isMine()) $this->searchFormFromSession($form);
+        if($form->isMine()) $this->searchFormToSession($form);
+
+        $paginator = new Paginator();
+
         //wyniki wyszukiwania do widoku
-        $this->view->result = $form->isMine() && $form->isValid() ? $this->getSearchResult($form) : null;
+         $result = $form->isValid() ? $this->getSearchResult($form, $paginator->getOffset(), $paginator->getLimit()) : null;
+        if ($result) {
+            $paginator->setRowsCount($result['totalCount']);
+        }
+        $this->view->paginator = $paginator;
+        $this->view->result = $result;
     }
 
+    private function searchFormFromSession(CategorySearch $form)
+    {
+        $session = new SessionSpace('search');
+        if (!isset($session->query)) {
+            return;
+        }
+        $query = $session->query;
+        $where = $session->where;
+
+        $fieldQuery = $form->getElement(CategorySearch::FIELD_QUERY_NAME);
+        $fieldQuery->setValue($query);
+
+        $fieldFilter = $form->getElement(CategorySearch::FIELD_FILTER_NAME);
+        $fieldFilter->setValue($where);
+
+        $form->setValid(true);
+    }
+
+    private function searchFormToSession(CategorySearch $form)
+    {
+        $session = new SessionSpace('search');
+        if(!$form->isValid()) {
+            $session->unsetAll();
+            return;
+        }
+
+        $fieldQuery = $form->getElement(CategorySearch::FIELD_QUERY_NAME);
+        $query = $fieldQuery->getValue();
+
+        $fieldFilter = $form->getElement(CategorySearch::FIELD_FILTER_NAME);
+        $where = $fieldFilter->getValue();
+
+        $session->query = $query;
+        $session->where = $where;
+    }
     /**
      * Lista stron CMS - podglad strony
      */
@@ -535,24 +582,24 @@ class CategoryController extends Controller
         return $allowedTemplates;
     }
 
-    private function getSearchResult(CategorySearch $form): array
+    private function getSearchResult(CategorySearch $form, int $offset, int $limit): array
     {
-        $resultBase = $this->getSearchResultBase($form);
-        $result = [];
-        foreach ($resultBase as $categoryRecord) {
-            $result[] = ['category' => $categoryRecord, 'extension' => $this->getCategoryExtension($categoryRecord)];
+        $result = $this->getSearchResultBase($form, $offset, $limit);
+        $rows = [];
+        foreach ($result['rows'] as $categoryRecord) {
+            $rows[] = ['category' => $categoryRecord, 'extension' => $this->getCategoryExtension($categoryRecord)];
         }
+        $result['rows'] = $rows;
         return $result;
     }
 
-    private function getSearchResultBase(CategorySearch $form): RecordCollection
+    private function getSearchResultBase(CategorySearch $form, int $offset, int $limit): array
     {
         $cmsCategoryQuery = (new CmsCategoryQuery())
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
             ->whereTemplate()->like($this->scopeConfig->getName() . '%')
             ->orderAscOrder()
-            ->offset(0)
-            ->limit(10);
+           ;
 
         $fieldQuery = $form->getElement(CategorySearch::FIELD_QUERY_NAME);
         $fieldFilter = $form->getElement(CategorySearch::FIELD_FILTER_NAME);
@@ -586,7 +633,11 @@ class CategoryController extends Controller
             $cmsCategoryQuery->whereUri()->like($searchString);
         }
 
-        return $cmsCategoryQuery->find();
+        $totalCount = $cmsCategoryQuery->count();
+
+        $cmsCategoryQuery->offset($offset)->limit($limit);
+
+        return ['totalCount' => $totalCount, 'rows'=> $cmsCategoryQuery->find()];
     }
 
     private function getCategoryExtension(CmsCategoryRecord $category): array
