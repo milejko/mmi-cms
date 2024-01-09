@@ -128,8 +128,12 @@ class CategoryController extends Controller
 
         $form->setAction(App::$di->get(Router::class)->encodeUrl(['module' => 'cmsAdmin', 'controller'=>'category', 'action'=>'search']));
 
-        if(!$form->isMine()) $this->searchFormFromSession($form);
-        if($form->isMine()) $this->searchFormToSession($form);
+        if (!$form->isMine()) {
+            $this->searchFormFromSession($form);
+        }
+        if ($form->isMine()) {
+            $this->searchFormToSession($form);
+        }
 
         $paginator = new Paginator();
 
@@ -163,7 +167,7 @@ class CategoryController extends Controller
     private function searchFormToSession(CategorySearch $form)
     {
         $session = new SessionSpace('search');
-        if(!$form->isValid()) {
+        if (!$form->isValid()) {
             $session->unsetAll();
             return;
         }
@@ -177,6 +181,7 @@ class CategoryController extends Controller
         $session->query = $query;
         $session->where = $where;
     }
+
     /**
      * Lista stron CMS - podglad strony
      */
