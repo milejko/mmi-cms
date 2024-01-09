@@ -28,10 +28,12 @@ use CmsAdmin\Form\CategorySearch;
 use CmsAdmin\Model\CategoryAclModel;
 use CmsAdmin\Plugin\CategoryHistoryGrid;
 use DI\Annotation\Inject;
+use Mmi\App\App;
 use Mmi\Cache\CacheInterface;
 use Mmi\Form\Element\ElementAbstract;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
+use Mmi\Mvc\Router;
 use Mmi\Orm\RecordCollection;
 use Mmi\Paginator\Paginator;
 use Mmi\Security\AuthInterface;
@@ -123,6 +125,9 @@ class CategoryController extends Controller
         $this->view->scopeName = $this->scopeConfig->getName();
         //form do widoku
         $this->view->categorySearch = $form = new CategorySearch();
+
+        $form->setAction(App::$di->get(Router::class)->encodeUrl(['module' => 'cmsAdmin', 'controller'=>'category', 'action'=>'search']));
+
         if(!$form->isMine()) $this->searchFormFromSession($form);
         if($form->isMine()) $this->searchFormToSession($form);
 
