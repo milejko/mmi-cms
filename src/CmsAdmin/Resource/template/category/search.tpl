@@ -24,7 +24,7 @@
                                     </tr>
                                     </thead>
                                     <tbody class="ui-sortable">
-                                    {foreach $result as $extendedCategory}
+                                    {foreach $result['rows'] as $extendedCategory}
                                         {$category = $extendedCategory['category']}
                                         {$extension = $extendedCategory['extension']}
                                         {$allowed = categoryAclAllowed($category->id)}
@@ -80,6 +80,7 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div>{$paginator}</div>
                             <div class="clear"></div>
                         {/if}
                     </div>
