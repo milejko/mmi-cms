@@ -93,6 +93,45 @@ class MultiField extends ElementAbstract
     }
 
     /**
+     * Zdarzenie wywoływane przed zapisem całego formularza
+     * @return void
+     */
+    public function beforeFormSave()
+    {
+        parent::beforeFormSave();
+
+        foreach ($this->getElements() as $element) {
+            $element->beforeFormSave();
+        }
+    }
+
+    /**
+     * Zdarzenie wywoływane po zapisie całego formularza
+     * @return void
+     */
+    public function onFormSaved()
+    {
+        parent::onFormSaved();
+
+        foreach ($this->getElements() as $element) {
+            $element->onFormSaved();
+        }
+    }
+
+    /**
+     * Zdarzenie wywoływane po zapisie rekordu - znane PK, ale niewykonane jeszcze afterSave
+     * @return void
+     */
+    public function onRecordSaved()
+    {
+        parent::onRecordSaved();
+
+        foreach ($this->getElements() as $element) {
+            $element->onRecordSaved();
+        }
+    }
+
+    /**
      * Waliduje pole
      *
      * @return boolean
@@ -123,6 +162,7 @@ class MultiField extends ElementAbstract
     /**
      * Waliduje pole
      *
+     * @param int $parentIndex
      * @return bool
      */
     public function isNestedValid(int $parentIndex): bool
@@ -145,6 +185,7 @@ class MultiField extends ElementAbstract
      * @param int $index
      * @param array $itemValues
      * @param bool $result
+     * @param int|null $parentIndex
      */
     protected function validateItem(int $index, array $itemValues, bool &$result, ?int $parentIndex = null): void
     {
@@ -170,6 +211,7 @@ class MultiField extends ElementAbstract
      * @param Multifield $element
      * @param array|null $value
      * @param bool $result
+     * @param int $parentIndex
      */
     private function validateMultifieldElement(Multifield $element, ?array $value, bool &$result, int $parentIndex): void
     {

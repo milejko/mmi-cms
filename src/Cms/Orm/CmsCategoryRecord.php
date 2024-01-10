@@ -3,7 +3,10 @@
 namespace Cms\Orm;
 
 use Cms\App\CmsAppMvcEvents;
+use Cms\Exception\CategoryWidgetException;
 use Cms\Model\CategoryWidgetModel;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Mmi\App\App;
 use Mmi\Cache\CacheInterface;
 use Mmi\DataObject;
@@ -423,7 +426,10 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
 
     /**
      * Pobiera model widgetów
-     * @return \Cms\Model\CategoryWidgetModel
+     * @return CategoryWidgetModel
+     * @throws CategoryWidgetException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getWidgetModel()
     {
