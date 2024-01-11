@@ -10,7 +10,10 @@
 
 namespace Cms\Form\Element;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use Mmi\Filter\Url;
+use Mmi\Form\Form;
 
 /**
  * Element Plupload
@@ -37,6 +40,21 @@ class Plupload extends UploaderElementAbstract
     public const TEMPLATE_ERRORS = 'cmsAdmin/form/element/element-abstract/errors';
     //szablon etykiety
     public const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
+
+    /**
+     * Ustawia form macierzysty
+     * @param Form $form
+     * @return self
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function setForm(Form $form)
+    {
+        parent::setForm($form);
+        $this->setIgnore();
+
+        return $this;
+    }
 
     /**
      * Ustawia rozmiar chunka
@@ -310,7 +328,8 @@ class Plupload extends UploaderElementAbstract
         }
 
         //dołączanie skryptu
-        $this->view->headScript()->appendScript("
+        $this->view->headScript()->appendScript(
+            "
 			$(document).ready(function () {
 				'use strict';
 				var conf = $.extend(true, {}, PLUPLOADCONF.settings);
@@ -330,7 +349,8 @@ class Plupload extends UploaderElementAbstract
 				" . ($this->getOption('afterEdit') ? "conf.after_edit = " . json_encode($this->getOption('afterEdit')) . ";" : "") . "
 				$('#" . $this->getId() . "').plupload(conf);
 			});
-		");
+		"
+        );
 
         return $html;
     }
