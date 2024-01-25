@@ -27,6 +27,7 @@ CREATE TABLE "cms_category" (
   "name" varchar(128) DEFAULT NULL,
   "title" varchar(128) DEFAULT NULL,
   "description" text DEFAULT NULL,
+  "contentToSearch" text DEFAULT null,
   "uri" varchar(255) NOT NULL,
   "path" varchar(128) DEFAULT NULL,
   "customUri" varchar(255) DEFAULT NULL,

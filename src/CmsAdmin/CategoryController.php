@@ -18,6 +18,7 @@ use Cms\Model\CategoryDraft;
 use Cms\Model\CategoryValidationModel;
 use Cms\Model\SkinsetModel;
 use Cms\Model\TemplateModel;
+use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryAclRecord;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
@@ -34,10 +35,8 @@ use Mmi\Form\Element\ElementAbstract;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 use Mmi\Mvc\Router;
-use Mmi\Orm\RecordCollection;
 use Mmi\Paginator\Paginator;
 use Mmi\Security\AuthInterface;
-
 use Mmi\Session\SessionSpace;
 use function array_reverse;
 
@@ -348,6 +347,8 @@ class CategoryController extends Controller
         if ($form->isMine()) {
             //przed zapisem formularza
             $templateModel->invokeBeforeSaveEditForm($form);
+            //aktualizacja contentu pod wyszukiwarkę
+            $this->updateContentToSearch($category);
             //zapis formularza
             if (!$request->validationField) {
                 $form->save();
@@ -665,5 +666,20 @@ class CategoryController extends Controller
             $parentCategory = $parentCategory->getParentRecord();
         }
         return array_reverse($breadcrumbs);
+    }
+
+    /**
+     * Pobiera content pod wyszukiwarkę
+     */
+    private function updateContentToSearch(CmsCategoryRecord $category): void
+    {
+        $contentToSearch = '';
+
+        foreach ($category->getWidgetModel()->getWidgetRelations() as $widgetRelationRecord) {
+            $widgetModel = new WidgetModel($widgetRelationRecord, $this->cmsSkinsetConfig);
+            $contentToSearch .= $widgetModel->getContentToSearch() . ' ';
+        }
+
+        $category->contentToSearch = trim($contentToSearch);
     }
 }

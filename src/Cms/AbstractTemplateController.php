@@ -98,6 +98,7 @@ abstract class AbstractTemplateController extends Controller
             $to->ogImageUrl = $ogImageRecord->getThumbUrl('scalecrop', '1200x630');
         }
         $to->description = (string) $this->cmsCategoryRecord->description;
+        $to->contentToSearch = (string) $this->cmsCategoryRecord->contentToSearch;
         $to->opensNewWindow = (bool) $this->cmsCategoryRecord->blank;
         $to->visible = (bool) $this->cmsCategoryRecord->visible;
         $to->children = $this->getChildren();

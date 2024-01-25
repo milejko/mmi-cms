@@ -21,4 +21,9 @@ class SampleWidgetController extends AbstractWidgetController
     public function previewAction()
     {
     }
+
+    public function getContentToSearch(): string
+    {
+        return '';
+    }
 }

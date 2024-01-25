@@ -15,6 +15,7 @@ class TemplateDataTransport extends HttpJsonTransport
     public ?string  $dateModify;
     public string   $title;
     public string   $description;
+    public string   $contentToSearch;
     public string   $ogImageUrl;
     public string   $order;
     public bool     $opensNewWindow = false;

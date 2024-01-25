@@ -118,6 +118,12 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
     public $description;
 
     /**
+     * Fraza pod wyszukiwarkę
+     * @var string
+     */
+    public $contentToSearch;
+
+    /**
      * Nowe okno
      * @var boolean
      */
