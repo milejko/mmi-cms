@@ -18,6 +18,7 @@ use Cms\Model\CategoryDraft;
 use Cms\Model\CategoryValidationModel;
 use Cms\Model\SkinsetModel;
 use Cms\Model\TemplateModel;
+use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryAclRecord;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
@@ -370,6 +371,8 @@ class CategoryController extends Controller
         if ($form->isMine()) {
             //przed zapisem formularza
             $templateModel->invokeBeforeSaveEditForm($form);
+            //aktualizacja contentu pod wyszukiwarkę
+            $this->updateFullContent($category);
             //zapis formularza
             if (!$request->validationField) {
                 $form->save();
@@ -744,5 +747,20 @@ class CategoryController extends Controller
         }
 
         return $templateOptions;
+    }
+
+    /**
+     * Pobiera content pod wyszukiwarkę
+     */
+    private function updateFullContent(CmsCategoryRecord $category): void
+    {
+        $fullContent = '';
+
+        foreach ($category->getWidgetModel()->getWidgetRelations() as $widgetRelationRecord) {
+            $widgetModel = new WidgetModel($widgetRelationRecord, $this->cmsSkinsetConfig);
+            $fullContent .= $widgetModel->getFullContent() . ' ';
+        }
+
+        $category->fullContent = trim($fullContent);
     }
 }

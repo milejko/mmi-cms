@@ -2,17 +2,17 @@
 
 namespace Cms\Model;
 
-use Cms\Api\DataInterface;
-use Cms\Exception\CategoryWidgetException;
-use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 use Cms\AbstractWidgetController;
-use Mmi\Mvc\View;
-use Cms\App\CmsWidgetConfig;
+use Cms\Api\DataInterface;
 use Cms\App\CmsSectionConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\App\CmsTemplateConfig;
+use Cms\App\CmsWidgetConfig;
+use Cms\Exception\CategoryWidgetException;
+use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 use Mmi\App\App;
 use Mmi\Cache\CacheInterface;
+use Mmi\Mvc\View;
 
 /**
  * Model widgeta
@@ -149,8 +149,15 @@ class WidgetModel
     }
 
     /**
+     * Pobiera full content pod wyszukiwarkę
+     */
+    public function getFullContent(): string
+    {
+        return $this->_createController()->getFullContent();
+    }
+
+    /**
      * Wywołanie akcji usuwania
-     * @param View $view
      * @return void
      * @throws CategoryWidgetException
      */
@@ -162,7 +169,7 @@ class WidgetModel
 
     /**
      * Tworzy instancję kontrolera
-     * @return WidgetController
+     * @return AbstractWidgetController
      * @throws CategoryWidgetException
      */
     private function _createController()

@@ -9,8 +9,8 @@ use Cms\App\CmsWidgetConfig;
 use Cms\Orm\CmsCategoryWidgetCategoryRecord;
 use Cms\Orm\CmsFileQuery;
 use Cms\Orm\CmsFileRecord;
-use Mmi\Mvc\Controller;
 use Mmi\Http\Request;
+use Mmi\Mvc\Controller;
 
 /**
  * Abstrakcyjna klasa kontrolera widgetów
@@ -50,7 +50,7 @@ abstract class AbstractWidgetController extends Controller
 
     /**
      * Sets the CMS widget config
-    */
+     */
     public function setWidgetConfig(CmsWidgetConfig $cmsWidgetConfig): self
     {
         $this->widgetConfig = $cmsWidgetConfig;
@@ -106,6 +106,14 @@ abstract class AbstractWidgetController extends Controller
      */
     public function displayAction(Request $request)
     {
+    }
+
+    /**
+     * Pobiera content pod wyszukiwarkę
+     */
+    public function getFullContent(): string
+    {
+        return '';
     }
 
     /**
