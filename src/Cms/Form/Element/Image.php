@@ -60,7 +60,7 @@ class Image extends UploaderElementAbstract
 
     public function getUploadedFile(?string $name): ?CmsFileRecord
     {
-        return $this->_uploadedFiles[$name] ?? null;
+        return $this->_uploadedFiles[$name] ?? array_values($this->_uploadedFiles)[0] ?? null;
     }
 
     public function beforeFormSave(): void
