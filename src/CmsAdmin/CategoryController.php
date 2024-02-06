@@ -34,11 +34,10 @@ use Mmi\Form\Element\ElementAbstract;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 use Mmi\Mvc\Router;
-use Mmi\Orm\RecordCollection;
 use Mmi\Paginator\Paginator;
 use Mmi\Security\AuthInterface;
-
 use Mmi\Session\SessionSpace;
+
 use function array_reverse;
 
 /**
@@ -126,7 +125,7 @@ class CategoryController extends Controller
         //form do widoku
         $this->view->categorySearch = $form = new CategorySearch();
 
-        $form->setAction(App::$di->get(Router::class)->encodeUrl(['module' => 'cmsAdmin', 'controller'=>'category', 'action'=>'search']));
+        $form->setAction(App::$di->get(Router::class)->encodeUrl(['module' => 'cmsAdmin', 'controller' => 'category', 'action' => 'search']));
 
         if (!$form->isMine()) {
             $this->searchFormFromSession($form);
@@ -138,7 +137,7 @@ class CategoryController extends Controller
         $paginator = new Paginator();
 
         //wyniki wyszukiwania do widoku
-         $result = $form->isValid() ? $this->getSearchResult($form, $paginator->getOffset(), $paginator->getLimit()) : null;
+        $result = $form->isValid() ? $this->getSearchResult($form, $paginator->getOffset(), $paginator->getLimit()) : null;
         if ($result) {
             $paginator->setRowsCount($result['totalCount']);
         }
@@ -608,8 +607,7 @@ class CategoryController extends Controller
         $cmsCategoryQuery = (new CmsCategoryQuery())
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
             ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-            ->orderAscOrder()
-           ;
+            ->orderAscPath()->orderAscOrder();
 
         $fieldQuery = $form->getElement(CategorySearch::FIELD_QUERY_NAME);
         $fieldFilter = $form->getElement(CategorySearch::FIELD_FILTER_NAME);
@@ -640,14 +638,24 @@ class CategoryController extends Controller
         }
 
         if (CategorySearch::FIELD_FILTER_OPTION_BREADCRUMBS === $fieldFilter->getValue()) {
-            $cmsCategoryQuery->whereUri()->like($searchString);
+            $whereUris = new CmsCategoryQuery();
+
+            foreach ($cmsCategoryQuery->whereName()->like($searchString)->findPairs('id', 'uri') as $uri) {
+                $whereUris->orFieldUri()->like($uri . '%');
+            }
+
+            $cmsCategoryQuery
+                ->resetWhere()
+                ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
+                ->whereTemplate()->like($this->scopeConfig->getName() . '%')
+                ->andQuery($whereUris);
         }
 
         $totalCount = $cmsCategoryQuery->count();
 
         $cmsCategoryQuery->offset($offset)->limit($limit);
 
-        return ['totalCount' => $totalCount, 'rows'=> $cmsCategoryQuery->find()];
+        return ['totalCount' => $totalCount, 'rows' => $cmsCategoryQuery->find()];
     }
 
     private function getCategoryExtension(CmsCategoryRecord $category): array
