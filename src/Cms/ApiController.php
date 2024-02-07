@@ -246,11 +246,8 @@ class ApiController extends Controller
     {
         $this->getResponse()->setTypeJson();
         $categoryRecord = $this->cmsCategoryRepository->getCategoryRecordById($request->id);
-        if ($categoryRecord && $categoryRecord->isActive()) {
-            $this->cache->save($categoryRecord->id, CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($categoryRecord->getScope() . $categoryRecord->getUri()));
-        }
         //brak kategorii lub szablonu
-        if (!$categoryRecord || !$categoryRecord->isActive() || $categoryRecord->template == $categoryRecord->getScope()) {
+        if (!$categoryRecord || !$categoryRecord->isActive() || !$categoryRecord->template) {
             //404
             return $this->getNotFoundResponse();
         }
