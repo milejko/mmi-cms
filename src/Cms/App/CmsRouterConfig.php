@@ -23,6 +23,7 @@ class CmsRouterConfig extends RouterConfig
     public const API_METHOD_CONTENTS = self::API_HOME . '/%s/contents';
     public const API_METHOD_STRUCTURE = self::API_HOME . '/%s/structure';
     public const API_METHOD_PREVIEW = self::API_HOME . '/%s/contents/preview/%s/%s/%s/%s';
+    public const API_METHOD_ID_RESOLVER = self::API_HOME . '/contents/id/%s';
 
     public function __construct()
     {
@@ -49,7 +50,7 @@ class CmsRouterConfig extends RouterConfig
         $this->setRoute('cms-api', 'api', ['module' => 'cms', 'controller' => 'api', 'action' => 'index']);
 
         //routa API stron cms po ID
-        $this->setRoute('cms-contents-id-api', '/^api\/contents\/id\/([0-9]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'redirectId', 'id' => '$1']);
+        $this->setRoute('cms-contents-id-resolver-api', '/^api\/contents\/id\/([0-9]+)$/', ['module' => 'cms', 'controller' => 'api', 'action' => 'redirectId', 'id' => '$1']);
 
         //routa API podglądu nieopublikownych (i opublikowanych) stron cms
         $this->setRoute('cms-contents-preview-api', '/^api\/([a-z0-9-]+)\/contents\/preview\/([0-9]+)\/([0-9]+)\/([0-9]+)\/([0-9]+)/', ['module' => 'cms', 'controller' => 'api', 'action' => 'getCategoryPreview', 'scope' => '$1', 'id' => '$2', 'originalId' => '$3', 'authId' => '$4', 'time' => '$5']);

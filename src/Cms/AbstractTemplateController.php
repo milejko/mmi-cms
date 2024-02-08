@@ -112,12 +112,8 @@ abstract class AbstractTemplateController extends Controller
                 ->setHref(sprintf(CmsRouterConfig::API_METHOD_STRUCTURE, $this->cmsCategoryRecord->getScope()))
                 ->setRel(LinkData::REL_STRUCTURE),
             (new LinkData())
-                ->setHref(
-                    (null === $parent = $this->cmsCategoryRecord->getParentRecord()) ?
-                    sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $this->cmsCategoryRecord->getScope()) :
-                    sprintf(CmsRouterConfig::API_METHOD_CONTENT, $this->cmsCategoryRecord->getScope(), $parent->getUri())
-                )
-                ->setRel(LinkData::REL_PARENT),
+                ->setHref(sprintf(CmsRouterConfig::API_METHOD_ID_RESOLVER, $this->cmsCategoryRecord->getPk()))
+                ->setRel(LinkData::REL_EXTERNAL),
             (new LinkData())
                 ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $this->cmsCategoryRecord->getScope(), $this->cmsCategoryRecord->getUri()))
                 ->setRel(LinkData::REL_SELF),
