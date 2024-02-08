@@ -42,8 +42,6 @@ use Mmi\Session\SessionInterface;
  * @method self setToolbars(string $value)
  * @method self setMenubar(string $value)
  * @method self setPlugins(string $value)
- * @method self setHeight(int $value)
- * @method self setWidth(int $value)
  * @method self setFontFormats(string $value)
  * @method self setResize(string $value)
  * @method self setFontSizeFormats(string $value)
@@ -130,21 +128,6 @@ class TinyMce extends UploaderElementAbstract
      * @var array
      */
     protected $_common;
-
-    /**
-     * Ustawia form macierzysty
-     *
-     * @param Form $form
-     *
-     * @return self
-     */
-    public function setForm(Form $form)
-    {
-        parent::setForm($form);
-        $this->setIgnore(false);
-
-        return $this;
-    }
 
     /**
      * Alias na setObject()s

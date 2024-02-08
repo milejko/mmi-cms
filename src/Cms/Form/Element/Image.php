@@ -4,7 +4,7 @@
  * Mmi Framework (https://github.com/milejko/mmi.git)
  *
  * @link       https://github.com/milejko/mmi.git
- * @copyright  Copyright (c) 2010-2017 Mariusz Miłejko (mariusz@milejko.pl)
+ * @copyright  Copyright (c) 2010-2024 Mariusz Miłejko (mariusz@milejko.pl)
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
@@ -16,8 +16,7 @@ use Cms\Orm\CmsFileRecord;
 use Mmi\App\App;
 use Mmi\Form\Element\ElementAbstract;
 use Mmi\Http\Request;
-use Mmi\Http\RequestFiles;
-use Mmi\Http\RequestPost;
+use Mmi\Http\RequestFile;
 
 /**
  * Element TinyMce specyficzny dla generatora
@@ -29,7 +28,7 @@ use Mmi\Http\RequestPost;
  * @method self setObject($object) ustawia obiekt
  * @method self setObjectId($id) ustawia identyfikator obiektu
  */
-class Image extends UploaderElementAbstract implements UploaderElementInterface
+class Image extends UploaderElementAbstract
 {
     //szablon początku pola
     public const TEMPLATE_BEGIN = 'cmsAdmin/form/element/element-abstract/begin';
@@ -44,61 +43,73 @@ class Image extends UploaderElementAbstract implements UploaderElementInterface
     //szablon etykiety
     public const TEMPLATE_LABEL = 'cmsAdmin/form/element/element-abstract/label';
 
-    //suffixy dodatkowych pól hidden
-    private const DELETE_FIELD_SUFFIX = '-delete';
-
     /**
-     * Załadowany plik
-     * @var CmsFileRecord
+     * Załadowane pliki
+     * @var array|CmsFileRecord[]
      */
-    protected $_uploadedFile;
-
-    /**
-     * Metoda wywoływana po dodaniu pola do formularza
-     * @param \Mmi\Form\Form $form
-     * @return $this|ElementAbstract|void
-     * @throws \Mmi\App\KernelException
-     */
-    public function setForm(\Mmi\Form\Form $form)
-    {
-        parent::setForm($form);
-        $request = App::$di->get(Request::class);
-        $this->_handlePost($form, $request->getPost(), $request->getFiles());
-        return $this;
-    }
+    protected array $_uploadedFiles = [];
 
     public function fetchField()
     {
         $this->_createTempFiles();
-        $this->_uploadedFile = CmsFileQuery::byObjectAndClass(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), 'image')->findFirst();
+        foreach (CmsFileQuery::byObjectAndClass(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), 'image')->find() as $file) {
+            $this->_uploadedFiles[$file->name] = $file;
+        }
         return ElementAbstract::fetchField();
     }
 
-    public function getUploadedFile(): ?CmsFileRecord
+    public function getUploadedFile(?string $name): ?CmsFileRecord
     {
-        return $this->_uploadedFile;
+        return $this->_uploadedFiles[$name] ?? array_values($this->_uploadedFiles)[0] ?? null;
     }
 
-    protected function _handlePost($form, RequestPost $post, RequestFiles $files)
+    public function beforeFormSave(): void
     {
-        if (!isset($post->{$form->getBaseName()})) {
+        $request = App::$di->get(Request::class);
+        $post = $request->getPost();
+        if (!isset($post->{$this->_form->getBaseName()})) {
             return;
         }
-        //delete checkbox
-        if (isset($post->{$form->getBaseName()}[$this->getBasename() . self::DELETE_FIELD_SUFFIX])) {
-            File::deleteByObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), [self::PLACEHOLDER_NAME]);
-            return;
+        $fileArray = $request->getFiles()->getAsArray()[$this->_form->getBaseName()];
+        $dataArray = $post->{$this->_form->getBaseName()};
+        $ignoreFileNames = $this->keepFiles($dataArray);
+        if (empty($ignoreFileNames) && empty($fileArray)) {
+            $ignoreFileNames = [self::PLACEHOLDER_NAME];
         }
-        $fileArray = $files->getAsArray();
-        if (!isset($fileArray[$form->getBaseName()]) || !isset($fileArray[$form->getBaseName()][$this->getBasename()][0])) {
-            return;
-        }
-        File::deleteByObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId());
-        File::appendFile($fileArray[$form->getBaseName()][$this->getBasename()][0], self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+        //delete files
+        File::deleteByObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), $ignoreFileNames);
+        //save files
+        $savedFiles = $this->saveFiles($fileArray);
+        //update form data
+        $post->{$this->_form->getBaseName()} = array_replace_recursive($dataArray, $savedFiles);
+        $this->_form->setFromPost($post);
     }
 
-    public function getDeleteCheckboxName(): string
+    private function keepFiles(array $values, array &$names = []): array
     {
-        return $this->_form ? ($this->_form->getBaseName() . '[' . $this->getBasename() . self::DELETE_FIELD_SUFFIX . ']') : '';
+        foreach ($values as $index => $value) {
+            if (is_array($value)) {
+                $this->keepFiles($value, $names);
+            } elseif (!empty($value) && $index === $this->getBasename()) {
+                $names[] = $value;
+            }
+        }
+
+        return $names;
+    }
+
+    private function saveFiles(array $fileArray): array
+    {
+        $savedFiles = [];
+
+        foreach ($fileArray as $fieldName => $fieldData) {
+            if (is_array($fieldData)) {
+                $savedFiles[$fieldName] = $this->saveFiles($fieldData);
+            } elseif ($fieldData instanceof RequestFile && $fieldName === $this->getBasename()) {
+                $savedFiles[$fieldName] = File::appendFile($fieldData, self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), ['image/jpeg', 'image/png', 'image/gif', 'image/webp'])->name;
+            }
+        }
+
+        return $savedFiles;
     }
 }

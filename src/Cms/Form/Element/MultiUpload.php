@@ -17,8 +17,8 @@ use Mmi\App\App;
 use Mmi\Form\Form;
 use Mmi\Http\Request;
 use Mmi\Http\Response;
-use Mmi\Validator\StringLength;
 use Mmi\Mvc\View;
+use Mmi\Validator\StringLength;
 
 /**
  * Element wielokrotny upload
@@ -211,12 +211,14 @@ class MultiUpload extends MultiField implements UploaderElementInterface
 
     /**
      * Zapis formularza przenosi pliki
+     * @return void
      */
     public function onFormSaved()
     {
         //pliki już obsłużone (inny uploader z tym samym prefixem)
         if ($this->_form->getOption(self::FILES_MOVED_OPTION_PREFIX . $this->getObject())) {
-            return parent::onFormSaved();
+            parent::onFormSaved();
+            return;
         }
         //ustawianie flagi na formie dla innych uploaderów
         $this->_form->setOption(self::FILES_MOVED_OPTION_PREFIX . $this->getObject(), true);
@@ -230,7 +232,7 @@ class MultiUpload extends MultiField implements UploaderElementInterface
             ->delete();
         //przenoszenie plikow z tymczasowego "worka" do docelowego
         File::move($this->getTemporaryObject(), $this->getUploaderId(), $this->getObject(), $this->getObjectId());
-        return parent::onFormSaved();
+        parent::onFormSaved();
     }
 
     /**

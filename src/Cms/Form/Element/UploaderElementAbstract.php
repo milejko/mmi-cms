@@ -13,6 +13,8 @@ namespace Cms\Form\Element;
 use Cms\Model\File;
 use Cms\Orm\CmsFileQuery;
 use Cms\Orm\CmsFileRecord;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Mmi\App\App;
 use Mmi\Form\Element\ElementAbstract;
 use Mmi\Form\Form;
@@ -38,11 +40,12 @@ abstract class UploaderElementAbstract extends ElementAbstract implements Upload
      * Ustawia form macierzysty
      * @param Form $form
      * @return self
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function setForm(Form $form)
     {
         parent::setForm($form);
-        $this->setIgnore();
         if (!$this->getObject() && $form->hasRecord()) {
             $this->setObject($this->_getFileObjectByClassName(get_class($form->getRecord())));
         }
