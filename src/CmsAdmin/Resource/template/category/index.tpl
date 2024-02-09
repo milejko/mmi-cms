@@ -51,9 +51,9 @@
                                         {$compatibleChildrenKeys = []}
                                     {/if}
                                     {$nestingEnabled = $compatibleChildrenKeys|count}
-                                    <tr data-id="{$category->id}">
+                                    <tr data-id="{$category->id}"{if $request->highlight == $category->id} class="table-danger"{/if}>
                                         <td class="align-middle">
-                                            <i class="icon-{if $nestingEnabled}folder{else}doc{/if} p-1 mr-2 {if !$category->active}alert-danger{elseif $category->visible}alert-success{else}alert-warning{/if}"></i>
+                                            <i class="icon-{$templateConfig::ICON} p-1 mr-2 {if !$category->active}alert-danger{elseif $category->visible}alert-success{else}alert-warning{/if}"></i>
                                             {if $nestingEnabled}<a href="{@module=cmsAdmin&controller=category&action=index&parentId={$category->id}@}">{/if}
                                                 {if $category->name}{$category->name|stripTags}{else}({#template.category.index.label.default#}){/if}{if $nestingEnabled}</a>{/if}
                                             <small>

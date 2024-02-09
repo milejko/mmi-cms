@@ -16,6 +16,7 @@ use Cms\FolderTemplateController;
 class FolderTemplateConfig extends CmsTemplateConfig
 {
     public const KEY = 'folder';
+    public const ICON = 'folder-alt';
 
     public function __construct()
     {

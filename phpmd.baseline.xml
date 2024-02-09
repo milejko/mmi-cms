@@ -83,6 +83,7 @@
   <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Cms/Form/Element/Plupload.php" method="_renderImprintElement"/>
   <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/Cms/Form/Element/Plupload.php" method="_renderImprintElement"/>
   <violation rule="PHPMD\Rule\Design\LongMethod" file="src/Cms/Form/Element/Plupload.php" method="_renderImprintElement"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseVariableName" file="src/Cms/Form/Element/Plupload.php" method="_errors"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCaseVariableName" file="src/Cms/Form/Element/Plupload.php" method="_renderImprintElement"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/Plupload.php" method="_renderImprintElement"/>
   <violation rule="PHPMD\Rule\CleanCode\ElseExpression" file="src/Cms/Form/Element/Plupload.php"/>
@@ -260,6 +261,7 @@
   <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryController.php" method="deleteAction"/>
   <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryController.php" method="copyAction"/>
   <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryController.php" method="sortAction"/>
+  <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryController.php" method="getSearchResultBase"/>
   <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/CmsAdmin/CategoryController.php"/>
   <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/CmsAdmin/CategoryController.php" method="_prepareDraft"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/CmsAdmin/CategoryController.php" method="_prepareDraft"/>

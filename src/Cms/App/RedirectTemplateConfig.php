@@ -16,6 +16,7 @@ use Cms\RedirectTemplateController;
 class RedirectTemplateConfig extends CmsTemplateConfig
 {
     public const KEY = 'redirect';
+    public const ICON = 'link';
 
     public function __construct()
     {
