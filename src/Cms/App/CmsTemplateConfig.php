@@ -9,6 +9,8 @@ use Cms\Orm\CmsCategoryRecord;
  */
 class CmsTemplateConfig
 {
+    public const ICON = 'folder';
+
     /**
      * Nazwa szablonu
      */

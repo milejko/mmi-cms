@@ -637,11 +637,17 @@ class CategoryController extends Controller
             );
         }
 
-        if (CategorySearch::FIELD_FILTER_OPTION_BREADCRUMBS === $fieldFilter->getValue()) {
+        if (CategorySearch::FIELD_FILTER_OPTION_BREADCRUMBS === $fieldFilter->getValue()
+            && $result = $cmsCategoryQuery->whereName()->like($searchString)->findPairs('id', 'id')) {
             $whereUris = new CmsCategoryQuery();
 
-            foreach ($cmsCategoryQuery->whereName()->like($searchString)->findPairs('id', 'uri') as $uri) {
-                $whereUris->orFieldUri()->like($uri . '%');
+            foreach ($result as $id) {
+                $whereUris
+                    ->whereId()->equals($id)
+                    ->orFieldPath()->like($id)
+                    ->orFieldPath()->like($id . '/%')
+                    ->orFieldPath()->like('%/' . $id)
+                    ->orFieldPath()->like('%/' . $id . '/%');
             }
 
             $cmsCategoryQuery
