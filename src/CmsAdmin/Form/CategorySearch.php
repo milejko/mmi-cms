@@ -19,6 +19,7 @@ class CategorySearch extends Form
 {
     public const FIELD_QUERY_NAME = 'query';
     public const FIELD_FILTER_NAME = 'filter';
+    public const FIELD_TEMPLATE_NAME = 'template';
 
     public const FIELD_FILTER_OPTION_ALL = 'all';
     public const FIELD_FILTER_OPTION_NAME = 'name';
@@ -50,6 +51,12 @@ class CategorySearch extends Form
                 ->addValidator(new NotEmpty())
                 ->setMultioptions(self::FIELD_FILTER_OPTIONS)
                 ->setValue(self::FIELD_FILTER_OPTION_ALL)
+        );
+
+        $this->addElement(
+            (new Element\MultiCheckbox(self::FIELD_TEMPLATE_NAME))
+                ->setLabel('form.categorySearch.template.label')
+                ->setMultioptions($this->getOption('templates'))
         );
 
         $this->addElement(
