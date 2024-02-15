@@ -123,7 +123,7 @@ class CategoryController extends Controller
         //scope do widoku
         $this->view->scopeName = $this->scopeConfig->getName();
         //form do widoku
-        $this->view->categorySearch = $form = new CategorySearch();
+        $this->view->categorySearch = $form = new CategorySearch(null, ['templates' => $this->getTemplates()]);
 
         $form->setAction(App::$di->get(Router::class)->encodeUrl(['module' => 'cmsAdmin', 'controller' => 'category', 'action' => 'search']));
 
@@ -611,6 +611,11 @@ class CategoryController extends Controller
 
         $fieldQuery = $form->getElement(CategorySearch::FIELD_QUERY_NAME);
         $fieldFilter = $form->getElement(CategorySearch::FIELD_FILTER_NAME);
+        $fieldTemplate = $form->getElement(CategorySearch::FIELD_TEMPLATE_NAME);
+
+        if ($templates = $fieldTemplate?->getValue()) {
+            $cmsCategoryQuery->whereTemplate()->equals($templates);
+        }
 
         $searchString = '%' . str_replace('%', '', $fieldQuery->getValue() ?? '') . '%';
         $searchPath = trim(parse_url($fieldQuery->getValue(), PHP_URL_PATH), '/');
@@ -679,5 +684,17 @@ class CategoryController extends Controller
             $parentCategory = $parentCategory->getParentRecord();
         }
         return array_reverse($breadcrumbs);
+    }
+
+    private function getTemplates(): array
+    {
+        $scope = $this->scopeConfig->getName();
+        $templateOptions = [];
+
+        foreach ($this->cmsSkinsetConfig->getSkinByKey($scope)->getTemplates() as $template) {
+            $templateOptions[$scope . '/' . $template->getKey()] = $template->getName();
+        }
+
+        return $templateOptions;
     }
 }
