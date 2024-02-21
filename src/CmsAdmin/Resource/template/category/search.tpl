@@ -1,4 +1,4 @@
-{headScript()->appendFile('/resource/cmsAdmin/js/category/index.js')}
+{headScript()->appendFile('/resource/cmsAdmin/js/category/search.js')}
 <div class="container-fluid">
     <div class="animated fadeIn">
         <div class="row">
@@ -18,12 +18,30 @@
                                 <table class="table table-striped table-sort" data-sort-url="{@module=cmsAdmin&controller=category&action=sort@}">
                                     <thead>
                                     <tr>
-                                        <th style="width: 100px;"></th>
-                                        <th>{#template.category.search.column.name#}</th>
-                                        <th>{#template.category.search.column.breadcrumbs#}</th>
-                                        <th>{#template.category.search.column.address#}</th>
-                                        <th>{#template.category.search.column.dateModify#}</th>
-                                        <th></th>
+                                        <th style="width: 100px;">
+                                        </th>
+                                        <th>
+                                            <a class="order" data-column="name" data-method="{$order['name']}" data-page="{$paginator->getPage()}">
+                                                {#template.category.search.column.name#}
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a class="order" data-column="breadcrumbs" data-method="{$order['breadcrumbs']}" data-page="{$paginator->getPage()}">
+                                                {#template.category.search.column.breadcrumbs#}
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a class="order" data-column="uri" data-method="{$order['uri']}" data-page="{$paginator->getPage()}">
+                                                {#template.category.search.column.uri#}
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a class="order" data-column="dateModify" data-method="{$order['dateModify']}" data-page="{$paginator->getPage()}">
+                                                {#template.category.search.column.dateModify#}
+                                            </a>
+                                        </th>
+                                        <th>
+                                        </th>
                                     </tr>
                                     </thead>
                                     <tbody class="ui-sortable">

@@ -70,8 +70,6 @@ namespace Cms\Orm;
  * @method QueryHelper\CmsCategoryQueryField whereUri()
  * @method QueryHelper\CmsCategoryQueryField andFieldUri()
  * @method QueryHelper\CmsCategoryQueryField orFieldUri()
- * @method CmsCategoryQuery orderAscUri()
- * @method CmsCategoryQuery orderDescUri()
  * @method CmsCategoryQuery groupByUri()
  * @method QueryHelper\CmsCategoryQueryField wherePath()
  * @method QueryHelper\CmsCategoryQueryField andFieldPath()
@@ -177,6 +175,7 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
     /**
      * Wyszukuje kategorię po uri z uwzględnieniem priorytetu
      * @param string $uri
+     * @param string $scope
      * @return CmsCategoryRecord
      */
     public function getCategoryByUri(string $uri, string $scope)
@@ -206,6 +205,7 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
     /**
      * Wyszukanie po historycznym uri
      * @param string $uri
+     * @param string $scope
      * @return self
      */
     public function byHistoryUri(string $uri, string $scope)
@@ -227,7 +227,7 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
     /**
      * Wyszukiwanie, czy jakas strona o danym uri jest juz aktywna
      * @param string $uri
-     * @param string $scope
+     * @param string|null $scope
      * @param int|null $ignoreId
      * @return bool
      */
@@ -247,5 +247,25 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
         }
 
         return $query->count() > 0;
+    }
+
+    final protected function _prepareOrderUri(?string $tableName = null, bool $asc = true): self
+    {
+        $uri = $this->_prepareField('uri', $tableName);
+        $customUri = $this->_prepareField('customUri', $tableName);
+
+        $this->_compile->order .= ($this->_compile->order ? ',' : 'ORDER BY') . " (CASE WHEN $customUri IS NOT NULL AND LENGTH($customUri) > 0 THEN $customUri ELSE $uri END) " . ($asc ? 'ASC' : 'DESC');
+
+        return $this;
+    }
+
+    final public function orderAscUri(?string $tableName = null): self
+    {
+        return $this->_prepareOrderUri($tableName);
+    }
+
+    final public function orderDescUri(?string $tableName = null): self
+    {
+        return $this->_prepareOrderUri($tableName, false);
     }
 }
