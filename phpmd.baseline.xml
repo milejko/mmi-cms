@@ -425,4 +425,8 @@
   <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Cms/Validator/TagUnique.php"/>
   <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Cms/App/CmsTemplateConfig.php"/>
   <violation rule="PHPMD\Rule\ExcessivePublicCount" file="src/Cms/Orm/CmsCategoryRecord.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Cms/Orm/CmsCategoryQuery.php"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsCategoryQuery.php" method="_prepareOrderUri"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/CmsAdmin/CategoryController.php" method="getSearchResultBase"/>
+  <violation rule="PHPMD\Rule\Design\NpathComplexity" file="rc/CmsAdmin/CategoryController.php" method="getSearchResultBase"/>
 </phpmd-baseline>

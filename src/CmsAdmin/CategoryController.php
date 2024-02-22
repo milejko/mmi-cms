@@ -134,10 +134,17 @@ class CategoryController extends Controller
             $this->searchFormToSession($form);
         }
 
+        $this->view->order = [
+            'name' => $request->order['name'] ?? null,
+            'breadcrumbs' => $request->order['breadcrumbs'] ?? (empty($request->order) ? 'asc' : null),
+            'uri' => $request->order['uri'] ?? null,
+            'dateModify' => $request->order['dateModify'] ?? null,
+        ];
+
         $paginator = new Paginator();
 
         //wyniki wyszukiwania do widoku
-        $result = $form->isValid() ? $this->getSearchResult($form, $paginator->getOffset(), $paginator->getLimit()) : null;
+        $result = $form->isValid() ? $this->getSearchResult($form, $this->view->order, $paginator->getOffset(), $paginator->getLimit()) : null;
         if ($result) {
             $paginator->setRowsCount($result['totalCount']);
         }
@@ -148,17 +155,13 @@ class CategoryController extends Controller
     private function searchFormFromSession(CategorySearch $form)
     {
         $session = new SessionSpace('search');
-        if (!isset($session->query)) {
+        if (!isset($session->search)) {
             return;
         }
-        $query = $session->query;
-        $where = $session->where;
 
-        $fieldQuery = $form->getElement(CategorySearch::FIELD_QUERY_NAME);
-        $fieldQuery->setValue($query);
-
-        $fieldFilter = $form->getElement(CategorySearch::FIELD_FILTER_NAME);
-        $fieldFilter->setValue($where);
+        $form->getElement(CategorySearch::FIELD_QUERY_NAME)->setValue($session->search[CategorySearch::FIELD_QUERY_NAME] ?? null);
+        $form->getElement(CategorySearch::FIELD_FILTER_NAME)->setValue($session->search[CategorySearch::FIELD_FILTER_NAME] ?? null);
+        $form->getElement(CategorySearch::FIELD_TEMPLATE_NAME)->setValue($session->search[CategorySearch::FIELD_TEMPLATE_NAME] ?? null);
 
         $form->setValid(true);
     }
@@ -171,14 +174,11 @@ class CategoryController extends Controller
             return;
         }
 
-        $fieldQuery = $form->getElement(CategorySearch::FIELD_QUERY_NAME);
-        $query = $fieldQuery->getValue();
-
-        $fieldFilter = $form->getElement(CategorySearch::FIELD_FILTER_NAME);
-        $where = $fieldFilter->getValue();
-
-        $session->query = $query;
-        $session->where = $where;
+        $session->search = [
+            CategorySearch::FIELD_QUERY_NAME => $form->getElement(CategorySearch::FIELD_QUERY_NAME)->getValue(),
+            CategorySearch::FIELD_FILTER_NAME => $form->getElement(CategorySearch::FIELD_FILTER_NAME)->getValue(),
+            CategorySearch::FIELD_TEMPLATE_NAME => $form->getElement(CategorySearch::FIELD_TEMPLATE_NAME)->getValue(),
+        ];
     }
 
     /**
@@ -206,14 +206,16 @@ class CategoryController extends Controller
             $this->getResponse()->redirectToUrl(
                 $skinBasedPreviewUrl .
                 '?apiUrl=' .
-                urlencode(sprintf(
-                    CmsRouterConfig::API_METHOD_PREVIEW,
-                    $category->getScope(),
-                    $category->id,
-                    $category->cmsCategoryOriginalId ?? 0,
-                    $category->cmsAuthId,
-                    time()
-                )) .
+                urlencode(
+                    sprintf(
+                        CmsRouterConfig::API_METHOD_PREVIEW,
+                        $category->getScope(),
+                        $category->id,
+                        $category->cmsCategoryOriginalId ?? 0,
+                        $category->cmsAuthId,
+                        time()
+                    )
+                ) .
                 '&returnUrl=' .
                 urlencode('/cmsAdmin/category/' . ($category->parentId ? '?parentId=' . $category->parentId : ''))
             ) :
@@ -303,12 +305,17 @@ class CategoryController extends Controller
         //modyfikacja breadcrumbów
         $this->view->adminNavigation()
             ->removeLastBreadcrumb()
-            ->modifyLastBreadcrumb('menu.category.index', $this->view->url([
-                'module' => 'cmsAdmin',
-                'controller' => 'category',
-                'action' => 'index',
-                'parentId' => $category->parentId
-            ]))
+            ->modifyLastBreadcrumb(
+                'menu.category.index',
+                $this->view->url(
+                    [
+                        'module' => 'cmsAdmin',
+                        'controller' => 'category',
+                        'action' => 'index',
+                        'parentId' => $category->parentId
+                    ]
+                )
+            )
             ->appendBreadcrumb('menu.category.edit', '#');
         //pobranie listy widgetów koniecznych do dodania przed zapisem
         $minOccurrenceWidgets = (new CategoryValidationModel(
@@ -405,14 +412,16 @@ class CategoryController extends Controller
             $this->getResponse()->redirectToUrl(
                 $skinBasedPreviewUrl .
                 '?apiUrl=' .
-                urlencode(sprintf(
-                    CmsRouterConfig::API_METHOD_PREVIEW,
-                    $category->getScope(),
-                    $category->id,
-                    $category->cmsCategoryOriginalId ?? 0,
-                    $category->cmsAuthId,
-                    time()
-                )) .
+                urlencode(
+                    sprintf(
+                        CmsRouterConfig::API_METHOD_PREVIEW,
+                        $category->getScope(),
+                        $category->id,
+                        $category->cmsCategoryOriginalId ?? 0,
+                        $category->cmsAuthId,
+                        time()
+                    )
+                ) .
                 '&returnUrl=' .
                 urlencode('/cmsAdmin/category/edit?id=' . $category->id . '&originalId=' . $category->cmsCategoryOriginalId . '&uploaderId=' . $category->id)
             ) :
@@ -591,9 +600,9 @@ class CategoryController extends Controller
         return $allowedTemplates;
     }
 
-    private function getSearchResult(CategorySearch $form, int $offset, int $limit): array
+    private function getSearchResult(CategorySearch $form, array $order, int $offset, int $limit): array
     {
-        $result = $this->getSearchResultBase($form, $offset, $limit);
+        $result = $this->getSearchResultBase($form, $order, $offset, $limit);
         $rows = [];
         foreach ($result['rows'] as $categoryRecord) {
             $rows[] = ['category' => $categoryRecord, 'extension' => $this->getCategoryExtension($categoryRecord)];
@@ -602,20 +611,15 @@ class CategoryController extends Controller
         return $result;
     }
 
-    private function getSearchResultBase(CategorySearch $form, int $offset, int $limit): array
+    private function getSearchResultBase(CategorySearch $form, array $order, int $offset, int $limit): array
     {
         $cmsCategoryQuery = (new CmsCategoryQuery())
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
-            ->whereTemplate()->like($this->scopeConfig->getName() . '%')
-            ->orderAscPath()->orderAscOrder();
+            ->whereTemplate()->like($this->scopeConfig->getName() . '%');
 
         $fieldQuery = $form->getElement(CategorySearch::FIELD_QUERY_NAME);
         $fieldFilter = $form->getElement(CategorySearch::FIELD_FILTER_NAME);
         $fieldTemplate = $form->getElement(CategorySearch::FIELD_TEMPLATE_NAME);
-
-        if ($templates = $fieldTemplate?->getValue()) {
-            $cmsCategoryQuery->whereTemplate()->equals($templates);
-        }
 
         $searchString = '%' . str_replace('%', '', $fieldQuery->getValue() ?? '') . '%';
         $searchPath = trim(parse_url($fieldQuery->getValue(), PHP_URL_PATH), '/');
@@ -662,9 +666,37 @@ class CategoryController extends Controller
                 ->andQuery($whereUris);
         }
 
+        if ($templates = $fieldTemplate?->getValue()) {
+            $cmsCategoryQuery->whereTemplate()->equals($templates);
+        }
+
         $totalCount = $cmsCategoryQuery->count();
 
         $cmsCategoryQuery->offset($offset)->limit($limit);
+
+        if ($order['name'] === 'asc') {
+            $cmsCategoryQuery->orderAscName();
+        } elseif ($order['name'] === 'desc') {
+            $cmsCategoryQuery->orderDescName();
+        }
+
+        if ($order['breadcrumbs'] === 'asc') {
+            $cmsCategoryQuery->orderAscPath()->orderAscOrder();
+        } elseif ($order['breadcrumbs'] === 'desc') {
+            $cmsCategoryQuery->orderDescPath()->orderDescOrder();
+        }
+
+        if ($order['uri'] === 'asc') {
+            $cmsCategoryQuery->orderAscUri();
+        } elseif ($order['uri'] === 'desc') {
+            $cmsCategoryQuery->orderDescUri();
+        }
+
+        if ($order['dateModify'] === 'asc') {
+            $cmsCategoryQuery->orderAscDateModify();
+        } elseif ($order['dateModify'] === 'desc') {
+            $cmsCategoryQuery->orderDescDateModify();
+        }
 
         return ['totalCount' => $totalCount, 'rows' => $cmsCategoryQuery->find()];
     }
