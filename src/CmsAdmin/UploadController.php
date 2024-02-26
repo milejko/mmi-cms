@@ -238,6 +238,7 @@ class UploadController extends Controller
                     [
                         'result' => 'OK',
                         'name' => $record->name,
+                        'originalName' => $record->original,
                         'class' => $record->class,
                         'downloadUrl' => $record->getDownloadUrl()
                     ],
