@@ -7,6 +7,7 @@
                 {$categoryForm->start()}
                 {$category = $categoryForm->getRecord()}
                 <h5>{$category->name|stripTags}{if $template && _($template->getName())} ({_($template->getName())}){/if}</h5>
+                <h6>{niceCategorySlug($category)}</h6>
                 <div class="floating-buttons">
                     <a style="color: #fff;" href="{@module=cmsAdmin&controller=category&action=index&parentId={$category->parentId}@}" class="btn btn-secondary confirm" title="{#template.category.edit.cancel.alert#}">
                         <i class="icon-close"></i>
@@ -23,7 +24,7 @@
                         {#template.category.edit.commit#}
                     </button>
                 </div>
-                <ul class="nav nav-tabs" role="tablist" data-id="{$categoryForm->getRecord()->id}">
+                <ul class="nav nav-tabs mt-4" role="tablist" data-id="{$categoryForm->getRecord()->id}">
                     {foreach $categoryForm->getOption('tabs') as $tabKey => $tab}
                         {$tabContainsElement = false}
                         {foreach $categoryForm->getElements() as $element}
