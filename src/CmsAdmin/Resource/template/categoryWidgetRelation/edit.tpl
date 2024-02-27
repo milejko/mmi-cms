@@ -3,6 +3,7 @@
         <div class="row">
             <div class="col-md-12">
                 <h5>{$category->name} ({_($widgetModel->getTemplateConfig()->getName())})</h5>
+                <h6>{niceCategorySlug($category)}</h6>
                 <div class="card mt-4">
                     <div class="card-header">
                         <strong>{_($widgetModel->getWidgetConfig()->getName())} - {_($widgetModel->getSectionConfig()->getName())}</strong>

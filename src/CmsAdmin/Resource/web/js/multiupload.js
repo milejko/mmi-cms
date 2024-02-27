@@ -64,6 +64,9 @@ function multiuploadLoadThumb(sourceInput) {
             if ('undefined' !== typeof response.class) {
                 $listItem.find('.thumb img').attr('src', uploader.data('icons-url') + response.class + '.svg').addClass('file-icon');
             }
+            if ('undefined' !== typeof response.originalName) {
+                $listItem.find('.thumb img').attr('alt', response.originalName);
+            }
             if ('undefined' !== typeof response.thumb) {
                 $listItem.find('.thumb img').attr('src', response.thumb).removeClass('file-icon');
             }
