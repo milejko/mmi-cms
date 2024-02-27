@@ -11,9 +11,7 @@
 namespace CmsAdmin\Mvc\ViewHelper;
 
 use Cms\Orm\CmsCategoryRecord;
-use Mmi\App\App;
 use Mmi\Mvc\ViewHelper\HelperAbstract;
-use Mmi\Security\AuthInterface;
 
 class NiceCategorySlug extends HelperAbstract
 {
