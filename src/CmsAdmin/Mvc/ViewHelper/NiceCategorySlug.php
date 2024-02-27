@@ -19,7 +19,6 @@ class NiceCategorySlug extends HelperAbstract
 
     public function niceCategorySlug(CmsCategoryRecord $cmsCategoryRecord): string
     {
-        
         $parentRecord = $cmsCategoryRecord->getParentRecord();
         $parents = [$parentRecord];
         $slug = '';
