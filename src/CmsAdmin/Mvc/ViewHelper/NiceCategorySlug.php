@@ -17,14 +17,13 @@ class NiceCategorySlug extends HelperAbstract
 {
     private const SEPARATOR = ' / ';
 
-    public function niceCategorySlug(CmsCategoryRecord $cmsCategoryRecord): string
+    public function niceCategorySlug(CmsCategoryRecord $record): string
     {
-        $parentRecord = $cmsCategoryRecord->getParentRecord();
-        $parents = [$parentRecord];
-        $slug = '';
-        while ($parentRecord = $parentRecord->getParentRecord()) {
-            $parents[] = $parentRecord;
+        $parents = [];
+        while ($record = $record->getParentRecord()) {
+            $parents[] = $record;
         }
+        $slug = '';
         foreach (array_reverse($parents) as $parentRecord) {
             $slug .= $parentRecord->name . self::SEPARATOR;
         }
