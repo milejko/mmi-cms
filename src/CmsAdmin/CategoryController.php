@@ -276,8 +276,9 @@ class CategoryController extends Controller
         }
         //sprawdzanie kompatybilności templata
         $requestedTemplateAllowed = false;
-        foreach ($this->getAllowedTemplates($category->getParentRecord()) as $allowedTemplateConfig) {
-            if ($category->template == $this->scopeConfig->getName() . '/' . $allowedTemplateConfig->getKey()) {
+        $skinsetModel = new SkinsetModel($this->cmsSkinsetConfig);
+        foreach ($skinsetModel->getSkinConfigByKey($this->scopeConfig->getName())->getTemplates() as $allowedTemplateConfig) {
+            if ($category->template === $this->scopeConfig->getName() . '/' . $allowedTemplateConfig->getKey()) {
                 $requestedTemplateAllowed = true;
                 break;
             }
