@@ -115,7 +115,7 @@ class AuthProvider implements AuthProviderInterface
         $ldapClient = new LdapClient($this->container->get(LdapConfig::class));
         try {
             //wyszukiwanie w LDAPie
-            $ldapResults = $ldapClient->findUser($query, 10, ['sAMAccountname']);
+            $ldapResults = $ldapClient->findUser($query, 10, ['sAMAccountName']);
         } catch (\Exception $e) {
             //błąd usługi
             $this->logger->error($e->getMessage());
