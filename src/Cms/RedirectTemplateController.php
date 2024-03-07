@@ -73,12 +73,12 @@ class RedirectTemplateController extends AbstractTemplateController
 
     public function beforeSaveEditForm(CategoryForm $categoryForm): void
     {
+        parent::beforeSaveEditForm($categoryForm);
+
         if (LinkData::REL_INTERNAL === $categoryForm->getElement(self::REDIRECT_TYPE)->getValue()) {
             $categoryForm->getElement(self::REDIRECT_URI)
                 ->removeValidator(Validator\Url::class)
                 ->setValue(LinkData::INTERNAL_REDIRECT_PREFIX . $categoryForm->getElement(self::REDIRECT_CATEGORY_ID)->getValue());
         }
-
-        parent::beforeSaveEditForm($categoryForm);
     }
 }
