@@ -80,9 +80,11 @@ class Image extends UploaderElementAbstract
         File::deleteByObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), $ignoreFileNames);
         //save files
         $savedFiles = $this->saveFiles($fileArray);
-        //update form data
-        $post->{$this->_form->getBaseName()} = array_replace_recursive($dataArray, $savedFiles);
-        $this->_form->setFromPost($post);
+        //update element data
+        foreach ($savedFiles as $name => $value) {
+            $element = $this->_form->getElement($name);
+            $element?->setValue(is_array($value) ? array_replace_recursive($element?->getValue(), $value) : $value);
+        }
     }
 
     private function keepFiles(array $values, array &$names = []): array
