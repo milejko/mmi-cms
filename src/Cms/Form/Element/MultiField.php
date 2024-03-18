@@ -360,8 +360,8 @@ class MultiField extends ElementAbstract
             }
 
             if ('**' === $index) {
-                $element->setId(preg_replace('/\-\d\-/', '-##-', $element->getId()));
-                $element->setName(preg_replace('/\[\d\]/', '[##]', $element->getName()));
+                $element->setId(preg_replace('/\-(\d+|\*\*)\-(.+\-\*\*)/', '-##-$2', $element->getId()));
+                $element->setName(preg_replace('/\[(\d+|\*\*)\](\[.+\]\[\*\*\])/', '[##]$2', $element->getName()));
             }
 
             if ($element instanceof Checkbox) {
