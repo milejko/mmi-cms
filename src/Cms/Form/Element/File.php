@@ -21,9 +21,11 @@ use Mmi\Http\RequestFile;
 /**
  * @method string getObject() pobiera obiekt
  * @method int getObjectId() pobiera identyfikator obiektu
+ * @method string getAcceptMimeType()
  *
  * @method self setObject($object) ustawia obiekt
  * @method self setObjectId($id) ustawia identyfikator obiektu
+ * @method self setAcceptMimeType($commaSeparatedMimeTypes)
  */
 class File extends UploaderElementAbstract
 {
@@ -44,26 +46,26 @@ class File extends UploaderElementAbstract
      * Załadowane pliki
      * @var array|CmsFileRecord[]
      */
-    protected array $_uploadedFiles = [];
+    protected array $uploadedFiles = [];
 
     public function fetchField()
     {
         //multiupload backwards compatibility
-        if (is_array($this->getValue()) && isset($this->getValue()[0][$this->getBasename()])) {
-            $this->setValue($this->getValue()[0][$this->getBasename()]);
+        if (is_array($this->getValue()) && isset($this->getValue()[0]['file'])) {
+            $this->setValue($this->getValue()[0]['file']);
         }
         $this->_createTempFiles();
         foreach (CmsFileQuery::byObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId())
             ->whereName()->notEquals(self::PLACEHOLDER_NAME)
             ->find() as $file) {
-            $this->_uploadedFiles[$file->name] = $file;
+            $this->uploadedFiles[$file->name] = $file;
         }
         return ElementAbstract::fetchField();
     }
 
     public function getUploadedFile(?string $name): ?CmsFileRecord
     {
-        return $this->_uploadedFiles[$name] ?? array_values($this->_uploadedFiles)[0] ?? null;
+        return $this->uploadedFiles[$name] ?? array_values($this->uploadedFiles)[0] ?? null;
     }
 
     public function beforeFormSave(): void
@@ -108,9 +110,20 @@ class File extends UploaderElementAbstract
         foreach ($fileArray as $fieldName => $fieldData) {
             if (is_array($fieldData)) {
                 $savedFiles[$fieldName] = $this->saveFiles($fieldData);
-            } elseif ($fieldData instanceof RequestFile && $fieldName === $this->getBasename()) {
-                $savedFiles[$fieldName] = FileModel::appendFile($fieldData, self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId())->name;
+                continue;
             }
+            if ($fieldName != $this->getBasename()) {
+                continue;
+            }
+            if (!($fieldData instanceof RequestFile)) {
+                continue;
+            }
+            $acceptedTypes = $this->getAcceptMimeType() ? explode(',', $this->getAcceptMimeType()) : [];
+            $file = FileModel::appendFile($fieldData, self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), $acceptedTypes);
+            if (null === $file) {
+                continue;
+            }
+            $savedFiles[$fieldName] = $file->name;
         }
         return $savedFiles;
     }

@@ -64,7 +64,7 @@
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/DateTimePicker.php" method="_formatDate"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Form/Element/Image.php"/>
   <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Cms/Form/Element/Image.php"/>
-  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Form/Element/Image.php" method="_handlePost"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Cms/Form/Element/File.php"/>
   <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Form/Element/MultiCheckbox.php"/>
   <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Cms/Form/Element/MultiCheckbox.php"/>
   <violation rule="PHPMD\Rule\Design\WeightedMethodCount" file="src/Cms/Form/Element/MultiField.php"/>
