@@ -36,13 +36,13 @@ class MenuService implements MenuServiceInterface
      */
     public function getMenus(?string $scope, int $maxLevel = 0): array
     {
-        $menuStructure = [];
         //loading from cache
         $cacheKey = CmsCategoryRecord::CATEGORY_CACHE_TRANSPORT_PREFIX . $scope;
         $menuStructure = $this->cacheService->load($cacheKey);
         if (null !== $menuStructure) {
             return $menuStructure;
         }
+        $menuStructure = [];
         //getting from infrastructure + writing down item order
         foreach ($this->getTopLevelFromInfrastructure($scope) as $cmsCategoryRecord) {
             $menuStructure[] = $this->formatItem($cmsCategoryRecord, 0, $maxLevel);

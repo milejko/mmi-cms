@@ -124,27 +124,8 @@ class CategoryController extends \Mmi\Mvc\Controller
      */
     protected function _getPublishedCategoryByUri($uri, $scope)
     {
-        //próba mapowania uri na ID kategorii z cache
-        if (null === $categoryId = $this->cache->load($cacheKey = CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($uri))) {
-            //próba pobrania kategorii po URI
-            if (null === $category = (new Orm\CmsCategoryQuery())->getCategoryByUri($uri, $scope)) {
-                //zapis informacji o braku kategorii w cache
-                $this->cache->save(false, $cacheKey, 0);
-                //301 (o ile możliwe) lub 404
-                $this->_redirectOrNotFound($uri, $scope);
-            }
-            //id kategorii
-            $categoryId = $category->id;
-            //zapis id kategorii i kategorii w cache
-            $this->cache->save($categoryId, $cacheKey, 0);
-        }
-        //w buforze jest informacja o braku strony
-        if (false === $categoryId) {
-            //301 (o ile możliwe) lub 404
-            $this->_redirectOrNotFound($uri, $scope);
-        }
-        $category = $this->cmsCategoryRepository->getCategoryRecordById($categoryId);
-        if (null === $category) {
+        $category = $this->cmsCategoryRepository->getCategoryRecordByUri($uri, $scope);
+        if (!$category) {
             $this->_redirectOrNotFound($uri, $scope);
         }
         return $this->_checkCategory($category);

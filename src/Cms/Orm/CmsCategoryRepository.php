@@ -32,6 +32,30 @@ class CmsCategoryRepository
         return $cmsCategoryRecord;
     }
 
+    public function getCategoryRecordByUri(string $uri, string $scope): ?CmsCategoryRecord
+    {
+        if (null === $uri) {
+            return null;
+        }
+        $cacheKey = CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($scope . $uri);
+        $cmsCategoryId = $this->cache->load($cacheKey);
+        if (false === $cmsCategoryId) {
+            return null;
+        }
+        if (null !== $cmsCategoryId) {
+            return $this->getCategoryRecordById($cmsCategoryId);
+        }
+        $cmsCategoryRecord = (new CmsCategoryQuery())->getCategoryByUri($uri, $scope);
+        if (null === $cmsCategoryRecord || !$cmsCategoryRecord->isActive()) {
+            $this->cache->save(false, $cacheKey);
+            $this->cache->save(false, CmsCategoryRecord::REDIRECT_CACHE_PREFIX . md5($scope . $uri), 0);
+            return null;
+        }
+        $this->cache->save($cmsCategoryRecord, CmsCategoryRecord::CATEGORY_CACHE_PREFIX . $cmsCategoryRecord->id);
+        $this->cache->save($cmsCategoryRecord->id, $cacheKey);
+        return $cmsCategoryRecord;
+    }
+
     public function getChildrenCategoryIds(?int $id): array
     {
         $categoryRecord = $this->getCategoryRecordById($id);

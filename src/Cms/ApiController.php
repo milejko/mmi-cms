@@ -366,28 +366,8 @@ class ApiController extends Controller
      */
     private function getCategoryId($scope, $uri)
     {
-        //próba mapowania uri na ID kategorii z cache
-        if ($categoryId = $this->cache->load($cacheKey = CmsCategoryRecord::URI_ID_CACHE_PREFIX . md5($scope . $uri))) {
-            return $categoryId;
-        }
-        if (false === $categoryId) {
-            return null;
-        }
-        //próba pobrania kategorii po URI
-        if (null === $category = (new Orm\CmsCategoryQuery())->getCategoryByUri($uri, $scope)) {
-            //zapis informacji o braku kategorii w cache
-            $this->cache->save(false, $cacheKey, 0);
-            return null;
-        }
-        //kategoria jest nieaktywna
-        if (!$category->isActive()) {
-            //zapis informacji o braku kategorii w cache
-            $this->cache->save(false, $cacheKey, 0);
-            $this->cache->save(false, CmsCategoryRecord::REDIRECT_CACHE_PREFIX . md5($scope . $uri), 0);
-            return null;
-        }
-        $this->cache->save($category->id, $cacheKey, 0);
-        return $category->id;
+        $category = $this->cmsCategoryRepository->getCategoryRecordByUri($uri, $scope);
+        return $category ? $category->id : null;
     }
 
     /**

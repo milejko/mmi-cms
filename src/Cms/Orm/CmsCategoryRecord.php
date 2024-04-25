@@ -344,8 +344,8 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //usuwanie plików
         (new CmsFileQuery())
             ->whereQuery((new CmsFileQuery())
-                    ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
-                    ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%'))
+                ->whereObject()->like(CmsCategoryRecord::FILE_OBJECT . '%')
+                ->andFieldObject()->notLike(CmsCategoryWidgetCategoryRecord::FILE_OBJECT . '%'))
             ->andFieldObjectId()->equals($this->getPk())
             ->delete();
         //usuwanie tagów
@@ -636,13 +636,21 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         }
         $cache->remove(self::WIDGET_MODEL_CACHE_PREFIX . $this->cmsCategoryOriginalId);
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($scope . $this->uri));
-        $cache->remove(self::URI_ID_CACHE_PREFIX . md5($scope . $this->getInitialStateValue('uri')));
         $cache->remove(self::URI_ID_CACHE_PREFIX . md5($scope . $this->customUri));
-        $cache->remove(self::URI_ID_CACHE_PREFIX . md5($scope . $this->getInitialStateValue('customUri')));
         $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->uri));
-        $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->getInitialStateValue('uri')));
         $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->customUri));
-        $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $this->getInitialStateValue('customUri')));
+        $newestHistoricalVersion = (new CmsCategoryQuery())
+            ->whereCmsCategoryOriginalId()->equals($this->cmsCategoryOriginalId ?: $this->id)
+            ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_HISTORY)
+            ->orderDescDateModify()
+            ->findFirst();
+        //drop previous version cache
+        if ($newestHistoricalVersion) {
+            $cache->remove(self::URI_ID_CACHE_PREFIX . md5($scope . $newestHistoricalVersion->customUri));
+            $cache->remove(self::URI_ID_CACHE_PREFIX . md5($scope . $newestHistoricalVersion->uri));
+            $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $newestHistoricalVersion->uri));
+            $cache->remove(self::REDIRECT_CACHE_PREFIX . md5($scope . $newestHistoricalVersion->customUri));
+        }
         //drop skin menu cache
         $cache->remove(self::CATEGORY_CACHE_TRANSPORT_PREFIX . $scope);
         $cache->remove(self::CATEGORY_CACHE_STRUCTURE_PREFIX . $scope);
