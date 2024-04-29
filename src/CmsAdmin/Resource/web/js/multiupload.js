@@ -73,6 +73,7 @@ function multiuploadLoadThumb(sourceInput) {
             if ('undefined' !== typeof response.downloadUrl) {
                 $listItem.find('.download').attr('href', response.downloadUrl);
             }
+            $(document).trigger('thumbComplete', {item: $listItem, response: response});
         });
     }
 }
@@ -188,6 +189,7 @@ function multiuploadInitAdd(containerId) {
                                 multifieldRemoveTinyMce(newItem);
                                 multifieldInitTinyMce(newItem);
                                 multifieldToggleActive(newItem);
+                                $(document).trigger('uploadComplete', {item: newItem, response: response});
                             }
 
                             if (filesCompleted === filesTotal) {
