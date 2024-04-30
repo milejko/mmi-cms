@@ -64,7 +64,7 @@ class TinyMce extends UploaderElementAbstract
 
     public const TOOLBARS = [
         'simple'   => [
-            'undo redo | bold italic underline strikethrough | link unlink anchor | alignleft aligncenter alignright alignjustify | subscript superscript | charmap visualchars nonbreaking mathlive',
+            'undo redo | bold italic underline strikethrough | link unlink anchor | alignleft aligncenter alignright alignjustify | subscript superscript | fontsizeselect forecolor | charmap visualchars nonbreaking mathlive',
         ],
         'advanced' => [
             'undo redo | cut copy paste pastetext searchreplace | bold italic underline strikethrough | subscript superscript | alignleft aligncenter alignright alignjustify | fontselect fontsizeselect | forecolor backcolor',
