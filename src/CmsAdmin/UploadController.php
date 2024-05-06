@@ -89,6 +89,7 @@ class UploadController extends Controller
                 'result' => 'OK',
                 'cmsFileId' => $pluploadHandler->getSavedCmsFileId(),
                 'cmsFileName' => $pluploadHandler->getSavedCmsFileName(),
+                'originalName' => $request->getPost()->name,
             ],
             JSON_THROW_ON_ERROR
         );
