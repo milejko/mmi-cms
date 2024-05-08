@@ -304,7 +304,7 @@ class CategoryController extends Controller
         //zapisywanie oryginalnego id
         $originalId = $category->cmsCategoryOriginalId ? $category->cmsCategoryOriginalId : $category->id;
         //przygotowanie draftu (lub przekierowanie)
-        $this->_prepareDraft($category, $originalId);
+        $this->_prepareDraft($request, $category, $originalId);
         //draft ma obcego właściciela
         if ($category->cmsAuthId != $this->auth->getId()) {
             $this->getMessenger()->addMessage('messenger.category.permission.denied', false);
@@ -313,7 +313,7 @@ class CategoryController extends Controller
         //sprawdzenie uprawnień do edycji węzła kategorii
         if (!(new CategoryAclModel())->getAcl()->isAllowed($this->auth->getRoles(), $originalId)) {
             $this->getMessenger()->addMessage('messenger.category.permission.denied', false);
-            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId, 'p' => $this->p]);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId, 'p' => $request->p]);
         }
         //adres podglądu do widoku
         $this->view->previewUrl = $this->cmsSkinsetConfig->getSkinByKey($this->scopeConfig->getName())->getPreviewUrl();
@@ -328,7 +328,7 @@ class CategoryController extends Controller
                         'controller' => 'category',
                         'action' => 'index',
                         'parentId' => $category->parentId,
-                        'p' => $this->p
+                        'p' => $request->p
                     ]
                 )
             )
@@ -394,7 +394,7 @@ class CategoryController extends Controller
         //sprawdzenie czy kategoria nadal istnieje (form robi zapis - to trwa)
         if (!$form->isMine() && (null === $category = (new CmsCategoryQuery())->findPk($request->id))) {
             //przekierowanie na originalId
-            return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $request->originalId, 'p' => $this->p]);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $request->originalId, 'p' => $request->p]);
         }
         //jeśli nie było posta
         if (!$form->isMine()) {
@@ -413,7 +413,7 @@ class CategoryController extends Controller
         if ($form->isSaved() && $form->getElement('commit')->getValue()) {
             //messenger + redirect
             $this->getMessenger()->addMessage('messenger.category.category.saved', true);
-            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId, 'p' => $this->p]);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId, 'p' => $request->p]);
         }
         //format redirect:url
         if ($form->isSaved() && 'redirect' == substr($form->getElement('submit')->getValue(), 0, 8)) {
@@ -439,7 +439,7 @@ class CategoryController extends Controller
                     )
                 ) .
                 '&returnUrl=' .
-                urlencode('/cmsAdmin/category/edit?id=' . $category->id . '&originalId=' . $category->cmsCategoryOriginalId . '&uploaderId=' . $category->id . '&p=' . $this->p)
+                urlencode('/cmsAdmin/category/edit?id=' . $category->id . '&originalId=' . $category->cmsCategoryOriginalId . '&uploaderId=' . $category->id . '&p=' . $request->p)
             ) :
             $this->getResponse()->redirect(
                 'cms',
@@ -567,7 +567,7 @@ class CategoryController extends Controller
      * Przygotowanie drafta
      * @param int $originalId
      */
-    protected function _prepareDraft(CmsCategoryRecord $category, $originalId)
+    protected function _prepareDraft(Request $request, CmsCategoryRecord $category, $originalId)
     {
         //jeśli to nie był DRAFT
         if (null !== $category->cmsCategoryOriginalId && CmsCategoryRecord::STATUS_DRAFT == $category->status) {
@@ -576,14 +576,14 @@ class CategoryController extends Controller
         //draft nie może być utworzony, ani wczytany
         if (null === $draft = (new CategoryDraft($category))->createAndGetDraftForUser($this->auth->getId())) {
             $this->getMessenger()->addMessage('messenger.category.draft.fail', false);
-            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId, 'p' => $this->p]);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId, 'p' => $request->p]);
         }
         //przekierowanie do edycji DRAFTu - nowego ID
         $this->getResponse()->redirect(
             'cmsAdmin',
             'category',
             'edit',
-            ['id' => $draft->id, 'originalId' => $originalId, 'uploaderId' => $draft->id, 'p' => $this->p]
+            ['id' => $draft->id, 'originalId' => $originalId, 'uploaderId' => $draft->id, 'p' => $request->p]
         );
     }
 
