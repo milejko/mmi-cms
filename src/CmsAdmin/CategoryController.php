@@ -115,7 +115,7 @@ class CategoryController extends Controller
             ->setRowsCount($categoryQuery->count());
         //redirect to the last page if out of scope
         if ($paginator->getPagesCount() > 0 && $paginator->getPage() > $paginator->getPagesCount()) {
-            $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $this->parentId, 'p' => $paginator->getPagesCount()]);
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $request->parentId, 'p' => $paginator->getPagesCount()]);
         }
         $this->view->paginator = $paginator;
 
