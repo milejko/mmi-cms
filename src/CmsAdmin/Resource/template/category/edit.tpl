@@ -9,7 +9,7 @@
                 <h5>{$category->name|stripTags}{if $template && _($template->getName())} ({_($template->getName())}){/if}</h5>
                 <h6>{niceCategorySlug($category)}</h6>
                 <div class="floating-buttons">
-                    <a style="color: #fff;" href="{@module=cmsAdmin&controller=category&action=index&parentId={$category->parentId}@}" class="btn btn-secondary confirm" title="{#template.category.edit.cancel.alert#}">
+                    <a style="color: #fff;" href="{@module=cmsAdmin&controller=category&action=index&parentId={$category->parentId}&p={$request->p}@}" class="btn btn-secondary confirm" title="{#template.category.edit.cancel.alert#}">
                         <i class="icon-close"></i>
                         {#template.category.edit.cancel#}
                     </a>

@@ -63,10 +63,10 @@
                                         </td>
                                         <td align="right" {if !$allowed}class="inactive"{/if}>
                                             {if $allowed}
-                                                <a class="button btn btn-primary btn-inline-block" title="{#template.category.index.edit#}" href="{@module=cmsAdmin&controller=category&action=edit&id={$category->id}&force=1@}">
+                                                <a class="button btn btn-primary btn-inline-block" title="{#template.category.index.edit#}" href="{@module=cmsAdmin&controller=category&action=edit&id={$category->id}&force=1&p={$paginator->getPage()}@}">
                                                     <i class="icon-pencil"></i>
                                                 </a>
-                                                {if $category->active}
+                                                {if $category->active && $frontUrl}
                                                     <a class="button btn btn-primary btn-inline-block" title="{#template.category.index.show#}" href="{$frontUrl}/{$category->getUri()}" target="_blank">
                                                         <i class="icon-globe"></i>
                                                     </a>
@@ -93,6 +93,7 @@
                                 {/foreach}
                                 </tbody>
                             </table>
+                            {$paginator}
                         </div>
                         <div class="clear"></div>
                     </div>

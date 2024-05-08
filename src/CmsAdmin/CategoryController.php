@@ -45,6 +45,8 @@ use function array_reverse;
  */
 class CategoryController extends Controller
 {
+    private const PAGINATOR_ROWS_PER_PAGE = 200;
+
     //przedrostek brakującego widgeta
     public const MISSING_WIDGET_MESSENGER_PREFIX = 'messenger.widget.missing.';
 
@@ -79,7 +81,7 @@ class CategoryController extends Controller
     public function indexAction(Request $request)
     {
         $parentCategory = null;
-        //wyszukiwanie parenta
+        //search for a parent
         if ($request->parentId && (null === $parentCategory = $this->cmsCategoryRepository->getCategoryRecordById($request->parentId))) {
             //missing parent
             $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
@@ -88,27 +90,38 @@ class CategoryController extends Controller
             //template incompatible
             $this->getResponse()->redirect('cmsAdmin', 'category', 'index');
         }
-        //dostępne szablony
+        //available templates
         $this->view->allowedTemplates = $this->getAllowedTemplates($parentCategory);
-        //generowanie breadcrumbów
+
         $breadcrumbs = [];
         while ($parentCategory) {
             $breadcrumbs[] = $parentCategory;
             $parentCategory = $parentCategory->getParentRecord();
         }
-        //breadcrumby
         $this->view->breadcrumbs = array_reverse($breadcrumbs);
-        //model skóry skinset do widoku
+
         $this->view->skinset = $skinsetModel = new SkinsetModel($this->cmsSkinsetConfig);
-        //scope do widoku
         $this->view->scopeName = $this->scopeConfig->getName();
-        //znalezione kategorie do widoku
-        $this->view->categories = (new CmsCategoryQuery())
+
+        $categoryQuery = (new CmsCategoryQuery())
             ->whereStatus()->equals(CmsCategoryRecord::STATUS_ACTIVE)
             ->whereParentId()->equals($request->parentId ?: null)
             ->whereTemplate()->like($this->scopeConfig->getName() . '%')
             ->whereTemplate()->equals([$this->scopeConfig->getName() => $this->scopeConfig->getName()] + $skinsetModel->getAllowedTemplateKeysBySkinKey($this->scopeConfig->getName()))
-            ->orderAscOrder()
+            ->orderAscOrder();
+
+        $paginator = (new Paginator())
+            ->setRowsPerPage(self::PAGINATOR_ROWS_PER_PAGE)
+            ->setRowsCount($categoryQuery->count());
+        //redirect to the last page if out of scope
+        if ($paginator->getPagesCount() > 0 && $paginator->getPage() > $paginator->getPagesCount()) {
+            $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $request->parentId, 'p' => $paginator->getPagesCount()]);
+        }
+        $this->view->paginator = $paginator;
+
+        $this->view->categories = $categoryQuery
+            ->limit($paginator->getLimit())
+            ->offset($paginator->getOffset())
             ->find();
     }
 
@@ -141,7 +154,8 @@ class CategoryController extends Controller
             'dateModify' => $request->order['dateModify'] ?? null,
         ];
 
-        $paginator = new Paginator();
+        $paginator = (new Paginator())
+            ->setRowsPerPage(self::PAGINATOR_ROWS_PER_PAGE);
 
         //wyniki wyszukiwania do widoku
         $result = $form->isValid() ? $this->getSearchResult($form, $this->view->order, $paginator->getOffset(), $paginator->getLimit()) : null;
@@ -290,7 +304,7 @@ class CategoryController extends Controller
         //zapisywanie oryginalnego id
         $originalId = $category->cmsCategoryOriginalId ? $category->cmsCategoryOriginalId : $category->id;
         //przygotowanie draftu (lub przekierowanie)
-        $this->_prepareDraft($category, $originalId);
+        $this->_prepareDraft($request, $category, $originalId);
         //draft ma obcego właściciela
         if ($category->cmsAuthId != $this->auth->getId()) {
             $this->getMessenger()->addMessage('messenger.category.permission.denied', false);
@@ -299,7 +313,7 @@ class CategoryController extends Controller
         //sprawdzenie uprawnień do edycji węzła kategorii
         if (!(new CategoryAclModel())->getAcl()->isAllowed($this->auth->getRoles(), $originalId)) {
             $this->getMessenger()->addMessage('messenger.category.permission.denied', false);
-            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId, 'p' => $request->p]);
         }
         //adres podglądu do widoku
         $this->view->previewUrl = $this->cmsSkinsetConfig->getSkinByKey($this->scopeConfig->getName())->getPreviewUrl();
@@ -313,7 +327,8 @@ class CategoryController extends Controller
                         'module' => 'cmsAdmin',
                         'controller' => 'category',
                         'action' => 'index',
-                        'parentId' => $category->parentId
+                        'parentId' => $category->parentId,
+                        'p' => $request->p
                     ]
                 )
             )
@@ -379,7 +394,7 @@ class CategoryController extends Controller
         //sprawdzenie czy kategoria nadal istnieje (form robi zapis - to trwa)
         if (!$form->isMine() && (null === $category = (new CmsCategoryQuery())->findPk($request->id))) {
             //przekierowanie na originalId
-            return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $request->originalId]);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'edit', ['id' => $request->originalId, 'p' => $request->p]);
         }
         //jeśli nie było posta
         if (!$form->isMine()) {
@@ -398,7 +413,7 @@ class CategoryController extends Controller
         if ($form->isSaved() && $form->getElement('commit')->getValue()) {
             //messenger + redirect
             $this->getMessenger()->addMessage('messenger.category.category.saved', true);
-            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId, 'p' => $request->p]);
         }
         //format redirect:url
         if ($form->isSaved() && 'redirect' == substr($form->getElement('submit')->getValue(), 0, 8)) {
@@ -424,7 +439,7 @@ class CategoryController extends Controller
                     )
                 ) .
                 '&returnUrl=' .
-                urlencode('/cmsAdmin/category/edit?id=' . $category->id . '&originalId=' . $category->cmsCategoryOriginalId . '&uploaderId=' . $category->id)
+                urlencode('/cmsAdmin/category/edit?id=' . $category->id . '&originalId=' . $category->cmsCategoryOriginalId . '&uploaderId=' . $category->id . '&p=' . $request->p)
             ) :
             $this->getResponse()->redirect(
                 'cms',
@@ -552,7 +567,7 @@ class CategoryController extends Controller
      * Przygotowanie drafta
      * @param int $originalId
      */
-    protected function _prepareDraft(CmsCategoryRecord $category, $originalId)
+    protected function _prepareDraft(Request $request, CmsCategoryRecord $category, $originalId)
     {
         //jeśli to nie był DRAFT
         if (null !== $category->cmsCategoryOriginalId && CmsCategoryRecord::STATUS_DRAFT == $category->status) {
@@ -561,14 +576,14 @@ class CategoryController extends Controller
         //draft nie może być utworzony, ani wczytany
         if (null === $draft = (new CategoryDraft($category))->createAndGetDraftForUser($this->auth->getId())) {
             $this->getMessenger()->addMessage('messenger.category.draft.fail', false);
-            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId]);
+            return $this->getResponse()->redirect('cmsAdmin', 'category', 'index', ['parentId' => $category->parentId, 'p' => $request->p]);
         }
         //przekierowanie do edycji DRAFTu - nowego ID
         $this->getResponse()->redirect(
             'cmsAdmin',
             'category',
             'edit',
-            ['id' => $draft->id, 'originalId' => $originalId, 'uploaderId' => $draft->id]
+            ['id' => $draft->id, 'originalId' => $originalId, 'uploaderId' => $draft->id, 'p' => $request->p]
         );
     }
 
