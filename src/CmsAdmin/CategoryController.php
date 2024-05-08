@@ -122,7 +122,7 @@ class CategoryController extends Controller
         $this->view->categories = $categoryQuery
             ->limit($paginator->getLimit())
             ->offset($paginator->getOffset())
-            ->find();        
+            ->find();
     }
 
     /**
