@@ -10,6 +10,7 @@ use Mmi\Session\SessionSpace;
  */
 class CmsScopeConfig
 {
+    private const COOKIE_LIFETIME = 3600 * 24 * 365;
     private const SCOPE_SESSION_SPACE = 'cms-scope';
     private const COOKIE_NAME = 'cms-scope';
 
@@ -29,7 +30,7 @@ class CmsScopeConfig
 
     public function setName(string $name): self
     {
-        new Cookie(self::COOKIE_NAME, $name);
+        new Cookie(self::COOKIE_NAME, $name, null, time() + self::COOKIE_LIFETIME);
         $this->space->name = $name;
         return $this;
     }
