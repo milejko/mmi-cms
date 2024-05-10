@@ -12,6 +12,7 @@
                             <div class="available-templates" style="overflow-x: auto; white-space:nowrap;">
                                 {foreach $allowedTemplates as $templateConfig}
                                     <a class="button btn btn-primary btn-inline-block" href="{@module=cmsAdmin&controller=category&action=edit&parentId={$request->parentId}&template={$scopeName}/{$templateConfig->getKey()}@}">
+                                        <i class="icon-plus small"></i>
                                         {_($templateConfig->getName())}
                                     </a>
                                 {/foreach}
@@ -20,7 +21,7 @@
                             <table class="table table-striped table-sort" data-sort-url="{@module=cmsAdmin&controller=category&action=sort@}">
                                 <thead>
                                 <tr>
-                                    <th colspan="2">
+                                    <th colspan="3">
                                         {if $breadcrumbs}
                                             <a href="{@module=cmsAdmin&controller=category&action=index@}"><i class="icon-home"></i></a>
                                             <i class="icon-arrow-right small"></i>
@@ -52,7 +53,7 @@
                                     {/if}
                                     {$nestingEnabled = $compatibleChildrenKeys|count}
                                     <tr data-id="{$category->id}"{if $request->highlight == $category->id} class="table-danger"{/if}>
-                                        <td class="align-middle">
+                                        <td class="align-middle" width="*">
                                             <i class="icon-{$templateConfig::ICON} p-1 mr-2 {if !$category->active}alert-danger{elseif $category->visible}alert-success{else}alert-warning{/if}"></i>
                                             {if $nestingEnabled}<a href="{@module=cmsAdmin&controller=category&action=index&parentId={$category->id}@}">{/if}
                                                 {if $category->name}{$category->name|stripTags}{else}({#template.category.index.label.default#}){/if}{if $nestingEnabled}</a>{/if}
@@ -61,7 +62,8 @@
                                                 ({if $templateConfig}{_($templateConfig->getName())}{/if})
                                             </small>
                                         </td>
-                                        <td align="right" {if !$allowed}class="inactive"{/if}>
+                                        <td align="right" class="align-middle" style="width: 130px">{dateAge($category->dateModify ?: $category->dateAdd)}</td>
+                                        <td align="right" style="width: {if $frontUrl}290px{else}245px{/if}">
                                             {if $allowed}
                                                 <a class="button btn btn-primary btn-inline-block" title="{#template.category.index.edit#}" href="{@module=cmsAdmin&controller=category&action=edit&id={$category->id}&force=1&p={$paginator->getPage()}@}">
                                                     <i class="icon-pencil"></i>
@@ -69,10 +71,6 @@
                                                 {if $category->active && $frontUrl}
                                                     <a class="button btn btn-primary btn-inline-block" title="{#template.category.index.show#}" href="{$frontUrl}/{$category->getUri()}" target="_blank">
                                                         <i class="icon-globe"></i>
-                                                    </a>
-                                                {else}
-                                                    <a class="button btn btn-primary btn-inline-block" title="{#template.category.index.preview#}" href="{@module=cmsAdmin&controller=category&action=preview&id={$category->id}@}" target="_blank">
-                                                        <i class="icon-eyeglass"></i>
                                                     </a>
                                                 {/if}
                                                 <a class="button btn btn-primary btn-inline-block operation-button sort-row ui-sortable-handle" title="{#template.category.index.reorder#}" href="#">

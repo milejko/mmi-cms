@@ -60,7 +60,7 @@
         <input type="hidden" id="{$_element->getId()}-name" name="{$_element->getName()}" value="{$value|input}" />
     </div>
     <div>
-        <label><span id="{$_element->getId()}-size">{if $file}{$file->original} ({php_round($file->size / 1048576, 2)} MB){else}({#form.element.image.missing.label#}){/if}</span></label><br/>
+        <label><span id="{$_element->getId()}-size">{if $file}<a href="{$file->getDownloadUrl()}" download><i class="icon-cloud-download small"></i> {$file->original}</a> ({php_round($file->size / 1048576, 2)} MB){else}({#form.element.image.missing.label#}){/if}</span></label><br/>
         <button style="color: #fff;" id="{$_element->getId()}-delete" class="btn{if $file} btn-danger{/if}" onclick="
             document.getElementById('{$_element->getId()}').value = '';
             document.getElementById('{$_element->getId()}-name').value = '';

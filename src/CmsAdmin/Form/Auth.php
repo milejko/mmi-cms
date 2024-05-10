@@ -18,6 +18,7 @@ use Mmi\Filter;
 use Mmi\App\App;
 use Mmi\Security\AclInterface;
 use Mmi\Security\AuthProviderInterface;
+use Mmi\Validator\NotEmpty;
 
 /**
  * Formularz dodawania i edycji użytkowników CMS
@@ -47,6 +48,14 @@ class Auth extends Form
             ->addFilter(new Filter\StringTrim())
             ->addValidator(new Validator\EmailAddress())
             ->addValidator(new Validator\RecordUnique([new CmsAuthQuery(), 'email', $this->getRecord()->id])));
+
+        //lang
+        $languages = explode(',', $this->getOption('cmsLanguageList'));
+        $this->addElement((new Element\Select('lang'))
+            ->setMultioptions(array_combine(array_values($languages), array_values($languages)))
+            ->setLabel('form.auth.lang.label')
+            ->setRequired()
+            ->addValidator(new NotEmpty()));
 
         //aktywny
         $this->addElement((new Element\Checkbox('active'))

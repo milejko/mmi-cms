@@ -9,8 +9,10 @@ use Mmi\Mvc\MvcForbiddenException;
 use Mmi\Mvc\MvcNotFoundException;
 use Mmi\Mvc\View;
 use Mmi\Security\AclInterface;
+use Mmi\Security\Auth;
 use Mmi\Security\AuthInterface;
 use Mmi\Session\SessionInterface;
+use Mmi\Session\SessionSpace;
 use Mmi\Translate\TranslateInterface;
 use Psr\Container\ContainerInterface;
 
@@ -56,6 +58,10 @@ class CmsAppEventInterceptor implements AppEventInterceptorInterface
         $acl = $this->container->get(AclInterface::class);
         $auth = $this->container->get(AuthInterface::class);
         $actionLabel = strtolower($this->request->getModuleName() . ':' . $this->request->getControllerName() . ':' . $this->request->getActionName());
+        if ($auth->hasIdentity()) {
+            $userLocale = (new SessionSpace(Auth::SESSION_NAMESPACE))->lang;
+            $this->translate->setLocale($userLocale ? : $this->cmsLanguageDefault);
+        }
         //no module
         if (!$this->request->getModuleName()) {
             return;
