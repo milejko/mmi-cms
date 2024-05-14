@@ -26,6 +26,7 @@
   <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/App/CmsSectionConfig.php"/>
   <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Cms/App/CmsTemplateConfig.php"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/App/CmsWidgetConfig.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Cms/App/CmsAppEventInterceptor.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Cms/CategoryController.php"/>
   <violation rule="PHPMD\Rule\CleanCode\IfStatementAssignment" file="src/Cms/CategoryController.php" method="redactorPreviewAction"/>
   <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/CategoryController.php"/>

@@ -41,6 +41,11 @@ class AuthController extends Controller
     private AuthProviderInterface $authProvider;
 
     /**
+     * @Inject("cms.language.list")
+     */
+    private string $cmsLanguageList;
+
+    /**
      * Lista użytkowników
      */
     public function indexAction()
@@ -55,7 +60,7 @@ class AuthController extends Controller
     {
         $this->view->ldap = $this->ldapConfig;
 
-        $form = new Auth(new CmsAuthRecord($request->id), [AclInterface::class => $this->acl]);
+        $form = new Auth(new CmsAuthRecord($request->id), [AclInterface::class => $this->acl, 'cmsLanguageList' => $this->cmsLanguageList]);
         if ($form->isSaved()) {
             $this->getMessenger()->addMessage('messenger.auth.saved', true);
             $this->getResponse()->redirect('cmsAdmin', 'auth');

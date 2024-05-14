@@ -7,14 +7,15 @@
         </div>
         <div class="section-widgets card-body">
             <div class="available-widgets">
-                <h6>{#template.categoryWidgetRelation.addWidget#}</h6>
                 {foreach $section->getAvailableWidgets() as $availableWidgetKey => $availableWidget}
                     {if $widgetValidator->isWidgetAvailable($availableWidgetKey)}
                         <button id="{$section->getKey()}/{$availableWidget->getKey()}" class="button btn btn-primary btn-inline-block" type="submit" name="cmsadmin-form-categoryform[submit]" value="redirect:{@module=cmsAdmin&controller=categoryWidgetRelation&widget={$availableWidgetKey}&action=edit&categoryId={$category->id}&originalId={$category->cmsCategoryOriginalId}@}">
+                            <i class="icon-plus small"></i>
                             {_($availableWidget->getName())}
                         </button>
                     {else}
                         <button class="button btn btn-inline-block" disabled>
+                            <i class="icon-plus small"></i>
                             {_($availableWidget->getName())}
                         </button>
                     {/if}

@@ -79,7 +79,7 @@ class FileGrid extends \CmsAdmin\Grid\Grid
             ->setDisabled());
 
         $this->addColumn((new Column\CustomColumn('operations'))
-            ->setLabel('<i class="fa fa-2 fa-gears"></i>')
-            ->setTemplateCode('<a class="button small" href="{$record->getDownloadUrl()}" download><i class="fa fa-2 fa-download"></i></a>'));
+            ->setLabel('<i class="icon-cloud-download"></i>')
+            ->setTemplateCode('<a class="button" href="{$record->getDownloadUrl()}" download><i class="icon-cloud-download"></i></a>'));
     }
 }
