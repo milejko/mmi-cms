@@ -50,7 +50,7 @@ class Auth extends Form
             ->addValidator(new Validator\RecordUnique([new CmsAuthQuery(), 'email', $this->getRecord()->id])));
 
         //lang
-        $languages = explode(',', $this->getOption('cmsLanguageList'));
+        $languages = explode(',', (string) $this->getOption('cmsLanguageList'));
         $this->addElement((new Element\Select('lang'))
             ->setMultioptions(array_combine(array_values($languages), array_values($languages)))
             ->setLabel('form.auth.lang.label')

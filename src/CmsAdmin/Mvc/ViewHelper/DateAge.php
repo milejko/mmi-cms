@@ -10,48 +10,55 @@
 
 namespace CmsAdmin\Mvc\ViewHelper;
 
+use CmsAdmin\Model\DateAgeException;
+use CmsAdmin\Model\DateAgeModel;
 use Mmi\Mvc\ViewHelper\HelperAbstract;
 
 class DateAge extends HelperAbstract
 {
-    private const TEMPLATE = '<span style="opacity: %s;">%s</span>';
-    
+    private const SPAN_PATTERN = '<span style="opacity: %s;">%s</span>';
+
     public function dateAge(?string $dateTime): string
     {
-        if (false === strtotime($dateTime)) {
-            return $this->getLabel(0, 'unknown');
+        try {
+            $dateAgeModel = new DateAgeModel($dateTime);
+        } catch (DateAgeException $e) {
+            return $this->getLabel(null);
         }
-        $ageInMinutes = round((time() - strtotime($dateTime)) / 60);
-        $ageInHours = round($ageInMinutes / 60);
-        $ageInDays = round($ageInHours / 24);
-        $ageInWeeks = round($ageInDays / 7);
-        $ageInMonths = round($ageInDays / 30);
-        $ageInYears = round($ageInDays / 365);
-
-        $opacity = $ageInMinutes > 1 ? round(0.05 + 0.95 / sqrt(1 + 0.0008 * $ageInMinutes), 2) : 1;
-        if ($ageInYears > 0) {
-            return $this->getLabel($ageInYears, $ageInYears == 1 ? 'year' : 'years', $opacity);
-        }
-        if ($ageInMonths > 0) {
-            return $this->getLabel($ageInMonths, $ageInMonths == 1 ? 'month' : 'months', $opacity);
-        }
-        if ($ageInWeeks > 1) {
-            return $this->getLabel($ageInWeeks, $ageInWeeks == 1 ? 'week' : 'weeks', $opacity);
-        }
-        if ($ageInDays > 0) {
-            return $this->getLabel($ageInDays, $ageInDays == 1 ? 'day' : 'days', $opacity);
-        }
-        if ($ageInHours > 0) {
-            return $this->getLabel($ageInHours, $ageInHours == 1 ? 'hour' : 'hours', $opacity);
-        }
-        if ($ageInMinutes > 1) {
-            return $this->getLabel($ageInMinutes, $ageInMinutes == 1 ? 'minute' : 'minutes', $opacity);
-        }
-        return $this->getLabel(0, 'now');
+        return $this->getLabel($dateAgeModel);
     }
 
-    private function getLabel($age, $labelSuffix, $opacity = 1): string
+    private function getLabel(?DateAgeModel $dateAgeModel): string
     {
-        return sprintf(self::TEMPLATE, $opacity, $this->view->_('view.helper.dateAge.' . $labelSuffix, [$age]));
+        $age = 0;
+        switch ($dateAgeModel->getAgeRange()) {
+            case DateAgeModel::YEAR_SCALE:
+                $age = $dateAgeModel->getAgeInYears();
+                break;
+            case DateAgeModel::MONTH_SCALE:
+                $age = $dateAgeModel->getAgeInMonths();
+                break;
+            case DateAgeModel::WEEK_SCALE:
+                $age = $dateAgeModel->getAgeInWeeks();
+                break;
+            case DateAgeModel::DAY_SCALE:
+                $age = $dateAgeModel->getAgeInDays();
+                break;
+            case DateAgeModel::HOUR_SCALE:
+                $age = $dateAgeModel->getAgeInHours();
+                break;
+            case DateAgeModel::MINUTE_SCALE:
+                $age = $dateAgeModel->getAgeInMinutes();
+                break;
+        }
+        if (0 == $dateAgeModel->getAgeInMinutes()) {
+            return sprintf(self::SPAN_PATTERN, 1, $this->view->_('view.helper.dateAge.now'));
+        }
+        return sprintf(self::SPAN_PATTERN, $this->calculateOpacity($dateAgeModel->getAgeInMinutes()), $this->view->_('view.helper.dateAge.' . $dateAgeModel->getAgeRange() . ($age > 1 ? 's' : ''), [$age]));
+    }
+
+    private function calculateOpacity(int $ageInMinutes): float
+    {
+        return $ageInMinutes > 1 ? round(0.05 + 0.95 / sqrt(1 + 0.0008 * $ageInMinutes), 2) : 1;
     }
 }

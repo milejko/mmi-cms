@@ -62,7 +62,7 @@
                                                 ({if $templateConfig}{_($templateConfig->getName())}{/if})
                                             </small>
                                         </td>
-                                        <td align="right" class="align-middle" style="width: 130px">{dateAge($category->dateModify ?: $category->dateAdd)}</td>
+                                        <td align="right" class="align-middle" style="width: 145px">{dateAge($category->dateModify ?: $category->dateAdd)}</td>
                                         <td align="right" style="width: {if $frontUrl}290px{else}245px{/if}">
                                             {if $allowed}
                                                 <a class="button btn btn-primary btn-inline-block" title="{#template.category.index.edit#}" href="{@module=cmsAdmin&controller=category&action=edit&id={$category->id}&force=1&p={$paginator->getPage()}@}">

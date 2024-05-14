@@ -60,7 +60,7 @@ class CmsAppEventInterceptor implements AppEventInterceptorInterface
         $actionLabel = strtolower($this->request->getModuleName() . ':' . $this->request->getControllerName() . ':' . $this->request->getActionName());
         if ($auth->hasIdentity()) {
             $userLocale = (new SessionSpace(Auth::SESSION_NAMESPACE))->lang;
-            $this->translate->setLocale($userLocale ? : $this->cmsLanguageDefault);
+            $this->translate->setLocale($userLocale ?: $this->cmsLanguageDefault);
         }
         //no module
         if (!$this->request->getModuleName()) {
