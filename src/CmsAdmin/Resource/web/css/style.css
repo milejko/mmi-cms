@@ -12030,3 +12030,29 @@ div.grid .chosen-container .chosen-drop {
     margin-bottom: 4px;
     padding: 8px;
 }
+
+#cmsadmin-form-categorysearch-query-container {
+    display: inline-block;
+    width: calc(100% - 700px);
+    vertical-align: top;
+}
+
+#cmsadmin-form-categorysearch-filter-container {
+    display: inline-block;
+    width: 150px;
+    margin-left: 20px;
+    vertical-align: top;
+}
+
+#cmsadmin-form-categorysearch-template-container {
+    display: inline-block;
+    margin-left: 20px;
+    width: 510px;
+    vertical-align: top;
+}
+
+#cmsadmin-form-categorysearch-template-container .select2-selection {
+    min-height: 39px;
+    border-radius: 0;
+    border-color: #c2cfd6;
+}
