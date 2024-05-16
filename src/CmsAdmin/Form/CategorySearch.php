@@ -54,9 +54,11 @@ class CategorySearch extends Form
         );
 
         $this->addElement(
-            (new Element\MultiCheckbox(self::FIELD_TEMPLATE_NAME))
+            (new Element\Select(self::FIELD_TEMPLATE_NAME))
                 ->setLabel('form.categorySearch.template.label')
                 ->setMultioptions($this->getOption('templates'))
+                ->setMultiple()
+                ->addClass('select2')
         );
 
         $this->addElement(
