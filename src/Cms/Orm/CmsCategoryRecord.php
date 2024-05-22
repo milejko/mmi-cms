@@ -290,8 +290,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         //badanie modyfikacji przed update
         //zmodyfikowany parent
         $parentModified = $this->isModified('parentId');
-        //zmodyfikowany order
-        $orderModified = $this->isModified('order');
         //zmodyfikowana aktywność
         $activeModified = $this->isModified('active');
         //zmodyfikowana widoczność
