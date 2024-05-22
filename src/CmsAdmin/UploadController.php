@@ -174,6 +174,9 @@ class UploadController extends Mvc\Controller
         //pobranie danych
         $form = array_merge(['active' => 0, 'sticky' => null], $this->getPost()->form);
         foreach ($form as $field) {
+            if (!isset($field['name'])) {
+                continue;
+            }
             $form[$field['name']] = $field['value'];
             if ($field['name'] == 'active' || $field['name'] == 'sticky') {
                 continue;
