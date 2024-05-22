@@ -201,7 +201,6 @@
   <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Cms/Orm/CmsCategoryRecord.php"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsCategoryRecord.php" method="_softDeleteChildren"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsCategoryRecord.php" method="_getPublishedChildren"/>
-  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsCategoryRecord.php" method="_sortChildren"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCasePropertyName" file="src/Cms/Orm/CmsCategoryWidgetCategoryQuery.php"/>
   <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Cms/Orm/CmsCategoryWidgetCategoryRecord.php"/>
   <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Cms/Orm/CmsCategoryWidgetCategoryRecord.php" method="_generateUuid"/>
