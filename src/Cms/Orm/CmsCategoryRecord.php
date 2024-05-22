@@ -304,11 +304,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         if (!parent::_update()) {
             return false;
         }
-        //sortowanie dzieci po przestawieniu rodzica, lub kolejności
-        if ($parentModified || $orderModified) {
-            //sortuje dzieci
-            $this->_sortChildren();
-        }
         if (self::STATUS_ACTIVE != $this->status) {
             return true;
         }
@@ -590,30 +585,6 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
             ->orderAscOrder()
             ->orderAscId()
             ->find();
-    }
-
-    /**
-     * Sortuje dzieci wybranego rodzica
-     * @param integer $order wstawiona kolejność
-     */
-    protected function _sortChildren()
-    {
-        $i = 0;
-        //pobranie dzieci swojego rodzica
-        foreach ($this->_getPublishedChildren($this->parentId, $this->getScope()) as $categoryRecord) {
-            //ten rekord musi pozostać w niezmienionej pozycji (był sortowany)
-            if ($categoryRecord->id == $this->id) {
-                continue;
-            }
-            //ten sam order wskakuje za rekord
-            if ($this->order == $i) {
-                $i++;
-            }
-            //obliczanie nowej kolejności
-            $categoryRecord->order = $i++;
-            //prosty zapis
-            $categoryRecord->simpleUpdate();
-        }
     }
 
     /**
