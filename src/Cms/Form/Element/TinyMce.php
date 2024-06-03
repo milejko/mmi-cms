@@ -11,7 +11,6 @@
 namespace Cms\Form\Element;
 
 use Mmi\App\App;
-use Mmi\Form\Form;
 use Mmi\Mvc\View;
 use Mmi\Session\SessionInterface;
 
@@ -27,7 +26,7 @@ use Mmi\Session\SessionInterface;
  * @method ?int getWidth()
  * @method ?string getToolbars()
  * @method ?string getContextMenu()
- * @method ?string getMenubar()
+ * @method ?bool getMenubar()
  * @method ?string getFontSizeFormats()
  * @method ?string getMode()
  * @method ?string getFontFormats()
@@ -40,10 +39,10 @@ use Mmi\Session\SessionInterface;
  * @method self setUploaderId($id) ustawia id uploadera
  * @method self setContextMenu(string $value)
  * @method self setToolbars(string $value)
- * @method self setMenubar(string $value)
+ * @method self setMenubar(bool $value)
  * @method self setPlugins(string $value)
  * @method self setFontFormats(string $value)
- * @method self setResize(string $value)
+ * @method self setResize(bool $value)
  * @method self setFontSizeFormats(string $value)
  * @method self unsetMode()
  */
@@ -62,19 +61,22 @@ class TinyMce extends UploaderElementAbstract
     //szablon pola textarea
     public const TEMPLATE_FIELD = 'mmi/form/element/textarea';
 
+    private const MODE_ADVANCED = 'advanced';
+    private const MODE_SIMPLE   = 'simple';
+
     public const TOOLBARS = [
-        'simple'   => [
-            'undo redo | bold italic underline strikethrough | link unlink anchor | alignleft aligncenter alignright alignjustify | subscript superscript | fontsizeselect forecolor | charmap visualchars nonbreaking mathlive',
+        self::MODE_SIMPLE   => [
+            'undo redo | bold italic underline strikethrough | link unlink anchor | alignleft aligncenter alignright alignjustify | subscript superscript | fontsizeselect forecolor | charmap visualchars nonbreaking mathlive | code',
         ],
-        'advanced' => [
+        self::MODE_ADVANCED => [
             'undo redo | cut copy paste pastetext searchreplace | bold italic underline strikethrough | subscript superscript | alignleft aligncenter alignright alignjustify | fontselect fontsizeselect | forecolor backcolor',
             'styleselect | table | bullist numlist outdent indent blockquote | link unlink anchor | image media lioniteimages | fullscreen code | charmap visualchars nonbreaking hr mathlive',
         ],
     ];
 
     public const CONTEXT_MENU = [
-        'simple'   => 'link image inserttable | cell row column deletetable',
-        'advanced' => 'link image media inserttable | cell row column deletetable',
+        self::MODE_SIMPLE   => 'link image inserttable | cell row column deletetable',
+        self::MODE_ADVANCED => 'link image media inserttable | cell row column deletetable',
     ];
 
     public const PLUGINS = [
@@ -148,7 +150,7 @@ class TinyMce extends UploaderElementAbstract
      */
     public function setModeDefault()
     {
-        return $this->setOption('mode', 'advanced');
+        return $this->setModeAdvanced();
     }
 
     /**
@@ -158,7 +160,7 @@ class TinyMce extends UploaderElementAbstract
      */
     public function setModeAdvanced()
     {
-        return $this->setOption('mode', 'advanced');
+        return $this->setMode(self::MODE_ADVANCED);
     }
 
     /**
@@ -168,7 +170,7 @@ class TinyMce extends UploaderElementAbstract
      */
     public function setModeSimple()
     {
-        return $this->setOption('mode', 'simple');
+        return $this->setMode(self::MODE_SIMPLE);
     }
 
     /**
@@ -227,9 +229,10 @@ class TinyMce extends UploaderElementAbstract
      */
     public function __construct($name)
     {
+        parent::__construct($name);
         $this->addClass('form-control');
         $this->addClass('tinymce');
-        parent::__construct($name);
+        $this->setModeDefault();
         //wyłączenie CDN
         $this->view->setCdn(null);
     }
@@ -246,7 +249,7 @@ class TinyMce extends UploaderElementAbstract
         //bazowa wspólna konfiguracja
         $this->_baseConfig($this->view);
         //tryb edytora
-        $mode = $this->getMode() ?? 'advanced';
+        $mode = $this->getMode();
         //metoda konfiguracji edytora
         $modeConfigurator = '_mode' . ucfirst($mode);
         if (method_exists($this, $modeConfigurator)) {
@@ -268,10 +271,10 @@ class TinyMce extends UploaderElementAbstract
         );
 
         //unsety zbędnych opcji
-        $this->unsetMode()->unsetCustomConfig()->unsetCss()->unsetTheme()->unsetSkin()
-            ->unsetPlugins()->unsetContextMenu()->unsetResize()->unsetMenubar()
-            ->unsetImageAdvanceTab()->unsetFontFormats()->unsetFontSizeFormats()
-            ->unsetImageCaption();
+        //$this->unsetMode()->unsetCustomConfig()->unsetCss()->unsetTheme()->unsetSkin()
+        //    ->unsetPlugins()->unsetContextMenu()->unsetResize()->unsetMenubar()
+        //    ->unsetImageAdvanceTab()->unsetFontFormats()->unsetFontSizeFormats()
+        //    ->unsetImageCaption();
 
         return parent::fetchField();
     }
@@ -395,10 +398,10 @@ class TinyMce extends UploaderElementAbstract
     protected function _modeSimple()
     {
         if ($this->getToolbars() === null) {
-            $this->setToolbars(self::TOOLBARS['simple']);
+            $this->setToolbars(self::TOOLBARS[self::MODE_SIMPLE]);
         }
         if ($this->getContextMenu() === null) {
-            $this->setContextMenu(self::CONTEXT_MENU['simple']);
+            $this->setContextMenu(self::CONTEXT_MENU[self::MODE_SIMPLE]);
         }
         if ($this->getResize() === null) {
             $this->setResize(false);
@@ -414,10 +417,10 @@ class TinyMce extends UploaderElementAbstract
     protected function _modeAdvanced()
     {
         if ($this->getToolbars() === null) {
-            $this->setToolbars(self::TOOLBARS['advanced']);
+            $this->setToolbars(self::TOOLBARS[self::MODE_ADVANCED]);
         }
         if ($this->getContextMenu() === null) {
-            $this->setContextMenu(self::CONTEXT_MENU['advanced']);
+            $this->setContextMenu(self::CONTEXT_MENU[self::MODE_ADVANCED]);
         }
     }
 }
