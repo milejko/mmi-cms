@@ -1,7 +1,7 @@
 let multifieldListItemTemplate = {};
 
 $(document).ready(function () {
-    multifieldInitLists(('.multifield'));
+    multifieldInitLists($('.multifield'));
     $('.multifield .field-list').sortable({
         axis: "y",
         helper: function () {
@@ -34,8 +34,8 @@ $(window).on('load', function () {
 });
 
 
-function multifieldInitLists(lists) {
-    $(lists).each(function (index, list) {
+function multifieldInitLists($lists) {
+    $lists.each(function (index, list) {
         $(list).find('.ne-error-list').each(function () {
             if ($(this).children().length > 0) {
                 multifieldShowMultifieldItem($(this).closest('.field-list-item'));
@@ -44,6 +44,7 @@ function multifieldInitLists(lists) {
 
         let containerId = $(list).attr('id');
         multifieldInitContainer(containerId);
+        $(document).trigger('multifieldInitialized', {item: $(this).parent()});
     });
 }
 
@@ -54,7 +55,6 @@ function multifieldInitContainer(containerId) {
     multifieldInitToggleAll(containerId);
     multifieldInitAdd(containerId);
     multifieldInitToggleAuto(containerId);
-    multifieldInitLists('#' + containerId + ' .multifield');
 }
 
 function multifieldInitActive(containerId) {
@@ -111,10 +111,11 @@ function multifieldInitAdd(containerId) {
         );
         let newItem = $(list).children('.field-list-item').last();
         newItem.find('.select2').select2();
-        multifieldInitContainer(containerId);
+        multifieldInitLists(newItem.find('.multifield'));
         multifieldRemoveTinyMce(newItem);
         multifieldInitTinyMce(newItem);
         multifieldToggleActive(newItem);
+        $(document).trigger('multifieldItemAdded', {item: newItem});
     });
 }
 

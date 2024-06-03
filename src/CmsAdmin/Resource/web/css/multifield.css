@@ -8,7 +8,7 @@
   background-color: #fff;
   transition: max-height 0.5s;
   transition-timing-function: ease-in-out;
-  max-height: 6.7rem;
+  max-height: 7rem;
   overflow: hidden;
   display: flex;
   justify-content: space-between;
