@@ -72,10 +72,15 @@ class File extends UploaderElementAbstract
     {
         $request = App::$di->get(Request::class);
         $post = $request->getPost();
-        if (!isset($post->{$this->_form->getBaseName()})) {
+        $formBaseName = $this->_form->getBaseName();
+        if (!isset($post->{$formBaseName})) {
             return;
         }
-        $fileArray = $request->getFiles()->getAsArray()[$this->_form->getBaseName()];
+        $files = $request->getFiles()->getAsArray();
+        if (!isset($files[$formBaseName])) {
+            return;
+        }
+        $fileArray = $files[$formBaseName];
         $dataArray = $post->{$this->_form->getBaseName()};
         $ignoreFileNames = $this->keepFiles($dataArray);
         if (empty($ignoreFileNames) && empty($fileArray)) {
