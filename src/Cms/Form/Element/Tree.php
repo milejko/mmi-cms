@@ -115,7 +115,7 @@ class Tree extends \Mmi\Form\Element\ElementAbstract
             return $html;
         }
         //zaznaczone wartości
-        $values = explode(';', $this->getValue());
+        $values = explode(';', (string) $this->getValue());
         $html .= '<ul>';
         //iteracja po dzieciakach i budowa lisci drzewa
         foreach ($node['children'] as $child) {

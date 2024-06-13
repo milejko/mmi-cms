@@ -18,6 +18,7 @@
                                 {/foreach}
                             </div>
                             <br/>
+                            {$paginator}
                             <table class="table table-striped table-sort" data-sort-url="{@module=cmsAdmin&controller=category&action=sort@}">
                                 <thead>
                                 <tr>
