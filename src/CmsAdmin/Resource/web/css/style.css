@@ -11161,6 +11161,10 @@ hr.transparent {
     line-height: 49px !important;
 }
 
+.ne-error-list {
+    clear: both;
+}
+
 .ne-error-list ul {
     padding: 0;
     list-style-type: none;
