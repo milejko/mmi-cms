@@ -58,8 +58,15 @@
   text-align: right;
 }
 
-.multifield > .btn-toggle .fa {
+.multifield > .btn-toggle .fa,
+.form-group > .btn-toggle-all .fa {
   vertical-align: sub;
+}
+
+.form-group > .btn-toggle-all {
+  display: inline-block;
+  float: right;
+  text-align: right;
 }
 
 .form-control.multifield > .field-list > .field-list-item > .icons a {
