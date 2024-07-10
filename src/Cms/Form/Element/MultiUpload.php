@@ -143,6 +143,10 @@ class MultiUpload extends MultiField implements UploaderElementInterface
      */
     protected function renderListSection(?array $itemValues, string $index): string
     {
+        if (!isset($itemValues[self::FILE_ELEMENT_NAME])) {
+            $itemValues[self::FILE_ELEMENT_NAME] = '{{cmsFileName}}';
+        }
+
         return '
         <div>
             <div class="thumb">
