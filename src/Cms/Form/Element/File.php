@@ -65,7 +65,16 @@ class File extends UploaderElementAbstract
 
     public function getUploadedFile(?string $name): ?CmsFileRecord
     {
-        return $this->uploadedFiles[$name] ?? array_values($this->uploadedFiles)[0] ?? null;
+        if (isset($this->uploadedFiles[$name])) {
+            return $this->uploadedFiles[$name];
+        }
+
+        //uploader backwards compatibility
+        if ($this->getName() === ($this->_form->getBaseName() . '[' . $this->getBaseName() . ']')) {
+            return array_values($this->uploadedFiles)[0] ?? null;
+        }
+
+        return null;
     }
 
     public function beforeFormSave(): void

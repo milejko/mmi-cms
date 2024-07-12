@@ -40,11 +40,9 @@ $(window).on('load', function () {
     });
 });
 
-
 function multifieldInitLists($lists) {
-    $lists.each(function (index, list) {
-        let containerId = $(list).attr('id');
-        multifieldInitContainer(containerId);
+    $lists.each(function () {
+        multifieldInitContainer($(this).attr('id'));
         $(document).trigger('multifieldInitialized', {item: $(this).parent()});
     });
 }
