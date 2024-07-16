@@ -104,6 +104,7 @@ function multifieldInitAdd(containerId) {
         multifieldInitLists(newItem.find('.multifield'));
         multifieldRemoveTinyMce(newItem);
         multifieldInitTinyMce(newItem);
+        multifieldReadActive(newItem);
         multifieldToggleActive(newItem);
         $(document).trigger('multifieldItemAdded', {item: newItem});
     });
