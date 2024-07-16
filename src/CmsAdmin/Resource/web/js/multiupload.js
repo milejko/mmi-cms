@@ -188,6 +188,7 @@ function multiuploadInitAdd(containerId) {
                                 multiuploadInitContainer(containerId);
                                 multifieldRemoveTinyMce(newItem);
                                 multifieldInitTinyMce(newItem);
+                                multifieldReadActive(newItem);
                                 multifieldToggleActive(newItem);
                                 $(document).trigger('uploadComplete', {item: newItem, response: response});
                             }
