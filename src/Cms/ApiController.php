@@ -257,7 +257,7 @@ class ApiController extends Controller
         }
         //obiekt transportowy
         $redirectTransportObject = new RedirectTransport(sprintf(CmsRouterConfig::API_METHOD_CONTENT, $categoryRecord->getScope(), $categoryRecord->getUri()));
-        return $this->getResponse()->setTypeJson()
+        return $this->getResponse()
             ->setCode($redirectTransportObject->getCode())
             ->setContent($redirectTransportObject->toString());
     }
