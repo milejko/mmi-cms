@@ -47,9 +47,9 @@ class TagController extends Controller
     /**
      * Edycja tagów
      */
-    public function editAction()
+    public function editAction(Request $request)
     {
-        $tag = new CmsTagRecord($this->id);
+        $tag = new CmsTagRecord($request->id);
         $tag->scope = $this->cmsScopeConfig->getName();
         $form = new Tag($tag, [ContainerInterface::class => $this->container]);
         if ($form->isSaved()) {

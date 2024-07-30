@@ -19,11 +19,18 @@ $(document).ready(function () {
         },
         handle: '.sortable-handler',
     });
+    $(document).on('click', '.btn-toggle-all', function (e) {
+        e.preventDefault();
+        multifieldToggleGeneralSwitch($(this));
+    });
 });
 
 $(window).on('load', function () {
     $('.multifield .ne-error-list').each(function () {
         if ($(this).children().length > 0) {
+            multifieldShowMultifieldItem($(this).parents('.field-list-item'));
+            multifieldShowMultifieldItem($(this).closest('.field-list-item'));
+
             $('html, body').animate({
                 scrollTop: $(this).offset().top - 200
             }, 1000);
@@ -33,17 +40,9 @@ $(window).on('load', function () {
     });
 });
 
-
 function multifieldInitLists($lists) {
-    $lists.each(function (index, list) {
-        $(list).find('.ne-error-list').each(function () {
-            if ($(this).children().length > 0) {
-                multifieldShowMultifieldItem($(this).closest('.field-list-item'));
-            }
-        });
-
-        let containerId = $(list).attr('id');
-        multifieldInitContainer(containerId);
+    $lists.each(function () {
+        multifieldInitContainer($(this).attr('id'));
         $(document).trigger('multifieldInitialized', {item: $(this).parent()});
     });
 }
@@ -52,7 +51,6 @@ function multifieldInitContainer(containerId) {
     multifieldInitActive(containerId);
     multifieldInitRemove(containerId);
     multifieldInitToggle(containerId);
-    multifieldInitToggleAll(containerId);
     multifieldInitAdd(containerId);
     multifieldInitToggleAuto(containerId);
 }
@@ -89,14 +87,6 @@ function multifieldInitToggle(containerId) {
     });
 }
 
-function multifieldInitToggleAll(containerId) {
-    $(document).off('click', '#' + containerId + ' > .btn-toggle');
-    $(document).on('click', '#' + containerId + ' > .btn-toggle', function (e) {
-        e.preventDefault();
-        multifieldToggleGeneralSwitch($(this));
-    });
-}
-
 function multifieldInitAdd(containerId) {
     $(document).off('click', '#' + containerId + ' > .btn-add');
     $(document).on('click', '#' + containerId + ' > .btn-add', function (e) {
@@ -114,6 +104,7 @@ function multifieldInitAdd(containerId) {
         multifieldInitLists(newItem.find('.multifield'));
         multifieldRemoveTinyMce(newItem);
         multifieldInitTinyMce(newItem);
+        multifieldReadActive(newItem);
         multifieldToggleActive(newItem);
         $(document).trigger('multifieldItemAdded', {item: newItem});
     });
@@ -160,12 +151,12 @@ function multifieldToggleGeneralSwitchStyle(generalSwitch) {
     }
 }
 
-function multifieldToggleGeneralSwitch(generalSwitch) {
-    multifieldToggleGeneralSwitchStyle(generalSwitch);
-    if ($(generalSwitch).hasClass('active')) {
-        multifieldShowAllMultifieldItems($(generalSwitch).closest('.multifield').children('.field-list'));
+function multifieldToggleGeneralSwitch($generalSwitch) {
+    multifieldToggleGeneralSwitchStyle($generalSwitch);
+    if ($generalSwitch.hasClass('active')) {
+        multifieldShowAllMultifieldItems($generalSwitch.siblings('.multifield').find('> .field-list'));
     } else {
-        multifieldHideAllMultifieldItems($(generalSwitch).closest('.multifield').children('.field-list'));
+        multifieldHideAllMultifieldItems($generalSwitch.siblings('.multifield').find('> .field-list'));
     }
 }
 

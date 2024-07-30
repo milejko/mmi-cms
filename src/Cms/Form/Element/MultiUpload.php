@@ -4,7 +4,7 @@
  * Mmi Framework (https://github.com/milejko/mmi.git)
  *
  * @link       https://github.com/milejko/mmi.git
- * @copyright  Copyright (c) 2010-2017 Mariusz Miłejko (mariusz@milejko.pl)
+ * @copyright  Copyright (c) 2010-2024 Mariusz Miłejko (mariusz@milejko.pl)
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
@@ -107,7 +107,11 @@ class MultiUpload extends MultiField implements UploaderElementInterface
     {
         $this->_createTempFiles();
         $this->addScriptsAndLinks();
-        return '<div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">
+        return '
+        <a href="#" class="btn-toggle-all" role="button">
+            <span>Rozwiń wszystkie</span> <i class="fa fa-angle-down fa-2"></i>
+        </a>
+        <div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">
             <label for="' . $this->getId() . '-add" class="upload-add-label">
                 <i class="icon fa fa-5 fa-cloud-upload"></i>
                 Kliknij lub upuść pliki w tym obszarze
@@ -137,57 +141,22 @@ class MultiUpload extends MultiField implements UploaderElementInterface
      *
      * @return string
      */
-    protected function renderListElement(?array $itemValues = null, string $index = '**'): string
+    protected function renderListSection(?array $itemValues, string $index): string
     {
-        $html = '<li class="field-list-item border mb-3 p-3">
-            <div class="icons">
-                <a href="#" class="btn-toggle" role="button">
-                    <i class="fa fa-angle-down fa-6"></i>
-                </a>
-            </div>
-            <div>
-                <div class="thumb">
-                    <img src="/resource/cmsAdmin/images/loader.gif">
-                </div>
-                <div class="operations">
-                    <a class="edit" href="#"><i class="fa fa-pencil"></i></a>
-                    <a class="download" download><i class="fa fa-download"></i></a>
-                </div>
-            </div>
-        <section>';
-
-        foreach ($this->getElements() as $element) {
-            $element->setId($this->getId() . '-' . $index . '-' . $element->getBaseName());
-            $element->setName($this->getName() . '[' . $index . '][' . $element->getBaseName() . ']');
-            $element->setValue($itemValues[$element->getBaseName()] ?? null);
-            $element->setErrors($this->_elementErrors[$index][$element->getBaseName()] ?? []);
-
-            if ($element instanceof Checkbox) {
-                $element->setChecked($element->getValue());
-            }
-
-            if (self::FILE_ELEMENT_NAME === $element->getBaseName()) {
-                $element->setValue($itemValues[$element->getBaseName()] ?? '{{cmsFileName}}');
-            }
-
-            $html .= $element->__toString();
+        if (!isset($itemValues[self::FILE_ELEMENT_NAME])) {
+            $itemValues[self::FILE_ELEMENT_NAME] = '{{cmsFileName}}';
         }
 
-        $html .= '</section>
-            <div class="icons">
-                <a href="#" class="sortable-handler" role="button">
-                    <i class="fa fa-arrows fa-2"></i>
-                </a>
-                <a href="#" class="btn-active" role="button">
-                    <i class="fa fa-eye fa-2"></i>
-                </a>
-                <a href="#" class="btn-remove" role="button">
-                    <i class="fa fa-trash-o fa-2"></i>
-                </a>
+        return '
+        <div>
+            <div class="thumb">
+                <img src="/resource/cmsAdmin/images/loader.gif">
             </div>
-        </li>';
-
-        return trim(preg_replace('/\r|\n|\s\s+/', ' ', $html));
+            <div class="operations">
+                <a class="edit" href="#"><i class="fa fa-pencil"></i></a>
+                <a class="download" download><i class="fa fa-download"></i></a>
+            </div>
+        </div>' . parent::renderListSection($itemValues, $index);
     }
 
     protected function addScriptsAndLinks(): void

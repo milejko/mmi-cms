@@ -184,10 +184,11 @@ function multiuploadInitAdd(containerId) {
                                     .replaceAll('{{cmsFileName}}', cmsFileName));
                                 let newItem = $(list).children('.field-list-item').last();
                                 newItem.find('.select2').select2();
-                                multifieldInitContainer(containerId);
+                                multifieldInitLists(newItem.find('.multifield'));
                                 multiuploadInitContainer(containerId);
                                 multifieldRemoveTinyMce(newItem);
                                 multifieldInitTinyMce(newItem);
+                                multifieldReadActive(newItem);
                                 multifieldToggleActive(newItem);
                                 $(document).trigger('uploadComplete', {item: newItem, response: response});
                             }

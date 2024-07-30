@@ -33,7 +33,7 @@
   bottom: 3rem;
 }
 
-.multiupload-fixed .field-list {
+.multiupload-fixed > .field-list {
   margin-left: calc(200px + 1rem);
 }
 

@@ -28,7 +28,7 @@
 }
 
 .form-control.multifield > .field-list > .field-list-item.active {
-  max-height: 2000px;
+  max-height: 100%;
 }
 
 .form-control.multifield > .field-list > .field-list-item > section {
@@ -58,8 +58,15 @@
   text-align: right;
 }
 
-.multifield > .btn-toggle .fa {
+.multifield > .btn-toggle .fa,
+.form-group > .btn-toggle-all .fa {
   vertical-align: sub;
+}
+
+.form-group > .btn-toggle-all {
+  display: inline-block;
+  float: right;
+  text-align: right;
 }
 
 .form-control.multifield > .field-list > .field-list-item > .icons a {

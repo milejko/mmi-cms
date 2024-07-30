@@ -4,7 +4,7 @@
  * Mmi Framework (https://github.com/milejko/mmi.git)
  *
  * @link       https://github.com/milejko/mmi.git
- * @copyright  Copyright (c) 2010-2017 Mariusz Miłejko (mariusz@milejko.pl)
+ * @copyright  Copyright (c) 2010-2024 Mariusz Miłejko (mariusz@milejko.pl)
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
@@ -152,7 +152,10 @@ class MultiField extends ElementAbstract
         }
 
         foreach ($this->getValue() as $index => $itemValues) {
-            $this->validateItem($index, $itemValues, $result);
+            //walidujemy tylko aktywne kafelki
+            if (true === $itemValues[self::IS_ACTIVE]) {
+                $this->validateItem($index, $itemValues, $result);
+            }
         }
 
         //zwrot rezultatu wszystkich walidacji (iloczyn)
@@ -174,7 +177,10 @@ class MultiField extends ElementAbstract
         }
 
         foreach ($this->getValue() as $index => $itemValues) {
-            $this->validateItem($index, $itemValues, $result, $parentIndex);
+            //walidujemy tylko aktywne kafelki
+            if (true === $itemValues[self::IS_ACTIVE]) {
+                $this->validateItem($index, $itemValues, $result, $parentIndex);
+            }
         }
 
         //zwrot rezultatu wszystkich walidacji (iloczyn)
@@ -302,12 +308,13 @@ class MultiField extends ElementAbstract
     {
         $this->addScriptsAndLinks();
 
-        return '<div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">
-            <a href="#" class="btn-toggle" role="button">
+        return '
+            <a href="#" class="btn-toggle-all" role="button">
                 <span>Rozwiń wszystkie</span> <i class="fa fa-angle-down fa-2"></i>
             </a>
-            ' . $this->renderList() . '
-            <a href="#" class="btn btn-primary btn-add" role="button" data-template="' . $this->getDeclaredName() . '">Dodaj element</a>
+            <div id="' . $this->getId() . '-list" class="' . $this->getClass() . '">
+                ' . $this->renderList() . '
+                <a href="#" class="btn btn-primary btn-add" role="button" data-template="' . $this->getDeclaredName() . '">Dodaj element</a>
             </div>';
     }
 
@@ -341,13 +348,41 @@ class MultiField extends ElementAbstract
      */
     protected function renderListElement(?array $itemValues = null, string $index = '**'): string
     {
-        $html = '<li class="field-list-item border mb-3 p-3">
+        $html = '
+        <li class="field-list-item border mb-3 p-3">
             <div class="icons">
                 <a href="#" class="btn-toggle" role="button">
                     <i class="fa fa-angle-down fa-6"></i>
                 </a>
             </div>
-        <section>';
+            ' . $this->renderListSection($itemValues, $index) . '
+            <div class="icons">
+                <a href="#" class="sortable-handler" role="button">
+                    <i class="fa fa-arrows fa-2"></i>
+                </a>
+                <a href="#" class="btn-active" role="button">
+                    <i class="fa fa-eye fa-2"></i>
+                </a>
+                <a href="#" class="btn-remove" role="button">
+                    <i class="fa fa-trash-o fa-2"></i>
+                </a>
+            </div>
+        </li>';
+
+        return trim(preg_replace('/\r|\n|\s\s+/', ' ', $html));
+    }
+
+    /**
+     * Renderer sekcji formularza
+     *
+     * @param array|null $itemValues
+     * @param string $index
+     *
+     * @return string
+     */
+    protected function renderListSection(?array $itemValues, string $index): string
+    {
+        $content = '';
 
         foreach ($this->getElements() as $element) {
             $element->setId($this->getId() . '-' . $index . '-' . $element->getBaseName());
@@ -368,24 +403,10 @@ class MultiField extends ElementAbstract
                 $element->setChecked((bool)$element->getValue());
             }
 
-            $html .= $element->__toString();
+            $content .= $element->__toString();
         }
 
-        $html .= '</section>
-            <div class="icons">
-                <a href="#" class="sortable-handler" role="button">
-                    <i class="fa fa-arrows fa-2"></i>
-                </a>
-                <a href="#" class="btn-active" role="button">
-                    <i class="fa fa-eye fa-2"></i>
-                </a>
-                <a href="#" class="btn-remove" role="button">
-                    <i class="fa fa-trash-o fa-2"></i>
-                </a>
-            </div>
-        </li>';
-
-        return trim(preg_replace('/\r|\n|\s\s+/', ' ', $html));
+        return '<section>' . $content . '</section>';
     }
 
     /**
