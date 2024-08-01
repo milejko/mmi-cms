@@ -33,13 +33,14 @@ class RedirectTemplateController extends AbstractTemplateController
     {
         parent::decorateEditForm($categoryForm);
 
-        $redirectUri = $categoryForm->getRecord()->redirectUri;
         $redirectType = LinkData::REL_EXTERNAL;
         $redirectCategoryId = null;
+        $redirectUri = $categoryForm->getRecord()->redirectUri;
 
         if ($redirectUri && preg_match('/^' . str_replace('/', '\/', LinkData::INTERNAL_REDIRECT_PREFIX) . '(\d+)/', $redirectUri, $matches)) {
             $redirectType = LinkData::REL_INTERNAL;
             $redirectCategoryId = $matches[1];
+            $redirectUri = LinkData::INTERNAL_REDIRECT_PREFIX . $redirectCategoryId;
         }
 
         $tree = (new CategoryModel(
@@ -60,6 +61,7 @@ class RedirectTemplateController extends AbstractTemplateController
                 ->setRequired()
                 ->addValidator(new Validator\Url())
                 ->addFilter(new Filter\StringTrim())
+                ->setValue($redirectUri)
         );
 
         $categoryForm->addElement(
@@ -75,10 +77,14 @@ class RedirectTemplateController extends AbstractTemplateController
     {
         parent::beforeSaveEditForm($categoryForm);
 
-        if (LinkData::REL_INTERNAL === $categoryForm->getElement(self::REDIRECT_TYPE)->getValue()) {
-            $categoryForm->getElement(self::REDIRECT_URI)
-                ->removeValidator(Validator\Url::class)
-                ->setValue(LinkData::INTERNAL_REDIRECT_PREFIX . $categoryForm->getElement(self::REDIRECT_CATEGORY_ID)->getValue());
+        if (LinkData::REL_INTERNAL !== $categoryForm->getElement(self::REDIRECT_TYPE)->getValue()) {
+            $categoryForm->getElement(self::REDIRECT_CATEGORY_ID)
+                ->setValue(null);
+            return;
         }
+
+        $categoryForm->getElement(self::REDIRECT_URI)
+            ->removeValidator(Validator\Url::class)
+            ->setValue(LinkData::INTERNAL_REDIRECT_PREFIX . $categoryForm->getElement(self::REDIRECT_CATEGORY_ID)->getValue());
     }
 }

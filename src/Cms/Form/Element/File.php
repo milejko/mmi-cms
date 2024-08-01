@@ -80,26 +80,25 @@ class File extends UploaderElementAbstract
     public function beforeFormSave(): void
     {
         $request = App::$di->get(Request::class);
-        $post = $request->getPost();
-        $formBaseName = $this->_form->getBaseName();
-        if (!isset($post->{$formBaseName})) {
-            return;
-        }
         $files = $request->getFiles()->getAsArray();
-        if (!isset($files[$formBaseName])) {
+        $formBaseName = $this->_form->getBaseName();
+        if (empty($files[$formBaseName])) {
             return;
         }
-        $fileArray = $files[$formBaseName];
-        $dataArray = $post->{$this->_form->getBaseName()};
+        $dataArray = [];
+        foreach ($this->_form->getElements() as $element) {
+            $dataArray[$element->getBaseName()] = $element->getValue();
+        }
         $ignoreFileNames = $this->keepFiles($dataArray);
-        if (empty($ignoreFileNames) && empty($fileArray)) {
+        if (empty($ignoreFileNames)) {
             $ignoreFileNames = [self::PLACEHOLDER_NAME];
         }
         //delete files
         FileModel::deleteByObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), $ignoreFileNames);
         //save files
-        $savedFiles = $this->saveFiles($fileArray);
+        $savedFiles = $this->saveFiles($files[$formBaseName]);
         //update form data
+        $post = $request->getPost();
         $post->{$this->_form->getBaseName()} = array_replace_recursive($dataArray, $savedFiles);
         $this->_form->setFromPost($post);
     }
