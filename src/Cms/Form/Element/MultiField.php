@@ -153,7 +153,7 @@ class MultiField extends ElementAbstract
 
         foreach ($this->getValue() as $index => $itemValues) {
             //walidujemy tylko aktywne kafelki
-            if (true === $itemValues[self::IS_ACTIVE]) {
+            if (isset($itemValues[self::IS_ACTIVE]) && true === $itemValues[self::IS_ACTIVE]) {
                 $this->validateItem($index, $itemValues, $result);
             }
         }
