@@ -82,7 +82,7 @@ class File extends UploaderElementAbstract
         $request = App::$di->get(Request::class);
         $files = $request->getFiles()->getAsArray();
         $formBaseName = $this->_form->getBaseName();
-        if (empty($files[$formBaseName])) {
+        if (!isset($files[$formBaseName])) {
             return;
         }
         $dataArray = [];
@@ -95,6 +95,9 @@ class File extends UploaderElementAbstract
         }
         //delete files
         FileModel::deleteByObject(self::TEMP_OBJECT_PREFIX . $this->getObject(), $this->getUploaderId(), $ignoreFileNames);
+        if (empty($files[$formBaseName])) {
+            return;
+        }
         //save files
         $savedFiles = $this->saveFiles($files[$formBaseName]);
         //update form data
