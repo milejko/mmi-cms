@@ -34,6 +34,7 @@ use Mmi\Cache\CacheInterface;
 use Mmi\Http\Request;
 use Mmi\Http\Response;
 use Mmi\Mvc\Controller;
+use Psr\Log\LoggerInterface;
 
 /**
  * Kontroler kategorii
@@ -64,6 +65,11 @@ class ApiController extends Controller
      * @Inject
      */
     private CmsCategoryRepository $cmsCategoryRepository;
+
+    /**
+     * @Inject
+     */
+    private LoggerInterface $logger;
 
     /**
      * Index action (available skins)
@@ -146,7 +152,12 @@ class ApiController extends Controller
             //404 - skin not found
             return $this->getNotFoundResponse($e->getMessage());
         }
-        $menuTransport = (new MenuDataTransport())->setMenu($this->structureService->getStructure($skinConfig->getKey()));
+        try {
+            $menuTransport = (new MenuDataTransport())->setMenu($this->structureService->getStructure($skinConfig->getKey()));
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage(), $e->getTrace());
+            return $this->getErrorResponse();
+        }
         $menuTransport->_links = [
             (new LinkData())
             ->setHref(sprintf(CmsRouterConfig::API_METHOD_CONTENTS, $skinConfig->getKey()))
@@ -172,10 +183,15 @@ class ApiController extends Controller
             //404 - skin not found
             return $this->getNotFoundResponse($e->getMessage());
         }
-        $menuTransport = (new MenuDataTransport())->setMenu($this->menuService->getMenus(
-            $request->scope,
-            $skinConfig->getMenuMaxDepthReturned()
-        ));
+        try {
+            $menuTransport = (new MenuDataTransport())->setMenu($this->menuService->getMenus(
+                $request->scope,
+                $skinConfig->getMenuMaxDepthReturned()
+            ));
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage(), $e->getTrace());
+            return $this->getErrorResponse();
+        }
         $menuTransport->_links = [
             (new LinkData())
             ->setHref(sprintf(CmsRouterConfig::API_METHOD_STRUCTURE, $skinConfig->getKey()))
@@ -200,7 +216,8 @@ class ApiController extends Controller
                 ->setCode($transportObject->getCode())
                 ->setContent($transportObject->toString());
         } catch (\Exception $e) {
-            return $this->getNotFoundResponse($e->getMessage());
+            $this->logger->error($e->getMessage(), $e->getTrace());
+            return $this->getErrorResponse();
         }
     }
 
@@ -245,7 +262,12 @@ class ApiController extends Controller
     public function redirectIdAction(Request $request)
     {
         $this->getResponse()->setTypeJson();
-        $categoryRecord = $this->cmsCategoryRepository->getCategoryRecordById($request->id);
+        try {
+            $categoryRecord = $this->cmsCategoryRepository->getCategoryRecordById($request->id);
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage(), $e->getTrace());
+            return $this->getErrorResponse();
+        }
         //brak kategorii lub szablonu
         if (!$categoryRecord || !$categoryRecord->isActive() || !$categoryRecord->template) {
             //404
@@ -321,6 +343,18 @@ class ApiController extends Controller
         $errorTransport = (new ErrorTransport())
             ->setMessage($message)
             ->setCode(ErrorTransport::CODE_NOT_FOUND);
+        return $this->getResponse()->setTypeJson()
+            ->setCode($errorTransport->getCode())
+            ->setContent($errorTransport->toString());
+    }
+
+    /**
+     * Zwraca odpowiedź 500 z podanym messagem
+     */
+    private function getErrorResponse(string $message = 'Backend server error'): Response
+    {
+        $errorTransport = (new ErrorTransport())
+            ->setMessage($message);
         return $this->getResponse()->setTypeJson()
             ->setCode($errorTransport->getCode())
             ->setContent($errorTransport->toString());
