@@ -222,7 +222,7 @@ class ApiControllerTest extends TestCase
     {
         $response = self::$apiController->getCategoryAction(new Request(['scope' => 'sample', 'uri' => 'bugged-template']));
         self::assertEquals(500, $response->getCode());
-        self::assertEquals('{"message":"some bug"}', $response->getContent());
+        self::assertEquals('{"message":"Backend server error"}', $response->getContent());
     }
 
     public function testIfIdCanBeRedirectedToUri(): void
