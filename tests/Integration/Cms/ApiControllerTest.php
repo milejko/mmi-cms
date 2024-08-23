@@ -221,7 +221,7 @@ class ApiControllerTest extends TestCase
     public function testIfRecordWithBuggedTemplateCanNotBeReceived(): void
     {
         $response = self::$apiController->getCategoryAction(new Request(['scope' => 'sample', 'uri' => 'bugged-template']));
-        self::assertEquals(404, $response->getCode());
+        self::assertEquals(500, $response->getCode());
         self::assertEquals('{"message":"some bug"}', $response->getContent());
     }
 
