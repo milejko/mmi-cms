@@ -12,6 +12,7 @@ namespace Cms\Model;
 
 use Mmi\App\App;
 use Mmi\App\KernelException;
+use Mmi\Filter\Url;
 
 /**
  * Model
@@ -92,7 +93,7 @@ class FileSystemModel
             $this->_name[2] .
             $this->_name[3] .
             self::PATH_SEPARATOR .
-            md5($targetName . $this->_name . App::$di->get('cms.auth.salt')) .
+            md5((new Url())->filter($targetName) . $this->_name . App::$di->get('cms.auth.salt')) .
             $this->_name .
             self::PATH_SEPARATOR .
             $targetName;
