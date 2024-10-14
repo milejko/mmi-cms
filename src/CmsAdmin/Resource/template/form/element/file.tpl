@@ -1,5 +1,6 @@
 {$value = $_element->getValue()}
 {$file = $_element->getUploadedFile($value)}
+{$value = $value ? $value : ($file ? $file->name : '')}
 
 <div>
     <div class="pull-left mr-3">
