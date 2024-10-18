@@ -10,8 +10,10 @@
 
 namespace Cms;
 
+use Cms\Form\Element\UploaderElementInterface;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
+use Cms\Orm\CmsFileQuery;
 
 /**
  * Kontroler harmonogramu zadań
@@ -20,9 +22,11 @@ class CronController extends \Mmi\Mvc\Controller
 {
     private const RETAIN_HISTORICAL_VERSIONS = 3;
     private const BATCH_SIZE = 1000;
-    private const DRAFT_MAX_AGE = '-7 days';
+    private const TEMP_MAX_AGE = '-30 days';
+    private const DRAFT_MAX_AGE = '-30 days';
     private const TRASH_MAX_AGE = '-6 months';
     private const VERSION_MAX_AGE = '-6 months';
+    private const DELETE_MESSAGE_TEMPLATE = 'Deleted: %s out of %s';
 
     public function init()
     {
@@ -59,13 +63,14 @@ class CronController extends \Mmi\Mvc\Controller
 
     public function draftCleanupAction()
     {
-        //usuwanie draftów
-        $deletedArticles = (new CmsCategoryQuery())
+        $query = (new CmsCategoryQuery())
             ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_DRAFT)
-            ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime(self::DRAFT_MAX_AGE)))
-            ->limit(self::BATCH_SIZE)
+            ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime(self::DRAFT_MAX_AGE)));
+        $applicableItems = $query->count();
+        //usuwanie draftów
+        $query->limit(self::BATCH_SIZE)
             ->delete();
-        return 'Deleted drafts: ' . (int) $deletedArticles;
+        return sprintf(self::DELETE_MESSAGE_TEMPLATE, $applicableItems < self::BATCH_SIZE ? $applicableItems : self::BATCH_SIZE, $applicableItems);
     }
 
     /**
@@ -73,13 +78,14 @@ class CronController extends \Mmi\Mvc\Controller
      */
     public function trashCleanupAction()
     {
-        //usuwanie z kosza
-        $deletedArticles = (new CmsCategoryQuery())
+        $query = (new CmsCategoryQuery())
             ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_DELETED)
-            ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime(self::TRASH_MAX_AGE)))
-            ->limit(self::BATCH_SIZE)
+            ->andFieldDateAdd()->less(date('Y-m-d H:i:s', strtotime(self::TRASH_MAX_AGE)));
+        $applicableItems = $query->count();
+        //usuwanie z kosza
+        $query->limit(self::BATCH_SIZE)
             ->delete();
-        return 'Deleted trash items: ' . (int) $deletedArticles;
+        return sprintf(self::DELETE_MESSAGE_TEMPLATE, $applicableItems < self::BATCH_SIZE ? $applicableItems : self::BATCH_SIZE, $applicableItems);
     }
 
     /**
@@ -123,7 +129,7 @@ class CronController extends \Mmi\Mvc\Controller
             }
         }
         //komunikat o zakończeniu
-        return 'Deleted historical versions: ' . (int) $deletedArticles;
+        return sprintf(self::DELETE_MESSAGE_TEMPLATE, $deletedArticles, '?');
     }
 
     /**
@@ -131,7 +137,11 @@ class CronController extends \Mmi\Mvc\Controller
      */
     public function tempCleanupAction()
     {
-        //usuwanie plików tmp
-        return 'Temporary files deleted: ' . (int) \Cms\Model\File::deleteOrphans(self::BATCH_SIZE);
+        $query = (new CmsFileQuery())->whereObject()->like(UploaderElementInterface::TEMP_OBJECT_PREFIX . '%')
+            ->andFieldDateModify()->less(date('Y-m-d H:i:s', strtotime(self::TEMP_MAX_AGE)));
+        $applicableItems = $query->count();
+        $query->limit(self::BATCH_SIZE)
+            ->delete();
+        return sprintf(self::DELETE_MESSAGE_TEMPLATE, $applicableItems < self::BATCH_SIZE ? $applicableItems : self::BATCH_SIZE, $applicableItems);
     }
 }

@@ -18,9 +18,9 @@ use Psr\Log\LoggerInterface;
 
 class Cron
 {
-    public const MIN_EXECUTION_OFFSET = 200000;
-    public const MAX_EXECUTION_OFFSET = 500000;
-    public const SECONDS_PER_MINUTE = 60;
+    private const MIN_EXECUTION_OFFSET = 200000;
+    private const MAX_EXECUTION_OFFSET = 500000;
+    private const SECONDS_PER_MINUTE = 60;
 
     /**
      * Pobiera zadania crona
@@ -48,7 +48,7 @@ class Cron
                 continue;
             }
             //wykonany juz w tej minucie
-            if (time() - strtotime($cronRecord->dateLastExecute) < self::SECONDS_PER_MINUTE) {
+            if (time() - strtotime((string) $cronRecord->dateLastExecute) < self::SECONDS_PER_MINUTE) {
                 continue;
             }
             //blokuje rekord na czas wykonania

@@ -314,16 +314,4 @@ class File
             ->andFieldName()->notEquals($ignoreFileNames)
             ->delete();
     }
-
-    /**
-     * Usuwanie nieużywanych plików przypiętych do tmp-XXX
-     * @param string $modifiedDate graniczna data modyfikacji
-     */
-    public static function deleteOrphans($limit = 1000)
-    {
-        (new CmsFileQuery())->whereObject()->like(UploaderElementInterface::TEMP_OBJECT_PREFIX . '%')
-            ->andFieldDateModify()->less(date('Y-m-d H:i:s', strtotime('-1 week')))
-            ->limit($limit)
-            ->delete();
-    }
 }
