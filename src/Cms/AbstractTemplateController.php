@@ -184,7 +184,7 @@ abstract class AbstractTemplateController extends Controller
         while (null !== $record) {
             //template not compatible
             if (null === $skinsetModel->getTemplateConfigByKey($record->template)) {
-                continue;
+                break;
             }
             //adding breadcrumb with modified order field
             $breadcrumbs[] = $this->getBreadcrumbDataByRecord($record)
