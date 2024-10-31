@@ -79,7 +79,7 @@
                                                 {$category->getUri()}
                                             </td>
                                             <td class="align-middle">
-                                                {$category->dateModify}
+                                                {dateAge($category->dateModify ?: $category->dateAdd)}
                                             </td>
                                             <td align="right" {if !$allowed}class="inactive"{/if}>
                                                 {if $allowed}
