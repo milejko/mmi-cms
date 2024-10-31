@@ -85,6 +85,9 @@ class SkinsetModel
             return null;
         }
         $keyElements = explode('/', $key);
+        if (!isset($keyElements[1])) {
+            return null;
+        }
         //iteracja po szablonach
         foreach ($skinConfig->getTemplates() as $templateConfig) {
             //porównanie klucza skorki i szablonu z odpowiadającym elementem klucza
