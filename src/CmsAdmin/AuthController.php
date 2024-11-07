@@ -13,7 +13,6 @@ namespace CmsAdmin;
 use Cms\Orm\CmsAuthQuery;
 use Cms\Orm\CmsAuthRecord;
 use CmsAdmin\Form\Auth;
-use Mmi\App\App;
 use Mmi\Http\Request;
 use Mmi\Ldap\LdapConfig;
 use Mmi\Mvc\Controller;
@@ -83,15 +82,16 @@ class AuthController extends Controller
     /**
      * Akcja jsonowa wyszukująca użytkowników w LDAP
      */
-    public function autocompleteAction(Request $request)
+    public function autocompleteAction(Request $request): string
     {
+        $term = str_replace([' ', '*'], '', $request->term);
         //typ odpowiedzi
         $this->getResponse()->setTypeJson();
         //za krótki ciąg
-        if (strlen(trim($request->term)) < 3) {
+        if (strlen($term) < 3) {
             return json_encode([]);
         }
         //zwraca odpowiedz JSON
-        return json_encode($this->authProvider->ldapAutocomplete($request->term . '*'));
+        return json_encode($this->authProvider->ldapAutocomplete($term . '*'));
     }
 }
