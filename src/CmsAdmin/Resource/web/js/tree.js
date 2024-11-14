@@ -303,7 +303,7 @@ $(document).ready(function () {
 
 //przeładowanie strony
 CATEGORYCONF.loadEditUrl = function (nodeId) {
-    window.location.assign('/cmsAdmin/category/edit?id=' + nodeId);
+    window.location.assign('/cmsAdmin/category/edit/?id=' + nodeId);
 };
 
 //przeładowanie strony
