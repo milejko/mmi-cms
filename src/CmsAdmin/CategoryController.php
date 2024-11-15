@@ -439,7 +439,7 @@ class CategoryController extends Controller
                     )
                 ) .
                 '&returnUrl=' .
-                urlencode('/cmsAdmin/category/edit?id=' . $category->id . '&originalId=' . $category->cmsCategoryOriginalId . '&uploaderId=' . $category->id . '&p=' . $request->p)
+                urlencode('/cmsAdmin/category/edit/?id=' . $category->id . '&originalId=' . $category->cmsCategoryOriginalId . '&uploaderId=' . $category->id . '&p=' . $request->p)
             ) :
             $this->getResponse()->redirect(
                 'cms',
