@@ -69,7 +69,6 @@ class CategoryVersion extends \Cms\Model\CategoryDraft
         $this->_category->parentId = $this->_category->getInitialStateValue('parentId');
         $this->_category->path = $this->_category->getInitialStateValue('path');
         $this->_category->order = $this->_category->getInitialStateValue('order');
-        $this->_category->dateAdd = $this->_category->getInitialStateValue('dateAdd');
         //status active
         $this->_category->status = \Cms\Orm\CmsCategoryRecord::STATUS_ACTIVE;
         //czyszczenie id oryginału
