@@ -611,7 +611,7 @@ class CmsCategoryRecord extends \Mmi\Orm\Record
         $newestHistoricalVersion = (new CmsCategoryQuery())
             ->whereCmsCategoryOriginalId()->equals($this->cmsCategoryOriginalId ?: $this->id)
             ->andFieldStatus()->equals(CmsCategoryRecord::STATUS_HISTORY)
-            ->orderDescDateModify()
+            ->orderDescDateAdd()
             ->findFirst();
         //drop previous version cache
         if ($newestHistoricalVersion) {
