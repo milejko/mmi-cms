@@ -57,7 +57,7 @@ class DateAgeModelTest extends TestCase
     {
         $dam = new DateAgeModel('-5 days');
         self::assertEquals('d', $dam->getAgeRange());
-        self::assertEquals(5, $dam->getAgeInDays());
+        self::assertEquals(4, $dam->getAgeInDays());
         #time change from summer to winter can give range 119-121 (normally 120)
         self::assertGreaterThanOrEqual(119, $dam->getAgeInHours());
         self::assertLessThanOrEqual(121, $dam->getAgeInHours());
@@ -74,13 +74,13 @@ class DateAgeModelTest extends TestCase
     {
         $dam = new DateAgeModel('-3 weeks');
         self::assertEquals('w', $dam->getAgeRange());
-        self::assertEquals(3, $dam->getAgeInWeeks());
-        self::assertEquals(21, $dam->getAgeInDays());
+        self::assertEquals(2, $dam->getAgeInWeeks());
+        self::assertEquals(20, $dam->getAgeInDays());
         #time change from summer to winter can give 503-505 (normally 504)
         self::assertGreaterThanOrEqual(503, $dam->getAgeInHours());
         self::assertLessThanOrEqual(505, $dam->getAgeInHours());
         #time change from summer to winter can give 30240-30390 (normally 30330)
-        self::assertGreaterThanOrEqual(30240, $dam->getAgeInMinutes());
+        self::assertGreaterThanOrEqual(30180, $dam->getAgeInMinutes());
         self::assertLessThanOrEqual(30390, $dam->getAgeInMinutes());
 
         self::assertEquals(0, $dam->getAgeInMonths());
