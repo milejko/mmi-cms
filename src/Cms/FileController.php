@@ -141,7 +141,6 @@ class FileController extends \Mmi\Mvc\Controller
         }
         $files = [];
         foreach (\Cms\Orm\CmsFileQuery::byObjectAndClass($request->object, $request->objectId, $request->class)->find() as $file) {
-            $full = $file->getThumbUrl();
             $small = $poster = '';
             switch ($file->class) {
                 case 'image':
@@ -151,9 +150,11 @@ class FileController extends \Mmi\Mvc\Controller
                     break;
                 case 'audio':
                 case 'video':
-                    $small = '';
+                    $full = $file->getDownloadUrl();
                     $poster = $file->data->posterFileName ? (new FileSystemModel($file->data->posterFileName))->getThumbPath() : null;
                     break;
+                default:
+                    $full = $file->getDownloadUrl();
             }
             $files[] = [
                 'id' => $file->id,
