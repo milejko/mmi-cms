@@ -48,7 +48,7 @@
                     }
 
                     if (el.attr('data-typ') == 'audio') {
-                        var box = '<audio src="' + el.attr('href') + '" controls></audio>';
+                        var box = '<audio src="' + el.attr('href') + '" controls controlsList="nodownload" oncontextmenu="return false;"></audio>';
                     }
 
                     if (el.attr('data-typ') == 'video') {
@@ -72,16 +72,16 @@
                         buttons: {
                             'Usuń': function () {
                                 $.post(o.removeUrl, {cmsFileId: el.attr('data-id'), object: o.params.formObject, objectId: o.params.formObjectId}, 'json')
-                                        .done(function (data) {
-                                            if (data.result === 'OK') {
-                                                el.parents('li:first').remove();
-                                            } else {
-                                                $('#error').html('Usunięcie pliku nie powiodło się');
-                                            }
-                                        })
-                                        .fail(function () {
+                                    .done(function (data) {
+                                        if (data.result === 'OK') {
+                                            el.parents('li:first').remove();
+                                        } else {
                                             $('#error').html('Usunięcie pliku nie powiodło się');
-                                        });
+                                        }
+                                    })
+                                    .fail(function () {
+                                        $('#error').html('Usunięcie pliku nie powiodło się');
+                                    });
                                 $(this).dialog('close');
                             },
                             'Anuluj': function () {
@@ -136,87 +136,87 @@
 
                     //okienko edycji - pobieramy dane rekordu z bazy
                     $.post('/cmsAdmin/upload/details', {cmsFileId: el.attr('data-id')}, 'json')
-                            .done(function (data) {
-                                if (data.result === 'OK' && data.record) {
-                                    //przygotowujemy zawartość okienka edycji i pokazujemy go
-                                    var edit = 'div#dialog-edit';
+                        .done(function (data) {
+                            if (data.result === 'OK' && data.record) {
+                                //przygotowujemy zawartość okienka edycji i pokazujemy go
+                                var edit = 'div#dialog-edit';
 
-                                    //video poster
-                                    if( data.data['urlFile'] != undefined ){
-                                        $('#video').find('#urlVideo').attr('src', data.data['urlFile']);
-                                        $(edit + ' input[name="poster"]').val(data.data['poster']);
-                                        new VideoFrameExtractor().initialize({
-                                            input: '#poster',
-                                            video: '#video',
-                                            btn: '#frame-camera',
-                                            output: '#output',
-                                            dialog: '.ui-dialog'
-                                        });
-                                    }
-
-                                    $(edit + ' input[name="title"]').val(data.data.title);
-                                    $(edit + ' input[name="author"]').val(data.data.author);
-                                    $(edit + ' .dialog-error').hide().find('p').text('');
-
-                                    $("div#dialog-edit select[name='source']").change(function () {
-                                        $("div#dialog-edit #img-edit").attr('src', 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
-                                        if ($(this).val() != "") {
-                                            $("div#dialog-edit #img-edit").attr('src', $(this).val());
-                                        }
+                                //video poster
+                                if( data.data['urlFile'] != undefined ){
+                                    $('#video').find('#urlVideo').attr('src', data.data['urlFile']);
+                                    $(edit + ' input[name="poster"]').val(data.data['poster']);
+                                    new VideoFrameExtractor().initialize({
+                                        input: '#poster',
+                                        video: '#video',
+                                        btn: '#frame-camera',
+                                        output: '#output',
+                                        dialog: '.ui-dialog'
                                     });
-
-                                    var editDialog = $(edit).dialog({
-                                        width: ((screen.width * 0.5) * 0.8),
-                                        height:  ((screen.height * 0.8) * 0.8),
-                                        maximiziable: true,
-                                        modal: true,
-                                        resizable: false,
-                                        closeText: 'Zamknij',
-                                        title: 'Edycja pliku',
-                                        dialogClass: 'dialogEdit',
-                                        buttons: {
-                                            'Zapisz': function () {
-                                                //trigger odświeżający dane
-                                                //tinymce.triggerSave();
-                                                $.post('/cmsAdmin/upload/describe',
-                                                        {cmsFileId: el.attr('data-id'),
-                                                            form: $(edit + ' input,' + edit + ' select,' + edit + ' textarea').serializeArray()
-                                                        }, 'json')
-                                                        .done(function (data) {
-                                                            if (data.result === 'OK') {
-                                                                editDialog.dialog('close');
-                                                                var posterSource = $("div#dialog-edit select[name='source']").val()
-                                                                    || $("div#dialog-edit input[name='poster']").val();
-                                                                el.parent().find('a.insert').attr('data-poster', posterSource);
-
-                                                                //odswiezenie listy
-                                                                $.ajax({
-                                                                    url: o.galleryUrl,
-                                                                    success: function (response) {
-                                                                        $('#lionite-gallery').html(response);
-                                                                    }
-                                                                });
-
-                                                            } else {
-                                                                $(edit + ' .dialog-error p').text('Nie udało się zapisać zmian! Spróbuj ponownie!').parent().show();
-                                                            }
-                                                        })
-                                                        .fail(function () {
-                                                            $(edit + ' .dialog-error p').text('Nie udało się zapisać zmian! Spróbuj ponownie!').parent().show();
-                                                        });
-                                            },
-                                            'Anuluj': function () {
-                                                $(this).dialog('close');
-                                            }
-                                        }
-                                    });
-                                } else {
-                                    alert('Pobranie opisu pliku nie powiodło się! Spróbuj ponownie');
                                 }
-                            })
-                            .fail(function () {
+
+                                $(edit + ' input[name="title"]').val(data.data.title);
+                                $(edit + ' input[name="author"]').val(data.data.author);
+                                $(edit + ' .dialog-error').hide().find('p').text('');
+
+                                $("div#dialog-edit select[name='source']").change(function () {
+                                    $("div#dialog-edit #img-edit").attr('src', 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
+                                    if ($(this).val() != "") {
+                                        $("div#dialog-edit #img-edit").attr('src', $(this).val());
+                                    }
+                                });
+
+                                var editDialog = $(edit).dialog({
+                                    width: ((screen.width * 0.5) * 0.8),
+                                    height:  ((screen.height * 0.8) * 0.8),
+                                    maximiziable: true,
+                                    modal: true,
+                                    resizable: false,
+                                    closeText: 'Zamknij',
+                                    title: 'Edycja pliku',
+                                    dialogClass: 'dialogEdit',
+                                    buttons: {
+                                        'Zapisz': function () {
+                                            //trigger odświeżający dane
+                                            //tinymce.triggerSave();
+                                            $.post('/cmsAdmin/upload/describe',
+                                                {cmsFileId: el.attr('data-id'),
+                                                    form: $(edit + ' input,' + edit + ' select,' + edit + ' textarea').serializeArray()
+                                                }, 'json')
+                                                .done(function (data) {
+                                                    if (data.result === 'OK') {
+                                                        editDialog.dialog('close');
+                                                        var posterSource = $("div#dialog-edit select[name='source']").val()
+                                                            || $("div#dialog-edit input[name='poster']").val();
+                                                        el.parent().find('a.insert').attr('data-poster', posterSource);
+
+                                                        //odswiezenie listy
+                                                        $.ajax({
+                                                            url: o.galleryUrl,
+                                                            success: function (response) {
+                                                                $('#lionite-gallery').html(response);
+                                                            }
+                                                        });
+
+                                                    } else {
+                                                        $(edit + ' .dialog-error p').text('Nie udało się zapisać zmian! Spróbuj ponownie!').parent().show();
+                                                    }
+                                                })
+                                                .fail(function () {
+                                                    $(edit + ' .dialog-error p').text('Nie udało się zapisać zmian! Spróbuj ponownie!').parent().show();
+                                                });
+                                        },
+                                        'Anuluj': function () {
+                                            $(this).dialog('close');
+                                        }
+                                    }
+                                });
+                            } else {
                                 alert('Pobranie opisu pliku nie powiodło się! Spróbuj ponownie');
-                            });
+                            }
+                        })
+                        .fail(function () {
+                            alert('Pobranie opisu pliku nie powiodło się! Spróbuj ponownie');
+                        });
 
                 }
 
@@ -244,20 +244,20 @@
         ajaxUpload: function (el, connector) {
             var o = this.options;
             var url = connector,
-                    uploadButton = $('<button/>')
+                uploadButton = $('<button/>')
                     .addClass('btn btn-primary')
                     .prop('disabled', true)
                     .text('Processing...')
                     .on('click', function () {
                         var $this = $(this),
-                                data = $this.data();
+                            data = $this.data();
                         $this
-                                .off('click')
-                                .text('Abort')
-                                .on('click', function () {
-                                    $this.remove();
-                                    data.abort();
-                                });
+                            .off('click')
+                            .text('Abort')
+                            .on('click', function () {
+                                $this.remove();
+                                data.abort();
+                            });
                         data.submit().always(function () {
                             $this.remove();
                         });
@@ -309,40 +309,40 @@
             });
             $(el).on('fileuploadprocessalways', function (e, data) {
                 var index = data.index,
-                        file = data.files[index],
-                        node = $(data.context.children()[index]);
+                    file = data.files[index],
+                    node = $(data.context.children()[index]);
 
 
                 if (file.preview) {
                     node
-                            .prepend('<br>')
-                            .prepend(file.preview);
+                        .prepend('<br>')
+                        .prepend(file.preview);
                 }
                 if (file.error) {
                     var txt = file.error + ' : ' + file.name;
                     $('#error')
-                            .append('<br>')
-                            .append($('<span class="text-danger"/>').text(txt));
+                        .append('<br>')
+                        .append($('<span class="text-danger"/>').text(txt));
                 }
                 if (index + 1 === data.files.length) {
                     data.context.find('button')
-                            .text('Upload')
-                            .prop('disabled', !!data.files.error);
+                        .text('Upload')
+                        .prop('disabled', !!data.files.error);
                 }
             });
             $(el).on('fileuploadprogressall', function (e, data) {
                 var progress = parseInt(data.loaded / data.total * 100, 10);
                 $('#progress .progress-bar').css(
-                        'width',
-                        progress + '%'
-                        );
+                    'width',
+                    progress + '%'
+                );
             });
             $(el).on('fileuploadfail', function (e, data) {
                 $.each(data.files, function (index, file) {
                     var error = $('<span class="text-danger"/>').text('File upload failed.');
                     $(data.context.children()[index])
-                            .append('<br>')
-                            .append(error);
+                        .append('<br>')
+                        .append(error);
                 });
             }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
 
