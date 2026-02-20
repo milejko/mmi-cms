@@ -48,7 +48,7 @@
                     }
 
                     if (el.attr('data-typ') == 'audio') {
-                        var box = '<audio src="' + el.attr('href') + '" controls></audio>';
+                        var box = '<audio src="' + el.attr('href') + '" controls controlsList="nodownload" oncontextmenu="return false;"></audio>';
                     }
 
                     if (el.attr('data-typ') == 'video') {
