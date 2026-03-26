@@ -150,14 +150,11 @@ class AuthProvider implements AuthProviderInterface
      */
     protected function _authSuccess(CmsAuthRecord $record)
     {
-        //zapis poprawnego logowania do rekordu
-        $record->lastIp = $this->request->getServer()->remoteAddress;
+        $record->lastIp = $this->extractFirstIp($this->request->getServer()->remoteAddress);
         $record->lastLog = date('Y-m-d H:i:s');
         $record->save();
         $this->logger->info('Logged in: ' . $record->username);
-        //nowy obiekt autoryzacji
         $authRecord = new \Mmi\Security\AuthRecord();
-        //ustawianie pól rekordu
         $authRecord->id = $record->id;
         $authRecord->name = $record->name;
         $authRecord->username = $record->username;
@@ -236,10 +233,24 @@ class AuthProvider implements AuthProviderInterface
      */
     protected function _updateUserFailedLogin($record)
     {
-        //zapis danych błędnego logowania znanego użytkownika
-        $record->lastFailIp = $this->request->getServer()->remoteAddress;
+        $record->lastFailIp = $this->extractFirstIp($this->request->getServer()->remoteAddress);
         $record->lastFailLog = date('Y-m-d H:i:s');
         $record->failLogCount = $record->failLogCount + 1;
         $record->save();
+    }
+
+    /**
+     * Extracts the first IP from a value that may be an array or comma-separated string
+     */
+    private function extractFirstIp($ip): string
+    {
+        if (is_array($ip)) {
+            return trim((string) ($ip[0] ?? ''));
+        }
+        $ip = (string) $ip;
+        if (str_contains($ip, ',')) {
+            return trim(explode(',', $ip)[0]);
+        }
+        return trim($ip);
     }
 }
