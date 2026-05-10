@@ -14,6 +14,7 @@ use Cms\App\CmsScopeConfig;
 use Cms\Orm\CmsCategoryQuery;
 use CmsAdmin\Model\CategoryAclModel;
 use CmsAdmin\Plugin\CategoryGrid;
+use DI\Attribute\Inject;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 use Mmi\Security\AuthInterface;
@@ -23,14 +24,10 @@ use Mmi\Security\AuthInterface;
  */
 class CategoryTrashController extends Controller
 {
-    /**
-     * @Inject
-     */
+    #[Inject]
     private AuthInterface $auth;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private CmsScopeConfig $scopeConfig;
 
     /**

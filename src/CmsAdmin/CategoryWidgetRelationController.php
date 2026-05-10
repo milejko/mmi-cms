@@ -18,6 +18,7 @@ use Cms\Model\CategoryWidgetModel;
 use Cms\Model\SkinsetModel;
 use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryRecord;
+use DI\Attribute\Inject;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 
@@ -27,14 +28,10 @@ use Mmi\Mvc\Controller;
  */
 class CategoryWidgetRelationController extends Controller
 {
-    /**
-     * @Inject
-     */
+    #[Inject]
     private CmsSkinsetConfig $cmsSkinsetConfig;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private CmsScopeConfig $scopeConfig;
 
     /**

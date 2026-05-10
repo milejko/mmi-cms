@@ -13,6 +13,7 @@ namespace CmsAdmin;
 use Cms\Orm\CmsAuthQuery;
 use Cms\Orm\CmsAuthRecord;
 use CmsAdmin\Form\Auth;
+use DI\Attribute\Inject;
 use Mmi\Http\Request;
 use Mmi\Ldap\LdapConfig;
 use Mmi\Mvc\Controller;
@@ -24,24 +25,16 @@ use Mmi\Security\AuthProviderInterface;
  */
 class AuthController extends Controller
 {
-    /**
-     * @Inject
-     */
+    #[Inject]
     private LdapConfig $ldapConfig;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private AclInterface $acl;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private AuthProviderInterface $authProvider;
 
-    /**
-     * @Inject("cms.language.list")
-     */
+    #[Inject('cms.language.list')]
     private string $cmsLanguageList;
 
     /**

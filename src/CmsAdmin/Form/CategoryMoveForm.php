@@ -54,7 +54,7 @@ class CategoryMoveForm extends Form
         $this->addElement((new Submit('submit'))->setLabel('form.categoryMove.save.label'));
     }
 
-    private function getFilteredTree(array $tree, CmsCategoryRecord $categoryRecord = null): array
+    private function getFilteredTree(array $tree, ?CmsCategoryRecord $categoryRecord = null): array
     {
         $filteredTree = [];
         $categoryTemplateConfig = $this->skinsetModel->getTemplateConfigByKey($categoryRecord->template);

@@ -10,6 +10,7 @@
 
 namespace CmsAdmin;
 
+use DI\Attribute\Inject;
 use Mmi\Http\ResponseDebugger;
 use Mmi\Mvc\Controller;
 use Psr\Container\ContainerInterface;
@@ -21,14 +22,10 @@ class ConfigController extends Controller
 {
     public const THREE_DOTS = '(...)';
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private ContainerInterface $container;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private ResponseDebugger $responseDebugger;
 
     /**

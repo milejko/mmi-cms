@@ -15,7 +15,7 @@ use Cms\Orm\CmsTagQuery;
 use Cms\Orm\CmsTagRecord;
 use CmsAdmin\Form\Tag;
 use CmsAdmin\Plugin\TagGrid;
-use DI\Annotation\Inject;
+use DI\Attribute\Inject;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 use Psr\Container\ContainerInterface;
@@ -26,14 +26,10 @@ use Psr\Container\ContainerInterface;
  */
 class TagController extends Controller
 {
-    /**
-     * @Inject
-     */
+    #[Inject]
     private ContainerInterface $container;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private CmsScopeConfig $cmsScopeConfig;
 
     /**

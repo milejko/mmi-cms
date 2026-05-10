@@ -15,14 +15,12 @@ use Mmi\Session\SessionInterface;
 use Mmi\Session\SessionSpace;
 use Mmi\Translate\TranslateInterface;
 use Psr\Container\ContainerInterface;
+use DI\Attribute\Inject;
 
 class CmsAppEventInterceptor implements AppEventInterceptorInterface
 {
     public const API_CONTROLLER_PATTERN = '/api$/i';
 
-    /**
-     * @Inject({"cmsLanguageList" = "cms.language.list", "cmsLanguageDefault" = "cms.language.default"})
-     */
     public function __construct(
         protected ContainerInterface $container,
         protected AppProfilerInterface $profiler,
@@ -32,8 +30,8 @@ class CmsAppEventInterceptor implements AppEventInterceptorInterface
         protected CmsSkinsetConfig $cmsSkinsetConfig,
         protected View $view,
         protected TranslateInterface $translate,
-        protected string $cmsLanguageList,
-        protected string $cmsLanguageDefault
+        #[Inject('cms.language.list')] protected string $cmsLanguageList,
+        #[Inject('cms.language.default')] protected string $cmsLanguageDefault
     ) {
     }
 

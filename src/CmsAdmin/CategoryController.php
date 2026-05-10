@@ -27,7 +27,7 @@ use CmsAdmin\Form\CategoryMoveForm;
 use CmsAdmin\Form\CategorySearch;
 use CmsAdmin\Model\CategoryAclModel;
 use CmsAdmin\Plugin\CategoryHistoryGrid;
-use DI\Annotation\Inject;
+use DI\Attribute\Inject;
 use Mmi\App\App;
 use Mmi\Cache\CacheInterface;
 use Mmi\Form\Element\ElementAbstract;
@@ -50,29 +50,19 @@ class CategoryController extends Controller
     //przedrostek brakującego widgeta
     public const MISSING_WIDGET_MESSENGER_PREFIX = 'messenger.widget.missing.';
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private AuthInterface $auth;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private CacheInterface $cache;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private CmsScopeConfig $scopeConfig;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private CmsSkinsetConfig $cmsSkinsetConfig;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private CmsCategoryRepository $cmsCategoryRepository;
 
     /**
