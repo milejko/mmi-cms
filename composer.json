@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "mmi/mmi": "dev-feature/major-php8.5-phpunit13-upgrade",
+        "mmi/mmi": "^5.0",
         "phpmailer/phpmailer": "^6.0"
     },
     "autoload": {
@@ -44,7 +44,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "5.7-dev"
+            "dev-master": "6.0-dev"
         }
     },
     "scripts": {
