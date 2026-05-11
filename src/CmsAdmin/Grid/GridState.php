@@ -34,7 +34,7 @@ class GridState extends \Mmi\OptionObject
      * Rozmiar danych
      * @var integer
      */
-    protected $_dataCount = 0;
+    protected $dataCount = 0;
 
     /**
      * Obiekt grida
@@ -149,11 +149,11 @@ class GridState extends \Mmi\OptionObject
         $this->_applyFilters($query)
             ->_applyOrder($query);
         //ustawia rozmiar danych
-        $this->_dataCount = $query->count();
+        $this->dataCount = $query->count();
         //obliczenia offsetu
         $offset = ($this->getPage() - 1) * $this->getRowsPerPage();
         //jeśli offset jest nieprawidłowy
-        if ($offset > $this->_dataCount) {
+        if ($offset > $this->dataCount) {
             //strona 1 + offset od zera
             $this->setPage(1);
             $offset = 0;
@@ -172,7 +172,7 @@ class GridState extends \Mmi\OptionObject
     {
         //aktualizacja danych
         $this->_grid->getDataCollection();
-        return $this->_dataCount;
+        return $this->dataCount;
     }
 
     /**

@@ -23,7 +23,7 @@ class PluploadHandler
      * Opisy możliwych błędów
      * @var array
      */
-    private static $_errors = [
+    private static $errors = [
         PLUPLOAD_MOVE_ERR => "Błąd przenoszenia pliku",
         PLUPLOAD_INPUT_ERR => "Błąd odczytu danych wejściowych",
         PLUPLOAD_OUTPUT_ERR => "Błąd zapisu danych",
@@ -37,97 +37,97 @@ class PluploadHandler
      * Kod błędu, jaki wystąpił przy odbieraniu pliku
      * @var integer
      */
-    private $_errorCode = null;
+    private $errorCode = null;
 
     /**
      * Opis błędu, jaki wystąpił przy odbieraniu pliku
      * @var string
      */
-    private $_errorMessage = "";
+    private $errorMessage = "";
 
     /**
      * Nazwa oryginalna pliku
      * @var string
      */
-    private $_fileName;
+    private $fileName;
 
     /**
      * Nazwa unikalna pliku
      * @var string
      */
-    private $_fileId;
+    private $fileId;
 
     /**
      * Rozmiar przesłanego pliku
      * @var integer
      */
-    private $_fileSize;
+    private $fileSize;
 
     /**
      * Typ obiektu formularza
      * @var string
      */
-    private $_formObject;
+    private $formObject;
 
     /**
      * Id obiektu z formularza
      * @var integer
      */
-    private $_formObjectId = null;
+    private $formObjectId = null;
 
     /**
      * Id rekordu pliku Cms w bazie
      * @var integer
      */
-    private $_cmsFileId;
+    private $cmsFileId;
 
     /**
      * Zapisany rekord pliku Cms
      * @var \Cms\Orm\CmsFileRecord
      */
-    private $_cmsFileRecord;
+    private $cmsFileRecord;
 
     /**
      * Ścieżka do katalogu do zapisu plików tymczasowych
      * @var string
      */
-    private $_targetDir;
+    private $targetDir;
 
     /**
      * Ścieżka do zapisu pliku tymczasowego
      * @var string
      */
-    private $_filePath;
+    private $filePath;
 
     /**
      * Ścieżka do zapisu fragmentu pliku tymczasowego
      * @var string
      */
-    private $_filePathPart;
+    private $filePathPart;
 
     /**
      * Uchwyt do zapisu pliku tymczasowego
      * @var resource
      */
-    private $_fileHandle;
+    private $fileHandle;
 
     /**
      * Uchwyt do odczytu danych wejściowych
      * @var resource
      */
-    private $_inputHandle;
+    private $inputHandle;
 
     /**
      * Obiekt odpowiedzi
      * @var \Mmi\Http\Response
      */
-    private $_response;
+    private $response;
 
     /**
      * Obiekt żądania
      * @var \Mmi\Http\Request
      */
-    private $_request;
+    private $request;
 
     /**
      * Numer kolejny kawałka pliku
@@ -145,13 +145,13 @@ class PluploadHandler
      * Typ zawartości w żądaniu
      * @var string
      */
-    private $_contentType;
+    private $contentType;
 
     /**
      * Filtry dla akceptowanych plików
      * @var array
      */
-    private $_filters;
+    private $filters;
 
     /**
      * Konstruktor
@@ -171,7 +171,7 @@ class PluploadHandler
      */
     public function setTargetDir($path)
     {
-        $this->_targetDir = rtrim($path, '/') . '/';
+        $this->targetDir = rtrim($path, '/') . '/';
         return $this;
     }
 
@@ -182,7 +182,7 @@ class PluploadHandler
      */
     public function setRequest(\Mmi\Http\Request $request)
     {
-        $this->_request = $request;
+        $this->request = $request;
         return $this;
     }
 
@@ -193,7 +193,7 @@ class PluploadHandler
      */
     public function setResponse(\Mmi\Http\Response $response)
     {
-        $this->_response = $response;
+        $this->response = $response;
         return $this;
     }
 
@@ -213,7 +213,7 @@ class PluploadHandler
             if (!$this->_prepareUploadData()) {
                 return false;
             }
-            if (strpos($this->_contentType, "multipart") !== false) {
+            if (strpos($this->contentType, "multipart") !== false) {
                 if (!$this->_multipart()) {
                     return false;
                 }
@@ -238,11 +238,11 @@ class PluploadHandler
      */
     private function _setRequestAndResponse()
     {
-        if (!is_object($this->_request)) {
-            $this->_request = App::$di->get(Request::class);
+        if (!is_object($this->request)) {
+            $this->request = App::$di->get(Request::class);
         }
-        if (!is_object($this->_response)) {
-            $this->_response = App::$di->get(Response::class);
+        if (!is_object($this->response)) {
+            $this->response = App::$di->get(Response::class);
         }
         return $this;
     }
@@ -257,26 +257,26 @@ class PluploadHandler
             $this->_setError(PLUPLOAD_TMPDIR_ERR);
             return false;
         }
-        $post = $this->_request->getPost();
+        $post = $this->request->getPost();
         $this->_chunk = ($post->chunk) ? intval($post->chunk) : 0;
         $this->_chunks = ($post->chunks) ? intval($post->chunks) : 0;
-        $this->_fileName = $post->name;
-        $this->_fileId = $post->fileId;
-        $this->_fileSize = $post->fileSize;
-        $this->_formObject = $post->formObject;
-        $this->_formObjectId = ($post->formObjectId) ? $post->formObjectId : null;
-        $this->_cmsFileId = ($post->cmsFileId > 0) ? $post->cmsFileId : null;
-        $this->_filters = ($post->filters) ? $post->filters : [];
-        if (!$this->_fileName || !$this->_fileId || !$this->_fileSize || !$this->_formObject) {
+        $this->fileName = $post->name;
+        $this->fileId = $post->fileId;
+        $this->fileSize = $post->fileSize;
+        $this->formObject = $post->formObject;
+        $this->formObjectId = ($post->formObjectId) ? $post->formObjectId : null;
+        $this->cmsFileId = ($post->cmsFileId > 0) ? $post->cmsFileId : null;
+        $this->filters = ($post->filters) ? $post->filters : [];
+        if (!$this->fileName || !$this->fileId || !$this->fileSize || !$this->formObject) {
             $this->_setError(PLUPLOAD_INPUT_ERR, "Błąd: niekompletne parametry żądania");
             return false;
         }
-        $this->_filePath = $this->_targetDir . $this->_fileId . sha1($this->_fileName);
-        if (strrpos($this->_fileName, '.') > 0) {
-            $this->_filePath .= substr($this->_fileName, strrpos($this->_fileName, '.'));
+        $this->filePath = $this->targetDir . $this->fileId . sha1($this->fileName);
+        if (strrpos($this->fileName, '.') > 0) {
+            $this->filePath .= substr($this->fileName, strrpos($this->fileName, '.'));
         }
-        $this->_filePathPart = $this->_filePath . '.part';
-        $this->_contentType = $this->_request->getContentType();
+        $this->filePathPart = $this->filePath . '.part';
+        $this->contentType = $this->request->getContentType();
         return true;
     }
 
@@ -286,7 +286,7 @@ class PluploadHandler
      */
     private function _setResponseHeaders()
     {
-        $this->_response->setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT", true)
+        $this->response->setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT", true)
             ->setHeader("Last-Modified", gmdate("D, d M Y H:i:s") . " GMT", true)
             ->setHeader("Cache-Control", "no-store, no-cache, must-revalidate", true)
             ->setHeader("Cache-Control", "post-check=0, pre-check=0", false)
@@ -300,10 +300,10 @@ class PluploadHandler
      */
     private function _createTargetDir()
     {
-        if (!$this->_targetDir) {
+        if (!$this->targetDir) {
             return false;
         }
-        $targetDir = rtrim($this->_targetDir, '/');
+        $targetDir = rtrim($this->targetDir, '/');
         if (!file_exists($targetDir)) {
             if (!@mkdir($targetDir, 0777, true)) {
                 return false;
@@ -318,7 +318,7 @@ class PluploadHandler
      */
     public function getErrorCode()
     {
-        return $this->_errorCode;
+        return $this->errorCode;
     }
 
     /**
@@ -327,7 +327,7 @@ class PluploadHandler
      */
     public function getErrorMessage()
     {
-        return $this->_errorMessage;
+        return $this->errorMessage;
     }
 
     /**
@@ -336,8 +336,8 @@ class PluploadHandler
      */
     public function getSavedCmsFileId()
     {
-        if ($this->_cmsFileRecord) {
-            return $this->_cmsFileRecord->id;
+        if ($this->cmsFileRecord) {
+            return $this->cmsFileRecord->id;
         }
         return null;
     }
@@ -348,8 +348,8 @@ class PluploadHandler
      */
     public function getSavedCmsFileName()
     {
-        if ($this->_cmsFileRecord) {
-            return $this->_cmsFileRecord->name;
+        if ($this->cmsFileRecord) {
+            return $this->cmsFileRecord->name;
         }
         return null;
     }
@@ -360,7 +360,7 @@ class PluploadHandler
      */
     public function getSavedCmsFileRecord()
     {
-        return $this->_cmsFileRecord;
+        return $this->cmsFileRecord;
     }
 
     /**
@@ -371,15 +371,15 @@ class PluploadHandler
      */
     private function _setError($code, $message = "")
     {
-        if (isset(self::$_errors[$code])) {
-            $this->_errorCode = $code;
-            $this->_errorMessage = self::$_errors[$code];
+        if (isset(self::$errors[$code])) {
+            $this->errorCode = $code;
+            $this->errorMessage = self::$errors[$code];
         } else {
-            $this->_errorCode = PLUPLOAD_UNKNOWN_ERR;
-            $this->_errorMessage = self::$_errors[PLUPLOAD_UNKNOWN_ERR];
+            $this->errorCode = PLUPLOAD_UNKNOWN_ERR;
+            $this->errorMessage = self::$errors[PLUPLOAD_UNKNOWN_ERR];
         }
         if ($message) {
-            $this->_errorMessage = $message;
+            $this->errorMessage = $message;
         }
         return $this;
     }
@@ -390,7 +390,7 @@ class PluploadHandler
      */
     private function _multipart()
     {
-        $files = $this->_request->getFiles()->getAsArray();
+        $files = $this->request->getFiles()->getAsArray();
         //brak dodanego pliku (part'a)
         if (!isset($files['file']) || !isset($files['file'][0])) {
             $this->_setError(PLUPLOAD_INPUT_ERR);
@@ -429,23 +429,23 @@ class PluploadHandler
      */
     private function _readWrite($input, $unlink)
     {
-        $this->_fileHandle = fopen($this->_filePathPart, $this->_chunk == 0 ? "wb" : "ab");
+        $this->fileHandle = fopen($this->filePathPart, $this->_chunk == 0 ? "wb" : "ab");
         //brak uchwytu pliku wyjściowego
-        if (!$this->_fileHandle) {
+        if (!$this->fileHandle) {
             $this->_setError(PLUPLOAD_OUTPUT_ERR);
             return false;
         }
-        $this->_inputHandle = fopen($input, "rb");
+        $this->inputHandle = fopen($input, "rb");
         //brak uchwytu danych wejściowych
-        if (!$this->_inputHandle) {
+        if (!$this->inputHandle) {
             $this->_setError(PLUPLOAD_INPUT_ERR);
             return false;
         }
-        while ($buff = fread($this->_inputHandle, 8192)) {
-            fwrite($this->_fileHandle, $buff);
+        while ($buff = fread($this->inputHandle, 8192)) {
+            fwrite($this->fileHandle, $buff);
         }
-        fclose($this->_inputHandle);
-        fclose($this->_fileHandle);
+        fclose($this->inputHandle);
+        fclose($this->fileHandle);
         if ($unlink) {
             @unlink($input);
         }
@@ -464,13 +464,13 @@ class PluploadHandler
             return true;
         }
         //zamiana nazwy
-        if (!rename($this->_filePathPart, $this->_filePath)) {
+        if (!rename($this->filePathPart, $this->filePath)) {
             $this->_setError(PLUPLOAD_MOVE_ERR);
             return false;
         }
         //zapis rekordu pliku
         if (!$this->_saveFile()) {
-            if ($this->_errorCode === null) {
+            if ($this->errorCode === null) {
                 $this->_setError(PLUPLOAD_MOVE_ERR);
             }
             return false;
@@ -488,13 +488,13 @@ class PluploadHandler
         //jeśli niedopuszczalny plik
         if (!$this->_filterFile($requestFile)) {
             //usuwamy plik z katalogu plupload
-            @unlink($this->_filePath);
+            @unlink($this->filePath);
             $this->_setError(PLUPLOAD_TYPE_ERR, "Niedopuszczalny typ pliku");
             return false;
         }
         //jeśli przesłano plik dla konkretnego id w bazie
-        if ($this->_cmsFileId) {
-            if (null !== $this->_cmsFileRecord = (new \Cms\Orm\CmsFileQuery())->findPk($this->_cmsFileId)) {
+        if ($this->cmsFileId) {
+            if (null !== $this->cmsFileRecord = (new \Cms\Orm\CmsFileQuery())->findPk($this->cmsFileId)) {
                 return $this->_replaceFile($requestFile);
             }
         }
@@ -509,9 +509,9 @@ class PluploadHandler
     private function _getRequestFile()
     {
         $data = [
-            'name' => $this->_fileName,
-            'size' => $this->_fileSize,
-            'tmp_name' => $this->_filePath
+            'name' => $this->fileName,
+            'size' => $this->fileSize,
+            'tmp_name' => $this->filePath
         ];
         return new \Mmi\Http\RequestFile($data);
     }
@@ -523,14 +523,14 @@ class PluploadHandler
      */
     private function _filterFile(\Mmi\Http\RequestFile $requestFile)
     {
-        if (empty($this->_filters)) {
+        if (empty($this->filters)) {
             return true;
         }
-        if (!isset($this->_filters['mime_types']) || empty($this->_filters['mime_types'])) {
+        if (!isset($this->filters['mime_types']) || empty($this->filters['mime_types'])) {
             return true;
         }
         $allowedTypes = $allowedExts = [];
-        foreach ($this->_filters['mime_types'] as $mt) {
+        foreach ($this->filters['mime_types'] as $mt) {
             if (array_key_exists('mime', $mt)) {
                 $allowedTypes[] = strtolower($mt['mime']);
             } elseif (array_key_exists('extensions', $mt)) {
@@ -542,8 +542,8 @@ class PluploadHandler
             return false;
         }
         //sprawdzamy rozszerzenie
-        if (strrpos($this->_fileName, '.') > 0) {
-            $ext = strtolower(substr($this->_fileName, strrpos($this->_fileName, '.') + 1));
+        if (strrpos($this->fileName, '.') > 0) {
+            $ext = strtolower(substr($this->fileName, strrpos($this->fileName, '.') + 1));
             if (in_array($ext, $allowedExts)) {
                 return true;
             }
@@ -558,14 +558,14 @@ class PluploadHandler
      */
     private function _createNewFile(\Mmi\Http\RequestFile $requestFile)
     {
-        if (null === $this->_cmsFileRecord = \Cms\Model\File::appendFile($requestFile, $this->_formObject, $this->_formObjectId)) {
+        if (null === $this->cmsFileRecord = \Cms\Model\File::appendFile($requestFile, $this->formObject, $this->formObjectId)) {
             $this->_setError(PLUPLOAD_MOVE_ERR, "Błąd tworzenia nowego rekordu pliku");
             $result = false;
         } else {
-            $result = $this->_cmsFileRecord->save();
+            $result = $this->cmsFileRecord->save();
         }
         //usuwamy plik z katalogu plupload
-        @unlink($this->_filePath);
+        @unlink($this->filePath);
         return $result;
     }
 
@@ -576,16 +576,16 @@ class PluploadHandler
      */
     private function _replaceFile(\Mmi\Http\RequestFile $requestFile)
     {
-        if ($this->_cmsFileRecord === null) {
+        if ($this->cmsFileRecord === null) {
             $result = false;
         } else {
-            $result = ($this->_cmsFileRecord->replaceFile($requestFile) && $this->_cmsFileRecord->save());
+            $result = ($this->cmsFileRecord->replaceFile($requestFile) && $this->cmsFileRecord->save());
         }
         if ($result === false) {
             $this->_setError(PLUPLOAD_MOVE_ERR, "Błąd podczas nadpisywania pliku");
         }
         //usuwamy plik z katalogu plupload
-        @unlink($this->_filePath);
+        @unlink($this->filePath);
         return $result;
     }
 }

@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "mmi/mmi": "4.*",
+        "mmi/mmi": "^5.0",
         "phpmailer/phpmailer": "^6.0"
     },
     "autoload": {
@@ -44,7 +44,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "5.7-dev"
+            "dev-master": "6.0-dev"
         }
     },
     "scripts": {
@@ -60,7 +60,6 @@
         "test:phpcs": "XDEBUG_MODE=off phpcs",
         "test:phpmd": "XDEBUG_MODE=off phpmd ./src text phpmd.xml.dist",
         "test:phpunit": "XDEBUG_MODE=coverage phpunit --coverage-clover ./.phpunit.coverage.clover.xml --coverage-html ./web/build/phpunit",
-        "test:infection": "XDEBUG_MODE=off infection --no-progress --only-covered --threads=max",
         "test:all": [
             "@test:security-checker",
             "@test:phpcs",
@@ -70,11 +69,10 @@
         ]
     },
     "require-dev": {
-        "mmi/mmi-build-toolkit": "*"
+       "mmi/mmi-build-toolkit": "^3.0"
     },
     "config": {
         "allow-plugins": {
-            "infection/extension-installer": true,
             "php-http/discovery": true
         }
     }

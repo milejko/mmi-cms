@@ -14,6 +14,7 @@ use Cms\App\CmsScopeConfig;
 use Cms\App\CmsSkinsetConfig;
 use Cms\Model\SkinsetModel;
 use CmsAdmin\Form\CategoryAclForm;
+use DI\Attribute\Inject;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
 use Mmi\Security\AclInterface;
@@ -23,19 +24,13 @@ use Mmi\Security\AclInterface;
  */
 class CategoryAclController extends Controller
 {
-    /**
-     * @Inject
-     */
+    #[Inject]
     private CmsScopeConfig $scopeConfig;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private CmsSkinsetConfig $cmsSkinsetConfig;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private AclInterface $acl;
 
     /**

@@ -5,6 +5,7 @@ namespace Tests\Unit\Cms\Security;
 use Cms\Orm\CmsAuthRecord;
 use Cms\Security\AuthProvider;
 use Mmi\Http\Request;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -16,8 +17,8 @@ class AuthProviderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->logger = $this->createMock(LoggerInterface::class);
-        $this->container = $this->createMock(ContainerInterface::class);
+        $this->logger = $this->createStub(LoggerInterface::class);
+        $this->container = $this->createStub(ContainerInterface::class);
     }
 
     private function createProvider(string $remoteAddr = '127.0.0.1'): AuthProvider
@@ -32,15 +33,12 @@ class AuthProviderTest extends TestCase
         return new AuthProvider($this->logger, $request, $this->container);
     }
 
-    /**
-     * @dataProvider extractFirstIpDataProvider
-     */
+    #[DataProvider('extractFirstIpDataProvider')]
     public function testExtractFirstIp($input, string $expected): void
     {
         $provider = $this->createProvider();
 
         $reflection = new \ReflectionMethod($provider, 'extractFirstIp');
-        $reflection->setAccessible(true);
 
         self::assertSame($expected, $reflection->invoke($provider, $input));
     }
@@ -79,7 +77,6 @@ class AuthProviderTest extends TestCase
         $record->expects(self::once())->method('save');
 
         $reflection = new \ReflectionMethod($provider, '_authSuccess');
-        $reflection->setAccessible(true);
 
         $authRecord = $reflection->invoke($provider, $record);
 
@@ -97,7 +94,7 @@ class AuthProviderTest extends TestCase
     {
         $provider = $this->createProvider('10.20.30.40');
 
-        $record = $this->createMock(CmsAuthRecord::class);
+        $record = $this->createStub(CmsAuthRecord::class);
         $record->id = 5;
         $record->username = 'admin';
         $record->name = 'Admin';
@@ -105,10 +102,8 @@ class AuthProviderTest extends TestCase
         $record->lang = 'pl';
         $record->roles = 'editor';
         $record->method('getRoles')->willReturn(['editor']);
-        $record->method('save');
 
         $reflection = new \ReflectionMethod($provider, '_authSuccess');
-        $reflection->setAccessible(true);
 
         $authRecord = $reflection->invoke($provider, $record);
 
@@ -119,7 +114,7 @@ class AuthProviderTest extends TestCase
     {
         $provider = $this->createProvider();
 
-        $record = $this->createMock(CmsAuthRecord::class);
+        $record = $this->createStub(CmsAuthRecord::class);
         $record->id = 2;
         $record->username = 'noroles';
         $record->name = 'No Roles';
@@ -127,10 +122,8 @@ class AuthProviderTest extends TestCase
         $record->lang = 'en';
         $record->roles = '';
         $record->method('getRoles')->willReturn([]);
-        $record->method('save');
 
         $reflection = new \ReflectionMethod($provider, '_authSuccess');
-        $reflection->setAccessible(true);
 
         $authRecord = $reflection->invoke($provider, $record);
 
@@ -146,7 +139,6 @@ class AuthProviderTest extends TestCase
         $record->expects(self::once())->method('save');
 
         $reflection = new \ReflectionMethod($provider, '_updateUserFailedLogin');
-        $reflection->setAccessible(true);
 
         $reflection->invoke($provider, $record);
 
@@ -159,12 +151,10 @@ class AuthProviderTest extends TestCase
     {
         $provider = $this->createProvider('172.16.0.1');
 
-        $record = $this->createMock(CmsAuthRecord::class);
+        $record = $this->createStub(CmsAuthRecord::class);
         $record->failLogCount = 0;
-        $record->method('save');
 
         $reflection = new \ReflectionMethod($provider, '_updateUserFailedLogin');
-        $reflection->setAccessible(true);
 
         $reflection->invoke($provider, $record);
 
@@ -176,12 +166,10 @@ class AuthProviderTest extends TestCase
     {
         $provider = $this->createProvider();
 
-        $record = $this->createMock(CmsAuthRecord::class);
+        $record = $this->createStub(CmsAuthRecord::class);
         $record->failLogCount = 10;
-        $record->method('save');
 
         $reflection = new \ReflectionMethod($provider, '_updateUserFailedLogin');
-        $reflection->setAccessible(true);
 
         $reflection->invoke($provider, $record);
 
@@ -190,7 +178,8 @@ class AuthProviderTest extends TestCase
 
     public function testGetSaltedPasswordHash(): void
     {
-        $this->container->method('get')
+        $this->container = $this->createMock(ContainerInterface::class);
+        $this->container->expects(self::atLeastOnce())->method('get')
             ->with('cms.auth.salt')
             ->willReturn('test-salt');
 
@@ -206,7 +195,8 @@ class AuthProviderTest extends TestCase
 
     public function testGetSaltedPasswordHashDifferentPasswords(): void
     {
-        $this->container->method('get')
+        $this->container = $this->createMock(ContainerInterface::class);
+        $this->container->expects(self::atLeastOnce())->method('get')
             ->with('cms.auth.salt')
             ->willReturn('salt');
 
@@ -220,13 +210,14 @@ class AuthProviderTest extends TestCase
 
     public function testAuthSuccessLogsUsername(): void
     {
+        $this->logger = $this->createMock(LoggerInterface::class);
         $this->logger->expects(self::once())
             ->method('info')
             ->with('Logged in: adminuser');
 
         $provider = $this->createProvider();
 
-        $record = $this->createMock(CmsAuthRecord::class);
+        $record = $this->createStub(CmsAuthRecord::class);
         $record->id = 1;
         $record->username = 'adminuser';
         $record->name = 'Admin';
@@ -234,16 +225,15 @@ class AuthProviderTest extends TestCase
         $record->lang = 'en';
         $record->roles = 'admin';
         $record->method('getRoles')->willReturn(['admin']);
-        $record->method('save');
 
         $reflection = new \ReflectionMethod($provider, '_authSuccess');
-        $reflection->setAccessible(true);
 
         $reflection->invoke($provider, $record);
     }
 
     public function testAuthFailedLogsIdentityAndReason(): void
     {
+        $this->logger = $this->createMock(LoggerInterface::class);
         $this->logger->expects(self::once())
             ->method('notice')
             ->with('Login failed: baduser Invalid password.');
@@ -251,7 +241,6 @@ class AuthProviderTest extends TestCase
         $provider = $this->createProvider();
 
         $reflection = new \ReflectionMethod($provider, '_authFailed');
-        $reflection->setAccessible(true);
 
         $reflection->invoke($provider, 'baduser', 'Invalid password.');
     }

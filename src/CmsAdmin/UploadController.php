@@ -14,6 +14,7 @@ use Cms\Model\File;
 use Cms\Mvc\ViewHelper\Thumb;
 use Cms\Orm\CmsFileQuery;
 use Cms\Orm\CmsFileRecord;
+use DI\Attribute\Inject;
 use Exception;
 use Mmi\DataObject;
 use Mmi\Http\Request;
@@ -26,11 +27,8 @@ use Mmi\Mvc\Controller;
  */
 class UploadController extends Controller
 {
-    /**
-     * @Inject
-     * @var ActionHelper
-     */
-    private $actionHelper;
+    #[Inject]
+    private ActionHelper $actionHelper;
 
     /**
      * Inicjalizacja - wyłączanie layoutu

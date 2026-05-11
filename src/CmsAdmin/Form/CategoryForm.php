@@ -31,7 +31,7 @@ class CategoryForm extends Form
      * @param CmsCategoryRecord $record
      * @param array $options
      */
-    public function __construct(CmsCategoryRecord $record = null, array $options = [])
+    public function __construct(?CmsCategoryRecord $record = null, array $options = [])
     {
         //podłączenie rekordu
         $this->_record = $record;

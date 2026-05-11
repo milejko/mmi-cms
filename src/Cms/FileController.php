@@ -11,6 +11,7 @@
 namespace Cms;
 
 use Cms\Model\FileSystemModel;
+use DI\Attribute\Inject;
 use Mmi\App\KernelException;
 use Mmi\Http\Request;
 use Mmi\Mvc\MvcForbiddenException;
@@ -23,14 +24,10 @@ use Mmi\Session\SessionInterface;
  */
 class FileController extends \Mmi\Mvc\Controller
 {
-    /**
-     * @Inject
-     */
+    #[Inject]
     private SessionInterface $session;
 
-    /**
-     * @Inject("cms.thumb.quality")
-     */
+    #[Inject('cms.thumb.quality')]
     private int $imageQuality;
 
     /**

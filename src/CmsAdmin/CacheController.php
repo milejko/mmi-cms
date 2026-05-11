@@ -10,6 +10,7 @@
 
 namespace CmsAdmin;
 
+use DI\Attribute\Inject;
 use Mmi\Cache\CacheInterface;
 use Mmi\Cache\SystemCacheInterface;
 use Mmi\Http\Request;
@@ -20,14 +21,10 @@ use Mmi\Mvc\Controller;
  */
 class CacheController extends Controller
 {
-    /**
-     * @Inject
-     */
+    #[Inject]
     private CacheInterface $cache;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private SystemCacheInterface $systemCache;
 
     /**

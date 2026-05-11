@@ -231,7 +231,7 @@ class CmsCategoryQuery extends \Mmi\Orm\Query
      * @param int|null $ignoreId
      * @return bool
      */
-    public function isSimilarActivePage(string $uri, string $scope = null, int $ignoreId = null): bool
+    public function isSimilarActivePage(string $uri, ?string $scope = null, ?int $ignoreId = null): bool
     {
         $query = (new self())
             ->whereQuery((new self())->searchByUri($uri))

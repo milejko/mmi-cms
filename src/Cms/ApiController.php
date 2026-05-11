@@ -30,6 +30,7 @@ use Cms\Orm\CmsCategoryPreviewRecord;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use Cms\Orm\CmsCategoryRepository;
+use DI\Attribute\Inject;
 use Mmi\Cache\CacheInterface;
 use Mmi\Http\Request;
 use Mmi\Http\Response;
@@ -41,34 +42,22 @@ use Psr\Log\LoggerInterface;
  */
 class ApiController extends Controller
 {
-    /**
-     * @Inject
-     */
+    #[Inject]
     private CmsSkinsetConfig $cmsSkinsetConfig;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private CacheInterface $cache;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private MenuServiceInterface $menuService;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private StructureServiceInterface $structureService;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private CmsCategoryRepository $cmsCategoryRepository;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private LoggerInterface $logger;
 
     /**

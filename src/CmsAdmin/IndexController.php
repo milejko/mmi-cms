@@ -13,6 +13,7 @@ namespace CmsAdmin;
 use Cms\App\CmsScopeConfig;
 use Cms\App\CmsSkinsetConfig;
 use CmsAdmin\Form\ScopeSelectForm;
+use DI\Attribute\Inject;
 use Mmi\Security\AuthInterface;
 use Mmi\Http\Request;
 use Mmi\Mvc\Controller;
@@ -29,29 +30,19 @@ class IndexController extends Controller
     private const MESSENGER_PASSWORD_SUCCESS = 'messenger.index.password.success';
     private const MESSENGER_SCOPE_SUCCESS = 'messenger.index.scopeMenu.success';
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private AuthInterface $auth;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private SessionInterface $session;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private CmsScopeConfig $scopeConfig;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private CmsSkinsetConfig $skinsetConfig;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private Request $masterRequest;
 
     /**

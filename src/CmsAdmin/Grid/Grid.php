@@ -21,13 +21,13 @@ abstract class Grid extends \Mmi\OptionObject
      * Columny grida
      * @var array
      */
-    protected $_columns = [];
+    protected $columns = [];
 
     /**
      * Obiekt zapytania
      * @var \Mmi\Orm\Query
      */
-    protected $_query;
+    protected $query;
 
     /**
      * Dane
@@ -70,7 +70,7 @@ abstract class Grid extends \Mmi\OptionObject
     final public function addColumn(Column\ColumnAbstract $column)
     {
         //dodawanie Columnu (nazwa unikalna)
-        return $this->_columns[$column->getName()] = $column->setGrid($this);
+        return $this->columns[$column->getName()] = $column->setGrid($this);
     }
 
     /**
@@ -79,7 +79,7 @@ abstract class Grid extends \Mmi\OptionObject
      */
     final public function getColumns()
     {
-        return $this->_columns;
+        return $this->columns;
     }
 
     /**
@@ -114,10 +114,10 @@ abstract class Grid extends \Mmi\OptionObject
     final public function getQuery()
     {
         //brak obiektu zapytania
-        if (!$this->_query) {
+        if (!$this->query) {
             throw new GridException('Query not initialized');
         }
-        return $this->_query;
+        return $this->query;
     }
 
     /**
@@ -127,7 +127,7 @@ abstract class Grid extends \Mmi\OptionObject
      */
     final public function setQuery(\Mmi\Orm\Query $query)
     {
-        $this->_query = $query;
+        $this->query = $query;
         return $this;
     }
 

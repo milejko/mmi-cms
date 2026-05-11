@@ -16,6 +16,7 @@ use Cms\Model\WidgetModel;
 use Cms\Orm\CmsCategoryQuery;
 use Cms\Orm\CmsCategoryRecord;
 use Cms\Orm\CmsCategoryRepository;
+use DI\Attribute\Inject;
 use Mmi\Cache\CacheInterface;
 use Mmi\Http\Request;
 use Mmi\Mvc\ActionHelper;
@@ -31,39 +32,22 @@ class CategoryController extends \Mmi\Mvc\Controller
     //akcja weryfikująca czy użytkownik jest redaktorem
     public const REDACTOR_VERIFY_ACTION = 'cmsAdmin:category:index';
 
-    /**
-     * @Inject
-     * @var CacheInterface
-     */
-    private $cache;
+    #[Inject]
+    private CacheInterface $cache;
 
-    /**
-     * @Inject
-     * @var AuthInterface
-     */
-    private $auth;
+    #[Inject]
+    private AuthInterface $auth;
 
-    /**
-     * @Inject
-     * @var AclInterface
-     */
-    private $acl;
+    #[Inject]
+    private AclInterface $acl;
 
-    /**
-     * @Inject
-     * @var CmsSkinsetConfig
-     */
-    private $cmsSkinsetConfig;
+    #[Inject]
+    private CmsSkinsetConfig $cmsSkinsetConfig;
 
-    /**
-     * @Inject
-     * @var ActionHelper
-     */
-    private $actionHelper;
+    #[Inject]
+    private ActionHelper $actionHelper;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     private CmsCategoryRepository $cmsCategoryRepository;
 
     /**

@@ -17,7 +17,7 @@ class ObservableEventManagerMock implements EventManagerInterface
 {
     private array $events = [];
 
-    public function trigger(string $event, mixed $target = null, array $argv = [], object $callback = null)
+    public function trigger(string $event, mixed $target = null, array $argv = [], ?object $callback = null)
     {
         $this->events[] = [
             'event' => $event,
@@ -27,7 +27,7 @@ class ObservableEventManagerMock implements EventManagerInterface
         ];
     }
 
-    public function attach(string $event, object $callback = null, int $priority = 1): object
+    public function attach(string $event, ?object $callback = null, int $priority = 1): object
     {
         return new stdClass();
     }
