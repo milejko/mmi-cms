@@ -97,7 +97,7 @@ class PluploadHandler
      * Ścieżka do zapisu pliku tymczasowego
      * @var string
      */
-    private $_filePath;
+    private $filePath;
 
     /**
      * Ścieżka do zapisu fragmentu pliku tymczasowego
